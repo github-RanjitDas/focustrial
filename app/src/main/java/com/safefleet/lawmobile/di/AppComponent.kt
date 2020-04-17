@@ -25,6 +25,7 @@ interface AppComponent : AndroidInjector<BaseApplication> {
         fun application(application: BaseApplication): Builder
 
         fun presentationComponent(presentationComponent: PresentationComponent): Builder
+
         fun build(): AppComponent
     }
 }

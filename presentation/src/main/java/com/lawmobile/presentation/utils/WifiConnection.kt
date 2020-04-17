@@ -1,0 +1,112 @@
+@file:Suppress("DEPRECATION")
+
+package com.lawmobile.presentation.utils
+
+import android.annotation.SuppressLint
+import android.net.ConnectivityManager
+import android.net.Network
+import android.net.NetworkCapabilities
+import android.net.NetworkRequest
+import android.net.wifi.WifiConfiguration
+import android.net.wifi.WifiManager
+import android.net.wifi.WifiNetworkSpecifier
+import android.os.Build
+import android.util.Base64
+import androidx.annotation.RequiresApi
+
+@SuppressLint("MissingPermission")
+class WifiConnection(
+    private val wifiManager: WifiManager,
+    private val wifiConfiguration: WifiConfiguration,
+    private val connectivityManager: ConnectivityManager
+) {
+
+    fun connectionWithHotspotCamera(
+        ssid: String,
+        isConnectedSuccess: (connected: Boolean) -> Unit
+    ) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            connectWifiWithNetworkSpecifier(ssid, isConnectedSuccess)
+        } else {
+            connectWifiWithWifiConfiguration(ssid, isConnectedSuccess)
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.Q)
+    private fun connectWifiWithNetworkSpecifier(
+        ssid: String,
+        isConnectedSuccess: (connected: Boolean) -> Unit
+    ) {
+        val specifier =
+            WifiNetworkSpecifier.Builder().setSsid(ssid).setWpa2Passphrase(getWifiSecret()).build()
+        val request = NetworkRequest.Builder()
+            .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
+            .removeCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+            .setNetworkSpecifier(specifier)
+            .build()
+        val networkCallback = object : ConnectivityManager.NetworkCallback() {
+
+            override fun onAvailable(network: Network?) {
+                isConnectedSuccess.invoke(true)
+            }
+
+            override fun onUnavailable() {
+                isConnectedSuccess.invoke(false)
+            }
+        }
+        connectivityManager.requestNetwork(request, networkCallback)
+    }
+
+    private fun connectWifiWithWifiConfiguration(
+        ssid: String,
+        isConnectedSuccess: (connected: Boolean) -> Unit
+    ) {
+        wifiManager.disconnect()
+        enableWifi()
+        var networkId = getIfExistNetworkId(ssid)
+        if (networkId == null) {
+            setWifiConfiguration(ssid)
+            wifiManager.addNetwork(wifiConfiguration)
+            networkId = wifiConfiguration.networkId
+        }
+
+        wifiManager.enableNetwork(networkId, true)
+        val isReconnectWifi = wifiManager.reconnect()
+        waitSecondsWhileTheWifiIsConnected()
+        isConnectedSuccess.invoke(isReconnectWifi)
+    }
+
+    private fun waitSecondsWhileTheWifiIsConnected() {
+        Thread.sleep(4000)
+    }
+
+    private fun enableWifi() {
+        if (!wifiManager.isWifiEnabled) wifiManager.isWifiEnabled = true
+    }
+
+    private fun getIfExistNetworkId(ssid: String): Int? {
+        val configuredNetworksSaved = wifiManager.configuredNetworks
+        configuredNetworksSaved.forEach {
+
+            if (it.SSID == "\"$ssid\"") return it.networkId
+        }
+        return null
+    }
+
+    private fun setWifiConfiguration(ssid: String) {
+        wifiConfiguration.SSID = "\"$ssid\""
+        wifiConfiguration.preSharedKey = "\"${getWifiSecret()}\""
+        wifiConfiguration.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.WPA_PSK)
+    }
+
+    private fun getWifiSecret(): String {
+        var buffer: ByteArray = Base64.decode(SECRET_CAMERA, Base64.DEFAULT)
+        buffer = Base64.decode(String(buffer).toByteArray(), Base64.DEFAULT)
+        buffer = Base64.decode(String(buffer).toByteArray(), Base64.DEFAULT)
+        return String(buffer)
+    }
+
+    companion object {
+        const val SECRET_CAMERA = "VFZSSmVrNUVWVEpPZW1jMVRVRTlQUT09"
+    }
+}
