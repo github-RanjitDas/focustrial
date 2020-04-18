@@ -1,4 +1,15 @@
 <?xml version= "1.0" encoding="utf-8"?>
 <resources>
+    <string name="background">background</string>
+    <string name="focus_logo_background">Focus logo background</string>
+    <string name="waiting_for_camera">WAITING FOR \n CAMERA</string>
+    <string name="go_to_validate_ssid">Go to validate ssid</string>
+    <string name="instructions_to_link_camera">INSTRUCTIONS TO LINK CAMERA</string>
+    <string name="connection_status">CONNECTION STATUS</string>
+    <string name="exit">EXIT</string>
+    <string name="connecting_to_camera">CONNECTING \n TO CAMERA</string>
+    <string name="circle_progress_connection_camera">Circle progress connection camera</string>
+    <string name="welcome_officer">WELCOME OFFICER</string>
+    <string name="_57">57</string>
 
 </resources>

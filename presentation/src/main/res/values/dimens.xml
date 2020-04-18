@@ -1,9 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- General -->
+    <dimen name="no_dp">0dp</dimen>
 
     <!-- Text Size -->
+    <dimen name="text_h1">24sp</dimen>
+    <dimen name="text_h3">22sp</dimen>
+    <dimen name="text_h5">20sp</dimen>
+    <dimen name="text_p7">11sp</dimen>
 
-    <!--  Paring Phone with Camera -->
+    <!-- Login -->
+    <dimen name="login_constrain_parent_padding">40dp</dimen>
+
+    <!--  Pairing Phone with Camera -->
+    <dimen name="pairing_phone_camera_text_version_margin_top">10dp</dimen>
+    <dimen name="pairing_phone_camera_text_version_margin_sides">20dp</dimen>
+    <dimen name="pairing_phone_camera_image_focus_margin_top">5dp</dimen>
+    <dimen name="pairing_phone_camera_image_focus_margin_sides">0dp</dimen>
+    <dimen name="pairing_phone_camera_text_title_margin_top">20dp</dimen>
+    <dimen name="pairing_phone_camera_input_height">40dp</dimen>
+    <dimen name="pairing_phone_camera_input_margin_top">30dp</dimen>
+    <dimen name="pairing_phone_camera_input_edit_padding_sides">5dp</dimen>
+    <dimen name="pairing_phone_camera_button_go_size">140dp</dimen>
+    <dimen name="pairing_phone_camera_button_go_margin_top">15dp</dimen>
+    <dimen name="pairing_phone_camera_text_instruction_margin_top">20dp</dimen>
+    <dimen name="pairing_phone_camera_view_instructions_margin_sides">20dp</dimen>
+    <dimen name="pairing_phone_camera_view_instructions_margin_top">3dp</dimen>
+    <dimen name="pairing_phone_camera_view_instructions_height">0.7dp</dimen>
+    <dimen name="pairing_phone_camera_image_circle_size">180dp</dimen>
+    <dimen name="pairing_phone_camera_progress_bar_size">300dp</dimen>
+
+    <!-- Validate password officer-->
+    <dimen name="validate_password_officer_text_officer_name_margin_top">10dp</dimen>
 
 </resources>
