@@ -1,0 +1,27 @@
+ext.pitestExclusions = [
+        //Dagger 2
+        '**.*Dagger*Component*',
+        '**.*Module*',
+        '**.*Modules*',
+        '**.*MembersInjector*',
+        '**.*_Factory*',
+        '**.*Provide*Factory*',
+
+        //Classes I intentionally don't want to test
+        "**.*Activity*",
+        '**.*Constants*',
+        '**.App.class',
+        '**.*Adapter*',
+        '**.*ViewHolder*',
+
+        "**.*Fragment*",
+        "**.*Manifest*",
+        "**.*Module*",
+        "**.*Application*",
+        "**.res.**",
+        "**.entity.**",
+        "**.models.**",
+        "**.adapters.**",
+        '**.extensions.**',
+        "**.*Fragment*"
+]
