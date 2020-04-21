@@ -4,6 +4,7 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'jacoco'
 apply from: '../jacoco.gradle'
+apply from: '../pitest-exceptions.gradle'
 
 android {
     compileSdkVersion 29
@@ -84,4 +85,14 @@ dependencies {
     testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutines_test_version"
 
     implementation project(path: ':domain')
+}
+
+pitest {
+    //Add Inspection exclusions since IntelliJ is sending invalid warnings for pitest plugin
+    //noinspection GrFinalVariableAccess,GroovyAccessibility
+    targetClasses = ["com.lawmobile.data.*"]
+    //noinspection GrFinalVariableAccess,GroovyAccessibility
+    targetTests = ["com.lawmobile.data.*"]
+    //noinspection GrFinalVariableAccess,GroovyAccessibility
+    excludedClasses = pitestExclusions
 }

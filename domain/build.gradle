@@ -4,6 +4,7 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'jacoco'
 apply from: '../jacoco.gradle'
+apply from: '../pitest-exceptions.gradle'
 
 android {
     compileSdkVersion 29
@@ -82,4 +83,14 @@ dependencies {
 
     api 'com.safefleet.mobile:avml:1.1.10-SNAPSHOT@aar'
     api 'com.safefleet.mobile:commons:1.2.2-SNAPSHOT@aar'
+}
+
+pitest {
+    //Add Inspection exclusions since IntelliJ is sending invalid warnings for pitest plugin
+    //noinspection GrFinalVariableAccess,GroovyAccessibility
+    targetClasses = ["com.lawmobile.domain.*"]
+    //noinspection GrFinalVariableAccess,GroovyAccessibility
+    targetTests = ["com.lawmobile.domain.*"]
+    //noinspection GrFinalVariableAccess,GroovyAccessibility
+    excludedClasses = pitestExclusions
 }

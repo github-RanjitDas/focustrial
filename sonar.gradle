@@ -21,5 +21,7 @@ sonarqube {
         property "sonar.coverage.jacoco.xmlReportPaths", "build/reports/jacoco/testDebugUnitTestCoverage/testDebugUnitTestCoverage.xml"
         property "sonar.junit.reportsPath", "build/test-results/testDebugUnitTest"
         property "sonar.android.lint.report", "build/reports/lint-results.xml"
+
+        property "dc5.mutationAnalysis.pitest.sensor.reports.directory", "build/reports/pitest"
     }
 }

@@ -31,6 +31,7 @@ Thumbs.db
 bin/
 gen/
 build/
+/*/jacoco.exec
 
 # Local configuration file (sdk path, etc)
 local.properties
