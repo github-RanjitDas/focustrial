@@ -1,11 +1,12 @@
 package com.lawmobile.presentation.ui.login
 
+import android.content.Intent
 import android.content.pm.PackageInfo
 import android.os.Bundle
-import android.widget.Toast
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.extensions.attachFragment
 import com.lawmobile.presentation.ui.base.BaseActivity
+import com.lawmobile.presentation.ui.live.LiveActivity
 import com.lawmobile.presentation.ui.pairingPhoneWithCamera.PairingPhoneWithCameraFragment
 import com.lawmobile.presentation.ui.validatePasswordOfficer.ValidatePasswordOfficerFragment
 import kotlinx.android.synthetic.main.activity_login.*
@@ -38,11 +39,16 @@ class LoginActivity : BaseActivity() {
     private fun manageValidatePasswordOfficer() {
         validateSuccessPasswordOfficer = { isSuccess ->
             if (isSuccess) {
-                Toast.makeText(this, "password success", Toast.LENGTH_LONG).show()
+                startLiveViewActivity()
             } else {
                 showFragmentPairingCamera()
             }
         }
+    }
+
+    private fun startLiveViewActivity() {
+        startActivity(Intent(this, LiveActivity::class.java))
+        this.finish()
     }
 
     private fun showFragmentPairingCamera() {

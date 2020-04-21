@@ -20,6 +20,7 @@ import org.junit.jupiter.api.extension.ExtendWith
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @ExtendWith(InstantExecutorExtension::class)
 class PairingPhoneWithCameraViewModelTest {
+
     companion object {
         const val DEFAULT_GATEWAY_ADDRESS = "192.168.42.1"
         const val DEFAULT_SSID = "X57014694"
@@ -42,7 +43,7 @@ class PairingPhoneWithCameraViewModelTest {
 
     }
 
-    private val pairingPhoneWithCameraUseCase: PairingPhoneWithCameraUseCase = mockk {
+    private val pairingPhoneWithCameraUseCase: PairingPhoneWithCameraUseCase = mockk{
         every { progressPairingCamera } returns MediatorLiveData()
     }
     private val viewModel: PairingPhoneWithCameraViewModel by lazy {
@@ -101,7 +102,6 @@ class PairingPhoneWithCameraViewModelTest {
         Assert.assertFalse(viewModel.isValidNumberCameraBWC(""))
     }
 
-
     @Test
     fun testConnectCellPhoneToWifiCamera() {
         viewModel.connectCellPhoneToWifiCamera(DEFAULT_SERIAL_NUMBER) {
@@ -114,14 +114,14 @@ class PairingPhoneWithCameraViewModelTest {
     }
 
     @Test
-    fun testGetSSIDSavedIfExist() {
+    fun testGetSSIDSavedIfExist(){
         every { pairingPhoneWithCameraUseCase.getSSIDSavedIfExist() } returns Result.Success("123456789")
         viewModel.getSSIDSavedIfExist()
         verify { pairingPhoneWithCameraUseCase.getSSIDSavedIfExist() }
     }
 
     @Test
-    fun testSaveSerialNumberOfCamera() {
+    fun testSaveSerialNumberOfCamera(){
         every { pairingPhoneWithCameraUseCase.saveSerialNumberOfCamera(any()) } just Runs
         viewModel.saveSerialNumberOfCamera("123")
         verify { pairingPhoneWithCameraUseCase.saveSerialNumberOfCamera("123") }

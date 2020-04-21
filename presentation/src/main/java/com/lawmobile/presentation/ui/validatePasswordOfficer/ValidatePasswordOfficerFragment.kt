@@ -60,8 +60,8 @@ class ValidatePasswordOfficerFragment : BaseFragment() {
             validateSuccessPasswordOfficer.invoke(true)
             return
         }
-
         validateSuccessPasswordOfficer.invoke(false)
+
     }
 
     companion object {

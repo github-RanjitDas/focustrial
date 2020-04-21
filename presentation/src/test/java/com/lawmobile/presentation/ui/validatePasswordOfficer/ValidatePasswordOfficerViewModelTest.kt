@@ -15,12 +15,10 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.api.extension.ExtendWith
-import java.lang.Exception
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @ExtendWith(InstantExecutorExtension::class)
 class ValidatePasswordOfficerViewModelTest {
-
 
     //region mocks
     private val validatePasswordOfficerUseCase: ValidatePasswordOfficerUseCase = mockk()
@@ -58,7 +56,9 @@ class ValidatePasswordOfficerViewModelTest {
 
     @Test
     fun testGetInformationUserError() {
-        coEvery { validatePasswordOfficerUseCase.getUserInformation() } returns Result.Error(Exception("Error"))
+        coEvery { validatePasswordOfficerUseCase.getUserInformation() } returns Result.Error(
+            Exception("Error")
+        )
         viewModel.getUserInformation()
         Assert.assertEquals(viewModel.errorDomainUser.value, "Error")
     }

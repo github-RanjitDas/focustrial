@@ -21,7 +21,6 @@ class EncodePasswordTest {
         )
     }
 
-
     @Test
     fun encodePasswordOfficerFailed() {
         mockkStatic(Base64::class)

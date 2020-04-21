@@ -1,6 +1,7 @@
 package com.lawmobile.presentation.ui.pairingPhoneWithCamera
 
-import androidx.lifecycle.*
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.lawmobile.domain.usecase.pairingPhoneWithCamera.PairingPhoneWithCameraUseCase
 import com.lawmobile.presentation.ui.base.BaseViewModel
 import com.lawmobile.presentation.utils.WifiConnection
@@ -23,7 +24,9 @@ class PairingPhoneWithCameraViewModel @Inject constructor(
         val gateway = wifiHelper.getGatewayAddress()
         val ipAddress = wifiHelper.getIpAddress()
         if (ipAddress.isEmpty() || gateway.isEmpty()) {
-            progressConnectionWithTheCamera.postValue(Result.Error(Exception(EXCEPTION_GET_PARAMS_TO_CONNECT)))
+            progressConnectionWithTheCamera.postValue(
+                Result.Error(Exception(EXCEPTION_GET_PARAMS_TO_CONNECT))
+            )
         }
 
         viewModelScope.launch {
@@ -49,7 +52,9 @@ class PairingPhoneWithCameraViewModel @Inject constructor(
         wifiConnection.connectionWithHotspotCamera("X$codeCamera", isConnectedSuccess)
     }
 
-    companion object{
-        const val EXCEPTION_GET_PARAMS_TO_CONNECT = "Exception in get params to configure connection"
+    companion object {
+        const val EXCEPTION_GET_PARAMS_TO_CONNECT =
+            "Exception in get params to configure connection"
     }
+
 }
