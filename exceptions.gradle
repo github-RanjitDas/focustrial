@@ -33,5 +33,7 @@ ext.fileFilter = [
         "**/models/**",
         "**/app/**",
         "**/adapters/**",
-        '**/extensions/*.*'
+        '**/extensions/*.*',
+        "**/*VLCMediaPlayer.*"
+
 ]

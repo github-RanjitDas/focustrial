@@ -12,4 +12,10 @@
     <string name="welcome_officer">WELCOME OFFICER</string>
     <string name="_57">57</string>
 
+    <!-- Live view -->
+    <string name="image_description_full_screen_size">Full Screen size</string>
+    <string name="image_description_live_view_title">Live View title</string>
+    <string name="image_description_bottom_image">Bottom Image</string>
+    <string name="image_description_back_to_normal_size_screen">Back to normal size screen</string>
+
 </resources>

@@ -47,11 +47,11 @@
                 android:digits="0123456789"
                 android:fontFamily="@font/jura_regular"
                 android:gravity="center_vertical"
-                android:text="@string/_57"
                 android:imeOptions="actionDone"
                 android:inputType="number"
                 android:paddingStart="@dimen/pairing_phone_camera_input_edit_padding_sides"
                 android:paddingEnd="@dimen/pairing_phone_camera_input_edit_padding_sides"
+                android:text="@string/_57"
 
                 android:textColor="@color/black"
                 tools:text="57014604" />

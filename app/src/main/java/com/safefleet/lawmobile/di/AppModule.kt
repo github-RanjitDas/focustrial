@@ -8,6 +8,8 @@ import android.content.SharedPreferences
 import android.net.ConnectivityManager
 import android.net.wifi.WifiConfiguration
 import android.net.wifi.WifiManager
+import com.google.gson.Gson
+import com.lawmobile.presentation.utils.VLCMediaPlayer
 import com.lawmobile.presentation.utils.WifiConnection
 import com.lawmobile.presentation.utils.WifiHelper
 import com.safefleet.lawmobile.BaseApplication
@@ -16,6 +18,8 @@ import com.safefleet.mobile.avml.cameras.CameraDataSourceImpl
 import com.safefleet.mobile.avml.cameras.CameraType
 import dagger.Module
 import dagger.Provides
+import org.videolan.libvlc.LibVLC
+import org.videolan.libvlc.MediaPlayer
 import javax.inject.Singleton
 
 @Module
@@ -77,6 +81,28 @@ class AppModule {
         @Singleton
         fun provideCameraDataSource(preferences: SharedPreferences): CameraDataSource =
             CameraDataSourceImpl(CameraType.X1, preferences)
+
+        @JvmStatic
+        @Provides
+        @Singleton
+        fun provideGSON() = Gson()
+
+        @JvmStatic
+        @Provides
+        @Singleton
+        fun provideLibVLC(application: BaseApplication): LibVLC = LibVLC(application)
+
+        @JvmStatic
+        @Provides
+        @Singleton
+        fun provideMediaPlayer(libVLC: LibVLC): MediaPlayer = MediaPlayer(libVLC)
+
+        @JvmStatic
+        @Provides
+        @Singleton
+        fun provideVLCMediaPlayer(libVLC: LibVLC, mediaPlayer: MediaPlayer): VLCMediaPlayer =
+            VLCMediaPlayer(libVLC, mediaPlayer)
+
 
     }
 }
