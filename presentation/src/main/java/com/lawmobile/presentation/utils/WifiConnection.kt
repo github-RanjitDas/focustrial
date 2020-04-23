@@ -3,10 +3,8 @@
 package com.lawmobile.presentation.utils
 
 import android.annotation.SuppressLint
-import android.net.ConnectivityManager
-import android.net.Network
-import android.net.NetworkCapabilities
-import android.net.NetworkRequest
+import android.net.*
+import android.net.wifi.ScanResult
 import android.net.wifi.WifiConfiguration
 import android.net.wifi.WifiManager
 import android.net.wifi.WifiNetworkSpecifier
@@ -37,16 +35,27 @@ class WifiConnection(
         ssid: String,
         isConnectedSuccess: (connected: Boolean) -> Unit
     ) {
-        val specifier =
-            WifiNetworkSpecifier.Builder().setSsid(ssid).setWpa2Passphrase(getWifiSecret()).build()
+
+        var network: ScanResult? = null
+        wifiManager.scanResults.forEach {
+            if (it.SSID == ssid) network = it
+        }
+
+        val networkResult = network ?: return
+        val specifier = WifiNetworkSpecifier.Builder()
+            .setSsid(networkResult.SSID)
+            .setWpa2Passphrase(getWifiSecret())
+            .setBssid(MacAddress.fromString(networkResult.BSSID))
+            .build()
+
         val request = NetworkRequest.Builder()
             .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
-            .removeCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
             .setNetworkSpecifier(specifier)
             .build()
         val networkCallback = object : ConnectivityManager.NetworkCallback() {
 
             override fun onAvailable(network: Network?) {
+                connectivityManager.bindProcessToNetwork(network)
                 isConnectedSuccess.invoke(true)
             }
 
@@ -77,7 +86,7 @@ class WifiConnection(
     }
 
     private fun waitSecondsWhileTheWifiIsConnected() {
-        Thread.sleep(4000)
+        Thread.sleep(2000)
     }
 
     private fun enableWifi() {

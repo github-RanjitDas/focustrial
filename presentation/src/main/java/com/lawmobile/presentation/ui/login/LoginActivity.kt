@@ -1,10 +1,13 @@
 package com.lawmobile.presentation.ui.login
 
+import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageInfo
 import android.os.Bundle
+import android.widget.Toast
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.extensions.attachFragment
+import com.lawmobile.presentation.extensions.verifyForAskingPermission
 import com.lawmobile.presentation.ui.base.BaseActivity
 import com.lawmobile.presentation.ui.live.LiveActivity
 import com.lawmobile.presentation.ui.pairingPhoneWithCamera.PairingPhoneWithCameraFragment
@@ -23,6 +26,7 @@ class LoginActivity : BaseActivity() {
         manageValidatePasswordOfficer()
         setTextVersion()
         showFragmentPairingCamera()
+        verifyLocationPermission()
     }
 
     private fun manageConnectionCamera() {
@@ -41,7 +45,8 @@ class LoginActivity : BaseActivity() {
             if (isSuccess) {
                 startLiveViewActivity()
             } else {
-                showFragmentPairingCamera()
+                Toast.makeText(this, "Incorrect password, please try again", Toast.LENGTH_LONG)
+                    .show()
             }
         }
     }
@@ -71,5 +76,13 @@ class LoginActivity : BaseActivity() {
         val packageInfo: PackageInfo = packageManager.getPackageInfo(this.packageName, 0)
         textViewVersion.text = String.format("Version %s ", packageInfo.versionName)
     }
+
+    private fun verifyLocationPermission() {
+        this.verifyForAskingPermission(
+            Manifest.permission.ACCESS_FINE_LOCATION,
+            PERMISSION_FOR_LOCATION
+        )
+    }
+
 
 }

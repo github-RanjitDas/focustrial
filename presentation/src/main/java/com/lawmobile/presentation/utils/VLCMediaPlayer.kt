@@ -18,9 +18,11 @@ class VLCMediaPlayer(private val libVLC: LibVLC, private val mediaPlayer: MediaP
         media.addOption(":file-caching=1000")
         mediaPlayer.media = media
         media.release()
-        mediaPlayer.vlcVout.setVideoView(view)
         if (mediaPlayer.vlcVout.areViewsAttached()) mediaPlayer.vlcVout.detachViews()
-        mediaPlayer.vlcVout.attachViews { _, _, _, _, _, _, _ -> setSizeInMediaPlayer(view) }
+        mediaPlayer.vlcVout.setVideoView(view)
+        mediaPlayer.vlcVout.attachViews { _, _, _, _, _, _, _ ->
+            setSizeInMediaPlayer(view)
+        }
     }
 
     fun setSizeInMediaPlayer(view: SurfaceView) {

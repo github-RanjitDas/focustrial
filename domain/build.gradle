@@ -7,13 +7,13 @@ apply from: '../jacoco.gradle'
 apply from: '../pitest-exceptions.gradle'
 
 android {
-    compileSdkVersion 29
+    compileSdkVersion rootProject.ext.compileSdkVersion
 
     defaultConfig {
-        minSdkVersion 23
-        targetSdkVersion 29
-        versionCode 1
-        versionName "3.0.0"
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
+        versionCode rootProject.ext.buildVersion
+        versionName "$rootProject.ext.major.$rootProject.ext.minor.$rootProject.ext.patch"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles 'consumer-rules.pro'
@@ -45,7 +45,7 @@ android {
     }
 
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = rootProject.ext.jvmTarget
     }
 
 }
