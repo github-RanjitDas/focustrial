@@ -1,13 +1,20 @@
 package com.lawmobile.presentation.ui.pairingPhoneWithCamera
 
+import android.Manifest
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import com.lawmobile.presentation.R
+import com.lawmobile.presentation.entity.AlertInformation
+import com.lawmobile.presentation.extensions.createAlertInformation
+import com.lawmobile.presentation.extensions.isPermissionGranted
 import com.lawmobile.presentation.extensions.text
+import com.lawmobile.presentation.ui.base.BaseActivity
 import com.lawmobile.presentation.ui.base.BaseFragment
 import com.lawmobile.presentation.ui.login.LoginActivity
 import com.safefleet.mobile.commons.helpers.Result
@@ -20,7 +27,6 @@ class PairingPhoneWithCameraFragment : BaseFragment() {
     @Inject
     lateinit var pairingPhoneWithCameraViewModel: PairingPhoneWithCameraViewModel
     lateinit var connectionSuccess: (isSuccess: Boolean) -> Unit
-    private var attemptToPairingCamera = 1
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -30,7 +36,6 @@ class PairingPhoneWithCameraFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        attemptToPairingCamera = 1
         startWithProgressPairing(false)
         checkIfExistSerialNumberSavedToConnectionToCamera()
         configureListeners()
@@ -48,8 +53,30 @@ class PairingPhoneWithCameraFragment : BaseFragment() {
 
     private fun configureListeners() {
         imageButtonGo.setOnClickListener {
-            starConnectionToHotspotCamera()
+            if ((activity as BaseActivity).isPermissionGranted(Manifest.permission.ACCESS_FINE_LOCATION)) {
+                starConnectionToHotspotCamera()
+            } else {
+                showAlertToNavigateToPermissions()
+            }
         }
+    }
+
+    private fun showAlertToNavigateToPermissions() {
+        val alertInformation = AlertInformation(R.string.please_enable_permission,
+            R.string.please_enable_permission_location,
+            { startIntentToGivePermission() },
+            true,
+            { dialogInterface -> dialogInterface.cancel() })
+        activity?.createAlertInformation(alertInformation)
+    }
+
+
+    private fun startIntentToGivePermission() {
+        val intent = Intent()
+        intent.action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
+        val uri: Uri = Uri.fromParts("package", activity?.packageName, null)
+        intent.data = uri
+        startActivity(intent)
     }
 
     private fun setSelectionEditTextOfSerialNumber() {
@@ -78,8 +105,10 @@ class PairingPhoneWithCameraFragment : BaseFragment() {
     }
 
     private fun verifyConnectionWithTheCamera() {
-        startWithProgressPairing(true)
-        verifyProgressConnectionWithTheCamera()
+        activity?.runOnUiThread {
+            startWithProgressPairing(true)
+            verifyProgressConnectionWithTheCamera()
+        }
     }
 
     private fun verifyProgressConnectionWithTheCamera() {

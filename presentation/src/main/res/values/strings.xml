@@ -11,6 +11,10 @@
     <string name="circle_progress_connection_camera">Circle progress connection camera</string>
     <string name="welcome_officer">WELCOME OFFICER</string>
     <string name="_57">57</string>
+    <string name="please_enable_permission">Please enable permission from settings</string>
+    <string name="please_enable_permission_location">Required location permission for pairing the camera</string>
+    <string name="OK">OK</string>
+    <string name="cancel">Cancel</string>
 
     <!-- Live view -->
     <string name="image_description_full_screen_size">Full Screen size</string>
