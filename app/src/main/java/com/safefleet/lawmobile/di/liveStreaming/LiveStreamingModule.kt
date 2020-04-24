@@ -1,5 +1,6 @@
 package com.safefleet.lawmobile.di.liveStreaming
 
+import android.media.MediaActionSound
 import com.lawmobile.data.datasource.remote.liveStreaming.LiveStreamingRemoteDataSource
 import com.lawmobile.data.datasource.remote.liveStreaming.LiveStreamingRemoteDataSourceImpl
 import com.lawmobile.data.repository.liveStreaming.LiveStreamingRepositoryImpl
@@ -24,6 +25,10 @@ class LiveStreamingModule {
         @Provides
         fun provideLiveRepository(liveStreamingRemoteDataSource: LiveStreamingRemoteDataSource): LiveStreamingRepository =
             LiveStreamingRepositoryImpl(liveStreamingRemoteDataSource)
+
+        @JvmStatic
+        @Provides
+        fun provideMediaActionSound() = MediaActionSound()
 
         @JvmStatic
         @Provides

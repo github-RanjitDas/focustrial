@@ -23,5 +23,8 @@
     <string name="image_description_live_view_title">Live View title</string>
     <string name="image_description_bottom_image">Bottom Image</string>
     <string name="image_description_back_to_normal_size_screen">Back to normal size screen</string>
+    <!-- Snapshots -->
+    <string name="live_view_take_photo_success">Snapshot Taken</string>
+    <string name="live_view_take_photo_failed">Failed snapshot</string>
 
 </resources>

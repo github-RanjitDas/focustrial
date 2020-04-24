@@ -1,6 +1,7 @@
 package com.lawmobile.presentation.extensions
 
 import android.content.Context
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.entity.AlertInformation
@@ -20,4 +21,8 @@ fun Context.createAlertInformation(alertInformation: AlertInformation) {
         }
         show()
     }
+}
+
+fun Context.showToast(message:String, duration: Int){
+    Toast.makeText(this,message, duration).show()
 }
