@@ -3,10 +3,9 @@ package com.lawmobile.presentation.ui.validatePasswordOfficer
 import com.lawmobile.domain.entity.DomainUser
 import com.lawmobile.domain.usecase.validatePasswordOfficer.ValidatePasswordOfficerUseCase
 import com.lawmobile.presentation.InstantExecutorExtension
+import com.lawmobile.presentation.utils.CameraHelper
 import com.safefleet.mobile.commons.helpers.Result
-import io.mockk.coEvery
-import io.mockk.coVerify
-import io.mockk.mockk
+import io.mockk.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.setMain
@@ -22,12 +21,11 @@ class ValidatePasswordOfficerViewModelTest {
 
     //region mocks
     private val validatePasswordOfficerUseCase: ValidatePasswordOfficerUseCase = mockk()
+    private val cameraHelper: CameraHelper = mockk()
 
     //endregion
     private val viewModel: ValidatePasswordOfficerViewModel by lazy {
-        ValidatePasswordOfficerViewModel(
-            validatePasswordOfficerUseCase
-        )
+        ValidatePasswordOfficerViewModel(validatePasswordOfficerUseCase, cameraHelper)
     }
 
     @ExperimentalCoroutinesApi
@@ -61,5 +59,15 @@ class ValidatePasswordOfficerViewModelTest {
         )
         viewModel.getUserInformation()
         Assert.assertEquals(viewModel.errorDomainUser.value, "Error")
+    }
+
+    @Test
+    fun testCreateSingletonCameraHelper() {
+        mockkObject(CameraHelper)
+        every { CameraHelper.setInstance(any()) } just Runs
+
+        viewModel.createSingletonCameraHelper()
+        verify { CameraHelper.setInstance(cameraHelper) }
+
     }
 }

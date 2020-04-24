@@ -15,6 +15,8 @@
     <string name="please_enable_permission_location">Required location permission for pairing the camera</string>
     <string name="OK">OK</string>
     <string name="cancel">Cancel</string>
+    <string name="the_camera_was_disconnected">Camera disconnected</string>
+    <string name="the_camera_was_disconnected_description">BWC disconnected, please close the app and connect again</string>
 
     <!-- Live view -->
     <string name="image_description_full_screen_size">Full Screen size</string>
