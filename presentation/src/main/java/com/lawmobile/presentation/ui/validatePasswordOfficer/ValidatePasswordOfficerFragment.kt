@@ -8,6 +8,7 @@ import android.widget.Toast
 import androidx.lifecycle.Observer
 import com.lawmobile.domain.entity.DomainUser
 import com.lawmobile.presentation.R
+import com.lawmobile.presentation.extensions.setOnClickListenerCheckConnection
 import com.lawmobile.presentation.extensions.text
 import com.lawmobile.presentation.ui.base.BaseFragment
 import com.lawmobile.presentation.utils.EncodePassword
@@ -30,6 +31,7 @@ class ValidatePasswordOfficerFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        validatePasswordOfficerViewModel.createSingletonCameraHelper()
         getUserInformation()
         configureListeners()
     }
@@ -50,7 +52,9 @@ class ValidatePasswordOfficerFragment : BaseFragment() {
     }
 
     private fun configureListeners() {
-        imageButtonGo.setOnClickListener { verifyPasswordOfficer() }
+        imageButtonGo.setOnClickListenerCheckConnection {
+            verifyPasswordOfficer()
+        }
     }
 
     private fun verifyPasswordOfficer() {
@@ -60,8 +64,8 @@ class ValidatePasswordOfficerFragment : BaseFragment() {
             validateSuccessPasswordOfficer.invoke(true)
             return
         }
-        validateSuccessPasswordOfficer.invoke(false)
 
+        validateSuccessPasswordOfficer.invoke(false)
     }
 
     companion object {

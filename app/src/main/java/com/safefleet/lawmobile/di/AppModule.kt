@@ -9,6 +9,7 @@ import android.net.ConnectivityManager
 import android.net.wifi.WifiConfiguration
 import android.net.wifi.WifiManager
 import com.google.gson.Gson
+import com.lawmobile.presentation.utils.CameraHelper
 import com.lawmobile.presentation.utils.VLCMediaPlayer
 import com.lawmobile.presentation.utils.WifiConnection
 import com.lawmobile.presentation.utils.WifiHelper
@@ -81,6 +82,14 @@ class AppModule {
         @Singleton
         fun provideCameraDataSource(preferences: SharedPreferences): CameraDataSource =
             CameraDataSourceImpl(CameraType.X1, preferences)
+
+        @JvmStatic
+        @Provides
+        @Singleton
+        fun provideCameraHelper(
+            cameraDataSource: CameraDataSource,
+            wifiHelper: WifiHelper
+        ): CameraHelper = CameraHelper(cameraDataSource, wifiHelper)
 
         @JvmStatic
         @Provides

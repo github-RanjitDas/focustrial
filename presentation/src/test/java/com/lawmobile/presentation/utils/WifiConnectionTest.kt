@@ -64,7 +64,6 @@ class WifiConnectionTest {
     }
 
     @Test
-    @Suppress("DEPRECATION")
     fun testConnectionWithHotspotCamera() {
         mockkStatic(Build.VERSION::class)
         setFinalStatic(Build.VERSION::class.java.getField("SDK_INT"), SDK_P)
