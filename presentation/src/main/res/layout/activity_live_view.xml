@@ -29,38 +29,37 @@
         android:layout_width="@dimen/live_view_toggle_full_screen_width"
         android:layout_height="@dimen/live_view_toggle_full_screen_height"
         android:background="@null"
+        android:contentDescription="@string/image_description_full_screen_size"
         android:scaleType="centerCrop"
         android:src="@drawable/ic_full_size"
         app:layout_constraintBottom_toBottomOf="@+id/liveStreamingView"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:contentDescription="@string/image_description_full_screen_size" />
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <Button
         android:id="@+id/buttonSnapshot"
-        android:layout_width="@dimen/live_view_main_button_width"
-        android:layout_height="@dimen/live_view_main_button_height"
-        android:layout_marginStart="@dimen/live_view_main_button_margin_larger"
-        android:layout_marginTop="@dimen/live_view_main_button_margin_mid"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/live_view_main_button_margin_shorter"
+        android:layout_marginTop="@dimen/live_view_main_button_margin_top"
         android:layout_marginEnd="@dimen/live_view_main_button_margin_shorter"
-        android:background="@drawable/snap"
+        android:background="@drawable/ic_snap_selector"
         app:layout_constraintEnd_toStartOf="@+id/guideline2"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/liveStreamingView" />
 
     <Button
         android:id="@+id/buttonStreaming"
-        android:layout_width="@dimen/live_view_main_button_width"
-        android:layout_height="@dimen/live_view_main_button_height"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/live_view_main_button_margin_shorter"
-        android:layout_marginTop="@dimen/live_view_main_button_margin_mid"
-        android:layout_marginEnd="@dimen/live_view_main_button_margin_larger"
-        android:background="@drawable/record"
+        android:layout_marginTop="@dimen/live_view_main_button_margin_top"
+        android:layout_marginEnd="@dimen/live_view_main_button_margin_shorter"
+        android:background="@drawable/ic_record"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/guideline2"
         app:layout_constraintTop_toBottomOf="@+id/toggleFullScreenLiveView" />
 
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
@@ -74,43 +73,45 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
+        android:layout_marginTop="24dp"
         android:width="@dimen/live_view_switch_button_width"
         android:height="@dimen/live_view_switch_button_height"
-        android:background="@drawable/switch_on"
+        android:background="@drawable/ic_switch_on"
         android:checked="true"
         android:textOff=""
         android:textOn=""
         android:thumb="@android:color/transparent"
         android:track="@android:color/transparent"
+        app:layout_constraintBottom_toTopOf="@+id/saveActionButtons"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guideline" />
+        app:layout_constraintTop_toBottomOf="@+id/buttonStreaming"
+        app:layout_constraintVertical_bias="0.0" />
 
     <ImageView
-        android:id="@+id/imageView"
         android:layout_width="@dimen/live_view_title_toggle_live_view_width"
         android:layout_height="@dimen/live_view_title_toggle_live_view_height"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="@dimen/live_view_text_toggle_live_view_marginTop"
         android:background="@drawable/livetxt"
+        android:contentDescription="@string/image_description_live_view_title"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button_switch_live"
-        android:contentDescription="@string/image_description_live_view_title" />
+        app:layout_constraintTop_toBottomOf="@+id/button_switch_live" />
 
     <ImageView
         android:id="@+id/saveActionButtons"
         android:layout_width="match_parent"
         android:layout_height="@dimen/live_view_bottom_white_image_height"
         android:background="@drawable/nav_bg"
+        android:contentDescription="@string/image_description_bottom_image"
         android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        android:contentDescription="@string/image_description_bottom_image" />
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <Button
-        android:id="@+id/button_snapshots"
         android:layout_width="@dimen/live_view_secondary_button_width"
         android:layout_height="@dimen/live_view_secondary_button_height"
         android:background="@drawable/snapshot"
@@ -133,13 +134,12 @@
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="@+id/imageViewBackground"
+        app:layout_constraintBottom_toTopOf="@+id/saveActionButtons"
         app:layout_constraintEnd_toEndOf="@+id/imageViewBackground"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/imageViewBackground" />
 
     <TextView
-        android:id="@+id/progress_message"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/progress_view"

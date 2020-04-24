@@ -2,7 +2,6 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/mainContainerPairing"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -105,7 +104,6 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
-            android:id="@+id/textViewConnectingToCamera"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/pairing_phone_camera_text_title_margin_top"
@@ -118,7 +116,6 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
-            android:id="@+id/imageView2"
             android:layout_width="@dimen/pairing_phone_camera_image_circle_size"
             android:layout_height="@dimen/pairing_phone_camera_image_circle_size"
             android:contentDescription="@string/circle_progress_connection_camera"

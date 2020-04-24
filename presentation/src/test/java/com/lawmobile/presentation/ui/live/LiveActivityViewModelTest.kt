@@ -1,5 +1,6 @@
 package com.lawmobile.presentation.ui.live
 
+import android.media.MediaActionSound
 import android.view.SurfaceView
 import com.lawmobile.domain.usecase.liveStreaming.LiveStreamingUseCase
 import com.lawmobile.presentation.InstantExecutorExtension
@@ -15,18 +16,20 @@ import org.junit.jupiter.api.extension.ExtendWith
 class LiveActivityViewModelTest {
 
     private val vlcMediaPlayer: VLCMediaPlayer = mockk{
-        every { createMediaPlayer(any(),any()) } just Runs
+        every { createMediaPlayer(any(), any()) } just Runs
         every { setSizeInMediaPlayer(any()) } just Runs
         every { playMediaPlayer() } just Runs
         every { stopMediaPlayer() } just Runs
     }
+
+    private val mediaActionSound: MediaActionSound = mockk()
 
     private val liveStreamingUseCase: LiveStreamingUseCase = mockk{
         every { getUrlForLiveStream() } returns String()
     }
 
     private val liveActivityViewModel: LiveActivityViewModel by lazy {
-        LiveActivityViewModel(vlcMediaPlayer, liveStreamingUseCase)
+        LiveActivityViewModel(vlcMediaPlayer, liveStreamingUseCase, mediaActionSound)
     }
 
     @Test
