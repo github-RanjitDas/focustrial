@@ -9,6 +9,14 @@ class LiveStreamingUseCaseImpl(private val liveStreamingRepository: LiveStreamin
         return liveStreamingRepository.getUrlForLiveStream()
     }
 
+    override suspend fun startRecordVideo(): Result<Unit> {
+        return liveStreamingRepository.startRecordVideo()
+    }
+
+    override suspend fun stopRecordVideo(): Result<Unit> {
+        return liveStreamingRepository.stopRecordVideo()
+    }
+
     override suspend fun takePhoto(): Result<Unit> {
         return liveStreamingRepository.takePhoto()
     }

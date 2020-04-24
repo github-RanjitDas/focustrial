@@ -34,5 +34,4 @@ class ValidatePasswordOfficerViewModel @Inject constructor(
             }
         }
     }
-
 }

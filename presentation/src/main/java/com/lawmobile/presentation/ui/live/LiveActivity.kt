@@ -1,11 +1,13 @@
 package com.lawmobile.presentation.ui.live
 
-import android.annotation.SuppressLint
-import android.content.pm.ActivityInfo
+import android.content.pm.ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+import android.content.pm.ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
 import android.os.Bundle
 import android.widget.Toast
 import androidx.lifecycle.Observer
 import com.lawmobile.presentation.R
+import com.lawmobile.presentation.extensions.setOnCheckedChangeListenerCheckConnection
+import com.lawmobile.presentation.extensions.setOnClickListenerCheckConnection
 import com.lawmobile.presentation.extensions.showToast
 import com.lawmobile.presentation.ui.base.BaseActivity
 import com.safefleet.mobile.commons.helpers.Result
@@ -17,29 +19,120 @@ class LiveActivity : BaseActivity() {
     @Inject
     lateinit var liveActivityViewModel: LiveActivityViewModel
 
+    private var isRecordingVideo: Boolean = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_live_view)
+        configureObservers()
     }
 
-    @SuppressLint("SourceLockedOrientationActivity")
     override fun onResume() {
         super.onResume()
         setUrlLive()
         startLiveVideoView()
-        setButtons()
-        observeResult()
+        configureListeners()
     }
 
-    private fun setButtons() {
-        buttonSnapshot.setOnClickListener { takePhoto() }
-        toggleFullScreenLiveView.setOnClickListener {
-            requestedOrientation = if (resources.configuration.orientation == ActivityInfo.SCREEN_ORIENTATION_PORTRAIT) {
-                ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
-            } else{
-                ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+    private fun configureListeners() {
+        toggleFullScreenLiveView.setOnClickListenerCheckConnection {
+            changeOrientationLive()
+        }
+        buttonSnapshot.setOnClickListenerCheckConnection {
+            changeStatusSwitch(true)
+            takePhoto()
+        }
+        buttonStreaming.setOnClickListenerCheckConnection {
+            changeStatusSwitch(true)
+            manageRecordingVideo()
+        }
+        buttonSwitchLiveView.setOnCheckedChangeListenerCheckConnection { _, isChecked ->
+            changeStatusSwitch(isChecked)
+        }
+    }
+
+    private fun changeStatusSwitch(isChecked: Boolean) {
+        if (isRecordingVideo) return
+        changeVisibilityView(isChecked)
+        buttonSwitchLiveView.isChecked = isChecked
+        toggleFullScreenLiveView.isClickable = isChecked
+        if (isChecked) {
+            buttonSwitchLiveView.setBackgroundResource(R.drawable.ic_switch_on)
+            return
+        }
+
+        buttonSwitchLiveView.setBackgroundResource(R.drawable.ic_switch_off)
+    }
+
+    private fun changeVisibilityView(isVisible: Boolean) {
+        if (isVisible) {
+            liveStreamingView.setBackgroundResource(R.color.transparent)
+            return
+        }
+
+        liveStreamingView.setBackgroundResource(R.color.black)
+    }
+
+    private fun configureObservers() {
+        liveActivityViewModel.stopRecordVideo.observe(this, Observer {
+            manageResultInRecordingVideo(it)
+        })
+
+        liveActivityViewModel.startRecordVideo.observe(this, Observer {
+            manageResultInRecordingVideo(it)
+        })
+
+        liveActivityViewModel.resultTakePhotoLiveData.observe(this, Observer {
+            manageResultTakePhoto(it)
+        })
+    }
+
+    private fun manageResultTakePhoto(result: Result<Unit>) {
+        if (result is Result.Success) {
+            liveActivityViewModel.playSoundTakePhoto()
+            this.showToast(getString(R.string.live_view_take_photo_success), Toast.LENGTH_LONG)
+        } else {
+            this.showToast(getString(R.string.live_view_take_photo_failed), Toast.LENGTH_LONG)
+        }
+    }
+
+    private fun manageRecordingVideo() {
+        if (isRecordingVideo) {
+            liveActivityViewModel.stopRecordVideo()
+            return
+        }
+
+        liveActivityViewModel.startRecordVideo()
+    }
+
+    private fun manageResultInRecordingVideo(result: Result<Unit>) {
+        when (result) {
+            is Result.Success -> {
+                changeImageDependsRecordingVideo()
+            }
+            is Result.Error -> {
+                Toast.makeText(this, result.exception.message, Toast.LENGTH_LONG).show()
             }
         }
+    }
+
+    private fun changeImageDependsRecordingVideo() {
+        isRecordingVideo = !isRecordingVideo
+        if (isRecordingVideo) {
+            buttonStreaming.setBackgroundResource(R.drawable.ic_record_active)
+            return
+        }
+
+        buttonStreaming.setBackgroundResource(R.drawable.ic_record)
+    }
+
+    private fun changeOrientationLive() {
+        requestedOrientation =
+            if (resources.configuration.orientation == SCREEN_ORIENTATION_PORTRAIT) {
+                SCREEN_ORIENTATION_LANDSCAPE
+            } else {
+                SCREEN_ORIENTATION_PORTRAIT
+            }
     }
 
     override fun onStop() {
@@ -58,17 +151,5 @@ class LiveActivity : BaseActivity() {
 
     private fun takePhoto() {
         liveActivityViewModel.takePhoto()
-    }
-
-    private fun observeResult() {
-        liveActivityViewModel.resultTakePhotoLiveData.observe(this, Observer {
-            if (it is Result.Success) {
-                liveActivityViewModel.playSoundTakePhoto()
-                this.showToast(getString(R.string.live_view_take_photo_success), Toast.LENGTH_LONG)
-            }
-            else {
-                this.showToast(getString(R.string.live_view_take_photo_failed), Toast.LENGTH_LONG)
-            }
-        })
     }
 }

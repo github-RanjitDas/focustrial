@@ -2,21 +2,24 @@
 <resources>
     <string name="background">background</string>
     <string name="focus_logo_background">Focus logo background</string>
-    <string name="waiting_for_camera">WAITING FOR \n CAMERA</string>
-    <string name="go_to_validate_ssid">Go to validate ssid</string>
-    <string name="instructions_to_link_camera">INSTRUCTIONS TO LINK CAMERA</string>
-    <string name="connection_status">CONNECTION STATUS</string>
-    <string name="exit">EXIT</string>
-    <string name="connecting_to_camera">CONNECTING \n TO CAMERA</string>
-    <string name="circle_progress_connection_camera">Circle progress connection camera</string>
-    <string name="welcome_officer">WELCOME OFFICER</string>
-    <string name="_57">57</string>
-    <string name="please_enable_permission">Please enable permission from settings</string>
-    <string name="please_enable_permission_location">Required location permission for pairing the camera</string>
     <string name="OK">OK</string>
     <string name="cancel">Cancel</string>
     <string name="the_camera_was_disconnected">Camera disconnected</string>
     <string name="the_camera_was_disconnected_description">BWC disconnected, please close the app and connect again</string>
+
+    <!-- Login -->
+    <string name="_57">57</string>
+    <string name="please_enable_permission">Please enable permission from settings</string>
+    <string name="please_enable_permission_location">Required location permission for pairing the camera</string>
+    <string name="waiting_for_camera">WAITING FOR \n CAMERA</string>
+    <string name="go_to_validate_ssid">Go to validate ssid</string>
+    <string name="instructions_to_link_camera">INSTRUCTIONS TO LINK CAMERA</string>
+    <string name="connecting_to_camera">CONNECTING \n TO CAMERA</string>
+    <string name="circle_progress_connection_camera">Circle progress connection camera</string>
+    <string name="welcome_officer">WELCOME OFFICER</string>
+    <string name="connection_status">CONNECTION STATUS</string>
+    <string name="exit">EXIT</string>
+    <string name="enter_password">ENTER PASSWORD</string>
 
     <!-- Live view -->
     <string name="image_description_full_screen_size">Full Screen size</string>

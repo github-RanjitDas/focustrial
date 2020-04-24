@@ -41,17 +41,23 @@ class WifiConnection(
             if (it.SSID == ssid) network = it
         }
 
-        val networkResult = network ?: return
+        if (network == null) {
+            isConnectedSuccess.invoke(false)
+            return
+        }
+
+
         val specifier = WifiNetworkSpecifier.Builder()
-            .setSsid(networkResult.SSID)
+            .setSsid(network!!.SSID)
             .setWpa2Passphrase(getWifiSecret())
-            .setBssid(MacAddress.fromString(networkResult.BSSID))
+            .setBssid(MacAddress.fromString(network!!.BSSID))
             .build()
 
         val request = NetworkRequest.Builder()
             .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
             .setNetworkSpecifier(specifier)
             .build()
+
         val networkCallback = object : ConnectivityManager.NetworkCallback() {
 
             override fun onAvailable(network: Network?) {
