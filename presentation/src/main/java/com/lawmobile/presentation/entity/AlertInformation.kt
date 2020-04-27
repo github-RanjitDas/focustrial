@@ -5,7 +5,6 @@ import android.content.DialogInterface
 class AlertInformation(
     val title: Int,
     val message: Int,
-    val onClickPositiveButton: (DialogInterface) -> Unit,
-    val isNegativeButtonEnable: Boolean = true,
+    val onClickPositiveButton: ((DialogInterface) -> Unit)? = null,
     val onClickNegativeButton: ((DialogInterface) -> Unit)? = null
 )

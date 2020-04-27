@@ -65,7 +65,6 @@ class PairingPhoneWithCameraFragment : BaseFragment() {
         val alertInformation = AlertInformation(R.string.please_enable_permission,
             R.string.please_enable_permission_location,
             { startIntentToGivePermission() },
-            true,
             { dialogInterface -> dialogInterface.cancel() })
         activity?.createAlertInformation(alertInformation)
     }

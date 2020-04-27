@@ -40,15 +40,12 @@ class PairingPhoneWithCameraRemoteDataSourceImplTest {
             pairingPhoneWithCameraRemoteDataSourceImpl.loadPairingCamera("", "")
         }
 
-        coVerify { cameraDataSource.loadPairingCamera("", "") }
-    }
-
-    @Test
-    fun testToCheckPairingLiveData(){
         Assert.assertEquals(
             pairingPhoneWithCameraRemoteDataSourceImpl.progressPairingCamera,
             progressCamera
         )
+
+        coVerify { cameraDataSource.loadPairingCamera("", "") }
     }
 
     @Test

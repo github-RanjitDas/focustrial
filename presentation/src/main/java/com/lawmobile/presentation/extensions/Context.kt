@@ -9,20 +9,23 @@ import com.lawmobile.presentation.entity.AlertInformation
 fun Context.createAlertInformation(alertInformation: AlertInformation) {
     val builder = AlertDialog.Builder(this)
     builder.apply {
+        setCancelable(false)
         setTitle(getString(alertInformation.title))
         setMessage(getString(alertInformation.message))
-        setPositiveButton(R.string.OK) { dialog, _ ->
-            alertInformation.onClickPositiveButton.invoke(dialog)
+        if (alertInformation.onClickPositiveButton != null) {
+            setPositiveButton(R.string.OK) { dialog, _ ->
+                alertInformation.onClickPositiveButton.invoke(dialog)
+            }
         }
-        if (alertInformation.isNegativeButtonEnable) {
+        if (alertInformation.onClickNegativeButton != null) {
             setNegativeButton(R.string.cancel) { dialog, _ ->
-                alertInformation.onClickNegativeButton?.invoke(dialog)
+                alertInformation.onClickNegativeButton.invoke(dialog)
             }
         }
         show()
     }
 }
 
-fun Context.showToast(message:String, duration: Int){
-    Toast.makeText(this,message, duration).show()
+fun Context.showToast(message: String, duration: Int) {
+    Toast.makeText(this, message, duration).show()
 }
