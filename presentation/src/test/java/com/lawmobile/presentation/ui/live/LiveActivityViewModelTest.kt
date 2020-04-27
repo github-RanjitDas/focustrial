@@ -10,6 +10,7 @@ import io.mockk.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.setMain
+import org.junit.Assert
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
@@ -70,24 +71,38 @@ class LiveActivityViewModelTest {
 
     @Test
     fun testStartRecordVideoFlow() {
-        coEvery { liveStreamingUseCase.startRecordVideo() } returns Result.Success(Unit)
+        val result = Result.Success(Unit)
+        coEvery { liveStreamingUseCase.startRecordVideo() } returns result
         liveActivityViewModel.startRecordVideo()
+        Assert.assertEquals(liveActivityViewModel.startRecordVideo.value, result)
         coVerify { liveStreamingUseCase.startRecordVideo() }
     }
 
     @Test
     fun testStopRecordVideoFlow() {
-        coEvery { liveStreamingUseCase.stopRecordVideo() } returns Result.Success(Unit)
+        val result = Result.Success(Unit)
+        coEvery { liveStreamingUseCase.stopRecordVideo() } returns result
         liveActivityViewModel.stopRecordVideo()
+        Assert.assertEquals(liveActivityViewModel.stopRecordVideo.value, result)
         coVerify { liveStreamingUseCase.stopRecordVideo() }
     }
 
 
     @Test
     fun testTakePhotoFlow() {
-        coEvery { liveStreamingUseCase.takePhoto() } returns Result.Success(Unit)
+        val result = Result.Success(Unit)
+        coEvery { liveStreamingUseCase.takePhoto() } returns result
         liveActivityViewModel.takePhoto()
+        Assert.assertEquals(liveActivityViewModel.resultTakePhotoLiveData.value, result)
         coVerify { liveStreamingUseCase.takePhoto() }
+
+    }
+
+    @Test
+    fun playSoundTakePhoto() {
+        every { mediaActionSound.play(any()) } just Runs
+        liveActivityViewModel.playSoundTakePhoto()
+        verify { mediaActionSound.play(MediaActionSound.SHUTTER_CLICK) }
     }
 
 }

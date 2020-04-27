@@ -20,9 +20,8 @@ fun View.setOnClickListenerCheckConnection(callback: (View) -> Unit) {
 fun View.createAlertErrorConnection() {
     val title = R.string.the_camera_was_disconnected
     val message = R.string.the_camera_was_disconnected_description
-    val alertInformation = AlertInformation(title, message, { dialogInterface ->
-        dialogInterface.dismiss()
-    }, false)
+    val alertInformation = AlertInformation(title, message, null, null)
+
     this.context.createAlertInformation(alertInformation)
 }
 
