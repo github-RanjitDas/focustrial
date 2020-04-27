@@ -18,6 +18,12 @@ class LiveActivityViewModel @Inject constructor(
     private val mediaActionSound: MediaActionSound
 ) : BaseViewModel() {
 
+    private val startRecordVideoMediator: MediatorLiveData<Result<Unit>> = MediatorLiveData()
+    val startRecordVideo: LiveData<Result<Unit>> get() = startRecordVideoMediator
+
+    private val stopRecordVideoMediator: MediatorLiveData<Result<Unit>> = MediatorLiveData()
+    val stopRecordVideo: LiveData<Result<Unit>> get() = stopRecordVideoMediator
+
     private val resultTakePhotoMediatorLiveData = MediatorLiveData<Result<Unit>>()
     val resultTakePhotoLiveData: LiveData<Result<Unit>> get() = resultTakePhotoMediatorLiveData
 
@@ -44,4 +50,18 @@ class LiveActivityViewModel @Inject constructor(
     fun playSoundTakePhoto() {
         mediaActionSound.play(MediaActionSound.SHUTTER_CLICK)
     }
+
+    fun startRecordVideo() {
+        viewModelScope.launch {
+            startRecordVideoMediator.postValue(liveStreamingUseCase.startRecordVideo())
+        }
+    }
+
+    fun stopRecordVideo() {
+        viewModelScope.launch {
+            stopRecordVideoMediator.postValue(liveStreamingUseCase.stopRecordVideo())
+        }
+    }
+
+
 }

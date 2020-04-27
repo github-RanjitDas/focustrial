@@ -4,9 +4,7 @@ package com.lawmobile.presentation.utils
 
 import android.net.ConnectivityManager
 import android.net.DhcpInfo
-import android.net.wifi.WifiConfiguration
-import android.net.wifi.WifiInfo
-import android.net.wifi.WifiManager
+import android.net.wifi.*
 import android.os.Build
 import android.util.Base64
 import com.lawmobile.presentation.utils.WifiConnection.Companion.SECRET_CAMERA
@@ -26,6 +24,7 @@ class WifiConnectionTest {
         const val IP_NUMBER = 19572928
         const val DEFAULT_SSID = "X57014694"
         const val SDK_P = 28
+        const val SDK_Q = 29
     }
 
     private val dhcpInfoMock: DhcpInfo = mockk()
@@ -33,6 +32,10 @@ class WifiConnectionTest {
     private val connectionInfoMock: WifiInfo = mockk {
         every { ipAddress } returns IP_NUMBER
         every { ssid } returns DEFAULT_SSID
+    }
+
+    private val scanResult: ScanResult = mockk {
+        SSID = DEFAULT_SSID
     }
 
     private val wifiManager: WifiManager = mockk {
@@ -43,6 +46,7 @@ class WifiConnectionTest {
         every { disconnect() } returns true
         every { addNetwork(any()) } returns 1
         every { enableNetwork(any(), any()) } returns true
+        every { scanResults } returns listOf(scanResult)
     }
 
     private val wifiConfiguration: WifiConfiguration = mockk {
@@ -69,11 +73,21 @@ class WifiConnectionTest {
         setFinalStatic(Build.VERSION::class.java.getField("SDK_INT"), SDK_P)
         every { wifiManager.isWifiEnabled } returns true
         every { wifiManager.configuredNetworks } returns emptyList()
-
         wifiConnection.connectionWithHotspotCamera(DEFAULT_SSID) {
             Assert.assertTrue(it)
         }
     }
+
+    @Test
+    fun testConnectionWithHotspotCameraAndroidQFailed() {
+        mockkStatic(Build.VERSION::class)
+        setFinalStatic(Build.VERSION::class.java.getField("SDK_INT"), SDK_Q)
+        wifiConnection.connectionWithHotspotCamera("") {
+            Assert.assertFalse(it)
+        }
+    }
+
+
 
     @Throws(Exception::class)
     fun setFinalStatic(field: Field, newValue: Any?) {

@@ -10,6 +10,14 @@ class LiveStreamingRepositoryImpl(private val liveRemoteDataSource: LiveStreamin
         return liveRemoteDataSource.getUrlForLiveStream()
     }
 
+    override suspend fun startRecordVideo(): Result<Unit> {
+        return liveRemoteDataSource.startRecordVideo()
+    }
+
+    override suspend fun stopRecordVideo(): Result<Unit> {
+        return liveRemoteDataSource.stopRecordVideo()
+    }
+
     override suspend fun takePhoto(): Result<Unit> {
         return liveRemoteDataSource.takePhoto()
     }
