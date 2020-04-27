@@ -62,11 +62,12 @@
         app:layout_constraintTop_toBottomOf="@+id/toggleFullScreenLiveView" />
 
     <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintGuide_percent="0.6"
+        app:layout_constraintGuide_percent="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -75,7 +76,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="24dp"
         android:width="@dimen/live_view_switch_button_width"
         android:height="@dimen/live_view_switch_button_height"
         android:background="@drawable/ic_switch_on"
@@ -87,8 +87,7 @@
         app:layout_constraintBottom_toTopOf="@+id/saveActionButtons"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/buttonStreaming"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintTop_toTopOf="@+id/guideline" />
 
     <ImageView
         android:layout_width="@dimen/live_view_title_toggle_live_view_width"
