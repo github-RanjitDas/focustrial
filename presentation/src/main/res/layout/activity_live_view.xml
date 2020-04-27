@@ -67,7 +67,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintGuide_percent="0.5"
+        app:layout_constraintGuide_percent="0.65"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -76,26 +76,24 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:width="@dimen/live_view_switch_button_width"
-        android:height="@dimen/live_view_switch_button_height"
         android:background="@drawable/ic_switch_on"
         android:checked="true"
-        android:textOff=""
-        android:textOn=""
         android:thumb="@android:color/transparent"
         android:track="@android:color/transparent"
         app:layout_constraintBottom_toTopOf="@+id/saveActionButtons"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guideline" />
+        app:layout_constraintTop_toTopOf="@+id/guideline"
+        app:layout_constraintVertical_bias="0.0" />
 
-    <ImageView
-        android:layout_width="@dimen/live_view_title_toggle_live_view_width"
-        android:layout_height="@dimen/live_view_title_toggle_live_view_height"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="@dimen/live_view_text_toggle_live_view_marginTop"
-        android:background="@drawable/livetxt"
-        android:contentDescription="@string/image_description_live_view_title"
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textSize="@dimen/live_view_label_text_size"
+        android:padding="@dimen/live_view_label_padding"
+        android:text="@string/live_view_label"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/buttonSwitchLiveView" />
