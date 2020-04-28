@@ -16,7 +16,9 @@ import androidx.annotation.RequiresApi
 class WifiConnection(
     private val wifiManager: WifiManager,
     private val wifiConfiguration: WifiConfiguration,
-    private val connectivityManager: ConnectivityManager
+    private val connectivityManager: ConnectivityManager,
+    private val wifiNetworkSpecifier: WifiNetworkSpecifier.Builder?,
+    private val networkRequest: NetworkRequest.Builder
 ) {
 
     fun connectionWithHotspotCamera(
@@ -41,19 +43,18 @@ class WifiConnection(
             if (it.SSID == ssid) network = it
         }
 
-        if (network == null) {
+        if (network == null || wifiNetworkSpecifier == null) {
             isConnectedSuccess.invoke(false)
             return
         }
 
-
-        val specifier = WifiNetworkSpecifier.Builder()
+        val specifier = wifiNetworkSpecifier
             .setSsid(network!!.SSID)
             .setWpa2Passphrase(getWifiSecret())
             .setBssid(MacAddress.fromString(network!!.BSSID))
             .build()
 
-        val request = NetworkRequest.Builder()
+        val request = networkRequest
             .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
             .setNetworkSpecifier(specifier)
             .build()
@@ -69,6 +70,7 @@ class WifiConnection(
                 isConnectedSuccess.invoke(false)
             }
         }
+
         connectivityManager.requestNetwork(request, networkCallback)
     }
 
