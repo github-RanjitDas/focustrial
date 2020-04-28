@@ -6,8 +6,11 @@ import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
 import android.net.ConnectivityManager
+import android.net.NetworkRequest
 import android.net.wifi.WifiConfiguration
 import android.net.wifi.WifiManager
+import android.net.wifi.WifiNetworkSpecifier
+import android.os.Build
 import com.google.gson.Gson
 import com.lawmobile.presentation.utils.CameraHelper
 import com.lawmobile.presentation.utils.VLCMediaPlayer
@@ -75,7 +78,23 @@ class AppModule {
             wifiConfiguration: WifiConfiguration,
             connectivityManager: ConnectivityManager
         ): WifiConnection =
-            WifiConnection(wifiManager, wifiConfiguration, connectivityManager)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                WifiConnection(
+                    wifiManager,
+                    wifiConfiguration,
+                    connectivityManager,
+                    WifiNetworkSpecifier.Builder(),
+                    NetworkRequest.Builder()
+                )
+            } else {
+                WifiConnection(
+                    wifiManager,
+                    wifiConfiguration,
+                    connectivityManager,
+                    null,
+                    NetworkRequest.Builder()
+                )
+            }
 
         @JvmStatic
         @Provides
@@ -111,7 +130,6 @@ class AppModule {
         @Singleton
         fun provideVLCMediaPlayer(libVLC: LibVLC, mediaPlayer: MediaPlayer): VLCMediaPlayer =
             VLCMediaPlayer(libVLC, mediaPlayer)
-
 
     }
 }

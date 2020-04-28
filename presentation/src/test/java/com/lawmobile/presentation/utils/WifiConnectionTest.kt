@@ -4,6 +4,7 @@ package com.lawmobile.presentation.utils
 
 import android.net.ConnectivityManager
 import android.net.DhcpInfo
+import android.net.NetworkRequest
 import android.net.wifi.*
 import android.os.Build
 import android.util.Base64
@@ -56,9 +57,22 @@ class WifiConnectionTest {
         networkId = 1
     }
 
-    private val connectivityManager: ConnectivityManager = mockk()
+    private val connectivityManager: ConnectivityManager = mockk(relaxed = true)
 
-    private val wifiConnection = WifiConnection(wifiManager, wifiConfiguration, connectivityManager)
+    private val wifiNetworkSpecifier = mockk<WifiNetworkSpecifier.Builder>{
+        every { setSsid(DEFAULT_SSID) } returns mockk(relaxed = true)
+        every { setWpa2Passphrase(any()) } returns mockk(relaxed = true)
+        every { setBssid(any()) } returns mockk(relaxed = true)
+        every { build() } returns mockk(relaxed = true)
+    }
+
+    private val networkRequest = mockk<NetworkRequest.Builder>{
+        every { addTransportType(any()) } returns mockk(relaxed = true)
+        every { setNetworkSpecifier(wifiNetworkSpecifier.build()) } returns mockk(relaxed = true)
+        every { build() } returns mockk(relaxed = true)
+    }
+
+    private val wifiConnection = WifiConnection(wifiManager, wifiConfiguration, connectivityManager, wifiNetworkSpecifier, networkRequest)
 
     @BeforeEach
     fun setUp() {
@@ -87,7 +101,14 @@ class WifiConnectionTest {
         }
     }
 
-
+    @Test
+    fun testConnectionWithHotspotCameraAndroidQSuccess() {
+        mockkStatic(Build.VERSION::class)
+        setFinalStatic(Build.VERSION::class.java.getField("SDK_INT"), SDK_Q)
+        wifiConnection.connectionWithHotspotCamera(DEFAULT_SSID) {
+            Assert.assertTrue(it)
+        }
+    }
 
     @Throws(Exception::class)
     fun setFinalStatic(field: Field, newValue: Any?) {
