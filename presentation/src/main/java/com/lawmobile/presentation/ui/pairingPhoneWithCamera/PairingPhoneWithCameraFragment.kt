@@ -8,15 +8,16 @@ import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.lifecycle.Observer
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.entity.AlertInformation
 import com.lawmobile.presentation.extensions.createAlertInformation
 import com.lawmobile.presentation.extensions.isPermissionGranted
+import com.lawmobile.presentation.extensions.showToast
 import com.lawmobile.presentation.extensions.text
 import com.lawmobile.presentation.ui.base.BaseActivity
 import com.lawmobile.presentation.ui.base.BaseFragment
-import com.lawmobile.presentation.ui.login.LoginActivity
 import com.safefleet.mobile.commons.helpers.Result
 import kotlinx.android.synthetic.main.fragment_pairing_phone_with_camera.*
 import javax.inject.Inject
@@ -32,11 +33,12 @@ class PairingPhoneWithCameraFragment : BaseFragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? = inflater.inflate(R.layout.fragment_pairing_phone_with_camera, container, false)
+    ): View? {
+        return inflater.inflate(R.layout.fragment_pairing_phone_with_camera, container, false)
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        startWithProgressPairing(false)
         checkIfExistSerialNumberSavedToConnectionToCamera()
         configureListeners()
         setSelectionEditTextOfSerialNumber()
@@ -83,24 +85,42 @@ class PairingPhoneWithCameraFragment : BaseFragment() {
     }
 
     private fun starConnectionToHotspotCamera() {
+        startWithProgressPairing(true)
         val serialNumberCamera = textInputValidateSSID.text()
-        if (pairingPhoneWithCameraViewModel.isValidNumberCameraBWC(serialNumberCamera)) {
-            verifyConnectionWithTheCamera()
-            return
-        }
-
-        createConnectionWithWifi(serialNumberCamera)
+        Thread {
+            if (pairingPhoneWithCameraViewModel.isValidNumberCameraBWC(serialNumberCamera)) {
+                verifyConnectionWithTheCamera()
+            } else {
+                createConnectionWithWifi(serialNumberCamera)
+            }
+        }.start()
     }
 
     private fun createConnectionWithWifi(serialNumberCamera: String) {
         createConnectionWithCamera { isConnected ->
+            waitSecondsWhileTheWifiIsConnected()
             val isPossiblePairingCamera =
                 pairingPhoneWithCameraViewModel.isValidNumberCameraBWC(serialNumberCamera) && isConnected
             if (isPossiblePairingCamera) {
                 verifyConnectionWithTheCamera()
-
-            } else startWithProgressPairing(false)
+            } else {
+                showErrorFindNetworkOfCamera()
+            }
         }
+    }
+
+    private fun showErrorFindNetworkOfCamera(){
+        activity?.runOnUiThread {
+            activity?.showToast(
+                getString(R.string.the_application_did_not_find_camera),
+                Toast.LENGTH_LONG
+            )
+            startWithProgressPairing(false)
+        }
+    }
+
+    private fun waitSecondsWhileTheWifiIsConnected() {
+        Thread.sleep(3000)
     }
 
     private fun verifyConnectionWithTheCamera() {
@@ -123,16 +143,10 @@ class PairingPhoneWithCameraFragment : BaseFragment() {
     private fun manageResponseProgressInConnectionCamera(result: Result<Int>) {
         when (result) {
             is Result.Success -> setProgressInViewOfProgress(result.data)
-            is Result.Error -> startLoginActivityAgain()
+            is Result.Error -> startWithProgressPairing(false)
         }
     }
 
-    private fun startLoginActivityAgain() {
-        val intent = Intent(context, LoginActivity::class.java)
-        context?.startActivity(intent)
-        activity?.finish()
-        Runtime.getRuntime().exit(0)
-    }
 
     private fun createConnectionWithCamera(isConnectedSuccess: (connected: Boolean) -> Unit) {
         val serialNumberCamera = textInputValidateSSID.text()
@@ -154,14 +168,15 @@ class PairingPhoneWithCameraFragment : BaseFragment() {
     }
 
     private fun startWithProgressPairing(pairingVisible: Boolean) {
-        if (pairingVisible) {
-            constrainProgressValidateSSID.visibility = View.VISIBLE
-            constrainValidateSSID.visibility = View.GONE
-            return
+        activity?.runOnUiThread {
+            if (pairingVisible) {
+                constrainProgressValidateSSID.visibility = View.VISIBLE
+                constrainValidateSSID.visibility = View.GONE
+            } else {
+                constrainProgressValidateSSID.visibility = View.GONE
+                constrainValidateSSID.visibility = View.VISIBLE
+            }
         }
-
-        constrainProgressValidateSSID.visibility = View.GONE
-        constrainValidateSSID.visibility = View.VISIBLE
     }
 
     companion object {

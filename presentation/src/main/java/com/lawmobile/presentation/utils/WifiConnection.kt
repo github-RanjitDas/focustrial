@@ -78,7 +78,7 @@ class WifiConnection(
         ssid: String,
         isConnectedSuccess: (connected: Boolean) -> Unit
     ) {
-        wifiManager.disconnect()
+
         enableWifi()
         var networkId = getIfExistNetworkId(ssid)
         if (networkId == null) {
@@ -87,9 +87,15 @@ class WifiConnection(
             networkId = wifiConfiguration.networkId
         }
 
+        wifiManager.disconnect()
         wifiManager.enableNetwork(networkId, true)
-        val isReconnectWifi = wifiManager.reconnect()
         waitSecondsWhileTheWifiIsConnected()
+        if (!existNetwork(ssid)) {
+            isConnectedSuccess.invoke(false)
+            return
+        }
+
+        val isReconnectWifi = wifiManager.reconnect()
         isConnectedSuccess.invoke(isReconnectWifi)
     }
 
@@ -99,6 +105,15 @@ class WifiConnection(
 
     private fun enableWifi() {
         if (!wifiManager.isWifiEnabled) wifiManager.isWifiEnabled = true
+    }
+
+    private fun existNetwork(ssid: String): Boolean {
+        var scanResult: ScanResult? = null
+        wifiManager.scanResults.forEach {
+            if (it.SSID == ssid) scanResult = it
+        }
+
+        return scanResult != null
     }
 
     private fun getIfExistNetworkId(ssid: String): Int? {

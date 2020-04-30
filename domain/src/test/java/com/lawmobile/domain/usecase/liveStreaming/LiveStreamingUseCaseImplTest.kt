@@ -26,6 +26,20 @@ class LiveStreamingUseCaseImplTest {
     }
 
     @Test
+    fun testGetUrlForLiveStreamVerifyValueInURL() {
+        every { liveStreamingRepository.getUrlForLiveStream() } returns "xyz"
+        val url = liveStreamingUseCaseImpl.getUrlForLiveStream()
+        Assert.assertEquals(url, "xyz")
+    }
+
+    @Test
+    fun testGetUrlForLiveStreamVerifyValueEmpty() {
+        every { liveStreamingRepository.getUrlForLiveStream() } returns ""
+        val url = liveStreamingUseCaseImpl.getUrlForLiveStream()
+        Assert.assertEquals(url, "")
+    }
+
+    @Test
     fun testStartRecordVideoFlow() {
         coEvery { liveStreamingRepository.startRecordVideo() } returns Result.Success(Unit)
         runBlocking {
