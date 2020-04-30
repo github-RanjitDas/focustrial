@@ -4,8 +4,10 @@ import android.content.pm.ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
 import android.content.pm.ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
 import android.os.Bundle
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.Observer
 import com.lawmobile.presentation.R
+import com.lawmobile.presentation.extensions.createAlertProgress
 import com.lawmobile.presentation.extensions.setOnCheckedChangeListenerCheckConnection
 import com.lawmobile.presentation.extensions.setOnClickListenerCheckConnection
 import com.lawmobile.presentation.extensions.showToast
@@ -20,11 +22,15 @@ class LiveActivity : BaseActivity() {
     lateinit var liveActivityViewModel: LiveActivityViewModel
 
     private var isRecordingVideo: Boolean = false
+    private lateinit var dialogProgressSnapShot: AlertDialog
+    private lateinit var dialogProgressVideo: AlertDialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_live_view)
         configureObservers()
+        dialogProgressSnapShot = createAlertProgress(R.string.taking_snapshot)
+        dialogProgressVideo = createAlertProgress()
     }
 
     override fun onResume() {
@@ -39,10 +45,12 @@ class LiveActivity : BaseActivity() {
             changeOrientationLive()
         }
         buttonSnapshot.setOnClickListenerCheckConnection {
+            dialogProgressSnapShot.show()
             changeStatusSwitch(true)
             takePhoto()
         }
         buttonStreaming.setOnClickListenerCheckConnection {
+            dialogProgressVideo.show()
             changeStatusSwitch(true)
             manageRecordingVideo()
         }
@@ -75,14 +83,17 @@ class LiveActivity : BaseActivity() {
 
     private fun configureObservers() {
         liveActivityViewModel.stopRecordVideo.observe(this, Observer {
+            dialogProgressVideo.dismiss()
             manageResultInRecordingVideo(it)
         })
 
         liveActivityViewModel.startRecordVideo.observe(this, Observer {
+            dialogProgressVideo.dismiss()
             manageResultInRecordingVideo(it)
         })
 
         liveActivityViewModel.resultTakePhotoLiveData.observe(this, Observer {
+            dialogProgressSnapShot.dismiss()
             manageResultTakePhoto(it)
         })
     }

@@ -4,8 +4,13 @@
     <string name="focus_logo_background">Focus logo background</string>
     <string name="OK">OK</string>
     <string name="cancel">Cancel</string>
+
+    <!--Alerts -->
     <string name="the_camera_was_disconnected">Camera disconnected</string>
     <string name="the_camera_was_disconnected_description">BWC disconnected, please close the app and connect again</string>
+    <string name="loading_wait">Loading…</string>
+    <string name="taking_snapshot">Taking snapshot…</string>
+    <string name="the_application_did_not_find_camera">The application did not find the camera</string>
 
     <!-- Login -->
     <string name="_57">57</string>
@@ -30,6 +35,5 @@
     <!-- Snapshots -->
     <string name="live_view_take_photo_success">Snapshot Taken</string>
     <string name="live_view_take_photo_failed">Failed snapshot</string>
-
 
 </resources>

@@ -27,8 +27,15 @@ class LiveStreamingRepositoryImplTest {
     @Test
     fun testGetUrlForLiveStreamVerifyValue() {
         every { liveStreamingRemoteDataSource.getUrlForLiveStream() } returns "xyz"
-        val url = liveStreamingRemoteDataSource.getUrlForLiveStream()
+        val url = liveStreamingRepositoryImpl.getUrlForLiveStream()
         Assert.assertEquals("xyz", url)
+    }
+
+    @Test
+    fun testGetUrlForLiveStreamVerifyValueEmpty() {
+        every { liveStreamingRemoteDataSource.getUrlForLiveStream() } returns ""
+        val url = liveStreamingRemoteDataSource.getUrlForLiveStream()
+        Assert.assertEquals(url, "")
     }
 
     @Test
