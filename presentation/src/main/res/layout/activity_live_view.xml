@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -37,29 +38,51 @@
         app:layout_constraintBottom_toBottomOf="@+id/liveStreamingView"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <Button
+    <ImageButton
         android:id="@+id/buttonSnapshot"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/live_view_main_button_margin_shorter"
         android:layout_marginTop="@dimen/live_view_main_button_margin_top"
         android:layout_marginEnd="@dimen/live_view_main_button_margin_shorter"
+        android:contentDescription="@string/button_snapshot"
         android:background="@drawable/ic_snap_selector"
         app:layout_constraintEnd_toStartOf="@+id/guideline2"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/liveStreamingView" />
 
-    <Button
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/snap"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@id/buttonSnapshot"
+        app:layout_constraintStart_toStartOf="@id/buttonSnapshot"
+        app:layout_constraintEnd_toEndOf="@id/buttonSnapshot"/>
+
+    <ImageButton
         android:id="@+id/buttonStreaming"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/live_view_main_button_margin_shorter"
         android:layout_marginTop="@dimen/live_view_main_button_margin_top"
         android:layout_marginEnd="@dimen/live_view_main_button_margin_shorter"
-        android:background="@drawable/ic_record"
+        android:contentDescription="@string/button_streaming"
+        android:background="@drawable/ic_record_selector"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/guideline2"
         app:layout_constraintTop_toBottomOf="@+id/toggleFullScreenLiveView" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/record"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@id/buttonStreaming"
+        app:layout_constraintStart_toStartOf="@id/buttonStreaming"
+        app:layout_constraintEnd_toEndOf="@id/buttonStreaming"/>
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline"
@@ -92,6 +115,7 @@
         android:textAlignment="center"
         android:textColor="@color/white"
         android:textSize="@dimen/live_view_label_text_size"
+        android:textStyle="bold"
         android:padding="@dimen/live_view_label_padding"
         android:text="@string/live_view_label"
         app:layout_constraintEnd_toEndOf="parent"
@@ -102,7 +126,7 @@
         android:id="@+id/saveActionButtons"
         android:layout_width="match_parent"
         android:layout_height="@dimen/live_view_bottom_white_image_height"
-        android:background="@drawable/nav_bg"
+        android:background="@drawable/ic_nav_bg"
         android:contentDescription="@string/image_description_bottom_image"
         android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -110,20 +134,51 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <Button
+    <ImageButton
+        android:id="@+id/buttonSnapshotList"
         android:layout_width="@dimen/live_view_secondary_button_width"
         android:layout_height="@dimen/live_view_secondary_button_height"
-        android:background="@drawable/snapshot"
+        android:background="@drawable/ic_snapshot_list"
+        android:contentDescription="@string/snapshot_list"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/button_videos" />
+        app:layout_constraintEnd_toStartOf="@+id/buttonRecordList" />
 
-    <Button
-        android:id="@+id/button_videos"
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:textColor="@color/colorGrey"
+        android:textSize="@dimen/live_view_text_size"
+        android:textStyle="bold"
+        android:paddingEnd="@dimen/live_view_text_label_padding_right"
+        android:text="@string/snapshots"
+        app:layout_constraintEnd_toEndOf="@id/buttonSnapshotList"
+        app:layout_constraintStart_toStartOf="@id/buttonSnapshotList"
+        app:layout_constraintTop_toBottomOf="@id/guideline3"
+        tools:ignore="RtlSymmetry" />
+
+    <ImageButton
+        android:id="@+id/buttonRecordList"
         android:layout_width="@dimen/live_view_secondary_button_width"
         android:layout_height="@dimen/live_view_secondary_button_height"
-        android:background="@drawable/videos"
+        android:background="@drawable/ic_record_list"
+        android:contentDescription="@string/record_list"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="@+id/guideline2" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:textColor="@color/colorGrey"
+        android:textSize="@dimen/live_view_text_size"
+        android:textStyle="bold"
+        android:paddingStart="@dimen/live_view_text_label_padding_left"
+        android:text="@string/videos"
+        app:layout_constraintEnd_toEndOf="@id/buttonRecordList"
+        app:layout_constraintStart_toStartOf="@id/buttonRecordList"
+        app:layout_constraintTop_toBottomOf="@id/guideline3"
+        tools:ignore="RtlSymmetry" />
 
     <ProgressBar
         android:id="@+id/progress_view"
@@ -149,6 +204,16 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/progress_view" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintGuide_percent="0.95"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline2"

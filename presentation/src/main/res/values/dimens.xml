@@ -46,6 +46,9 @@
     <dimen name="live_view_secondary_button_height">113dp</dimen>
     <dimen name="live_view_label_padding">5dp</dimen>
     <dimen name="live_view_label_text_size">15sp</dimen>
+    <dimen name="live_view_text_size">11sp</dimen>
+    <dimen name="live_view_text_label_padding_right">10dp</dimen>
+    <dimen name="live_view_text_label_padding_left">5dp</dimen>
     <dimen name="dialog_height_parent">120dp</dimen>
     <dimen name="dialog_margin_sides_progress">12dp</dimen>
 
