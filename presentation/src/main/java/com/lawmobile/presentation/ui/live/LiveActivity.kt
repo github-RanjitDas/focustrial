@@ -60,7 +60,6 @@ class LiveActivity : BaseActivity() {
     }
 
     private fun changeStatusSwitch(isChecked: Boolean) {
-        if (isRecordingVideo) return
         changeVisibilityView(isChecked)
         buttonSwitchLiveView.isChecked = isChecked
         toggleFullScreenLiveView.isClickable = isChecked
