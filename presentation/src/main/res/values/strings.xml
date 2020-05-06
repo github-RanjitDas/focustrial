@@ -44,4 +44,16 @@
     <string name="record_list">Record List</string>
     <string name="videos">VIDEOS</string>
 
+    <!-- List of Snapshots and videos from camera -->
+    <string name="file_list_failed_load_files">Failed to Load Files</string>
+    <string name="file_list_date_default">DATE</string>
+    <string name="file_list_duration_default">DURATION</string>
+    <string name="file_list_event_default">EVENT</string>
+    <string name="button_snapshot_list_switch">buttonSnapshotListSwitch</string>
+    <string name="button_video_list_switch">buttonVideoListSwitch</string>
+    <string name="white_background">White Background</string>
+    <string name="no_images_found">\"No images found\"</string>
+    <string name="no_videos_found">No videos found</string>
+    <string name="back">BACK</string>
+
 </resources>

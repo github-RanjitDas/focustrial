@@ -51,5 +51,12 @@
     <dimen name="live_view_text_label_padding_left">5dp</dimen>
     <dimen name="dialog_height_parent">120dp</dimen>
     <dimen name="dialog_margin_sides_progress">12dp</dimen>
+    <dimen name="file_list_text_size">17sp</dimen>
+    <dimen name="file_list_nav_buttons_margin">10dp</dimen>
+    <dimen name="file_list_title_top">5dp</dimen>
+    <dimen name="file_list_title_bottom">15dp</dimen>
+    <dimen name="file_list_checkbox_margin_start">10dp</dimen>
+    <dimen name="check_box_item_file_start">10dp</dimen>
+    <dimen name="item_file_bottom_margin">1dp</dimen>
 
 </resources>

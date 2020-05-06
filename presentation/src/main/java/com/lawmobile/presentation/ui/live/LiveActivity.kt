@@ -1,5 +1,6 @@
 package com.lawmobile.presentation.ui.live
 
+import android.content.Intent
 import android.content.pm.ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
 import android.content.pm.ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
 import android.os.Bundle
@@ -12,6 +13,10 @@ import com.lawmobile.presentation.extensions.setOnCheckedChangeListenerCheckConn
 import com.lawmobile.presentation.extensions.setOnClickListenerCheckConnection
 import com.lawmobile.presentation.extensions.showToast
 import com.lawmobile.presentation.ui.base.BaseActivity
+import com.lawmobile.presentation.ui.fileList.FileListActivity
+import com.lawmobile.presentation.utils.Constants.FILE_LIST_SELECTOR
+import com.lawmobile.presentation.utils.Constants.SNAPSHOT_LIST
+import com.lawmobile.presentation.utils.Constants.VIDEO_LIST
 import com.safefleet.mobile.commons.helpers.Result
 import kotlinx.android.synthetic.main.activity_live_view.*
 import javax.inject.Inject
@@ -57,6 +62,20 @@ class LiveActivity : BaseActivity() {
         buttonSwitchLiveView.setOnCheckedChangeListenerCheckConnection { _, isChecked ->
             changeStatusSwitch(isChecked)
         }
+
+        buttonSnapshotList.setOnClickListenerCheckConnection {
+            startFileListIntent(SNAPSHOT_LIST)
+        }
+
+        buttonVideoList.setOnClickListenerCheckConnection {
+            startFileListIntent(VIDEO_LIST)
+        }
+    }
+
+    private fun startFileListIntent(fileType: String) {
+        val fileListIntent = Intent(this, FileListActivity::class.java)
+        fileListIntent.putExtra(FILE_LIST_SELECTOR, fileType)
+        startActivity(fileListIntent)
     }
 
     private fun changeStatusSwitch(isChecked: Boolean) {
@@ -76,7 +95,6 @@ class LiveActivity : BaseActivity() {
             liveStreamingView.setBackgroundResource(R.color.transparent)
             return
         }
-
         liveStreamingView.setBackgroundResource(R.color.black)
     }
 

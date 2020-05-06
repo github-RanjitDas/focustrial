@@ -1,5 +1,7 @@
 package com.safefleet.lawmobile.di
 
+import com.lawmobile.presentation.ui.fileList.SnapshotListFragment
+import com.lawmobile.presentation.ui.fileList.VideoListFragment
 import com.lawmobile.presentation.ui.pairingPhoneWithCamera.PairingPhoneWithCameraFragment
 import com.lawmobile.presentation.ui.validatePasswordOfficer.ValidatePasswordOfficerFragment
 import com.safefleet.lawmobile.di.pairingPhoneWithCamera.PairingPhoneWithCameraModule
@@ -15,4 +17,10 @@ abstract class FragmentBuilderModules {
 
     @ContributesAndroidInjector(modules = [ValidatePasswordOfficerModule::class])
     abstract fun contributeValidatePasswordOfficer():ValidatePasswordOfficerFragment
+
+    @ContributesAndroidInjector
+    abstract fun contributeSnapshotList():SnapshotListFragment
+
+    @ContributesAndroidInjector
+    abstract fun contributeVideoList():VideoListFragment
 }

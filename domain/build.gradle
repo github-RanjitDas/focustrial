@@ -81,8 +81,8 @@ dependencies {
     //Coroutines-test
     testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutines_test_version"
 
-    api 'com.safefleet.mobile:avml:1.1.10-SNAPSHOT@aar'
-    api 'com.safefleet.mobile:commons:1.2.2-SNAPSHOT@aar'
+    api 'com.safefleet.mobile:avml:1.2.0-SNAPSHOT@aar'
+    api 'com.safefleet.mobile:commons:1.3.0-SNAPSHOT@aar'
 }
 
 pitest {

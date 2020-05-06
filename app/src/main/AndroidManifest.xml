@@ -34,6 +34,10 @@
             android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity"
             android:name="com.lawmobile.presentation.ui.live.LiveActivity"/>
+        <activity android:name="com.lawmobile.presentation.ui.fileList.FileListActivity"
+            android:theme="@style/AppTheme.NoActionBar"
+            tools:ignore="LockedOrientationActivity"/>
+        <activity android:name="com.lawmobile.presentation.ui.fileListItemDetail.SnapshotItemDetailActivity" />
     </application>
 
 </manifest>
