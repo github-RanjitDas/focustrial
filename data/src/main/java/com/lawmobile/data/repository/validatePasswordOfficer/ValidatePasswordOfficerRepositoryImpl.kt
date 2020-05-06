@@ -1,7 +1,7 @@
 package com.lawmobile.data.repository.validatePasswordOfficer
 
 import com.lawmobile.data.datasource.remote.validatePasswordOfficer.ValidatePasswordOfficerRemoteDataSource
-import com.lawmobile.data.mappers.MapperCameraConnectUserDomainUse
+import com.lawmobile.data.mappers.MapperCameraDataSource
 import com.lawmobile.domain.entity.DomainUser
 import com.lawmobile.domain.repository.validatePasswordOfficer.ValidatePasswordOfficerRepository
 import com.safefleet.mobile.commons.helpers.Result
@@ -13,7 +13,7 @@ class ValidatePasswordOfficerRepositoryImpl(
         return when (val cameraUser =
             validatePasswordOfficerRemoteDataSource.getUserInformation()) {
             is Result.Success -> {
-                val user = MapperCameraConnectUserDomainUse
+                val user = MapperCameraDataSource
                     .cameraConnectUserResponseToDomainUser(cameraUser.data)
                 Result.Success(user)
             }

@@ -3,12 +3,9 @@ package com.lawmobile.data.mappers
 import com.lawmobile.domain.entity.DomainUser
 import com.safefleet.mobile.avml.cameras.entities.CameraConnectUserResponse
 
-object MapperCameraConnectUserDomainUse {
+object MapperCameraDataSource {
     fun cameraConnectUserResponseToDomainUser(cameraConnectUserResponse: CameraConnectUserResponse): DomainUser =
-        DomainUser(
-            cameraConnectUserResponse.officerId,
-            cameraConnectUserResponse.name,
-            cameraConnectUserResponse.password
-        )
-
+        cameraConnectUserResponse.run {
+            DomainUser(officerId, name, password)
+        }
 }

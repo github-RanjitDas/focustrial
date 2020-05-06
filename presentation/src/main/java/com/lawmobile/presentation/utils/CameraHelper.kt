@@ -1,6 +1,6 @@
 package com.lawmobile.presentation.utils
 
-import com.safefleet.mobile.avml.cameras.CameraDataSource
+import com.safefleet.mobile.avml.cameras.x1.CameraDataSource
 
 class CameraHelper(
     private val cameraDataSource: CameraDataSource,

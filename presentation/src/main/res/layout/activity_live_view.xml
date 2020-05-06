@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -141,7 +142,7 @@
         android:background="@drawable/ic_snapshot_list"
         android:contentDescription="@string/snapshot_list"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/buttonRecordList" />
+        app:layout_constraintEnd_toStartOf="@+id/buttonVideoList" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -158,10 +159,10 @@
         tools:ignore="RtlSymmetry" />
 
     <ImageButton
-        android:id="@+id/buttonRecordList"
+        android:id="@+id/buttonVideoList"
         android:layout_width="@dimen/live_view_secondary_button_width"
         android:layout_height="@dimen/live_view_secondary_button_height"
-        android:background="@drawable/ic_record_list"
+        android:background="@drawable/ic_video_list"
         android:contentDescription="@string/record_list"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="@+id/guideline2" />
@@ -175,8 +176,8 @@
         android:textStyle="bold"
         android:paddingStart="@dimen/live_view_text_label_padding_left"
         android:text="@string/videos"
-        app:layout_constraintEnd_toEndOf="@id/buttonRecordList"
-        app:layout_constraintStart_toStartOf="@id/buttonRecordList"
+        app:layout_constraintEnd_toEndOf="@id/buttonVideoList"
+        app:layout_constraintStart_toStartOf="@id/buttonVideoList"
         app:layout_constraintTop_toBottomOf="@id/guideline3"
         tools:ignore="RtlSymmetry" />
 
