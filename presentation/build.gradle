@@ -104,7 +104,7 @@ dependencies {
     testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutines_test_version"
 
     //Intent-animation
-    implementation "com.github.hajiyevelnur92:intentanimation:1.0"
+    implementation "com.github.hajiyevelnur92:intentanimation:$intent_animation_version"
 
     implementation project(path: ':domain')
 }

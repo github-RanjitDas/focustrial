@@ -2,7 +2,7 @@ package com.lawmobile.data.datasource.remote.validatePasswordOfficer
 
 import com.lawmobile.data.InstantExecutorExtension
 import com.lawmobile.data.datasource.remote.validatePasswordOfficer.ValidatePasswordOfficerRemoteDataSourceImpl.Companion.ERROR_IN_INFORMATION_USER
-import com.safefleet.mobile.avml.cameras.CameraDataSource
+import com.safefleet.mobile.avml.cameras.x1.CameraDataSource
 import com.safefleet.mobile.avml.cameras.entities.CameraConnectUserResponse
 import com.safefleet.mobile.commons.helpers.Result
 import io.mockk.*

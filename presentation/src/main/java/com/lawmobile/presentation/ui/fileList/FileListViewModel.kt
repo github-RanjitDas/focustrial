@@ -17,7 +17,8 @@ class FileListViewModel @Inject constructor(private val fileListUseCase: FileLis
         MediatorLiveData()
     val snapshotListLiveData: LiveData<Result<List<CameraConnectFile>>> get() = snapshotListMediator
 
-    private val videoListMediator: MediatorLiveData<Result<List<CameraConnectFile>>> = MediatorLiveData()
+    private val videoListMediator: MediatorLiveData<Result<List<CameraConnectFile>>> =
+        MediatorLiveData()
     val videoListLiveData: LiveData<Result<List<CameraConnectFile>>> get() = videoListMediator
 
     fun getSnapshotList() {

@@ -4,7 +4,7 @@ ext {
     compileSdkVersion = 29
     minSdkVersion = 23
     targetSdkVersion = 29
-    buildVersion = 10
+    buildVersion = 11
     major = 3
     minor = 0
     patch = 0
@@ -34,5 +34,6 @@ ext {
     pitest_junit5_plugin_version = "0.9" //pitest run fails for versions higher than 0.9
     recycker_version = '1.1.0'
     sonar_version = '2.7.1'
+    intent_animation_version = '1.0'
 
 }

@@ -27,7 +27,6 @@ class PairingPhoneWithCameraViewModelTest {
         const val DEFAULT_SERIAL_NUMBER = "57014694"
     }
 
-
     private val wifiHelper: WifiHelper = mockk {
         every { isEqualsValueWithSSID(DEFAULT_SSID) } returns true
         every { isEqualsValueWithSSID("X") } returns false
@@ -40,7 +39,6 @@ class PairingPhoneWithCameraViewModelTest {
         every { connectionWithHotspotCamera("X", any()) } answers {
             secondArg<(data: Boolean) -> Unit>().invoke(false)
         }
-
     }
 
     private val pairingPhoneWithCameraUseCase: PairingPhoneWithCameraUseCase = mockk{
