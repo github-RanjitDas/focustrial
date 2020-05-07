@@ -6,7 +6,7 @@ import com.lawmobile.data.InstantExecutorExtension
 import com.lawmobile.data.datasource.remote.pairingPhoneWithCamera.PairingPhoneWithCameraRemoteDataSourceImpl.Companion.DEFAULT_SERIAL_NUMBER
 import com.lawmobile.data.datasource.remote.pairingPhoneWithCamera.PairingPhoneWithCameraRemoteDataSourceImpl.Companion.ERROR_DOES_NOT_SSID_SAVED
 import com.lawmobile.data.datasource.remote.pairingPhoneWithCamera.PairingPhoneWithCameraRemoteDataSourceImpl.Companion.LAST_SERIAL_NUMBER_TO_CONNECTION
-import com.safefleet.mobile.avml.cameras.CameraDataSource
+import com.safefleet.mobile.avml.cameras.x1.CameraDataSource
 import com.safefleet.mobile.commons.helpers.Result
 import io.mockk.*
 import kotlinx.coroutines.runBlocking

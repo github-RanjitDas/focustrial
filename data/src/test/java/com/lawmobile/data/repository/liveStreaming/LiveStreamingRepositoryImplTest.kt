@@ -65,7 +65,6 @@ class LiveStreamingRepositoryImplTest {
         }
     }
 
-
     @Test
     fun testStopRecordVideoFlow() {
         coEvery { liveStreamingRemoteDataSource.stopRecordVideo() } returns Result.Success(Unit)
@@ -92,7 +91,6 @@ class LiveStreamingRepositoryImplTest {
             Assert.assertEquals(liveStreamingRepositoryImpl.stopRecordVideo(), result)
         }
     }
-
 
     @Test
     fun testTakePhotoFlow() {
