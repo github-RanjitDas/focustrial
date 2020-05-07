@@ -7,6 +7,7 @@
     <dimen name="text_h1">24sp</dimen>
     <dimen name="text_h3">22sp</dimen>
     <dimen name="text_h5">20sp</dimen>
+    <dimen name="text_p2">16sp</dimen>
     <dimen name="text_p7">11sp</dimen>
 
     <!-- Login -->
@@ -59,4 +60,14 @@
     <dimen name="check_box_item_file_start">10dp</dimen>
     <dimen name="item_file_bottom_margin">1dp</dimen>
 
+    <!-- Video playback -->
+    <dimen name="video_playback_surface_view_height">220dp</dimen>
+    <dimen name="video_playback_size_buttons">24dp</dimen>
+    <dimen name="video_playback_button_play_margin_sides">8dp</dimen>
+    <dimen name="video_playback_text_view_player_time_margin_sides">10dp</dimen>
+    <dimen name="video_playback_button_full_screen_margin_sides">8dp</dimen>
+    <dimen name="video_playback_button_aspect_margin_sides">10dp</dimen>
+    <dimen name="video_playback_text_view_player_length_margin_sides">10dp</dimen>
+    <dimen name="video_playback_padding_bottom_buttons">20dp</dimen>
+    <dimen name="video_playback_padding_top_buttons">5dp</dimen>
 </resources>

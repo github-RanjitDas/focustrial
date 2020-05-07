@@ -6,7 +6,7 @@ import com.lawmobile.data.repository.validatePasswordOfficer.ValidatePasswordOff
 import com.lawmobile.domain.repository.validatePasswordOfficer.ValidatePasswordOfficerRepository
 import com.lawmobile.domain.usecase.validatePasswordOfficer.ValidatePasswordOfficerUseCase
 import com.lawmobile.domain.usecase.validatePasswordOfficer.ValidatePasswordOfficerUseCaseImpl
-import com.safefleet.mobile.avml.cameras.x1.CameraDataSource
+import com.safefleet.mobile.avml.cameras.external.CameraDataSource
 import dagger.Module
 import dagger.Provides
 

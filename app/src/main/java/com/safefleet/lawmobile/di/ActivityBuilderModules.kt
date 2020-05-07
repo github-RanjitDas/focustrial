@@ -4,10 +4,12 @@ import com.lawmobile.presentation.ui.fileList.FileListActivity
 import com.lawmobile.presentation.ui.fileListItemDetail.SnapshotItemDetailActivity
 import com.lawmobile.presentation.ui.live.LiveActivity
 import com.lawmobile.presentation.ui.login.LoginActivity
+import com.lawmobile.presentation.ui.videoPlayback.VideoPlaybackActivity
 import com.safefleet.lawmobile.di.fileList.FileListModule
 import com.safefleet.lawmobile.di.fileListItemDetail.SnapshotItemDetailModule
 import com.safefleet.lawmobile.di.liveStreaming.LiveStreamingModule
 import com.safefleet.lawmobile.di.login.LoginModule
+import com.safefleet.lawmobile.di.videoPlayback.VideoPlaybackModule
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 
@@ -19,9 +21,13 @@ abstract class ActivityBuilderModules {
     @ContributesAndroidInjector(modules = [LiveStreamingModule::class])
     abstract fun contributeLiveActivity(): LiveActivity
 
+    @ContributesAndroidInjector(modules = [VideoPlaybackModule::class])
+    abstract fun contributeVideoPlayback(): VideoPlaybackActivity
+
     @ContributesAndroidInjector(modules = [FileListModule::class])
     abstract fun contributeFileListActivity(): FileListActivity
 
     @ContributesAndroidInjector(modules = [SnapshotItemDetailModule::class])
     abstract fun contributeSnapshotItemDetailActivity(): SnapshotItemDetailActivity
+
 }

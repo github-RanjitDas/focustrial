@@ -2,7 +2,7 @@ package com.lawmobile.data.datasource.remote.pairingPhoneWithCamera
 
 import android.content.SharedPreferences
 import androidx.lifecycle.LiveData
-import com.safefleet.mobile.avml.cameras.x1.CameraDataSource
+import com.safefleet.mobile.avml.cameras.external.CameraDataSource
 import com.safefleet.mobile.commons.helpers.Result
 import kotlin.Exception
 

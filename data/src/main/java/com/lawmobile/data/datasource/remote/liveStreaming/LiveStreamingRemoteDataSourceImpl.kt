@@ -1,6 +1,6 @@
 package com.lawmobile.data.datasource.remote.liveStreaming
 
-import com.safefleet.mobile.avml.cameras.x1.CameraDataSource
+import com.safefleet.mobile.avml.cameras.external.CameraDataSource
 import com.safefleet.mobile.commons.helpers.Result
 
 class LiveStreamingRemoteDataSourceImpl(private val cameraDataSource: CameraDataSource) :

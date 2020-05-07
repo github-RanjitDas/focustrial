@@ -7,7 +7,7 @@ import com.lawmobile.data.repository.liveStreaming.LiveStreamingRepositoryImpl
 import com.lawmobile.domain.repository.liveStreaming.LiveStreamingRepository
 import com.lawmobile.domain.usecase.liveStreaming.LiveStreamingUseCase
 import com.lawmobile.domain.usecase.liveStreaming.LiveStreamingUseCaseImpl
-import com.safefleet.mobile.avml.cameras.x1.CameraDataSource
+import com.safefleet.mobile.avml.cameras.external.CameraDataSource
 import dagger.Module
 import dagger.Provides
 

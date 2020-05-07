@@ -1,7 +1,9 @@
 package com.lawmobile.data.datasource.remote.fileList
 
-import com.safefleet.mobile.avml.cameras.x1.CameraDataSource
+
+
 import com.safefleet.mobile.avml.cameras.entities.CameraConnectFile
+import com.safefleet.mobile.avml.cameras.external.CameraDataSource
 import com.safefleet.mobile.commons.helpers.Result
 
 class FileListRemoteDataSourceImpl(private val cameraDataSource: CameraDataSource) :
