@@ -7,7 +7,7 @@ import com.lawmobile.data.repository.pairingPhoneWithCamera.PairingPhoneWithCame
 import com.lawmobile.domain.repository.pairingPhoneWithCamera.PairingPhoneWithCameraRepository
 import com.lawmobile.domain.usecase.pairingPhoneWithCamera.PairingPhoneWithCameraUseCase
 import com.lawmobile.domain.usecase.pairingPhoneWithCamera.PairingPhoneWithCameraUseCaseImpl
-import com.safefleet.mobile.avml.cameras.external.CameraDataSource
+import com.safefleet.mobile.avml.cameras.external.CameraConnectService
 import dagger.Module
 import dagger.Provides
 
@@ -21,9 +21,9 @@ class PairingPhoneWithCameraModule {
         @Provides
         fun providePairingPhoneWithCameraDataSource(
             preferences: SharedPreferences,
-            cameraDataSource: CameraDataSource
+            cameraConnectService: CameraConnectService
         ): PairingPhoneWithCameraRemoteDataSource =
-            PairingPhoneWithCameraRemoteDataSourceImpl(preferences, cameraDataSource)
+            PairingPhoneWithCameraRemoteDataSourceImpl(preferences, cameraConnectService)
 
         @JvmStatic
         @Provides

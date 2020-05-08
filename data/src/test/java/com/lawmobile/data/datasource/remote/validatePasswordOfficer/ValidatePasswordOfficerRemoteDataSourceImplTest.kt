@@ -2,8 +2,8 @@ package com.lawmobile.data.datasource.remote.validatePasswordOfficer
 
 import com.lawmobile.data.InstantExecutorExtension
 import com.lawmobile.data.datasource.remote.validatePasswordOfficer.ValidatePasswordOfficerRemoteDataSourceImpl.Companion.ERROR_IN_INFORMATION_USER
-import com.safefleet.mobile.avml.cameras.external.CameraDataSource
 import com.safefleet.mobile.avml.cameras.entities.CameraConnectUserResponse
+import com.safefleet.mobile.avml.cameras.external.CameraConnectService
 import com.safefleet.mobile.commons.helpers.Result
 import io.mockk.*
 import kotlinx.coroutines.runBlocking
@@ -18,15 +18,15 @@ import java.lang.Exception
 class ValidatePasswordOfficerRemoteDataSourceImplTest {
 
     private val connectCameraUserResult = Result.Success(CameraConnectUserResponse("", "", ""))
-    private val cameraDataSource: CameraDataSource = mockk()
+    private val cameraConnectService: CameraConnectService = mockk()
 
     private val validatePasswordOfficerRemoteDataSourceImpl by lazy {
-        ValidatePasswordOfficerRemoteDataSourceImpl(cameraDataSource)
+        ValidatePasswordOfficerRemoteDataSourceImpl(cameraConnectService)
     }
 
     @Test
     fun testGetUserInformationFromDataSourceSuccess() {
-        coEvery { cameraDataSource.getUserInformation() } returns connectCameraUserResult
+        coEvery { cameraConnectService.getUserResponse() } returns connectCameraUserResult
         runBlocking {
             Assert.assertEquals(
                 connectCameraUserResult,
@@ -37,7 +37,7 @@ class ValidatePasswordOfficerRemoteDataSourceImplTest {
 
     @Test
     fun testGetUserInformationFromDataSourceSuccessFailed() {
-        coEvery { cameraDataSource.getUserInformation() } throws Exception("")
+        coEvery { cameraConnectService.getUserResponse() } throws Exception("")
         runBlocking {
             val responseError =
                 validatePasswordOfficerRemoteDataSourceImpl.getUserInformation() as Result.Error

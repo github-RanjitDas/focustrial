@@ -1,10 +1,9 @@
 package com.lawmobile.presentation.utils
 
-import com.safefleet.mobile.avml.cameras.external.CameraDataSource
-
+import com.safefleet.mobile.avml.cameras.external.CameraConnectService
 
 class CameraHelper(
-    private val cameraDataSource: CameraDataSource,
+    private val cameraConnectService: CameraConnectService,
     private val wifiHelper: WifiHelper
 ) {
 
@@ -18,6 +17,6 @@ class CameraHelper(
     }
 
     fun checkWithAlertIfTheCameraIsConnected(): Boolean {
-        return cameraDataSource.isCameraConnected(wifiHelper.getGatewayAddress())
+        return cameraConnectService.isCameraConnected(wifiHelper.getGatewayAddress())
     }
 }

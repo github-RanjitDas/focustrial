@@ -6,7 +6,7 @@ import com.lawmobile.data.repository.validatePasswordOfficer.ValidatePasswordOff
 import com.lawmobile.domain.repository.validatePasswordOfficer.ValidatePasswordOfficerRepository
 import com.lawmobile.domain.usecase.validatePasswordOfficer.ValidatePasswordOfficerUseCase
 import com.lawmobile.domain.usecase.validatePasswordOfficer.ValidatePasswordOfficerUseCaseImpl
-import com.safefleet.mobile.avml.cameras.external.CameraDataSource
+import com.safefleet.mobile.avml.cameras.external.CameraConnectService
 import dagger.Module
 import dagger.Provides
 
@@ -19,9 +19,9 @@ class ValidatePasswordOfficerModule {
         @JvmStatic
         @Provides
         fun provideValidatePasswordOfficerRemoteDataSource(
-            cameraDataSource: CameraDataSource
+            cameraConnectService: CameraConnectService
         ): ValidatePasswordOfficerRemoteDataSource =
-            ValidatePasswordOfficerRemoteDataSourceImpl(cameraDataSource)
+            ValidatePasswordOfficerRemoteDataSourceImpl(cameraConnectService)
 
         @JvmStatic
         @Provides

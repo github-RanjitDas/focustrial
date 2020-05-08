@@ -6,7 +6,7 @@ import com.lawmobile.data.InstantExecutorExtension
 import com.lawmobile.data.datasource.remote.pairingPhoneWithCamera.PairingPhoneWithCameraRemoteDataSourceImpl.Companion.DEFAULT_SERIAL_NUMBER
 import com.lawmobile.data.datasource.remote.pairingPhoneWithCamera.PairingPhoneWithCameraRemoteDataSourceImpl.Companion.ERROR_DOES_NOT_SSID_SAVED
 import com.lawmobile.data.datasource.remote.pairingPhoneWithCamera.PairingPhoneWithCameraRemoteDataSourceImpl.Companion.LAST_SERIAL_NUMBER_TO_CONNECTION
-import com.safefleet.mobile.avml.cameras.external.CameraDataSource
+import com.safefleet.mobile.avml.cameras.external.CameraConnectService
 import com.safefleet.mobile.commons.helpers.Result
 import io.mockk.*
 import kotlinx.coroutines.runBlocking
@@ -20,7 +20,7 @@ import org.junit.jupiter.api.extension.ExtendWith
 class PairingPhoneWithCameraRemoteDataSourceImplTest {
 
     private val progressCamera: LiveData<Result<Int>> = mockk()
-    private val cameraDataSource: CameraDataSource = mockk {
+    private val cameraConnectService: CameraConnectService = mockk {
         every { progressPairingCamera } returns progressCamera
     }
 
@@ -30,12 +30,12 @@ class PairingPhoneWithCameraRemoteDataSourceImplTest {
     }
 
     private val pairingPhoneWithCameraRemoteDataSourceImpl by lazy {
-        PairingPhoneWithCameraRemoteDataSourceImpl(preferences, cameraDataSource)
+        PairingPhoneWithCameraRemoteDataSourceImpl(preferences, cameraConnectService)
     }
 
     @Test
     fun testLoadPairingCamera() {
-        coEvery { cameraDataSource.loadPairingCamera(any(), any()) } just Runs
+        coEvery { cameraConnectService.loadPairingCamera(any(), any()) } just Runs
         runBlocking {
             pairingPhoneWithCameraRemoteDataSourceImpl.loadPairingCamera("", "")
         }
@@ -45,7 +45,7 @@ class PairingPhoneWithCameraRemoteDataSourceImplTest {
             progressCamera
         )
 
-        coVerify { cameraDataSource.loadPairingCamera("", "") }
+        coVerify { cameraConnectService.loadPairingCamera("", "") }
     }
 
     @Test

@@ -2,7 +2,7 @@ package com.lawmobile.data.datasource.remote.fileList
 
 import com.lawmobile.data.InstantExecutorExtension
 import com.safefleet.mobile.avml.cameras.entities.CameraConnectFile
-import com.safefleet.mobile.avml.cameras.external.CameraDataSource
+import com.safefleet.mobile.avml.cameras.external.CameraConnectService
 import com.safefleet.mobile.commons.helpers.Result
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -17,25 +17,25 @@ import org.junit.jupiter.api.extension.ExtendWith
 @ExtendWith(InstantExecutorExtension::class)
 internal class FileListRemoteDataSourceImplTest {
 
-    private val cameraDataSource: CameraDataSource = mockk()
+    private val cameraConnectService: CameraConnectService = mockk()
 
     private val fileListRemoteDataSourceImpl by lazy {
-        FileListRemoteDataSourceImpl(cameraDataSource)
+        FileListRemoteDataSourceImpl(cameraConnectService)
     }
 
     @Test
     fun testGetSnapshotListFlow() {
-        coEvery { cameraDataSource.getListOfImages() } returns Result.Success(mockk())
+        coEvery { cameraConnectService.getListOfImages() } returns Result.Success(mockk())
         runBlocking {
             fileListRemoteDataSourceImpl.getSnapshotList()
         }
-        coVerify { cameraDataSource.getListOfImages() }
+        coVerify { cameraConnectService.getListOfImages() }
     }
 
     @Test
     fun testGetSnapshotListSuccess() {
         val result = Result.Success(listOf(mockk<CameraConnectFile>()))
-        coEvery { cameraDataSource.getListOfImages() } returns result
+        coEvery { cameraConnectService.getListOfImages() } returns result
         runBlocking {
             Assert.assertEquals(fileListRemoteDataSourceImpl.getSnapshotList(), result)
         }
@@ -44,7 +44,7 @@ internal class FileListRemoteDataSourceImplTest {
     @Test
     fun testGetSnapshotListFailed() {
         val result = Result.Error(mockk())
-        coEvery { cameraDataSource.getListOfImages() } returns result
+        coEvery { cameraConnectService.getListOfImages() } returns result
         runBlocking {
             Assert.assertEquals(fileListRemoteDataSourceImpl.getSnapshotList(), result)
         }
@@ -52,17 +52,17 @@ internal class FileListRemoteDataSourceImplTest {
 
     @Test
     fun testGetVideoListFlow() {
-        coEvery { cameraDataSource.getListOfVideos() } returns Result.Success(mockk())
+        coEvery { cameraConnectService.getListOfVideos() } returns Result.Success(mockk())
         runBlocking {
             fileListRemoteDataSourceImpl.getVideoList()
         }
-        coVerify { cameraDataSource.getListOfVideos() }
+        coVerify { cameraConnectService.getListOfVideos() }
     }
 
     @Test
     fun testGetVideoListSuccess() {
         val result = Result.Success(listOf(mockk<CameraConnectFile>()))
-        coEvery { cameraDataSource.getListOfVideos() } returns result
+        coEvery { cameraConnectService.getListOfVideos() } returns result
         runBlocking {
             Assert.assertEquals(fileListRemoteDataSourceImpl.getVideoList(), result)
         }
@@ -71,7 +71,7 @@ internal class FileListRemoteDataSourceImplTest {
     @Test
     fun testGetVideoListFailed() {
         val result = Result.Error(mockk())
-        coEvery { cameraDataSource.getListOfVideos() } returns result
+        coEvery { cameraConnectService.getListOfVideos() } returns result
         runBlocking {
             Assert.assertEquals(fileListRemoteDataSourceImpl.getVideoList(), result)
         }

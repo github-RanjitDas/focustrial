@@ -1,16 +1,14 @@
 package com.lawmobile.data.datasource.remote.fileList
 
-
-
 import com.safefleet.mobile.avml.cameras.entities.CameraConnectFile
-import com.safefleet.mobile.avml.cameras.external.CameraDataSource
+import com.safefleet.mobile.avml.cameras.external.CameraConnectService
 import com.safefleet.mobile.commons.helpers.Result
 
-class FileListRemoteDataSourceImpl(private val cameraDataSource: CameraDataSource) :
+class FileListRemoteDataSourceImpl(private val cameraConnectService: CameraConnectService) :
     FileListRemoteDataSource {
     override suspend fun getSnapshotList(): Result<List<CameraConnectFile>> =
-        cameraDataSource.getListOfImages()
+        cameraConnectService.getListOfImages()
 
     override suspend fun getVideoList(): Result<List<CameraConnectFile>> =
-        cameraDataSource.getListOfVideos()
+        cameraConnectService.getListOfVideos()
 }
