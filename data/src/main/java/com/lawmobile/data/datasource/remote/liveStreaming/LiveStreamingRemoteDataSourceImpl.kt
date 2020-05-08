@@ -1,23 +1,23 @@
 package com.lawmobile.data.datasource.remote.liveStreaming
 
-import com.safefleet.mobile.avml.cameras.external.CameraDataSource
+import com.safefleet.mobile.avml.cameras.external.CameraConnectService
 import com.safefleet.mobile.commons.helpers.Result
 
-class LiveStreamingRemoteDataSourceImpl(private val cameraDataSource: CameraDataSource) :
+class LiveStreamingRemoteDataSourceImpl(private val cameraConnectService: CameraConnectService) :
     LiveStreamingRemoteDataSource {
     override fun getUrlForLiveStream(): String {
-        return cameraDataSource.getUrlForLiveStream()
+        return cameraConnectService.getUrlForLiveStream()
     }
 
     override suspend fun takePhoto(): Result<Unit> {
-        return cameraDataSource.takePhoto()
+        return cameraConnectService.takePhoto()
     }
 
     override suspend fun startRecordVideo(): Result<Unit> {
-        return cameraDataSource.startRecordVideo()
+        return cameraConnectService.startRecordVideo()
     }
 
     override suspend fun stopRecordVideo(): Result<Unit> {
-        return cameraDataSource.stopRecordVideo()
+        return cameraConnectService.stopRecordVideo()
     }
 }

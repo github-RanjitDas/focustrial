@@ -12,14 +12,10 @@ import android.net.wifi.WifiManager
 import android.net.wifi.WifiNetworkSpecifier
 import android.os.Build
 import com.google.gson.Gson
-import com.lawmobile.presentation.utils.CameraHelper
 import com.lawmobile.presentation.utils.VLCMediaPlayer
 import com.lawmobile.presentation.utils.WifiConnection
 import com.lawmobile.presentation.utils.WifiHelper
 import com.safefleet.lawmobile.BaseApplication
-import com.safefleet.mobile.avml.cameras.external.CameraType
-import com.safefleet.mobile.avml.cameras.external.CameraDataSource
-import com.safefleet.mobile.avml.cameras.external.CameraDataSourceImpl
 import dagger.Module
 import dagger.Provides
 import org.videolan.libvlc.LibVLC
@@ -95,20 +91,6 @@ class AppModule {
                     NetworkRequest.Builder()
                 )
             }
-
-        @JvmStatic
-        @Provides
-        @Singleton
-        fun provideCameraDataSource(preferences: SharedPreferences): CameraDataSource =
-            CameraDataSourceImpl(CameraType.X1, preferences)
-
-        @JvmStatic
-        @Provides
-        @Singleton
-        fun provideCameraHelper(
-            cameraDataSource: CameraDataSource,
-            wifiHelper: WifiHelper
-        ): CameraHelper = CameraHelper(cameraDataSource, wifiHelper)
 
         @JvmStatic
         @Provides

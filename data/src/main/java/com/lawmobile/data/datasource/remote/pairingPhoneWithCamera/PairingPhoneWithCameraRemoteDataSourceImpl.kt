@@ -2,20 +2,20 @@ package com.lawmobile.data.datasource.remote.pairingPhoneWithCamera
 
 import android.content.SharedPreferences
 import androidx.lifecycle.LiveData
-import com.safefleet.mobile.avml.cameras.external.CameraDataSource
+import com.safefleet.mobile.avml.cameras.external.CameraConnectService
 import com.safefleet.mobile.commons.helpers.Result
 import kotlin.Exception
 
 open class PairingPhoneWithCameraRemoteDataSourceImpl(
     private val preferences: SharedPreferences,
-    private val cameraDataSource: CameraDataSource
+    private val cameraConnectService: CameraConnectService
 ) :
     PairingPhoneWithCameraRemoteDataSource {
     override var progressPairingCamera: LiveData<Result<Int>> =
-        cameraDataSource.progressPairingCamera
+        cameraConnectService.progressPairingCamera
 
     override suspend fun loadPairingCamera(hostnameToConnect: String, ipAddressClient: String) {
-        cameraDataSource.loadPairingCamera(hostnameToConnect, ipAddressClient)
+        cameraConnectService.loadPairingCamera(hostnameToConnect, ipAddressClient)
     }
 
     override fun getSSIDSavedIfExist(): Result<String> {
