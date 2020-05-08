@@ -16,7 +16,7 @@ buildscript {
     }
     configurations.maybeCreate('pitest')
     dependencies {
-        classpath "com.android.tools.build:gradle:$gradle_version"
+        classpath "com.android.tools.build:gradle:3.6.3"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:$sonar_version"
         classpath "org.jacoco:org.jacoco.core:$jacoco_version"
@@ -54,10 +54,12 @@ subprojects {
         apply plugin: 'pl.droidsonroids.pitest'
         pitest {
             testPlugin = 'junit5'
-            avoidCallsTo = ["kotlin.jvm.internal"] //Stabilizes mutation run for Android
-            mutators = ["NEW_DEFAULTS"]
+            threads = Runtime.getRuntime().availableProcessors()
             outputFormats = ["HTML", "XML"]
+            avoidCallsTo = ["kotlin.jvm.internal", "kotlin/ResultKt"] //Stabilizes mutation run for Android
+            enableDefaultIncrementalAnalysis =  true
             timestampedReports = false //Overwrite past mutation report
+            mutators = ["NEW_DEFAULTS"]
         }
     }
 }
