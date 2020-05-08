@@ -1,7 +1,7 @@
 package com.lawmobile.data.datasource.remote.liveStreaming
 
 import com.lawmobile.data.InstantExecutorExtension
-import com.safefleet.mobile.avml.cameras.x1.CameraDataSource
+import com.safefleet.mobile.avml.cameras.external.CameraDataSource
 import com.safefleet.mobile.commons.helpers.Result
 import io.mockk.*
 import kotlinx.coroutines.runBlocking

@@ -17,9 +17,9 @@ import com.lawmobile.presentation.utils.VLCMediaPlayer
 import com.lawmobile.presentation.utils.WifiConnection
 import com.lawmobile.presentation.utils.WifiHelper
 import com.safefleet.lawmobile.BaseApplication
-import com.safefleet.mobile.avml.cameras.CameraType
-import com.safefleet.mobile.avml.cameras.x1.CameraDataSource
-import com.safefleet.mobile.avml.cameras.x1.CameraDataSourceImpl
+import com.safefleet.mobile.avml.cameras.external.CameraType
+import com.safefleet.mobile.avml.cameras.external.CameraDataSource
+import com.safefleet.mobile.avml.cameras.external.CameraDataSourceImpl
 import dagger.Module
 import dagger.Provides
 import org.videolan.libvlc.LibVLC

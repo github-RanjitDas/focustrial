@@ -12,6 +12,8 @@ import com.lawmobile.presentation.extensions.setOnClickListenerCheckConnection
 import com.lawmobile.presentation.extensions.showToast
 import com.lawmobile.presentation.ui.base.BaseActivity
 import com.lawmobile.presentation.ui.fileListItemDetail.SnapshotItemDetailActivity
+import com.lawmobile.presentation.ui.videoPlayback.VideoPlaybackActivity
+import com.lawmobile.presentation.utils.Constants.CAMERA_CONNECT_FILE
 import com.lawmobile.presentation.utils.Constants.FILE_LIST_SELECTOR
 import com.lawmobile.presentation.utils.Constants.SNAPSHOT_LIST
 import com.lawmobile.presentation.utils.Constants.VIDEO_LIST
@@ -150,7 +152,9 @@ class FileListActivity : BaseActivity() {
     }
 
     private fun startVideoIntent(cameraConnectFile: CameraConnectFile) {
-        this.showToast(cameraConnectFile.date, Toast.LENGTH_LONG)
+        val fileListIntent = Intent(this, VideoPlaybackActivity::class.java)
+        fileListIntent.putExtra(CAMERA_CONNECT_FILE, cameraConnectFile)
+        startActivity(fileListIntent)
     }
 
 }

@@ -56,4 +56,9 @@
     <string name="no_videos_found">No videos found</string>
     <string name="back">BACK</string>
 
+    <!-- Video playback -->
+    <string name="play_pause_button_video_playback">Play/Pause button video playback</string>
+    <string name="aspect_video_playback">Aspect video playback</string>
+    <string name="video_default_time">00:00</string>
+
 </resources>

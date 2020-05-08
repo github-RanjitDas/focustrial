@@ -2,7 +2,7 @@ package com.lawmobile.data.datasource.remote.fileList
 
 import com.lawmobile.data.InstantExecutorExtension
 import com.safefleet.mobile.avml.cameras.entities.CameraConnectFile
-import com.safefleet.mobile.avml.cameras.x1.CameraDataSource
+import com.safefleet.mobile.avml.cameras.external.CameraDataSource
 import com.safefleet.mobile.commons.helpers.Result
 import io.mockk.coEvery
 import io.mockk.coVerify

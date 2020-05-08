@@ -6,7 +6,7 @@ import com.lawmobile.data.repository.fileList.FileListRepositoryImpl
 import com.lawmobile.domain.repository.fileList.FileListRepository
 import com.lawmobile.domain.usecase.fileList.FileListUseCase
 import com.lawmobile.domain.usecase.fileList.FileListUseCaseImpl
-import com.safefleet.mobile.avml.cameras.x1.CameraDataSource
+import com.safefleet.mobile.avml.cameras.external.CameraDataSource
 import dagger.Module
 import dagger.Provides
 
