@@ -37,10 +37,11 @@
     <!-- Live view -->
     <dimen name="live_view_switch_button_width">60dp</dimen>
     <dimen name="live_view_switch_button_height">22dp</dimen>
-    <dimen name="live_view_main_button_margin_top">32dp</dimen>
+    <dimen name="live_view_main_button_margin_top">50dp</dimen>
     <dimen name="live_view_main_button_margin_shorter">24dp</dimen>
     <dimen name="live_view_toggle_full_screen_width">24dp</dimen>
     <dimen name="live_view_toggle_full_screen_height">24dp</dimen>
+    <dimen name="live_view_image_recording_size">50dp</dimen>
     <dimen name="live_view_surface_view_height_default">220dp</dimen>
     <dimen name="live_view_bottom_white_image_height">120dp</dimen>
     <dimen name="live_view_secondary_button_width">123dp</dimen>

@@ -70,5 +70,6 @@
     <string name="snapshot_item_detail_size_value">0</string>
     <string name="snapshot_item_detail_photo_content_description">Photo from BWC</string>
     <string name="snapshot_detail_load_failed">Error loading snapshot</string>
+    <string name="image_video_recording">Image video recording</string>
 
 </resources>

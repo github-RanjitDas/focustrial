@@ -4,6 +4,7 @@ import android.content.Intent
 import android.content.pm.ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
 import android.content.pm.ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
 import android.os.Bundle
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.Observer
@@ -147,10 +148,12 @@ class LiveActivity : BaseActivity() {
     private fun changeImageDependsRecordingVideo() {
         isRecordingVideo = !isRecordingVideo
         if (isRecordingVideo) {
+            imageVideoRecording.visibility = View.VISIBLE
             buttonStreaming.setBackgroundResource(R.drawable.ic_record_active)
             return
         }
 
+        imageVideoRecording.visibility = View.INVISIBLE
         buttonStreaming.setBackgroundResource(R.drawable.ic_record)
     }
 
