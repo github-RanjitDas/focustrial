@@ -70,4 +70,7 @@
     <dimen name="video_playback_text_view_player_length_margin_sides">10dp</dimen>
     <dimen name="video_playback_padding_bottom_buttons">20dp</dimen>
     <dimen name="video_playback_padding_top_buttons">5dp</dimen>
+    <dimen name="snapshot_item_detail_32dp">32dp</dimen>
+    <dimen name="snapshot_item_detail_16dp">16dp</dimen>
+    <dimen name="file_list_item_margin_vertical">10dp</dimen>
 </resources>
