@@ -41,7 +41,7 @@ class PairingPhoneWithCameraViewModelTest {
         }
     }
 
-    private val pairingPhoneWithCameraUseCase: PairingPhoneWithCameraUseCase = mockk{
+    private val pairingPhoneWithCameraUseCase: PairingPhoneWithCameraUseCase = mockk {
         every { progressPairingCamera } returns MediatorLiveData()
     }
     private val viewModel: PairingPhoneWithCameraViewModel by lazy {
@@ -101,25 +101,40 @@ class PairingPhoneWithCameraViewModelTest {
     }
 
     @Test
-    fun testConnectCellPhoneToWifiCamera() {
+    fun testConnectCellPhoneToWifiCameraFlow() {
+        val isConnectedSuccess: (connected: Boolean) -> Unit = {}
+        viewModel.connectCellPhoneToWifiCamera(DEFAULT_SERIAL_NUMBER, isConnectedSuccess)
+        verify {
+            wifiConnection.connectionWithHotspotCamera(
+                "X$DEFAULT_SERIAL_NUMBER",
+                isConnectedSuccess
+            )
+        }
+    }
+
+    @Test
+    fun testConnectCellPhoneToWifiCameraSuccess() {
         viewModel.connectCellPhoneToWifiCamera(DEFAULT_SERIAL_NUMBER) {
             Assert.assertTrue(it)
         }
+    }
 
+    @Test
+    fun testConnectCellPhoneToWifiCameraFailed() {
         viewModel.connectCellPhoneToWifiCamera("") {
             Assert.assertFalse(it)
         }
     }
 
     @Test
-    fun testGetSSIDSavedIfExist(){
+    fun testGetSSIDSavedIfExist() {
         every { pairingPhoneWithCameraUseCase.getSSIDSavedIfExist() } returns Result.Success("123456789")
         viewModel.getSSIDSavedIfExist()
         verify { pairingPhoneWithCameraUseCase.getSSIDSavedIfExist() }
     }
 
     @Test
-    fun testSaveSerialNumberOfCamera(){
+    fun testSaveSerialNumberOfCamera() {
         every { pairingPhoneWithCameraUseCase.saveSerialNumberOfCamera(any()) } just Runs
         viewModel.saveSerialNumberOfCamera("123")
         verify { pairingPhoneWithCameraUseCase.saveSerialNumberOfCamera("123") }
