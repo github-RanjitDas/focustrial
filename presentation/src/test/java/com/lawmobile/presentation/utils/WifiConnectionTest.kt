@@ -99,6 +99,16 @@ class WifiConnectionTest {
     }
 
     @Test
+    fun testConnectionWithHotspotCameraAndroidPVerifyWiFiSecretCorrectly() {
+        mockkStatic(Build.VERSION::class)
+        setFinalStatic(Build.VERSION::class.java.getField("SDK_INT"), SDK_P)
+        every { wifiManager.isWifiEnabled } returns false
+        every { wifiManager.configuredNetworks } returns emptyList()
+        wifiConnection.connectionWithHotspotCamera(DEFAULT_SSID) {}
+        Assert.assertEquals(wifiConfiguration.preSharedKey, "\"12345\"")
+    }
+
+    @Test
     fun testConnectionWithHotspotCameraAndroidPWifiEnable() {
         mockkStatic(Build.VERSION::class)
         setFinalStatic(Build.VERSION::class.java.getField("SDK_INT"), SDK_P)
@@ -115,12 +125,27 @@ class WifiConnectionTest {
         every { wifiManager.isWifiEnabled } returns true
         val wifiConfiguration: WifiConfiguration = mockk()
         wifiConfiguration.SSID = DEFAULT_SSID
+        wifiConfiguration.networkId = 1
         every { wifiManager.configuredNetworks } returns listOf(wifiConfiguration)
         wifiConnection.connectionWithHotspotCamera(DEFAULT_SSID) {
             Assert.assertTrue(it)
         }
     }
 
+    @Test
+    fun testConnectionWithHotspotCameraAndroidPVerifyNetworkId() {
+        mockkStatic(Build.VERSION::class)
+        setFinalStatic(Build.VERSION::class.java.getField("SDK_INT"), SDK_P)
+        every { wifiManager.isWifiEnabled } returns true
+        val wifiConfiguration: WifiConfiguration = mockk()
+        wifiConfiguration.SSID = DEFAULT_SSID
+        wifiConfiguration.networkId = 1
+        every { wifiManager.configuredNetworks } returns listOf(wifiConfiguration)
+        wifiConnection.connectionWithHotspotCamera(DEFAULT_SSID) {}
+        verify { wifiManager.enableNetwork(1,true) }
+    }
+
+    
     @Test
     fun testConnectionWithHotspotCameraAndroidPSuccessWithAnotherWifiConfiguration() {
         mockkStatic(Build.VERSION::class)
