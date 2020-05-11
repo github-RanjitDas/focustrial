@@ -61,4 +61,14 @@
     <string name="aspect_video_playback">Aspect video playback</string>
     <string name="video_default_time">00:00</string>
 
+    <!-- Snapshot detail -->
+    <string name="snapshot_item_detail_photo_name_title">PHOTO NAME: </string>
+    <string name="snapshot_item_detail_photo_name_value">Default</string>
+    <string name="snapshot_item_detail_date_time_title">DATE TIME: </string>
+    <string name="snapshot_item_detail_date_time_value">YYYY-MM-DD HH:MM:SS</string>
+    <string name="snapshot_item_detail_size_title">SIZE(bytes): </string>
+    <string name="snapshot_item_detail_size_value">0</string>
+    <string name="snapshot_item_detail_photo_content_description">Photo from BWC</string>
+    <string name="snapshot_detail_load_failed">Error loading snapshot</string>
+
 </resources>
