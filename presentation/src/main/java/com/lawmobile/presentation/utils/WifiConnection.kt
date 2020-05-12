@@ -37,7 +37,8 @@ class WifiConnection(
         ssid: String,
         isConnectedSuccess: (connected: Boolean) -> Unit
     ) {
-
+        wifiManager.startScan()
+        waitSecondsWhileTheWifiIsConnected()
         var network: ScanResult? = null
         wifiManager.scanResults.forEach {
             if (it.SSID == ssid) network = it
