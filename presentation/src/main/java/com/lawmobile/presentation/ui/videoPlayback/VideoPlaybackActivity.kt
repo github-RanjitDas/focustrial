@@ -34,17 +34,25 @@ class VideoPlaybackActivity : BaseActivity() {
 
     override fun onResume() {
         super.onResume()
+        verifyIfSelectedVideoWasChanged()
         domainInformationVideo?.let {
             createVideoPlaybackInSurface(it)
             playVideoPlayback()
+            setProgressToVideo(currentProgressInVideo)
+            updateCurrentTimeInVideo()
+            configureObserveCurrentTimeVideo()
         } ?: run {
             createDialog()
             getInformationOfVideo()
         }
-        setProgressToVideo(currentProgressInVideo)
         configureListeners()
-        updateCurrentTimeInVideo()
-        configureObserveCurrentTimeVideo()
+    }
+
+    private fun verifyIfSelectedVideoWasChanged() {
+        val videoWasChanged = getCameraConnectFileFromIntent() != connectVideo
+        if (videoWasChanged) {
+            restartObjectOfCompanion()
+        }
     }
 
     private fun createDialog() {
@@ -76,7 +84,8 @@ class VideoPlaybackActivity : BaseActivity() {
 
     private fun getInformationOfVideo() {
         dialog.show()
-        videoPlaybackViewModel.getInformationResourcesVideo(getCameraConnectFileFromIntent())
+        connectVideo = getCameraConnectFileFromIntent()
+        videoPlaybackViewModel.getInformationResourcesVideo(connectVideo!!)
         videoPlaybackViewModel.domainInformationVideoLiveData.observe(this, Observer {
             manageResultObserverGetVideoInformation(it)
         })
@@ -94,6 +103,8 @@ class VideoPlaybackActivity : BaseActivity() {
                 domainInformationVideo = result.data
                 createVideoPlaybackInSurface(result.data)
                 playVideoPlayback()
+                updateCurrentTimeInVideo()
+                configureObserveCurrentTimeVideo()
             }
             is Result.Error -> {
                 val messageToast = result.exception.message ?: ERROR_IN_GET_INFORMATION_OF_VIDEO
@@ -128,7 +139,6 @@ class VideoPlaybackActivity : BaseActivity() {
 
     override fun onBackPressed() {
         super.onBackPressed()
-        restartObjectOfCompanion()
         videoPlaybackViewModel.stopMediaPlayer()
     }
 
@@ -200,6 +210,7 @@ class VideoPlaybackActivity : BaseActivity() {
     }
 
     companion object {
+        private var connectVideo: CameraConnectFile? = null
         private var domainInformationVideo: DomainInformationVideo? = null
         private var totalDurationVideoInMilliSeconds: Long = 0
         private var currentTimeVideoInMilliSeconds: Long = 0
