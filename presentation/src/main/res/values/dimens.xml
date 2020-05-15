@@ -74,4 +74,8 @@
     <dimen name="snapshot_item_detail_32dp">32dp</dimen>
     <dimen name="snapshot_item_detail_16dp">16dp</dimen>
     <dimen name="file_list_item_margin_vertical">10dp</dimen>
+    <dimen name="video_playback_metadata_text_size">16sp</dimen>
+    <dimen name="video_playback_metadata_spacing">20dp</dimen>
+    <dimen name="video_playback_edit_metadata_padding">5dp</dimen>
+    <dimen name="metadata_form_spacing">20dp</dimen>
 </resources>
