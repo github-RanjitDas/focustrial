@@ -27,6 +27,13 @@ class LoginActivity : BaseActivity() {
         setTextVersion()
         showFragmentPairingCamera()
         verifyLocationPermission()
+        setClickListeners()
+    }
+
+    private fun setClickListeners() {
+        textViewLoginExit.setOnClickListener {
+            killApp()
+        }
     }
 
     private fun manageConnectionCamera() {

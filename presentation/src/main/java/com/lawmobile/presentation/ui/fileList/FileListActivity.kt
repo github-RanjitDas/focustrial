@@ -22,7 +22,6 @@ import com.safefleet.mobile.commons.helpers.Result
 import kotlinx.android.synthetic.main.activity_file_list.*
 import maes.tech.intentanim.CustomIntent
 import javax.inject.Inject
-import kotlin.system.exitProcess
 
 class FileListActivity : BaseActivity() {
 
@@ -82,8 +81,7 @@ class FileListActivity : BaseActivity() {
         }
 
         textViewFileListExit.setOnClickListener {
-            finishAffinity()
-            exitProcess(0)
+            killApp()
         }
     }
 
@@ -119,7 +117,8 @@ class FileListActivity : BaseActivity() {
                 if (result.data.isNotEmpty()) {
                     fragmentListHolder.isVisible = true
                     noFilesTextView.isVisible = false
-                    fileListAdapter = FileListAdapter(result.data.sortedByDescending { it.date }, ::fileItemClick)
+                    fileListAdapter =
+                        FileListAdapter(result.data.sortedByDescending { it.date }, ::fileItemClick)
                     when (buttonSnapshotListSwitch.isActivated) {
                         true -> snapshotListFragment.setFileListAdapter?.invoke(fileListAdapter)
                         false -> videoListFragment.setFileListAdapter?.invoke(fileListAdapter)
