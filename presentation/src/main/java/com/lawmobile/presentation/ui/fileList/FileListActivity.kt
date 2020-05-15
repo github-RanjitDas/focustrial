@@ -119,7 +119,7 @@ class FileListActivity : BaseActivity() {
                 if (result.data.isNotEmpty()) {
                     fragmentListHolder.isVisible = true
                     noFilesTextView.isVisible = false
-                    fileListAdapter = FileListAdapter(result.data, ::fileItemClick)
+                    fileListAdapter = FileListAdapter(result.data.sortedByDescending { it.date }, ::fileItemClick)
                     when (buttonSnapshotListSwitch.isActivated) {
                         true -> snapshotListFragment.setFileListAdapter?.invoke(fileListAdapter)
                         false -> videoListFragment.setFileListAdapter?.invoke(fileListAdapter)

@@ -17,7 +17,6 @@ class FileListAdapter(
 
     private var viewGroup: ViewGroup? = null
     private var checked = false
-    private lateinit var sortedListFile: List<CameraConnectFile>
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FileListViewHolder {
         viewGroup = parent
@@ -29,8 +28,7 @@ class FileListAdapter(
     }
 
     override fun onBindViewHolder(fileListViewHolder: FileListViewHolder, position: Int) {
-        sortedListFile = listFile.sortedByDescending { it.date }
-        fileListViewHolder.bind(sortedListFile[position])
+        fileListViewHolder.bind(listFile[position])
     }
 
     fun checkAllItems() {
