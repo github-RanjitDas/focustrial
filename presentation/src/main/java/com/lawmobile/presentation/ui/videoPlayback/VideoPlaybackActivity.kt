@@ -69,6 +69,9 @@ class VideoPlaybackActivity : BaseActivity() {
         buttonAspect.setOnClickListenerCheckConnection {
             videoPlaybackViewModel.changeAspectRatio()
         }
+        cancelButtonVideoPlayback.setOnClickListenerCheckConnection {
+            onBackPressed()
+        }
         configureListenerSeekBar()
     }
 
@@ -105,12 +108,20 @@ class VideoPlaybackActivity : BaseActivity() {
                 playVideoPlayback()
                 updateCurrentTimeInVideo()
                 configureObserveCurrentTimeVideo()
+                setMetadata()
             }
             is Result.Error -> {
                 val messageToast = result.exception.message ?: ERROR_IN_GET_INFORMATION_OF_VIDEO
                 this.showToast(messageToast, Toast.LENGTH_SHORT)
             }
         }
+    }
+
+    private fun setMetadata() {
+        val startTime = connectVideo?.date?.split(" ")?.get(1) ?: ""
+        videoNameValue.text = connectVideo?.name
+        startTimeValue.text = startTime
+        durationValue.text = totalDurationVideoInMilliSeconds.convertMilliSecondsToString()
     }
 
     private fun createVideoPlaybackInSurface(domainInformationVideo: DomainInformationVideo) {

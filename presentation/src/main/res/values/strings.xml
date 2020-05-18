@@ -71,5 +71,48 @@
     <string name="snapshot_item_detail_photo_content_description">Photo from BWC</string>
     <string name="snapshot_detail_load_failed">Error loading snapshot</string>
     <string name="image_video_recording">Image video recording</string>
+    <string name="cancel_metadata" tools:ignore="ButtonCase">CANCEL</string>
+    <string name="save_metadata">SAVE</string>
+    <string name="playback_video_name">VIDEO NAME</string>
+    <string name="default_text">DEFAULT TEXT</string>
+    <string name="playback_start_time">START TIME</string>
+    <string name="playback_duration">DURATION</string>
+    <string name="playback_event">EVENT</string>
+    <string name="playback_partner_id">PARTNER ID</string>
+    <string name="playback_ticket_1">TICKET #1</string>
+    <string name="playback_ticket_2">TICKET #2</string>
+    <string name="playback_case_1">CASE #1</string>
+    <string name="playback_case_2">CASE #2</string>
+    <string name="playback_dispatch_1">DISPATCH #1</string>
+    <string name="playback_dispatch_2">DISPATCH #2</string>
+    <string name="playback_location">LOCATION</string>
+    <string name="playback_remarks">REMARKS</string>
+    <string name="playback_first_name">FIRST NAME</string>
+    <string name="playback_last_name">LAST NAME</string>
+    <string name="playback_gender">GENDER</string>
+    <string name="playback_race">RACE</string>
+    <string name="playback_driver_license">DRIVER LICENSE</string>
+    <string name="playback_license_plate">LICENSE PLATE</string>
+
+    <string-array name="gender_spinner">
+        <item>Select</item>
+        <item>Male</item>
+        <item>Female</item>
+        <item>Other</item>
+    </string-array>
+
+    <string-array name="race_spinner">
+        <item>Select</item>
+        <item>Black</item>
+        <item>White</item>
+        <item>Hispanic</item>
+        <item>Asian</item>
+        <item>Other</item>
+    </string-array>
+
+    <string-array name="event_spinner">
+        <item>Select</item>
+        <item>Default</item>
+    </string-array>
 
 </resources>

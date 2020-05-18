@@ -8,7 +8,9 @@
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
     <color name="transparent">#00000000</color>
-    <color name="grey">#BDBCBC</color>
+    <color name="grey">#CAC8C8</color>
+    <color name="greyTransparent">#ADCAC8C8</color>
+    <color name="greyTransparentDark">#AD7E7E7E</color>
     <color name="video_playback_background_buttons">#55000000</color>
 
 </resources>
