@@ -10,10 +10,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.Observer
 import com.lawmobile.domain.entity.DomainInformationVideo
 import com.lawmobile.presentation.R
-import com.lawmobile.presentation.extensions.convertMilliSecondsToString
-import com.lawmobile.presentation.extensions.createAlertProgress
-import com.lawmobile.presentation.extensions.setOnClickListenerCheckConnection
-import com.lawmobile.presentation.extensions.showToast
+import com.lawmobile.presentation.extensions.*
 import com.lawmobile.presentation.ui.base.BaseActivity
 import com.lawmobile.presentation.utils.Constants.CAMERA_CONNECT_FILE
 import com.safefleet.mobile.avml.cameras.entities.CameraConnectCatalog
@@ -154,9 +151,8 @@ class VideoPlaybackActivity : BaseActivity() {
     }
 
     private fun setMetadata() {
-        val startTime = connectVideo?.date?.split(" ")?.get(1) ?: ""
         videoNameValue.text = connectVideo?.name
-        startTimeValue.text = startTime
+        startTimeValue.text = connectVideo?.getVideoStartTime()
         durationValue.text = totalDurationVideoInMilliSeconds.convertMilliSecondsToString()
     }
 
