@@ -8,6 +8,7 @@ import com.lawmobile.domain.entity.DomainInformationVideo
 import com.lawmobile.domain.usecase.videoPlayback.VideoPlaybackUseCase
 import com.lawmobile.presentation.ui.base.BaseViewModel
 import com.lawmobile.presentation.utils.VLCMediaPlayer
+import com.safefleet.mobile.avml.cameras.entities.CameraConnectCatalog
 import com.safefleet.mobile.avml.cameras.entities.CameraConnectFile
 import com.safefleet.mobile.commons.helpers.Result
 import kotlinx.coroutines.launch
@@ -22,6 +23,10 @@ class VideoPlaybackViewModel @Inject constructor(
         MediatorLiveData<Result<DomainInformationVideo>>()
     val domainInformationVideoLiveData get() = domainInformationVideoMediatorLiveData
 
+    private val catalogInfoMediatorLiveData =
+        MediatorLiveData<Result<List<CameraConnectCatalog>>>()
+    val catalogInfoLiveData get() = catalogInfoMediatorLiveData
+
     private val currentTimeVideoMediator by lazy { MediatorLiveData<Long>() }
     val currentTimeVideo: LiveData<Long> get() = currentTimeVideoMediator
 
@@ -29,6 +34,14 @@ class VideoPlaybackViewModel @Inject constructor(
         viewModelScope.launch {
             domainInformationVideoMediatorLiveData.postValue(
                 videoPlaybackUseCase.getInformationResourcesVideo(cameraConnectFile)
+            )
+        }
+    }
+
+    fun getCatalogInfo() {
+        viewModelScope.launch {
+            catalogInfoMediatorLiveData.postValue(
+                videoPlaybackUseCase.getCatalogInfo()
             )
         }
     }

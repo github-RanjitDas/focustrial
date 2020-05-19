@@ -127,4 +127,28 @@ class VideoPlaybackViewModelTest {
         verify { vlcMediaPlayer.setProgressMediaPlayer(100F) }
     }
 
+    @Test
+    fun testGetCatalogInfoSuccess() {
+        coEvery { videoPlaybackUseCase.getCatalogInfo() } returns Result.Success(
+            mockk()
+        )
+        runBlocking {
+            videoPlaybackViewModel.getCatalogInfo()
+            Assert.assertTrue(videoPlaybackViewModel.catalogInfoLiveData.value is Result.Success)
+        }
+        coVerify { videoPlaybackUseCase.getCatalogInfo() }
+    }
+
+    @Test
+    fun testGetCatalogInfoError() {
+        coEvery { videoPlaybackUseCase.getCatalogInfo() } returns Result.Error(
+            mockk()
+        )
+        runBlocking {
+            videoPlaybackViewModel.getCatalogInfo()
+            Assert.assertTrue(videoPlaybackViewModel.catalogInfoLiveData.value is Result.Error)
+        }
+        coVerify { videoPlaybackUseCase.getCatalogInfo() }
+    }
+
 }

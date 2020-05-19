@@ -93,6 +93,8 @@
     <string name="playback_race">RACE</string>
     <string name="playback_driver_license">DRIVER LICENSE</string>
     <string name="playback_license_plate">LICENSE PLATE</string>
+    <string name="select">Select</string>
+    <string name="catalog_error">Could not get the catalog lists</string>
 
     <string-array name="gender_spinner">
         <item>Select</item>

@@ -3,6 +3,7 @@ package com.lawmobile.presentation.ui.videoPlayback
 import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.util.Log
+import android.widget.ArrayAdapter
 import android.widget.SeekBar
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
@@ -15,7 +16,9 @@ import com.lawmobile.presentation.extensions.setOnClickListenerCheckConnection
 import com.lawmobile.presentation.extensions.showToast
 import com.lawmobile.presentation.ui.base.BaseActivity
 import com.lawmobile.presentation.utils.Constants.CAMERA_CONNECT_FILE
+import com.safefleet.mobile.avml.cameras.entities.CameraConnectCatalog
 import com.safefleet.mobile.avml.cameras.entities.CameraConnectFile
+import com.safefleet.mobile.avml.cameras.entities.CatalogTypes
 import com.safefleet.mobile.commons.helpers.Result
 import kotlinx.android.synthetic.main.activity_video_playback.*
 import javax.inject.Inject
@@ -46,6 +49,39 @@ class VideoPlaybackActivity : BaseActivity() {
             getInformationOfVideo()
         }
         configureListeners()
+        getCatalogInfo()
+    }
+
+    private fun getCatalogInfo() {
+        videoPlaybackViewModel.getCatalogInfo()
+        videoPlaybackViewModel.catalogInfoLiveData.observe(this, Observer(::setCatalogLists))
+    }
+
+    private fun setCatalogLists(catalogInfoList: Result<List<CameraConnectCatalog>>) {
+        val eventList = mutableListOf<String>()
+        val raceList = mutableListOf<String>()
+        val genderList = mutableListOf<String>()
+
+        eventList.add(getString(R.string.select))
+
+        when (catalogInfoList) {
+            is Result.Success -> {
+                val eventNames =
+                    catalogInfoList.data.filter { it.type == CatalogTypes.EVENT.value }
+                        .map { it.name }
+                eventList.addAll(eventNames)
+            }
+            is Result.Error -> {
+                this.showToast(getString(R.string.catalog_error), Toast.LENGTH_SHORT)
+            }
+        }
+
+        raceList.addAll(resources.getStringArray(R.array.race_spinner))
+        genderList.addAll(resources.getStringArray(R.array.gender_spinner))
+
+        eventValue.adapter = ArrayAdapter(this, R.layout.spinner_item, eventList)
+        raceValue.adapter = ArrayAdapter(this, R.layout.spinner_item, raceList)
+        genderValue.adapter = ArrayAdapter(this, R.layout.spinner_item, genderList)
     }
 
     private fun verifyIfSelectedVideoWasChanged() {

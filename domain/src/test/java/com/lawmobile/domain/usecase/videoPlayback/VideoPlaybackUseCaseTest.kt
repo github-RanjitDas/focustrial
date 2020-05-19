@@ -14,17 +14,17 @@ import org.junit.jupiter.api.TestInstance
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class VideoPlaybackUseCaseTest {
 
-
     private val videoPlaybackRepository: VideoPlaybackRepository = mockk()
     private val videoPlaybackUseCaseImpl by lazy {
         VideoPlaybackUseCaseImpl(videoPlaybackRepository)
     }
 
-
     @Test
     fun testGetInformationResourcesVideoSuccess() {
         val cameraConnectFile: CameraConnectFile = mockk()
-        coEvery { videoPlaybackRepository.getInformationResourcesVideo(cameraConnectFile) } returns Result.Success(mockk())
+        coEvery { videoPlaybackRepository.getInformationResourcesVideo(cameraConnectFile) } returns Result.Success(
+            mockk()
+        )
         runBlocking {
             val result =
                 videoPlaybackUseCaseImpl.getInformationResourcesVideo(cameraConnectFile)
@@ -47,5 +47,27 @@ class VideoPlaybackUseCaseTest {
         }
 
         coVerify { videoPlaybackRepository.getInformationResourcesVideo(cameraConnectFile) }
+    }
+
+    @Test
+    fun testGetCatalogInfoSuccess() {
+        coEvery { videoPlaybackRepository.getCatalogInfo() } returns Result.Success(mockk())
+        runBlocking {
+            val result = videoPlaybackUseCaseImpl.getCatalogInfo()
+            Assert.assertTrue(result is Result.Success)
+        }
+        coVerify { videoPlaybackRepository.getCatalogInfo() }
+    }
+
+    @Test
+    fun testGetCatalogInfoError() {
+        coEvery { videoPlaybackRepository.getCatalogInfo() } returns Result.Error(
+            mockk()
+        )
+        runBlocking {
+            val result = videoPlaybackUseCaseImpl.getCatalogInfo()
+            Assert.assertTrue(result is Result.Error)
+        }
+        coVerify { videoPlaybackRepository.getCatalogInfo() }
     }
 }
