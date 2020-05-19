@@ -21,7 +21,6 @@ class VideoPlaybackRepositoryImplTest {
         VideoPlaybackRepositoryImpl(videoPlayBackRemoteDataSource)
     }
 
-
     @Test
     fun testGetInformationResourcesVideoSuccess() {
         val cameraConnectFile: CameraConnectFile = mockk()
@@ -52,6 +51,30 @@ class VideoPlaybackRepositoryImplTest {
         }
 
         coVerify { videoPlayBackRemoteDataSource.getInformationResourcesVideo(cameraConnectFile) }
+    }
+
+    @Test
+    fun testGetCatalogInfoSuccess() {
+        coEvery { videoPlayBackRemoteDataSource.getCatalogInfo() } returns Result.Success(
+            mockk()
+        )
+        runBlocking {
+            val result = videoPlaybackRepositoryImpl.getCatalogInfo()
+            Assert.assertTrue(result is Result.Success)
+        }
+        coVerify { videoPlayBackRemoteDataSource.getCatalogInfo() }
+    }
+
+    @Test
+    fun testGetCatalogInfoError() {
+        coEvery { videoPlayBackRemoteDataSource.getCatalogInfo() } returns Result.Error(
+            mockk()
+        )
+        runBlocking {
+            val result = videoPlaybackRepositoryImpl.getCatalogInfo()
+            Assert.assertTrue(result is Result.Error)
+        }
+        coVerify { videoPlayBackRemoteDataSource.getCatalogInfo() }
     }
 
 }

@@ -86,6 +86,9 @@ class WifiConnection(
             setWifiConfiguration(ssid)
             wifiManager.addNetwork(wifiConfiguration)
             networkId = wifiConfiguration.networkId
+        } else {
+            setWifiConfiguration(ssid)
+            wifiManager.updateNetwork(wifiConfiguration)
         }
 
         wifiManager.disconnect()
@@ -114,7 +117,7 @@ class WifiConnection(
             if (it.SSID == ssid) scanResult = it
         }
 
-        return scanResult != null
+        return scanResult != null || wifiManager.scanResults.size == 0
     }
 
     private fun getIfExistNetworkId(ssid: String): Int? {
@@ -130,6 +133,7 @@ class WifiConnection(
         wifiConfiguration.SSID = "\"$ssid\""
         wifiConfiguration.preSharedKey = "\"${getWifiSecret()}\""
         wifiConfiguration.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.WPA_PSK)
+        wifiConfiguration.priority = CONNECTION_PRIORITY
     }
 
     private fun getWifiSecret(): String {
@@ -141,5 +145,6 @@ class WifiConnection(
 
     companion object {
         const val SECRET_CAMERA = "VFZSSmVrNUVWVEpPZW1jMVRVRTlQUT09"
+        const val CONNECTION_PRIORITY = 999999999
     }
 }
