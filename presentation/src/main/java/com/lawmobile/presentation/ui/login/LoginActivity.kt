@@ -52,7 +52,7 @@ class LoginActivity : BaseActivity() {
             if (isSuccess) {
                 startLiveViewActivity()
             } else {
-                Toast.makeText(this, "Incorrect password, please try again", Toast.LENGTH_LONG)
+                Toast.makeText(this, R.string.incorrect_password, Toast.LENGTH_LONG)
                     .show()
             }
         }

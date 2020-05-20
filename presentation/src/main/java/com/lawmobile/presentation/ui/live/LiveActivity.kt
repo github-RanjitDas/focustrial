@@ -27,7 +27,6 @@ class LiveActivity : BaseActivity() {
     @Inject
     lateinit var liveActivityViewModel: LiveActivityViewModel
 
-    private var isRecordingVideo: Boolean = false
     private lateinit var dialogProgressSnapShot: AlertDialog
     private lateinit var dialogProgressVideo: AlertDialog
 

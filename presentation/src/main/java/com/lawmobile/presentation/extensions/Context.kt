@@ -5,6 +5,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.entity.AlertInformation
+import com.lawmobile.presentation.ui.base.BaseActivity
 
 fun Context.createAlertInformation(alertInformation: AlertInformation) {
     val builder = AlertDialog.Builder(this)
@@ -24,6 +25,24 @@ fun Context.createAlertInformation(alertInformation: AlertInformation) {
         }
         show()
     }
+}
+
+fun Context.createAlertErrorConnection() {
+    val title = R.string.the_camera_was_disconnected
+    val message = R.string.the_camera_was_disconnected_description
+    val alertInformation = AlertInformation(title, message, null, null)
+
+    this.createAlertInformation(alertInformation)
+}
+
+fun Context.createAlertSessionExpired() {
+    val activity = this as BaseActivity
+    val alertInformation =
+        AlertInformation(
+            R.string.connection_finished, R.string.connection_finished_description,
+            { activity.restartApp() }, null
+        )
+    this.createAlertInformation(alertInformation)
 }
 
 fun Context.showToast(message: String, duration: Int) {
