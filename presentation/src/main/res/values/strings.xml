@@ -10,6 +10,8 @@
     <string name="the_camera_was_disconnected_description">BWC disconnected, please close the app and connect again</string>
     <string name="loading_wait">Loading…</string>
     <string name="taking_snapshot">Taking snapshot…</string>
+    <string name="connection_finished">Connection Finished</string>
+    <string name="connection_finished_description">After 5 minutes without interaction the BWC disconnects</string>
     <string name="the_application_did_not_find_camera">The application did not find the camera</string>
 
     <!-- Login -->
@@ -25,6 +27,7 @@
     <string name="connection_status">CONNECTION STATUS</string>
     <string name="exit">EXIT</string>
     <string name="enter_password">ENTER PASSWORD</string>
+    <string name="incorrect_password">Incorrect password, please try again</string>
 
     <!-- Live view -->
     <string name="image_description_full_screen_size">Full Screen size</string>
