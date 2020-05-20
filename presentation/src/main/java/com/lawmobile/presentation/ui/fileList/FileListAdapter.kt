@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import androidx.core.view.forEach
 import androidx.recyclerview.widget.RecyclerView
 import com.lawmobile.presentation.R
+import com.lawmobile.presentation.extensions.getVideoStartTime
 import com.lawmobile.presentation.extensions.setOnClickListenerCheckConnection
 import com.safefleet.mobile.avml.cameras.entities.CameraConnectFile
 import com.safefleet.mobile.commons.helpers.inflate
@@ -47,7 +48,7 @@ class FileListAdapter(
         fun bind(cameraConnectFile: CameraConnectFile) {
             fileView.run {
                 cameraConnectFile.run {
-                    dateFileListItem.text = date
+                    dateFileListItem.text = getVideoStartTime()
                     durationFileListItem.text = ""
                     eventFileListItem.text = ""
                     itemFileList.setOnClickListenerCheckConnection {
