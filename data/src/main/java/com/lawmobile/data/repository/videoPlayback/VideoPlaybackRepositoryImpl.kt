@@ -14,16 +14,27 @@ class VideoPlaybackRepositoryImpl(private val videoPlaybackRemoteDataSource: Vid
     override suspend fun getInformationResourcesVideo(cameraConnectFile: CameraConnectFile): Result<DomainInformationVideo> {
         return when (val response =
             videoPlaybackRemoteDataSource.getInformationResourcesVideo(cameraConnectFile)) {
-            is Result.Success -> Result.Success(
-                MapperCameraConnectVideoInfoDomainVideo.cameraConnectFileToDomainInformationVideo(
-                    response.data
-                )
-            )
+            is Result.Success -> {
+                return try {
+                    Result.Success(
+                        MapperCameraConnectVideoInfoDomainVideo.cameraConnectFileToDomainInformationVideo(
+                            response.data
+                        )
+                    )
+                } catch (e: Exception) {
+                    Result.Error(Exception(ERROR_TO_GET_VIDEO))
+                }
+
+            }
             is Result.Error -> response
         }
     }
 
     override suspend fun getCatalogInfo(): Result<List<CameraConnectCatalog>> =
         videoPlaybackRemoteDataSource.getCatalogInfo()
+
+    companion object {
+        const val ERROR_TO_GET_VIDEO = "An error has occurred, try to open the video again"
+    }
 
 }
