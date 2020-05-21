@@ -8,6 +8,7 @@ import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.extensions.attachFragment
+import com.lawmobile.presentation.extensions.createAlertConfirmAppExit
 import com.lawmobile.presentation.extensions.setOnClickListenerCheckConnection
 import com.lawmobile.presentation.extensions.showToast
 import com.lawmobile.presentation.ui.base.BaseActivity
@@ -81,7 +82,7 @@ class FileListActivity : BaseActivity() {
         }
 
         textViewFileListExit.setOnClickListener {
-            killApp()
+            this.createAlertConfirmAppExit()
         }
     }
 

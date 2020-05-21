@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.widget.Toast
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.extensions.attachFragment
+import com.lawmobile.presentation.extensions.createAlertConfirmAppExit
 import com.lawmobile.presentation.extensions.verifyForAskingPermission
 import com.lawmobile.presentation.ui.base.BaseActivity
 import com.lawmobile.presentation.ui.live.LiveActivity
@@ -32,7 +33,7 @@ class LoginActivity : BaseActivity() {
 
     private fun setClickListeners() {
         textViewLoginExit.setOnClickListener {
-            killApp()
+            this.createAlertConfirmAppExit()
         }
     }
 
