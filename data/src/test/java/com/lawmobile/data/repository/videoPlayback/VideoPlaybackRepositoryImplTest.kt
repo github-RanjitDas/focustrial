@@ -1,17 +1,18 @@
 package com.lawmobile.data.repository.videoPlayback
 
 import com.lawmobile.data.datasource.remote.videoPlayback.VideoPlaybackRemoteDataSource
+import com.lawmobile.data.mappers.MapperCameraConnectVideoInfoDomainVideo
+import com.lawmobile.data.repository.videoPlayback.VideoPlaybackRepositoryImpl.Companion.ERROR_TO_GET_VIDEO
 import com.lawmobile.domain.entity.DomainInformationVideo
 import com.safefleet.mobile.avml.cameras.entities.CameraConnectFile
 import com.safefleet.mobile.avml.cameras.entities.CameraConnectVideoInfo
-import io.mockk.coEvery
-import io.mockk.mockk
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.TestInstance
-import  com.safefleet.mobile.commons.helpers.Result
-import io.mockk.coVerify
+import com.safefleet.mobile.commons.helpers.Result
+import io.mockk.*
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.TestInstance
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class VideoPlaybackRepositoryImplTest {
@@ -19,6 +20,11 @@ class VideoPlaybackRepositoryImplTest {
     private val videoPlayBackRemoteDataSource: VideoPlaybackRemoteDataSource = mockk()
     private val videoPlaybackRepositoryImpl by lazy {
         VideoPlaybackRepositoryImpl(videoPlayBackRemoteDataSource)
+    }
+
+    @BeforeEach
+    fun setUp(){
+        clearAllMocks()
     }
 
     @Test
@@ -33,6 +39,24 @@ class VideoPlaybackRepositoryImplTest {
             val result =
                 videoPlaybackRepositoryImpl.getInformationResourcesVideo(cameraConnectFile) as Result.Success
             Assert.assertEquals(result.data, domainInformationVideo)
+        }
+
+        coVerify { videoPlayBackRemoteDataSource.getInformationResourcesVideo(cameraConnectFile) }
+    }
+
+    @Test
+    fun testGetInformationResourcesVideoSuccessMapperFailed() {
+        mockkObject(MapperCameraConnectVideoInfoDomainVideo)
+        every { MapperCameraConnectVideoInfoDomainVideo.cameraConnectFileToDomainInformationVideo(any()) } throws Exception()
+        val cameraConnectFile: CameraConnectFile = mockk()
+        val cameraConnectVideoInformationVideo = CameraConnectVideoInfo(1, 1, 1, "", "", 1, "", "")
+        coEvery { videoPlayBackRemoteDataSource.getInformationResourcesVideo(cameraConnectFile) } returns Result.Success(
+            cameraConnectVideoInformationVideo
+        )
+        runBlocking {
+            val result =
+                videoPlaybackRepositoryImpl.getInformationResourcesVideo(cameraConnectFile) as Result.Error
+            Assert.assertEquals(result.exception.message, ERROR_TO_GET_VIDEO)
         }
 
         coVerify { videoPlayBackRemoteDataSource.getInformationResourcesVideo(cameraConnectFile) }

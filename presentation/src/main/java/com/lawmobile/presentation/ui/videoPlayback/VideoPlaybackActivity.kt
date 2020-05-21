@@ -17,6 +17,7 @@ import com.safefleet.mobile.avml.cameras.entities.CameraConnectCatalog
 import com.safefleet.mobile.avml.cameras.entities.CameraConnectFile
 import com.safefleet.mobile.avml.cameras.entities.CatalogTypes
 import com.safefleet.mobile.commons.helpers.Result
+import com.safefleet.mobile.commons.helpers.hideKeyboard
 import kotlinx.android.synthetic.main.activity_video_playback.*
 import javax.inject.Inject
 
@@ -26,6 +27,7 @@ class VideoPlaybackActivity : BaseActivity() {
     lateinit var videoPlaybackViewModel: VideoPlaybackViewModel
 
     private lateinit var dialog: AlertDialog
+    private var currentAttempts = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,6 +36,7 @@ class VideoPlaybackActivity : BaseActivity() {
 
     override fun onResume() {
         super.onResume()
+        hideKeyboard()
         verifyIfSelectedVideoWasChanged()
         domainInformationVideo?.let {
             createVideoPlaybackInSurface(it)
@@ -144,11 +147,21 @@ class VideoPlaybackActivity : BaseActivity() {
                 setMetadata()
             }
             is Result.Error -> {
+                if (isAllowedToAttemptToGetInformation()) {
+                    currentAttempts += 1
+                    connectVideo?.let { videoPlaybackViewModel.getInformationResourcesVideo(it) }
+                    return
+                }
+
                 val messageToast = result.exception.message ?: ERROR_IN_GET_INFORMATION_OF_VIDEO
                 this.showToast(messageToast, Toast.LENGTH_SHORT)
+                finish()
+
             }
         }
     }
+
+    private fun isAllowedToAttemptToGetInformation() = currentAttempts <= ATTEMPTS_ALLOWED
 
     private fun setMetadata() {
         videoNameValue.text = connectVideo?.name
@@ -259,5 +272,6 @@ class VideoPlaybackActivity : BaseActivity() {
         private var currentTimeVideoInMilliSeconds: Long = 0
         private var currentProgressInVideo = 0
         const val ERROR_IN_GET_INFORMATION_OF_VIDEO = "Error in get information of video"
+        const val ATTEMPTS_ALLOWED = 2
     }
 }
