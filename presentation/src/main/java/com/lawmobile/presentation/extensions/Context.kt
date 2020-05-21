@@ -45,6 +45,15 @@ fun Context.createAlertSessionExpired() {
     this.createAlertInformation(alertInformation)
 }
 
+fun Context.createAlertConfirmAppExit() {
+    val activity = this as BaseActivity
+    val alertInformation =
+        AlertInformation(
+            R.string.confirm_app_exit_title, R.string.confirm_app_exit_description,
+            { activity.killApp() }, {})
+    this.createAlertInformation(alertInformation)
+}
+
 fun Context.showToast(message: String, duration: Int) {
     Toast.makeText(this, message, duration).show()
 }
