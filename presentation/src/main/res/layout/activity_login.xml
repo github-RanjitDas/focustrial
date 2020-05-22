@@ -45,7 +45,7 @@
         app:layout_constraintTop_toBottomOf="@+id/textViewVersion" />
 
     <TextView
-        android:id="@+id/TextConnectionStatus"
+        android:id="@+id/textConnectionStatus"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/connection_status"
@@ -71,7 +71,7 @@
         android:paddingStart="@dimen/login_constrain_parent_padding"
         android:paddingEnd="@dimen/login_constrain_parent_padding"
         android:visibility="visible"
-        app:layout_constraintBottom_toTopOf="@+id/TextConnectionStatus"
+        app:layout_constraintBottom_toTopOf="@+id/textConnectionStatus"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageViewLogo" />
