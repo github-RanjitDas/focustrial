@@ -44,6 +44,7 @@ class VideoPlaybackActivity : BaseActivity() {
             setProgressToVideo(currentProgressInVideo)
             updateCurrentTimeInVideo()
             configureObserveCurrentTimeVideo()
+            setMetadata()
         } ?: run {
             createDialog()
             getInformationOfVideo()
