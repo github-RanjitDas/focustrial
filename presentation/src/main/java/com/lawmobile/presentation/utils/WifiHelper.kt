@@ -6,13 +6,13 @@ import java.math.BigInteger
 import java.net.Inet4Address
 
 
-class WifiHelper(private val wifiManager: WifiManager) {
+open class WifiHelper(private val wifiManager: WifiManager) {
 
     @SuppressLint("MissingPermission")
     private fun getGatewayAddressByte() =
         BigInteger.valueOf(wifiManager.dhcpInfo.gateway.toLong()).toByteArray()
 
-    fun getGatewayAddress(): String {
+    open fun getGatewayAddress(): String {
         return try {
             val reverseArrayIpAddress = getGatewayAddressByte().reversedArray()
             Inet4Address.getByAddress(reverseArrayIpAddress).hostAddress
@@ -21,7 +21,7 @@ class WifiHelper(private val wifiManager: WifiManager) {
         }
     }
 
-    fun getIpAddress(): String {
+    open fun getIpAddress(): String {
         return try {
             val reverseArrayIpAddress = getIpAddressByteArray().reversedArray()
             Inet4Address.getByAddress(reverseArrayIpAddress).hostAddress
@@ -37,6 +37,6 @@ class WifiHelper(private val wifiManager: WifiManager) {
     @SuppressLint("MissingPermission")
     private fun getSSIDWiFi(): String = wifiManager.connectionInfo.ssid.replace("\"", "")
 
-    fun isEqualsValueWithSSID(value: String): Boolean = getSSIDWiFi() == value
+    open fun isEqualsValueWithSSID(value: String): Boolean = getSSIDWiFi() == value
 
 }

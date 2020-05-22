@@ -16,7 +16,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
-            android:id="@+id/textView"
+            android:id="@+id/textWaitingForCamera"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/pairing_phone_camera_text_title_margin_top"
@@ -37,9 +37,10 @@
             android:background="@drawable/shape_solid_gradient_stroke_yellow_accent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView">
+            app:layout_constraintTop_toBottomOf="@+id/textWaitingForCamera">
 
             <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/textInputEditValidateSSID"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/pairing_phone_camera_input_height"
                 android:background="@android:color/transparent"
@@ -68,7 +69,7 @@
             app:layout_constraintTop_toBottomOf="@+id/textInputValidateSSID" />
 
         <TextView
-            android:id="@+id/TextInstructionsToLinkCamera"
+            android:id="@+id/textInstructionsToLinkCamera"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/pairing_phone_camera_text_instruction_margin_top"
@@ -87,9 +88,9 @@
             android:layout_marginTop="@dimen/pairing_phone_camera_view_instructions_margin_top"
             android:layout_marginEnd="@dimen/pairing_phone_camera_view_instructions_margin_sides"
             android:background="@color/yellowAccent"
-            app:layout_constraintEnd_toEndOf="@+id/TextInstructionsToLinkCamera"
-            app:layout_constraintStart_toStartOf="@+id/TextInstructionsToLinkCamera"
-            app:layout_constraintTop_toBottomOf="@+id/TextInstructionsToLinkCamera" />
+            app:layout_constraintEnd_toEndOf="@+id/textInstructionsToLinkCamera"
+            app:layout_constraintStart_toStartOf="@+id/textInstructionsToLinkCamera"
+            app:layout_constraintTop_toBottomOf="@+id/textInstructionsToLinkCamera" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -104,6 +105,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
+            android:id="@+id/textConnectingToCamera"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/pairing_phone_camera_text_title_margin_top"
