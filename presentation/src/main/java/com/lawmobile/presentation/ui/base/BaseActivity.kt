@@ -14,8 +14,7 @@ open class BaseActivity : DaggerAppCompatActivity() {
 
     @Inject
     lateinit var baseViewModel: BaseViewModel
-    private lateinit var lastInteraction: Timestamp
-    var isRecordingVideo: Boolean = false
+    var isLiveVideoOrPlaybackActive: Boolean = false
 
     fun killApp() {
         baseViewModel.deactivateCameraHotspot()
@@ -35,14 +34,26 @@ open class BaseActivity : DaggerAppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         super.onCreate(savedInstanceState)
-        lastInteraction = Timestamp(System.currentTimeMillis())
+        updateLastInteraction()
     }
 
     override fun onUserInteraction() {
         super.onUserInteraction()
-        if (!isRecordingVideo && checkIfSessionIsExpired() && this !is LoginActivity) {
+        if (!isLiveVideoOrPlaybackActive && checkIfSessionIsExpired() && this !is LoginActivity) {
             return
         }
+        updateLastInteraction()
+    }
+
+    fun updateLiveOrPlaybackActive(isActive: Boolean) {
+        if (isActive) {
+            updateLastInteraction()
+        }
+
+        isLiveVideoOrPlaybackActive = isActive
+    }
+
+    private fun updateLastInteraction(){
         lastInteraction = Timestamp(System.currentTimeMillis())
     }
 
@@ -54,6 +65,7 @@ open class BaseActivity : DaggerAppCompatActivity() {
     companion object {
         const val PERMISSION_FOR_LOCATION = 100
         const val MAX_TIME_SESSION = 300000
+        private lateinit var lastInteraction: Timestamp
     }
 
 }

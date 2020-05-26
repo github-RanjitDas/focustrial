@@ -40,6 +40,7 @@ class LiveActivity : BaseActivity() {
 
     override fun onResume() {
         super.onResume()
+        updateLiveOrPlaybackActive(buttonSwitchLiveView.isChecked)
         setUrlLive()
         startLiveVideoView()
         configureListeners()
@@ -73,12 +74,14 @@ class LiveActivity : BaseActivity() {
     }
 
     private fun startFileListIntent(fileType: String) {
+        updateLiveOrPlaybackActive(false)
         val fileListIntent = Intent(this, FileListActivity::class.java)
         fileListIntent.putExtra(FILE_LIST_SELECTOR, fileType)
         startActivity(fileListIntent)
     }
 
     private fun changeStatusSwitch(isChecked: Boolean) {
+        updateLiveOrPlaybackActive(isChecked)
         changeVisibilityView(isChecked)
         buttonSwitchLiveView.isChecked = isChecked
         toggleFullScreenLiveView.isClickable = isChecked
@@ -125,7 +128,7 @@ class LiveActivity : BaseActivity() {
     }
 
     private fun manageRecordingVideo() {
-        if (isRecordingVideo) {
+        if (isLiveVideoOrPlaybackActive) {
             liveActivityViewModel.stopRecordVideo()
             return
         }
@@ -145,8 +148,8 @@ class LiveActivity : BaseActivity() {
     }
 
     private fun changeImageDependsRecordingVideo() {
-        isRecordingVideo = !isRecordingVideo
-        if (isRecordingVideo) {
+        isLiveVideoOrPlaybackActive = !isLiveVideoOrPlaybackActive
+        if (isLiveVideoOrPlaybackActive) {
             imageVideoRecording.visibility = View.VISIBLE
             buttonStreaming.setBackgroundResource(R.drawable.ic_record_active)
             return
