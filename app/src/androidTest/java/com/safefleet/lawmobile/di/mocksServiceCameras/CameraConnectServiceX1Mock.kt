@@ -3,12 +3,10 @@ package com.safefleet.lawmobile.di.mocksServiceCameras
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import com.safefleet.lawmobile.TestData
-import com.safefleet.mobile.avml.cameras.entities.CameraConnectCatalog
-import com.safefleet.mobile.avml.cameras.entities.CameraConnectFile
-import com.safefleet.mobile.avml.cameras.entities.CameraConnectUserResponse
-import com.safefleet.mobile.avml.cameras.entities.CameraConnectVideoInfo
+import com.safefleet.mobile.avml.cameras.entities.*
 import com.safefleet.mobile.avml.cameras.external.CameraConnectService
 import com.safefleet.mobile.commons.helpers.Result
+import io.mockk.mockk
 
 class CameraConnectServiceX1Mock : CameraConnectService {
     private val progressPairingCameraMediator: MediatorLiveData<Result<Int>> = MediatorLiveData()
@@ -48,10 +46,18 @@ class CameraConnectServiceX1Mock : CameraConnectService {
         )
     }
 
+    override suspend fun getVideoMetadata(fileName: String): Result<CameraConnectVideoMetadata> {
+        return Result.Success(mockk())
+    }
+
     override fun isCameraConnected(gatewayConnection: String): Boolean = true
 
     override suspend fun loadPairingCamera(hostnameToConnect: String, ipAddressClient: String) {
         progressPairingCameraMediator.postValue(Result.Success(100))
+    }
+
+    override suspend fun saveVideoMetadata(cameraConnectVideoMetadata: CameraConnectVideoMetadata): Result<Unit> {
+        return Result.Success(Unit)
     }
 
     override suspend fun startRecordVideo(): Result<Unit> {

@@ -178,10 +178,12 @@ class VideoPlaybackActivity : BaseActivity() {
     }
 
     private fun playVideoPlayback() {
+        updateLiveOrPlaybackActive(true)
         videoPlaybackViewModel.playVLCMediaPlayer()
     }
 
     private fun pauseVideoPlayback() {
+        updateLiveOrPlaybackActive(false)
         videoPlaybackViewModel.pauseMediaPlayer()
     }
 
