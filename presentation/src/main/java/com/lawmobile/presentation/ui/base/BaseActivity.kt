@@ -14,7 +14,7 @@ open class BaseActivity : DaggerAppCompatActivity() {
 
     @Inject
     lateinit var baseViewModel: BaseViewModel
-    var isLiveVideoOrPlaybackActive: Boolean = false
+    private var isLiveVideoOrPlaybackActive: Boolean = false
 
     fun killApp() {
         baseViewModel.deactivateCameraHotspot()
