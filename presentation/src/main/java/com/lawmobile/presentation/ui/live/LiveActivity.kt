@@ -29,6 +29,7 @@ class LiveActivity : BaseActivity() {
 
     private lateinit var dialogProgressSnapShot: AlertDialog
     private lateinit var dialogProgressVideo: AlertDialog
+    private var isRecordingVideo:Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -128,7 +129,7 @@ class LiveActivity : BaseActivity() {
     }
 
     private fun manageRecordingVideo() {
-        if (isLiveVideoOrPlaybackActive) {
+        if (isRecordingVideo) {
             liveActivityViewModel.stopRecordVideo()
             return
         }
@@ -148,8 +149,8 @@ class LiveActivity : BaseActivity() {
     }
 
     private fun changeImageDependsRecordingVideo() {
-        isLiveVideoOrPlaybackActive = !isLiveVideoOrPlaybackActive
-        if (isLiveVideoOrPlaybackActive) {
+        isRecordingVideo = !isRecordingVideo
+        if (isRecordingVideo) {
             imageVideoRecording.visibility = View.VISIBLE
             buttonStreaming.setBackgroundResource(R.drawable.ic_record_active)
             return
