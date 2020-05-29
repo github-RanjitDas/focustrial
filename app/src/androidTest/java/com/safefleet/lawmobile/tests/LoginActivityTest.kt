@@ -2,6 +2,7 @@ package com.safefleet.lawmobile.tests
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
+import com.lawmobile.presentation.ui.login.LoginActivity
 import com.safefleet.lawmobile.TestData
 import com.safefleet.lawmobile.screens.LiveViewScreen
 import com.safefleet.lawmobile.screens.LoginScreen
@@ -10,7 +11,7 @@ import org.junit.runner.RunWith
 
 @LargeTest
 @RunWith(AndroidJUnit4::class)
-class LoginActivityTest : EspressoBaseTest() {
+class LoginActivityTest : EspressoBaseTest<LoginActivity>(LoginActivity::class.java) {
     // This class tests FMA-248 User story
     companion object {
         val SERIAL_NUMBER = TestData.SERIAL_NUMBER.value
@@ -40,7 +41,6 @@ class LoginActivityTest : EspressoBaseTest() {
             .isOfficerNameDisplayed(OFFICER_NAME)
 
         loginScreen.typePassword(OFFICER_PASSWORD).go()
-
         liveViewScreen.isLiveViewDisplayed()
     }
 
