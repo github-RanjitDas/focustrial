@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Process
 import android.view.WindowManager
+import com.lawmobile.presentation.extensions.createAlertSessionExpired
 import com.lawmobile.presentation.ui.login.LoginActivity
 import dagger.android.support.DaggerAppCompatActivity
 import java.sql.Timestamp
@@ -36,6 +37,16 @@ open class BaseActivity : DaggerAppCompatActivity() {
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         super.onCreate(savedInstanceState)
         updateLastInteraction()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        updateLastInteraction()
+    }
+
+    override fun onRestart() {
+        super.onRestart()
+        if (checkIfSessionIsExpired() && this !is LoginActivity) this.createAlertSessionExpired()
     }
 
     override fun onUserInteraction() {
