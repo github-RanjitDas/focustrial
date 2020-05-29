@@ -15,6 +15,7 @@ open class BaseActivity : DaggerAppCompatActivity() {
     @Inject
     lateinit var baseViewModel: BaseViewModel
     private var isLiveVideoOrPlaybackActive: Boolean = false
+    var isRecordingVideo: Boolean = false
 
     fun killApp() {
         baseViewModel.deactivateCameraHotspot()
@@ -39,7 +40,7 @@ open class BaseActivity : DaggerAppCompatActivity() {
 
     override fun onUserInteraction() {
         super.onUserInteraction()
-        if (!isLiveVideoOrPlaybackActive && checkIfSessionIsExpired() && this !is LoginActivity) {
+        if (!isLiveVideoOrPlaybackActive && !isRecordingVideo && checkIfSessionIsExpired() && this !is LoginActivity) {
             return
         }
         updateLastInteraction()
@@ -53,7 +54,7 @@ open class BaseActivity : DaggerAppCompatActivity() {
         isLiveVideoOrPlaybackActive = isActive
     }
 
-    private fun updateLastInteraction(){
+    private fun updateLastInteraction() {
         lastInteraction = Timestamp(System.currentTimeMillis())
     }
 

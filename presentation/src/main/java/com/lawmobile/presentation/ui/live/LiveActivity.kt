@@ -29,7 +29,6 @@ class LiveActivity : BaseActivity() {
 
     private lateinit var dialogProgressSnapShot: AlertDialog
     private lateinit var dialogProgressVideo: AlertDialog
-    private var isRecordingVideo:Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
