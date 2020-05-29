@@ -59,10 +59,14 @@ class LoginScreen {
 
     fun go() = clickOn(R.id.imageButtonGo)
 
-    fun isIncorrectPasswordToastDisplayed() =
-        toastMessage.assertContainsText(R.string.incorrect_password)
+    fun isIncorrectPasswordToastDisplayed() {
+        toastMessage.isToastDisplayed(R.string.incorrect_password)
+        toastMessage.waitUntilToastDisappears(R.string.incorrect_password)
+    }
 
-    fun isIncorrectSerialNumberToastDisplayed() =
-        toastMessage.assertContainsText(R.string.the_application_did_not_find_camera)
+    fun isIncorrectSerialNumberToastDisplayed() {
+        toastMessage.isToastDisplayed(R.string.the_application_did_not_find_camera)
+        toastMessage.waitUntilToastDisappears(R.string.the_application_did_not_find_camera)
+    }
 
 }
