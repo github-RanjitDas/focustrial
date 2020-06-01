@@ -121,4 +121,26 @@ class LiveStreamingUseCaseImplTest {
             Assert.assertEquals(liveStreamingUseCaseImpl.takePhoto(), result)
         }
     }
+
+    @Test
+    fun testGetCatalogInfoSuccess() {
+        coEvery { liveStreamingRepository.getCatalogInfo() } returns Result.Success(mockk())
+        runBlocking {
+            val result = liveStreamingUseCaseImpl.getCatalogInfo()
+            Assert.assertTrue(result is Result.Success)
+        }
+        coVerify { liveStreamingRepository.getCatalogInfo() }
+    }
+
+    @Test
+    fun testGetCatalogInfoError() {
+        coEvery { liveStreamingRepository.getCatalogInfo() } returns Result.Error(
+            mockk()
+        )
+        runBlocking {
+            val result = liveStreamingUseCaseImpl.getCatalogInfo()
+            Assert.assertTrue(result is Result.Error)
+        }
+        coVerify { liveStreamingRepository.getCatalogInfo() }
+    }
 }

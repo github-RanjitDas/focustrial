@@ -19,7 +19,6 @@ class VideoPlaybackRemoteDataSourceImplTest {
         VideoPlaybackRemoteDataSourceImpl(cameraConnectService)
     }
 
-
     @Test
     fun testGetInformationResourcesVideoSuccess() {
         val cameraConnectFile: CameraConnectFile = mockk()
@@ -51,30 +50,54 @@ class VideoPlaybackRemoteDataSourceImplTest {
     }
 
     @Test
-    fun testGetCatalogInfoSuccess() {
-        coEvery { cameraConnectService.getCatalogInfo() } returns Result.Success(
+    fun testGetVideoMetadataSuccess() {
+        coEvery { cameraConnectService.getVideoMetadata(any()) } returns Result.Success(
             mockk()
         )
         runBlocking {
             val result =
-                videoPlaybackRemoteDataSourceImpl.getCatalogInfo()
+                videoPlaybackRemoteDataSourceImpl.getVideoMetadata("")
             Assert.assertTrue(result is Result.Success)
         }
-
-        coVerify { cameraConnectService.getCatalogInfo() }
+        coVerify { cameraConnectService.getVideoMetadata(any()) }
     }
 
     @Test
-    fun testGetCatalogInfoError() {
-        coEvery { cameraConnectService.getCatalogInfo() } returns Result.Error(
+    fun testGetVideoMetadataError() {
+        coEvery { cameraConnectService.getVideoMetadata(any()) } returns Result.Error(
             mockk()
         )
         runBlocking {
             val result =
-                videoPlaybackRemoteDataSourceImpl.getCatalogInfo()
+                videoPlaybackRemoteDataSourceImpl.getVideoMetadata("")
             Assert.assertTrue(result is Result.Error)
         }
+        coVerify { cameraConnectService.getVideoMetadata(any()) }
+    }
 
-        coVerify { cameraConnectService.getCatalogInfo() }
+    @Test
+    fun testSaveVideoMetadataSuccess() {
+        coEvery { cameraConnectService.saveVideoMetadata(any()) } returns Result.Success(
+            mockk()
+        )
+        runBlocking {
+            val result =
+                videoPlaybackRemoteDataSourceImpl.saveVideoMetadata(mockk())
+            Assert.assertTrue(result is Result.Success)
+        }
+        coVerify { cameraConnectService.saveVideoMetadata(any()) }
+    }
+
+    @Test
+    fun testSaveVideoMetadataError() {
+        coEvery { cameraConnectService.saveVideoMetadata(any()) } returns Result.Error(
+            mockk()
+        )
+        runBlocking {
+            val result =
+                videoPlaybackRemoteDataSourceImpl.saveVideoMetadata(mockk())
+            Assert.assertTrue(result is Result.Error)
+        }
+        coVerify { cameraConnectService.saveVideoMetadata(any()) }
     }
 }

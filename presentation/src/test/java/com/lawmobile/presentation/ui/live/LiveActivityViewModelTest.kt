@@ -9,6 +9,7 @@ import com.safefleet.mobile.commons.helpers.Result
 import io.mockk.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.setMain
 import org.junit.Assert
 import org.junit.jupiter.api.BeforeEach
@@ -103,6 +104,30 @@ class LiveActivityViewModelTest {
         every { mediaActionSound.play(any()) } just Runs
         liveActivityViewModel.playSoundTakePhoto()
         verify { mediaActionSound.play(MediaActionSound.SHUTTER_CLICK) }
+    }
+
+    @Test
+    fun testGetCatalogInfoSuccess() {
+        coEvery { liveStreamingUseCase.getCatalogInfo() } returns Result.Success(
+            mockk()
+        )
+        runBlocking {
+            liveActivityViewModel.getCatalogInfo()
+            Assert.assertTrue(liveActivityViewModel.catalogInfoLiveData.value is Result.Success)
+        }
+        coVerify { liveStreamingUseCase.getCatalogInfo() }
+    }
+
+    @Test
+    fun testGetCatalogInfoError() {
+        coEvery { liveStreamingUseCase.getCatalogInfo() } returns Result.Error(
+            mockk()
+        )
+        runBlocking {
+            liveActivityViewModel.getCatalogInfo()
+            Assert.assertTrue(liveActivityViewModel.catalogInfoLiveData.value is Result.Error)
+        }
+        coVerify { liveStreamingUseCase.getCatalogInfo() }
     }
 
 }

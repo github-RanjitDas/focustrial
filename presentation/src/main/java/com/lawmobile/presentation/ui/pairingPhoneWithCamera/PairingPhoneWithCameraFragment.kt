@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.lifecycle.Observer
+import com.lawmobile.domain.CameraInfo
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.entity.AlertInformation
 import com.lawmobile.presentation.extensions.createAlertInformation
@@ -47,7 +48,8 @@ class PairingPhoneWithCameraFragment : BaseFragment() {
     private fun checkIfExistSerialNumberSavedToConnectionToCamera() {
         when (val result = pairingPhoneWithCameraViewModel.getSSIDSavedIfExist()) {
             is Result.Success -> {
-                textInputValidateSSID.editText?.setText(result.data)
+                CameraInfo.cameraSerialNumber = result.data
+                textInputValidateSSID.editText?.setText(CameraInfo.cameraSerialNumber)
                 starConnectionToHotspotCamera()
             }
         }
@@ -149,9 +151,9 @@ class PairingPhoneWithCameraFragment : BaseFragment() {
 
 
     private fun createConnectionWithCamera(isConnectedSuccess: (connected: Boolean) -> Unit) {
-        val serialNumberCamera = textInputValidateSSID.text()
+        CameraInfo.cameraSerialNumber = textInputValidateSSID.text()
         pairingPhoneWithCameraViewModel.connectCellPhoneToWifiCamera(
-            serialNumberCamera,
+            CameraInfo.cameraSerialNumber,
             isConnectedSuccess
         )
     }

@@ -8,8 +8,8 @@ import com.lawmobile.domain.entity.DomainInformationVideo
 import com.lawmobile.domain.usecase.videoPlayback.VideoPlaybackUseCase
 import com.lawmobile.presentation.ui.base.BaseViewModel
 import com.lawmobile.presentation.utils.VLCMediaPlayer
-import com.safefleet.mobile.avml.cameras.entities.CameraConnectCatalog
 import com.safefleet.mobile.avml.cameras.entities.CameraConnectFile
+import com.safefleet.mobile.avml.cameras.entities.CameraConnectVideoMetadata
 import com.safefleet.mobile.commons.helpers.Result
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -23,9 +23,13 @@ class VideoPlaybackViewModel @Inject constructor(
         MediatorLiveData<Result<DomainInformationVideo>>()
     val domainInformationVideoLiveData get() = domainInformationVideoMediatorLiveData
 
-    private val catalogInfoMediatorLiveData =
-        MediatorLiveData<Result<List<CameraConnectCatalog>>>()
-    val catalogInfoLiveData get() = catalogInfoMediatorLiveData
+    private val saveVideoMetadataMediatorLiveData =
+        MediatorLiveData<Result<Unit>>()
+    val saveVideoMetadataLiveData get() = saveVideoMetadataMediatorLiveData
+
+    private val videoMetadataMediatorLiveData =
+        MediatorLiveData<Result<CameraConnectVideoMetadata>>()
+    val videoMetadataLiveData get() = videoMetadataMediatorLiveData
 
     private val currentTimeVideoMediator by lazy { MediatorLiveData<Long>() }
     val currentTimeVideo: LiveData<Long> get() = currentTimeVideoMediator
@@ -38,10 +42,18 @@ class VideoPlaybackViewModel @Inject constructor(
         }
     }
 
-    fun getCatalogInfo() {
+    fun saveVideoMetadata(cameraConnectVideoMetadata: CameraConnectVideoMetadata) {
         viewModelScope.launch {
-            catalogInfoMediatorLiveData.postValue(
-                videoPlaybackUseCase.getCatalogInfo()
+            saveVideoMetadataLiveData.postValue(
+                videoPlaybackUseCase.saveVideoMetadata(cameraConnectVideoMetadata)
+            )
+        }
+    }
+
+    fun getVideoMetadata(fileName: String) {
+        viewModelScope.launch {
+            videoMetadataMediatorLiveData.postValue(
+                videoPlaybackUseCase.getVideoMetadata(fileName)
             )
         }
     }

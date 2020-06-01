@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.lifecycle.Observer
+import com.lawmobile.domain.CameraInfo
 import com.lawmobile.domain.entity.DomainUser
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.extensions.setOnClickListenerCheckConnection
@@ -43,6 +44,7 @@ class ValidatePasswordOfficerFragment : BaseFragment() {
             Observer { domainUser ->
                 this.domainUser = domainUser
                 textViewOfficerName.text = domainUser.name
+                CameraInfo.officerId = domainUser.id
             })
 
         validatePasswordOfficerViewModel.errorDomainUser.observe(viewLifecycleOwner, Observer {

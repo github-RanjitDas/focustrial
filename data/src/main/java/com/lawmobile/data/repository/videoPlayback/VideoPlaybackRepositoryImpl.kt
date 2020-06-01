@@ -1,11 +1,12 @@
 package com.lawmobile.data.repository.videoPlayback
 
 import com.lawmobile.data.datasource.remote.videoPlayback.VideoPlaybackRemoteDataSource
+import com.lawmobile.data.entities.RemoteCameraMetadata
 import com.lawmobile.data.mappers.MapperCameraConnectVideoInfoDomainVideo
 import com.lawmobile.domain.entity.DomainInformationVideo
 import com.lawmobile.domain.repository.videoPlayback.VideoPlaybackRepository
-import com.safefleet.mobile.avml.cameras.entities.CameraConnectCatalog
 import com.safefleet.mobile.avml.cameras.entities.CameraConnectFile
+import com.safefleet.mobile.avml.cameras.entities.CameraConnectVideoMetadata
 import com.safefleet.mobile.commons.helpers.Result
 
 class VideoPlaybackRepositoryImpl(private val videoPlaybackRemoteDataSource: VideoPlaybackRemoteDataSource) :
@@ -24,17 +25,45 @@ class VideoPlaybackRepositoryImpl(private val videoPlaybackRemoteDataSource: Vid
                 } catch (e: Exception) {
                     Result.Error(Exception(ERROR_TO_GET_VIDEO))
                 }
-
             }
             is Result.Error -> response
         }
     }
 
-    override suspend fun getCatalogInfo(): Result<List<CameraConnectCatalog>> =
-        videoPlaybackRemoteDataSource.getCatalogInfo()
-
-    companion object {
-        const val ERROR_TO_GET_VIDEO = "An error has occurred, try to open the video again"
+    override suspend fun saveVideoMetadata(cameraConnectVideoMetadata: CameraConnectVideoMetadata): Result<Unit> {
+        val metadata =
+            metadataList.find { it.videoMetadata.fileName == cameraConnectVideoMetadata.fileName }
+        val result = videoPlaybackRemoteDataSource.saveVideoMetadata(cameraConnectVideoMetadata)
+        if (result is Result.Success && metadata != null) {
+            val index =
+                metadataList.indexOfFirst { it.videoMetadata.fileName == cameraConnectVideoMetadata.fileName }
+            metadata.isChanged = true
+            metadataList[index] = metadata
+        }
+        return result
     }
 
+    override suspend fun getVideoMetadata(fileName: String): Result<CameraConnectVideoMetadata> {
+        val cameraConnectVideoMetadata = metadataList.find { it.videoMetadata.fileName == fileName }
+        return if (cameraConnectVideoMetadata != null && !cameraConnectVideoMetadata.isChanged) {
+            Result.Success(cameraConnectVideoMetadata.videoMetadata)
+        } else {
+            val result = videoPlaybackRemoteDataSource.getVideoMetadata(fileName)
+            if (result is Result.Success) {
+                val metadata = RemoteCameraMetadata(result.data, false)
+                if (cameraConnectVideoMetadata != null) {
+                    val index = metadataList.indexOfFirst { it.videoMetadata.fileName == fileName }
+                    metadataList[index] = metadata
+                } else {
+                    metadataList.add(metadata)
+                }
+            }
+            result
+        }
+    }
+
+    companion object {
+        var metadataList = mutableListOf<RemoteCameraMetadata>()
+        const val ERROR_TO_GET_VIDEO = "An error has occurred, try to open the video again"
+    }
 }

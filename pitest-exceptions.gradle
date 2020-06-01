@@ -23,5 +23,7 @@ ext.pitestExclusions = [
         "**.models.**",
         "**.adapters.**",
         '**.extensions.**',
-        "**.*Fragment*"
+        "**.*Fragment*",
+        "com.lawmobile.data.repository.videoPlayback.VideoPlaybackRepositoryImpl*",
+        "com.lawmobile.domain.CameraInfo*"
 ]

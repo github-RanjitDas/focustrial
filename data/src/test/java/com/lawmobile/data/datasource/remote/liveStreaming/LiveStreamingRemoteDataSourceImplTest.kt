@@ -117,4 +117,17 @@ class LiveStreamingRemoteDataSourceImplTest {
         }
     }
 
+    @Test
+    fun testGetCatalogInfoSuccess() {
+        coEvery { cameraConnectService.getCatalogInfo() } returns Result.Success(mockk())
+        runBlocking { liveStreamingRemoteDataSourceImpl.getCatalogInfo() }
+        coVerify { cameraConnectService.getCatalogInfo() }
+    }
+
+    @Test
+    fun testGetCatalogInfoError() {
+        coEvery { cameraConnectService.getCatalogInfo() } returns Result.Error(mockk())
+        runBlocking { liveStreamingRemoteDataSourceImpl.getCatalogInfo() }
+        coVerify { cameraConnectService.getCatalogInfo() }
+    }
 }

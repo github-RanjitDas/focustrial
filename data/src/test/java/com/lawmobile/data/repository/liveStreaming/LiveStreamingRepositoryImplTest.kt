@@ -120,4 +120,28 @@ class LiveStreamingRepositoryImplTest {
         }
     }
 
+    @Test
+    fun testGetCatalogInfoSuccess() {
+        coEvery { liveStreamingRemoteDataSource.getCatalogInfo() } returns Result.Success(
+            mockk()
+        )
+        runBlocking {
+            val result = liveStreamingRepositoryImpl.getCatalogInfo()
+            Assert.assertTrue(result is Result.Success)
+        }
+        coVerify { liveStreamingRemoteDataSource.getCatalogInfo() }
+    }
+
+    @Test
+    fun testGetCatalogInfoError() {
+        coEvery { liveStreamingRemoteDataSource.getCatalogInfo() } returns Result.Error(
+            mockk()
+        )
+        runBlocking {
+            val result = liveStreamingRepositoryImpl.getCatalogInfo()
+            Assert.assertTrue(result is Result.Error)
+        }
+        coVerify { liveStreamingRemoteDataSource.getCatalogInfo() }
+    }
+
 }
