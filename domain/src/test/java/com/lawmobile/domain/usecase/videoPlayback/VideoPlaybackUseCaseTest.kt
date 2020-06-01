@@ -50,24 +50,55 @@ class VideoPlaybackUseCaseTest {
     }
 
     @Test
-    fun testGetCatalogInfoSuccess() {
-        coEvery { videoPlaybackRepository.getCatalogInfo() } returns Result.Success(mockk())
-        runBlocking {
-            val result = videoPlaybackUseCaseImpl.getCatalogInfo()
-            Assert.assertTrue(result is Result.Success)
-        }
-        coVerify { videoPlaybackRepository.getCatalogInfo() }
-    }
-
-    @Test
-    fun testGetCatalogInfoError() {
-        coEvery { videoPlaybackRepository.getCatalogInfo() } returns Result.Error(
+    fun testGetVideoMetadataSuccess() {
+        coEvery { videoPlaybackRepository.getVideoMetadata(any()) } returns Result.Success(
             mockk()
         )
         runBlocking {
-            val result = videoPlaybackUseCaseImpl.getCatalogInfo()
+            val result =
+                videoPlaybackUseCaseImpl.getVideoMetadata("")
+            Assert.assertTrue(result is Result.Success)
+        }
+        coVerify { videoPlaybackRepository.getVideoMetadata(any()) }
+    }
+
+    @Test
+    fun testGetVideoMetadataError() {
+        coEvery { videoPlaybackRepository.getVideoMetadata(any()) } returns Result.Error(
+            mockk()
+        )
+        runBlocking {
+            val result =
+                videoPlaybackUseCaseImpl.getVideoMetadata("")
             Assert.assertTrue(result is Result.Error)
         }
-        coVerify { videoPlaybackRepository.getCatalogInfo() }
+        coVerify { videoPlaybackRepository.getVideoMetadata(any()) }
     }
+
+    @Test
+    fun testSaveVideoMetadataSuccess() {
+        coEvery { videoPlaybackRepository.saveVideoMetadata(any()) } returns Result.Success(
+            mockk()
+        )
+        runBlocking {
+            val result =
+                videoPlaybackUseCaseImpl.saveVideoMetadata(mockk())
+            Assert.assertTrue(result is Result.Success)
+        }
+        coVerify { videoPlaybackRepository.saveVideoMetadata(any()) }
+    }
+
+    @Test
+    fun testSaveVideoMetadataError() {
+        coEvery { videoPlaybackRepository.saveVideoMetadata(any()) } returns Result.Error(
+            mockk()
+        )
+        runBlocking {
+            val result =
+                videoPlaybackUseCaseImpl.saveVideoMetadata(mockk())
+            Assert.assertTrue(result is Result.Error)
+        }
+        coVerify { videoPlaybackRepository.saveVideoMetadata(any()) }
+    }
+
 }

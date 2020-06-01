@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.lawmobile.domain.usecase.liveStreaming.LiveStreamingUseCase
 import com.lawmobile.presentation.ui.base.BaseViewModel
 import com.lawmobile.presentation.utils.VLCMediaPlayer
+import com.safefleet.mobile.avml.cameras.entities.CameraConnectCatalog
 import com.safefleet.mobile.commons.helpers.Result
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -28,6 +29,18 @@ class LiveActivityViewModel @Inject constructor(
     val resultTakePhotoLiveData: LiveData<Result<Unit>> get() = resultTakePhotoMediatorLiveData
 
     fun getUrlLive(): String = liveStreamingUseCase.getUrlForLiveStream()
+
+    private val catalogInfoMediatorLiveData =
+        MediatorLiveData<Result<List<CameraConnectCatalog>>>()
+    val catalogInfoLiveData get() = catalogInfoMediatorLiveData
+
+    fun getCatalogInfo() {
+        viewModelScope.launch {
+            catalogInfoMediatorLiveData.postValue(
+                liveStreamingUseCase.getCatalogInfo()
+            )
+        }
+    }
 
     fun createVLCMediaPlayer(url: String, view: SurfaceView) {
         vlcMediaPlayer.createMediaPlayer(url, view)

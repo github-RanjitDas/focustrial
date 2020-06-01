@@ -8,6 +8,7 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.Observer
+import com.lawmobile.domain.CameraInfo
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.extensions.createAlertProgress
 import com.lawmobile.presentation.extensions.setOnCheckedChangeListenerCheckConnection
@@ -18,6 +19,8 @@ import com.lawmobile.presentation.ui.fileList.FileListActivity
 import com.lawmobile.presentation.utils.Constants.FILE_LIST_SELECTOR
 import com.lawmobile.presentation.utils.Constants.SNAPSHOT_LIST
 import com.lawmobile.presentation.utils.Constants.VIDEO_LIST
+import com.safefleet.mobile.avml.cameras.entities.CameraConnectCatalog
+import com.safefleet.mobile.avml.cameras.entities.CatalogTypes
 import com.safefleet.mobile.commons.helpers.Result
 import kotlinx.android.synthetic.main.activity_live_view.*
 import javax.inject.Inject
@@ -34,6 +37,7 @@ class LiveActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_live_view)
         configureObservers()
+        getCatalogInfo()
         dialogProgressSnapShot = createAlertProgress(R.string.taking_snapshot)
         dialogProgressVideo = createAlertProgress()
     }
@@ -44,6 +48,10 @@ class LiveActivity : BaseActivity() {
         setUrlLive()
         startLiveVideoView()
         configureListeners()
+    }
+
+    private fun getCatalogInfo() {
+        liveActivityViewModel.getCatalogInfo()
     }
 
     private fun configureListeners() {
@@ -116,6 +124,22 @@ class LiveActivity : BaseActivity() {
             dialogProgressSnapShot.dismiss()
             manageResultTakePhoto(it)
         })
+
+        liveActivityViewModel.catalogInfoLiveData.observe(this, Observer(::setCatalogInfo))
+    }
+
+    private fun setCatalogInfo(catalogInfoList: Result<List<CameraConnectCatalog>>) {
+        when (catalogInfoList) {
+            is Result.Success -> {
+                val eventNames =
+                    catalogInfoList.data.filter { it.type == CatalogTypes.EVENT.value }
+                        .map { it.name }
+                CameraInfo.events.addAll(eventNames)
+            }
+            is Result.Error -> {
+                this.showToast(getString(R.string.catalog_error), Toast.LENGTH_SHORT)
+            }
+        }
     }
 
     private fun manageResultTakePhoto(result: Result<Unit>) {

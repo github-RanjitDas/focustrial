@@ -1,11 +1,13 @@
 package com.lawmobile.data.repository.videoPlayback
 
 import com.lawmobile.data.datasource.remote.videoPlayback.VideoPlaybackRemoteDataSource
+import com.lawmobile.data.entities.RemoteCameraMetadata
 import com.lawmobile.data.mappers.MapperCameraConnectVideoInfoDomainVideo
 import com.lawmobile.data.repository.videoPlayback.VideoPlaybackRepositoryImpl.Companion.ERROR_TO_GET_VIDEO
 import com.lawmobile.domain.entity.DomainInformationVideo
 import com.safefleet.mobile.avml.cameras.entities.CameraConnectFile
 import com.safefleet.mobile.avml.cameras.entities.CameraConnectVideoInfo
+import com.safefleet.mobile.avml.cameras.entities.CameraConnectVideoMetadata
 import com.safefleet.mobile.commons.helpers.Result
 import io.mockk.*
 import kotlinx.coroutines.runBlocking
@@ -23,7 +25,7 @@ class VideoPlaybackRepositoryImplTest {
     }
 
     @BeforeEach
-    fun setUp(){
+    fun setUp() {
         clearAllMocks()
     }
 
@@ -47,7 +49,11 @@ class VideoPlaybackRepositoryImplTest {
     @Test
     fun testGetInformationResourcesVideoSuccessMapperFailed() {
         mockkObject(MapperCameraConnectVideoInfoDomainVideo)
-        every { MapperCameraConnectVideoInfoDomainVideo.cameraConnectFileToDomainInformationVideo(any()) } throws Exception()
+        every {
+            MapperCameraConnectVideoInfoDomainVideo.cameraConnectFileToDomainInformationVideo(
+                any()
+            )
+        } throws Exception()
         val cameraConnectFile: CameraConnectFile = mockk()
         val cameraConnectVideoInformationVideo = CameraConnectVideoInfo(1, 1, 1, "", "", 1, "", "")
         coEvery { videoPlayBackRemoteDataSource.getInformationResourcesVideo(cameraConnectFile) } returns Result.Success(
@@ -78,27 +84,116 @@ class VideoPlaybackRepositoryImplTest {
     }
 
     @Test
-    fun testGetCatalogInfoSuccess() {
-        coEvery { videoPlayBackRemoteDataSource.getCatalogInfo() } returns Result.Success(
-            mockk()
+    fun testSaveVideoMetadataSuccess() {
+        VideoPlaybackRepositoryImpl.metadataList = mutableListOf(
+            RemoteCameraMetadata(
+                mockk {
+                    every { fileName } returns ""
+                },
+                true
+            )
+        )
+        val cameraConnectVideoMetadata: CameraConnectVideoMetadata = mockk {
+            every { fileName } returns ""
+        }
+        coEvery { videoPlayBackRemoteDataSource.saveVideoMetadata(cameraConnectVideoMetadata) } returns Result.Success(
+            Unit
         )
         runBlocking {
-            val result = videoPlaybackRepositoryImpl.getCatalogInfo()
+            val result =
+                videoPlaybackRepositoryImpl.saveVideoMetadata(cameraConnectVideoMetadata)
             Assert.assertTrue(result is Result.Success)
         }
-        coVerify { videoPlayBackRemoteDataSource.getCatalogInfo() }
+        coVerify { videoPlayBackRemoteDataSource.saveVideoMetadata(cameraConnectVideoMetadata) }
     }
 
     @Test
-    fun testGetCatalogInfoError() {
-        coEvery { videoPlayBackRemoteDataSource.getCatalogInfo() } returns Result.Error(
+    fun testSaveVideoMetadataError() {
+        VideoPlaybackRepositoryImpl.metadataList = mockk(relaxed = true)
+        coEvery { videoPlayBackRemoteDataSource.saveVideoMetadata(any()) } returns Result.Error(
             mockk()
         )
         runBlocking {
-            val result = videoPlaybackRepositoryImpl.getCatalogInfo()
+            val result =
+                videoPlaybackRepositoryImpl.saveVideoMetadata(mockk())
             Assert.assertTrue(result is Result.Error)
         }
-        coVerify { videoPlayBackRemoteDataSource.getCatalogInfo() }
+        coVerify { videoPlayBackRemoteDataSource.saveVideoMetadata(any()) }
     }
 
+    @Test
+    fun testGetVideoMetadataSuccessUpdate() {
+        VideoPlaybackRepositoryImpl.metadataList = mutableListOf(
+            RemoteCameraMetadata(
+                mockk {
+                    every { fileName } returns ""
+                },
+                true
+            )
+        )
+        coEvery { videoPlayBackRemoteDataSource.getVideoMetadata(any()) } returns Result.Success(
+            mockk()
+        )
+        runBlocking {
+            val result =
+                videoPlaybackRepositoryImpl.getVideoMetadata("")
+            Assert.assertTrue(result is Result.Success)
+        }
+        coVerify { videoPlayBackRemoteDataSource.getVideoMetadata(any()) }
+    }
+
+    @Test
+    fun testGetVideoMetadataSuccessSave() {
+        VideoPlaybackRepositoryImpl.metadataList = mutableListOf(
+            RemoteCameraMetadata(
+                mockk {
+                    every { fileName } returns "x"
+                },
+                true
+            )
+        )
+        coEvery { videoPlayBackRemoteDataSource.getVideoMetadata(any()) } returns Result.Success(
+            mockk()
+        )
+        runBlocking {
+            val result =
+                videoPlaybackRepositoryImpl.getVideoMetadata("")
+            Assert.assertTrue(result is Result.Success)
+        }
+        coVerify { videoPlayBackRemoteDataSource.getVideoMetadata(any()) }
+    }
+
+    @Test
+    fun testGetVideoMetadataError() {
+        VideoPlaybackRepositoryImpl.metadataList = mockk(relaxed = true)
+        coEvery { videoPlayBackRemoteDataSource.getVideoMetadata(any()) } returns Result.Error(
+            mockk()
+        )
+        runBlocking {
+            val result =
+                videoPlaybackRepositoryImpl.getVideoMetadata("")
+            Assert.assertTrue(result is Result.Error)
+        }
+        coVerify { videoPlayBackRemoteDataSource.getVideoMetadata(any()) }
+    }
+
+    @Test
+    fun testGetVideoMetadataSaved() {
+        VideoPlaybackRepositoryImpl.metadataList = mutableListOf(
+            RemoteCameraMetadata(
+                mockk {
+                    every { fileName } returns ""
+                },
+                false
+            )
+        )
+        coEvery { videoPlayBackRemoteDataSource.getVideoMetadata(any()) } returns Result.Success(
+            mockk()
+        )
+        runBlocking {
+            val result =
+                videoPlaybackRepositoryImpl.getVideoMetadata("")
+            Assert.assertTrue(result is Result.Success)
+        }
+    }
 }

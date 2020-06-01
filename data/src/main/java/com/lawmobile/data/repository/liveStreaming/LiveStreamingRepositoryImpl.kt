@@ -2,6 +2,7 @@ package com.lawmobile.data.repository.liveStreaming
 
 import com.lawmobile.data.datasource.remote.liveStreaming.LiveStreamingRemoteDataSource
 import com.lawmobile.domain.repository.liveStreaming.LiveStreamingRepository
+import com.safefleet.mobile.avml.cameras.entities.CameraConnectCatalog
 import com.safefleet.mobile.commons.helpers.Result
 
 class LiveStreamingRepositoryImpl(private val liveRemoteDataSource: LiveStreamingRemoteDataSource) :
@@ -21,4 +22,7 @@ class LiveStreamingRepositoryImpl(private val liveRemoteDataSource: LiveStreamin
     override suspend fun takePhoto(): Result<Unit> {
         return liveRemoteDataSource.takePhoto()
     }
+
+    override suspend fun getCatalogInfo(): Result<List<CameraConnectCatalog>> =
+        liveRemoteDataSource.getCatalogInfo()
 }

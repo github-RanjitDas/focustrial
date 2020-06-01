@@ -2,7 +2,7 @@ package com.safefleet.lawmobile.di.cameraService
 
 import android.content.SharedPreferences
 import com.google.gson.Gson
-import com.lawmobile.domain.ActualCameraType
+import com.lawmobile.domain.CameraInfo
 import com.lawmobile.presentation.utils.CameraHelper
 import com.lawmobile.presentation.utils.WifiHelper
 import com.safefleet.lawmobile.di.mocksServiceCameras.CameraConnectServiceX1Mock
@@ -39,7 +39,7 @@ class CameraServiceModule {
             cameraHelperX1: CameraHelperX1,
             cameraPreferences: CameraPreferences
         ): CameraConnectService {
-            return when (ActualCameraType.type) {
+            return when (CameraInfo.cameraType) {
                 CameraType.X1 -> CameraConnectServiceX1Mock()
             }
         }

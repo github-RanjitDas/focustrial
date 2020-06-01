@@ -128,27 +128,43 @@ class VideoPlaybackViewModelTest {
     }
 
     @Test
-    fun testGetCatalogInfoSuccess() {
-        coEvery { videoPlaybackUseCase.getCatalogInfo() } returns Result.Success(
-            mockk()
-        )
+    fun testGetVideoMetadataLiveDataSuccess() {
+        coEvery { videoPlaybackUseCase.getVideoMetadata(any()) } returns Result.Success(mockk())
         runBlocking {
-            videoPlaybackViewModel.getCatalogInfo()
-            Assert.assertTrue(videoPlaybackViewModel.catalogInfoLiveData.value is Result.Success)
+            videoPlaybackViewModel.getVideoMetadata("")
+            Assert.assertTrue(videoPlaybackViewModel.videoMetadataLiveData.value is Result.Success)
         }
-        coVerify { videoPlaybackUseCase.getCatalogInfo() }
+        coVerify { videoPlaybackUseCase.getVideoMetadata(any()) }
     }
 
     @Test
-    fun testGetCatalogInfoError() {
-        coEvery { videoPlaybackUseCase.getCatalogInfo() } returns Result.Error(
-            mockk()
-        )
+    fun testGetVideoMetadataLiveDataError() {
+        coEvery { videoPlaybackUseCase.getVideoMetadata(any()) } returns Result.Error(mockk())
         runBlocking {
-            videoPlaybackViewModel.getCatalogInfo()
-            Assert.assertTrue(videoPlaybackViewModel.catalogInfoLiveData.value is Result.Error)
+            videoPlaybackViewModel.getVideoMetadata("")
+            Assert.assertTrue(videoPlaybackViewModel.videoMetadataLiveData.value is Result.Error)
         }
-        coVerify { videoPlaybackUseCase.getCatalogInfo() }
+        coVerify { videoPlaybackUseCase.getVideoMetadata(any()) }
+    }
+
+    @Test
+    fun testSaveVideoMetadataSuccess() {
+        coEvery { videoPlaybackUseCase.saveVideoMetadata(any()) } returns Result.Success(mockk())
+        runBlocking {
+            videoPlaybackViewModel.saveVideoMetadata(mockk())
+            Assert.assertTrue(videoPlaybackViewModel.saveVideoMetadataLiveData.value is Result.Success)
+        }
+        coVerify { videoPlaybackUseCase.saveVideoMetadata(any()) }
+    }
+
+    @Test
+    fun testSaveVideoMetadataError() {
+        coEvery { videoPlaybackUseCase.saveVideoMetadata(any()) } returns Result.Success(mockk())
+        runBlocking {
+            videoPlaybackViewModel.saveVideoMetadata(mockk())
+            Assert.assertTrue(videoPlaybackViewModel.saveVideoMetadataLiveData.value is Result.Success)
+        }
+        coVerify { videoPlaybackUseCase.saveVideoMetadata(any()) }
     }
 
 }

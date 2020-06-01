@@ -1,5 +1,6 @@
 package com.lawmobile.data.datasource.remote.liveStreaming
 
+import com.safefleet.mobile.avml.cameras.entities.CameraConnectCatalog
 import com.safefleet.mobile.avml.cameras.external.CameraConnectService
 import com.safefleet.mobile.commons.helpers.Result
 
@@ -20,4 +21,7 @@ class LiveStreamingRemoteDataSourceImpl(private val cameraConnectService: Camera
     override suspend fun stopRecordVideo(): Result<Unit> {
         return cameraConnectService.stopRecordVideo()
     }
+
+    override suspend fun getCatalogInfo(): Result<List<CameraConnectCatalog>> =
+        cameraConnectService.getCatalogInfo()
 }
