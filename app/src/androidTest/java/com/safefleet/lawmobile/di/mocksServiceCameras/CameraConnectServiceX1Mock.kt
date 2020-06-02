@@ -41,7 +41,7 @@ class CameraConnectServiceX1Mock : CameraConnectService {
             CameraConnectUserResponse(
                 TestData.OFFICER_PASSWORD.value,
                 TestData.OFFICER_NAME.value,
-                "hgElMu+nDSlTmaGC9F9QUbf/HY4WjnQ4YKHHiO1BCiU=" //Hashed value for 1111 password
+                "dZnvtiaAwPk/xx/OrSx0p7TLhGs48Uc0g7seZR7ej/4=" //Hashed value for 'san 6279!' password
             )
         )
     }

@@ -4,6 +4,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
 import com.lawmobile.presentation.ui.login.LoginActivity
 import com.safefleet.lawmobile.TestData
+import com.safefleet.lawmobile.helpers.MockUtils
 import com.safefleet.lawmobile.screens.LiveViewScreen
 import com.safefleet.lawmobile.screens.LoginScreen
 import org.junit.Test
@@ -11,7 +12,7 @@ import org.junit.runner.RunWith
 
 @LargeTest
 @RunWith(AndroidJUnit4::class)
-class LoginActivityTest : EspressoBaseTest<LoginActivity>(LoginActivity::class.java) {
+class LoginTest : EspressoBaseTest<LoginActivity>(LoginActivity::class.java) {
     // This class tests FMA-248 User story
     companion object {
         val SERIAL_NUMBER = TestData.SERIAL_NUMBER.value
@@ -23,10 +24,11 @@ class LoginActivityTest : EspressoBaseTest<LoginActivity>(LoginActivity::class.j
 
         val loginScreen = LoginScreen()
         val liveViewScreen = LiveViewScreen()
+        val mockUtils = MockUtils()
     }
 
     @Test
-    fun verify_app_login_FMA_261() {
+    fun verifyAppLogin_FMA_261_289() {
         loginScreen
             .isLogoDisplayed()
             .isWaitingForCameraTextDisplayed()
@@ -45,7 +47,7 @@ class LoginActivityTest : EspressoBaseTest<LoginActivity>(LoginActivity::class.j
     }
 
     @Test
-    fun verify_invalid_password_login_FMA_288() {
+    fun verifyInvalidPasswordLogin_FMA_288() {
         loginScreen.typeSerialNumber(SERIAL_NUMBER).go()
 
         loginScreen.isWelcomeTextDisplayed()
@@ -57,7 +59,7 @@ class LoginActivityTest : EspressoBaseTest<LoginActivity>(LoginActivity::class.j
     }
 
     @Test
-    fun verify_empty_password_login_FMA_288() {
+    fun verifyEmptyPasswordLogin_FMA_288() {
         loginScreen.typeSerialNumber(SERIAL_NUMBER).go()
 
         loginScreen.isWelcomeTextDisplayed().go()
@@ -67,11 +69,40 @@ class LoginActivityTest : EspressoBaseTest<LoginActivity>(LoginActivity::class.j
     }
 
     @Test
-    fun verify_incorrect_serial_number_FMA_287() {
+    fun verifyIncorrectSerialNumber_FMA_287() {
         loginScreen.typeSerialNumber(INVALID_SERIAL_NUMBER).go()
 
         loginScreen.isConnectingToCameraTextDisplayed()
         loginScreen.isIncorrectSerialNumberToastDisplayed()
         loginScreen.isWaitingForCameraTextDisplayed()
+    }
+
+    @Test
+    fun verifyPairingForTheSecondTime_FMA_286() {
+        loginScreen.typeSerialNumber(SERIAL_NUMBER).go()
+        loginScreen.typePassword(OFFICER_PASSWORD).go()
+        liveViewScreen.isLiveViewDisplayed()
+
+        loginScreen.restartApp()
+
+        loginScreen
+            .isWelcomeTextDisplayed()
+            .isOfficerNameDisplayed(OFFICER_NAME)
+
+        loginScreen.typePassword(OFFICER_PASSWORD).go()
+        liveViewScreen.isLiveViewDisplayed()
+    }
+
+    @Test
+    fun verifyLoginDisconnectionScenario_FMA_292() {
+        mockUtils.disconnectCamera()
+
+        loginScreen.isWaitingForCameraTextDisplayed()
+        loginScreen.typeSerialNumber(SERIAL_NUMBER).go()
+        loginScreen.typePassword(OFFICER_PASSWORD).go()
+
+        loginScreen.isDisconnectionAlertDisplayed()
+
+        mockUtils.restoreCameraConnection()
     }
 }

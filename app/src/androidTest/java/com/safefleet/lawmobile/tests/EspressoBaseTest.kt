@@ -17,7 +17,7 @@ open class EspressoBaseTest<T : Activity>(testActivityClass: Class<T>) {
     @get:Rule
     var baristaRule = BaristaRule.create(testActivityClass)
     // Uncomment line below and comment the one above if you want to disable barista defaults
-    //var activityTestRule = ActivityTestRule(testActivity::class.java)
+    //public var activityTestRule = ActivityTestRule(testActivityClass)
 
     @Rule
     @JvmField
