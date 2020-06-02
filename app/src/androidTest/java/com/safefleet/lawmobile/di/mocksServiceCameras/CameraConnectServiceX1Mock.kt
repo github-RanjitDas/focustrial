@@ -46,7 +46,10 @@ class CameraConnectServiceX1Mock : CameraConnectService {
         )
     }
 
-    override suspend fun getVideoMetadata(fileName: String): Result<CameraConnectVideoMetadata> {
+    override suspend fun getVideoMetadata(
+        fileName: String,
+        folderName: String
+    ): Result<CameraConnectVideoMetadata> {
         return Result.Success(mockk())
     }
 
@@ -54,6 +57,10 @@ class CameraConnectServiceX1Mock : CameraConnectService {
 
     override suspend fun loadPairingCamera(hostnameToConnect: String, ipAddressClient: String) {
         progressPairingCameraMediator.postValue(Result.Success(100))
+    }
+
+    override suspend fun savePhotoMetadata(cameraConnectPhotoMetadata: CameraConnectPhotoMetadata): Result<Unit> {
+        return Result.Success(Unit)
     }
 
     override suspend fun saveVideoMetadata(cameraConnectVideoMetadata: CameraConnectVideoMetadata): Result<Unit> {

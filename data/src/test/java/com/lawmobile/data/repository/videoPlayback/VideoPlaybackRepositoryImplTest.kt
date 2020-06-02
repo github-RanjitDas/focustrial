@@ -131,15 +131,20 @@ class VideoPlaybackRepositoryImplTest {
                 true
             )
         )
-        coEvery { videoPlayBackRemoteDataSource.getVideoMetadata(any()) } returns Result.Success(
+        coEvery {
+            videoPlayBackRemoteDataSource.getVideoMetadata(
+                any(),
+                any()
+            )
+        } returns Result.Success(
             mockk()
         )
         runBlocking {
             val result =
-                videoPlaybackRepositoryImpl.getVideoMetadata("")
+                videoPlaybackRepositoryImpl.getVideoMetadata("", "")
             Assert.assertTrue(result is Result.Success)
         }
-        coVerify { videoPlayBackRemoteDataSource.getVideoMetadata(any()) }
+        coVerify { videoPlayBackRemoteDataSource.getVideoMetadata(any(), any()) }
     }
 
     @Test
@@ -152,29 +157,39 @@ class VideoPlaybackRepositoryImplTest {
                 true
             )
         )
-        coEvery { videoPlayBackRemoteDataSource.getVideoMetadata(any()) } returns Result.Success(
+        coEvery {
+            videoPlayBackRemoteDataSource.getVideoMetadata(
+                any(),
+                any()
+            )
+        } returns Result.Success(
             mockk()
         )
         runBlocking {
             val result =
-                videoPlaybackRepositoryImpl.getVideoMetadata("")
+                videoPlaybackRepositoryImpl.getVideoMetadata("", "")
             Assert.assertTrue(result is Result.Success)
         }
-        coVerify { videoPlayBackRemoteDataSource.getVideoMetadata(any()) }
+        coVerify { videoPlayBackRemoteDataSource.getVideoMetadata(any(), any()) }
     }
 
     @Test
     fun testGetVideoMetadataError() {
         VideoPlaybackRepositoryImpl.metadataList = mockk(relaxed = true)
-        coEvery { videoPlayBackRemoteDataSource.getVideoMetadata(any()) } returns Result.Error(
+        coEvery {
+            videoPlayBackRemoteDataSource.getVideoMetadata(
+                any(),
+                any()
+            )
+        } returns Result.Error(
             mockk()
         )
         runBlocking {
             val result =
-                videoPlaybackRepositoryImpl.getVideoMetadata("")
+                videoPlaybackRepositoryImpl.getVideoMetadata("", "")
             Assert.assertTrue(result is Result.Error)
         }
-        coVerify { videoPlayBackRemoteDataSource.getVideoMetadata(any()) }
+        coVerify { videoPlayBackRemoteDataSource.getVideoMetadata(any(), any()) }
     }
 
     @Test
@@ -187,12 +202,17 @@ class VideoPlaybackRepositoryImplTest {
                 false
             )
         )
-        coEvery { videoPlayBackRemoteDataSource.getVideoMetadata(any()) } returns Result.Success(
+        coEvery {
+            videoPlayBackRemoteDataSource.getVideoMetadata(
+                any(),
+                any()
+            )
+        } returns Result.Success(
             mockk()
         )
         runBlocking {
             val result =
-                videoPlaybackRepositoryImpl.getVideoMetadata("")
+                videoPlaybackRepositoryImpl.getVideoMetadata("", "")
             Assert.assertTrue(result is Result.Success)
         }
     }

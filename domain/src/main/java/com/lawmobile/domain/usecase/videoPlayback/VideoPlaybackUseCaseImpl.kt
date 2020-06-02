@@ -15,6 +15,9 @@ class VideoPlaybackUseCaseImpl(private val videoPlaybackRepository: VideoPlaybac
     override suspend fun saveVideoMetadata(cameraConnectVideoMetadata: CameraConnectVideoMetadata): Result<Unit> =
         videoPlaybackRepository.saveVideoMetadata(cameraConnectVideoMetadata)
 
-    override suspend fun getVideoMetadata(fileName: String): Result<CameraConnectVideoMetadata> =
-        videoPlaybackRepository.getVideoMetadata(fileName)
+    override suspend fun getVideoMetadata(
+        fileName: String,
+        folderName: String
+    ): Result<CameraConnectVideoMetadata> =
+        videoPlaybackRepository.getVideoMetadata(fileName, folderName)
 }

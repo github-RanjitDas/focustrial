@@ -51,28 +51,28 @@ class VideoPlaybackRemoteDataSourceImplTest {
 
     @Test
     fun testGetVideoMetadataSuccess() {
-        coEvery { cameraConnectService.getVideoMetadata(any()) } returns Result.Success(
+        coEvery { cameraConnectService.getVideoMetadata(any(), any()) } returns Result.Success(
             mockk()
         )
         runBlocking {
             val result =
-                videoPlaybackRemoteDataSourceImpl.getVideoMetadata("")
+                videoPlaybackRemoteDataSourceImpl.getVideoMetadata("", "")
             Assert.assertTrue(result is Result.Success)
         }
-        coVerify { cameraConnectService.getVideoMetadata(any()) }
+        coVerify { cameraConnectService.getVideoMetadata(any(), any()) }
     }
 
     @Test
     fun testGetVideoMetadataError() {
-        coEvery { cameraConnectService.getVideoMetadata(any()) } returns Result.Error(
+        coEvery { cameraConnectService.getVideoMetadata(any(), any()) } returns Result.Error(
             mockk()
         )
         runBlocking {
             val result =
-                videoPlaybackRemoteDataSourceImpl.getVideoMetadata("")
+                videoPlaybackRemoteDataSourceImpl.getVideoMetadata("", "")
             Assert.assertTrue(result is Result.Error)
         }
-        coVerify { cameraConnectService.getVideoMetadata(any()) }
+        coVerify { cameraConnectService.getVideoMetadata(any(), any()) }
     }
 
     @Test

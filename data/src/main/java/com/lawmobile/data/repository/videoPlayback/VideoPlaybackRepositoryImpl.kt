@@ -43,12 +43,15 @@ class VideoPlaybackRepositoryImpl(private val videoPlaybackRemoteDataSource: Vid
         return result
     }
 
-    override suspend fun getVideoMetadata(fileName: String): Result<CameraConnectVideoMetadata> {
+    override suspend fun getVideoMetadata(
+        fileName: String,
+        folderName: String
+    ): Result<CameraConnectVideoMetadata> {
         val cameraConnectVideoMetadata = metadataList.find { it.videoMetadata.fileName == fileName }
         return if (cameraConnectVideoMetadata != null && !cameraConnectVideoMetadata.isChanged) {
             Result.Success(cameraConnectVideoMetadata.videoMetadata)
         } else {
-            val result = videoPlaybackRemoteDataSource.getVideoMetadata(fileName)
+            val result = videoPlaybackRemoteDataSource.getVideoMetadata(fileName, folderName)
             if (result is Result.Success) {
                 val metadata = RemoteCameraMetadata(result.data, false)
                 if (cameraConnectVideoMetadata != null) {

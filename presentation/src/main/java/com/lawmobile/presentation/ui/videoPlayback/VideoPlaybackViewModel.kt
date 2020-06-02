@@ -50,10 +50,10 @@ class VideoPlaybackViewModel @Inject constructor(
         }
     }
 
-    fun getVideoMetadata(fileName: String) {
+    fun getVideoMetadata(fileName: String, folderName: String) {
         viewModelScope.launch {
             videoMetadataMediatorLiveData.postValue(
-                videoPlaybackUseCase.getVideoMetadata(fileName)
+                videoPlaybackUseCase.getVideoMetadata(fileName, folderName)
             )
         }
     }
