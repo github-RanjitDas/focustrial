@@ -16,6 +16,9 @@ class VideoPlaybackRemoteDataSourceImpl(private val cameraConnectService: Camera
     override suspend fun saveVideoMetadata(cameraConnectVideoMetadata: CameraConnectVideoMetadata): Result<Unit> =
         cameraConnectService.saveVideoMetadata(cameraConnectVideoMetadata)
 
-    override suspend fun getVideoMetadata(fileName: String): Result<CameraConnectVideoMetadata> =
-        cameraConnectService.getVideoMetadata(fileName)
+    override suspend fun getVideoMetadata(
+        fileName: String,
+        folderName: String
+    ): Result<CameraConnectVideoMetadata> =
+        cameraConnectService.getVideoMetadata(fileName, folderName)
 }

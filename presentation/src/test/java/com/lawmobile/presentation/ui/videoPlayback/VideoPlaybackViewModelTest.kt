@@ -129,22 +129,32 @@ class VideoPlaybackViewModelTest {
 
     @Test
     fun testGetVideoMetadataLiveDataSuccess() {
-        coEvery { videoPlaybackUseCase.getVideoMetadata(any()) } returns Result.Success(mockk())
+        coEvery {
+            videoPlaybackUseCase.getVideoMetadata(
+                any(),
+                any()
+            )
+        } returns Result.Success(mockk())
         runBlocking {
-            videoPlaybackViewModel.getVideoMetadata("")
+            videoPlaybackViewModel.getVideoMetadata("", "")
             Assert.assertTrue(videoPlaybackViewModel.videoMetadataLiveData.value is Result.Success)
         }
-        coVerify { videoPlaybackUseCase.getVideoMetadata(any()) }
+        coVerify { videoPlaybackUseCase.getVideoMetadata(any(), any()) }
     }
 
     @Test
     fun testGetVideoMetadataLiveDataError() {
-        coEvery { videoPlaybackUseCase.getVideoMetadata(any()) } returns Result.Error(mockk())
+        coEvery {
+            videoPlaybackUseCase.getVideoMetadata(
+                any(),
+                any()
+            )
+        } returns Result.Error(mockk())
         runBlocking {
-            videoPlaybackViewModel.getVideoMetadata("")
+            videoPlaybackViewModel.getVideoMetadata("", "")
             Assert.assertTrue(videoPlaybackViewModel.videoMetadataLiveData.value is Result.Error)
         }
-        coVerify { videoPlaybackUseCase.getVideoMetadata(any()) }
+        coVerify { videoPlaybackUseCase.getVideoMetadata(any(), any()) }
     }
 
     @Test

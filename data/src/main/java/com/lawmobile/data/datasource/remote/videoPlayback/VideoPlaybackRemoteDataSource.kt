@@ -8,5 +8,8 @@ import com.safefleet.mobile.commons.helpers.Result
 interface VideoPlaybackRemoteDataSource {
     suspend fun getInformationResourcesVideo(cameraConnectFile: CameraConnectFile): Result<CameraConnectVideoInfo>
     suspend fun saveVideoMetadata(cameraConnectVideoMetadata: CameraConnectVideoMetadata): Result<Unit>
-    suspend fun getVideoMetadata(fileName: String): Result<CameraConnectVideoMetadata>
+    suspend fun getVideoMetadata(
+        fileName: String,
+        folderName: String
+    ): Result<CameraConnectVideoMetadata>
 }

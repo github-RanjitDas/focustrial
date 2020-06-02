@@ -262,11 +262,15 @@ class VideoPlaybackActivity : BaseActivity() {
     private fun getInformationOfVideo() {
         dialog.show()
         connectVideo = getCameraConnectFileFromIntent()
-        videoPlaybackViewModel.getInformationResourcesVideo(connectVideo!!)
+        connectVideo?.run {
+            videoPlaybackViewModel.getInformationResourcesVideo(this)
+        }
     }
 
     private fun getVideoMetadata() {
-        videoPlaybackViewModel.getVideoMetadata(connectVideo!!.name)
+        connectVideo?.run {
+            videoPlaybackViewModel.getVideoMetadata(name, nameFolder)
+        }
     }
 
     private fun getCameraConnectFileFromIntent(): CameraConnectFile {
@@ -357,7 +361,6 @@ class VideoPlaybackActivity : BaseActivity() {
                 if (isFromUser) {
                     seekBar?.let {
                         setProgressToVideo(it.progress)
-
                     }
                 }
             }

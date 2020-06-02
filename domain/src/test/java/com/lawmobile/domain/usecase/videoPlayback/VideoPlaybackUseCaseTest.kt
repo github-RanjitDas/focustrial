@@ -51,28 +51,28 @@ class VideoPlaybackUseCaseTest {
 
     @Test
     fun testGetVideoMetadataSuccess() {
-        coEvery { videoPlaybackRepository.getVideoMetadata(any()) } returns Result.Success(
+        coEvery { videoPlaybackRepository.getVideoMetadata(any(), any()) } returns Result.Success(
             mockk()
         )
         runBlocking {
             val result =
-                videoPlaybackUseCaseImpl.getVideoMetadata("")
+                videoPlaybackUseCaseImpl.getVideoMetadata("", "")
             Assert.assertTrue(result is Result.Success)
         }
-        coVerify { videoPlaybackRepository.getVideoMetadata(any()) }
+        coVerify { videoPlaybackRepository.getVideoMetadata(any(), any()) }
     }
 
     @Test
     fun testGetVideoMetadataError() {
-        coEvery { videoPlaybackRepository.getVideoMetadata(any()) } returns Result.Error(
+        coEvery { videoPlaybackRepository.getVideoMetadata(any(), any()) } returns Result.Error(
             mockk()
         )
         runBlocking {
             val result =
-                videoPlaybackUseCaseImpl.getVideoMetadata("")
+                videoPlaybackUseCaseImpl.getVideoMetadata("", "")
             Assert.assertTrue(result is Result.Error)
         }
-        coVerify { videoPlaybackRepository.getVideoMetadata(any()) }
+        coVerify { videoPlaybackRepository.getVideoMetadata(any(), any()) }
     }
 
     @Test
