@@ -59,18 +59,14 @@ class VideoPlaybackActivity : BaseActivity() {
             getInformationOfVideo()
         }
 
-        cameraConnectVideoMetadata?.run {
-            setVideoMetadata()
-        } ?: run {
-            getVideoMetadata()
-        }
+        getVideoMetadata()
 
         configureListeners()
     }
 
     private fun setCatalogLists() {
         eventList.add(getString(R.string.select))
-        eventList.addAll(CameraInfo.events)
+        eventList.addAll(CameraInfo.events.map { it.name })
         raceList.addAll(resources.getStringArray(R.array.race_spinner))
         genderList.addAll(resources.getStringArray(R.array.gender_spinner))
 
@@ -105,14 +101,13 @@ class VideoPlaybackActivity : BaseActivity() {
                 Toast.LENGTH_SHORT
             )
         }
-        cameraConnectVideoMetadata = null
+        dialog.dismiss()
     }
 
     private fun manageGetVideoMetadataResult(result: Result<CameraConnectVideoMetadata>) {
         when (result) {
             is Result.Success -> {
-                cameraConnectVideoMetadata = result.data
-                setVideoMetadata()
+                setVideoMetadata(result.data)
             }
             is Result.Error -> this.showToast(
                 getString(R.string.get_video_metadata_error),
@@ -122,7 +117,6 @@ class VideoPlaybackActivity : BaseActivity() {
     }
 
     private fun manageGetVideoInformationResult(result: Result<DomainInformationVideo>) {
-        dialog.dismiss()
         when (result) {
             is Result.Success -> {
                 totalDurationVideoInMilliSeconds = result.data.duration.toLong() * 1000
@@ -147,9 +141,9 @@ class VideoPlaybackActivity : BaseActivity() {
         }
     }
 
-    private fun setVideoMetadata() {
-        cameraConnectVideoMetadata?.metadata?.run {
-            eventValue.setSelection(getSpinnerSelection(eventList, event))
+    private fun setVideoMetadata(cameraConnectVideoMetadata: CameraConnectVideoMetadata) {
+        cameraConnectVideoMetadata.metadata?.run {
+            eventValue.setSelection(getSpinnerSelection(eventList, event?.name))
             partnerIdValue.setText(partnerID)
             ticket1Value.setText(ticketNumber)
             ticket2Value.setText(ticketNumber2)
@@ -166,6 +160,7 @@ class VideoPlaybackActivity : BaseActivity() {
             driverLicenseValue.setText(driverLicense)
             licensePlateValue.setText(licensePlate)
         }
+        dialog.dismiss()
     }
 
     private fun getSpinnerSelection(list: List<String>, value: String?): Int {
@@ -195,6 +190,7 @@ class VideoPlaybackActivity : BaseActivity() {
             videoPlaybackViewModel.changeAspectRatio()
         }
         saveButtonVideoPlayback.setOnClickListenerCheckConnection {
+            dialog.show()
             saveVideoMetadataInCamera()
         }
         cancelButtonVideoPlayback.setOnClickListenerCheckConnection {
@@ -211,7 +207,7 @@ class VideoPlaybackActivity : BaseActivity() {
 
         var gender = ""
         var race = ""
-
+        val event = CameraInfo.events[eventValue.selectedItemPosition - 1]
         if (genderValue.selectedItem != genderList[0]) {
             gender = genderValue.selectedItem.toString()
         }
@@ -225,9 +221,9 @@ class VideoPlaybackActivity : BaseActivity() {
             CameraInfo.officerId,
             connectVideo?.path,
             connectVideo?.nameFolder,
-            CameraInfo.cameraSerialNumber,
+            CameraInfo.serialNumber,
             VideoMetadata(
-                event = eventValue.selectedItem.toString(),
+                event = event,
                 partnerID = partnerIdValue.text.toString(),
                 ticketNumber = ticket1Value.text.toString(),
                 ticketNumber2 = ticket2Value.text.toString(),
@@ -376,7 +372,6 @@ class VideoPlaybackActivity : BaseActivity() {
 
     private fun restartObjectOfCompanion() {
         domainInformationVideo = null
-        cameraConnectVideoMetadata = null
         totalDurationVideoInMilliSeconds = 0
         currentTimeVideoInMilliSeconds = 0
         currentProgressInVideo = 0
@@ -385,7 +380,6 @@ class VideoPlaybackActivity : BaseActivity() {
     companion object {
         private var connectVideo: CameraConnectFile? = null
         private var domainInformationVideo: DomainInformationVideo? = null
-        private var cameraConnectVideoMetadata: CameraConnectVideoMetadata? = null
         private var totalDurationVideoInMilliSeconds: Long = 0
         private var currentTimeVideoInMilliSeconds: Long = 0
         private var currentProgressInVideo = 0

@@ -1,7 +1,7 @@
 package com.lawmobile.data.repository.videoPlayback
 
 import com.lawmobile.data.datasource.remote.videoPlayback.VideoPlaybackRemoteDataSource
-import com.lawmobile.data.entities.RemoteCameraMetadata
+import com.lawmobile.data.entities.VideoListMetadata
 import com.lawmobile.data.mappers.MapperCameraConnectVideoInfoDomainVideo
 import com.lawmobile.data.repository.videoPlayback.VideoPlaybackRepositoryImpl.Companion.ERROR_TO_GET_VIDEO
 import com.lawmobile.domain.entity.DomainInformationVideo
@@ -85,14 +85,6 @@ class VideoPlaybackRepositoryImplTest {
 
     @Test
     fun testSaveVideoMetadataSuccess() {
-        VideoPlaybackRepositoryImpl.metadataList = mutableListOf(
-            RemoteCameraMetadata(
-                mockk {
-                    every { fileName } returns ""
-                },
-                true
-            )
-        )
         val cameraConnectVideoMetadata: CameraConnectVideoMetadata = mockk {
             every { fileName } returns ""
         }
@@ -109,61 +101,34 @@ class VideoPlaybackRepositoryImplTest {
 
     @Test
     fun testSaveVideoMetadataError() {
-        VideoPlaybackRepositoryImpl.metadataList = mockk(relaxed = true)
-        coEvery { videoPlayBackRemoteDataSource.saveVideoMetadata(any()) } returns Result.Error(
+        val cameraConnectVideoMetadata: CameraConnectVideoMetadata = mockk(relaxed = true)
+        mockkObject(VideoListMetadata)
+        every { VideoListMetadata.getVideoMetadata(any()) } returns null
+
+        coEvery { videoPlayBackRemoteDataSource.saveVideoMetadata(cameraConnectVideoMetadata) } returns Result.Error(
             mockk()
         )
         runBlocking {
             val result =
-                videoPlaybackRepositoryImpl.saveVideoMetadata(mockk())
+                videoPlaybackRepositoryImpl.saveVideoMetadata(cameraConnectVideoMetadata)
             Assert.assertTrue(result is Result.Error)
         }
-        coVerify { videoPlayBackRemoteDataSource.saveVideoMetadata(any()) }
-    }
-
-    @Test
-    fun testGetVideoMetadataSuccessUpdate() {
-        VideoPlaybackRepositoryImpl.metadataList = mutableListOf(
-            RemoteCameraMetadata(
-                mockk {
-                    every { fileName } returns ""
-                },
-                true
-            )
-        )
-        coEvery {
-            videoPlayBackRemoteDataSource.getVideoMetadata(
-                any(),
-                any()
-            )
-        } returns Result.Success(
-            mockk()
-        )
-        runBlocking {
-            val result =
-                videoPlaybackRepositoryImpl.getVideoMetadata("", "")
-            Assert.assertTrue(result is Result.Success)
-        }
-        coVerify { videoPlayBackRemoteDataSource.getVideoMetadata(any(), any()) }
+        coVerify { videoPlayBackRemoteDataSource.saveVideoMetadata(cameraConnectVideoMetadata) }
     }
 
     @Test
     fun testGetVideoMetadataSuccessSave() {
-        VideoPlaybackRepositoryImpl.metadataList = mutableListOf(
-            RemoteCameraMetadata(
-                mockk {
-                    every { fileName } returns "x"
-                },
-                true
-            )
-        )
+        val cameraConnectVideoMetadata: CameraConnectVideoMetadata = mockk(relaxed = true)
+        mockkObject(VideoListMetadata)
+        every { VideoListMetadata.getVideoMetadata(any()) } returns null
+
         coEvery {
             videoPlayBackRemoteDataSource.getVideoMetadata(
                 any(),
                 any()
             )
         } returns Result.Success(
-            mockk()
+            cameraConnectVideoMetadata
         )
         runBlocking {
             val result =
@@ -175,7 +140,8 @@ class VideoPlaybackRepositoryImplTest {
 
     @Test
     fun testGetVideoMetadataError() {
-        VideoPlaybackRepositoryImpl.metadataList = mockk(relaxed = true)
+        mockkObject(VideoListMetadata)
+        every { VideoListMetadata.getVideoMetadata(any()) } returns null
         coEvery {
             videoPlayBackRemoteDataSource.getVideoMetadata(
                 any(),
@@ -194,21 +160,14 @@ class VideoPlaybackRepositoryImplTest {
 
     @Test
     fun testGetVideoMetadataSaved() {
-        VideoPlaybackRepositoryImpl.metadataList = mutableListOf(
-            RemoteCameraMetadata(
-                mockk {
-                    every { fileName } returns ""
-                },
-                false
-            )
-        )
+        val cameraConnectVideoMetadata: CameraConnectVideoMetadata = mockk(relaxed = true)
         coEvery {
             videoPlayBackRemoteDataSource.getVideoMetadata(
                 any(),
                 any()
             )
         } returns Result.Success(
-            mockk()
+            cameraConnectVideoMetadata
         )
         runBlocking {
             val result =

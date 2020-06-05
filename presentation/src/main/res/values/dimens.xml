@@ -78,4 +78,9 @@
     <dimen name="video_playback_metadata_spacing">20dp</dimen>
     <dimen name="video_playback_edit_metadata_padding">5dp</dimen>
     <dimen name="metadata_form_spacing">20dp</dimen>
+    <dimen name="associate_partner_id_top_margin">10dp</dimen>
+    <dimen name="associate_partner_id_title_padding">20dp</dimen>
+    <dimen name="associate_partner_id_edit_text_margin">20dp</dimen>
+    <dimen name="associate_partner_id_edit_text_size">20sp</dimen>
+    <dimen name="associate_partner_id_edit_text_padding">10dp</dimen>
 </resources>

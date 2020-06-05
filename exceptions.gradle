@@ -36,5 +36,4 @@ ext.fileFilter = [
         '**/extensions/*.*',
         "**/*VLCMediaPlayer.*",
         "com.lawmobile.domain.CameraInfo*"
-
 ]

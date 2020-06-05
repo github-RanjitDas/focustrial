@@ -133,7 +133,6 @@ class LiveActivity : BaseActivity() {
             is Result.Success -> {
                 val eventNames =
                     catalogInfoList.data.filter { it.type == CatalogTypes.EVENT.value }
-                        .map { it.name }
                 CameraInfo.events.addAll(eventNames)
             }
             is Result.Error -> {

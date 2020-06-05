@@ -100,10 +100,17 @@
     <string name="playback_license_plate">LICENSE PLATE</string>
     <string name="select">Select</string>
     <string name="catalog_error">Could not get the catalog lists</string>
+    <string name="partner_id_title">ASSOCIATE PARTNER ID</string>
+    <string name="partner_id_edit_text_hint">ENTER PARTNER ID</string>
+    <string name="associate_partner_id_content_description">Associate partner ID</string>
     <string name="get_video_metadata_error">Could not get video metadata</string>
     <string name="video_metadata_saved_success">Video metadata saved successfully</string>
     <string name="video_metadata_save_error">Video metadata could not be saved</string>
     <string name="event_mandatory">Event type field is mandatory</string>
+    <string name="file_list_associate_partner_id_success">Partner ID associated successfully</string>
+    <string name="file_list_associate_partner_id_error">Partner ID could not be associated</string>
+    <string name="partner_id_button_disabled_message">You must select at least one file to associate</string>
+    <string name="associate_partner_to_file_button">Associate partner to file button</string>
 
     <string-array name="gender_spinner">
         <item>Select</item>
