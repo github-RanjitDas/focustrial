@@ -2,7 +2,8 @@ package com.safefleet.lawmobile.di.mocksServiceCameras
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
-import com.safefleet.lawmobile.TestData
+import com.safefleet.lawmobile.testData.CameraFilesData
+import com.safefleet.lawmobile.testData.TestLoginData
 import com.safefleet.mobile.avml.cameras.entities.*
 import com.safefleet.mobile.avml.cameras.external.CameraConnectService
 import com.safefleet.mobile.commons.helpers.Result
@@ -12,6 +13,11 @@ class CameraConnectServiceX1Mock : CameraConnectService {
     private val progressPairingCameraMediator: MediatorLiveData<Result<Int>> = MediatorLiveData()
     override val progressPairingCamera: LiveData<Result<Int>>
         get() = progressPairingCameraMediator
+
+    companion object {
+        var snapshotsList = CameraFilesData.DEFAULT_SNAPSHOTS_LIST.value.toMutableList()
+        var takenPhotos = 0
+    }
 
     override suspend fun disconnectCamera(): Result<Unit> {
         return Result.Success(Unit)
@@ -26,8 +32,8 @@ class CameraConnectServiceX1Mock : CameraConnectService {
         return Result.Success(CameraConnectVideoInfo(0, 1000, 100, "", "10", 10, "", ""))
     }
 
-    override suspend fun getListOfImages(): Result<List<CameraConnectFile>> {
-        return Result.Success(emptyList())
+    override suspend fun getListOfImages(): Result<MutableList<CameraConnectFile>> {
+        return Result.Success(snapshotsList)
     }
 
     override suspend fun getListOfVideos(): Result<List<CameraConnectFile>> {
@@ -39,8 +45,8 @@ class CameraConnectServiceX1Mock : CameraConnectService {
     override suspend fun getUserResponse(): Result<CameraConnectUserResponse> {
         return Result.Success(
             CameraConnectUserResponse(
-                TestData.OFFICER_PASSWORD.value,
-                TestData.OFFICER_NAME.value,
+                TestLoginData.OFFICER_PASSWORD.value,
+                TestLoginData.OFFICER_NAME.value,
                 "dZnvtiaAwPk/xx/OrSx0p7TLhGs48Uc0g7seZR7ej/4=" //Hashed value for 'san 6279!' password
             )
         )
@@ -76,6 +82,8 @@ class CameraConnectServiceX1Mock : CameraConnectService {
     }
 
     override suspend fun takePhoto(): Result<Unit> {
+        snapshotsList.add(CameraFilesData.EXTRA_SNAPSHOTS_LIST.value[takenPhotos])
+        takenPhotos++
         return Result.Success(Unit)
     }
 

@@ -174,12 +174,12 @@ class LiveActivity : BaseActivity() {
     private fun changeImageDependsRecordingVideo() {
         isRecordingVideo = !isRecordingVideo
         if (isRecordingVideo) {
-            imageVideoRecording.visibility = View.VISIBLE
+            imageRecordingIndicator.visibility = View.VISIBLE
             buttonStreaming.setBackgroundResource(R.drawable.ic_record_active)
             return
         }
 
-        imageVideoRecording.visibility = View.INVISIBLE
+        imageRecordingIndicator.visibility = View.INVISIBLE
         buttonStreaming.setBackgroundResource(R.drawable.ic_record)
     }
 

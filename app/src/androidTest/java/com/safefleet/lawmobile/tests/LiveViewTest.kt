@@ -4,7 +4,6 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
 import com.lawmobile.presentation.ui.login.LoginActivity
 import com.safefleet.lawmobile.helpers.DeviceUtils
-import com.safefleet.lawmobile.helpers.MockUtils
 import com.safefleet.lawmobile.screens.LiveViewScreen
 import com.safefleet.lawmobile.screens.LoginScreen
 import org.junit.Before
@@ -16,7 +15,6 @@ import org.junit.runner.RunWith
 class LiveViewTest : EspressoBaseTest<LoginActivity>(LoginActivity::class.java) {
 
     private val liveViewScreen = LiveViewScreen()
-    private val mockUtils = MockUtils()
     private val device = DeviceUtils()
 
     @Before
