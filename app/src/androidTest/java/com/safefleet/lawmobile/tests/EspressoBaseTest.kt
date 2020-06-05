@@ -4,7 +4,10 @@ import android.app.Activity
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
 import androidx.test.rule.GrantPermissionRule
+import com.safefleet.lawmobile.di.mocksServiceCameras.CameraConnectServiceX1Mock
+import com.safefleet.lawmobile.helpers.MockUtils
 import com.schibsted.spain.barista.rule.BaristaRule
+import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.runner.RunWith
@@ -13,6 +16,10 @@ import org.junit.runner.RunWith
 @LargeTest
 @RunWith(AndroidJUnit4::class)
 open class EspressoBaseTest<T : Activity>(testActivityClass: Class<T>) {
+
+    companion object {
+        val mockUtils = MockUtils()
+    }
 
     @get:Rule
     var baristaRule = BaristaRule.create(testActivityClass)
@@ -27,5 +34,12 @@ open class EspressoBaseTest<T : Activity>(testActivityClass: Class<T>) {
     //Comment this @Before statement if you want to disable barista defaults
     @Before
     fun startActivity() = baristaRule.launchActivity()
+
+    @After
+    fun restoreData() {
+        mockUtils.restoreCameraConnection()
+        mockUtils.restoreSnapshotsOnX1()
+        CameraConnectServiceX1Mock.takenPhotos = 0
+    }
 
 }

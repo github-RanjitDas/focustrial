@@ -1,19 +1,13 @@
 package com.safefleet.lawmobile.screens
 
-import androidx.test.espresso.Espresso
-import androidx.test.rule.ActivityTestRule
-import com.lawmobile.presentation.ui.login.LoginActivity
 import com.safefleet.lawmobile.R
-import com.safefleet.lawmobile.TestData
-import com.safefleet.lawmobile.helpers.ToastMessage
+import com.safefleet.lawmobile.testData.TestLoginData
 import com.schibsted.spain.barista.assertion.BaristaVisibilityAssertions.assertContains
 import com.schibsted.spain.barista.assertion.BaristaVisibilityAssertions.assertDisplayed
 import com.schibsted.spain.barista.interaction.BaristaClickInteractions.clickOn
 import com.schibsted.spain.barista.interaction.BaristaEditTextInteractions.writeTo
 
 class LoginScreen : BaseScreen() {
-
-    private val toastMessage = ToastMessage()
 
     fun isLogoDisplayed(): LoginScreen {
         assertDisplayed(R.id.imageViewLogo)
@@ -51,12 +45,12 @@ class LoginScreen : BaseScreen() {
     fun isOfficerNameDisplayed(officerName: String) =
         assertContains(R.id.textViewOfficerName, officerName)
 
-    fun typeSerialNumber(serialNumber: String = TestData.SERIAL_NUMBER.value): LoginScreen {
+    fun typeSerialNumber(serialNumber: String = TestLoginData.SERIAL_NUMBER.value): LoginScreen {
         writeTo(R.id.textInputEditValidateSSID, serialNumber)
         return this
     }
 
-    fun typePassword(officerPassword: String = TestData.OFFICER_PASSWORD.value): LoginScreen {
+    fun typePassword(officerPassword: String = TestLoginData.OFFICER_PASSWORD.value): LoginScreen {
         writeTo(R.id.textInputEditTextValidatePasswordOfficer, officerPassword)
         return this
     }
@@ -72,12 +66,6 @@ class LoginScreen : BaseScreen() {
         toastMessage.isToastDisplayed(R.string.the_application_did_not_find_camera)
         toastMessage.waitUntilToastDisappears(R.string.the_application_did_not_find_camera)
     }
-
-    fun restartApp() {
-        Espresso.pressBackUnconditionally()
-        ActivityTestRule(LoginActivity::class.java).launchActivity(null)
-    }
-
 
     fun login() {
         try {

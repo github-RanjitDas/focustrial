@@ -1,6 +1,6 @@
-package com.safefleet.lawmobile
+package com.safefleet.lawmobile.testData
 
-enum class TestData(val value: String) {
+enum class TestLoginData(val value: String) {
     SERIAL_NUMBER("57014694"),
     INVALID_SERIAL_NUMBER("57012182"),
     OFFICER_PASSWORD("san 6279!"),
@@ -8,3 +8,5 @@ enum class TestData(val value: String) {
     SSID("X" + SERIAL_NUMBER.value),
     INVALID_SSID("X" + INVALID_SERIAL_NUMBER.value)
 }
+
+

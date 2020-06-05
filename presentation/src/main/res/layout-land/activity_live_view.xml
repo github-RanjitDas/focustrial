@@ -68,7 +68,7 @@
     <ImageView
         android:visibility="gone"
         android:src="@drawable/ic_rec_video"
-        android:id="@+id/imageVideoRecording"
+        android:id="@+id/imageRecordingIndicator"
         android:clickable="false"
         android:layout_width="@dimen/live_view_image_recording_size"
         android:layout_height="@dimen/live_view_image_recording_size"

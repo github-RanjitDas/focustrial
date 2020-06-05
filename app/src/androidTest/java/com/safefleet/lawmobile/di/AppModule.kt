@@ -13,7 +13,7 @@ import com.lawmobile.presentation.utils.VLCMediaPlayer
 import com.lawmobile.presentation.utils.WifiConnection
 import com.lawmobile.presentation.utils.WifiHelper
 import com.safefleet.lawmobile.BaseApplication
-import com.safefleet.lawmobile.TestData
+import com.safefleet.lawmobile.testData.TestLoginData
 import dagger.Module
 import dagger.Provides
 import io.mockk.every
@@ -60,8 +60,8 @@ class AppModule {
         fun provideWifiHelper(wifiManager: WifiManager): WifiHelper = mockk {
             every { getGatewayAddress() } returns "192.168.42.1"
             every { getIpAddress() } returns "192.168.42.2"
-            every { isEqualsValueWithSSID(TestData.SSID.value) } returns true
-            every { isEqualsValueWithSSID(TestData.INVALID_SSID.value) } returns false
+            every { isEqualsValueWithSSID(TestLoginData.SSID.value) } returns true
+            every { isEqualsValueWithSSID(TestLoginData.INVALID_SSID.value) } returns false
         }
 
         @JvmStatic
@@ -78,10 +78,10 @@ class AppModule {
             wifiConfiguration: WifiConfiguration,
             connectivityManager: ConnectivityManager
         ): WifiConnection = mockk {
-            every { connectionWithHotspotCamera(TestData.SSID.value, any()) } answers {
+            every { connectionWithHotspotCamera(TestLoginData.SSID.value, any()) } answers {
                 secondArg<(data: Boolean) -> Unit>().invoke(true)
             }
-            every { connectionWithHotspotCamera(TestData.INVALID_SSID.value, any()) } answers {
+            every { connectionWithHotspotCamera(TestLoginData.INVALID_SSID.value, any()) } answers {
                 secondArg<(data: Boolean) -> Unit>().invoke(false)
             }
         }
