@@ -9,8 +9,10 @@ import com.safefleet.mobile.avml.cameras.entities.CameraConnectVideoMetadata
 import com.safefleet.mobile.avml.cameras.entities.VideoMetadata
 import com.safefleet.mobile.commons.helpers.Result
 import io.mockk.*
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 
@@ -21,6 +23,11 @@ internal class FileListRepositoryImplTest {
 
     private val fileListRepositoryImpl: FileListRepositoryImpl by lazy {
         FileListRepositoryImpl(fileListRemoteDataSource)
+    }
+
+    @BeforeEach
+    fun setup() {
+        clearAllMocks()
     }
 
     @Test
@@ -58,11 +65,7 @@ internal class FileListRepositoryImplTest {
     @Test
     fun testGetVideoListFlow() {
         coEvery { fileListRemoteDataSource.getVideoList() } returns Result.Success(
-            listOf(
-                mockk(
-                    relaxed = true
-                )
-            )
+            listOf(mockk(relaxed = true))
         )
         runBlocking {
             fileListRepositoryImpl.getVideoList()
@@ -76,9 +79,7 @@ internal class FileListRepositoryImplTest {
         every { VideoListMetadata.getVideoMetadata(any()) } returns null
         val cameraConnectFile: CameraConnectFile = mockk(relaxed = true)
         coEvery { fileListRemoteDataSource.getVideoList() } returns Result.Success(
-            listOf(
-                cameraConnectFile
-            )
+            listOf(cameraConnectFile)
         )
         val response = Result.Success(listOf(DomainInformationFile(cameraConnectFile, null)))
         runBlocking {
@@ -114,15 +115,13 @@ internal class FileListRepositoryImplTest {
     @Test
     fun testSavePartnerIdVideosSuccess() {
         val result = Result.Success(Unit)
-        val cameraConnectFile = CameraConnectFile("", "", "", "")
-        val cameraConnectVideoMetadata = RemoteVideoMetadata(
-            CameraConnectVideoMetadata("", "", "", "", "", VideoMetadata(partnerID = "abc")),
+        val cameraConnectFile = CameraConnectFile("", "", "", "1")
+        val remoteVideoMetadata = RemoteVideoMetadata(
+            CameraConnectVideoMetadata("", "", "", "2", "", VideoMetadata(partnerID = "abc")),
             false
         )
 
-        mockkObject(VideoListMetadata)
-        every { VideoListMetadata.getVideoMetadata(any()) } returns cameraConnectVideoMetadata
-        every { VideoListMetadata.saveOrUpdateVideoMetadata(any()) } returns Unit
+        VideoListMetadata.metadataList = mutableListOf(remoteVideoMetadata)
         coEvery { fileListRemoteDataSource.savePartnerIdVideos(any()) } returns result
 
         runBlocking {
@@ -132,28 +131,31 @@ internal class FileListRepositoryImplTest {
                     "1234"
                 ), result
             )
+            Assert.assertEquals(1, VideoListMetadata.metadataList.size)
         }
 
         val resultMetadata = CameraConnectVideoMetadata(
             "",
             "",
             "",
-            "",
+            "1",
             "",
             metadata = VideoMetadata(partnerID = "1234")
         )
 
-        coVerify { fileListRemoteDataSource.savePartnerIdVideos(resultMetadata) }
+        coVerify {
+            delay(100)
+            VideoListMetadata.getIndexVideoMetadata(any())
+            fileListRemoteDataSource.savePartnerIdVideos(resultMetadata)
+        }
     }
 
     @Test
     fun testSavePartnerIdVideosSuccessNull() {
         val result = Result.Success(Unit)
         val cameraConnectFile = CameraConnectFile("", "", "", "")
+        VideoListMetadata.metadataList = mutableListOf()
 
-        mockkObject(VideoListMetadata)
-        every { VideoListMetadata.getVideoMetadata(any()) } returns null
-        every { VideoListMetadata.saveOrUpdateVideoMetadata(any()) } returns Unit
         coEvery { fileListRemoteDataSource.savePartnerIdVideos(any()) } returns result
 
         runBlocking {
@@ -163,6 +165,7 @@ internal class FileListRepositoryImplTest {
                     "1234"
                 ), result
             )
+            Assert.assertEquals(1, VideoListMetadata.metadataList.size)
         }
 
         val resultMetadata = CameraConnectVideoMetadata(
@@ -175,6 +178,7 @@ internal class FileListRepositoryImplTest {
         )
 
         coVerify { fileListRemoteDataSource.savePartnerIdVideos(resultMetadata) }
+
     }
 
     @Test
@@ -223,6 +227,11 @@ internal class FileListRepositoryImplTest {
                     ), ""
                 ), result
             )
+        }
+
+        coVerify {
+            delay(100)
+            fileListRemoteDataSource.savePartnerIdSnapshot(any())
         }
     }
 

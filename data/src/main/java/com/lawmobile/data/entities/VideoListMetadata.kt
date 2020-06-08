@@ -8,7 +8,7 @@ object VideoListMetadata {
         return metadataList.find { it.videoMetadata.fileName == fileName }
     }
 
-    private fun getIndexVideoMetadata(fileName: String) =
+    fun getIndexVideoMetadata(fileName: String) =
         metadataList.indexOfFirst { it.videoMetadata.fileName == fileName }
 
     fun saveOrUpdateVideoMetadata(remoteVideoMetadata: RemoteVideoMetadata) {
