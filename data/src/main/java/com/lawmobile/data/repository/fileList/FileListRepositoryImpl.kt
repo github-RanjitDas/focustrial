@@ -12,6 +12,7 @@ import kotlinx.coroutines.delay
 
 class FileListRepositoryImpl(private val fileListRemoteDataSource: FileListRemoteDataSource) :
     FileListRepository {
+
     override suspend fun getSnapshotList(): Result<List<DomainInformationFile>> {
         return when (val response = fileListRemoteDataSource.getSnapshotList()) {
             is Result.Success -> Result.Success(response.data.map {
@@ -44,7 +45,7 @@ class FileListRepositoryImpl(private val fileListRemoteDataSource: FileListRemot
             val cameraConnectVideoMetadata: CameraConnectVideoMetadata?
             val remoteVideoMetadata = VideoListMetadata.getVideoMetadata(it.name)
             if (remoteVideoMetadata != null && remoteVideoMetadata.videoMetadata.metadata != null) {
-                remoteVideoMetadata.videoMetadata.metadata?.partnerID = partnerID
+                remoteVideoMetadata.videoMetadata.metadata!!.partnerID = partnerID
                 remoteVideoMetadata.videoMetadata.nameFolder = it.nameFolder
                 cameraConnectVideoMetadata = remoteVideoMetadata.videoMetadata
             } else {
