@@ -1,6 +1,7 @@
 package com.lawmobile.data.repository.fileList
 
 import com.lawmobile.data.datasource.remote.fileList.FileListRemoteDataSource
+import com.lawmobile.data.entities.FileList
 import com.lawmobile.data.entities.RemoteVideoMetadata
 import com.lawmobile.data.entities.VideoListMetadata
 import com.lawmobile.domain.CameraInfo
@@ -12,12 +13,19 @@ import kotlinx.coroutines.delay
 
 class FileListRepositoryImpl(private val fileListRemoteDataSource: FileListRemoteDataSource) :
     FileListRepository {
-
     override suspend fun getSnapshotList(): Result<List<DomainInformationFile>> {
         return when (val response = fileListRemoteDataSource.getSnapshotList()) {
-            is Result.Success -> Result.Success(response.data.map {
-                DomainInformationFile(it, null)
-            })
+            is Result.Success -> {
+                val items = response.data.map {
+                    DomainInformationFile(it, null)
+                }
+                if (items.size < FileList.listOfImages.size){
+                    return Result.Success(FileList.listOfImages)
+                }
+
+                FileList.listOfImages = items
+                return Result.Success(items)
+            }
             is Result.Error -> response
         }
     }
@@ -29,7 +37,15 @@ class FileListRepositoryImpl(private val fileListRemoteDataSource: FileListRemot
                     val remoteMetadata = VideoListMetadata.getVideoMetadata(it.name)
                     DomainInformationFile(it, remoteMetadata?.videoMetadata)
                 }
-                Result.Success(items)
+                if (items.size < FileList.listOfVideos.size){
+                    return Result.Success(FileList.listOfVideos.map {
+                        val remoteMetadata = VideoListMetadata.getVideoMetadata(it.cameraConnectFile.name)
+                        DomainInformationFile(it.cameraConnectFile, remoteMetadata?.videoMetadata)
+                    })
+                }
+
+                FileList.listOfVideos = items
+                return Result.Success(items)
             }
             is Result.Error -> response
         }

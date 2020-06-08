@@ -1,6 +1,7 @@
 package com.lawmobile.data.repository.fileList
 
 import com.lawmobile.data.datasource.remote.fileList.FileListRemoteDataSource
+import com.lawmobile.data.entities.FileList
 import com.lawmobile.data.entities.RemoteVideoMetadata
 import com.lawmobile.data.entities.VideoListMetadata
 import com.lawmobile.domain.entity.DomainInformationFile
@@ -47,9 +48,25 @@ internal class FileListRepositoryImplTest {
                 cameraConnectFile
             )
         )
+        FileList.listOfImages = emptyList()
         val response = Result.Success(listOf(DomainInformationFile(cameraConnectFile, null)))
         runBlocking {
             Assert.assertEquals(fileListRepositoryImpl.getSnapshotList(), response)
+        }
+    }
+
+
+    @Test
+    fun testGetSnapshotListSuccessWithLessValuesInDataSource() {
+        val cameraConnectFile: CameraConnectFile = mockk(relaxed = true)
+        coEvery { fileListRemoteDataSource.getSnapshotList() } returns Result.Success(
+            listOf(
+                cameraConnectFile
+            )
+        )
+        FileList.listOfImages = listOf(DomainInformationFile(cameraConnectFile, null),DomainInformationFile(cameraConnectFile, null))
+        runBlocking {
+            Assert.assertEquals(fileListRepositoryImpl.getSnapshotList(), Result.Success(FileList.listOfImages))
         }
     }
 
@@ -81,9 +98,25 @@ internal class FileListRepositoryImplTest {
         coEvery { fileListRemoteDataSource.getVideoList() } returns Result.Success(
             listOf(cameraConnectFile)
         )
+        FileList.listOfVideos = emptyList()
         val response = Result.Success(listOf(DomainInformationFile(cameraConnectFile, null)))
         runBlocking {
             Assert.assertEquals(fileListRepositoryImpl.getVideoList(), response)
+        }
+    }
+
+    @Test
+    fun testGetVideoListSuccessLessInResponseDataSource() {
+        mockkObject(VideoListMetadata)
+        every { VideoListMetadata.getVideoMetadata(any()) } returns null
+        val cameraConnectFile: CameraConnectFile = mockk(relaxed = true)
+        coEvery { fileListRemoteDataSource.getVideoList() } returns Result.Success(
+            listOf(cameraConnectFile)
+        )
+        FileList.listOfVideos = listOf(DomainInformationFile(cameraConnectFile, null),
+            DomainInformationFile(cameraConnectFile, null) )
+        runBlocking {
+            Assert.assertEquals(fileListRepositoryImpl.getVideoList(), Result.Success(FileList.listOfVideos))
         }
     }
 
