@@ -12,5 +12,6 @@
     <color name="greyTransparent">#ADCAC8C8</color>
     <color name="greyTransparentDark">#AD7E7E7E</color>
     <color name="video_playback_background_buttons">#55000000</color>
+    <color name="blue">#177ECD</color>
 
 </resources>

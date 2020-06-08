@@ -48,8 +48,8 @@ class PairingPhoneWithCameraFragment : BaseFragment() {
     private fun checkIfExistSerialNumberSavedToConnectionToCamera() {
         when (val result = pairingPhoneWithCameraViewModel.getSSIDSavedIfExist()) {
             is Result.Success -> {
-                CameraInfo.cameraSerialNumber = result.data
-                textInputValidateSSID.editText?.setText(CameraInfo.cameraSerialNumber)
+                CameraInfo.serialNumber = result.data
+                textInputValidateSSID.editText?.setText(CameraInfo.serialNumber)
                 starConnectionToHotspotCamera()
             }
         }
@@ -151,9 +151,9 @@ class PairingPhoneWithCameraFragment : BaseFragment() {
 
 
     private fun createConnectionWithCamera(isConnectedSuccess: (connected: Boolean) -> Unit) {
-        CameraInfo.cameraSerialNumber = textInputValidateSSID.text()
+        CameraInfo.serialNumber = textInputValidateSSID.text()
         pairingPhoneWithCameraViewModel.connectCellPhoneToWifiCamera(
-            CameraInfo.cameraSerialNumber,
+            CameraInfo.serialNumber,
             isConnectedSuccess
         )
     }

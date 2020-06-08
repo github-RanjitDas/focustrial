@@ -19,7 +19,6 @@ fun BaseActivity.verifyForAskingPermission(permission: String, requestCode: Int)
     }
 }
 
-
 @SuppressLint("InflateParams")
 fun BaseActivity.createAlertProgress(textLoading: Int = R.string.loading_wait): AlertDialog {
     val builder = AlertDialog.Builder(this)

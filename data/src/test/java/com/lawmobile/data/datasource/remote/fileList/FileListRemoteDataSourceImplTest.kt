@@ -52,17 +52,38 @@ internal class FileListRemoteDataSourceImplTest {
 
     @Test
     fun testGetVideoListFlow() {
-        coEvery { cameraConnectService.getListOfVideos() } returns Result.Success(mockk())
+        coEvery { cameraConnectService.getListOfVideos() } returns Result.Success(
+            listOf(
+                mockk(
+                    relaxed = true
+                )
+            )
+        )
+        coEvery {
+            cameraConnectService.getVideoMetadata(
+                any(),
+                any()
+            )
+        } returns Result.Success(mockk(relaxed = true))
         runBlocking {
             fileListRemoteDataSourceImpl.getVideoList()
         }
-        coVerify { cameraConnectService.getListOfVideos() }
+        coVerify {
+            cameraConnectService.getListOfVideos()
+            cameraConnectService.getVideoMetadata(any(), any())
+        }
     }
 
     @Test
     fun testGetVideoListSuccess() {
-        val result = Result.Success(listOf(mockk<CameraConnectFile>()))
+        val result = Result.Success(listOf(mockk<CameraConnectFile>(relaxed = true)))
         coEvery { cameraConnectService.getListOfVideos() } returns result
+        coEvery {
+            cameraConnectService.getVideoMetadata(
+                any(),
+                any()
+            )
+        } returns Result.Success(mockk(relaxed = true))
         runBlocking {
             Assert.assertEquals(fileListRemoteDataSourceImpl.getVideoList(), result)
         }
@@ -77,4 +98,57 @@ internal class FileListRemoteDataSourceImplTest {
         }
     }
 
+    @Test
+    fun testSavePartnerIdVideosFlow() {
+        coEvery { cameraConnectService.saveVideoMetadata(any()) } returns Result.Success(Unit)
+        runBlocking {
+            fileListRemoteDataSourceImpl.savePartnerIdVideos(mockk())
+        }
+        coVerify { cameraConnectService.saveVideoMetadata(any()) }
+    }
+
+    @Test
+    fun testSavePartnerIdVideosSuccess() {
+        val result = Result.Success(Unit)
+        coEvery { cameraConnectService.saveVideoMetadata(any()) } returns result
+        runBlocking {
+            Assert.assertEquals(fileListRemoteDataSourceImpl.savePartnerIdVideos(mockk()), result)
+        }
+    }
+
+    @Test
+    fun testSavePartnerIdVideosFailed() {
+        val result = Result.Error(mockk())
+        coEvery { cameraConnectService.saveVideoMetadata(any()) } returns result
+        runBlocking {
+            Assert.assertEquals(fileListRemoteDataSourceImpl.savePartnerIdVideos(mockk()), result)
+        }
+    }
+
+    @Test
+    fun testSavePartnerIdSnapshotFlow() {
+        coEvery { cameraConnectService.savePhotoMetadata(any()) } returns Result.Success(Unit)
+        runBlocking {
+            fileListRemoteDataSourceImpl.savePartnerIdSnapshot(mockk())
+        }
+        coVerify { cameraConnectService.savePhotoMetadata(any()) }
+    }
+
+    @Test
+    fun testSavePartnerIdSnapshotSuccess() {
+        val result = Result.Success(Unit)
+        coEvery { cameraConnectService.savePhotoMetadata(any()) } returns result
+        runBlocking {
+            Assert.assertEquals(fileListRemoteDataSourceImpl.savePartnerIdSnapshot(mockk()), result)
+        }
+    }
+
+    @Test
+    fun testSavePartnerIdSnapshotFailed() {
+        val result = Result.Error(mockk())
+        coEvery { cameraConnectService.savePhotoMetadata(any()) } returns result
+        runBlocking {
+            Assert.assertEquals(fileListRemoteDataSourceImpl.savePartnerIdSnapshot(mockk()), result)
+        }
+    }
 }
