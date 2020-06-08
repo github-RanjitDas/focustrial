@@ -191,7 +191,7 @@ class FileListActivity : BaseActivity() {
                     noFilesTextView.isVisible = false
                     fileListAdapter =
                         FileListAdapter(::fileItemClick, ::enableAssociatePartnerButton)
-                    fileListAdapter.fileList = result.data
+                    fileListAdapter.fileList = result.data.sortedByDescending { it.cameraConnectFile.date }
                     when (buttonSnapshotListSwitch.isActivated) {
                         true -> snapshotListFragment.setFileListAdapter?.invoke(fileListAdapter)
                         false -> videoListFragment.setFileListAdapter?.invoke(fileListAdapter)
