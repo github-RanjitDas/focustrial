@@ -190,7 +190,6 @@ class VideoPlaybackActivity : BaseActivity() {
             videoPlaybackViewModel.changeAspectRatio()
         }
         saveButtonVideoPlayback.setOnClickListenerCheckConnection {
-            dialog.show()
             saveVideoMetadataInCamera()
         }
         cancelButtonVideoPlayback.setOnClickListenerCheckConnection {
@@ -204,6 +203,8 @@ class VideoPlaybackActivity : BaseActivity() {
             this.showToast(getString(R.string.event_mandatory), Toast.LENGTH_SHORT)
             return
         }
+
+        dialog.show()
 
         var gender = ""
         var race = ""
