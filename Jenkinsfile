@@ -32,7 +32,7 @@ node ('docker-builds-slave') {
 
             stage('Build project'){
                 logger.stage()
-                timeout(10) {
+                timeout(15) {
                     sh "gradle buildDebug --stacktrace"
                 }
             }
@@ -57,7 +57,7 @@ node ('docker-builds-slave') {
             }
             stage('Mutation Tests') {
                 logger.stage()
-                timeout(10) {
+                timeout(20) {
                     sh "gradle pitestDebug --stacktrace"
                     archiveArtifacts "presentation/build/pitHistory.txt"
                     archiveArtifacts "domain/build/pitHistory.txt"
