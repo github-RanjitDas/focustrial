@@ -111,6 +111,7 @@
     <string name="file_list_associate_partner_id_error">Partner ID could not be associated</string>
     <string name="partner_id_button_disabled_message">You must select at least one file to associate</string>
     <string name="associate_partner_to_file_button">Associate partner to file button</string>
+    <string name="valid_partner_id_message">You must enter a valid Partner ID</string>
 
     <string-array name="gender_spinner">
         <item>Select</item>
