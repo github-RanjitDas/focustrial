@@ -141,6 +141,11 @@ class FileListActivity : BaseActivity() {
         dialogLayout.associatePartnerIdButton.setOnClickListener {
             dialogFileList.show()
             val partnerID = dialogLayout.partner_id_edit_text.text.toString()
+            if (partnerID.isEmpty()) {
+                this.showToast(getString(R.string.valid_partner_id_message), Toast.LENGTH_SHORT)
+                dialogFileList.dismiss()
+                return@setOnClickListener
+            }
             val listSelected =
                 fileListAdapter.fileList.filter { it.isChecked }.map { it.cameraConnectFile }
             when (buttonSnapshotListSwitch.isActivated) {
