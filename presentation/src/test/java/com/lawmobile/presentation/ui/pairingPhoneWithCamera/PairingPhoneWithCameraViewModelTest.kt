@@ -139,4 +139,11 @@ class PairingPhoneWithCameraViewModelTest {
         viewModel.saveSerialNumberOfCamera("123")
         verify { pairingPhoneWithCameraUseCase.saveSerialNumberOfCamera("123") }
     }
+
+    @Test
+    fun testIsWifiEnable(){
+        every { wifiConnection.isWifiEnable() } returns true
+        viewModel.isWifiEnable()
+        verify { wifiConnection.isWifiEnable() }
+    }
 }

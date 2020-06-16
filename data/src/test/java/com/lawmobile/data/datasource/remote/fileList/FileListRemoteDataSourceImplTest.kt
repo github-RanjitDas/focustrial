@@ -1,6 +1,7 @@
 package com.lawmobile.data.datasource.remote.fileList
 
 import com.lawmobile.data.InstantExecutorExtension
+import com.lawmobile.data.entities.VideoListMetadata
 import com.safefleet.mobile.avml.cameras.entities.CameraConnectFile
 import com.safefleet.mobile.avml.cameras.external.CameraConnectService
 import com.safefleet.mobile.commons.helpers.Result
@@ -53,12 +54,10 @@ internal class FileListRemoteDataSourceImplTest {
     @Test
     fun testGetVideoListFlow() {
         coEvery { cameraConnectService.getListOfVideos() } returns Result.Success(
-            listOf(
-                mockk(
-                    relaxed = true
-                )
-            )
+            listOf( mockk(relaxed = true))
         )
+
+        VideoListMetadata.metadataList = mutableListOf()
         coEvery {
             cameraConnectService.getVideoMetadata(
                 any(),
