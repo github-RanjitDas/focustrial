@@ -52,6 +52,8 @@ class PairingPhoneWithCameraViewModel @Inject constructor(
         wifiConnection.connectionWithHotspotCamera("X$codeCamera", isConnectedSuccess)
     }
 
+    fun isWifiEnable(): Boolean  = wifiConnection.isWifiEnable()
+
     companion object {
         const val EXCEPTION_GET_PARAMS_TO_CONNECT =
             "Exception in get params to configure connection"

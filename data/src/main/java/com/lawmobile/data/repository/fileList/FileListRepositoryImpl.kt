@@ -23,7 +23,7 @@ class FileListRepositoryImpl(private val fileListRemoteDataSource: FileListRemot
                     return Result.Success(FileList.listOfImages)
                 }
 
-                FileList.listOfImages = items
+                FileList.changeListOfImages(items)
                 return Result.Success(items)
             }
             is Result.Error -> response
@@ -44,7 +44,7 @@ class FileListRepositoryImpl(private val fileListRemoteDataSource: FileListRemot
                     })
                 }
 
-                FileList.listOfVideos = items
+                FileList.changeListOfVideos(items)
                 return Result.Success(items)
             }
             is Result.Error -> response

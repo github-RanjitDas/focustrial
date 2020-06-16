@@ -30,6 +30,8 @@
     <string name="exit">EXIT</string>
     <string name="enter_password">ENTER PASSWORD</string>
     <string name="incorrect_password">Incorrect password, please try again</string>
+    <string name="wifi_is_off">The WiFi is off</string>
+    <string name="please_turn_wifi_on">Please turn the WiFi on and connect to the camera</string>
 
     <!-- Live view -->
     <string name="image_description_full_screen_size">Full Screen size</string>
@@ -65,21 +67,6 @@
     <string name="play_pause_button_video_playback">Play/Pause button video playback</string>
     <string name="aspect_video_playback">Aspect video playback</string>
     <string name="video_default_time">00:00</string>
-
-    <!-- Snapshot detail -->
-    <string name="snapshot_item_detail_photo_name_title">PHOTO NAME: </string>
-    <string name="snapshot_item_detail_photo_name_value">Default</string>
-    <string name="snapshot_item_detail_date_time_title">DATE TIME: </string>
-    <string name="snapshot_item_detail_date_time_value">YYYY-MM-DD HH:MM:SS</string>
-    <string name="snapshot_item_detail_size_title">SIZE(bytes): </string>
-    <string name="snapshot_item_detail_size_value">0</string>
-    <string name="snapshot_item_detail_photo_content_description">Photo from BWC</string>
-    <string name="snapshot_detail_load_failed">Error loading snapshot</string>
-    <string name="image_video_recording">Image video recording</string>
-    <string name="cancel_metadata" tools:ignore="ButtonCase">CANCEL</string>
-    <string name="save_metadata">SAVE</string>
-    <string name="playback_video_name">VIDEO NAME</string>
-    <string name="default_text">DEFAULT TEXT</string>
     <string name="playback_start_time">START TIME</string>
     <string name="playback_duration">DURATION</string>
     <string name="playback_event">EVENT</string>
@@ -99,14 +86,31 @@
     <string name="playback_driver_license">DRIVER LICENSE</string>
     <string name="playback_license_plate">LICENSE PLATE</string>
     <string name="select">Select</string>
+    <string name="event_mandatory">Event type field is mandatory</string>
     <string name="catalog_error">Could not get the catalog lists</string>
-    <string name="partner_id_title">ASSOCIATE PARTNER ID</string>
-    <string name="partner_id_edit_text_hint">ENTER PARTNER ID</string>
-    <string name="associate_partner_id_content_description">Associate partner ID</string>
     <string name="get_video_metadata_error">Could not get video metadata</string>
     <string name="video_metadata_saved_success">Video metadata saved successfully</string>
     <string name="video_metadata_save_error">Video metadata could not be saved</string>
-    <string name="event_mandatory">Event type field is mandatory</string>
+
+    <!-- Snapshot detail -->
+    <string name="snapshot_item_detail_photo_name_title">PHOTO NAME: </string>
+    <string name="snapshot_item_detail_photo_name_value">Default</string>
+    <string name="snapshot_item_detail_date_time_title">DATE TIME: </string>
+    <string name="snapshot_item_detail_date_time_value">YYYY-MM-DD HH:MM:SS</string>
+    <string name="snapshot_item_detail_size_title">SIZE(bytes): </string>
+    <string name="snapshot_item_detail_size_value">0</string>
+    <string name="snapshot_item_detail_photo_content_description">Photo from BWC</string>
+    <string name="snapshot_detail_load_failed">Error loading snapshot</string>
+    <string name="image_video_recording">Image video recording</string>
+    <string name="cancel_metadata" tools:ignore="ButtonCase">CANCEL</string>
+    <string name="save_metadata">SAVE</string>
+    <string name="playback_video_name">VIDEO NAME</string>
+    <string name="default_text">DEFAULT TEXT</string>
+
+    <!-- Partner Id -->
+    <string name="partner_id_title">ASSOCIATE PARTNER ID</string>
+    <string name="partner_id_edit_text_hint">ENTER PARTNER ID</string>
+    <string name="associate_partner_id_content_description">Associate partner ID</string>
     <string name="file_list_associate_partner_id_success">Partner ID associated successfully</string>
     <string name="file_list_associate_partner_id_error">Partner ID could not be associated</string>
     <string name="partner_id_button_disabled_message">You must select at least one file to associate</string>
