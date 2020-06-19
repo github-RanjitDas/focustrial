@@ -1,6 +1,6 @@
 package com.lawmobile.domain.usecase.validatePasswordOfficer
 
-import com.lawmobile.domain.entity.DomainUser
+import com.lawmobile.domain.entities.DomainUser
 import com.safefleet.mobile.commons.helpers.Result
 
 interface ValidatePasswordOfficerUseCase {

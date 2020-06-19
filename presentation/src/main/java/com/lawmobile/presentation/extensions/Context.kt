@@ -4,7 +4,7 @@ import android.content.Context
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import com.lawmobile.presentation.R
-import com.lawmobile.presentation.entity.AlertInformation
+import com.lawmobile.presentation.entities.AlertInformation
 import com.lawmobile.presentation.ui.base.BaseActivity
 
 fun Context.createAlertInformation(alertInformation: AlertInformation) {

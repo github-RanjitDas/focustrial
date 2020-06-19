@@ -1,6 +1,6 @@
 package com.lawmobile.data.entities
 
-import com.lawmobile.domain.entity.DomainInformationFile
+import com.lawmobile.domain.entities.DomainInformationFile
 
 object FileList {
     var listOfVideos = emptyList<DomainInformationFile>()

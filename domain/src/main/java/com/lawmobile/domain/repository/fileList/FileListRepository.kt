@@ -1,6 +1,6 @@
 package com.lawmobile.domain.repository.fileList
 
-import com.lawmobile.domain.entity.DomainInformationFile
+import com.lawmobile.domain.entities.DomainInformationFile
 import com.safefleet.mobile.avml.cameras.entities.CameraConnectFile
 import com.safefleet.mobile.commons.helpers.Result
 

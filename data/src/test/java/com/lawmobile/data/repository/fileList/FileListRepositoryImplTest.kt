@@ -4,7 +4,7 @@ import com.lawmobile.data.datasource.remote.fileList.FileListRemoteDataSource
 import com.lawmobile.data.entities.FileList
 import com.lawmobile.data.entities.RemoteVideoMetadata
 import com.lawmobile.data.entities.VideoListMetadata
-import com.lawmobile.domain.entity.DomainInformationFile
+import com.lawmobile.domain.entities.DomainInformationFile
 import com.safefleet.mobile.avml.cameras.entities.CameraConnectFile
 import com.safefleet.mobile.avml.cameras.entities.CameraConnectVideoMetadata
 import com.safefleet.mobile.avml.cameras.entities.VideoMetadata

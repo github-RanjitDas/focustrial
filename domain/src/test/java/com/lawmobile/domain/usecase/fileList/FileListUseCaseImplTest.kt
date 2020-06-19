@@ -1,6 +1,6 @@
 package com.lawmobile.domain.usecase.fileList
 
-import com.lawmobile.domain.entity.DomainInformationFile
+import com.lawmobile.domain.entities.DomainInformationFile
 import com.lawmobile.domain.repository.fileList.FileListRepository
 import com.safefleet.mobile.commons.helpers.Result
 import io.mockk.coEvery

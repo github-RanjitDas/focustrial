@@ -1,4 +1,4 @@
-package com.lawmobile.presentation.entity
+package com.lawmobile.presentation.entities
 
 import android.content.DialogInterface
 

@@ -2,7 +2,7 @@ package com.lawmobile.data.repository.validatePasswordOfficer
 
 import com.lawmobile.data.datasource.remote.validatePasswordOfficer.ValidatePasswordOfficerRemoteDataSource
 import com.lawmobile.data.mappers.MapperCameraDataSource
-import com.lawmobile.domain.entity.DomainUser
+import com.lawmobile.domain.entities.DomainUser
 import com.lawmobile.domain.repository.validatePasswordOfficer.ValidatePasswordOfficerRepository
 import com.safefleet.mobile.commons.helpers.Result
 

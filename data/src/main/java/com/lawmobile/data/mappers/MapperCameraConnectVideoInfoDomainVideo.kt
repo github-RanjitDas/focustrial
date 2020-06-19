@@ -1,6 +1,6 @@
 package com.lawmobile.data.mappers
 
-import com.lawmobile.domain.entity.DomainInformationVideo
+import com.lawmobile.domain.entities.DomainInformationVideo
 import com.safefleet.mobile.avml.cameras.entities.CameraConnectVideoInfo
 
 object MapperCameraConnectVideoInfoDomainVideo {

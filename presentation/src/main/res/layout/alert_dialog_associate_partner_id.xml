@@ -6,7 +6,6 @@
 
     <TextView
         android:visibility="gone"
-        android:id="@+id/partner_id_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/white"

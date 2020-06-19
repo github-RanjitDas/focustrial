@@ -1,6 +1,6 @@
 package com.lawmobile.presentation.ui.validatePasswordOfficer
 
-import com.lawmobile.domain.entity.DomainUser
+import com.lawmobile.domain.entities.DomainUser
 import com.lawmobile.domain.usecase.validatePasswordOfficer.ValidatePasswordOfficerUseCase
 import com.lawmobile.presentation.InstantExecutorExtension
 import com.lawmobile.presentation.utils.CameraHelper

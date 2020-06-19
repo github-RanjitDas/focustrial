@@ -3,12 +3,12 @@ package com.lawmobile.presentation.ui.fileList
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.lawmobile.domain.entity.DomainInformationFile
+import com.lawmobile.domain.entities.DomainInformationFile
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.extensions.getVideoStartTime
 import com.lawmobile.presentation.extensions.setOnClickListenerCheckConnection
 import com.safefleet.mobile.commons.helpers.inflate
-import kotlinx.android.synthetic.main.file_list_item.view.*
+import kotlinx.android.synthetic.main.file_list_recycler_item.view.*
 
 class FileListAdapter(
     private val onFileClick: (DomainInformationFile) -> Unit,
@@ -26,7 +26,7 @@ class FileListAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FileListViewHolder {
         viewGroup = parent
         return FileListViewHolder(
-            parent.inflate(R.layout.file_list_item),
+            parent.inflate(R.layout.file_list_recycler_item),
             onFileClick,
             onFileCheck
         )

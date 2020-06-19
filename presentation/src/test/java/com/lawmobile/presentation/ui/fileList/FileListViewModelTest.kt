@@ -1,6 +1,6 @@
 package com.lawmobile.presentation.ui.fileList
 
-import com.lawmobile.domain.entity.DomainInformationFile
+import com.lawmobile.domain.entities.DomainInformationFile
 import com.lawmobile.domain.usecase.fileList.FileListUseCase
 import com.lawmobile.presentation.InstantExecutorExtension
 import com.safefleet.mobile.commons.helpers.Result

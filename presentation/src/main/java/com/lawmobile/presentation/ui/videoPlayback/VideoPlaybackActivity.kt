@@ -1,5 +1,8 @@
 package com.lawmobile.presentation.ui.videoPlayback
 
+import android.app.Activity
+import android.content.DialogInterface
+import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.util.Log
@@ -8,14 +11,19 @@ import android.widget.SeekBar
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.Observer
-import com.lawmobile.domain.CameraInfo
-import com.lawmobile.domain.entity.DomainInformationVideo
+import com.lawmobile.domain.entities.CameraInfo
+import com.lawmobile.domain.entities.DomainInformationVideo
 import com.lawmobile.presentation.R
+import com.lawmobile.presentation.entities.AlertInformation
 import com.lawmobile.presentation.extensions.*
 import com.lawmobile.presentation.ui.base.BaseActivity
+import com.lawmobile.presentation.ui.linkSnapshotsToVideo.LinkSnapshotsActivity
 import com.lawmobile.presentation.utils.Constants.CAMERA_CONNECT_FILE
+import com.lawmobile.presentation.utils.Constants.SNAPSHOTS_LINKED
+import com.lawmobile.presentation.utils.Constants.SNAPSHOTS_SELECTED
 import com.safefleet.mobile.avml.cameras.entities.CameraConnectFile
 import com.safefleet.mobile.avml.cameras.entities.CameraConnectVideoMetadata
+import com.safefleet.mobile.avml.cameras.entities.PhotoAssociated
 import com.safefleet.mobile.avml.cameras.entities.VideoMetadata
 import com.safefleet.mobile.commons.helpers.Result
 import com.safefleet.mobile.commons.helpers.hideKeyboard
@@ -30,13 +38,19 @@ class VideoPlaybackActivity : BaseActivity() {
     private val eventList = mutableListOf<String>()
     private val raceList = mutableListOf<String>()
     private val genderList = mutableListOf<String>()
+    private var photoAssociatedList: ArrayList<String?>? = ArrayList()
 
     private lateinit var dialog: AlertDialog
     private var currentAttempts = 0
+    private var areChangesSaved = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_video_playback)
+        createDialog()
+        setCatalogLists()
+        setObservers()
+        configureListeners()
     }
 
     override fun onResume() {
@@ -44,9 +58,6 @@ class VideoPlaybackActivity : BaseActivity() {
 
         hideKeyboard()
         verifyIfSelectedVideoWasChanged()
-        setCatalogLists()
-        setObservers()
-        createDialog()
 
         domainInformationVideo?.let {
             createVideoPlaybackInSurface(it)
@@ -60,8 +71,12 @@ class VideoPlaybackActivity : BaseActivity() {
         }
 
         getVideoMetadata()
+    }
 
-        configureListeners()
+    override fun onPause() {
+        super.onPause()
+        if (videoPlaybackViewModel.isMediaPlayerPlaying())
+            manageButtonPlayPause()
     }
 
     private fun setCatalogLists() {
@@ -102,6 +117,7 @@ class VideoPlaybackActivity : BaseActivity() {
             )
         }
         dialog.dismiss()
+        areChangesSaved = true
     }
 
     private fun manageGetVideoMetadataResult(result: Result<CameraConnectVideoMetadata>) {
@@ -160,6 +176,10 @@ class VideoPlaybackActivity : BaseActivity() {
             driverLicenseValue.setText(driverLicense)
             licensePlateValue.setText(licensePlate)
         }
+        if (photoAssociatedList.isNullOrEmpty()) {
+            photoAssociatedList =
+                cameraConnectVideoMetadata.photos?.map { it.fileName } as ArrayList<String?>?
+        }
         dialog.dismiss()
     }
 
@@ -195,6 +215,11 @@ class VideoPlaybackActivity : BaseActivity() {
         cancelButtonVideoPlayback.setOnClickListenerCheckConnection {
             onBackPressed()
         }
+        buttonLinkSnapshots.setOnClickListenerCheckConnection {
+            val intent = Intent(this, LinkSnapshotsActivity::class.java)
+            intent.putStringArrayListExtra(SNAPSHOTS_LINKED, photoAssociatedList)
+            startActivityForResult(intent, 1)
+        }
         configureListenerSeekBar()
     }
 
@@ -216,6 +241,8 @@ class VideoPlaybackActivity : BaseActivity() {
         if (raceValue.selectedItem != raceList[0]) {
             race = raceValue.selectedItem.toString()
         }
+
+        val photoListAssociated = photoAssociatedList?.map { PhotoAssociated(it) }
 
         val cameraConnectVideoMetadata = CameraConnectVideoMetadata(
             videoNameValue.text.toString(),
@@ -240,14 +267,15 @@ class VideoPlaybackActivity : BaseActivity() {
                 race = race,
                 driverLicense = driverLicenseValue.text.toString(),
                 licensePlate = licensePlateValue.text.toString()
-            )
+            ),
+            photoListAssociated
         )
 
         videoPlaybackViewModel.saveVideoMetadata(cameraConnectVideoMetadata)
     }
 
     private fun manageButtonPlayPause() {
-        if (videoPlaybackViewModel.isMediaPlayerPaying()) {
+        if (videoPlaybackViewModel.isMediaPlayerPlaying()) {
             buttonPlay.setImageResource(R.drawable.ic_media_play)
             pauseVideoPlayback()
         } else {
@@ -309,8 +337,23 @@ class VideoPlaybackActivity : BaseActivity() {
     }
 
     override fun onBackPressed() {
-        super.onBackPressed()
-        videoPlaybackViewModel.stopMediaPlayer()
+        if (areChangesSaved) {
+            videoPlaybackViewModel.stopMediaPlayer()
+            super.onBackPressed()
+        } else {
+            val alertInformation = AlertInformation(
+                R.string.metadata_confirmation,
+                R.string.metadata_confirmation_message,
+                ::closeWithoutSave
+            ) {}
+            this.createAlertInformation(alertInformation)
+        }
+    }
+
+    private fun closeWithoutSave(dialogInterface: DialogInterface) {
+        areChangesSaved = true
+        dialogInterface.dismiss()
+        onBackPressed()
     }
 
     private fun updateCurrentTimeInVideo() {
@@ -323,6 +366,18 @@ class VideoPlaybackActivity : BaseActivity() {
             currentTimeVideoInMilliSeconds = it
             updateProgressVideoInView()
         })
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == 1) {
+            if (resultCode == Activity.RESULT_OK) {
+                this.showToast(getString(R.string.image_linked_success), Toast.LENGTH_SHORT)
+                val list = data?.getStringArrayListExtra(SNAPSHOTS_SELECTED)
+                photoAssociatedList = list
+                areChangesSaved = false
+            }
+        }
     }
 
     private fun updateProgressVideoInView() {

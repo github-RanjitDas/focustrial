@@ -60,8 +60,8 @@ dependencies {
     implementation "com.google.android.material:material:$android_material_version"
 
     //Kotlin Coroutines
-    api "org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlin_coroutine_version"
-    api "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlin_coroutine_version"
+    api "org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlin_coroutine_android_version"
+    api "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlin_coroutine_core_version"
 
     // Junit5
     testImplementation "org.junit.jupiter:junit-jupiter-api:$junit5_version"
@@ -80,8 +80,8 @@ dependencies {
     //Coroutines-test
     testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutines_test_version"
 
-    api 'com.safefleet.mobile:avml:1.4.0-SNAPSHOT@aar'
-    api 'com.safefleet.mobile:commons:1.4.0-SNAPSHOT@aar'
+    api 'com.safefleet.mobile:avml:1.4.1-SNAPSHOT@aar'
+    api 'com.safefleet.mobile:commons:1.4.1-SNAPSHOT@aar'
 }
 
 pitest {

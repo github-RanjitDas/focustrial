@@ -45,8 +45,14 @@
             android:name="com.lawmobile.presentation.ui.fileList.FileListActivity"
             android:theme="@style/AppTheme.NoActionBar"
             tools:ignore="LockedOrientationActivity" />
+
         <activity
             android:name="com.lawmobile.presentation.ui.snapshotDetail.SnapshotDetailActivity"
+            android:theme="@style/AppTheme.NoActionBar"
+            tools:ignore="LockedOrientationActivity" />
+
+        <activity
+            android:name="com.lawmobile.presentation.ui.linkSnapshotsToVideo.LinkSnapshotsActivity"
             android:theme="@style/AppTheme.NoActionBar"
             tools:ignore="LockedOrientationActivity" />
 

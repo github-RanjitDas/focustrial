@@ -3,7 +3,7 @@ package com.lawmobile.presentation.ui.fileList
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.viewModelScope
-import com.lawmobile.domain.entity.DomainInformationFile
+import com.lawmobile.domain.entities.DomainInformationFile
 import com.lawmobile.domain.usecase.fileList.FileListUseCase
 import com.lawmobile.presentation.ui.base.BaseViewModel
 import com.safefleet.mobile.avml.cameras.entities.CameraConnectFile

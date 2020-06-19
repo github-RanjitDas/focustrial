@@ -1,6 +1,6 @@
 package com.lawmobile.domain.usecase.videoPlayback
 
-import com.lawmobile.domain.entity.DomainInformationVideo
+import com.lawmobile.domain.entities.DomainInformationVideo
 import com.lawmobile.domain.usecase.BaseUseCase
 import com.safefleet.mobile.avml.cameras.entities.CameraConnectFile
 import com.safefleet.mobile.avml.cameras.entities.CameraConnectVideoMetadata
