@@ -1,6 +1,9 @@
 package com.lawmobile.data.repository.liveStreaming
 
 import com.lawmobile.data.datasource.remote.liveStreaming.LiveStreamingRemoteDataSource
+import com.lawmobile.data.entities.FileList
+import com.lawmobile.domain.entities.DomainInformationFile
+import com.safefleet.mobile.avml.cameras.entities.CameraConnectFile
 import com.safefleet.mobile.commons.helpers.Result
 import io.mockk.*
 import kotlinx.coroutines.runBlocking
@@ -80,6 +83,7 @@ class LiveStreamingRepositoryImplTest {
         coEvery { liveStreamingRemoteDataSource.stopRecordVideo() } returns result
         runBlocking {
             Assert.assertEquals(liveStreamingRepositoryImpl.stopRecordVideo(), result)
+            Assert.assertTrue(FileList.listOfVideos.isEmpty())
         }
     }
 
@@ -108,6 +112,7 @@ class LiveStreamingRepositoryImplTest {
         coEvery { liveStreamingRemoteDataSource.takePhoto() } returns result
         runBlocking {
             Assert.assertEquals(liveStreamingRepositoryImpl.takePhoto(), result)
+            Assert.assertTrue(FileList.listOfImages.isEmpty())
         }
     }
 

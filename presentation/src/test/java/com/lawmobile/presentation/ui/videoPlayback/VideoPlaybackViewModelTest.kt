@@ -102,14 +102,14 @@ class VideoPlaybackViewModelTest {
 
     @Test
     fun testIsMediaPlayerPayingTrue() {
-        every { vlcMediaPlayer.isMediaPlayerPaying() } returns true
-        Assert.assertTrue(videoPlaybackViewModel.isMediaPlayerPaying())
+        every { vlcMediaPlayer.isMediaPlayerPlaying() } returns true
+        Assert.assertTrue(videoPlaybackViewModel.isMediaPlayerPlaying())
     }
 
     @Test
     fun testIsMediaPlayerPayingFalse() {
-        every { vlcMediaPlayer.isMediaPlayerPaying() } returns false
-        Assert.assertFalse(videoPlaybackViewModel.isMediaPlayerPaying())
+        every { vlcMediaPlayer.isMediaPlayerPlaying() } returns false
+        Assert.assertFalse(videoPlaybackViewModel.isMediaPlayerPlaying())
     }
 
     @Test

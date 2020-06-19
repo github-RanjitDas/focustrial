@@ -1,4 +1,4 @@
-package com.lawmobile.domain.entity
+package com.lawmobile.domain.entities
 
 data class DomainInformationVideo(
     val size: Long,

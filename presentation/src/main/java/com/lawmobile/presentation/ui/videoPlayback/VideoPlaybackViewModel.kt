@@ -4,7 +4,7 @@ import android.view.SurfaceView
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.viewModelScope
-import com.lawmobile.domain.entity.DomainInformationVideo
+import com.lawmobile.domain.entities.DomainInformationVideo
 import com.lawmobile.domain.usecase.videoPlayback.VideoPlaybackUseCase
 import com.lawmobile.presentation.ui.base.BaseViewModel
 import com.lawmobile.presentation.utils.VLCMediaPlayer
@@ -78,7 +78,7 @@ class VideoPlaybackViewModel @Inject constructor(
         vlcMediaPlayer.changeAspectRatio()
     }
 
-    fun isMediaPlayerPaying() = vlcMediaPlayer.isMediaPlayerPaying()
+    fun isMediaPlayerPlaying() = vlcMediaPlayer.isMediaPlayerPlaying()
 
     fun getTimeInMillisMediaPlayer() {
         currentTimeVideoMediator.postValue(vlcMediaPlayer.getTimeInMillisMediaPlayer())

@@ -83,4 +83,7 @@
     <dimen name="associate_partner_id_edit_text_margin">20dp</dimen>
     <dimen name="associate_partner_id_edit_text_size">20sp</dimen>
     <dimen name="associate_partner_id_edit_text_padding">10dp</dimen>
+    <dimen name="snapshot_link_recycler_padding_horizontal">10dp</dimen>
+    <dimen name="snapshot_link_recycler_padding_vertical">30dp</dimen>
+    <dimen name="snapshot_link_item_height">100dp</dimen>
 </resources>

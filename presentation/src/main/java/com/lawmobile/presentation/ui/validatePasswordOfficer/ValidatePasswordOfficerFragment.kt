@@ -6,8 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.lifecycle.Observer
-import com.lawmobile.domain.CameraInfo
-import com.lawmobile.domain.entity.DomainUser
+import com.lawmobile.domain.entities.CameraInfo
+import com.lawmobile.domain.entities.DomainUser
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.extensions.setOnClickListenerCheckConnection
 import com.lawmobile.presentation.extensions.text

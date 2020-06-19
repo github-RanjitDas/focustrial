@@ -1,6 +1,6 @@
 package com.lawmobile.domain.repository.validatePasswordOfficer
 
-import com.lawmobile.domain.entity.DomainUser
+import com.lawmobile.domain.entities.DomainUser
 import com.lawmobile.domain.repository.BaseRepository
 import com.safefleet.mobile.commons.helpers.Result
 

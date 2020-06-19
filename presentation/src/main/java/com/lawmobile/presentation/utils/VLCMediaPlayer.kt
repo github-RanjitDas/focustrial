@@ -50,7 +50,7 @@ class VLCMediaPlayer(private val libVLC: LibVLC, private val mediaPlayer: MediaP
         }
     }
 
-    fun isMediaPlayerPaying() = mediaPlayer.isPlaying
+    fun isMediaPlayerPlaying() = mediaPlayer.isPlaying
 
     fun changeAspectRatio() {
         when (getAspectRatio()) {

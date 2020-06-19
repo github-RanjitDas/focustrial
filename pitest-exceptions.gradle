@@ -19,7 +19,7 @@ ext.pitestExclusions = [
         "**.*Module*",
         "**.*Application*",
         "**.res.**",
-        "**.entity.**",
+        "**.entities.**",
         "**.models.**",
         "**.adapters.**",
         '**.extensions.**',
@@ -27,5 +27,7 @@ ext.pitestExclusions = [
         "com.lawmobile.data.repository.videoPlayback.VideoPlaybackRepositoryImpl*",
         "com.lawmobile.domain.CameraInfo*",
         "com.lawmobile.data.entities.VideoListMetadata*",
-        "com.lawmobile.presentation.ui.base.BaseViewModel*"
+        "com.lawmobile.presentation.ui.base.BaseViewModel*",
+        "com.lawmobile.presentation.utils.WifiConnection*",
+        "com.lawmobile.data.repository.linkSnapshotsToVideo.LinkSnapshotsRepositoryImpl*"
 ]

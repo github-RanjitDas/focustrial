@@ -4,7 +4,7 @@ import com.lawmobile.data.datasource.remote.videoPlayback.VideoPlaybackRemoteDat
 import com.lawmobile.data.entities.RemoteVideoMetadata
 import com.lawmobile.data.entities.VideoListMetadata
 import com.lawmobile.data.mappers.MapperCameraConnectVideoInfoDomainVideo
-import com.lawmobile.domain.entity.DomainInformationVideo
+import com.lawmobile.domain.entities.DomainInformationVideo
 import com.lawmobile.domain.repository.videoPlayback.VideoPlaybackRepository
 import com.safefleet.mobile.avml.cameras.entities.CameraConnectFile
 import com.safefleet.mobile.avml.cameras.entities.CameraConnectVideoMetadata

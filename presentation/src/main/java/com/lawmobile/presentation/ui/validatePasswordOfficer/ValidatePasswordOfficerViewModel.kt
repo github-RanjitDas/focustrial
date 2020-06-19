@@ -3,7 +3,7 @@ package com.lawmobile.presentation.ui.validatePasswordOfficer
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.viewModelScope
-import com.lawmobile.domain.entity.DomainUser
+import com.lawmobile.domain.entities.DomainUser
 import com.lawmobile.domain.usecase.validatePasswordOfficer.ValidatePasswordOfficerUseCase
 import com.lawmobile.presentation.ui.base.BaseViewModel
 import com.lawmobile.presentation.utils.CameraHelper

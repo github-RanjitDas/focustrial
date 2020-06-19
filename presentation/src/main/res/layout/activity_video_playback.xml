@@ -15,7 +15,6 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/constrainPlayerControls"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/video_playback_background_buttons"
@@ -95,7 +94,6 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/metaDataForm"
         android:layout_width="match_parent"
         android:layout_height="@dimen/no_dp"
         android:background="@drawable/background"
@@ -680,6 +678,16 @@
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent" />
+
+        <ImageView
+            android:id="@+id/buttonLinkSnapshots"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_link"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:contentDescription="@string/buttonlinksnapshots" />
 
         <TextView
             android:id="@+id/saveButtonVideoPlayback"

@@ -1,4 +1,4 @@
-package com.lawmobile.domain.entity
+package com.lawmobile.domain.entities
 
 import com.safefleet.mobile.avml.cameras.entities.CameraConnectFile
 import com.safefleet.mobile.avml.cameras.entities.CameraConnectVideoMetadata

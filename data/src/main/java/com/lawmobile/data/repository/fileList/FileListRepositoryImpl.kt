@@ -4,8 +4,8 @@ import com.lawmobile.data.datasource.remote.fileList.FileListRemoteDataSource
 import com.lawmobile.data.entities.FileList
 import com.lawmobile.data.entities.RemoteVideoMetadata
 import com.lawmobile.data.entities.VideoListMetadata
-import com.lawmobile.domain.CameraInfo
-import com.lawmobile.domain.entity.DomainInformationFile
+import com.lawmobile.domain.entities.CameraInfo
+import com.lawmobile.domain.entities.DomainInformationFile
 import com.lawmobile.domain.repository.fileList.FileListRepository
 import com.safefleet.mobile.avml.cameras.entities.*
 import com.safefleet.mobile.commons.helpers.Result
@@ -16,12 +16,11 @@ class FileListRepositoryImpl(private val fileListRemoteDataSource: FileListRemot
     override suspend fun getSnapshotList(): Result<List<DomainInformationFile>> {
         return when (val response = fileListRemoteDataSource.getSnapshotList()) {
             is Result.Success -> {
-                val items = response.data.map {
+                val items = response.data.sortedByDescending { it.date }.map {
                     DomainInformationFile(it, null)
                 }
-                if (items.size < FileList.listOfImages.size){
+                if (items.size < FileList.listOfImages.size)
                     return Result.Success(FileList.listOfImages)
-                }
 
                 FileList.changeListOfImages(items)
                 return Result.Success(items)
@@ -33,14 +32,18 @@ class FileListRepositoryImpl(private val fileListRemoteDataSource: FileListRemot
     override suspend fun getVideoList(): Result<List<DomainInformationFile>> {
         return when (val response = fileListRemoteDataSource.getVideoList()) {
             is Result.Success -> {
-                val items = response.data.map {
+                val items = response.data.sortedByDescending { it.date }.map {
                     val remoteMetadata = VideoListMetadata.getVideoMetadata(it.name)
                     DomainInformationFile(it, remoteMetadata?.videoMetadata)
                 }
-                if (items.size < FileList.listOfVideos.size){
+                if (items.size < FileList.listOfVideos.size) {
                     return Result.Success(FileList.listOfVideos.map {
-                        val remoteMetadata = VideoListMetadata.getVideoMetadata(it.cameraConnectFile.name)
-                        DomainInformationFile(it.cameraConnectFile, remoteMetadata?.videoMetadata)
+                        val remoteMetadata =
+                            VideoListMetadata.getVideoMetadata(it.cameraConnectFile.name)
+                        DomainInformationFile(
+                            it.cameraConnectFile,
+                            remoteMetadata?.videoMetadata
+                        )
                     })
                 }
 

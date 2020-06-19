@@ -29,7 +29,7 @@ ext.fileFilter = [
         "**/*Module.**",
         "**/*Application.**",
         "**/res/**",
-        "**/entity/**",
+        "**/entities/**",
         "**/models/**",
         "**/app/**",
         "**/adapters/**",
