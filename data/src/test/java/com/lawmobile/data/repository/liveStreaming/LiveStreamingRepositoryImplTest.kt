@@ -2,12 +2,11 @@ package com.lawmobile.data.repository.liveStreaming
 
 import com.lawmobile.data.datasource.remote.liveStreaming.LiveStreamingRemoteDataSource
 import com.lawmobile.data.entities.FileList
-import com.lawmobile.domain.entities.DomainInformationFile
-import com.safefleet.mobile.avml.cameras.entities.CameraConnectFile
 import com.safefleet.mobile.commons.helpers.Result
 import io.mockk.*
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 
@@ -18,6 +17,11 @@ class LiveStreamingRepositoryImplTest {
 
     private val liveStreamingRepositoryImpl: LiveStreamingRepositoryImpl by lazy {
         LiveStreamingRepositoryImpl(liveStreamingRemoteDataSource)
+    }
+
+    @BeforeEach
+    fun setUp() {
+        clearMocks()
     }
 
     @Test
@@ -81,6 +85,7 @@ class LiveStreamingRepositoryImplTest {
     fun testStopRecordVideoSuccess() {
         val result = Result.Success(Unit)
         coEvery { liveStreamingRemoteDataSource.stopRecordVideo() } returns result
+        FileList.listOfVideos = listOf(mockk(relaxed = true))
         runBlocking {
             Assert.assertEquals(liveStreamingRepositoryImpl.stopRecordVideo(), result)
             Assert.assertTrue(FileList.listOfVideos.isEmpty())
@@ -110,6 +115,7 @@ class LiveStreamingRepositoryImplTest {
     fun testTakePhotoSuccess() {
         val result = Result.Success(Unit)
         coEvery { liveStreamingRemoteDataSource.takePhoto() } returns result
+        FileList.listOfImages = listOf(mockk(relaxed = true))
         runBlocking {
             Assert.assertEquals(liveStreamingRepositoryImpl.takePhoto(), result)
             Assert.assertTrue(FileList.listOfImages.isEmpty())
