@@ -40,7 +40,9 @@ class LinkSnapshotsActivity : BaseActivity() {
 
         snapshotsLinked = intent.getStringArrayListExtra(SNAPSHOTS_LINKED)
         SnapshotsToLink.selectedImages = arrayListOf()
-        SnapshotsToLink.selectedImages.addAll(snapshotsLinked as ArrayList)
+        if (!snapshotsLinked.isNullOrEmpty()) {
+            SnapshotsToLink.selectedImages.addAll(snapshotsLinked as ArrayList)
+        }
         loadingDialog = this.createAlertProgress()
         loadingDialog.show()
 
