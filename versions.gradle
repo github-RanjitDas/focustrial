@@ -37,5 +37,4 @@ ext {
     sonar_version = '2.7.1'
     ui_automator_version = '2.2.0'
     intent_animation_version = '1.0'
-
 }
