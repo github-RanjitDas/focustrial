@@ -42,7 +42,10 @@ class VideoPlaybackActivity : BaseActivity() {
 
     private lateinit var dialog: AlertDialog
     private var currentAttempts = 0
-    private var areChangesSaved = true
+    private var areLinkedSnapshotsChangesSaved = true
+    private var isVideoMetadataChangesSaved = false
+    private lateinit var currentMetadata: CameraConnectVideoMetadata
+    private lateinit var newMetadata: CameraConnectVideoMetadata
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -117,12 +120,13 @@ class VideoPlaybackActivity : BaseActivity() {
             )
         }
         dialog.dismiss()
-        areChangesSaved = true
+        areLinkedSnapshotsChangesSaved = true
     }
 
     private fun manageGetVideoMetadataResult(result: Result<CameraConnectVideoMetadata>) {
         when (result) {
             is Result.Success -> {
+                currentMetadata = result.data
                 setVideoMetadata(result.data)
             }
             is Result.Error -> this.showToast(
@@ -228,50 +232,9 @@ class VideoPlaybackActivity : BaseActivity() {
             this.showToast(getString(R.string.event_mandatory), Toast.LENGTH_SHORT)
             return
         }
-
         dialog.show()
-
-        var gender = ""
-        var race = ""
-        val event = CameraInfo.events[eventValue.selectedItemPosition - 1]
-        if (genderValue.selectedItem != genderList[0]) {
-            gender = genderValue.selectedItem.toString()
-        }
-
-        if (raceValue.selectedItem != raceList[0]) {
-            race = raceValue.selectedItem.toString()
-        }
-
-        val photoListAssociated = photoAssociatedList?.map { PhotoAssociated(it) }
-
-        val cameraConnectVideoMetadata = CameraConnectVideoMetadata(
-            videoNameValue.text.toString(),
-            CameraInfo.officerId,
-            connectVideo?.path,
-            connectVideo?.nameFolder,
-            CameraInfo.serialNumber,
-            VideoMetadata(
-                event = event,
-                partnerID = partnerIdValue.text.toString(),
-                ticketNumber = ticket1Value.text.toString(),
-                ticketNumber2 = ticket2Value.text.toString(),
-                caseNumber = case1Value.text.toString(),
-                caseNumber2 = case2Value.text.toString(),
-                dispatchNumber = dispatch1Value.text.toString(),
-                dispatchNumber2 = dispatch2Value.text.toString(),
-                location = locationValue.text.toString(),
-                remarks = remarksValue.text.toString(),
-                firstName = firstNameValue.text.toString(),
-                lastName = lastNameValue.text.toString(),
-                gender = gender,
-                race = race,
-                driverLicense = driverLicenseValue.text.toString(),
-                licensePlate = licensePlateValue.text.toString()
-            ),
-            photoListAssociated
-        )
-
-        videoPlaybackViewModel.saveVideoMetadata(cameraConnectVideoMetadata)
+        videoPlaybackViewModel.saveVideoMetadata(getNewMetadataFromForm())
+        isVideoMetadataChangesSaved = true
     }
 
     private fun manageButtonPlayPause() {
@@ -337,7 +300,7 @@ class VideoPlaybackActivity : BaseActivity() {
     }
 
     override fun onBackPressed() {
-        if (areChangesSaved) {
+        if (areLinkedSnapshotsChangesSaved && !verifyVideoMetadataWasEdited()) {
             videoPlaybackViewModel.stopMediaPlayer()
             super.onBackPressed()
         } else {
@@ -350,10 +313,94 @@ class VideoPlaybackActivity : BaseActivity() {
         }
     }
 
+    private fun verifyVideoMetadataWasEdited(): Boolean {
+        if (!isVideoMetadataChangesSaved) {
+            verifyVideoMetadataIsNullOrEmpty()
+            val newMetadata = getNewMetadataFromForm()
+            return currentMetadata.metadata?.event?.name != newMetadata.metadata?.event?.name ||
+                    currentMetadata.metadata?.partnerID != newMetadata.metadata?.partnerID ||
+                    currentMetadata.metadata?.ticketNumber != newMetadata.metadata?.ticketNumber ||
+                    currentMetadata.metadata?.ticketNumber2 != newMetadata.metadata?.ticketNumber2 ||
+                    currentMetadata.metadata?.caseNumber != newMetadata.metadata?.caseNumber ||
+                    currentMetadata.metadata?.caseNumber2 != newMetadata.metadata?.caseNumber2 ||
+                    currentMetadata.metadata?.dispatchNumber != newMetadata.metadata?.dispatchNumber ||
+                    currentMetadata.metadata?.dispatchNumber2 != newMetadata.metadata?.dispatchNumber2 ||
+                    currentMetadata.metadata?.location != newMetadata.metadata?.location ||
+                    currentMetadata.metadata?.remarks != newMetadata.metadata?.remarks ||
+                    currentMetadata.metadata?.firstName != newMetadata.metadata?.firstName ||
+                    currentMetadata.metadata?.lastName != newMetadata.metadata?.lastName ||
+                    currentMetadata.metadata?.driverLicense != newMetadata.metadata?.driverLicense ||
+                    currentMetadata.metadata?.licensePlate != newMetadata.metadata?.licensePlate ||
+                    currentMetadata.metadata?.gender != newMetadata.metadata?.gender ||
+                    currentMetadata.metadata?.race != newMetadata.metadata?.race
+        }
+        return false
+    }
+
+    private fun getNewMetadataFromForm(): CameraConnectVideoMetadata {
+
+        var gender = ""
+        var race = ""
+        val event = CameraInfo.events[eventValue.selectedItemPosition - 1]
+        if (genderValue.selectedItem != genderList[0]) {
+            gender = genderValue.selectedItem.toString()
+        }
+
+        if (raceValue.selectedItem != raceList[0]) {
+            race = raceValue.selectedItem.toString()
+        }
+
+        val photoListAssociated = photoAssociatedList?.map { PhotoAssociated(it) }
+
+        return CameraConnectVideoMetadata(
+            videoNameValue.text.toString(),
+            CameraInfo.officerId,
+            connectVideo?.path,
+            connectVideo?.nameFolder,
+            CameraInfo.serialNumber,
+            VideoMetadata(
+                event = event,
+                partnerID = partnerIdValue.text.toString(),
+                ticketNumber = ticket1Value.text.toString(),
+                ticketNumber2 = ticket2Value.text.toString(),
+                caseNumber = case1Value.text.toString(),
+                caseNumber2 = case2Value.text.toString(),
+                dispatchNumber = dispatch1Value.text.toString(),
+                dispatchNumber2 = dispatch2Value.text.toString(),
+                location = locationValue.text.toString(),
+                remarks = remarksValue.text.toString(),
+                firstName = firstNameValue.text.toString(),
+                lastName = lastNameValue.text.toString(),
+                gender = gender,
+                race = race,
+                driverLicense = driverLicenseValue.text.toString(),
+                licensePlate = licensePlateValue.text.toString()
+            ),
+            photoListAssociated
+        )
+    }
+
+    private fun verifyVideoMetadataIsNullOrEmpty() {
+        currentMetadata.metadata?.apply {
+            if (partnerID.isNullOrEmpty()) partnerID = ""
+            if (ticketNumber.isNullOrEmpty()) ticketNumber = ""
+            if (ticketNumber2.isNullOrEmpty()) ticketNumber2 = ""
+            if (caseNumber.isNullOrEmpty()) caseNumber = ""
+            if (caseNumber2.isNullOrEmpty()) caseNumber2 = ""
+            if (dispatchNumber.isNullOrEmpty()) dispatchNumber = ""
+            if (dispatchNumber2.isNullOrEmpty()) dispatchNumber2 = ""
+            if (location.isNullOrEmpty()) location = ""
+            if (remarks.isNullOrEmpty()) remarks = ""
+            if (firstName.isNullOrEmpty()) firstName = ""
+            if (lastName.isNullOrEmpty()) lastName = ""
+            if (driverLicense.isNullOrEmpty()) driverLicense = ""
+            if (licensePlate.isNullOrEmpty()) licensePlate = ""
+        }
+    }
+
     private fun closeWithoutSave(dialogInterface: DialogInterface) {
-        areChangesSaved = true
         dialogInterface.dismiss()
-        onBackPressed()
+        finish()
     }
 
     private fun updateCurrentTimeInVideo() {
@@ -375,7 +422,7 @@ class VideoPlaybackActivity : BaseActivity() {
                 this.showToast(getString(R.string.image_linked_success), Toast.LENGTH_SHORT)
                 val list = data?.getStringArrayListExtra(SNAPSHOTS_SELECTED)
                 photoAssociatedList = list
-                areChangesSaved = false
+                areLinkedSnapshotsChangesSaved = false
             }
         }
     }
