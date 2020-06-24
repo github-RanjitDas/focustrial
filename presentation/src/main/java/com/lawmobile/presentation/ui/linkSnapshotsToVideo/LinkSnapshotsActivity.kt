@@ -13,6 +13,7 @@ import com.lawmobile.domain.entities.DomainInformationImage
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.entities.SnapshotsToLink
 import com.lawmobile.presentation.extensions.createAlertProgress
+import com.lawmobile.presentation.extensions.setOnClickListenerCheckConnection
 import com.lawmobile.presentation.extensions.showToast
 import com.lawmobile.presentation.ui.base.BaseActivity
 import com.lawmobile.presentation.utils.Constants.SNAPSHOTS_LINKED
@@ -66,10 +67,10 @@ class LinkSnapshotsActivity : BaseActivity() {
     }
 
     private fun setListeners() {
-        cancelButtonSnapshotLink.setOnClickListener {
+        cancelButtonSnapshotLink.setOnClickListenerCheckConnection {
             onBackPressed()
         }
-        addButtonSnapshotLink.setOnClickListener {
+        addButtonSnapshotLink.setOnClickListenerCheckConnection {
             addSnapshotsToVideo()
         }
     }
