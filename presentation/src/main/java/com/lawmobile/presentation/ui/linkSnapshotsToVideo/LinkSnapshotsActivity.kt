@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -88,8 +89,11 @@ class LinkSnapshotsActivity : BaseActivity() {
         }
     }
 
-    private fun areSnapshotsSelected() =
-        snapshotsLinked != SnapshotsToLink.selectedImages
+    private fun areSnapshotsSelected(): Boolean {
+        return if (snapshotsLinked.isNullOrEmpty())
+            SnapshotsToLink.selectedImages.isNotEmpty()
+        else snapshotsLinked != SnapshotsToLink.selectedImages
+    }
 
     private fun setObservers() {
         linkSnapshotsViewModel.imageListLiveData.observe(this, Observer(::handleImageList))
@@ -108,16 +112,24 @@ class LinkSnapshotsActivity : BaseActivity() {
     }
 
     private fun setImagesInAdapter(it: List<DomainInformationImage>) {
+        if (it.isEmpty()) {
+            linkSnapshotRecyclerView.isVisible = false
+            noImagesTextView.isVisible = true
+        } else {
+            linkSnapshotRecyclerView.isVisible = true
+            noImagesTextView.isVisible = false
+
+            it.forEach {
+                tmpImageList.add(it)
+            }
+
+            linkSnapshotsAdapter.imageList = setImagesLinkedToVideo(
+                tmpImageList,
+                snapshotsLinked
+            ) as ArrayList<DomainInformationImage>
+        }
         isLoading = false
         loadingDialog.dismiss()
-        it.forEach {
-            tmpImageList.add(it)
-        }
-
-        linkSnapshotsAdapter.imageList = setImagesLinkedToVideo(
-            tmpImageList,
-            snapshotsLinked
-        ) as ArrayList<DomainInformationImage>
     }
 
     private fun scrollListenerForPagination() = object : RecyclerView.OnScrollListener() {
