@@ -79,7 +79,7 @@ class FileListRepositoryImpl(private val fileListRemoteDataSource: FileListRemot
                 )
             }
 
-            delay(100)
+            delay(200)
             val result = fileListRemoteDataSource.savePartnerIdVideos(cameraConnectVideoMetadata)
             if (result is Result.Error) {
                 errorsInFiles.add(it.name)
@@ -112,7 +112,7 @@ class FileListRepositoryImpl(private val fileListRemoteDataSource: FileListRemot
                 metadata = partnerMetadata,
                 nameFolder = it.nameFolder
             )
-            delay(100)
+            delay(200)
             val result =
                 fileListRemoteDataSource.savePartnerIdSnapshot(cameraConnectSnapshotMetadata)
             if (result is Result.Error) {

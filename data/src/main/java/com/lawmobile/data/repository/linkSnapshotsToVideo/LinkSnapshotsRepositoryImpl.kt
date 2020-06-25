@@ -62,7 +62,7 @@ class LinkSnapshotsRepositoryImpl(
         for (i in IMAGES_PER_PAGE * (currentPage - 1) until IMAGES_PER_PAGE * currentPage) {
             if (isNotLastSnapshot(i)) {
                 FileList.listOfImages[i].run {
-                    delay(200)
+                    delay(370)
                     cameraConnectFile.let {
                         snapshotFile = it
                         emit(linkSnapshotsRemoteDataSource.getImageBytes(it))
