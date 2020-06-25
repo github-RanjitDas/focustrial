@@ -27,6 +27,15 @@
         android:textColor="@color/white"
         android:visibility="gone" />
 
+    <ProgressBar
+        android:id="@+id/progress_circular"
+        android:indeterminateDrawable="@drawable/progress_loading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@+id/linkSnapshotRecyclerView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
     <TextView
         android:id="@+id/cancelButtonSnapshotLink"
         android:layout_width="wrap_content"

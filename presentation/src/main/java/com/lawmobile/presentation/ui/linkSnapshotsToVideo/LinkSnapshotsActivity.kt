@@ -45,15 +45,19 @@ class LinkSnapshotsActivity : BaseActivity() {
         if (!snapshotsLinked.isNullOrEmpty()) {
             SnapshotsToLink.selectedImages.addAll(snapshotsLinked as ArrayList)
         }
-        loadingDialog = this.createAlertProgress()
-        loadingDialog.show()
-
+        configureLoadingViews()
         linkSnapshotsAdapter = LinkSnapshotsAdapter()
         linkSnapshotsViewModel.getImageBytesList(currentPage)
 
         setObservers()
         setListeners()
         configureRecyclerView()
+    }
+
+    private fun configureLoadingViews() {
+        loadingDialog = this.createAlertProgress()
+        loadingDialog.show()
+        progress_circular.isVisible = false
     }
 
     private fun configureRecyclerView() {
@@ -119,6 +123,7 @@ class LinkSnapshotsActivity : BaseActivity() {
         } else {
             linkSnapshotRecyclerView.isVisible = true
             noImagesTextView.isVisible = false
+            progress_circular.isVisible = false
 
             it.forEach {
                 tmpImageList.add(it)
@@ -128,6 +133,10 @@ class LinkSnapshotsActivity : BaseActivity() {
                 tmpImageList,
                 snapshotsLinked
             ) as ArrayList<DomainInformationImage>
+
+            if(thereAreSixOrMoreAndInAdapterLess()){
+                progress_circular.isVisible = true
+            }
         }
         isLoading = false
         loadingDialog.dismiss()
@@ -136,16 +145,14 @@ class LinkSnapshotsActivity : BaseActivity() {
     private fun scrollListenerForPagination() = object : RecyclerView.OnScrollListener() {
         override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
             super.onScrolled(recyclerView, dx, dy)
-
             val visibleItemCount = recyclerView.childCount
             val totalItemCount = linkSnapshotsAdapter.itemCount
             val firstVisibleItemPosition =
                 (recyclerView.layoutManager as GridLayoutManager).findFirstVisibleItemPosition()
-
             if (!isLoading && !isLastPage()) {
                 if (visibleItemCount + firstVisibleItemPosition >= totalItemCount && firstVisibleItemPosition >= 0) {
+                    progress_circular.isVisible = true
                     currentPage++
-                    loadingDialog.show()
                     isLoading = true
                     linkSnapshotsViewModel.getImageBytesList(currentPage)
                 }
@@ -155,6 +162,9 @@ class LinkSnapshotsActivity : BaseActivity() {
 
     private fun isLastPage() =
         linkSnapshotsAdapter.imageList.size == linkSnapshotsViewModel.getImageListSize()
+
+    private fun thereAreSixOrMoreAndInAdapterLess() =
+        linkSnapshotsAdapter.imageList.size < 6 && linkSnapshotsViewModel.getImageListSize() >= 6
 
     private fun setImagesLinkedToVideo(
         imageList: List<DomainInformationImage>,
