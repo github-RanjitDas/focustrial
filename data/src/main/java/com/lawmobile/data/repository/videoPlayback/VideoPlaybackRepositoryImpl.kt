@@ -9,7 +9,6 @@ import com.lawmobile.domain.repository.videoPlayback.VideoPlaybackRepository
 import com.safefleet.mobile.avml.cameras.entities.CameraConnectFile
 import com.safefleet.mobile.avml.cameras.entities.CameraConnectVideoMetadata
 import com.safefleet.mobile.commons.helpers.Result
-import kotlinx.coroutines.delay
 
 class VideoPlaybackRepositoryImpl(private val videoPlaybackRemoteDataSource: VideoPlaybackRemoteDataSource) :
     VideoPlaybackRepository {
@@ -50,7 +49,6 @@ class VideoPlaybackRepositoryImpl(private val videoPlaybackRemoteDataSource: Vid
         return if (cameraConnectVideoMetadata != null && !cameraConnectVideoMetadata.isChanged) {
             Result.Success(cameraConnectVideoMetadata.videoMetadata)
         } else {
-            delay(100)
             val result = videoPlaybackRemoteDataSource.getVideoMetadata(fileName, folderName)
             if (result is Result.Success) {
                 val metadata = RemoteVideoMetadata(result.data, false)

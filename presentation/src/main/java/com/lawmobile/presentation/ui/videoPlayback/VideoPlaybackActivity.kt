@@ -45,7 +45,6 @@ class VideoPlaybackActivity : BaseActivity() {
     private var areLinkedSnapshotsChangesSaved = true
     private var isVideoMetadataChangesSaved = false
     private lateinit var currentMetadata: CameraConnectVideoMetadata
-    private lateinit var newMetadata: CameraConnectVideoMetadata
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -316,32 +315,60 @@ class VideoPlaybackActivity : BaseActivity() {
     private fun verifyVideoMetadataWasEdited(): Boolean {
         if (!isVideoMetadataChangesSaved) {
             verifyVideoMetadataIsNullOrEmpty()
-            val newMetadata = getNewMetadataFromForm()
-            return currentMetadata.metadata?.event?.name != newMetadata.metadata?.event?.name ||
-                    currentMetadata.metadata?.partnerID != newMetadata.metadata?.partnerID ||
-                    currentMetadata.metadata?.ticketNumber != newMetadata.metadata?.ticketNumber ||
-                    currentMetadata.metadata?.ticketNumber2 != newMetadata.metadata?.ticketNumber2 ||
-                    currentMetadata.metadata?.caseNumber != newMetadata.metadata?.caseNumber ||
-                    currentMetadata.metadata?.caseNumber2 != newMetadata.metadata?.caseNumber2 ||
-                    currentMetadata.metadata?.dispatchNumber != newMetadata.metadata?.dispatchNumber ||
-                    currentMetadata.metadata?.dispatchNumber2 != newMetadata.metadata?.dispatchNumber2 ||
-                    currentMetadata.metadata?.location != newMetadata.metadata?.location ||
-                    currentMetadata.metadata?.remarks != newMetadata.metadata?.remarks ||
-                    currentMetadata.metadata?.firstName != newMetadata.metadata?.firstName ||
-                    currentMetadata.metadata?.lastName != newMetadata.metadata?.lastName ||
-                    currentMetadata.metadata?.driverLicense != newMetadata.metadata?.driverLicense ||
-                    currentMetadata.metadata?.licensePlate != newMetadata.metadata?.licensePlate ||
-                    currentMetadata.metadata?.gender != newMetadata.metadata?.gender ||
-                    currentMetadata.metadata?.race != newMetadata.metadata?.race
+
+            val newMetadata = getNewMetadataFromForm().metadata
+            val oldMetadata = currentMetadata.metadata
+                ?: return newMetadata?.run {
+                    event != null ||
+                            !partnerID.isNullOrEmpty() ||
+                            !ticketNumber.isNullOrEmpty() ||
+                            !ticketNumber2.isNullOrEmpty() ||
+                            !caseNumber.isNullOrEmpty() ||
+                            !dispatchNumber.isNullOrEmpty() ||
+                            !dispatchNumber2.isNullOrEmpty() ||
+                            !location.isNullOrEmpty() ||
+                            !remarks.isNullOrEmpty() ||
+                            !firstName.isNullOrEmpty() ||
+                            !lastName.isNullOrEmpty() ||
+                            !driverLicense.isNullOrEmpty() ||
+                            !licensePlate.isNullOrEmpty() ||
+                            !gender.isNullOrEmpty() ||
+                            !race.isNullOrEmpty()
+                } ?: false
+
+            return oldMetadata.let { fromJson ->
+                newMetadata?.let { fromForm ->
+                    fromJson.event?.name != fromForm.event?.name ||
+                            fromJson.partnerID != fromForm.partnerID ||
+                            fromJson.ticketNumber != fromForm.ticketNumber ||
+                            fromJson.ticketNumber2 != fromForm.ticketNumber2 ||
+                            fromJson.caseNumber != fromForm.caseNumber ||
+                            fromJson.caseNumber2 != fromForm.caseNumber2 ||
+                            fromJson.dispatchNumber != fromForm.dispatchNumber ||
+                            fromJson.dispatchNumber2 != fromForm.dispatchNumber2 ||
+                            fromJson.location != fromForm.location ||
+                            fromJson.remarks != fromForm.remarks ||
+                            fromJson.firstName != fromForm.firstName ||
+                            fromJson.lastName != fromForm.lastName ||
+                            fromJson.driverLicense != fromForm.driverLicense ||
+                            fromJson.licensePlate != fromForm.licensePlate ||
+                            fromJson.gender != fromForm.gender ||
+                            fromJson.race != fromForm.race
+                } ?: false
+            }
         }
         return false
     }
 
     private fun getNewMetadataFromForm(): CameraConnectVideoMetadata {
 
-        var gender = ""
-        var race = ""
-        val event = CameraInfo.events[eventValue.selectedItemPosition - 1]
+        var gender: String? = null
+        var race: String? = null
+        val event =
+            if (eventValue.selectedItemPosition != 0)
+                CameraInfo.events[eventValue.selectedItemPosition - 1]
+            else null
+
         if (genderValue.selectedItem != genderList[0]) {
             gender = genderValue.selectedItem.toString()
         }
