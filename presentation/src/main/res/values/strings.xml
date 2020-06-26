@@ -26,7 +26,6 @@
     <string name="connecting_to_camera">CONNECTING \n TO CAMERA</string>
     <string name="circle_progress_connection_camera">Circle progress connection camera</string>
     <string name="welcome_officer">WELCOME OFFICER</string>
-    <string name="connection_status">CONNECTION STATUS</string>
     <string name="exit">EXIT</string>
     <string name="enter_password">ENTER PASSWORD</string>
     <string name="incorrect_password">Incorrect password, please try again</string>
@@ -125,6 +124,9 @@
     <string name="metadata_confirmation_message">There are unsaved changes</string>
     <string name="valid_partner_id_message">You must enter a valid Partner ID</string>
     <string name="no_new_photo_selected_message">You have not selected any new photo</string>
+    <string name="mobile_data_status_title">Mobile Data</string>
+    <string name="mobile_data_status_message">Please disable mobile data to continue</string>
+    <string name="go_to_settings">Go to settings</string>
 
     <string-array name="gender_spinner">
         <item>Select</item>

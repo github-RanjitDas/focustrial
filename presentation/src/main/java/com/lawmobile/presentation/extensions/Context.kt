@@ -5,6 +5,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.entities.AlertInformation
+import com.lawmobile.presentation.entities.NeutralAlertInformation
 import com.lawmobile.presentation.ui.base.BaseActivity
 
 fun Context.createAlertInformation(alertInformation: AlertInformation) {
@@ -52,6 +53,21 @@ fun Context.createAlertConfirmAppExit() {
             R.string.confirm_app_exit_title, R.string.confirm_app_exit_description,
             { activity.killApp() }, {})
     this.createAlertInformation(alertInformation)
+}
+
+fun Context.createAlertMobileDataActive(neutralAlertInformation: NeutralAlertInformation): AlertDialog {
+    val builder = AlertDialog.Builder(this)
+    builder.apply {
+        neutralAlertInformation.run {
+            setTitle(title)
+            setMessage(message)
+            setNeutralButton(getString(buttonText)) { dialog, _ ->
+                onClickNeutralButton.invoke(dialog)
+            }
+        }
+        setCancelable(false)
+    }
+    return builder.create()
 }
 
 fun Context.showToast(message: String, duration: Int) {
