@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -46,24 +45,24 @@
         android:layout_marginStart="@dimen/live_view_main_button_margin_shorter"
         android:layout_marginTop="@dimen/live_view_main_button_margin_top"
         android:layout_marginEnd="@dimen/live_view_main_button_margin_shorter"
-        android:contentDescription="@string/button_snapshot"
         android:background="@drawable/ic_snap_selector"
+        android:contentDescription="@string/button_snapshot"
         app:layout_constraintEnd_toStartOf="@+id/guideline2"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/liveStreamingView" />
 
     <ImageView
-        android:visibility="invisible"
-        android:src="@drawable/ic_rec_video"
         android:id="@+id/imageRecordingIndicator"
-        android:clickable="false"
         android:layout_width="@dimen/live_view_image_recording_size"
         android:layout_height="@dimen/live_view_image_recording_size"
+        android:clickable="false"
+        android:contentDescription="@string/image_video_recording"
+        android:src="@drawable/ic_rec_video"
+        android:visibility="invisible"
         app:layout_constraintBottom_toTopOf="@+id/buttonStreaming"
         app:layout_constraintEnd_toEndOf="@+id/buttonStreaming"
         app:layout_constraintStart_toStartOf="@+id/buttonStreaming"
-        app:layout_constraintTop_toBottomOf="@+id/liveStreamingView"
-        android:contentDescription="@string/image_video_recording" />
+        app:layout_constraintTop_toBottomOf="@+id/liveStreamingView" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -71,9 +70,9 @@
         android:text="@string/snap"
         android:textColor="@color/white"
         android:textStyle="bold"
-        app:layout_constraintTop_toBottomOf="@id/buttonSnapshot"
+        app:layout_constraintEnd_toEndOf="@id/buttonSnapshot"
         app:layout_constraintStart_toStartOf="@id/buttonSnapshot"
-        app:layout_constraintEnd_toEndOf="@id/buttonSnapshot"/>
+        app:layout_constraintTop_toBottomOf="@id/buttonSnapshot" />
 
     <ImageButton
         android:id="@+id/buttonStreaming"
@@ -82,8 +81,8 @@
         android:layout_marginStart="@dimen/live_view_main_button_margin_shorter"
         android:layout_marginTop="@dimen/live_view_main_button_margin_top"
         android:layout_marginEnd="@dimen/live_view_main_button_margin_shorter"
-        android:contentDescription="@string/button_streaming"
         android:background="@drawable/ic_record_selector"
+        android:contentDescription="@string/button_streaming"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/guideline2"
         app:layout_constraintTop_toBottomOf="@+id/toggleFullScreenLiveView" />
@@ -94,9 +93,9 @@
         android:text="@string/record"
         android:textColor="@color/white"
         android:textStyle="bold"
-        app:layout_constraintTop_toBottomOf="@id/buttonStreaming"
+        app:layout_constraintEnd_toEndOf="@id/buttonStreaming"
         app:layout_constraintStart_toStartOf="@id/buttonStreaming"
-        app:layout_constraintEnd_toEndOf="@id/buttonStreaming"/>
+        app:layout_constraintTop_toBottomOf="@id/buttonStreaming" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline"
@@ -127,15 +126,26 @@
         android:id="@+id/textLiveViewSwitch"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:padding="@dimen/live_view_label_padding"
+        android:text="@string/live_view_label"
         android:textAlignment="center"
         android:textColor="@color/white"
         android:textSize="@dimen/live_view_label_text_size"
         android:textStyle="bold"
-        android:padding="@dimen/live_view_label_padding"
-        android:text="@string/live_view_label"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/buttonSwitchLiveView" />
+
+    <ImageView
+        android:id="@+id/buttonOpenHelpPage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/margin_info_button_live_view"
+        android:layout_marginBottom="@dimen/margin_info_button_live_view"
+        android:contentDescription="@string/button_link_snapshots"
+        android:src="@drawable/ic_info"
+        app:layout_constraintBottom_toTopOf="@+id/saveActionButtons"
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <ImageView
         android:id="@+id/saveActionButtons"
@@ -161,12 +171,12 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:paddingEnd="@dimen/live_view_text_label_padding_right"
+        android:text="@string/snapshots"
         android:textAlignment="center"
         android:textColor="@color/colorGrey"
         android:textSize="@dimen/live_view_text_size"
         android:textStyle="bold"
-        android:paddingEnd="@dimen/live_view_text_label_padding_right"
-        android:text="@string/snapshots"
         app:layout_constraintEnd_toEndOf="@id/buttonSnapshotList"
         app:layout_constraintStart_toStartOf="@id/buttonSnapshotList"
         app:layout_constraintTop_toBottomOf="@id/guideline3"
@@ -184,12 +194,12 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:paddingStart="@dimen/live_view_text_label_padding_left"
+        android:text="@string/videos"
         android:textAlignment="center"
         android:textColor="@color/colorGrey"
         android:textSize="@dimen/live_view_text_size"
         android:textStyle="bold"
-        android:paddingStart="@dimen/live_view_text_label_padding_left"
-        android:text="@string/videos"
         app:layout_constraintEnd_toEndOf="@id/buttonVideoList"
         app:layout_constraintStart_toStartOf="@id/buttonVideoList"
         app:layout_constraintTop_toBottomOf="@id/guideline3"

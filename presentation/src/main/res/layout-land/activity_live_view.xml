@@ -46,7 +46,6 @@
         app:layout_constraintTop_toBottomOf="@+id/toggleFullScreenLiveView" />
 
     <Switch
-        android:visibility="gone"
         android:id="@+id/buttonSwitchLiveView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -60,65 +59,78 @@
         android:textOn=""
         android:thumb="@android:color/transparent"
         android:track="@android:color/transparent"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/buttonStreaming"
         app:layout_constraintVertical_bias="0.0" />
 
     <ImageView
-        android:visibility="gone"
-        android:src="@drawable/ic_rec_video"
         android:id="@+id/imageRecordingIndicator"
-        android:clickable="false"
         android:layout_width="@dimen/live_view_image_recording_size"
         android:layout_height="@dimen/live_view_image_recording_size"
+        android:clickable="false"
+        android:contentDescription="@string/image_video_recording"
+        android:src="@drawable/ic_rec_video"
+        android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@+id/buttonStreaming"
         app:layout_constraintEnd_toEndOf="@+id/buttonStreaming"
         app:layout_constraintStart_toStartOf="@+id/buttonStreaming"
-        app:layout_constraintTop_toBottomOf="@+id/liveStreamingView"
-        android:contentDescription="@string/image_video_recording" />
+        app:layout_constraintTop_toBottomOf="@+id/liveStreamingView" />
 
     <ImageButton
-        android:visibility="gone"
         android:id="@+id/buttonSnapshotList"
         android:layout_width="@dimen/live_view_secondary_button_width"
         android:layout_height="@dimen/live_view_secondary_button_height"
         android:background="@drawable/ic_snapshot_list"
         android:contentDescription="@string/snapshot_list"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/buttonVideoList" />
 
     <TextView
-        android:visibility="gone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="@string/snapshots"
         android:textAlignment="center"
         android:textColor="@color/colorGrey"
         android:textSize="@dimen/live_view_text_size"
         android:textStyle="bold"
-        android:text="@string/snapshots"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"/>
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageButton
-        android:visibility="gone"
         android:id="@+id/buttonVideoList"
         android:layout_width="@dimen/live_view_secondary_button_width"
         android:layout_height="@dimen/live_view_secondary_button_height"
         android:background="@drawable/ic_video_list"
         android:contentDescription="@string/record_list"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         tools:ignore="MissingConstraints" />
 
     <TextView
-        android:visibility="gone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="@string/videos"
         android:textAlignment="center"
         android:textColor="@color/colorGrey"
         android:textSize="@dimen/live_view_text_size"
         android:textStyle="bold"
-        android:text="@string/videos"
+        android:visibility="gone"
+        tools:ignore="MissingConstraints" />
+
+    <ImageView
+        android:id="@+id/buttonOpenHelpPage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/margin_info_button_live_view"
+        android:layout_marginBottom="@dimen/margin_info_button_live_view"
+        android:contentDescription="@string/button_link_snapshots"
+        android:src="@drawable/ic_info"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
         tools:ignore="MissingConstraints" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

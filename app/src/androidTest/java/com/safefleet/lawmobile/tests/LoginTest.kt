@@ -33,7 +33,6 @@ class LoginTest : EspressoBaseTest<LoginActivity>(LoginActivity::class.java) {
             .isLogoDisplayed()
             .isWaitingForCameraTextDisplayed()
             .isInstructionsTextDisplayed()
-            .isConnectionStatusDisplayed()
             .isExitDisplayed()
 
         loginScreen.typeSerialNumber(SERIAL_NUMBER).go()

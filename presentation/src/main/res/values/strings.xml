@@ -119,7 +119,7 @@
     <string name="filename">FILENAME</string>
     <string name="link_images_error">Something went wrong getting the images, please try again</string>
     <string name="image_linked_success">Images added successfully</string>
-    <string name="buttonlinksnapshots">buttonLinkSnapshots</string>
+    <string name="button_link_snapshots">buttonLinkSnapshots</string>
     <string name="photo_for_associate_to_video">photo for associate to video</string>
     <string name="metadata_confirmation">Are you sure?</string>
     <string name="metadata_confirmation_message">There are unsaved changes</string>
