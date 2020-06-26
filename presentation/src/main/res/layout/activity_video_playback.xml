@@ -687,7 +687,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:contentDescription="@string/buttonlinksnapshots" />
+            android:contentDescription="@string/button_link_snapshots" />
 
         <TextView
             android:id="@+id/saveButtonVideoPlayback"

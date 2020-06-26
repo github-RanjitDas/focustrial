@@ -106,6 +106,9 @@ dependencies {
     //Intent-animation
     implementation "com.github.hajiyevelnur92:intentanimation:$intent_animation_version"
 
+    // PDF Viewer
+    implementation "com.github.barteksc:android-pdf-viewer:$pdf_viewer_version"
+
     implementation project(path: ':domain')
 }
 

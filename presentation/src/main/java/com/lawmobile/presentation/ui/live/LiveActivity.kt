@@ -16,6 +16,7 @@ import com.lawmobile.presentation.extensions.setOnClickListenerCheckConnection
 import com.lawmobile.presentation.extensions.showToast
 import com.lawmobile.presentation.ui.base.BaseActivity
 import com.lawmobile.presentation.ui.fileList.FileListActivity
+import com.lawmobile.presentation.ui.helpSection.HelpPageActivity
 import com.lawmobile.presentation.utils.Constants.FILE_LIST_SELECTOR
 import com.lawmobile.presentation.utils.Constants.SNAPSHOT_LIST
 import com.lawmobile.presentation.utils.Constants.VIDEO_LIST
@@ -78,6 +79,11 @@ class LiveActivity : BaseActivity() {
 
         buttonVideoList.setOnClickListenerCheckConnection {
             startFileListIntent(VIDEO_LIST)
+        }
+
+        buttonOpenHelpPage.setOnClickListenerCheckConnection {
+            val intent = Intent(this, HelpPageActivity::class.java)
+            startActivity(intent)
         }
     }
 

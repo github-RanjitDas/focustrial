@@ -56,6 +56,11 @@
             android:theme="@style/AppTheme.NoActionBar"
             tools:ignore="LockedOrientationActivity" />
 
+        <activity
+            android:name="com.lawmobile.presentation.ui.helpSection.HelpPageActivity"
+            android:label="User Guide"
+            android:parentActivityName="com.lawmobile.presentation.ui.login.LoginActivity" />
+
     </application>
 
 </manifest>

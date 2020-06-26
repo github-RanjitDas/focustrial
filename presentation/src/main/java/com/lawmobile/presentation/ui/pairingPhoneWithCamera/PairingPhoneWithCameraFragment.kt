@@ -20,6 +20,7 @@ import com.lawmobile.presentation.extensions.showToast
 import com.lawmobile.presentation.extensions.text
 import com.lawmobile.presentation.ui.base.BaseActivity
 import com.lawmobile.presentation.ui.base.BaseFragment
+import com.lawmobile.presentation.ui.helpSection.HelpPageActivity
 import com.safefleet.mobile.commons.helpers.Result
 import kotlinx.android.synthetic.main.fragment_pairing_phone_with_camera.*
 import javax.inject.Inject
@@ -63,6 +64,9 @@ class PairingPhoneWithCameraFragment : BaseFragment() {
             } else {
                 showAlertToNavigateToPermissions()
             }
+        }
+        textInstructionsToLinkCamera.setOnClickListener {
+            openHelpPage()
         }
     }
 
@@ -194,6 +198,11 @@ class PairingPhoneWithCameraFragment : BaseFragment() {
                 constrainValidateSSID.visibility = View.VISIBLE
             }
         }
+    }
+
+    private fun openHelpPage() {
+        val intent = Intent(context, HelpPageActivity::class.java)
+        startActivity(intent)
     }
 
     companion object {

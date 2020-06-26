@@ -24,11 +24,6 @@ class LoginScreen : BaseScreen() {
         return this
     }
 
-    fun isConnectionStatusDisplayed(): LoginScreen {
-        assertDisplayed(R.id.textConnectionStatus, R.string.connection_status)
-        return this
-    }
-
     fun isExitDisplayed(): LoginScreen {
         assertDisplayed(R.id.textViewLoginExit, R.string.exit)
         return this

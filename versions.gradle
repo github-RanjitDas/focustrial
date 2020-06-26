@@ -4,7 +4,7 @@ ext {
     compileSdkVersion = 29
     minSdkVersion = 23
     targetSdkVersion = 29
-    buildVersion = 36
+    buildVersion = 37
     major = 3
     minor = 0
     patch = 0
@@ -37,4 +37,5 @@ ext {
     sonar_version = '2.7.1'
     ui_automator_version = '2.2.0'
     intent_animation_version = '1.0'
+    pdf_viewer_version = '3.2.0-beta.1'
 }
