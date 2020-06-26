@@ -12,6 +12,7 @@ import android.net.wifi.WifiManager
 import android.net.wifi.WifiNetworkSpecifier
 import android.os.Build
 import com.google.gson.Gson
+import com.lawmobile.presentation.utils.MobileDataStatus
 import com.lawmobile.presentation.utils.VLCMediaPlayer
 import com.lawmobile.presentation.utils.WifiConnection
 import com.lawmobile.presentation.utils.WifiHelper
@@ -112,6 +113,12 @@ class AppModule {
         @Singleton
         fun provideVLCMediaPlayer(libVLC: LibVLC, mediaPlayer: MediaPlayer): VLCMediaPlayer =
             VLCMediaPlayer(libVLC, mediaPlayer)
+
+        @JvmStatic
+        @Provides
+        @Singleton
+        fun provideMobileDataStatus(application: Application) =
+            MobileDataStatus(application)
 
     }
 }
