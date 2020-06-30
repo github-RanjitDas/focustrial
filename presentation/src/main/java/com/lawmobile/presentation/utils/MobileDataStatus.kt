@@ -26,6 +26,7 @@ class MobileDataStatus(application: Application) : LiveData<Boolean>() {
 
     override fun onActive() {
         super.onActive()
+        value = false
 
         val builder = NetworkRequest.Builder()
             .addTransportType(NetworkCapabilities.TRANSPORT_CELLULAR)
