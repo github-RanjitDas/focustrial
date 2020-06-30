@@ -57,7 +57,7 @@ class LinkSnapshotsActivity : BaseActivity() {
     private fun configureLoadingViews() {
         loadingDialog = this.createAlertProgress()
         loadingDialog.show()
-        progress_circular.isVisible = false
+        constrain_loading.isVisible = false
     }
 
     private fun configureRecyclerView() {
@@ -123,7 +123,7 @@ class LinkSnapshotsActivity : BaseActivity() {
         } else {
             linkSnapshotRecyclerView.isVisible = true
             noImagesTextView.isVisible = false
-            progress_circular.isVisible = false
+            constrain_loading.isVisible = false
 
             it.forEach {
                 tmpImageList.add(it)
@@ -135,7 +135,7 @@ class LinkSnapshotsActivity : BaseActivity() {
             ) as ArrayList<DomainInformationImage>
 
             if(thereAreSixOrMoreAndInAdapterLess()){
-                progress_circular.isVisible = true
+                constrain_loading.isVisible = true
             }
         }
         isLoading = false
@@ -151,7 +151,7 @@ class LinkSnapshotsActivity : BaseActivity() {
                 (recyclerView.layoutManager as GridLayoutManager).findFirstVisibleItemPosition()
             if (!isLoading && !isLastPage()) {
                 if (visibleItemCount + firstVisibleItemPosition >= totalItemCount && firstVisibleItemPosition >= 0) {
-                    progress_circular.isVisible = true
+                    constrain_loading.isVisible = true
                     currentPage++
                     isLoading = true
                     linkSnapshotsViewModel.getImageBytesList(currentPage)
