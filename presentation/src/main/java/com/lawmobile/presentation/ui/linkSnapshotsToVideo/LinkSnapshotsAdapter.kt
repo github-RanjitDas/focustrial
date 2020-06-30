@@ -53,10 +53,14 @@ class LinkSnapshotsAdapter :
                     setSnapshotSelected(imageList[position].isAssociatedToVideo)
                     val result =
                         SnapshotsToLink.selectedImages.find { it == imageList[position].cameraConnectFile.name }
-                    if (result == null)
+                    val resultDates =
+                        SnapshotsToLink.selectedImagesDate.find { it == imageList[position].cameraConnectFile.date }
+                    if (result == null) {
                         SnapshotsToLink.selectedImages.add(imageList[position].cameraConnectFile.name)
-                    else {
+                        SnapshotsToLink.selectedImagesDate.add(imageList[position].cameraConnectFile.date)
+                    } else {
                         SnapshotsToLink.selectedImages.remove(result)
+                        SnapshotsToLink.selectedImagesDate.remove(resultDates)
                     }
                 }
             }
