@@ -306,8 +306,9 @@ class VideoPlaybackActivity : BaseActivity() {
             val alertInformation = AlertInformation(
                 R.string.metadata_confirmation,
                 R.string.metadata_confirmation_message,
-                ::closeWithoutSave
-            ) {}
+                ::closeWithoutSave,
+                {},null
+            )
             this.createAlertInformation(alertInformation)
         }
     }

@@ -3,7 +3,7 @@ package com.lawmobile.presentation.ui.fileList
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.viewModelScope
-import com.lawmobile.domain.entities.DomainInformationFile
+import com.lawmobile.domain.entities.DomainInformationFileResponse
 import com.lawmobile.domain.usecase.fileList.FileListUseCase
 import com.lawmobile.presentation.ui.base.BaseViewModel
 import com.safefleet.mobile.avml.cameras.entities.CameraConnectFile
@@ -14,13 +14,13 @@ import javax.inject.Inject
 class FileListViewModel @Inject constructor(private val fileListUseCase: FileListUseCase) :
     BaseViewModel() {
 
-    private val snapshotListMediator: MediatorLiveData<Result<List<DomainInformationFile>>> =
+    private val snapshotListMediator: MediatorLiveData<Result<DomainInformationFileResponse>> =
         MediatorLiveData()
-    val snapshotListLiveData: LiveData<Result<List<DomainInformationFile>>> get() = snapshotListMediator
+    val snapshotListLiveData: LiveData<Result<DomainInformationFileResponse>> get() = snapshotListMediator
 
-    private val videoListMediator: MediatorLiveData<Result<List<DomainInformationFile>>> =
+    private val videoListMediator: MediatorLiveData<Result<DomainInformationFileResponse>> =
         MediatorLiveData()
-    val videoListLiveData: LiveData<Result<List<DomainInformationFile>>> get() = videoListMediator
+    val videoListLiveData: LiveData<Result<DomainInformationFileResponse>> get() = videoListMediator
 
     private val videoPartnerIdMediator: MediatorLiveData<Result<Unit>> =
         MediatorLiveData()

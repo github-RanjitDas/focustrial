@@ -61,6 +61,8 @@
     <string name="no_images_found">No images found</string>
     <string name="no_videos_found">No videos found</string>
     <string name="back">BACK</string>
+    <string name="getting_files_error">Getting files error</string>
+    <string name="getting_files_error_description">Access to a specific folder failed, folder name :</string>
 
     <!-- Video playback -->
     <string name="play_pause_button_video_playback">Play/Pause button video playback</string>

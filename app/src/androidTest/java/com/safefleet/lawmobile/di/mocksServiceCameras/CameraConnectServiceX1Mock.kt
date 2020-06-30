@@ -32,12 +32,16 @@ class CameraConnectServiceX1Mock : CameraConnectService {
         return Result.Success(CameraConnectVideoInfo(0, 1000, 100, "", "10", 10, "", ""))
     }
 
-    override suspend fun getListOfImages(): Result<MutableList<CameraConnectFile>> {
-        return Result.Success(snapshotsList)
+    override suspend fun getListOfImages(): Result<CameraConnectFileResponseWithErrors> {
+        val cameraConnectFileResponseWithErrors = CameraConnectFileResponseWithErrors()
+        cameraConnectFileResponseWithErrors.items.addAll(snapshotsList)
+        return Result.Success(cameraConnectFileResponseWithErrors)
     }
 
-    override suspend fun getListOfVideos(): Result<List<CameraConnectFile>> {
-        return Result.Success(emptyList())
+    override suspend fun getListOfVideos(): Result<CameraConnectFileResponseWithErrors> {
+        val cameraConnectFileResponseWithErrors = CameraConnectFileResponseWithErrors()
+        cameraConnectFileResponseWithErrors.items.addAll(arrayListOf())
+        return Result.Success(cameraConnectFileResponseWithErrors)
     }
 
     override fun getUrlForLiveStream(): String = ""

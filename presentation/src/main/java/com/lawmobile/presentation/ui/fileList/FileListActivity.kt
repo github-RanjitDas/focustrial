@@ -12,7 +12,9 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
 import com.lawmobile.domain.entities.DomainInformationFile
+import com.lawmobile.domain.entities.DomainInformationFileResponse
 import com.lawmobile.presentation.R
+import com.lawmobile.presentation.entities.AlertInformation
 import com.lawmobile.presentation.extensions.*
 import com.lawmobile.presentation.ui.base.BaseActivity
 import com.lawmobile.presentation.ui.snapshotDetail.SnapshotDetailActivity
@@ -188,15 +190,27 @@ class FileListActivity : BaseActivity() {
         )
     }
 
-    private fun handleFileListResult(result: Result<List<DomainInformationFile>>) {
+    private fun handleFileListResult(result: Result<DomainInformationFileResponse>) {
         when (result) {
             is Result.Success -> {
-                if (result.data.isNotEmpty()) {
+
+                if (result.data.errors.isNotEmpty()) {
+                    var customMessage = getString(R.string.getting_files_error_description) + "\n"
+                    result.data.errors.forEach {
+                        customMessage += it + "\n"
+                    }
+                    val alertInformation = AlertInformation(R.string.getting_files_error, null, {
+                        it.dismiss()
+                    }, null, customMessage)
+                    this.createAlertInformation(alertInformation)
+                }
+                if (result.data.listItems.isNotEmpty()) {
                     fragmentListHolder.isVisible = true
                     noFilesTextView.isVisible = false
                     fileListAdapter =
                         FileListAdapter(::fileItemClick, ::enableAssociatePartnerButton)
-                    fileListAdapter.fileList = result.data.sortedByDescending { it.cameraConnectFile.date }
+                    fileListAdapter.fileList =
+                        result.data.listItems.sortedByDescending { it.cameraConnectFile.date }
                     when (buttonSnapshotListSwitch.isActivated) {
                         true -> snapshotListFragment.setFileListAdapter?.invoke(fileListAdapter)
                         false -> videoListFragment.setFileListAdapter?.invoke(fileListAdapter)

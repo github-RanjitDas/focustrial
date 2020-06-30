@@ -10,10 +10,19 @@ import com.lawmobile.presentation.ui.base.BaseActivity
 
 fun Context.createAlertInformation(alertInformation: AlertInformation) {
     val builder = AlertDialog.Builder(this)
+    var message = ""
+    if (alertInformation.message != null){
+        message = getString(alertInformation.message)
+    }else {
+        if (alertInformation.customMessage != null){
+            message = alertInformation.customMessage
+        }
+    }
+
     builder.apply {
         setCancelable(false)
         setTitle(getString(alertInformation.title))
-        setMessage(getString(alertInformation.message))
+        setMessage(message)
         if (alertInformation.onClickPositiveButton != null) {
             setPositiveButton(R.string.OK) { dialog, _ ->
                 alertInformation.onClickPositiveButton.invoke(dialog)

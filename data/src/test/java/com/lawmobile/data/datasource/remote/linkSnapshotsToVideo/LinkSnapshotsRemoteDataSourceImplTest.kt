@@ -1,12 +1,10 @@
 package com.lawmobile.data.datasource.remote.linkSnapshotsToVideo
 
 import com.safefleet.mobile.avml.cameras.entities.CameraConnectFile
+import com.safefleet.mobile.avml.cameras.entities.CameraConnectFileResponseWithErrors
 import com.safefleet.mobile.avml.cameras.external.CameraConnectService
 import com.safefleet.mobile.commons.helpers.Result
-import io.mockk.clearAllMocks
-import io.mockk.coEvery
-import io.mockk.coVerify
-import io.mockk.mockk
+import io.mockk.*
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert
 import org.junit.jupiter.api.BeforeEach
@@ -69,7 +67,11 @@ internal class LinkSnapshotsRemoteDataSourceImplTest {
 
     @Test
     fun testGetSnapshotListSuccess() {
-        val result = Result.Success(listOf(mockk<CameraConnectFile>()))
+        val cameraConnectFile: CameraConnectFile = mockk(relaxed = true)
+        val cameraResponse: CameraConnectFileResponseWithErrors = mockk{
+            every { items } returns  arrayListOf(cameraConnectFile)
+        }
+        val result = Result.Success(cameraResponse)
         coEvery { cameraConnectService.getListOfImages() } returns result
         runBlocking {
             Assert.assertEquals(linkSnapshotsRemoteDataSourceImpl.getSnapshotList(), result)

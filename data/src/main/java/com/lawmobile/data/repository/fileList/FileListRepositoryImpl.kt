@@ -6,6 +6,7 @@ import com.lawmobile.data.entities.RemoteVideoMetadata
 import com.lawmobile.data.entities.VideoListMetadata
 import com.lawmobile.domain.entities.CameraInfo
 import com.lawmobile.domain.entities.DomainInformationFile
+import com.lawmobile.domain.entities.DomainInformationFileResponse
 import com.lawmobile.domain.repository.fileList.FileListRepository
 import com.safefleet.mobile.avml.cameras.entities.*
 import com.safefleet.mobile.commons.helpers.Result
@@ -13,31 +14,38 @@ import kotlinx.coroutines.delay
 
 class FileListRepositoryImpl(private val fileListRemoteDataSource: FileListRemoteDataSource) :
     FileListRepository {
-    override suspend fun getSnapshotList(): Result<List<DomainInformationFile>> {
+    override suspend fun getSnapshotList(): Result<DomainInformationFileResponse> {
         return when (val response = fileListRemoteDataSource.getSnapshotList()) {
             is Result.Success -> {
-                val items = response.data.sortedByDescending { it.date }.map {
+                val domainInformationFileResponse = DomainInformationFileResponse()
+                val items = response.data.items.sortedByDescending { it.date }.map {
                     DomainInformationFile(it, null)
                 }
-                if (items.size < FileList.listOfImages.size)
-                    return Result.Success(FileList.listOfImages)
+                domainInformationFileResponse.errors.addAll(response.data.errors)
+                if (items.size < FileList.listOfImages.size) {
+                    domainInformationFileResponse.listItems.addAll(FileList.listOfImages)
+                    return Result.Success(domainInformationFileResponse)
+                }
 
+                domainInformationFileResponse.listItems.addAll(items)
                 FileList.changeListOfImages(items)
-                return Result.Success(items)
+                return Result.Success(domainInformationFileResponse)
             }
             is Result.Error -> response
         }
     }
 
-    override suspend fun getVideoList(): Result<List<DomainInformationFile>> {
+    override suspend fun getVideoList(): Result<DomainInformationFileResponse> {
         return when (val response = fileListRemoteDataSource.getVideoList()) {
             is Result.Success -> {
-                val items = response.data.sortedByDescending { it.date }.map {
+                val domainInformationFileResponse = DomainInformationFileResponse()
+                val items = response.data.items.sortedByDescending { it.date }.map {
                     val remoteMetadata = VideoListMetadata.getVideoMetadata(it.name)
                     DomainInformationFile(it, remoteMetadata?.videoMetadata)
                 }
+                domainInformationFileResponse.errors.addAll(response.data.errors)
                 if (items.size < FileList.listOfVideos.size) {
-                    return Result.Success(FileList.listOfVideos.map {
+                    domainInformationFileResponse.listItems.addAll(FileList.listOfVideos.map {
                         val remoteMetadata =
                             VideoListMetadata.getVideoMetadata(it.cameraConnectFile.name)
                         DomainInformationFile(
@@ -45,10 +53,12 @@ class FileListRepositoryImpl(private val fileListRemoteDataSource: FileListRemot
                             remoteMetadata?.videoMetadata
                         )
                     })
+                    return  Result.Success(domainInformationFileResponse)
                 }
 
                 FileList.changeListOfVideos(items)
-                return Result.Success(items)
+                domainInformationFileResponse.listItems.addAll(items)
+                return Result.Success(domainInformationFileResponse)
             }
             is Result.Error -> response
         }
