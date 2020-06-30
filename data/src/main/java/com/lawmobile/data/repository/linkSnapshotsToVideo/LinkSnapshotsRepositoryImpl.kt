@@ -45,8 +45,8 @@ class LinkSnapshotsRepositoryImpl(
         return if (FileList.listOfImages.isEmpty()) {
             return when (val response = linkSnapshotsRemoteDataSource.getSnapshotList()) {
                 is Result.Success -> {
-                    if (response.data.size > FileList.listOfImages.size)
-                        FileList.listOfImages = response.data.sortedByDescending { it.date }.map {
+                    if (response.data.items.size > FileList.listOfImages.size)
+                        FileList.listOfImages = response.data.items.sortedByDescending { it.date }.map {
                             DomainInformationFile(it, null)
                         }
                     Result.Success(Unit)

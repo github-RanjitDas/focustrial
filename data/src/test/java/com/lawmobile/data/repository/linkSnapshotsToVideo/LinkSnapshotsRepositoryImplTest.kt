@@ -2,11 +2,10 @@ package com.lawmobile.data.repository.linkSnapshotsToVideo
 
 import com.lawmobile.data.datasource.remote.linkSnapshotsToVideo.LinkSnapshotsRemoteDataSource
 import com.lawmobile.data.entities.FileList
+import com.safefleet.mobile.avml.cameras.entities.CameraConnectFile
+import com.safefleet.mobile.avml.cameras.entities.CameraConnectFileResponseWithErrors
 import com.safefleet.mobile.commons.helpers.Result
-import io.mockk.clearAllMocks
-import io.mockk.coEvery
-import io.mockk.coVerify
-import io.mockk.mockk
+import io.mockk.*
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert
 import org.junit.jupiter.api.BeforeEach
@@ -53,10 +52,12 @@ internal class LinkSnapshotsRepositoryImplTest {
     @Test
     fun testGetImageByteListError() {
         FileList.listOfImages = emptyList()
+        val cameraConnectFile: CameraConnectFile = mockk(relaxed = true)
+        val cameraResponse: CameraConnectFileResponseWithErrors = mockk{
+            every { items } returns  arrayListOf(cameraConnectFile)
+        }
         coEvery { linkSnapshotsRemoteDataSource.getSnapshotList() } returns Result.Success(
-            listOf(
-                mockk(relaxed = true), mockk(relaxed = true)
-            )
+            cameraResponse
         )
         coEvery { linkSnapshotsRemoteDataSource.getImageBytes(any()) } returns Result.Error(mockk())
 
@@ -69,11 +70,11 @@ internal class LinkSnapshotsRepositoryImplTest {
     @Test
     fun testGetImageByteListSuccess() {
         FileList.listOfImages = emptyList()
-        coEvery { linkSnapshotsRemoteDataSource.getSnapshotList() } returns Result.Success(
-            listOf(
-                mockk(relaxed = true), mockk(relaxed = true)
-            )
-        )
+        val cameraConnectFile: CameraConnectFile = mockk(relaxed = true)
+        val cameraResponse: CameraConnectFileResponseWithErrors = mockk{
+            every { items } returns  arrayListOf(cameraConnectFile, cameraConnectFile)
+        }
+        coEvery { linkSnapshotsRemoteDataSource.getSnapshotList() } returns Result.Success(cameraResponse)
         coEvery { linkSnapshotsRemoteDataSource.getImageBytes(any()) } returns Result.Success("Hola".toByteArray())
 
         runBlocking {

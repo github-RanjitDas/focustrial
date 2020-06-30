@@ -3,6 +3,7 @@ package com.lawmobile.data.datasource.remote.fileList
 import com.lawmobile.data.entities.RemoteVideoMetadata
 import com.lawmobile.data.entities.VideoListMetadata
 import com.safefleet.mobile.avml.cameras.entities.CameraConnectFile
+import com.safefleet.mobile.avml.cameras.entities.CameraConnectFileResponseWithErrors
 import com.safefleet.mobile.avml.cameras.entities.CameraConnectPhotoMetadata
 import com.safefleet.mobile.avml.cameras.entities.CameraConnectVideoMetadata
 import com.safefleet.mobile.avml.cameras.external.CameraConnectService
@@ -14,13 +15,13 @@ import kotlinx.coroutines.withContext
 class FileListRemoteDataSourceImpl(private val cameraConnectService: CameraConnectService) :
     FileListRemoteDataSource {
 
-    override suspend fun getSnapshotList(): Result<List<CameraConnectFile>> =
+    override suspend fun getSnapshotList(): Result<CameraConnectFileResponseWithErrors> =
         cameraConnectService.getListOfImages()
 
-    override suspend fun getVideoList(): Result<List<CameraConnectFile>> {
+    override suspend fun getVideoList(): Result<CameraConnectFileResponseWithErrors> {
         val response = withContext(Dispatchers.Default) { cameraConnectService.getListOfVideos() }
         if (response is Result.Success) {
-            getMetadataForVideoList(response.data)
+            getMetadataForVideoList(response.data.items)
         }
 
         return response

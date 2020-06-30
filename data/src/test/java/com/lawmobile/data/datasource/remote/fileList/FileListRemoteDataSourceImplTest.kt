@@ -3,10 +3,12 @@ package com.lawmobile.data.datasource.remote.fileList
 import com.lawmobile.data.InstantExecutorExtension
 import com.lawmobile.data.entities.VideoListMetadata
 import com.safefleet.mobile.avml.cameras.entities.CameraConnectFile
+import com.safefleet.mobile.avml.cameras.entities.CameraConnectFileResponseWithErrors
 import com.safefleet.mobile.avml.cameras.external.CameraConnectService
 import com.safefleet.mobile.commons.helpers.Result
 import io.mockk.coEvery
 import io.mockk.coVerify
+import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert
@@ -35,7 +37,11 @@ internal class FileListRemoteDataSourceImplTest {
 
     @Test
     fun testGetSnapshotListSuccess() {
-        val result = Result.Success(listOf(mockk<CameraConnectFile>()))
+        val cameraConnectFile: CameraConnectFile = mockk(relaxed = true)
+        val cameraResponse: CameraConnectFileResponseWithErrors = mockk{
+            every { items } returns  arrayListOf(cameraConnectFile)
+        }
+        val result = Result.Success(cameraResponse)
         coEvery { cameraConnectService.getListOfImages() } returns result
         runBlocking {
             Assert.assertEquals(fileListRemoteDataSourceImpl.getSnapshotList(), result)
@@ -53,9 +59,11 @@ internal class FileListRemoteDataSourceImplTest {
 
     @Test
     fun testGetVideoListFlow() {
-        coEvery { cameraConnectService.getListOfVideos() } returns Result.Success(
-            listOf( mockk(relaxed = true))
-        )
+        val cameraConnectFile: CameraConnectFile = mockk(relaxed = true)
+        val cameraResponse: CameraConnectFileResponseWithErrors = mockk{
+            every { items } returns  arrayListOf(cameraConnectFile)
+        }
+        coEvery { cameraConnectService.getListOfVideos() } returns Result.Success(cameraResponse)
 
         VideoListMetadata.metadataList = mutableListOf()
         coEvery {
@@ -75,7 +83,11 @@ internal class FileListRemoteDataSourceImplTest {
 
     @Test
     fun testGetVideoListSuccess() {
-        val result = Result.Success(listOf(mockk<CameraConnectFile>(relaxed = true)))
+        val cameraConnectFile: CameraConnectFile = mockk(relaxed = true)
+        val cameraResponse: CameraConnectFileResponseWithErrors = mockk{
+            every { items } returns  arrayListOf(cameraConnectFile)
+        }
+        val result = Result.Success(cameraResponse)
         coEvery { cameraConnectService.getListOfVideos() } returns result
         coEvery {
             cameraConnectService.getVideoMetadata(
