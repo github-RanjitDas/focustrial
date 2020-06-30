@@ -16,6 +16,7 @@ import com.lawmobile.presentation.extensions.createAlertProgress
 import com.lawmobile.presentation.extensions.setOnClickListenerCheckConnection
 import com.lawmobile.presentation.extensions.showToast
 import com.lawmobile.presentation.ui.base.BaseActivity
+import com.lawmobile.presentation.utils.Constants.SNAPSHOTS_DATE_SELECTED
 import com.lawmobile.presentation.utils.Constants.SNAPSHOTS_LINKED
 import com.lawmobile.presentation.utils.Constants.SNAPSHOTS_SELECTED
 import com.safefleet.mobile.commons.helpers.Result
@@ -30,6 +31,7 @@ class LinkSnapshotsActivity : BaseActivity() {
 
     private lateinit var linkSnapshotsAdapter: LinkSnapshotsAdapter
     private var snapshotsLinked: ArrayList<String?>? = null
+    private var snapshotsLinkedDate: ArrayList<String?>? = null
     private var currentPage = 1
 
     private lateinit var loadingDialog: AlertDialog
@@ -41,9 +43,12 @@ class LinkSnapshotsActivity : BaseActivity() {
         setContentView(R.layout.activity_link_snapshots)
 
         snapshotsLinked = intent.getStringArrayListExtra(SNAPSHOTS_LINKED)
+        snapshotsLinkedDate = intent.getStringArrayListExtra(SNAPSHOTS_DATE_SELECTED)
         SnapshotsToLink.selectedImages = arrayListOf()
+        SnapshotsToLink.selectedImagesDate = arrayListOf()
         if (!snapshotsLinked.isNullOrEmpty()) {
             SnapshotsToLink.selectedImages.addAll(snapshotsLinked as ArrayList)
+            SnapshotsToLink.selectedImagesDate.addAll(snapshotsLinkedDate as ArrayList)
         }
         configureLoadingViews()
         linkSnapshotsAdapter = LinkSnapshotsAdapter()
@@ -82,8 +87,11 @@ class LinkSnapshotsActivity : BaseActivity() {
     private fun addSnapshotsToVideo() {
         if (areSnapshotsSelected()) {
             val returnIntent = Intent()
-            val selectedItems = SnapshotsToLink.selectedImages
-            returnIntent.putStringArrayListExtra(SNAPSHOTS_SELECTED, selectedItems)
+            returnIntent.putStringArrayListExtra(SNAPSHOTS_SELECTED, SnapshotsToLink.selectedImages)
+            returnIntent.putStringArrayListExtra(
+                SNAPSHOTS_DATE_SELECTED,
+                SnapshotsToLink.selectedImagesDate
+            )
             setResult(Activity.RESULT_OK, returnIntent)
             onBackPressed()
         } else {
@@ -131,10 +139,10 @@ class LinkSnapshotsActivity : BaseActivity() {
 
             linkSnapshotsAdapter.imageList = setImagesLinkedToVideo(
                 tmpImageList,
-                snapshotsLinked
+                SnapshotsToLink.selectedImages
             ) as ArrayList<DomainInformationImage>
 
-            if(thereAreSixOrMoreAndInAdapterLess()){
+            if (thereAreSixOrMoreAndInAdapterLess()) {
                 constrain_loading.isVisible = true
             }
         }

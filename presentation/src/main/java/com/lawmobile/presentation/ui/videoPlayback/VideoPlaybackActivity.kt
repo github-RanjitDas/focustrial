@@ -19,11 +19,11 @@ import com.lawmobile.presentation.extensions.*
 import com.lawmobile.presentation.ui.base.BaseActivity
 import com.lawmobile.presentation.ui.linkSnapshotsToVideo.LinkSnapshotsActivity
 import com.lawmobile.presentation.utils.Constants.CAMERA_CONNECT_FILE
+import com.lawmobile.presentation.utils.Constants.SNAPSHOTS_DATE_SELECTED
 import com.lawmobile.presentation.utils.Constants.SNAPSHOTS_LINKED
 import com.lawmobile.presentation.utils.Constants.SNAPSHOTS_SELECTED
 import com.safefleet.mobile.avml.cameras.entities.CameraConnectFile
 import com.safefleet.mobile.avml.cameras.entities.CameraConnectVideoMetadata
-import com.safefleet.mobile.avml.cameras.entities.PhotoAssociated
 import com.safefleet.mobile.avml.cameras.entities.VideoMetadata
 import com.safefleet.mobile.commons.helpers.Result
 import com.safefleet.mobile.commons.helpers.hideKeyboard
@@ -38,7 +38,8 @@ class VideoPlaybackActivity : BaseActivity() {
     private val eventList = mutableListOf<String>()
     private val raceList = mutableListOf<String>()
     private val genderList = mutableListOf<String>()
-    private var photoAssociatedList: ArrayList<String?>? = ArrayList()
+    private var linkedPhotosList: ArrayList<CameraConnectFile>? = ArrayList()
+    private var linkedPhotosDateAndTimeList: ArrayList<String>? = ArrayList()
 
     private lateinit var dialog: AlertDialog
     private var currentAttempts = 0
@@ -179,11 +180,23 @@ class VideoPlaybackActivity : BaseActivity() {
             driverLicenseValue.setText(driverLicense)
             licensePlateValue.setText(licensePlate)
         }
-        if (photoAssociatedList.isNullOrEmpty()) {
-            photoAssociatedList =
-                cameraConnectVideoMetadata.photos?.map { it.fileName } as ArrayList<String?>?
+        if (linkedPhotosList.isNullOrEmpty()) {
+            linkedPhotosList =
+                cameraConnectVideoMetadata.photos as ArrayList<CameraConnectFile>?
+            linkedPhotosDateAndTimeList =
+                cameraConnectVideoMetadata.photos?.map { it.date } as ArrayList<String>?
+
         }
+        updateLinkedPhotosField()
         dialog.dismiss()
+    }
+
+    private fun updateLinkedPhotosField() {
+        linkedPhotosValue.text = ""
+        linkedPhotosDateAndTimeList?.forEach {
+            linkedPhotosValue.append(it)
+            linkedPhotosValue.append("\n")
+        }
     }
 
     private fun getSpinnerSelection(list: List<String>, value: String?): Int {
@@ -220,7 +233,14 @@ class VideoPlaybackActivity : BaseActivity() {
         }
         buttonLinkSnapshots.setOnClickListenerCheckConnection {
             val intent = Intent(this, LinkSnapshotsActivity::class.java)
-            intent.putStringArrayListExtra(SNAPSHOTS_LINKED, photoAssociatedList)
+            linkedPhotosList?.run {
+                intent.putStringArrayListExtra(
+                    SNAPSHOTS_LINKED,
+                    map { it.name } as ArrayList<String>)
+                intent.putStringArrayListExtra(
+                    SNAPSHOTS_DATE_SELECTED,
+                    map { it.date } as ArrayList<String>)
+            }
             startActivityForResult(intent, 1)
         }
         configureListenerSeekBar()
@@ -307,7 +327,7 @@ class VideoPlaybackActivity : BaseActivity() {
                 R.string.metadata_confirmation,
                 R.string.metadata_confirmation_message,
                 ::closeWithoutSave,
-                {},null
+                {}, null
             )
             this.createAlertInformation(alertInformation)
         }
@@ -378,8 +398,6 @@ class VideoPlaybackActivity : BaseActivity() {
             race = raceValue.selectedItem.toString()
         }
 
-        val photoListAssociated = photoAssociatedList?.map { PhotoAssociated(it) }
-
         return CameraConnectVideoMetadata(
             videoNameValue.text.toString(),
             CameraInfo.officerId,
@@ -404,7 +422,7 @@ class VideoPlaybackActivity : BaseActivity() {
                 driverLicense = driverLicenseValue.text.toString(),
                 licensePlate = licensePlateValue.text.toString()
             ),
-            photoListAssociated
+            linkedPhotosList
         )
     }
 
@@ -448,11 +466,28 @@ class VideoPlaybackActivity : BaseActivity() {
         if (requestCode == 1) {
             if (resultCode == Activity.RESULT_OK) {
                 this.showToast(getString(R.string.image_linked_success), Toast.LENGTH_SHORT)
-                val list = data?.getStringArrayListExtra(SNAPSHOTS_SELECTED)
-                photoAssociatedList = list
-                areLinkedSnapshotsChangesSaved = false
+                handleLinkedSnapshotsResult(data)
             }
         }
+    }
+
+    private fun handleLinkedSnapshotsResult(data: Intent?) {
+        val snapshotsNameList = data?.getStringArrayListExtra(SNAPSHOTS_SELECTED)
+        val tmpList: ArrayList<CameraConnectFile>? = ArrayList()
+        linkedPhotosDateAndTimeList = data?.getStringArrayListExtra(SNAPSHOTS_DATE_SELECTED)
+        snapshotsNameList?.forEachIndexed { index, fileName ->
+            tmpList?.add(
+                CameraConnectFile(
+                    fileName,
+                    linkedPhotosDateAndTimeList?.get(index) ?: "",
+                    "",
+                    ""
+                )
+            )
+        }
+        linkedPhotosList = tmpList
+        areLinkedSnapshotsChangesSaved = false
+        updateLinkedPhotosField()
     }
 
     private fun updateProgressVideoInView() {

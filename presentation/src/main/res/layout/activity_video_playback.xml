@@ -661,6 +661,35 @@
                     app:layout_constraintTop_toTopOf="@id/licensePlateTitle"
                     tools:ignore="Autofill,LabelFor" />
 
+                <TextView
+                    android:id="@+id/linkedPhotosTitle"
+                    android:layout_width="@dimen/no_dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/video_playback_metadata_spacing"
+                    android:layout_marginBottom="@dimen/video_playback_metadata_spacing"
+                    android:text="@string/linked_photos_metadata_title"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/video_playback_metadata_text_size"
+                    android:textStyle="bold"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toLeftOf="@id/guidelinePlayback"
+                    app:layout_constraintTop_toBottomOf="@id/licensePlateTitle" />
+
+                <TextView
+                    android:id="@+id/linkedPhotosValue"
+                    android:layout_width="@dimen/no_dp"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="@dimen/padding_horizontal_metadata_fields"
+                    android:paddingEnd="@dimen/no_dp"
+                    android:text="@string/no_linked_photos"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/video_playback_metadata_text_size"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintLeft_toRightOf="@id/guidelinePlayback"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/linkedPhotosTitle"
+                    tools:ignore="Autofill,LabelFor" />
+
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </ScrollView>
@@ -683,11 +712,11 @@
             android:id="@+id/buttonLinkSnapshots"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:contentDescription="@string/button_link_snapshots"
             android:src="@drawable/ic_link"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:contentDescription="@string/button_link_snapshots" />
+            app:layout_constraintStart_toStartOf="parent" />
 
         <TextView
             android:id="@+id/saveButtonVideoPlayback"
