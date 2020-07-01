@@ -1,12 +1,14 @@
 package com.safefleet.lawmobile.di
 
 import com.lawmobile.presentation.ui.fileList.FileListActivity
+import com.lawmobile.presentation.ui.helpSection.HelpPageActivity
 import com.lawmobile.presentation.ui.linkSnapshotsToVideo.LinkSnapshotsActivity
 import com.lawmobile.presentation.ui.live.LiveActivity
 import com.lawmobile.presentation.ui.login.LoginActivity
 import com.lawmobile.presentation.ui.snapshotDetail.SnapshotDetailActivity
 import com.lawmobile.presentation.ui.videoPlayback.VideoPlaybackActivity
 import com.safefleet.lawmobile.di.fileList.FileListModule
+import com.safefleet.lawmobile.di.helpSection.HelpPageModule
 import com.safefleet.lawmobile.di.linkSnapshotsToVideo.LinkSnapshotsModule
 import com.safefleet.lawmobile.di.liveStreaming.LiveStreamingModule
 import com.safefleet.lawmobile.di.login.LoginModule
@@ -34,5 +36,8 @@ abstract class ActivityBuilderModules {
 
     @ContributesAndroidInjector(modules = [LinkSnapshotsModule::class])
     abstract fun contributeLinkSnapshotsActivity(): LinkSnapshotsActivity
+
+    @ContributesAndroidInjector(modules = [HelpPageModule::class])
+    abstract fun contributeHelpPageActivity(): HelpPageActivity
 
 }
