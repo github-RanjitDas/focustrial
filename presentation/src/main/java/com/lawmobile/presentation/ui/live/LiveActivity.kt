@@ -83,6 +83,7 @@ class LiveActivity : BaseActivity() {
 
         buttonOpenHelpPage.setOnClickListenerCheckConnection {
             val intent = Intent(this, HelpPageActivity::class.java)
+            intent.putExtra("LiveActivity", true)
             startActivity(intent)
         }
     }
