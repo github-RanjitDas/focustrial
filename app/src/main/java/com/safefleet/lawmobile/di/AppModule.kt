@@ -117,8 +117,8 @@ class AppModule {
         @JvmStatic
         @Provides
         @Singleton
-        fun provideMobileDataStatus(application: Application) =
-            MobileDataStatus(application)
+        fun provideMobileDataStatus(connectivityManager: ConnectivityManager) =
+            MobileDataStatus(connectivityManager)
 
     }
 }

@@ -21,23 +21,7 @@ class WifiConnection(
     private val networkRequest: NetworkRequest.Builder
 ) {
 
-    fun isWifiEnable(): Boolean {
-
-        var isWifiEnable = false
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            connectivityManager.allNetworks.forEach { network ->
-                connectivityManager.getNetworkInfo(network).apply {
-                    if (this != null && type == ConnectivityManager.TYPE_WIFI) {
-                        isWifiEnable = isWifiEnable or isConnected
-                    }
-                }
-            }
-        } else {
-            isWifiEnable = wifiManager.isWifiEnabled
-        }
-
-        return isWifiEnable
-    }
+    fun isWifiEnable(): Boolean = wifiManager.isWifiEnabled
 
     fun connectionWithHotspotCamera(
         ssid: String,

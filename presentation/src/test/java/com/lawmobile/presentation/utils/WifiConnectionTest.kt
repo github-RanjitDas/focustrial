@@ -187,7 +187,6 @@ class WifiConnectionTest {
         }
     }
 
-
     @Test
     fun testConnectionWithHotspotCameraAndroidQFailedByNetworkSpecifier() {
         mockkStatic(Build.VERSION::class)
@@ -272,44 +271,4 @@ class WifiConnectionTest {
         every { wifiManager.isWifiEnabled } returns false
         Assert.assertFalse(wifiConnection.isWifiEnable())
     }
-
-    @Test
-    fun testIsWifiEnableAndroidQTrue(){
-        mockkStatic(Build.VERSION::class)
-        setFinalStatic(Build.VERSION::class.java.getField("SDK_INT"), SDK_Q)
-        val network:Network = mockk()
-        val networkInfo:NetworkInfo = mockk()
-        every { networkInfo.type } returns ConnectivityManager.TYPE_WIFI
-        every { networkInfo.isConnected } returns  true
-        every { connectivityManager.getNetworkInfo(network) } returns networkInfo
-        every { connectivityManager.allNetworks } returns listOf(network).toTypedArray()
-        Assert.assertTrue(wifiConnection.isWifiEnable())
-    }
-
-    @Test
-    fun testIsWifiEnableAndroidQFailedTypeMobile(){
-        mockkStatic(Build.VERSION::class)
-        setFinalStatic(Build.VERSION::class.java.getField("SDK_INT"), SDK_Q)
-        val network:Network = mockk()
-        val networkInfo:NetworkInfo = mockk()
-        every { networkInfo.type } returns ConnectivityManager.TYPE_MOBILE
-        every { networkInfo.isConnected } returns  true
-        every { connectivityManager.getNetworkInfo(network) } returns networkInfo
-        every { connectivityManager.allNetworks } returns listOf(network).toTypedArray()
-        Assert.assertFalse(wifiConnection.isWifiEnable())
-    }
-
-    @Test
-    fun testIsWifiEnableAndroidQIsConnectedFalse(){
-        mockkStatic(Build.VERSION::class)
-        setFinalStatic(Build.VERSION::class.java.getField("SDK_INT"), SDK_Q)
-        val network:Network = mockk()
-        val networkInfo:NetworkInfo = mockk()
-        every { networkInfo.type } returns ConnectivityManager.TYPE_WIFI
-        every { networkInfo.isConnected } returns  false
-        every { connectivityManager.getNetworkInfo(network) } returns networkInfo
-        every { connectivityManager.allNetworks } returns listOf(network).toTypedArray()
-        Assert.assertFalse(wifiConnection.isWifiEnable())
-    }
-
 }
