@@ -1,18 +1,12 @@
 package com.lawmobile.presentation.utils
 
-import android.app.Application
-import android.content.Context
 import android.net.ConnectivityManager
 import android.net.Network
 import android.net.NetworkCapabilities
 import android.net.NetworkRequest
 import androidx.lifecycle.LiveData
 
-class MobileDataStatus(application: Application) : LiveData<Boolean>() {
-
-    private val connectivityManager: ConnectivityManager by lazy {
-        application.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-    }
+class MobileDataStatus(private val connectivityManager: ConnectivityManager) : LiveData<Boolean>() {
 
     private val networkCallback = object : ConnectivityManager.NetworkCallback() {
         override fun onAvailable(network: Network?) {
