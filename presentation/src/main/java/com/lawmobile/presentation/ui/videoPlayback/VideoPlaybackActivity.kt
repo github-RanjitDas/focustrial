@@ -24,6 +24,7 @@ import com.lawmobile.presentation.utils.Constants.SNAPSHOTS_LINKED
 import com.lawmobile.presentation.utils.Constants.SNAPSHOTS_SELECTED
 import com.safefleet.mobile.avml.cameras.entities.CameraConnectFile
 import com.safefleet.mobile.avml.cameras.entities.CameraConnectVideoMetadata
+import com.safefleet.mobile.avml.cameras.entities.PhotoAssociated
 import com.safefleet.mobile.avml.cameras.entities.VideoMetadata
 import com.safefleet.mobile.commons.helpers.Result
 import com.safefleet.mobile.commons.helpers.hideKeyboard
@@ -38,8 +39,8 @@ class VideoPlaybackActivity : BaseActivity() {
     private val eventList = mutableListOf<String>()
     private val raceList = mutableListOf<String>()
     private val genderList = mutableListOf<String>()
-    private var linkedPhotosList: ArrayList<CameraConnectFile>? = ArrayList()
-    private var linkedPhotosDateAndTimeList: ArrayList<String>? = ArrayList()
+    private var linkedPhotoList: ArrayList<PhotoAssociated>? = ArrayList()
+    private var linkedPhotoDateList: ArrayList<String>? = ArrayList()
 
     private lateinit var dialog: AlertDialog
     private var currentAttempts = 0
@@ -180,10 +181,10 @@ class VideoPlaybackActivity : BaseActivity() {
             driverLicenseValue.setText(driverLicense)
             licensePlateValue.setText(licensePlate)
         }
-        if (linkedPhotosList.isNullOrEmpty()) {
-            linkedPhotosList =
-                cameraConnectVideoMetadata.photos as ArrayList<CameraConnectFile>?
-            linkedPhotosDateAndTimeList =
+        if (linkedPhotoList.isNullOrEmpty()) {
+            linkedPhotoList =
+                cameraConnectVideoMetadata.photos as ArrayList<PhotoAssociated>?
+            linkedPhotoDateList =
                 cameraConnectVideoMetadata.photos?.map { it.date } as ArrayList<String>?
 
         }
@@ -193,7 +194,7 @@ class VideoPlaybackActivity : BaseActivity() {
 
     private fun updateLinkedPhotosField() {
         linkedPhotosValue.text = ""
-        linkedPhotosDateAndTimeList?.forEach {
+        linkedPhotoDateList?.forEach {
             linkedPhotosValue.append(it)
             linkedPhotosValue.append("\n")
         }
@@ -233,7 +234,7 @@ class VideoPlaybackActivity : BaseActivity() {
         }
         buttonLinkSnapshots.setOnClickListenerCheckConnection {
             val intent = Intent(this, LinkSnapshotsActivity::class.java)
-            linkedPhotosList?.run {
+            linkedPhotoList?.run {
                 intent.putStringArrayListExtra(
                     SNAPSHOTS_LINKED,
                     map { it.name } as ArrayList<String>)
@@ -422,7 +423,7 @@ class VideoPlaybackActivity : BaseActivity() {
                 driverLicense = driverLicenseValue.text.toString(),
                 licensePlate = licensePlateValue.text.toString()
             ),
-            linkedPhotosList
+            linkedPhotoList
         )
     }
 
@@ -473,19 +474,17 @@ class VideoPlaybackActivity : BaseActivity() {
 
     private fun handleLinkedSnapshotsResult(data: Intent?) {
         val snapshotsNameList = data?.getStringArrayListExtra(SNAPSHOTS_SELECTED)
-        val tmpList: ArrayList<CameraConnectFile>? = ArrayList()
-        linkedPhotosDateAndTimeList = data?.getStringArrayListExtra(SNAPSHOTS_DATE_SELECTED)
+        val tmpList: ArrayList<PhotoAssociated>? = ArrayList()
+        linkedPhotoDateList = data?.getStringArrayListExtra(SNAPSHOTS_DATE_SELECTED)
         snapshotsNameList?.forEachIndexed { index, fileName ->
             tmpList?.add(
-                CameraConnectFile(
+                PhotoAssociated(
                     fileName,
-                    linkedPhotosDateAndTimeList?.get(index) ?: "",
-                    "",
-                    ""
+                    linkedPhotoDateList?.get(index) ?: ""
                 )
             )
         }
-        linkedPhotosList = tmpList
+        linkedPhotoList = tmpList
         areLinkedSnapshotsChangesSaved = false
         updateLinkedPhotosField()
     }
