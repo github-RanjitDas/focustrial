@@ -23,7 +23,6 @@ import com.safefleet.mobile.commons.helpers.Result
 import kotlinx.android.synthetic.main.activity_link_snapshots.*
 import javax.inject.Inject
 
-
 class LinkSnapshotsActivity : BaseActivity() {
 
     @Inject
