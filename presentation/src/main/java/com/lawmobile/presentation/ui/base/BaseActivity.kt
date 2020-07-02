@@ -14,6 +14,7 @@ import com.lawmobile.presentation.extensions.createAlertSessionExpired
 import com.lawmobile.presentation.ui.login.LoginActivity
 import com.lawmobile.presentation.utils.MobileDataStatus
 import dagger.android.support.DaggerAppCompatActivity
+import java.lang.Exception
 import java.sql.Timestamp
 import javax.inject.Inject
 import kotlin.system.exitProcess
@@ -59,7 +60,17 @@ open class BaseActivity : DaggerAppCompatActivity() {
             R.string.mobile_data_status_message,
             R.string.go_to_settings
         ) {
-            startActivity(Intent(Settings.ACTION_SETTINGS))
+            var intent = Intent(Intent.ACTION_MAIN)
+            intent.setClassName(
+                "com.android.phone",
+                "com.android.phone.settings.MobileNetworkSettings"
+            )
+            try {
+                startActivity(intent)
+            } catch (e: Exception) {
+                intent = Intent(Settings.ACTION_NETWORK_OPERATOR_SETTINGS)
+                startActivity(intent)
+            }
         }
 
         mobileDataDialog = this.createAlertMobileDataActive(alertInformation)
