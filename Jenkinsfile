@@ -80,15 +80,28 @@ node ('docker-builds-slave') {
                 stage('Generate APK'){
                     logger.stage()
                     timeout(10){
-                        sh "gradle assembleDebug --stacktrace"
+                        withVault(vaultSecrets: [[path: "jenkins/lawmobile/android", secretValues: [[vaultKey: 'android-keystore', envVar: 'android_keystore']]]]) {
+                            sh """cat > $WORKSPACE/keystore.jks_64 <<  EOL\n$android_keystore\nEOL"""
+                            sh "base64 -d keystore.jks_64 > app/keystore.jks"
+                        }
+                        sh "gradle assembleRelease --stacktrace"
                     }
                 }
                 stage('Archive APK'){
                     logger.stage()
                     timeout(10){
                         dir("app/build/outputs/apk") {
-                            sh "mv debug/app-debug.apk debug/app-debug-${BUILD_NUMBER}.apk"
-                            archiveArtifacts "debug/app-debug-${BUILD_NUMBER}.apk"
+                            sh "mv release/app-release.apk release/app-release-${BUILD_NUMBER}.apk"
+                            archiveArtifacts "release/app-release-${BUILD_NUMBER}.apk"
+                        }
+                    }
+                }
+                stage('Clean credentials'){
+                    logger.stage()
+                    timeout(10){
+                        dir("app/build/outputs/apk") {
+                            sh "rm $WORKSPACE/keystore.jks_64"
+                            sh "rm $WORKSPACE/app/keystore.jks"
                         }
                     }
                 }
