@@ -9,6 +9,8 @@ import io.mockk.coVerify
 import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.setMain
 import org.junit.Assert
 import org.junit.jupiter.api.BeforeEach
@@ -103,5 +105,12 @@ class FileListViewModelTest {
         fileListViewModel.associatePartnerIdToSnapshotList(listOf(mockk()), "")
         Assert.assertEquals(fileListViewModel.snapshotPartnerIdLiveData.value, result)
         coVerify { fileListUseCase.savePartnerIdSnapshot(any(), any()) }
+    }
+
+    @Test
+    fun testLoadingTimeout() {
+        fileListViewModel.loadingTimeout()
+        runBlocking { delay(10000) }
+        Assert.assertEquals(true, fileListViewModel.timeoutLiveData.value)
     }
 }
