@@ -95,6 +95,7 @@ class VideoPlaybackActivity : BaseActivity() {
     }
 
     private fun setObservers() {
+        isAlertShowing.observe(this, Observer(::managePlaybackOnAlert))
         videoPlaybackViewModel.domainInformationVideoLiveData.observe(
             this,
             Observer(::manageGetVideoInformationResult)
@@ -107,6 +108,15 @@ class VideoPlaybackActivity : BaseActivity() {
             this,
             Observer(::manageGetVideoMetadataResult)
         )
+    }
+
+    private fun managePlaybackOnAlert(isShowing: Boolean) {
+        if (isShowing) {
+            pauseVideoPlayback()
+        } else {
+            setProgressToVideo(0)
+            buttonPlay.setImageResource(R.drawable.ic_media_pause)
+        }
     }
 
     private fun manageSaveVideoResult(result: Result<Unit>) {
@@ -259,10 +269,8 @@ class VideoPlaybackActivity : BaseActivity() {
 
     private fun manageButtonPlayPause() {
         if (videoPlaybackViewModel.isMediaPlayerPlaying()) {
-            buttonPlay.setImageResource(R.drawable.ic_media_play)
             pauseVideoPlayback()
         } else {
-            buttonPlay.setImageResource(R.drawable.ic_media_pause)
             playVideoPlayback()
         }
     }
@@ -301,11 +309,13 @@ class VideoPlaybackActivity : BaseActivity() {
     }
 
     private fun playVideoPlayback() {
+        buttonPlay.setImageResource(R.drawable.ic_media_pause)
         updateLiveOrPlaybackActive(true)
         videoPlaybackViewModel.playVLCMediaPlayer()
     }
 
     private fun pauseVideoPlayback() {
+        buttonPlay.setImageResource(R.drawable.ic_media_play)
         updateLiveOrPlaybackActive(false)
         videoPlaybackViewModel.pauseMediaPlayer()
     }
