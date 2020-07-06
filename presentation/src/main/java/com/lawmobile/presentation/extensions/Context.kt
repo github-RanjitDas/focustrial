@@ -70,8 +70,10 @@ fun Context.createAlertMobileDataActive(neutralAlertInformation: NeutralAlertInf
         neutralAlertInformation.run {
             setTitle(title)
             setMessage(message)
-            setNeutralButton(getString(buttonText)) { dialog, _ ->
-                onClickNeutralButton.invoke(dialog)
+            buttonText?.let {
+                setNeutralButton(getString(it)) { dialog, _ ->
+                    onClickNeutralButton?.invoke(dialog)
+                }
             }
         }
         setCancelable(false)

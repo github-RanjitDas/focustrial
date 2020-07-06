@@ -131,7 +131,6 @@
     <string name="no_new_photo_selected_message">You have not selected any new photo</string>
     <string name="mobile_data_status_title">Mobile Data</string>
     <string name="mobile_data_status_message">Please disable mobile data to continue</string>
-    <string name="go_to_settings">Go to settings</string>
     <string name="linked_photos_metadata_title">LINKED PHOTOS</string>
     <string name="no_linked_photos">No linked photos</string>
 
