@@ -9,6 +9,7 @@ import android.net.ConnectivityManager
 import android.net.wifi.WifiConfiguration
 import android.net.wifi.WifiManager
 import com.google.gson.Gson
+import com.lawmobile.presentation.utils.MobileDataStatus
 import com.lawmobile.presentation.utils.VLCMediaPlayer
 import com.lawmobile.presentation.utils.WifiConnection
 import com.lawmobile.presentation.utils.WifiHelper
@@ -84,6 +85,7 @@ class AppModule {
             every { connectionWithHotspotCamera(TestLoginData.INVALID_SSID.value, any()) } answers {
                 secondArg<(data: Boolean) -> Unit>().invoke(false)
             }
+            every { isWifiEnable() } returns true
         }
 
         @JvmStatic
@@ -106,6 +108,12 @@ class AppModule {
         @Singleton
         fun provideVLCMediaPlayer(libVLC: LibVLC, mediaPlayer: MediaPlayer): VLCMediaPlayer =
             VLCMediaPlayer(libVLC, mediaPlayer)
+
+        @JvmStatic
+        @Provides
+        @Singleton
+        fun provideMobileDataStatus(connectivityManager: ConnectivityManager) =
+            MobileDataStatus(connectivityManager)
 
     }
 }
