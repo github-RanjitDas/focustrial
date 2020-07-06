@@ -15,6 +15,7 @@ import com.safefleet.mobile.avml.cameras.entities.CameraConnectFile
 import com.safefleet.mobile.commons.helpers.Result
 import kotlinx.android.synthetic.main.activity_file_list.textViewFileListBack
 import kotlinx.android.synthetic.main.activity_snapshot_item_detail.*
+import java.lang.Exception
 import javax.inject.Inject
 
 class SnapshotDetailActivity : BaseActivity() {
@@ -45,7 +46,16 @@ class SnapshotDetailActivity : BaseActivity() {
     }
 
     private fun setImageAndData(byteArray: ByteArray) {
-        photoItemDetailHolder.setImageBitmap(byteArray.convertBitmap())
+        try {
+            photoItemDetailHolder.setImageBitmap(byteArray.convertBitmap())
+        } catch (e: Exception) {
+            photoItemDetailHolder.setImageDrawable(
+                resources.getDrawable(
+                    R.drawable.ic_failed_image,
+                    null
+                )
+            )
+        }
         sizeValue.text = byteArray.size.toString()
         photoNameValue.text = file.name
         dateTimeValue.text = file.date

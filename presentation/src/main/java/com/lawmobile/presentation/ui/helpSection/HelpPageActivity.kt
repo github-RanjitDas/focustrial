@@ -26,18 +26,25 @@ class HelpPageActivity : BaseActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (startedFromLiveActivity) {
             when (item.itemId) {
-                android.R.id.home -> {
-                    val isSessionExpired = checkIfSessionIsExpired()
-                    if (isSessionExpired) {
-                        this.createAlertSessionExpired()
-                        return true
-                    } else if (!CameraHelper.getInstance().checkWithAlertIfTheCameraIsConnected()) {
-                        this.createAlertErrorConnection()
-                        return true
-                    }
-                }
+                android.R.id.home -> onBackPressed()
             }
         }
-        return false
+        return true
+    }
+
+    override fun onBackPressed() {
+        if (checkConnectionToCamera()) finish()
+    }
+
+    private fun checkConnectionToCamera(): Boolean {
+        val isSessionExpired = checkIfSessionIsExpired()
+        if (isSessionExpired) {
+            this.createAlertSessionExpired()
+            return false
+        }
+        return if (!CameraHelper.getInstance().checkWithAlertIfTheCameraIsConnected()) {
+            this.createAlertErrorConnection()
+            false
+        } else true
     }
 }
