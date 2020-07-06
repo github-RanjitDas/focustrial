@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.os.Process
 import android.view.WindowManager
 import androidx.appcompat.app.AlertDialog
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.entities.NeutralAlertInformation
@@ -28,6 +29,7 @@ open class BaseActivity : DaggerAppCompatActivity() {
     private var isLiveVideoOrPlaybackActive: Boolean = false
     private lateinit var mobileDataDialog: AlertDialog
     var isRecordingVideo: Boolean = false
+    var isAlertShowing = MutableLiveData<Boolean>()
 
     fun killApp() {
         baseViewModel.deactivateCameraHotspot()
@@ -61,6 +63,7 @@ open class BaseActivity : DaggerAppCompatActivity() {
     }
 
     private fun showMobileDataDialog(active: Boolean) {
+        isAlertShowing.postValue(active)
         if (active) mobileDataDialog.show()
         else mobileDataDialog.dismiss()
     }
