@@ -13,12 +13,4 @@ class PairingPhoneWithCameraUseCaseImpl(private val pairingPhoneWithCameraReposi
         pairingPhoneWithCameraRepository.loadPairingCamera(hostnameToConnect, ipAddressClient)
     }
 
-    override fun getSSIDSavedIfExist(): Result<String> {
-        return pairingPhoneWithCameraRepository.getSSIDSavedIfExist()
-    }
-
-    override fun saveSerialNumberOfCamera(serialNumber: String) {
-        pairingPhoneWithCameraRepository.saveSerialNumberOfCamera(serialNumber)
-    }
-
 }

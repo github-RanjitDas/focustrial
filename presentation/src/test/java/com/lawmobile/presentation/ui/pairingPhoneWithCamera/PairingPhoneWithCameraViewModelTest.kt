@@ -4,7 +4,6 @@ import androidx.lifecycle.MediatorLiveData
 import com.lawmobile.domain.usecase.pairingPhoneWithCamera.PairingPhoneWithCameraUseCase
 import com.lawmobile.presentation.InstantExecutorExtension
 import com.lawmobile.presentation.ui.pairingPhoneWithCamera.PairingPhoneWithCameraViewModel.Companion.EXCEPTION_GET_PARAMS_TO_CONNECT
-import com.lawmobile.presentation.utils.WifiConnection
 import com.lawmobile.presentation.utils.WifiHelper
 import com.safefleet.mobile.commons.helpers.Result
 import io.mockk.*
@@ -24,7 +23,6 @@ class PairingPhoneWithCameraViewModelTest {
     companion object {
         const val DEFAULT_GATEWAY_ADDRESS = "192.168.42.1"
         const val DEFAULT_SSID = "X57014694"
-        const val DEFAULT_SERIAL_NUMBER = "57014694"
     }
 
     private val wifiHelper: WifiHelper = mockk {
@@ -32,20 +30,11 @@ class PairingPhoneWithCameraViewModelTest {
         every { isEqualsValueWithSSID("X") } returns false
     }
 
-    private val wifiConnection: WifiConnection = mockk {
-        every { connectionWithHotspotCamera(DEFAULT_SSID, any()) } answers {
-            secondArg<(data: Boolean) -> Unit>().invoke(true)
-        }
-        every { connectionWithHotspotCamera("X", any()) } answers {
-            secondArg<(data: Boolean) -> Unit>().invoke(false)
-        }
-    }
-
     private val pairingPhoneWithCameraUseCase: PairingPhoneWithCameraUseCase = mockk {
         every { progressPairingCamera } returns MediatorLiveData()
     }
     private val viewModel: PairingPhoneWithCameraViewModel by lazy {
-        PairingPhoneWithCameraViewModel(pairingPhoneWithCameraUseCase, wifiHelper, wifiConnection)
+        PairingPhoneWithCameraViewModel(pairingPhoneWithCameraUseCase, wifiHelper)
     }
 
     @ExperimentalCoroutinesApi
@@ -96,54 +85,25 @@ class PairingPhoneWithCameraViewModelTest {
 
     @Test
     fun testIsValidNumberCameraBWC() {
-        Assert.assertTrue(viewModel.isValidNumberCameraBWC(DEFAULT_SERIAL_NUMBER))
+        Assert.assertTrue(viewModel.isValidNumberCameraBWC(DEFAULT_SSID))
         Assert.assertFalse(viewModel.isValidNumberCameraBWC(""))
     }
 
     @Test
-    fun testConnectCellPhoneToWifiCameraFlow() {
-        val isConnectedSuccess: (connected: Boolean) -> Unit = {}
-        viewModel.connectCellPhoneToWifiCamera(DEFAULT_SERIAL_NUMBER, isConnectedSuccess)
-        verify {
-            wifiConnection.connectionWithHotspotCamera(
-                "X$DEFAULT_SERIAL_NUMBER",
-                isConnectedSuccess
-            )
-        }
+    fun getNetworkName() {
+        every { wifiHelper.getSSIDWiFi() } returns DEFAULT_SSID
+        Assert.assertEquals(DEFAULT_SSID, viewModel.getNetworkName())
     }
 
     @Test
-    fun testConnectCellPhoneToWifiCameraSuccess() {
-        viewModel.connectCellPhoneToWifiCamera(DEFAULT_SERIAL_NUMBER) {
-            Assert.assertTrue(it)
-        }
+    fun isWifiEnableTrue() {
+        every { wifiHelper.isWifiEnable() } returns true
+        Assert.assertTrue(viewModel.isWifiEnable())
     }
 
     @Test
-    fun testConnectCellPhoneToWifiCameraFailed() {
-        viewModel.connectCellPhoneToWifiCamera("") {
-            Assert.assertFalse(it)
-        }
-    }
-
-    @Test
-    fun testGetSSIDSavedIfExist() {
-        every { pairingPhoneWithCameraUseCase.getSSIDSavedIfExist() } returns Result.Success("123456789")
-        viewModel.getSSIDSavedIfExist()
-        verify { pairingPhoneWithCameraUseCase.getSSIDSavedIfExist() }
-    }
-
-    @Test
-    fun testSaveSerialNumberOfCamera() {
-        every { pairingPhoneWithCameraUseCase.saveSerialNumberOfCamera(any()) } just Runs
-        viewModel.saveSerialNumberOfCamera("123")
-        verify { pairingPhoneWithCameraUseCase.saveSerialNumberOfCamera("123") }
-    }
-
-    @Test
-    fun testIsWifiEnable(){
-        every { wifiConnection.isWifiEnable() } returns true
-        viewModel.isWifiEnable()
-        verify { wifiConnection.isWifiEnable() }
+    fun isWifiEnableFalse() {
+        every { wifiHelper.isWifiEnable() } returns false
+        Assert.assertFalse(viewModel.isWifiEnable())
     }
 }

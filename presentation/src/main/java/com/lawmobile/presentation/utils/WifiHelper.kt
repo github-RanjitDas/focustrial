@@ -8,6 +8,8 @@ import java.net.Inet4Address
 
 open class WifiHelper(private val wifiManager: WifiManager) {
 
+    fun isWifiEnable(): Boolean = wifiManager.isWifiEnabled
+
     @SuppressLint("MissingPermission")
     private fun getGatewayAddressByte() =
         BigInteger.valueOf(wifiManager.dhcpInfo.gateway.toLong()).toByteArray()
@@ -35,7 +37,7 @@ open class WifiHelper(private val wifiManager: WifiManager) {
         BigInteger.valueOf(wifiManager.connectionInfo.ipAddress.toLong()).toByteArray()
 
     @SuppressLint("MissingPermission")
-    private fun getSSIDWiFi(): String = wifiManager.connectionInfo.ssid.replace("\"", "")
+    fun getSSIDWiFi(): String = wifiManager.connectionInfo.ssid.replace("\"", "")
 
     open fun isEqualsValueWithSSID(value: String): Boolean = getSSIDWiFi() == value
 

@@ -17,8 +17,6 @@ class PairingPhoneWithCameraRepositoryImplTest {
         mockk {
             every { progressPairingCamera } returns progressCamera
             coEvery { loadPairingCamera(any(), any()) } just Runs
-            every { getSSIDSavedIfExist() } returns Result.Success("123456789")
-            every { saveSerialNumberOfCamera(any()) } just Runs
         }
 
     private val pairingPhoneWithCameraRepositoryImpl by lazy {
@@ -42,17 +40,5 @@ class PairingPhoneWithCameraRepositoryImplTest {
             pairingPhoneWithCameraRepositoryImpl.progressPairingCamera,
             progressCamera
         )
-    }
-
-    @Test
-    fun testGetSSIDSavedIfExist() {
-        pairingPhoneWithCameraRepositoryImpl.getSSIDSavedIfExist()
-        verify { pairingPhoneWithCameraRemoteDataSource.getSSIDSavedIfExist() }
-    }
-
-    @Test
-    fun testSaveSerialNumberOfCamera() {
-        pairingPhoneWithCameraRepositoryImpl.saveSerialNumberOfCamera("123456789")
-        verify { pairingPhoneWithCameraRemoteDataSource.saveSerialNumberOfCamera("123456789") }
     }
 }

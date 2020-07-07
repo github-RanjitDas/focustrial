@@ -1,8 +1,7 @@
-package com.lawmobile.domain.usecase.parginPhoneWithCamera
+package com.lawmobile.domain.usecase.pairingPhoneWithCamera
 
 import androidx.lifecycle.LiveData
 import com.lawmobile.domain.repository.pairingPhoneWithCamera.PairingPhoneWithCameraRepository
-import com.lawmobile.domain.usecase.pairingPhoneWithCamera.PairingPhoneWithCameraUseCaseImpl
 import com.safefleet.mobile.commons.helpers.Result
 import io.mockk.*
 import kotlinx.coroutines.runBlocking
@@ -34,27 +33,10 @@ class PairingPhoneWithCameraUseCaseImplTest {
         coVerify {
             pairingPhoneWithCameraRepository.loadPairingCamera("", "")
         }
-
     }
 
     @Test
-    fun testToCheckPairingLiveData(){
+    fun testToCheckPairingLiveData() {
         Assert.assertEquals(useCase.progressPairingCamera, progressCamera)
-    }
-
-    @Test
-    fun testGetSSIDSavedIfExist() {
-        every { pairingPhoneWithCameraRepository.getSSIDSavedIfExist() } returns Result.Success("123123")
-
-        useCase.getSSIDSavedIfExist()
-        verify { pairingPhoneWithCameraRepository.getSSIDSavedIfExist() }
-    }
-
-    @Test
-    fun testSaveSerialNumberOfCamera() {
-        every { pairingPhoneWithCameraRepository.saveSerialNumberOfCamera(any()) } just Runs
-
-        useCase.saveSerialNumberOfCamera("123456789")
-        verify { pairingPhoneWithCameraRepository.saveSerialNumberOfCamera("123456789") }
     }
 }

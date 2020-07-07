@@ -3,7 +3,6 @@ package com.lawmobile.presentation.ui.pairingPhoneWithCamera
 import android.Manifest
 import android.content.Intent
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import android.view.LayoutInflater
@@ -17,7 +16,6 @@ import com.lawmobile.presentation.entities.AlertInformation
 import com.lawmobile.presentation.extensions.createAlertInformation
 import com.lawmobile.presentation.extensions.isPermissionGranted
 import com.lawmobile.presentation.extensions.showToast
-import com.lawmobile.presentation.extensions.text
 import com.lawmobile.presentation.ui.base.BaseActivity
 import com.lawmobile.presentation.ui.base.BaseFragment
 import com.lawmobile.presentation.ui.helpSection.HelpPageActivity
@@ -42,19 +40,7 @@ class PairingPhoneWithCameraFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        checkIfExistSerialNumberSavedToConnectionToCamera()
         configureListeners()
-        setSelectionEditTextOfSerialNumber()
-    }
-
-    private fun checkIfExistSerialNumberSavedToConnectionToCamera() {
-        when (val result = pairingPhoneWithCameraViewModel.getSSIDSavedIfExist()) {
-            is Result.Success -> {
-                CameraInfo.serialNumber = result.data
-                textInputValidateSSID.editText?.setText(CameraInfo.serialNumber)
-                startConnectionToHotspotCamera()
-            }
-        }
     }
 
     private fun configureListeners() {
@@ -86,25 +72,21 @@ class PairingPhoneWithCameraFragment : BaseFragment() {
         startActivity(intent)
     }
 
-    private fun setSelectionEditTextOfSerialNumber() {
-        textInputValidateSSID.editText?.setSelection(textInputValidateSSID.text().length)
-    }
-
     private fun startConnectionToHotspotCamera() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && !pairingPhoneWithCameraViewModel.isWifiEnable()) {
+        if (!pairingPhoneWithCameraViewModel.isWifiEnable()) {
             createAlertToNavigateWifiSettings()
             return
         }
 
-        startWithProgressPairing(true)
-        val serialNumberCamera = textInputValidateSSID.text()
-        Thread {
-            if (pairingPhoneWithCameraViewModel.isValidNumberCameraBWC(serialNumberCamera)) {
-                verifyConnectionWithTheCamera()
-            } else {
-                createConnectionWithWifi(serialNumberCamera)
-            }
-        }.start()
+        val serialNumberCamera = pairingPhoneWithCameraViewModel.getNetworkName()
+
+        if (pairingPhoneWithCameraViewModel.isValidNumberCameraBWC(serialNumberCamera)) {
+            CameraInfo.serialNumber = serialNumberCamera
+            startWithProgressPairing(true)
+            verifyConnectionWithTheCamera()
+        } else {
+            activity?.showToast("Verify the connection to the camera wifi", Toast.LENGTH_SHORT)
+        }
     }
 
     private fun createAlertToNavigateWifiSettings() {
@@ -116,33 +98,6 @@ class PairingPhoneWithCameraFragment : BaseFragment() {
             })
 
         activity?.createAlertInformation(alertInformation)
-    }
-
-    private fun createConnectionWithWifi(serialNumberCamera: String) {
-        createConnectionWithCamera { isConnected ->
-            waitSecondsWhileTheWifiIsConnected()
-            val isPossiblePairingCamera =
-                pairingPhoneWithCameraViewModel.isValidNumberCameraBWC(serialNumberCamera) && isConnected
-            if (isPossiblePairingCamera) {
-                verifyConnectionWithTheCamera()
-            } else {
-                showErrorFindNetworkOfCamera()
-            }
-        }
-    }
-
-    private fun showErrorFindNetworkOfCamera() {
-        activity?.runOnUiThread {
-            activity?.showToast(
-                getString(R.string.the_application_did_not_find_camera),
-                Toast.LENGTH_LONG
-            )
-            startWithProgressPairing(false)
-        }
-    }
-
-    private fun waitSecondsWhileTheWifiIsConnected() {
-        Thread.sleep(3000)
     }
 
     private fun verifyConnectionWithTheCamera() {
@@ -169,21 +124,11 @@ class PairingPhoneWithCameraFragment : BaseFragment() {
         }
     }
 
-    private fun createConnectionWithCamera(isConnectedSuccess: (connected: Boolean) -> Unit) {
-        CameraInfo.serialNumber = textInputValidateSSID.text()
-        pairingPhoneWithCameraViewModel.connectCellPhoneToWifiCamera(
-            CameraInfo.serialNumber,
-            isConnectedSuccess
-        )
-    }
-
     private fun setProgressInViewOfProgress(progress: Int) {
         circularProgressbar.progress = progress
         val percent = "$progress%"
         textViewProgressConnection.text = percent
         if (progress == PERCENT_TOTAL_CONNECTION_CAMERA) {
-            val serialNumberCamera = textInputValidateSSID.text()
-            pairingPhoneWithCameraViewModel.saveSerialNumberOfCamera(serialNumberCamera)
             connectionSuccess.invoke(true)
         }
     }
