@@ -23,7 +23,7 @@
     <dimen name="pairing_phone_camera_input_margin_top">30dp</dimen>
     <dimen name="pairing_phone_camera_input_edit_padding_sides">5dp</dimen>
     <dimen name="pairing_phone_camera_button_go_size">140dp</dimen>
-    <dimen name="pairing_phone_camera_button_go_margin_top">15dp</dimen>
+    <dimen name="pairing_phone_camera_button_go_margin_top">50dp</dimen>
     <dimen name="pairing_phone_camera_text_instruction_margin_top">20dp</dimen>
     <dimen name="pairing_phone_camera_view_instructions_margin_sides">20dp</dimen>
     <dimen name="pairing_phone_camera_view_instructions_margin_top">3dp</dimen>

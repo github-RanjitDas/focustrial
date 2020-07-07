@@ -24,16 +24,18 @@ class HelpPageActivity : BaseActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (startedFromLiveActivity) {
-            when (item.itemId) {
-                android.R.id.home -> onBackPressed()
-            }
+        when (item.itemId) {
+            android.R.id.home -> onBackPressed()
         }
         return true
     }
 
     override fun onBackPressed() {
-        if (checkConnectionToCamera()) finish()
+        if (startedFromLiveActivity) {
+            if (checkConnectionToCamera()) finish()
+        } else {
+            finish()
+        }
     }
 
     private fun checkConnectionToCamera(): Boolean {
