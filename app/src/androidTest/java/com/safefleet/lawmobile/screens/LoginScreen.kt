@@ -40,11 +40,6 @@ class LoginScreen : BaseScreen() {
     fun isOfficerNameDisplayed(officerName: String) =
         assertContains(R.id.textViewOfficerName, officerName)
 
-    fun typeSerialNumber(serialNumber: String = TestLoginData.SERIAL_NUMBER.value): LoginScreen {
-        writeTo(R.id.textInputEditValidateSSID, serialNumber)
-        return this
-    }
-
     fun typePassword(officerPassword: String = TestLoginData.OFFICER_PASSWORD.value): LoginScreen {
         writeTo(R.id.textInputEditTextValidatePasswordOfficer, officerPassword)
         return this
@@ -64,7 +59,7 @@ class LoginScreen : BaseScreen() {
 
     fun login() {
         try {
-            this.typeSerialNumber().go()
+            this.go()
         } catch (e: Exception) {
 
         }

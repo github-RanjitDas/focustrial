@@ -4,7 +4,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.lawmobile.domain.usecase.pairingPhoneWithCamera.PairingPhoneWithCameraUseCase
 import com.lawmobile.presentation.ui.base.BaseViewModel
-import com.lawmobile.presentation.utils.WifiConnection
 import com.lawmobile.presentation.utils.WifiHelper
 import com.safefleet.mobile.commons.helpers.Result
 import kotlinx.coroutines.launch
@@ -12,8 +11,7 @@ import javax.inject.Inject
 
 class PairingPhoneWithCameraViewModel @Inject constructor(
     private val pairingPhoneWithCameraUseCase: PairingPhoneWithCameraUseCase,
-    private val wifiHelper: WifiHelper,
-    private val wifiConnection: WifiConnection
+    private val wifiHelper: WifiHelper
 ) :
     BaseViewModel() {
 
@@ -34,29 +32,17 @@ class PairingPhoneWithCameraViewModel @Inject constructor(
         }
     }
 
-    fun getSSIDSavedIfExist(): Result<String> {
-        return pairingPhoneWithCameraUseCase.getSSIDSavedIfExist()
-    }
-
-    fun saveSerialNumberOfCamera(serialNumber: String) {
-        pairingPhoneWithCameraUseCase.saveSerialNumberOfCamera(serialNumber)
-    }
-
     fun isValidNumberCameraBWC(codeCamera: String): Boolean =
-        wifiHelper.isEqualsValueWithSSID("X$codeCamera")
+        codeCamera.contains(CAMERA_SSID_IDENTIFIER)
 
-    fun connectCellPhoneToWifiCamera(
-        codeCamera: String,
-        isConnectedSuccess: (connected: Boolean) -> Unit
-    ) {
-        wifiConnection.connectionWithHotspotCamera("X$codeCamera", isConnectedSuccess)
-    }
+    fun getNetworkName() = wifiHelper.getSSIDWiFi()
 
-    fun isWifiEnable(): Boolean  = wifiConnection.isWifiEnable()
+    fun isWifiEnable(): Boolean = wifiHelper.isWifiEnable()
 
     companion object {
         const val EXCEPTION_GET_PARAMS_TO_CONNECT =
             "Exception in get params to configure connection"
+        const val CAMERA_SSID_IDENTIFIER = "X57"
     }
 
 }

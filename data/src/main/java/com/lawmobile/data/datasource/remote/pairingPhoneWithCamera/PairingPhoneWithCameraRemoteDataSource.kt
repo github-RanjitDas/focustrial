@@ -6,6 +6,4 @@ import com.safefleet.mobile.commons.helpers.Result
 interface PairingPhoneWithCameraRemoteDataSource {
     val progressPairingCamera: LiveData<Result<Int>>
     suspend fun loadPairingCamera(hostnameToConnect: String, ipAddressClient: String)
-    fun getSSIDSavedIfExist(): Result<String>
-    fun saveSerialNumberOfCamera(serialNumber: String)
 }

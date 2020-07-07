@@ -1,6 +1,5 @@
 package com.safefleet.lawmobile.di.pairingPhoneWithCamera
 
-import android.content.SharedPreferences
 import com.lawmobile.data.datasource.remote.pairingPhoneWithCamera.PairingPhoneWithCameraRemoteDataSource
 import com.lawmobile.data.datasource.remote.pairingPhoneWithCamera.PairingPhoneWithCameraRemoteDataSourceImpl
 import com.lawmobile.data.repository.pairingPhoneWithCamera.PairingPhoneWithCameraRepositoryImpl
@@ -20,10 +19,9 @@ class PairingPhoneWithCameraModule {
         @JvmStatic
         @Provides
         fun providePairingPhoneWithCameraDataSource(
-            preferences: SharedPreferences,
             cameraConnectService: CameraConnectService
         ): PairingPhoneWithCameraRemoteDataSource =
-            PairingPhoneWithCameraRemoteDataSourceImpl(preferences, cameraConnectService)
+            PairingPhoneWithCameraRemoteDataSourceImpl(cameraConnectService)
 
         @JvmStatic
         @Provides

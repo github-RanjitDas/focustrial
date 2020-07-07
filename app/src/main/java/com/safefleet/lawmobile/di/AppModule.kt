@@ -6,15 +6,11 @@ import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
 import android.net.ConnectivityManager
-import android.net.NetworkRequest
 import android.net.wifi.WifiConfiguration
 import android.net.wifi.WifiManager
-import android.net.wifi.WifiNetworkSpecifier
-import android.os.Build
 import com.google.gson.Gson
 import com.lawmobile.presentation.utils.MobileDataStatus
 import com.lawmobile.presentation.utils.VLCMediaPlayer
-import com.lawmobile.presentation.utils.WifiConnection
 import com.lawmobile.presentation.utils.WifiHelper
 import com.safefleet.lawmobile.BaseApplication
 import dagger.Module
@@ -65,33 +61,6 @@ class AppModule {
         @Provides
         @Singleton
         fun provideWifiConfiguration(): WifiConfiguration = WifiConfiguration()
-
-        @Suppress("DEPRECATION")
-        @JvmStatic
-        @Provides
-        @Singleton
-        fun provideWifiConnection(
-            wifiManager: WifiManager,
-            wifiConfiguration: WifiConfiguration,
-            connectivityManager: ConnectivityManager
-        ): WifiConnection =
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                WifiConnection(
-                    wifiManager,
-                    wifiConfiguration,
-                    connectivityManager,
-                    WifiNetworkSpecifier.Builder(),
-                    NetworkRequest.Builder()
-                )
-            } else {
-                WifiConnection(
-                    wifiManager,
-                    wifiConfiguration,
-                    connectivityManager,
-                    null,
-                    NetworkRequest.Builder()
-                )
-            }
 
         @JvmStatic
         @Provides

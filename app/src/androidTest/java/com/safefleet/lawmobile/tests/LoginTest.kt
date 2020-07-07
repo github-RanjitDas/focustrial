@@ -15,10 +15,8 @@ import org.junit.runner.RunWith
 class LoginTest : EspressoBaseTest<LoginActivity>(LoginActivity::class.java) {
     // This class tests FMA-248 User story
     companion object {
-        val SERIAL_NUMBER = TestLoginData.SERIAL_NUMBER.value
         val OFFICER_NAME = TestLoginData.OFFICER_NAME.value
         val OFFICER_PASSWORD = TestLoginData.OFFICER_PASSWORD.value
-        val INVALID_SERIAL_NUMBER = TestLoginData.INVALID_SERIAL_NUMBER.value
 
         const val INVALID_OFFICER_PASSWORD = "950887928"
 
@@ -35,7 +33,7 @@ class LoginTest : EspressoBaseTest<LoginActivity>(LoginActivity::class.java) {
             .isInstructionsTextDisplayed()
             .isExitDisplayed()
 
-        loginScreen.typeSerialNumber(SERIAL_NUMBER).go()
+        loginScreen.go()
 
         loginScreen
             .isWelcomeTextDisplayed()
@@ -47,7 +45,7 @@ class LoginTest : EspressoBaseTest<LoginActivity>(LoginActivity::class.java) {
 
     @Test
     fun verifyInvalidPasswordLogin_FMA_288() {
-        loginScreen.typeSerialNumber(SERIAL_NUMBER).go()
+        loginScreen.go()
 
         loginScreen.isWelcomeTextDisplayed()
 
@@ -59,7 +57,7 @@ class LoginTest : EspressoBaseTest<LoginActivity>(LoginActivity::class.java) {
 
     @Test
     fun verifyEmptyPasswordLogin_FMA_288() {
-        loginScreen.typeSerialNumber(SERIAL_NUMBER).go()
+        loginScreen.go()
 
         loginScreen.isWelcomeTextDisplayed().go()
 
@@ -69,7 +67,7 @@ class LoginTest : EspressoBaseTest<LoginActivity>(LoginActivity::class.java) {
 
     @Test
     fun verifyIncorrectSerialNumber_FMA_287() {
-        loginScreen.typeSerialNumber(INVALID_SERIAL_NUMBER).go()
+        loginScreen.go()
 
         loginScreen.isConnectingToCameraTextDisplayed()
         loginScreen.isIncorrectSerialNumberToastDisplayed()
@@ -78,7 +76,7 @@ class LoginTest : EspressoBaseTest<LoginActivity>(LoginActivity::class.java) {
 
     @Test
     fun verifyPairingForTheSecondTime_FMA_286() {
-        loginScreen.typeSerialNumber(SERIAL_NUMBER).go()
+        loginScreen.go()
         loginScreen.typePassword(OFFICER_PASSWORD).go()
         liveViewScreen.isLiveViewDisplayed()
 
@@ -97,7 +95,7 @@ class LoginTest : EspressoBaseTest<LoginActivity>(LoginActivity::class.java) {
         mockUtils.disconnectCamera()
 
         loginScreen.isWaitingForCameraTextDisplayed()
-        loginScreen.typeSerialNumber(SERIAL_NUMBER).go()
+        loginScreen.go()
         loginScreen.typePassword(OFFICER_PASSWORD).go()
 
         loginScreen.isDisconnectionAlertDisplayed()

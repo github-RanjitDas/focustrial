@@ -13,12 +13,4 @@ class PairingPhoneWithCameraRepositoryImpl(private val pairingPhoneWithCameraRem
     override suspend fun loadPairingCamera(hostnameToConnect: String, ipAddressClient: String) {
         pairingPhoneWithCameraRemoteDataSource.loadPairingCamera(hostnameToConnect, ipAddressClient)
     }
-
-    override fun getSSIDSavedIfExist(): Result<String> {
-        return pairingPhoneWithCameraRemoteDataSource.getSSIDSavedIfExist()
-    }
-
-    override fun saveSerialNumberOfCamera(serialNumber: String) {
-        pairingPhoneWithCameraRemoteDataSource.saveSerialNumberOfCamera(serialNumber)
-    }
 }

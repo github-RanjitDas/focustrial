@@ -11,7 +11,6 @@ import android.net.wifi.WifiManager
 import com.google.gson.Gson
 import com.lawmobile.presentation.utils.MobileDataStatus
 import com.lawmobile.presentation.utils.VLCMediaPlayer
-import com.lawmobile.presentation.utils.WifiConnection
 import com.lawmobile.presentation.utils.WifiHelper
 import com.safefleet.lawmobile.BaseApplication
 import com.safefleet.lawmobile.testData.TestLoginData
@@ -63,30 +62,13 @@ class AppModule {
             every { getIpAddress() } returns "192.168.42.2"
             every { isEqualsValueWithSSID(TestLoginData.SSID.value) } returns true
             every { isEqualsValueWithSSID(TestLoginData.INVALID_SSID.value) } returns false
+            every { isWifiEnable() } returns true
         }
 
         @JvmStatic
         @Provides
         @Singleton
         fun provideWifiConfiguration(): WifiConfiguration = WifiConfiguration()
-
-        @Suppress("DEPRECATION")
-        @JvmStatic
-        @Provides
-        @Singleton
-        fun provideWifiConnection(
-            wifiManager: WifiManager,
-            wifiConfiguration: WifiConfiguration,
-            connectivityManager: ConnectivityManager
-        ): WifiConnection = mockk {
-            every { connectionWithHotspotCamera(TestLoginData.SSID.value, any()) } answers {
-                secondArg<(data: Boolean) -> Unit>().invoke(true)
-            }
-            every { connectionWithHotspotCamera(TestLoginData.INVALID_SSID.value, any()) } answers {
-                secondArg<(data: Boolean) -> Unit>().invoke(false)
-            }
-            every { isWifiEnable() } returns true
-        }
 
         @JvmStatic
         @Provides

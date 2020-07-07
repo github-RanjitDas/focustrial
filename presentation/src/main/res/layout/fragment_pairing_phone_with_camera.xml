@@ -19,54 +19,26 @@
             android:id="@+id/textWaitingForCamera"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/pairing_phone_camera_text_title_margin_top"
             android:fontFamily="@font/jura_regular"
             android:gravity="center"
             android:text="@string/waiting_for_camera"
             android:textColor="@color/white"
             android:textSize="@dimen/text_h3"
+            android:layout_marginBottom="@dimen/pairing_phone_camera_button_go_margin_top"
+            app:layout_constraintBottom_toTopOf="@+id/imageButtonGo"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/textInputValidateSSID"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/pairing_phone_camera_input_margin_top"
-            android:background="@drawable/shape_solid_gradient_stroke_yellow_accent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textWaitingForCamera">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/textInputEditValidateSSID"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/pairing_phone_camera_input_height"
-                android:background="@android:color/transparent"
-                android:digits="0123456789"
-                android:fontFamily="@font/jura_regular"
-                android:gravity="center_vertical"
-                android:imeOptions="actionDone"
-                android:inputType="number"
-                android:paddingStart="@dimen/pairing_phone_camera_input_edit_padding_sides"
-                android:paddingEnd="@dimen/pairing_phone_camera_input_edit_padding_sides"
-                android:text="@string/_57"
-
-                android:textColor="@color/black"
-                tools:text="57014604" />
-        </com.google.android.material.textfield.TextInputLayout>
+            app:layout_constraintStart_toStartOf="parent" />
 
         <ImageView
             android:id="@+id/imageButtonGo"
             android:layout_width="@dimen/pairing_phone_camera_button_go_size"
             android:layout_height="@dimen/pairing_phone_camera_button_go_size"
-            android:layout_marginTop="@dimen/pairing_phone_camera_button_go_margin_top"
             android:contentDescription="@string/go_to_validate_ssid"
             android:src="@drawable/button_go"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textInputValidateSSID" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" />
 
         <TextView
             android:id="@+id/textInstructionsToLinkCamera"

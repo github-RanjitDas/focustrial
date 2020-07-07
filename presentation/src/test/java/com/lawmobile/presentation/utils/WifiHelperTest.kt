@@ -18,6 +18,7 @@ class WifiHelperTest {
         const val DEFAULT_GATEWAY_ADDRESS = "192.168.42.1"
         const val DEFAULT_SSID = "X57014694"
     }
+
     private val dhcpInfoMock: DhcpInfo = mockk()
 
     private val connectionInfoMock: WifiInfo = mockk {
@@ -66,6 +67,18 @@ class WifiHelperTest {
     fun testIsEqualsValueWithSSID() {
         every { wifiManager.dhcpInfo } returns dhcpInfoMock
         Assert.assertTrue(wifiHelper.isEqualsValueWithSSID(DEFAULT_SSID))
+    }
+
+    @Test
+    fun testIsWifiEnabledTrue() {
+        every { wifiManager.isWifiEnabled } returns true
+        Assert.assertTrue(wifiHelper.isWifiEnable())
+    }
+
+    @Test
+    fun testIsWifiEnabled() {
+        every { wifiManager.isWifiEnabled } returns false
+        Assert.assertFalse(wifiHelper.isWifiEnable())
     }
 
 }
