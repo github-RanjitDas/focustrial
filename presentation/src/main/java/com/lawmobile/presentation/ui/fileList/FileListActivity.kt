@@ -58,6 +58,7 @@ class FileListActivity : BaseActivity() {
         setListeners()
         createDialog()
         loadingDialog.show()
+        fileListViewModel.loadingTimeout()
     }
 
     override fun onResume() {
@@ -67,10 +68,9 @@ class FileListActivity : BaseActivity() {
 
         if (buttonVideoListSwitch.isActivated) {
             fileListViewModel.getVideoList()
-            return
+        } else {
+            fileListViewModel.getSnapshotList()
         }
-
-        fileListViewModel.getSnapshotList()
     }
 
     override fun finish() {
@@ -87,6 +87,17 @@ class FileListActivity : BaseActivity() {
         fileListViewModel.videoListLiveData.observe(this, Observer(::handleFileListResult))
         fileListViewModel.snapshotPartnerIdLiveData.observe(this, Observer(::handlePartnerIdResult))
         fileListViewModel.videoPartnerIdLiveData.observe(this, Observer(::handlePartnerIdResult))
+        fileListViewModel.timeoutLiveData.observe(this, Observer(::handleTimeout))
+    }
+
+    private fun handleTimeout(timeout: Boolean) {
+        if (timeout) {
+            if (loadingDialog.isShowing) {
+                this.showToast("Could not retrieve the files, please try again", Toast.LENGTH_SHORT)
+                Thread.sleep(500)
+                finish()
+            }
+        }
     }
 
     private fun setListeners() {
