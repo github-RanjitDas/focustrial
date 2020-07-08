@@ -38,6 +38,7 @@ class FileListActivity : BaseActivity() {
     private val snapshotListFragment = SnapshotListFragment.getActualInstance()
     private val videoListFragment = VideoListFragment.getActualInstance()
     private lateinit var loadingDialog: AlertDialog
+    private var isLoading = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,7 +58,7 @@ class FileListActivity : BaseActivity() {
         setObservers()
         setListeners()
         createDialog()
-        loadingDialog.show()
+        showLoadingDialog()
         fileListViewModel.loadingTimeout()
     }
 
@@ -92,8 +93,8 @@ class FileListActivity : BaseActivity() {
 
     private fun handleTimeout(timeout: Boolean) {
         if (timeout) {
-            if (loadingDialog.isShowing) {
-                this.showToast("Could not retrieve the files, please try again", Toast.LENGTH_SHORT)
+            if (isLoading) {
+                this.showToast(getString(R.string.loading_files_error), Toast.LENGTH_SHORT)
                 Thread.sleep(500)
                 finish()
             }
@@ -103,7 +104,7 @@ class FileListActivity : BaseActivity() {
     private fun setListeners() {
         buttonSnapshotListSwitch.setOnClickListenerCheckConnection {
             if (!it.isActivated) {
-                loadingDialog.show()
+                showLoadingDialog()
                 setSnapshotFragment()
                 fileListViewModel.getSnapshotList()
                 fileListCheckBox.isChecked = false
@@ -112,7 +113,7 @@ class FileListActivity : BaseActivity() {
 
         buttonVideoListSwitch.setOnClickListenerCheckConnection {
             if (!it.isActivated) {
-                loadingDialog.show()
+                showLoadingDialog()
                 setVideoFragment()
                 fileListViewModel.getVideoList()
                 fileListCheckBox.isChecked = false
@@ -152,11 +153,11 @@ class FileListActivity : BaseActivity() {
         val alertDialog = dialogBuilder.show()
         alertDialog.setCanceledOnTouchOutside(true)
         dialogLayout.associatePartnerIdButton.setOnClickListener {
-            loadingDialog.show()
+            showLoadingDialog()
             val partnerID = dialogLayout.partner_id_edit_text.text.toString()
             if (partnerID.isEmpty()) {
                 this.showToast(getString(R.string.valid_partner_id_message), Toast.LENGTH_SHORT)
-                loadingDialog.dismiss()
+                hideLoadingDialog()
                 return@setOnClickListener
             }
             val listSelected =
@@ -204,7 +205,6 @@ class FileListActivity : BaseActivity() {
     private fun handleFileListResult(result: Result<DomainInformationFileResponse>) {
         when (result) {
             is Result.Success -> {
-
                 if (result.data.errors.isNotEmpty()) {
                     var customMessage = getString(R.string.getting_files_error_description) + "\n"
                     result.data.errors.forEach {
@@ -234,11 +234,11 @@ class FileListActivity : BaseActivity() {
                         false -> noFilesTextView.text = getString(R.string.no_videos_found)
                     }
                 }
-                loadingDialog.dismiss()
+                hideLoadingDialog()
             }
             is Result.Error -> {
                 this.showToast(getString(R.string.file_list_failed_load_files), Toast.LENGTH_LONG)
-                loadingDialog.dismiss()
+                hideLoadingDialog()
             }
         }
     }
@@ -269,7 +269,7 @@ class FileListActivity : BaseActivity() {
                 )
             }
         }
-        loadingDialog.dismiss()
+        hideLoadingDialog()
     }
 
     private fun fileItemClick(domainInformationFile: DomainInformationFile) {
@@ -290,5 +290,15 @@ class FileListActivity : BaseActivity() {
         val fileListIntent = Intent(this, VideoPlaybackActivity::class.java)
         fileListIntent.putExtra(CAMERA_CONNECT_FILE, cameraConnectFile)
         startActivity(fileListIntent)
+    }
+
+    private fun showLoadingDialog() {
+        loadingDialog.show()
+        isLoading = true
+    }
+
+    private fun hideLoadingDialog() {
+        loadingDialog.dismiss()
+        isLoading = false
     }
 }

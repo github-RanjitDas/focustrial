@@ -17,7 +17,6 @@
     <string name="confirm_app_exit_title">Exit FMA</string>
 
     <!-- Login -->
-    <string name="_57">57</string>
     <string name="please_enable_permission">Please enable permission from settings</string>
     <string name="please_enable_permission_location">Required location permission for pairing the camera</string>
     <string name="waiting_for_camera" tools:ignore="ExtraTranslation">WAITING FOR \n CAMERA</string>
@@ -133,6 +132,7 @@
     <string name="mobile_data_status_message">Please disable mobile data to continue</string>
     <string name="linked_photos_metadata_title">LINKED PHOTOS</string>
     <string name="no_linked_photos">No linked photos</string>
+    <string name="loading_files_error">Could not retrieve the files, please try again</string>
 
     <string-array name="gender_spinner">
         <item>Select</item>
