@@ -121,7 +121,8 @@ class FileListActivity : BaseActivity() {
         }
 
         fileListCheckBox.setOnCheckedChangeListener { _, _ ->
-            fileListAdapter.checkAllItems()
+            if (!noFilesTextView.isVisible)
+                fileListAdapter.checkAllItems()
         }
 
         textViewFileListBack.setOnClickListenerCheckConnection {
