@@ -6,7 +6,6 @@ import com.schibsted.spain.barista.assertion.BaristaVisibilityAssertions.assertD
 import com.schibsted.spain.barista.assertion.BaristaVisibilityAssertions.assertNotDisplayed
 import com.schibsted.spain.barista.assertion.BaristaVisibilityAssertions.assertNotExist
 import com.schibsted.spain.barista.interaction.BaristaClickInteractions.clickOn
-import com.schibsted.spain.barista.interaction.BaristaSleepInteractions
 
 class LiveViewScreen : BaseScreen() {
 
@@ -15,6 +14,7 @@ class LiveViewScreen : BaseScreen() {
         assertNotExist(R.id.liveStreamingView)
         assertNotExist(R.id.buttonStreaming)
         assertNotExist(R.id.buttonSnapshot)
+        assertNotExist(R.id.buttonOpenHelpPage)
     }
 
     fun isLiveViewDisplayed() {
@@ -26,6 +26,8 @@ class LiveViewScreen : BaseScreen() {
 
         assertDisplayed(R.id.buttonStreaming)
         assertDisplayed(R.string.record)
+
+        assertDisplayed(R.id.buttonOpenHelpPage)
 
         assertDisplayed(R.id.textLiveViewSwitch, R.string.live_view_label)
 
@@ -54,7 +56,7 @@ class LiveViewScreen : BaseScreen() {
     }
 
     fun isRecordingNotInProgress() {
-        assertHasBackground(R.id.buttonStreaming, R.drawable.ic_record_selector)
+        assertHasBackground(R.id.buttonStreaming, R.drawable.ic_record)
         assertNotDisplayed(R.id.imageRecordingIndicator)
     }
 
@@ -63,16 +65,19 @@ class LiveViewScreen : BaseScreen() {
         assertDisplayed(R.id.imageRecordingIndicator)
     }
 
-    fun switchLiveViewToggle() = clickOn(R.id.buttonSwitchLiveView)
-
-    fun switchFullScreenMode() {
-        clickOn(R.id.toggleFullScreenLiveView)
-        BaristaSleepInteractions.sleep(1000)
+    fun isUserGuideDisplayed() {
+        assertDisplayed(R.id.pdfView)
     }
 
-    fun openSnapshotsList() = clickOn(R.id.buttonSnapshotList)
+    fun switchLiveViewToggle() = clickOn(R.id.buttonSwitchLiveView)
 
-    fun openVideosList() = clickOn(R.id.buttonVideoList)
+    fun switchFullScreenMode() = clickOn(R.id.toggleFullScreenLiveView)
+
+    fun openSnapshotList() = clickOn(R.id.buttonSnapshotList)
+
+    fun openVideoList() = clickOn(R.id.buttonVideoList)
+
+    fun openHelpPage() = clickOn(R.id.buttonOpenHelpPage)
 
     fun takeSnapshot() {
         clickOn(R.id.buttonSnapshot)
@@ -83,12 +88,10 @@ class LiveViewScreen : BaseScreen() {
     fun startRecording() {
         this.isRecordingNotInProgress()
         clickOn(R.id.buttonStreaming)
-        this.isRecordingInProgress()
     }
 
     fun stopRecording() {
         this.isRecordingInProgress()
         clickOn(R.id.buttonStreaming)
-        this.isRecordingNotInProgress()
     }
 }

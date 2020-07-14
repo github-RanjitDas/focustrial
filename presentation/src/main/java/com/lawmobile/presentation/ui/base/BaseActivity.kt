@@ -10,8 +10,10 @@ import androidx.lifecycle.Observer
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.entities.NeutralAlertInformation
 import com.lawmobile.presentation.extensions.createAlertMobileDataActive
+import com.lawmobile.presentation.extensions.createAlertProgress
 import com.lawmobile.presentation.extensions.createAlertSessionExpired
 import com.lawmobile.presentation.ui.login.LoginActivity
+import com.lawmobile.presentation.utils.EspressoIdlingResource
 import com.lawmobile.presentation.utils.MobileDataStatus
 import dagger.android.support.DaggerAppCompatActivity
 import java.sql.Timestamp
@@ -30,6 +32,7 @@ open class BaseActivity : DaggerAppCompatActivity() {
     private lateinit var mobileDataDialog: AlertDialog
     var isRecordingVideo: Boolean = false
     var isAlertShowing = MutableLiveData<Boolean>()
+    private var loadingDialog: AlertDialog? = null
 
     fun killApp() {
         baseViewModel.deactivateCameraHotspot()
@@ -101,6 +104,18 @@ open class BaseActivity : DaggerAppCompatActivity() {
     fun checkIfSessionIsExpired(): Boolean {
         val timeNow = Timestamp(System.currentTimeMillis())
         return (timeNow.time - lastInteraction.time) > MAX_TIME_SESSION
+    }
+
+    fun showLoadingDialog() {
+        EspressoIdlingResource.increment()
+        loadingDialog = this.createAlertProgress()
+        loadingDialog?.show()
+    }
+
+    fun hideLoadingDialog() {
+        loadingDialog?.dismiss()
+        loadingDialog = null
+        EspressoIdlingResource.decrement()
     }
 
     companion object {

@@ -91,4 +91,5 @@
 
     <!-- link_snapshots -->
     <dimen name="link_snapshot_margin_sides_loading_message">10dp</dimen>
+    <dimen name="file_list_recycler_view">32dp</dimen>
 </resources>

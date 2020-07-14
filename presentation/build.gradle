@@ -60,6 +60,10 @@ dependencies {
     testImplementation "junit:junit:$junit_version"
     androidTestImplementation "androidx.test.espresso:espresso-core:$espresso_version"
 
+    //Espresso Idling Resource
+    androidTestImplementation "androidx.test.espresso:espresso-idling-resource:$espresso_version"
+    implementation "androidx.test.espresso:espresso-idling-resource:$espresso_version"
+
     //Material
     implementation "com.google.android.material:material:$android_material_version"
 

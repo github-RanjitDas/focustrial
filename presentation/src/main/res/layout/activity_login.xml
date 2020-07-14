@@ -48,6 +48,7 @@
         android:id="@+id/textViewLoginExit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:padding="15dp"
         android:clickable="true"
         android:focusable="true"
         android:text="@string/exit"

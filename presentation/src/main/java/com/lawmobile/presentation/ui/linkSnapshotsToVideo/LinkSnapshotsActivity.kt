@@ -4,7 +4,6 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
@@ -12,7 +11,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.lawmobile.domain.entities.DomainInformationImage
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.entities.SnapshotsToLink
-import com.lawmobile.presentation.extensions.createAlertProgress
 import com.lawmobile.presentation.extensions.setOnClickListenerCheckConnection
 import com.lawmobile.presentation.extensions.showToast
 import com.lawmobile.presentation.ui.base.BaseActivity
@@ -33,7 +31,6 @@ class LinkSnapshotsActivity : BaseActivity() {
     private var snapshotsLinkedDate: ArrayList<String?>? = null
     private var currentPage = 1
 
-    private lateinit var loadingDialog: AlertDialog
     private var tmpImageList = ArrayList<DomainInformationImage>()
     private var isLoading = false
 
@@ -59,8 +56,7 @@ class LinkSnapshotsActivity : BaseActivity() {
     }
 
     private fun configureLoadingViews() {
-        loadingDialog = this.createAlertProgress()
-        loadingDialog.show()
+        showLoadingDialog()
         constrain_loading.isVisible = false
     }
 
@@ -146,7 +142,7 @@ class LinkSnapshotsActivity : BaseActivity() {
             }
         }
         isLoading = false
-        loadingDialog.dismiss()
+        hideLoadingDialog()
     }
 
     private fun scrollListenerForPagination() = object : RecyclerView.OnScrollListener() {
