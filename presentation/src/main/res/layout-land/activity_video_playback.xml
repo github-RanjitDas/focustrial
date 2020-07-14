@@ -663,29 +663,29 @@
                     tools:ignore="Autofill,LabelFor" />
 
                 <TextView
-                    android:visibility="gone"
                     android:id="@+id/linkedPhotosTitle"
                     android:layout_width="@dimen/no_dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/video_playback_metadata_spacing"
+                    android:layout_marginBottom="20dp"
                     android:text="@string/linked_photos_metadata_title"
                     android:textColor="@color/white"
                     android:textSize="@dimen/video_playback_metadata_text_size"
                     android:textStyle="bold"
-                    android:layout_marginBottom="20dp"
+                    android:visibility="gone"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toLeftOf="@id/guidelinePlayback"
-                    app:layout_constraintTop_toBottomOf="@id/licensePlateTitle"
-                    app:layout_constraintBottom_toBottomOf="parent"/>
+                    app:layout_constraintTop_toBottomOf="@id/licensePlateTitle" />
 
                 <TextView
-                    android:visibility="gone"
                     android:id="@+id/linkedPhotosValue"
                     android:layout_width="@dimen/no_dp"
                     android:layout_height="wrap_content"
                     android:padding="@dimen/video_playback_edit_metadata_padding"
                     android:textColor="@color/white"
                     android:textSize="@dimen/video_playback_metadata_text_size"
+                    android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="@+id/linkedPhotosTitle"
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintLeft_toRightOf="@id/guidelinePlayback"
@@ -715,11 +715,12 @@
             android:id="@+id/buttonLinkSnapshots"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:contentDescription="@string/button_link_snapshots"
             android:src="@drawable/ic_link"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:contentDescription="@string/button_link_snapshots" />
+            app:layout_constraintStart_toStartOf="parent" />
 
         <TextView
             android:id="@+id/saveButtonVideoPlayback"
