@@ -5,6 +5,7 @@ import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.os.Bundle
+import android.text.InputFilter
 import android.util.Log
 import android.widget.ArrayAdapter
 import android.widget.SeekBar
@@ -31,6 +32,7 @@ import com.safefleet.mobile.commons.helpers.hideKeyboard
 import kotlinx.android.synthetic.main.activity_video_playback.*
 import javax.inject.Inject
 
+
 class VideoPlaybackActivity : BaseActivity() {
 
     @Inject
@@ -48,11 +50,20 @@ class VideoPlaybackActivity : BaseActivity() {
     private var isVideoMetadataChangesSaved = false
     private lateinit var currentMetadata: CameraConnectVideoMetadata
 
+    private val blockCharacterSet = ","
+    private val filter =
+        arrayOf(InputFilter { source, start, end, dest, dstart, dend ->
+            if (source != null && blockCharacterSet.contains("" + source)) {
+                ""
+            } else null
+        })
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_video_playback)
         createDialog()
         setCatalogLists()
+        addEditTextFilter()
         setObservers()
         configureListeners()
     }
@@ -81,6 +92,22 @@ class VideoPlaybackActivity : BaseActivity() {
         super.onPause()
         if (videoPlaybackViewModel.isMediaPlayerPlaying())
             manageButtonPlayPause()
+    }
+
+    private fun addEditTextFilter() {
+        partnerIdValue.filters = filter
+        ticket1Value.filters = filter
+        ticket2Value.filters = filter
+        case1Value.filters = filter
+        case2Value.filters = filter
+        dispatch1Value.filters = filter
+        dispatch2Value.filters = filter
+        locationValue.filters = filter
+        remarksValue.filters = filter
+        firstNameValue.filters = filter
+        lastNameValue.filters = filter
+        driverLicenseValue.filters = filter
+        licensePlateValue.filters = filter
     }
 
     private fun setCatalogLists() {
