@@ -671,6 +671,7 @@
                     android:textColor="@color/white"
                     android:textSize="@dimen/video_playback_metadata_text_size"
                     android:textStyle="bold"
+                    android:visibility="gone"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toLeftOf="@id/guidelinePlayback"
                     app:layout_constraintTop_toBottomOf="@id/licensePlateTitle" />
@@ -684,6 +685,7 @@
                     android:text="@string/no_linked_photos"
                     android:textColor="@color/white"
                     android:textSize="@dimen/video_playback_metadata_text_size"
+                    android:visibility="gone"
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintLeft_toRightOf="@id/guidelinePlayback"
                     app:layout_constraintRight_toRightOf="parent"
@@ -714,6 +716,7 @@
             android:layout_height="wrap_content"
             android:contentDescription="@string/button_link_snapshots"
             android:src="@drawable/ic_link"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
