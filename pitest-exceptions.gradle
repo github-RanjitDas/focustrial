@@ -29,5 +29,6 @@ ext.pitestExclusions = [
         "com.lawmobile.data.entities.VideoListMetadata*",
         "com.lawmobile.presentation.ui.base.BaseViewModel*",
         "com.lawmobile.presentation.utils.WifiConnection*",
-        "com.lawmobile.data.repository.linkSnapshotsToVideo.LinkSnapshotsRepositoryImpl*"
+        "com.lawmobile.data.repository.linkSnapshotsToVideo.LinkSnapshotsRepositoryImpl*",
+        "com.lawmobile.presentation.utils.MobileDataStatus*"
 ]
