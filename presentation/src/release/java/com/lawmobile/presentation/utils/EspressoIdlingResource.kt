@@ -1,6 +1,6 @@
 package com.lawmobile.presentation.utils
 
-object EspressoIdlingResources {
+object EspressoIdlingResource {
     fun increment() {}
     fun decrement() {}
 }
