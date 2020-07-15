@@ -53,13 +53,15 @@
     <dimen name="live_view_text_label_padding_left">5dp</dimen>
     <dimen name="dialog_height_parent">120dp</dimen>
     <dimen name="dialog_margin_sides_progress">12dp</dimen>
+    <dimen name="item_file_bottom_margin">1dp</dimen>
+
+    <!-- File List -->
     <dimen name="file_list_text_size">17sp</dimen>
     <dimen name="file_list_nav_buttons_margin">10dp</dimen>
     <dimen name="file_list_title_top">5dp</dimen>
+    <dimen name="file_list_item_height">50dp</dimen>
     <dimen name="file_list_title_bottom">15dp</dimen>
     <dimen name="file_list_checkbox_margin_start">10dp</dimen>
-    <dimen name="check_box_item_file_start">10dp</dimen>
-    <dimen name="item_file_bottom_margin">1dp</dimen>
 
     <!-- Video playback -->
     <dimen name="video_playback_surface_view_height">220dp</dimen>
@@ -73,7 +75,6 @@
     <dimen name="video_playback_padding_top_buttons">5dp</dimen>
     <dimen name="snapshot_item_detail_32dp">32dp</dimen>
     <dimen name="snapshot_item_detail_16dp">16dp</dimen>
-    <dimen name="file_list_item_margin_vertical">10dp</dimen>
     <dimen name="video_playback_metadata_text_size">16sp</dimen>
     <dimen name="video_playback_metadata_spacing">20dp</dimen>
     <dimen name="video_playback_edit_metadata_padding">5dp</dimen>
