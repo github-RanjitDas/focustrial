@@ -1,6 +1,5 @@
 package com.safefleet.lawmobile.tests
 
-
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
 import com.lawmobile.presentation.ui.login.LoginActivity
@@ -25,48 +24,56 @@ class AppNavigationTest : EspressoBaseTest<LoginActivity>(LoginActivity::class.j
 
     @Test
     fun verifySwitchBetweenSnapshotsAndVideosList_FMA_564() {
-        liveViewScreen.openSnapshotsList()
-        fileListScreen.switchToVideosList()
-        // TODO: implement missing steps when videos are mocked
+        with(fileListScreen) {
+            liveViewScreen.openSnapshotList()
+            isSnapshotListDisplayed()
+
+            switchToVideosList()
+            isVideoListDisplayed()
+        }
     }
 
     @Test
     fun verifyLiveViewToggleBehaviorAfterNavigation_FMA_214() {
-        liveViewScreen.isLiveViewDisplayed()
-        liveViewScreen.isLiveViewToggleEnabled()
+        with(liveViewScreen) {
+            isLiveViewDisplayed()
+            isLiveViewToggleEnabled()
 
-        liveViewScreen.switchLiveViewToggle()
-        liveViewScreen.isLiveViewToggleDisabled()
+            switchLiveViewToggle()
+            isLiveViewToggleDisabled()
 
-        liveViewScreen.openSnapshotsList()
-        fileListScreen.goBack()
+            openSnapshotList()
+            fileListScreen.goBack()
 
-        liveViewScreen.isLiveViewDisplayed()
-        liveViewScreen.isLiveViewToggleDisabled()
+            isLiveViewDisplayed()
+            isLiveViewToggleDisabled()
 
-        liveViewScreen.switchLiveViewToggle()
-        liveViewScreen.isLiveViewToggleEnabled()
+            switchLiveViewToggle()
+            isLiveViewToggleEnabled()
+        }
     }
 
     @Test
     fun verifyRecordingAfterNavigation_FMA_549() {
-        liveViewScreen.isLiveViewDisplayed()
+        with(liveViewScreen) {
+            isLiveViewDisplayed()
 
-        liveViewScreen.startRecording()
-        liveViewScreen.isRecordingInProgress()
+            startRecording()
+            isRecordingInProgress()
 
-        liveViewScreen.openSnapshotsList()
-        fileListScreen.goBack()
+            openSnapshotList()
+            fileListScreen.goBack()
 
-        liveViewScreen.isRecordingInProgress()
+            isRecordingInProgress()
 
-        liveViewScreen.openVideosList()
-        fileListScreen.goBack()
+            openVideoList()
+            fileListScreen.goBack()
 
-        liveViewScreen.isRecordingInProgress()
+            isRecordingInProgress()
 
-        liveViewScreen.stopRecording()
-        liveViewScreen.isRecordingNotInProgress()
+            stopRecording()
+            isRecordingNotInProgress()
+        }
     }
 
 }

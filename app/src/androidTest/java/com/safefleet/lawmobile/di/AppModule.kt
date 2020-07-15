@@ -63,6 +63,7 @@ class AppModule {
             every { isEqualsValueWithSSID(TestLoginData.SSID.value) } returns true
             every { isEqualsValueWithSSID(TestLoginData.INVALID_SSID.value) } returns false
             every { isWifiEnable() } returns true
+            every { getSSIDWiFi() } returns TestLoginData.SSID.value
         }
 
         @JvmStatic
@@ -89,13 +90,25 @@ class AppModule {
         @Provides
         @Singleton
         fun provideVLCMediaPlayer(libVLC: LibVLC, mediaPlayer: MediaPlayer): VLCMediaPlayer =
-            VLCMediaPlayer(libVLC, mediaPlayer)
+            mockk(relaxed = true) {
+                every { changeAspectRatio() } returns Unit
+                every { createMediaPlayer(any(), any()) } returns Unit
+                every { setSizeInMediaPlayer(any()) } returns Unit
+                every { playMediaPlayer() } returns Unit
+                every { stopMediaPlayer() } returns Unit
+                every { pauseMediaPlayer() } returns Unit
+                every { setProgressMediaPlayer(any()) } returns Unit
+                every { isMediaPlayerPlaying() } returns false
+                every { getTimeInMillisMediaPlayer() } returns 1L
+            }
 
         @JvmStatic
         @Provides
         @Singleton
         fun provideMobileDataStatus(connectivityManager: ConnectivityManager) =
-            MobileDataStatus(connectivityManager)
+            mockk<MobileDataStatus>(relaxed = true) {
+                every { value } returns false
+            }
 
     }
 }

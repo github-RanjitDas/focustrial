@@ -44,7 +44,6 @@ class FileListRemoteDataSourceImpl(private val cameraConnectService: CameraConne
                 }
             }
         }
-
     }
 
     override suspend fun savePartnerIdVideos(cameraConnectVideoMetadata: CameraConnectVideoMetadata): Result<Unit> =
