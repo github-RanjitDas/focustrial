@@ -76,23 +76,23 @@ node ('docker-builds-slave') {
                 }
             }
 
-            if(env.BRANCH_NAME == 'develop' || env.BRANCH_NAME == 'master'){
-                stage('Generate APK'){
+            if(env.BRANCH_NAME == 'develop' || env.BRANCH_NAME == 'master' || env.BRANCH_NAME.startsWith('release/')){
+                stage('Generate AAB'){
                     logger.stage()
                     timeout(10){
                         withVault(vaultSecrets: [[path: "jenkins/lawmobile/android", secretValues: [[vaultKey: 'android-keystore', envVar: 'android_keystore']]]]) {
                             sh """cat > $WORKSPACE/keystore.jks_64 <<  EOL\n$android_keystore\nEOL"""
                             sh "base64 -d keystore.jks_64 > app/keystore.jks"
                         }
-                        sh "gradle assembleRelease --stacktrace"
+                        sh "gradle bundleRelease --stacktrace"
                     }
                 }
-                stage('Archive APK'){
+                stage('Archive AAB'){
                     logger.stage()
                     timeout(10){
-                        dir("app/build/outputs/apk") {
-                            sh "mv release/app-release.apk release/app-release-${BUILD_NUMBER}.apk"
-                            archiveArtifacts "release/app-release-${BUILD_NUMBER}.apk"
+                        dir("app/build/outputs/bundle") {
+                            sh "mv release/app-release.aab release/app-release-${BUILD_NUMBER}.aab"
+                            archiveArtifacts "release/app-release-${BUILD_NUMBER}.aab"
                         }
                     }
                 }
