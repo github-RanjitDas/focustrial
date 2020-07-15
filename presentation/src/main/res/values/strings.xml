@@ -134,6 +134,7 @@
     <string name="no_linked_photos">No linked photos</string>
     <string name="loading_files_error">Could not retrieve the files, please try again</string>
     <string name="verify_camera_wifi">Please verify the connection to the camera WiFi</string>
+    <string name="error_saving_video">Error checking video saved in camera, please wait and try again</string>
 
     <string-array name="gender_spinner">
         <item>Select</item>
