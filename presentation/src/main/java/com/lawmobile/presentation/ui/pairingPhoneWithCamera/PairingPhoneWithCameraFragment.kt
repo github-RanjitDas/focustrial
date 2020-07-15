@@ -41,6 +41,7 @@ class PairingPhoneWithCameraFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         configureListeners()
+        setObservers()
     }
 
     private fun configureListeners() {
@@ -85,7 +86,7 @@ class PairingPhoneWithCameraFragment : BaseFragment() {
             startWithProgressPairing(true)
             verifyConnectionWithTheCamera()
         } else {
-            activity?.showToast("Verify the connection to the camera wifi", Toast.LENGTH_SHORT)
+            activity?.showToast(getString(R.string.verify_camera_wifi), Toast.LENGTH_SHORT)
         }
     }
 
@@ -109,11 +110,12 @@ class PairingPhoneWithCameraFragment : BaseFragment() {
 
     private fun verifyProgressConnectionWithTheCamera() {
         pairingPhoneWithCameraViewModel.getProgressConnectionWithTheCamera()
+    }
+
+    private fun setObservers() {
         pairingPhoneWithCameraViewModel.progressConnectionWithTheCamera.observe(
             viewLifecycleOwner,
-            Observer {
-                manageResponseProgressInConnectionCamera(it)
-            }
+            Observer(::manageResponseProgressInConnectionCamera)
         )
     }
 

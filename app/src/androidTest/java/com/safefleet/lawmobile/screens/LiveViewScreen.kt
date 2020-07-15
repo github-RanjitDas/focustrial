@@ -12,7 +12,7 @@ class LiveViewScreen : BaseScreen() {
     fun isLiveViewNotDisplayed() {
         assertNotExist(R.id.buttonSwitchLiveView)
         assertNotExist(R.id.liveStreamingView)
-        assertNotExist(R.id.buttonStreaming)
+        assertNotExist(R.id.buttonRecord)
         assertNotExist(R.id.buttonSnapshot)
         assertNotExist(R.id.buttonOpenHelpPage)
     }
@@ -24,7 +24,7 @@ class LiveViewScreen : BaseScreen() {
         assertDisplayed(R.id.buttonSnapshot)
         assertDisplayed(R.string.snap)
 
-        assertDisplayed(R.id.buttonStreaming)
+        assertDisplayed(R.id.buttonRecord)
         assertDisplayed(R.string.record)
 
         assertDisplayed(R.id.buttonOpenHelpPage)
@@ -40,7 +40,7 @@ class LiveViewScreen : BaseScreen() {
 
     fun isVideoInFullScreen() {
         assertNotDisplayed(R.id.buttonSwitchLiveView)
-        assertNotDisplayed(R.id.buttonStreaming)
+        assertNotDisplayed(R.id.buttonRecord)
         assertNotDisplayed(R.id.buttonSnapshot)
 
         assertDisplayed(R.id.liveStreamingView)
@@ -56,12 +56,12 @@ class LiveViewScreen : BaseScreen() {
     }
 
     fun isRecordingNotInProgress() {
-        assertHasBackground(R.id.buttonStreaming, R.drawable.ic_record)
+        assertHasBackground(R.id.buttonRecord, R.drawable.ic_record)
         assertNotDisplayed(R.id.imageRecordingIndicator)
     }
 
     fun isRecordingInProgress() {
-        assertHasBackground(R.id.buttonStreaming, R.drawable.ic_record_active)
+        assertHasBackground(R.id.buttonRecord, R.drawable.ic_record_active)
         assertDisplayed(R.id.imageRecordingIndicator)
     }
 
@@ -87,11 +87,11 @@ class LiveViewScreen : BaseScreen() {
 
     fun startRecording() {
         this.isRecordingNotInProgress()
-        clickOn(R.id.buttonStreaming)
+        clickOn(R.id.buttonRecord)
     }
 
     fun stopRecording() {
         this.isRecordingInProgress()
-        clickOn(R.id.buttonStreaming)
+        clickOn(R.id.buttonRecord)
     }
 }
