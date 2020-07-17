@@ -50,14 +50,6 @@ class VideoPlaybackActivity : BaseActivity() {
     private var isVideoMetadataChangesSaved = false
     private lateinit var currentMetadata: CameraConnectVideoMetadata
 
-    private val blockCharacterSet = ","
-    private val filter =
-        arrayOf(InputFilter { source, start, end, dest, dstart, dend ->
-            if (source != null && blockCharacterSet.contains("" + source)) {
-                ""
-            } else null
-        })
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_video_playback)
@@ -95,19 +87,30 @@ class VideoPlaybackActivity : BaseActivity() {
     }
 
     private fun addEditTextFilter() {
-        partnerIdValue.filters = filter
-        ticket1Value.filters = filter
-        ticket2Value.filters = filter
-        case1Value.filters = filter
-        case2Value.filters = filter
-        dispatch1Value.filters = filter
-        dispatch2Value.filters = filter
-        locationValue.filters = filter
-        remarksValue.filters = filter
-        firstNameValue.filters = filter
-        lastNameValue.filters = filter
-        driverLicenseValue.filters = filter
-        licensePlateValue.filters = filter
+        partnerIdValue.filters = getFiltersWithLength(20)
+        ticket1Value.filters = getFiltersWithLength(20)
+        ticket2Value.filters = getFiltersWithLength(20)
+        case1Value.filters = getFiltersWithLength(50)
+        case2Value.filters = getFiltersWithLength(50)
+        dispatch1Value.filters = getFiltersWithLength(30)
+        dispatch2Value.filters = getFiltersWithLength(30)
+        locationValue.filters = getFiltersWithLength(30)
+        remarksValue.filters = getFiltersWithLength(100)
+        firstNameValue.filters = getFiltersWithLength(30)
+        lastNameValue.filters = getFiltersWithLength(30)
+        driverLicenseValue.filters = getFiltersWithLength(30)
+        licensePlateValue.filters = getFiltersWithLength(30)
+    }
+
+    private fun getFiltersWithLength(length: Int): Array<InputFilter> {
+        val blockCharacterSet = ","
+        val filterLength = InputFilter.LengthFilter(length)
+        val filterComma = InputFilter { source, _, _, _, _, _ ->
+            if (source != null && blockCharacterSet.contains("" + source)) {
+                ""
+            } else null
+        }
+        return arrayOf(filterLength, filterComma)
     }
 
     private fun setCatalogLists() {
