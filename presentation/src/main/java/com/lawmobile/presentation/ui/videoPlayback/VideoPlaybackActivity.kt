@@ -342,6 +342,9 @@ class VideoPlaybackActivity : BaseActivity() {
         buttonPlay.setImageResource(R.drawable.ic_media_pause)
         updateLiveOrPlaybackActive(true)
         videoPlaybackViewModel.playVLCMediaPlayer()
+        if (currentProgressInVideo in 1..99){
+            setProgressToVideo(currentProgressInVideo)
+        }
     }
 
     private fun pauseVideoPlayback() {
@@ -497,8 +500,15 @@ class VideoPlaybackActivity : BaseActivity() {
     private fun configureObserveCurrentTimeVideo() {
         videoPlaybackViewModel.currentTimeVideo.observe(this, Observer {
             updateCurrentTimeInVideo()
-            currentTimeVideoInMilliSeconds = it
-            updateProgressVideoInView()
+            if (it != currentTimeVideoInMilliSeconds){
+                currentTimeVideoInMilliSeconds = it
+                updateProgressVideoInView()
+            }
+
+            if (currentProgressInVideo == 100 && videoPlaybackViewModel.isMediaPlayerPlaying()) {
+                updateLastInteraction()
+                pauseVideoPlayback()
+            }
         })
     }
 
