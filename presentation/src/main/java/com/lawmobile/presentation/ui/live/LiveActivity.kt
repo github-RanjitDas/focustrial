@@ -215,4 +215,6 @@ class LiveActivity : BaseActivity() {
     private fun takePhoto() {
         liveActivityViewModel.takePhoto()
     }
+
+    override fun onBackPressed() {}
 }
