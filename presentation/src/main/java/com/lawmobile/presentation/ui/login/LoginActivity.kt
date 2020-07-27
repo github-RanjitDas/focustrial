@@ -92,4 +92,6 @@ class LoginActivity : BaseActivity() {
         )
     }
 
+    override fun onBackPressed() {}
+
 }
