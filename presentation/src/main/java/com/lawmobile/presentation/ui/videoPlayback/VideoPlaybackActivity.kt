@@ -5,6 +5,7 @@ import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.os.Bundle
+import android.text.InputFilter
 import android.util.Log
 import android.widget.ArrayAdapter
 import android.widget.SeekBar
@@ -30,6 +31,7 @@ import com.safefleet.mobile.commons.helpers.hideKeyboard
 import kotlinx.android.synthetic.main.activity_video_playback.*
 import javax.inject.Inject
 
+
 class VideoPlaybackActivity : BaseActivity() {
 
     @Inject
@@ -51,6 +53,7 @@ class VideoPlaybackActivity : BaseActivity() {
         setContentView(R.layout.activity_video_playback)
         showLoadingDialog()
         setCatalogLists()
+        addEditTextFilter()
         setObservers()
         configureListeners()
     }
@@ -79,6 +82,33 @@ class VideoPlaybackActivity : BaseActivity() {
         super.onPause()
         if (videoPlaybackViewModel.isMediaPlayerPlaying())
             manageButtonPlayPause()
+    }
+
+    private fun addEditTextFilter() {
+        partnerIdValue.filters = getFiltersWithLength(20)
+        ticket1Value.filters = getFiltersWithLength(20)
+        ticket2Value.filters = getFiltersWithLength(20)
+        case1Value.filters = getFiltersWithLength(50)
+        case2Value.filters = getFiltersWithLength(50)
+        dispatch1Value.filters = getFiltersWithLength(30)
+        dispatch2Value.filters = getFiltersWithLength(30)
+        locationValue.filters = getFiltersWithLength(30)
+        remarksValue.filters = getFiltersWithLength(100)
+        firstNameValue.filters = getFiltersWithLength(30)
+        lastNameValue.filters = getFiltersWithLength(30)
+        driverLicenseValue.filters = getFiltersWithLength(30)
+        licensePlateValue.filters = getFiltersWithLength(30)
+    }
+
+    private fun getFiltersWithLength(length: Int): Array<InputFilter> {
+        val blockCharacterSet = ","
+        val filterLength = InputFilter.LengthFilter(length)
+        val filterComma = InputFilter { source, _, _, _, _, _ ->
+            if (source != null && blockCharacterSet.contains("" + source)) {
+                ""
+            } else null
+        }
+        return arrayOf(filterLength, filterComma)
     }
 
     private fun setCatalogLists() {
@@ -304,6 +334,9 @@ class VideoPlaybackActivity : BaseActivity() {
         buttonPlay.setImageResource(R.drawable.ic_media_pause)
         updateLiveOrPlaybackActive(true)
         videoPlaybackViewModel.playVLCMediaPlayer()
+        if (currentProgressInVideo in 1..99){
+            setProgressToVideo(currentProgressInVideo)
+        }
     }
 
     private fun pauseVideoPlayback() {
@@ -459,8 +492,15 @@ class VideoPlaybackActivity : BaseActivity() {
     private fun configureObserveCurrentTimeVideo() {
         videoPlaybackViewModel.currentTimeVideo.observe(this, Observer {
             updateCurrentTimeInVideo()
-            currentTimeVideoInMilliSeconds = it
-            updateProgressVideoInView()
+            if (it != currentTimeVideoInMilliSeconds){
+                currentTimeVideoInMilliSeconds = it
+                updateProgressVideoInView()
+            }
+
+            if (currentProgressInVideo == 100 && videoPlaybackViewModel.isMediaPlayerPlaying()) {
+                updateLastInteraction()
+                pauseVideoPlayback()
+            }
         })
     }
 

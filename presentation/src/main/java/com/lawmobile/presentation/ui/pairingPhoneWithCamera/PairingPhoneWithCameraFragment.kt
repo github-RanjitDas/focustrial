@@ -127,6 +127,7 @@ class PairingPhoneWithCameraFragment : BaseFragment() {
     }
 
     private fun setProgressInViewOfProgress(progress: Int) {
+        startWithProgressPairing(true)
         circularProgressbar.progress = progress
         val percent = "$progress%"
         textViewProgressConnection.text = percent

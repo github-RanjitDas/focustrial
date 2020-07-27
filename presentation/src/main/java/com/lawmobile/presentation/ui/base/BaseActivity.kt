@@ -97,7 +97,7 @@ open class BaseActivity : DaggerAppCompatActivity() {
         isLiveVideoOrPlaybackActive = isActive
     }
 
-    private fun updateLastInteraction() {
+    fun updateLastInteraction() {
         lastInteraction = Timestamp(System.currentTimeMillis())
     }
 
