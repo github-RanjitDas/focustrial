@@ -8,4 +8,5 @@ object CameraInfo {
     var events = mutableListOf<CameraConnectCatalog>()
     var officerId = ""
     var serialNumber = ""
+    var officerName = ""
 }

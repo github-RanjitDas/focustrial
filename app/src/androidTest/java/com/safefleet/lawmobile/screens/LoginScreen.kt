@@ -9,30 +9,24 @@ import com.schibsted.spain.barista.interaction.BaristaEditTextInteractions.write
 
 class LoginScreen : BaseScreen() {
 
-    fun isLogoDisplayed() = assertDisplayed(R.id.imageViewLogo)
+    fun isLogoDisplayed() = assertDisplayed(R.id.imageViewFMALogo)
 
     fun isInstructionsTextDisplayed() =
-        assertDisplayed(R.id.textInstructionsToLinkCamera, R.string.instructions_to_link_camera)
+        assertDisplayed(R.id.buttonInstructionsToLinkCamera, R.string.instructions_to_link_camera)
 
     fun isWaitingForCameraTextDisplayed() =
         assertDisplayed(R.id.textWaitingForCamera, R.string.waiting_for_camera)
-
-    fun isExitDisplayed() =
-        assertDisplayed(R.id.textViewLoginExit, R.string.exit)
 
     fun isConnectingToCameraTextDisplayed() =
         assertDisplayed(R.id.textConnectingToCamera, R.string.connecting_to_camera)
 
     fun isWelcomeTextDisplayed() =
-        assertContains(R.id.textViewTitleOfficer, R.string.welcome_officer)
-
-    fun isOfficerNameDisplayed(officerName: String) =
-        assertContains(R.id.textViewOfficerName, officerName)
+        assertContains(R.id.textViewPassword, R.string.welcome_officer)
 
     fun typePassword(officerPassword: String = TestLoginData.OFFICER_PASSWORD.value) =
-        writeTo(R.id.textInputEditTextValidatePasswordOfficer, officerPassword)
+        writeTo(R.id.editTextOfficerPassword, officerPassword)
 
-    fun go() = clickOn(R.id.imageButtonGo)
+    fun go() = clickOn(R.id.buttonLogin)
 
     fun isIncorrectPasswordToastDisplayed() {
         toastMessage.isToastDisplayed(R.string.incorrect_password)

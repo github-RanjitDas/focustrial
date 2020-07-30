@@ -19,14 +19,13 @@
     <!-- Login -->
     <string name="please_enable_permission">Please enable permission from settings</string>
     <string name="please_enable_permission_location">Required location permission for pairing the camera</string>
-    <string name="waiting_for_camera" tools:ignore="ExtraTranslation">WAITING FOR \n CAMERA</string>
+    <string name="waiting_for_camera" tools:ignore="ExtraTranslation">Click here to connect\nwith the camera</string>
     <string name="go_to_validate_ssid">Go to validate ssid</string>
-    <string name="instructions_to_link_camera">INSTRUCTIONS TO LINK CAMERA</string>
-    <string name="connecting_to_camera">CONNECTING \n TO CAMERA</string>
-    <string name="circle_progress_connection_camera">Circle progress connection camera</string>
-    <string name="welcome_officer">WELCOME OFFICER</string>
+    <string name="instructions_to_link_camera">Instructions to link camera</string>
+    <string name="connecting_to_camera">Connecting to Camera</string>
+    <string name="welcome_officer">Please enter your password</string>
     <string name="exit">EXIT</string>
-    <string name="enter_password">ENTER PASSWORD</string>
+    <string name="enter_password">Password</string>
     <string name="incorrect_password">Incorrect password, please try again</string>
     <string name="wifi_is_off">The WiFi is off</string>
     <string name="please_turn_wifi_on">Please turn the WiFi on and connect to the camera</string>
@@ -135,6 +134,12 @@
     <string name="loading_files_error">Could not retrieve the files, please try again</string>
     <string name="verify_camera_wifi">Please verify the connection to the camera WiFi</string>
     <string name="error_saving_video">Error checking video saved in camera, please wait and try again</string>
+    <string name="go">GO</string>
+    <string name="login">Login</string>
+    <string name="success_connection_to_camera">You have successfully connected to the camera</string>
+    <string name="try_again_button_pairing">Try Again</string>
+    <string name="error_connection_to_camera">There was a problem connecting to your camera</string>
+    <string name="snackbar_alert">snackbar alert</string>
 
     <string-array name="gender_spinner">
         <item>Select</item>

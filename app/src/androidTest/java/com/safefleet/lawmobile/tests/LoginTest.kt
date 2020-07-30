@@ -34,12 +34,10 @@ class LoginTest : EspressoBaseTest<LoginActivity>(LoginActivity::class.java) {
             isLogoDisplayed()
             isWaitingForCameraTextDisplayed()
             isInstructionsTextDisplayed()
-            isExitDisplayed()
 
             go()
 
             isWelcomeTextDisplayed()
-            isOfficerNameDisplayed(OFFICER_NAME)
 
             typePassword(OFFICER_PASSWORD)
             go()
@@ -88,7 +86,6 @@ class LoginTest : EspressoBaseTest<LoginActivity>(LoginActivity::class.java) {
 
             go()
             isWelcomeTextDisplayed()
-            isOfficerNameDisplayed(OFFICER_NAME)
 
             typePassword(OFFICER_PASSWORD)
             go()

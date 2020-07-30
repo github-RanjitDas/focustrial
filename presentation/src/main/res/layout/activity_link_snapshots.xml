@@ -4,26 +4,29 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.linkSnapshotsToVideo.LinkSnapshotsActivity"
     android:background="@drawable/background"
+    tools:context=".ui.linkSnapshotsToVideo.LinkSnapshotsActivity"
     tools:ignore="Overdraw">
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/linkSnapshotRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="@dimen/no_dp"
         app:layout_constraintBottom_toTopOf="@+id/constrain_loading"
         app:layout_constraintTop_toTopOf="parent" />
+
     <TextView
         android:id="@+id/noImagesTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/no_images_found"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
         android:textColor="@color/white"
-        android:visibility="gone" />
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constrain_loading"
         android:layout_width="match_parent"
@@ -31,6 +34,7 @@
         app:layout_constraintBottom_toTopOf="@+id/addButtonSnapshotLink"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
+
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline4"
             android:layout_width="wrap_content"
@@ -41,28 +45,33 @@
             app:layout_constraintGuide_percent="0.38"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
-        <ProgressBar
+
+        <com.airbnb.lottie.LottieAnimationView
             android:id="@+id/progress_circular"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:indeterminateDrawable="@drawable/progress_loading"
+            android:layout_width="@dimen/link_snapshots_loading_size"
+            android:layout_height="@dimen/link_snapshots_loading_size"
+            app:lottie_rawRes="@raw/circular_loading"
+            app:lottie_autoPlay="true"
+            app:lottie_loop="true"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/guideline4"
             app:layout_constraintTop_toTopOf="parent" />
+
         <TextView
-            android:layout_marginStart="@dimen/link_snapshot_margin_sides_loading_message"
-            android:layout_marginEnd="@dimen/link_snapshot_margin_sides_loading_message"
-            android:textColor="@color/white"
-            android:gravity="center"
-            android:fontFamily="@font/jura_medium"
-            android:textSize="@dimen/text_p2"
             android:layout_width="wrap_content"
-            android:text="@string/link_snapshot_message_loading"
             android:layout_height="match_parent"
+            android:layout_marginEnd="@dimen/link_snapshot_margin_sides_loading_message"
+            android:fontFamily="@font/jura_medium"
+            android:gravity="center"
+            android:text="@string/link_snapshot_message_loading"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_p2"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@+id/progress_circular"
             app:layout_constraintTop_toTopOf="parent" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
+
     <TextView
         android:id="@+id/cancelButtonSnapshotLink"
         android:layout_width="wrap_content"
@@ -76,6 +85,7 @@
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent" />
+
     <TextView
         android:id="@+id/addButtonSnapshotLink"
         android:layout_width="wrap_content"

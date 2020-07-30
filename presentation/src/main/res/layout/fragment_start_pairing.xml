@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="@dimen/no_dp"
+        android:layout_height="@dimen/no_dp"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/textWaitingForCamera"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/pairing_phone_camera_button_go_margin_top"
+            android:gravity="center"
+            android:text="@string/waiting_for_camera"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_h3"
+            app:layout_constraintBottom_toTopOf="@+id/buttonLogin"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <Button
+            android:background="@drawable/button_go_background"
+            android:id="@+id/buttonLogin"
+            android:text="@string/go"
+            android:textColor="@color/white"
+            android:textSize="@dimen/button_go_text_size"
+            android:layout_width="@dimen/pairing_phone_camera_button_go_size"
+            android:layout_height="@dimen/pairing_phone_camera_button_go_size"
+            android:contentDescription="@string/go_to_validate_ssid"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/buttonInstructionsToLinkCamera"
+            android:textAllCaps="false"
+            android:layout_width="@dimen/no_dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/button_instructions_margin_top"
+            android:background="@drawable/button_border_white_background"
+            android:text="@string/instructions_to_link_camera"
+            android:textColor="@color/white"
+            android:textSize="@dimen/button_instructions_text_size"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/buttonLogin"
+            tools:ignore="NotSibling" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
