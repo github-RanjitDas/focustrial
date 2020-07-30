@@ -106,11 +106,4 @@ class FileListViewModelTest {
         Assert.assertEquals(fileListViewModel.snapshotPartnerIdLiveData.value, result)
         coVerify { fileListUseCase.savePartnerIdSnapshot(any(), any()) }
     }
-
-    @Test
-    fun testLoadingTimeout() {
-        fileListViewModel.loadingTimeout()
-        runBlocking { delay(15000) }
-        Assert.assertEquals(true, fileListViewModel.timeoutLiveData.value)
-    }
 }

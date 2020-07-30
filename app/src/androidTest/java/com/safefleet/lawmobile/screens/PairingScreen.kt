@@ -10,5 +10,5 @@ class PairingScreen : BaseScreen() {
         assertDisplayed(R.id.pdfView)
     }
 
-    fun openHelpPage() = clickOn(R.id.textInstructionsToLinkCamera)
+    fun openHelpPage() = clickOn(R.id.buttonInstructionsToLinkCamera)
 }

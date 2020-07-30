@@ -112,7 +112,6 @@ class FileListRepositoryImpl(private val fileListRemoteDataSource: FileListRemot
     ): Result<Unit> {
         val errorsInFiles = ArrayList<String>()
         cameraConnectFileList.forEach {
-
             val partnerMetadata = PhotoMetadata(partnerID = partnerID)
             val cameraConnectSnapshotMetadata = CameraConnectPhotoMetadata(
                 fileName = it.name,

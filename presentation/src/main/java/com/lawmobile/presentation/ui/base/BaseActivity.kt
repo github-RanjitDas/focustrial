@@ -107,18 +107,21 @@ open class BaseActivity : DaggerAppCompatActivity() {
     }
 
     fun showLoadingDialog() {
+        baseViewModel.waitToFinish(LOADING_TIMEOUT)
         EspressoIdlingResource.increment()
         loadingDialog = this.createAlertProgress()
         loadingDialog?.show()
     }
 
     fun hideLoadingDialog() {
+        baseViewModel.cancelWait()
         loadingDialog?.dismiss()
         loadingDialog = null
         EspressoIdlingResource.decrement()
     }
 
     companion object {
+        const val LOADING_TIMEOUT = 15000L
         const val PERMISSION_FOR_LOCATION = 100
         const val MAX_TIME_SESSION = 300000
         private lateinit var lastInteraction: Timestamp

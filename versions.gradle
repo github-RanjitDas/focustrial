@@ -4,7 +4,7 @@ ext {
     compileSdkVersion = 29
     minSdkVersion = 23
     targetSdkVersion = 29
-    buildVersion = 52
+    buildVersion = 53
     major = 3
     minor = 0
     patch = 0
@@ -25,17 +25,18 @@ ext {
     junit_ext_version = '1.1.1'
     junit5_version = '5.5.1'
     kotlin_version = '1.3.72'
-    ktx_version = '1.3.0'
+    ktx_version = '1.3.1'
     kotlin_coroutine_core_version = '1.3.5'
     kotlin_coroutine_android_version = '1.3.0'
     libvlc_android_sdk_version = '3.0.13'
     lifecycle_version = '2.2.0'
+    lottieVersion = "3.4.0"
     mockk_version = '1.9'
+    pdf_viewer_version = '3.2.0-beta.1'
     pitest_plugin_version = '0.2.2'
     pitest_junit5_plugin_version = "0.9" //pitest run fails for versions higher than 0.9
     recycker_version = '1.1.0'
     sonar_version = '2.7.1'
     ui_automator_version = '2.2.0'
     intent_animation_version = '1.0'
-    pdf_viewer_version = '3.2.0-beta.1'
 }

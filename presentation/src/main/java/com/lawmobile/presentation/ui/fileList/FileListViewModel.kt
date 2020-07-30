@@ -74,11 +74,4 @@ class FileListViewModel @Inject constructor(private val fileListUseCase: FileLis
             )
         }
     }
-
-    fun loadingTimeout() {
-        viewModelScope.launch {
-            delay(15000)
-            timeoutMediator.value = true
-        }
-    }
 }
