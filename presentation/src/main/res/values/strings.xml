@@ -12,7 +12,6 @@
     <string name="taking_snapshot">Taking snapshot…</string>
     <string name="connection_finished">Connection Finished</string>
     <string name="connection_finished_description">After 5 minutes without interaction the BWC disconnects</string>
-    <string name="the_application_did_not_find_camera">The application could not find the camera</string>
     <string name="confirm_app_exit_description">Are you sure want to exit FMA?</string>
     <string name="confirm_app_exit_title">Exit FMA</string>
 

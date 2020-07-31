@@ -155,4 +155,37 @@ class LiveStreamingRepositoryImplTest {
         coVerify { liveStreamingRemoteDataSource.getCatalogInfo() }
     }
 
+    @Test
+    fun testGetBatteryLevel(){
+        val result = Result.Success(10)
+        coEvery { liveStreamingRemoteDataSource.getBatteryLevel() } returns result
+        runBlocking {
+            val response = liveStreamingRepositoryImpl.getBatteryLevel()
+            Assert.assertEquals(response, result)
+        }
+        coVerify { liveStreamingRemoteDataSource.getBatteryLevel() }
+    }
+
+    @Test
+    fun testGetFreeStorage(){
+        val result = Result.Success("10000")
+        coEvery { liveStreamingRemoteDataSource.getFreeStorage() } returns result
+        runBlocking {
+            val response = liveStreamingRepositoryImpl.getFreeStorage()
+            Assert.assertEquals(response,result)
+        }
+        coVerify { liveStreamingRemoteDataSource.getFreeStorage() }
+    }
+
+    @Test
+    fun testGetTotalStorage(){
+        val result = Result.Success("10000")
+        coEvery { liveStreamingRemoteDataSource.getTotalStorage() } returns result
+        runBlocking {
+            val response = liveStreamingRepositoryImpl.getTotalStorage()
+            Assert.assertEquals(response,result)
+        }
+        coVerify { liveStreamingRemoteDataSource.getTotalStorage() }
+    }
+
 }

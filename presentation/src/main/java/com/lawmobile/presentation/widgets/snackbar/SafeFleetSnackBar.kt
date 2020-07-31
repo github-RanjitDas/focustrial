@@ -28,10 +28,11 @@ class SafeFleetSnackBar(
         fun make(
             safeFleetSnackBarSettings: SafeFleetSnackBarSettings
         ): SafeFleetSnackBar? {
-            with(safeFleetSnackBarSettings) {
-                val parent = view.findSuitableParent() ?: throw IllegalArgumentException(
-                    "No suitable parent found from the given view. Please provide a valid view."
-                )
+            safeFleetSnackBarSettings.run {
+                val parent = view.findSuitableParent()
+                    ?: throw IllegalArgumentException(
+                        "No suitable parent found from the given view. Please provide a valid view."
+                    )
 
                 try {
                     val customView = LayoutInflater.from(view.context).inflate(

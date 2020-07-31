@@ -24,4 +24,13 @@ class LiveStreamingUseCaseImpl(private val liveStreamingRepository: LiveStreamin
 
     override suspend fun getCatalogInfo(): Result<List<CameraConnectCatalog>> =
         liveStreamingRepository.getCatalogInfo()
+
+    override suspend fun getBatteryLevel(): Result<Int> =
+        liveStreamingRepository.getBatteryLevel()
+
+    override suspend fun getFreeStorage(): Result<String> =
+        liveStreamingRepository.getFreeStorage()
+
+    override suspend fun getTotalStorage(): Result<String> =
+        liveStreamingRepository.getTotalStorage()
 }

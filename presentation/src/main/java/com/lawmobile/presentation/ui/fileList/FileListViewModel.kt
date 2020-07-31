@@ -8,7 +8,6 @@ import com.lawmobile.domain.usecase.fileList.FileListUseCase
 import com.lawmobile.presentation.ui.base.BaseViewModel
 import com.safefleet.mobile.avml.cameras.entities.CameraConnectFile
 import com.safefleet.mobile.commons.helpers.Result
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -31,9 +30,6 @@ class FileListViewModel @Inject constructor(private val fileListUseCase: FileLis
         MediatorLiveData()
     val snapshotPartnerIdLiveData: LiveData<Result<Unit>> get() = snapshotPartnerIdMediator
 
-    private val timeoutMediator: MediatorLiveData<Boolean> =
-        MediatorLiveData()
-    val timeoutLiveData: LiveData<Boolean> get() = timeoutMediator
 
     fun getSnapshotList() {
         viewModelScope.launch {
