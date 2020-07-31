@@ -28,11 +28,11 @@ class LiveActivityViewModel @Inject constructor(
     private val resultTakePhotoMediatorLiveData = MediatorLiveData<Result<Unit>>()
     val resultTakePhotoLiveData: LiveData<Result<Unit>> get() = resultTakePhotoMediatorLiveData
 
-    fun getUrlLive(): String = liveStreamingUseCase.getUrlForLiveStream()
-
     private val catalogInfoMediatorLiveData =
         MediatorLiveData<Result<List<CameraConnectCatalog>>>()
     val catalogInfoLiveData get() = catalogInfoMediatorLiveData
+
+    fun getUrlLive(): String = liveStreamingUseCase.getUrlForLiveStream()
 
     fun getCatalogInfo() {
         viewModelScope.launch {

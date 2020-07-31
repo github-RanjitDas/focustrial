@@ -14,6 +14,10 @@ class CameraConnectServiceX1Mock : CameraConnectService {
     override val progressPairingCamera: LiveData<Result<Int>>
         get() = progressPairingCameraMediator
 
+    override suspend fun deleteFile(fileName: String): Result<Unit> {
+        return Result.Success(Unit)
+    }
+
     companion object {
         var snapshotsList = CameraFilesData.DEFAULT_SNAPSHOT_LIST.value
         var videoList = CameraFilesData.DEFAULT_VIDEO_LIST.value
@@ -23,6 +27,10 @@ class CameraConnectServiceX1Mock : CameraConnectService {
 
     override suspend fun disconnectCamera(): Result<Unit> {
         return Result.Success(Unit)
+    }
+
+    override suspend fun getBatteryLevel(): Result<Int> {
+        return Result.Success(10)
     }
 
     override suspend fun getImageBytes(cameraConnectFile: CameraConnectFile): Result<ByteArray> {
@@ -42,6 +50,18 @@ class CameraConnectServiceX1Mock : CameraConnectService {
     override suspend fun getListOfVideos(): Result<CameraConnectFileResponseWithErrors> {
         FileList.listOfVideos = emptyList()
         return Result.Success(videoList)
+    }
+
+    override suspend fun getNumberOfSnapshots(): Result<String> {
+        return Result.Success("10")
+    }
+
+    override suspend fun getNumberOfVideos(): Result<String> {
+        return Result.Success("10")
+    }
+
+    override suspend fun getTotalStorage(): Result<String> {
+        return Result.Success("10")
     }
 
     override fun getUrlForLiveStream(): String = ""
@@ -128,5 +148,9 @@ class CameraConnectServiceX1Mock : CameraConnectService {
 
     override suspend fun getCatalogInfo(): Result<List<CameraConnectCatalog>> {
         return Result.Success(listOf(CameraConnectCatalog("1", "Default", "Default")))
+    }
+
+    override suspend fun getFreeStorage(): Result<String> {
+        return Result.Success("10")
     }
 }

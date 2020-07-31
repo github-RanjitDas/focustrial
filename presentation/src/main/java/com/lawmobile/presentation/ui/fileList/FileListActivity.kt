@@ -157,7 +157,6 @@ class FileListActivity : BaseActivity() {
             LayoutInflater.from(this)
                 .inflate(R.layout.alert_dialog_associate_partner_id, null, false)
         val dialogBuilder = AlertDialog.Builder(this).setView(dialogLayout)
-        val partnerID = dialogLayout.partner_id_edit_text.text.toString()
 
         associatePartnerIdDialog = dialogBuilder.create().apply {
             setCanceledOnTouchOutside(true)
@@ -166,6 +165,7 @@ class FileListActivity : BaseActivity() {
         }
 
         dialogLayout.associatePartnerIdButton.setOnClickListener {
+            val partnerID = dialogLayout.partner_id_edit_text.text.toString()
             associatePartnerId(partnerID)
         }
     }

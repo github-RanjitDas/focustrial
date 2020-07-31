@@ -33,11 +33,6 @@ class LoginScreen : BaseScreen() {
         //toastMessage.waitUntilToastDisappears(R.string.incorrect_password)
     }
 
-    fun isIncorrectSerialNumberToastDisplayed() {
-        toastMessage.isToastDisplayed(R.string.the_application_did_not_find_camera)
-        //toastMessage.waitUntilToastDisappears(R.string.the_application_did_not_find_camera)
-    }
-
     fun login() {
         try {
             go()

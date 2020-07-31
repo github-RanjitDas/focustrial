@@ -33,4 +33,13 @@ class LiveStreamingRepositoryImpl(private val liveRemoteDataSource: LiveStreamin
 
     override suspend fun getCatalogInfo(): Result<List<CameraConnectCatalog>> =
         liveRemoteDataSource.getCatalogInfo()
+
+    override suspend fun getBatteryLevel(): Result<Int> =
+        liveRemoteDataSource.getBatteryLevel()
+
+    override suspend fun getFreeStorage(): Result<String> =
+        liveRemoteDataSource.getFreeStorage()
+
+    override suspend fun getTotalStorage(): Result<String> =
+        liveRemoteDataSource.getTotalStorage()
 }
