@@ -1,7 +1,9 @@
 package com.lawmobile.presentation.ui.pairingPhoneWithCamera
 
 import android.Manifest
+import android.content.Context
 import android.content.Intent
+import android.location.LocationManager
 import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
@@ -21,6 +23,7 @@ import com.lawmobile.presentation.ui.base.BaseFragment
 import com.lawmobile.presentation.ui.helpSection.HelpPageActivity
 import com.safefleet.mobile.commons.helpers.Result
 import kotlinx.android.synthetic.main.fragment_pairing_phone_with_camera.*
+import java.lang.Exception
 import javax.inject.Inject
 
 
@@ -45,8 +48,16 @@ class PairingPhoneWithCameraFragment : BaseFragment() {
 
     private fun configureListeners() {
         imageButtonGo.setOnClickListener {
+
             if ((activity as BaseActivity).isPermissionGranted(Manifest.permission.ACCESS_FINE_LOCATION)) {
-                startConnectionToHotspotCamera()
+                if (isGpSActive()){
+                    startConnectionToHotspotCamera()
+                }else {
+                    val alertInformation = AlertInformation(R.string.gps_necessary_title, R.string.gps_necessary_description,{
+                        it.dismiss()
+                    })
+                    context?.createAlertInformation(alertInformation)
+                }
             } else {
                 showAlertToNavigateToPermissions()
             }
@@ -54,6 +65,17 @@ class PairingPhoneWithCameraFragment : BaseFragment() {
         textInstructionsToLinkCamera.setOnClickListener {
             openHelpPage()
         }
+    }
+
+    private fun isGpSActive() : Boolean{
+        val locationManager =
+            context!!.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        var gpsEnable = false
+        try {
+            gpsEnable = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
+        }catch (e: Exception){}
+
+        return gpsEnable
     }
 
     private fun showAlertToNavigateToPermissions() {
