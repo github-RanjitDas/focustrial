@@ -1,7 +1,9 @@
 package com.lawmobile.presentation.ui.login.pairingPhoneWithCamera
 
 import android.Manifest
+import android.content.Context
 import android.content.Intent
+import android.location.LocationManager
 import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
@@ -18,6 +20,7 @@ import com.lawmobile.presentation.ui.base.BaseFragment
 import com.lawmobile.presentation.ui.helpSection.HelpPageActivity
 import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.android.synthetic.main.fragment_start_pairing.*
+import java.lang.Exception
 import javax.inject.Inject
 
 
@@ -51,7 +54,7 @@ class StartPairingFragment : BaseFragment() {
 
     private fun verifyPermissionsToStartPairing() {
         if (arePermissionsGranted()) {
-            startPairingResultFragment()
+            if (isGPSActive()) startPairingResultFragment() else showAlertToGPSEnable()
         } else {
             showAlertToNavigateToPermissions()
         }
@@ -59,6 +62,19 @@ class StartPairingFragment : BaseFragment() {
 
     private fun arePermissionsGranted() =
         (activity as BaseActivity).isPermissionGranted(Manifest.permission.ACCESS_FINE_LOCATION)
+
+    private fun isGPSActive(): Boolean {
+        val locationManager =
+            context!!.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        var gpsEnable = false
+        try {
+            gpsEnable = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+
+        return gpsEnable
+    }
 
     private fun startPairingResultFragment() {
         if (!pairingViewModel.isWifiEnable()) {
@@ -78,6 +94,14 @@ class StartPairingFragment : BaseFragment() {
             R.string.please_enable_permission_location,
             { startIntentToGivePermission() },
             { dialogInterface -> dialogInterface.cancel() })
+        activity?.createAlertInformation(alertInformation)
+    }
+
+    private fun showAlertToGPSEnable() {
+        val alertInformation = AlertInformation(R.string.gps_necessary_title,
+            R.string.gps_necessary_description,
+            { dialogInterface ->  dialogInterface.cancel() },
+            null)
         activity?.createAlertInformation(alertInformation)
     }
 

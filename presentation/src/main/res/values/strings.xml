@@ -14,6 +14,8 @@
     <string name="connection_finished_description">After 5 minutes without interaction the BWC disconnects</string>
     <string name="confirm_app_exit_description">Are you sure want to exit FMA?</string>
     <string name="confirm_app_exit_title">Exit FMA</string>
+    <string name="gps_necessary_title">Location is required</string>
+    <string name="gps_necessary_description">Please turn ON location/GPS in order to use the app</string>
 
     <!-- Login -->
     <string name="please_enable_permission">Please enable permission from settings</string>
