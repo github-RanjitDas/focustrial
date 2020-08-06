@@ -13,5 +13,7 @@
     <color name="greyTransparentDark">#AD7E7E7E</color>
     <color name="video_playback_background_buttons">#55000000</color>
     <color name="blue">#177ECD</color>
+    <color name="whiteTransparent">#52FFFFFF</color>
+    <color name="red">#E4002B</color>
 
 </resources>

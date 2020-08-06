@@ -59,16 +59,19 @@ class LiveActivity : BaseActivity() {
         toggleFullScreenLiveView.setOnClickListenerCheckConnection {
             changeOrientationLive()
         }
+
         buttonSnapshot.setOnClickListenerCheckConnection {
             dialogProgressSnapShot.show()
             changeStatusSwitch(true)
             takePhoto()
         }
-        buttonStreaming.setOnClickListenerCheckConnection {
+
+        buttonRecord.setOnClickListenerCheckConnection {
             dialogProgressVideo.show()
             changeStatusSwitch(true)
             manageRecordingVideo()
         }
+
         buttonSwitchLiveView.setOnCheckedChangeListenerCheckConnection { _, isChecked ->
             changeStatusSwitch(isChecked)
         }
@@ -104,7 +107,6 @@ class LiveActivity : BaseActivity() {
             buttonSwitchLiveView.setBackgroundResource(R.drawable.ic_switch_on)
             return
         }
-
         buttonSwitchLiveView.setBackgroundResource(R.drawable.ic_switch_off)
     }
 
@@ -117,21 +119,18 @@ class LiveActivity : BaseActivity() {
     }
 
     private fun configureObservers() {
-        liveActivityViewModel.stopRecordVideo.observe(this, Observer {
-            dialogProgressVideo.dismiss()
-            manageResultInRecordingVideo(it)
-        })
-
-        liveActivityViewModel.startRecordVideo.observe(this, Observer {
-            dialogProgressVideo.dismiss()
-            manageResultInRecordingVideo(it)
-        })
-
-        liveActivityViewModel.resultTakePhotoLiveData.observe(this, Observer {
-            dialogProgressSnapShot.dismiss()
-            manageResultTakePhoto(it)
-        })
-
+        liveActivityViewModel.stopRecordVideo.observe(
+            this,
+            Observer(::manageResultInRecordingVideo)
+        )
+        liveActivityViewModel.startRecordVideo.observe(
+            this,
+            Observer(::manageResultInRecordingVideo)
+        )
+        liveActivityViewModel.resultTakePhotoLiveData.observe(
+            this,
+            Observer(::manageResultTakePhoto)
+        )
         liveActivityViewModel.catalogInfoLiveData.observe(this, Observer(::setCatalogInfo))
     }
 
@@ -149,6 +148,7 @@ class LiveActivity : BaseActivity() {
     }
 
     private fun manageResultTakePhoto(result: Result<Unit>) {
+        dialogProgressSnapShot.dismiss()
         if (result is Result.Success) {
             liveActivityViewModel.playSoundTakePhoto()
             this.showToast(getString(R.string.live_view_take_photo_success), Toast.LENGTH_LONG)
@@ -167,26 +167,23 @@ class LiveActivity : BaseActivity() {
     }
 
     private fun manageResultInRecordingVideo(result: Result<Unit>) {
-        when (result) {
-            is Result.Success -> {
-                changeImageDependsRecordingVideo()
-            }
-            is Result.Error -> {
-                Toast.makeText(this, result.exception.message, Toast.LENGTH_LONG).show()
-            }
+        if (result is Result.Error) {
+            Toast.makeText(this, getString(R.string.error_saving_video), Toast.LENGTH_LONG).show()
         }
+        changeImageDependsRecordingVideo()
     }
 
     private fun changeImageDependsRecordingVideo() {
+        dialogProgressVideo.dismiss()
         isRecordingVideo = !isRecordingVideo
         if (isRecordingVideo) {
             imageRecordingIndicator.visibility = View.VISIBLE
-            buttonStreaming.setBackgroundResource(R.drawable.ic_record_active)
+            buttonRecord.setBackgroundResource(R.drawable.ic_record_active)
             return
         }
 
         imageRecordingIndicator.visibility = View.INVISIBLE
-        buttonStreaming.setBackgroundResource(R.drawable.ic_record)
+        buttonRecord.setBackgroundResource(R.drawable.ic_record)
     }
 
     private fun changeOrientationLive() {

@@ -77,6 +77,10 @@ dependencies {
     androidTestImplementation "androidx.test.espresso:espresso-intents:$espresso_version"
     androidTestImplementation "androidx.test.uiautomator:uiautomator:$ui_automator_version"
 
+    //Espresso Idling Resource
+    androidTestImplementation "androidx.test.espresso:espresso-idling-resource:$espresso_version"
+    implementation "androidx.test.espresso:espresso-idling-resource:$espresso_version"
+
     //Barista (Library for espresso testing)
     androidTestImplementation("com.schibsted.spain:barista:$barista_version") {
         exclude group: 'org.jetbrains.kotlin'

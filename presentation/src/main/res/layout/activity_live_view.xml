@@ -59,9 +59,9 @@
         android:contentDescription="@string/image_video_recording"
         android:src="@drawable/ic_rec_video"
         android:visibility="invisible"
-        app:layout_constraintBottom_toTopOf="@+id/buttonStreaming"
-        app:layout_constraintEnd_toEndOf="@+id/buttonStreaming"
-        app:layout_constraintStart_toStartOf="@+id/buttonStreaming"
+        app:layout_constraintBottom_toTopOf="@+id/buttonRecord"
+        app:layout_constraintEnd_toEndOf="@+id/buttonRecord"
+        app:layout_constraintStart_toStartOf="@+id/buttonRecord"
         app:layout_constraintTop_toBottomOf="@+id/liveStreamingView" />
 
     <TextView
@@ -75,7 +75,7 @@
         app:layout_constraintTop_toBottomOf="@id/buttonSnapshot" />
 
     <ImageButton
-        android:id="@+id/buttonStreaming"
+        android:id="@+id/buttonRecord"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/live_view_main_button_margin_shorter"
@@ -93,9 +93,9 @@
         android:text="@string/record"
         android:textColor="@color/white"
         android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="@id/buttonStreaming"
-        app:layout_constraintStart_toStartOf="@id/buttonStreaming"
-        app:layout_constraintTop_toBottomOf="@id/buttonStreaming" />
+        app:layout_constraintEnd_toEndOf="@id/buttonRecord"
+        app:layout_constraintStart_toStartOf="@id/buttonRecord"
+        app:layout_constraintTop_toBottomOf="@id/buttonRecord" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline"

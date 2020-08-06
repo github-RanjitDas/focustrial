@@ -7,9 +7,12 @@ import com.safefleet.lawmobile.helpers.DeviceUtils
 import com.safefleet.lawmobile.screens.LiveViewScreen
 import com.safefleet.lawmobile.screens.LoginScreen
 import com.safefleet.lawmobile.testData.TestLoginData
+import org.junit.FixMethodOrder
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.junit.runners.MethodSorters
 
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @LargeTest
 @RunWith(AndroidJUnit4::class)
 class LoginTest : EspressoBaseTest<LoginActivity>(LoginActivity::class.java) {
@@ -26,80 +29,82 @@ class LoginTest : EspressoBaseTest<LoginActivity>(LoginActivity::class.java) {
     }
 
     @Test
-    fun verifyAppLogin_FMA_261_289() {
-        loginScreen
-            .isLogoDisplayed()
-            .isWaitingForCameraTextDisplayed()
-            .isInstructionsTextDisplayed()
-            .isExitDisplayed()
+    fun b_verifyAppLogin_FMA_261_289() {
+        with(loginScreen) {
+            isLogoDisplayed()
+            isWaitingForCameraTextDisplayed()
+            isInstructionsTextDisplayed()
 
-        loginScreen.go()
+            go()
 
-        loginScreen
-            .isWelcomeTextDisplayed()
-            .isOfficerNameDisplayed(OFFICER_NAME)
+            isWelcomeTextDisplayed()
 
-        loginScreen.typePassword(OFFICER_PASSWORD).go()
-        liveViewScreen.isLiveViewDisplayed()
+            typePassword(OFFICER_PASSWORD)
+            go()
+
+            liveViewScreen.isLiveViewDisplayed()
+        }
     }
 
     @Test
-    fun verifyInvalidPasswordLogin_FMA_288() {
-        loginScreen.go()
+    fun d_verifyInvalidPasswordLogin_FMA_288() {
+        with(loginScreen) {
+            go()
 
-        loginScreen.isWelcomeTextDisplayed()
+            isWelcomeTextDisplayed()
 
-        loginScreen.typePassword(INVALID_OFFICER_PASSWORD).go()
+            typePassword(INVALID_OFFICER_PASSWORD)
+            go()
 
-        loginScreen.isIncorrectPasswordToastDisplayed()
-        liveViewScreen.isLiveViewNotDisplayed()
+            isIncorrectPasswordToastDisplayed()
+            liveViewScreen.isLiveViewNotDisplayed()
+        }
     }
 
     @Test
-    fun verifyEmptyPasswordLogin_FMA_288() {
-        loginScreen.go()
+    fun c_verifyEmptyPasswordLogin_FMA_288() {
+        with(loginScreen) {
+            go()
 
-        loginScreen.isWelcomeTextDisplayed().go()
+            isWelcomeTextDisplayed()
+            go()
 
-        loginScreen.isIncorrectPasswordToastDisplayed()
-        liveViewScreen.isLiveViewNotDisplayed()
+            isIncorrectPasswordToastDisplayed()
+            liveViewScreen.isLiveViewNotDisplayed()
+        }
     }
 
     @Test
-    fun verifyIncorrectSerialNumber_FMA_287() {
-        loginScreen.go()
+    fun a_verifyPairingForTheSecondTime_FMA_286() {
+        with(loginScreen) {
+            go()
+            typePassword(OFFICER_PASSWORD)
+            go()
+            liveViewScreen.isLiveViewDisplayed()
 
-        loginScreen.isConnectingToCameraTextDisplayed()
-        loginScreen.isIncorrectSerialNumberToastDisplayed()
-        loginScreen.isWaitingForCameraTextDisplayed()
+            deviceUtils.restartApp()
+
+            go()
+            isWelcomeTextDisplayed()
+
+            typePassword(OFFICER_PASSWORD)
+            go()
+
+            liveViewScreen.isLiveViewDisplayed()
+        }
     }
 
     @Test
-    fun verifyPairingForTheSecondTime_FMA_286() {
-        loginScreen.go()
-        loginScreen.typePassword(OFFICER_PASSWORD).go()
-        liveViewScreen.isLiveViewDisplayed()
+    fun e_verifyLoginDisconnectionScenario_FMA_292() {
+        with(loginScreen) {
+            mockUtils.disconnectCamera()
 
-        deviceUtils.restartApp()
+            isWaitingForCameraTextDisplayed()
+            go()
+            typePassword(OFFICER_PASSWORD)
+            go()
 
-        loginScreen
-            .isWelcomeTextDisplayed()
-            .isOfficerNameDisplayed(OFFICER_NAME)
-
-        loginScreen.typePassword(OFFICER_PASSWORD).go()
-        liveViewScreen.isLiveViewDisplayed()
-    }
-
-    @Test
-    fun verifyLoginDisconnectionScenario_FMA_292() {
-        mockUtils.disconnectCamera()
-
-        loginScreen.isWaitingForCameraTextDisplayed()
-        loginScreen.go()
-        loginScreen.typePassword(OFFICER_PASSWORD).go()
-
-        loginScreen.isDisconnectionAlertDisplayed()
-
-        mockUtils.restoreCameraConnection()
+            isDisconnectionAlertDisplayed()
+        }
     }
 }

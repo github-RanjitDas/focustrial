@@ -37,7 +37,8 @@ class FileListActivity : BaseActivity() {
     private lateinit var fileListAdapter: FileListAdapter
     private val snapshotListFragment = SnapshotListFragment.getActualInstance()
     private val videoListFragment = VideoListFragment.getActualInstance()
-    private lateinit var loadingDialog: AlertDialog
+    private lateinit var associatePartnerIdDialog: AlertDialog
+    private var activeList: String? = null
     private var isLoading = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -45,8 +46,11 @@ class FileListActivity : BaseActivity() {
         setContentView(R.layout.activity_file_list)
 
         CustomIntent.customType(this, "bottom-to-up")
+        showLoadingDialog()
 
-        when (intent.extras?.getString(FILE_LIST_SELECTOR)) {
+        activeList = intent.extras?.getString(FILE_LIST_SELECTOR)
+
+        when (activeList) {
             SNAPSHOT_LIST -> {
                 setSnapshotFragment()
             }
@@ -57,9 +61,6 @@ class FileListActivity : BaseActivity() {
 
         setObservers()
         setListeners()
-        createDialog()
-        showLoadingDialog()
-        fileListViewModel.loadingTimeout()
     }
 
     override fun onResume() {
@@ -67,10 +68,13 @@ class FileListActivity : BaseActivity() {
 
         fileListCheckBox.isChecked = false
 
-        if (buttonVideoListSwitch.isActivated) {
-            fileListViewModel.getVideoList()
-        } else {
-            fileListViewModel.getSnapshotList()
+        when (activeList) {
+            SNAPSHOT_LIST -> {
+                fileListViewModel.getSnapshotList()
+            }
+            VIDEO_LIST -> {
+                fileListViewModel.getVideoList()
+            }
         }
     }
 
@@ -79,20 +83,16 @@ class FileListActivity : BaseActivity() {
         CustomIntent.customType(this, "up-to-bottom")
     }
 
-    private fun createDialog() {
-        loadingDialog = this.createAlertProgress()
-    }
-
     private fun setObservers() {
         fileListViewModel.snapshotListLiveData.observe(this, Observer(::handleFileListResult))
         fileListViewModel.videoListLiveData.observe(this, Observer(::handleFileListResult))
         fileListViewModel.snapshotPartnerIdLiveData.observe(this, Observer(::handlePartnerIdResult))
         fileListViewModel.videoPartnerIdLiveData.observe(this, Observer(::handlePartnerIdResult))
-        fileListViewModel.timeoutLiveData.observe(this, Observer(::handleTimeout))
+        fileListViewModel.isWaitFinishedLiveData.observe(this, Observer(::handleTimeout))
     }
 
-    private fun handleTimeout(timeout: Boolean) {
-        if (timeout) {
+    private fun handleTimeout(timedOut: Boolean) {
+        if (timedOut) {
             if (isLoading) {
                 this.showToast(getString(R.string.loading_files_error), Toast.LENGTH_SHORT)
                 Thread.sleep(500)
@@ -103,7 +103,10 @@ class FileListActivity : BaseActivity() {
 
     private fun setListeners() {
         buttonSnapshotListSwitch.setOnClickListenerCheckConnection {
-            if (!it.isActivated) {
+            if (activeList != SNAPSHOT_LIST) {
+                activeList = SNAPSHOT_LIST
+                it.isActivated = true
+                buttonVideoListSwitch.isActivated = false
                 showLoadingDialog()
                 setSnapshotFragment()
                 fileListViewModel.getSnapshotList()
@@ -112,7 +115,10 @@ class FileListActivity : BaseActivity() {
         }
 
         buttonVideoListSwitch.setOnClickListenerCheckConnection {
-            if (!it.isActivated) {
+            if (activeList != VIDEO_LIST) {
+                activeList = VIDEO_LIST
+                it.isActivated = true
+                buttonSnapshotListSwitch.isActivated = false
                 showLoadingDialog()
                 setVideoFragment()
                 fileListViewModel.getVideoList()
@@ -151,39 +157,48 @@ class FileListActivity : BaseActivity() {
             LayoutInflater.from(this)
                 .inflate(R.layout.alert_dialog_associate_partner_id, null, false)
         val dialogBuilder = AlertDialog.Builder(this).setView(dialogLayout)
-        val alertDialog = dialogBuilder.show()
-        alertDialog.setCanceledOnTouchOutside(true)
-        dialogLayout.associatePartnerIdButton.setOnClickListener {
-            showLoadingDialog()
-            val partnerID = dialogLayout.partner_id_edit_text.text.toString()
-            if (partnerID.isEmpty()) {
-                this.showToast(getString(R.string.valid_partner_id_message), Toast.LENGTH_SHORT)
-                hideLoadingDialog()
-                return@setOnClickListener
-            }
-            val listSelected =
-                fileListAdapter.fileList.filter { it.isChecked }.map { it.cameraConnectFile }
-            when (buttonSnapshotListSwitch.isActivated) {
-                true -> fileListViewModel.associatePartnerIdToSnapshotList(
-                    listSelected,
-                    partnerID
-                )
-                false -> fileListViewModel.associatePartnerIdToVideoList(
-                    listSelected,
-                    partnerID
-                )
-            }
-            alertDialog.dismiss()
+
+        associatePartnerIdDialog = dialogBuilder.create().apply {
+            setCanceledOnTouchOutside(true)
+            window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            show()
         }
-        alertDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-        alertDialog.show()
+
+        dialogLayout.associatePartnerIdButton.setOnClickListener {
+            val partnerID = dialogLayout.partner_id_edit_text.text.toString()
+            associatePartnerId(partnerID)
+        }
+    }
+
+    private fun associatePartnerId(partnerId: String) {
+        showLoadingDialog()
+
+        if (partnerId.isEmpty()) {
+            this.showToast(getString(R.string.valid_partner_id_message), Toast.LENGTH_SHORT)
+            hideLoadingDialog()
+            return
+        }
+
+        val listSelected =
+            fileListAdapter.fileList.filter { it.isChecked }.map { it.cameraConnectFile }
+
+        when (activeList) {
+            SNAPSHOT_LIST -> fileListViewModel.associatePartnerIdToSnapshotList(
+                listSelected,
+                partnerId
+            )
+            VIDEO_LIST -> fileListViewModel.associatePartnerIdToVideoList(
+                listSelected,
+                partnerId
+            )
+        }
+        associatePartnerIdDialog.dismiss()
     }
 
     private fun setSnapshotFragment() {
         snapshotListText.typeface = Typeface.DEFAULT_BOLD
         videoListText.typeface = Typeface.DEFAULT
-        buttonSnapshotListSwitch.isActivated = true
-        buttonVideoListSwitch.isActivated = false
+        activeList = SNAPSHOT_LIST
         supportFragmentManager.attachFragment(
             R.id.fragmentListHolder,
             snapshotListFragment,
@@ -194,8 +209,7 @@ class FileListActivity : BaseActivity() {
     private fun setVideoFragment() {
         videoListText.typeface = Typeface.DEFAULT_BOLD
         snapshotListText.typeface = Typeface.DEFAULT
-        buttonVideoListSwitch.isActivated = true
-        buttonSnapshotListSwitch.isActivated = false
+        activeList = VIDEO_LIST
         supportFragmentManager.attachFragment(
             R.id.fragmentListHolder,
             videoListFragment,
@@ -207,32 +221,18 @@ class FileListActivity : BaseActivity() {
         when (result) {
             is Result.Success -> {
                 if (result.data.errors.isNotEmpty()) {
-                    var customMessage = getString(R.string.getting_files_error_description) + "\n"
-                    result.data.errors.forEach {
-                        customMessage += it + "\n"
-                    }
-                    val alertInformation = AlertInformation(R.string.getting_files_error, null, {
-                        it.dismiss()
-                    }, null, customMessage)
-                    this.createAlertInformation(alertInformation)
+                    showErrors(result.data.errors)
                 }
                 if (result.data.listItems.isNotEmpty()) {
                     fragmentListHolder.isVisible = true
                     noFilesTextView.isVisible = false
-                    fileListAdapter =
-                        FileListAdapter(::fileItemClick, ::enableAssociatePartnerButton)
-                    fileListAdapter.fileList =
-                        result.data.listItems.sortedByDescending { it.cameraConnectFile.date }
-                    when (buttonSnapshotListSwitch.isActivated) {
-                        true -> snapshotListFragment.setFileListAdapter?.invoke(fileListAdapter)
-                        false -> videoListFragment.setFileListAdapter?.invoke(fileListAdapter)
-                    }
+                    setAdapter(result.data.listItems)
                 } else {
                     noFilesTextView.isVisible = true
                     fragmentListHolder.isVisible = false
-                    when (buttonSnapshotListSwitch.isActivated) {
-                        true -> noFilesTextView.text = getString(R.string.no_images_found)
-                        false -> noFilesTextView.text = getString(R.string.no_videos_found)
+                    when (activeList) {
+                        SNAPSHOT_LIST -> noFilesTextView.text = getString(R.string.no_images_found)
+                        VIDEO_LIST -> noFilesTextView.text = getString(R.string.no_videos_found)
                     }
                 }
                 hideLoadingDialog()
@@ -242,6 +242,27 @@ class FileListActivity : BaseActivity() {
                 hideLoadingDialog()
             }
         }
+    }
+
+    private fun setAdapter(listItems: ArrayList<DomainInformationFile>) {
+        fileListAdapter =
+            FileListAdapter(::fileItemClick, ::enableAssociatePartnerButton)
+        fileListAdapter.fileList = listItems.sortedByDescending { it.cameraConnectFile.date }
+        when (activeList) {
+            SNAPSHOT_LIST -> snapshotListFragment.setFileListAdapter?.invoke(fileListAdapter)
+            VIDEO_LIST -> videoListFragment.setFileListAdapter?.invoke(fileListAdapter)
+        }
+    }
+
+    private fun showErrors(errors: ArrayList<String>) {
+        var customMessage = getString(R.string.getting_files_error_description) + "\n"
+        errors.forEach {
+            customMessage += it + "\n"
+        }
+        val alertInformation = AlertInformation(R.string.getting_files_error, null, {
+            it.dismiss()
+        }, null, customMessage)
+        this.createAlertInformation(alertInformation)
     }
 
     private fun enableAssociatePartnerButton(checked: Boolean) {
@@ -274,32 +295,18 @@ class FileListActivity : BaseActivity() {
     }
 
     private fun fileItemClick(domainInformationFile: DomainInformationFile) {
-        loadingDialog.show()
-        when (buttonSnapshotListSwitch.isActivated) {
-            true -> startSnapshotIntent(domainInformationFile.cameraConnectFile)
-            false -> startVideoIntent(domainInformationFile.cameraConnectFile)
+        showLoadingDialog()
+        startFileListIntent(domainInformationFile.cameraConnectFile)
+    }
+
+    private fun startFileListIntent(cameraConnectFile: CameraConnectFile) {
+        val fileListIntent = Intent()
+        when (activeList) {
+            SNAPSHOT_LIST -> fileListIntent.setClass(this, SnapshotDetailActivity::class.java)
+            VIDEO_LIST -> fileListIntent.setClass(this, VideoPlaybackActivity::class.java)
         }
-    }
-
-    private fun startSnapshotIntent(cameraConnectFile: CameraConnectFile) {
-        val fileListIntent = Intent(this, SnapshotDetailActivity::class.java)
         fileListIntent.putExtra(CAMERA_CONNECT_FILE, cameraConnectFile)
+        hideLoadingDialog()
         startActivity(fileListIntent)
-    }
-
-    private fun startVideoIntent(cameraConnectFile: CameraConnectFile) {
-        val fileListIntent = Intent(this, VideoPlaybackActivity::class.java)
-        fileListIntent.putExtra(CAMERA_CONNECT_FILE, cameraConnectFile)
-        startActivity(fileListIntent)
-    }
-
-    private fun showLoadingDialog() {
-        loadingDialog.show()
-        isLoading = true
-    }
-
-    private fun hideLoadingDialog() {
-        loadingDialog.dismiss()
-        isLoading = false
     }
 }

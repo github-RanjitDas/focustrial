@@ -22,12 +22,17 @@ ext.pitestExclusions = [
         "**.entities.**",
         "**.models.**",
         "**.adapters.**",
+        "**.widgets.**",
         '**.extensions.**',
         "**.*Fragment*",
+
         "com.lawmobile.data.repository.videoPlayback.VideoPlaybackRepositoryImpl*",
         "com.lawmobile.domain.CameraInfo*",
         "com.lawmobile.data.entities.VideoListMetadata*",
         "com.lawmobile.presentation.ui.base.BaseViewModel*",
         "com.lawmobile.presentation.utils.WifiConnection*",
-        "com.lawmobile.data.repository.linkSnapshotsToVideo.LinkSnapshotsRepositoryImpl*"
+        "com.lawmobile.data.repository.linkSnapshotsToVideo.LinkSnapshotsRepositoryImpl*",
+        "com.lawmobile.presentation.utils.MobileDataStatus*",
+        "com.lawmobile.data.repository.fileList.FileListRepositoryImpl*",
+        "com.lawmobile.data.repository.liveStreaming.LiveStreamingRepositoryImpl*"
 ]

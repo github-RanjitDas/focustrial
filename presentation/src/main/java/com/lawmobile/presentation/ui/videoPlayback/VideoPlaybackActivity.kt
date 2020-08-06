@@ -10,7 +10,6 @@ import android.util.Log
 import android.widget.ArrayAdapter
 import android.widget.SeekBar
 import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.Observer
 import com.lawmobile.domain.entities.CameraInfo
 import com.lawmobile.domain.entities.DomainInformationVideo
@@ -44,7 +43,6 @@ class VideoPlaybackActivity : BaseActivity() {
     private var linkedPhotoList: ArrayList<PhotoAssociated>? = ArrayList()
     private var linkedPhotoDateList: ArrayList<String>? = ArrayList()
 
-    private lateinit var dialog: AlertDialog
     private var currentAttempts = 0
     private var areLinkedSnapshotsChangesSaved = true
     private var isVideoMetadataChangesSaved = false
@@ -53,7 +51,7 @@ class VideoPlaybackActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_video_playback)
-        createDialog()
+        showLoadingDialog()
         setCatalogLists()
         addEditTextFilter()
         setObservers()
@@ -160,7 +158,7 @@ class VideoPlaybackActivity : BaseActivity() {
                 Toast.LENGTH_SHORT
             )
         }
-        dialog.dismiss()
+        hideLoadingDialog()
         areLinkedSnapshotsChangesSaved = true
     }
 
@@ -226,10 +224,9 @@ class VideoPlaybackActivity : BaseActivity() {
                 cameraConnectVideoMetadata.photos as ArrayList<PhotoAssociated>?
             linkedPhotoDateList =
                 cameraConnectVideoMetadata.photos?.map { it.date } as ArrayList<String>?
-
         }
         updateLinkedPhotosField()
-        dialog.dismiss()
+        hideLoadingDialog()
     }
 
     private fun updateLinkedPhotosField() {
@@ -250,10 +247,6 @@ class VideoPlaybackActivity : BaseActivity() {
         if (videoWasChanged) {
             restartObjectOfCompanion()
         }
-    }
-
-    private fun createDialog() {
-        dialog = this.createAlertProgress()
     }
 
     private fun configureListeners() {
@@ -292,7 +285,7 @@ class VideoPlaybackActivity : BaseActivity() {
             this.showToast(getString(R.string.event_mandatory), Toast.LENGTH_SHORT)
             return
         }
-        dialog.show()
+        showLoadingDialog()
         videoPlaybackViewModel.saveVideoMetadata(getNewMetadataFromForm())
         isVideoMetadataChangesSaved = true
     }
@@ -306,7 +299,6 @@ class VideoPlaybackActivity : BaseActivity() {
     }
 
     private fun getInformationOfVideo() {
-        dialog.show()
         connectVideo = getCameraConnectFileFromIntent()
         connectVideo?.run {
             videoPlaybackViewModel.getInformationResourcesVideo(this)

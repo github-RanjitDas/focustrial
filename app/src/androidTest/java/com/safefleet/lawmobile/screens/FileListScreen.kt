@@ -1,20 +1,39 @@
 package com.safefleet.lawmobile.screens
 
-import androidx.test.espresso.assertion.ViewAssertions.matches
-import androidx.test.espresso.matcher.ViewMatchers.*
+import androidx.annotation.IdRes
+import androidx.annotation.StringRes
+import androidx.test.espresso.assertion.ViewAssertions
+import androidx.test.espresso.matcher.ViewMatchers
 import com.safefleet.lawmobile.R
+import com.safefleet.lawmobile.helpers.CustomCheckboxAction
 import com.safefleet.mobile.avml.cameras.entities.CameraConnectFile
-import com.schibsted.spain.barista.assertion.BaristaListAssertions.assertCustomAssertionAtPosition
-import com.schibsted.spain.barista.assertion.BaristaListAssertions.assertDisplayedAtPosition
-import com.schibsted.spain.barista.assertion.BaristaVisibilityAssertions
+import com.schibsted.spain.barista.assertion.BaristaListAssertions
+import com.schibsted.spain.barista.assertion.BaristaVisibilityAssertions.assertDisplayed
 import com.schibsted.spain.barista.interaction.BaristaClickInteractions.clickOn
-import com.schibsted.spain.barista.interaction.BaristaListInteractions.clickListItemChild
-import com.schibsted.spain.barista.interaction.BaristaListInteractions.scrollListToPosition
+import com.schibsted.spain.barista.interaction.BaristaListInteractions
+import com.schibsted.spain.barista.interaction.BaristaSleepInteractions
 
 class FileListScreen : BaseScreen() {
 
+    @IdRes
+    var recyclerView: Int = 0
+
+    fun areCheckboxesUnselected(startPosition: Int, endPosition: Int) {
+        for (position in (startPosition..endPosition)) {
+            isCheckboxUnselected(position)
+        }
+    }
+
+    fun scrollListToPosition(position: Int) {
+        BaristaListInteractions.scrollListToPosition(recyclerView, position)
+    }
+
     private fun isFileDisplayedAtPosition(fileDate: String, position: Int) {
-        assertDisplayedAtPosition(R.id.snapshotListRecycler, position, fileDate)
+        BaristaListAssertions.assertDisplayedAtPosition(
+            recyclerView,
+            position,
+            fileDate
+        )
     }
 
     fun areFilesSortedByDate(filesList: List<CameraConnectFile>) {
@@ -26,44 +45,49 @@ class FileListScreen : BaseScreen() {
     }
 
     fun selectCheckboxOnPosition(position: Int): FileListScreen {
-        clickListItemChild(R.id.snapshotListRecycler, position, R.id.checkboxFileListItem)
+        CustomCheckboxAction.selectCheckboxOnRecyclerPosition(recyclerView, position)
         return this
     }
 
     fun isCheckboxSelected(position: Int): FileListScreen {
-        assertCustomAssertionAtPosition(
-            R.id.snapshotListRecycler,
+        BaristaListAssertions.assertCustomAssertionAtPosition(
+            recyclerView,
             position,
-            viewAssertion = matches(withChild(isChecked()))
+            viewAssertion = ViewAssertions.matches(ViewMatchers.withChild(ViewMatchers.isChecked()))
         )
         return this
     }
 
     fun isCheckboxUnselected(position: Int): FileListScreen {
-        assertCustomAssertionAtPosition(
-            R.id.snapshotListRecycler,
+        BaristaListAssertions.assertCustomAssertionAtPosition(
+            recyclerView,
             position,
-            viewAssertion = matches(withChild(isNotChecked()))
+            viewAssertion = ViewAssertions.matches(ViewMatchers.withChild(ViewMatchers.isNotChecked()))
         )
         return this
     }
 
-    fun areCheckboxesUnselected(startPosition: Int, endPosition: Int) {
-        for (position in (startPosition..endPosition)) {
-            isCheckboxUnselected(position)
-        }
+    fun isSnapshotListDisplayed() = assertDisplayed(R.id.snapshotListRecycler)
+
+    fun isVideoListDisplayed() = assertDisplayed(R.id.videoListRecycler)
+
+    fun switchToVideosList() {
+        BaristaSleepInteractions.sleep(500)
+        clickOn(R.id.buttonVideoListSwitch)
+        BaristaSleepInteractions.sleep(2000)
     }
 
-    fun scrollListToPosition(position: Int) {
-        scrollListToPosition(R.id.snapshotListRecycler, position)
+    fun switchToSnapshotsList() {
+        BaristaSleepInteractions.sleep(500)
+        clickOn(R.id.buttonSnapshotListSwitch)
+        BaristaSleepInteractions.sleep(2000)
     }
 
-    fun switchToVideosList() = clickOn(R.id.buttonVideoListSwitch)
+    fun areNoFilesFound(@StringRes toastMessage: Int) =
+        assertDisplayed(R.id.noFilesTextView, toastMessage)
 
-    fun switchToSnapshotsList() = clickOn(R.id.buttonSnapshotListSwitch)
+    fun goBack() = clickOn(R.id.textViewFileListBack)
 
-    fun areNoSnapshotsFound() =
-        BaristaVisibilityAssertions.assertDisplayed(R.id.noFilesTextView, R.string.no_images_found)
-
-
+    fun clickOnItemInPosition(position: Int) =
+        BaristaListInteractions.clickListItem(recyclerView, position)
 }

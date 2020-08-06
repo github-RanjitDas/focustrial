@@ -4,35 +4,23 @@
     <dimen name="no_dp">0dp</dimen>
 
     <!-- Text Size -->
-    <dimen name="text_h1">24sp</dimen>
     <dimen name="text_h3">22sp</dimen>
     <dimen name="text_h5">20sp</dimen>
     <dimen name="text_p2">16sp</dimen>
-    <dimen name="text_p7">11sp</dimen>
 
     <!-- Login -->
     <dimen name="login_constrain_parent_padding">40dp</dimen>
 
     <!--  Pairing Phone with Camera -->
-    <dimen name="pairing_phone_camera_text_version_margin_top">10dp</dimen>
-    <dimen name="pairing_phone_camera_text_version_margin_sides">20dp</dimen>
-    <dimen name="pairing_phone_camera_image_focus_margin_top">5dp</dimen>
-    <dimen name="pairing_phone_camera_image_focus_margin_sides">0dp</dimen>
     <dimen name="pairing_phone_camera_text_title_margin_top">20dp</dimen>
     <dimen name="pairing_phone_camera_input_height">40dp</dimen>
     <dimen name="pairing_phone_camera_input_margin_top">30dp</dimen>
     <dimen name="pairing_phone_camera_input_edit_padding_sides">5dp</dimen>
-    <dimen name="pairing_phone_camera_button_go_size">140dp</dimen>
+    <dimen name="pairing_phone_camera_button_go_size">150dp</dimen>
     <dimen name="pairing_phone_camera_button_go_margin_top">50dp</dimen>
-    <dimen name="pairing_phone_camera_text_instruction_margin_top">20dp</dimen>
-    <dimen name="pairing_phone_camera_view_instructions_margin_sides">20dp</dimen>
-    <dimen name="pairing_phone_camera_view_instructions_margin_top">3dp</dimen>
-    <dimen name="pairing_phone_camera_view_instructions_height">0.7dp</dimen>
-    <dimen name="pairing_phone_camera_image_circle_size">180dp</dimen>
-    <dimen name="pairing_phone_camera_progress_bar_size">300dp</dimen>
+    <dimen name="pairing_phone_camera_progress_bar_size">250dp</dimen>
 
     <!-- Validate password officer-->
-    <dimen name="validate_password_officer_text_officer_name_margin_top">10dp</dimen>
 
     <!-- Live view -->
     <dimen name="live_view_switch_button_width">60dp</dimen>
@@ -52,14 +40,15 @@
     <dimen name="live_view_text_label_padding_right">10dp</dimen>
     <dimen name="live_view_text_label_padding_left">5dp</dimen>
     <dimen name="dialog_height_parent">120dp</dimen>
-    <dimen name="dialog_margin_sides_progress">12dp</dimen>
+    <dimen name="item_file_bottom_margin">1dp</dimen>
+
+    <!-- File List -->
     <dimen name="file_list_text_size">17sp</dimen>
     <dimen name="file_list_nav_buttons_margin">10dp</dimen>
     <dimen name="file_list_title_top">5dp</dimen>
+    <dimen name="file_list_item_height">50dp</dimen>
     <dimen name="file_list_title_bottom">15dp</dimen>
     <dimen name="file_list_checkbox_margin_start">10dp</dimen>
-    <dimen name="check_box_item_file_start">10dp</dimen>
-    <dimen name="item_file_bottom_margin">1dp</dimen>
 
     <!-- Video playback -->
     <dimen name="video_playback_surface_view_height">220dp</dimen>
@@ -73,7 +62,6 @@
     <dimen name="video_playback_padding_top_buttons">5dp</dimen>
     <dimen name="snapshot_item_detail_32dp">32dp</dimen>
     <dimen name="snapshot_item_detail_16dp">16dp</dimen>
-    <dimen name="file_list_item_margin_vertical">10dp</dimen>
     <dimen name="video_playback_metadata_text_size">16sp</dimen>
     <dimen name="video_playback_metadata_spacing">20dp</dimen>
     <dimen name="video_playback_edit_metadata_padding">5dp</dimen>
@@ -91,4 +79,21 @@
 
     <!-- link_snapshots -->
     <dimen name="link_snapshot_margin_sides_loading_message">10dp</dimen>
+    <dimen name="file_list_recycler_view">32dp</dimen>
+    <dimen name="margin_top_button_retry">60dp</dimen>
+    <dimen name="margin_bottom_image_view_result_pairing">30dp</dimen>
+    <dimen name="loading_dialog_size">76dp</dimen>
+    <dimen name="button_go_text_size">50sp</dimen>
+    <dimen name="button_instructions_margin_top">70dp</dimen>
+    <dimen name="button_instructions_text_size">15sp</dimen>
+    <dimen name="link_snapshots_loading_size">50dp</dimen>
+    <dimen name="button_retry_text_size">20sp</dimen>
+    <dimen name="result_pairing_image_padding">15dp</dimen>
+    <dimen name="password_label_margin_bottom">30dp</dimen>
+    <dimen name="password_text_input_margin_bottom">80dp</dimen>
+    <dimen name="button_login_text_size">20sp</dimen>
+    <dimen name="custom_snackbar_icon_size">30dp</dimen>
+    <dimen name="custom_snackbar_icon_margin">16dp</dimen>
+    <dimen name="custom_snackbar_text_padding">10dp</dimen>
+    <dimen name="custom_snackbar_text_size">12sp</dimen>
 </resources>

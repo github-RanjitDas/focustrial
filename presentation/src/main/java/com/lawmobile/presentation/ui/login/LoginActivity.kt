@@ -2,60 +2,86 @@ package com.lawmobile.presentation.ui.login
 
 import android.Manifest
 import android.content.Intent
-import android.content.pm.PackageInfo
+import android.graphics.drawable.AnimatedVectorDrawable
 import android.os.Bundle
-import android.widget.Toast
+import android.provider.Settings
+import androidx.core.view.isVisible
+import androidx.lifecycle.Observer
 import com.lawmobile.presentation.R
-import com.lawmobile.presentation.extensions.attachFragment
-import com.lawmobile.presentation.extensions.createAlertConfirmAppExit
+import com.lawmobile.presentation.extensions.attachFragmentWithAnimation
+import com.lawmobile.presentation.extensions.showErrorSnackBar
 import com.lawmobile.presentation.extensions.verifyForAskingPermission
 import com.lawmobile.presentation.ui.base.BaseActivity
 import com.lawmobile.presentation.ui.live.LiveActivity
-import com.lawmobile.presentation.ui.pairingPhoneWithCamera.PairingPhoneWithCameraFragment
-import com.lawmobile.presentation.ui.validatePasswordOfficer.ValidatePasswordOfficerFragment
+import com.lawmobile.presentation.ui.login.pairingPhoneWithCamera.PairingResultFragment
+import com.lawmobile.presentation.ui.login.pairingPhoneWithCamera.StartPairingFragment
+import com.lawmobile.presentation.ui.login.validateOfficerPassword.ValidateOfficerPasswordFragment
 import kotlinx.android.synthetic.main.activity_login.*
+import javax.inject.Inject
 
 class LoginActivity : BaseActivity() {
 
-    private lateinit var connectionSuccess: (isSuccess: Boolean) -> Unit
-    private lateinit var validateSuccessPasswordOfficer: (isSuccess: Boolean) -> Unit
+    @Inject
+    lateinit var loginActivityViewModel: LoginActivityViewModel
+
+    private val connectionSuccess: (isSuccess: Boolean) -> Unit = {
+        if (it) showValidateOfficerPasswordFragment()
+        else showFragmentPairingCamera()
+    }
+    private val validateSuccessPasswordOfficer: (isSuccess: Boolean) -> Unit = {
+        if (it) startLiveViewActivity()
+        else {
+            fragmentContainer.showErrorSnackBar(getString(R.string.incorrect_password))
+        }
+    }
+    private val validateRequirements: (isSuccess: Boolean) -> Unit = {
+        if (it) showPairingResultFragment()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
-        manageConnectionCamera()
-        manageValidatePasswordOfficer()
-        setTextVersion()
-        showFragmentPairingCamera()
-        verifyLocationPermission()
-        setClickListeners()
+        startAnimation()
     }
 
-    private fun setClickListeners() {
-        textViewLoginExit.setOnClickListener {
-            this.createAlertConfirmAppExit()
+    private fun startAnimation() {
+        if (isAnimationsEnabled()) {
+            imageViewFMALogoNoAnimation.isVisible = false
+            (imageViewFMALogo.drawable as AnimatedVectorDrawable).start()
+            loginActivityViewModel.waitToFinish(ANIMATION_DURATION)
+            loginActivityViewModel.isWaitFinishedLiveData.observe(
+                this,
+                Observer(::showLoginViews)
+            )
+        } else {
+            imageViewFMALogoNoAnimation.isVisible = true
+            imageViewFMALogo.isVisible = false
+            showLoginViews(true)
         }
     }
 
-    private fun manageConnectionCamera() {
+    private fun isAnimationsEnabled() =
+        Settings.System.getFloat(
+            contentResolver,
+            Settings.Global.TRANSITION_ANIMATION_SCALE,
+            0F
+        ) != 0F
+                && Settings.System.getFloat(
+            contentResolver,
+            Settings.Global.WINDOW_ANIMATION_SCALE,
+            0F
+        ) != 0F
+                && Settings.System.getFloat(
+            contentResolver,
+            Settings.Global.ANIMATOR_DURATION_SCALE,
+            0F
+        ) != 0F
 
-        connectionSuccess = { isSuccess ->
-            if (isSuccess) {
-                showFragmentValidatePasswordOfficer()
-            } else {
-                showFragmentPairingCamera()
-            }
-        }
-    }
-
-    private fun manageValidatePasswordOfficer() {
-        validateSuccessPasswordOfficer = { isSuccess ->
-            if (isSuccess) {
-                startLiveViewActivity()
-            } else {
-                Toast.makeText(this, R.string.incorrect_password, Toast.LENGTH_LONG)
-                    .show()
-            }
+    private fun showLoginViews(isFinished: Boolean) {
+        if (isFinished) {
+            imageViewSafeFleet.isVisible = true
+            showFragmentPairingCamera()
+            verifyLocationPermission()
         }
     }
 
@@ -65,24 +91,33 @@ class LoginActivity : BaseActivity() {
     }
 
     private fun showFragmentPairingCamera() {
-        supportFragmentManager.attachFragment(
-            containerId = R.id.constrainContainer,
-            fragment = PairingPhoneWithCameraFragment.createInstance(connectionSuccess),
-            tag = PairingPhoneWithCameraFragment.TAG
+        supportFragmentManager.attachFragmentWithAnimation(
+            containerId = R.id.fragmentContainer,
+            fragment = StartPairingFragment.createInstance(validateRequirements),
+            tag = StartPairingFragment.TAG,
+            animationIn = R.anim.bottom_to_top_anim,
+            animationOut = android.R.anim.fade_out
         )
     }
 
-    private fun showFragmentValidatePasswordOfficer() {
-        supportFragmentManager.attachFragment(
-            containerId = R.id.constrainContainer,
-            fragment = ValidatePasswordOfficerFragment.createInstance(validateSuccessPasswordOfficer),
-            tag = ValidatePasswordOfficerFragment.TAG
+    private fun showPairingResultFragment() {
+        supportFragmentManager.attachFragmentWithAnimation(
+            containerId = R.id.fragmentContainer,
+            fragment = PairingResultFragment.createInstance(connectionSuccess),
+            tag = PairingResultFragment.TAG,
+            animationIn = android.R.anim.fade_in,
+            animationOut = android.R.anim.fade_out
         )
     }
 
-    private fun setTextVersion() {
-        val packageInfo: PackageInfo = packageManager.getPackageInfo(this.packageName, 0)
-        textViewVersion.text = String.format("Version %s ", packageInfo.versionName)
+    private fun showValidateOfficerPasswordFragment() {
+        supportFragmentManager.attachFragmentWithAnimation(
+            containerId = R.id.fragmentContainer,
+            fragment = ValidateOfficerPasswordFragment.createInstance(validateSuccessPasswordOfficer),
+            tag = ValidateOfficerPasswordFragment.TAG,
+            animationIn = R.anim.slide_in_right,
+            animationOut = android.R.anim.fade_out
+        )
     }
 
     private fun verifyLocationPermission() {
@@ -93,5 +128,9 @@ class LoginActivity : BaseActivity() {
     }
 
     override fun onBackPressed() {}
+
+    companion object {
+        private const val ANIMATION_DURATION = 2000L
+    }
 
 }

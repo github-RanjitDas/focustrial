@@ -36,7 +36,7 @@
         app:layout_constraintTop_toBottomOf="@+id/liveStreamingView" />
 
     <Button
-        android:id="@+id/buttonStreaming"
+        android:id="@+id/buttonRecord"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/live_view_main_button_margin_shorter"
@@ -62,7 +62,7 @@
         android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/buttonStreaming"
+        app:layout_constraintTop_toBottomOf="@+id/buttonRecord"
         app:layout_constraintVertical_bias="0.0" />
 
     <ImageView
@@ -73,9 +73,9 @@
         android:contentDescription="@string/image_video_recording"
         android:src="@drawable/ic_rec_video"
         android:visibility="gone"
-        app:layout_constraintBottom_toTopOf="@+id/buttonStreaming"
-        app:layout_constraintEnd_toEndOf="@+id/buttonStreaming"
-        app:layout_constraintStart_toStartOf="@+id/buttonStreaming"
+        app:layout_constraintBottom_toTopOf="@+id/buttonRecord"
+        app:layout_constraintEnd_toEndOf="@+id/buttonRecord"
+        app:layout_constraintStart_toStartOf="@+id/buttonRecord"
         app:layout_constraintTop_toBottomOf="@+id/liveStreamingView" />
 
     <ImageButton
