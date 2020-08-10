@@ -14,6 +14,11 @@
     <color name="video_playback_background_buttons">#55000000</color>
     <color name="blue">#177ECD</color>
     <color name="whiteTransparent">#52FFFFFF</color>
+    <color name="whiteTransparentShadow">#CDFFFFFF</color>
     <color name="red">#E4002B</color>
+    <color name="lightBlue">#4E8AC9</color>
+    <color name="darkBlue">#0068AF</color>
+    <color name="whiteTransparentLive">#34FFFFFF</color>
+    <color name="greenSuccess">#5fbb66</color>
 
 </resources>

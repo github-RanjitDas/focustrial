@@ -1,20 +1,23 @@
 package com.lawmobile.presentation.extensions
 
 import android.content.Context
+import android.content.Intent
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.entities.AlertInformation
 import com.lawmobile.presentation.entities.NeutralAlertInformation
 import com.lawmobile.presentation.ui.base.BaseActivity
+import com.lawmobile.presentation.ui.login.LoginActivity
+import com.safefleet.mobile.commons.widgets.SafeFleetConfirmationDialog
 
 fun Context.createAlertInformation(alertInformation: AlertInformation) {
     val builder = AlertDialog.Builder(this)
     var message = ""
-    if (alertInformation.message != null){
+    if (alertInformation.message != null) {
         message = getString(alertInformation.message)
-    }else {
-        if (alertInformation.customMessage != null){
+    } else {
+        if (alertInformation.customMessage != null) {
             message = alertInformation.customMessage
         }
     }
@@ -57,11 +60,15 @@ fun Context.createAlertSessionExpired() {
 
 fun Context.createAlertConfirmAppExit() {
     val activity = this as BaseActivity
-    val alertInformation =
-        AlertInformation(
-            R.string.confirm_app_exit_title, R.string.confirm_app_exit_description,
-            { activity.killApp() }, {})
-    this.createAlertInformation(alertInformation)
+    SafeFleetConfirmationDialog(this, true).apply {
+        onResponseClicked = {
+            if (it) {
+                startActivity(Intent(context, LoginActivity::class.java))
+                activity.logout()
+            }
+        }
+        show()
+    }
 }
 
 fun Context.createAlertMobileDataActive(neutralAlertInformation: NeutralAlertInformation): AlertDialog {

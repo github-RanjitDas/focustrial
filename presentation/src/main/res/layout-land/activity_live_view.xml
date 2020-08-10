@@ -1,136 +1,295 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <include
+        android:id="@+id/liveViewAppBar"
+        layout="@layout/live_view_app_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone" />
 
     <SurfaceView
         android:id="@+id/liveStreamingView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageButton
         android:id="@+id/toggleFullScreenLiveView"
-        android:layout_width="@dimen/live_view_toggle_full_screen_width"
-        android:layout_height="@dimen/live_view_toggle_full_screen_height"
-        android:background="@null"
-        android:contentDescription="@string/image_description_back_to_normal_size_screen"
+        android:layout_width="@dimen/live_view_toggle_full_screen_size"
+        android:layout_height="@dimen/live_view_toggle_full_screen_size"
+        android:background="@color/transparent"
+        android:contentDescription="@string/image_description_full_screen_size"
+        android:padding="5dp"
         android:scaleType="centerCrop"
-        android:src="@drawable/ic_media_fullscreen_shrink"
+        android:src="@drawable/ic_full_size"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/liveStreamingView" />
+        app:layout_constraintEnd_toEndOf="parent" />
 
-    <Button
-        android:id="@+id/buttonSnapshot"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/live_view_main_button_margin_shorter"
-        android:background="@drawable/ic_snap_selector"
-        android:visibility="gone"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/liveStreamingView" />
-
-    <Button
-        android:id="@+id/buttonRecord"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/live_view_main_button_margin_shorter"
-        android:background="@drawable/ic_record"
-        android:visibility="gone"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toggleFullScreenLiveView" />
-
-    <Switch
-        android:id="@+id/buttonSwitchLiveView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="24dp"
-        android:width="@dimen/live_view_switch_button_width"
-        android:height="@dimen/live_view_switch_button_height"
-        android:background="@drawable/ic_switch_on"
-        android:checked="true"
-        android:textOff=""
-        android:textOn=""
-        android:thumb="@android:color/transparent"
-        android:track="@android:color/transparent"
-        android:visibility="gone"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/buttonRecord"
-        app:layout_constraintVertical_bias="0.0" />
-
-    <ImageView
-        android:id="@+id/imageRecordingIndicator"
-        android:layout_width="@dimen/live_view_image_recording_size"
-        android:layout_height="@dimen/live_view_image_recording_size"
-        android:clickable="false"
-        android:contentDescription="@string/image_video_recording"
-        android:src="@drawable/ic_rec_video"
-        android:visibility="gone"
-        app:layout_constraintBottom_toTopOf="@+id/buttonRecord"
-        app:layout_constraintEnd_toEndOf="@+id/buttonRecord"
-        app:layout_constraintStart_toStartOf="@+id/buttonRecord"
-        app:layout_constraintTop_toBottomOf="@+id/liveStreamingView" />
-
-    <ImageButton
-        android:id="@+id/buttonSnapshotList"
-        android:layout_width="@dimen/live_view_secondary_button_width"
-        android:layout_height="@dimen/live_view_secondary_button_height"
-        android:background="@drawable/ic_snapshot_list"
-        android:contentDescription="@string/snapshot_list"
-        android:visibility="gone"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/liveViewContainerLayout"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/no_dp"
+        app:layout_constraintTop_toBottomOf="@id/liveViewAppBar"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/buttonVideoList" />
+        android:visibility="gone">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/snapshots"
-        android:textAlignment="center"
-        android:textColor="@color/colorGrey"
-        android:textSize="@dimen/live_view_text_size"
-        android:textStyle="bold"
-        android:visibility="gone"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        <TextView
+            android:id="@+id/textViewCameraStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="14dp"
+            android:layout_marginVertical="10dp"
+            android:text="@string/camera_status"
+            android:textColor="@color/black"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageButton
-        android:id="@+id/buttonVideoList"
-        android:layout_width="@dimen/live_view_secondary_button_width"
-        android:layout_height="@dimen/live_view_secondary_button_height"
-        android:background="@drawable/ic_video_list"
-        android:contentDescription="@string/record_list"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        tools:ignore="MissingConstraints" />
+        <ImageView
+            android:id="@+id/imageViewBattery"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/ic_battery"
+            android:contentDescription="@string/battery_level"
+            app:layout_constraintStart_toStartOf="@id/textViewCameraStatus"
+            app:layout_constraintTop_toBottomOf="@id/textViewCameraStatus" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/videos"
-        android:textAlignment="center"
-        android:textColor="@color/colorGrey"
-        android:textSize="@dimen/live_view_text_size"
-        android:textStyle="bold"
-        android:visibility="gone"
-        tools:ignore="MissingConstraints" />
+        <TextView
+            android:id="@+id/textViewBatteryPercent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="11sp"
+            android:text="@string/battery_percent_placeholder"
+            tools:ignore="SmallSp"
+            app:layout_constraintTop_toTopOf="@id/imageViewBattery"
+            app:layout_constraintStart_toStartOf="@id/progressBatteryLevel" />
 
-    <ImageView
-        android:id="@+id/buttonOpenHelpPage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/margin_info_button_live_view"
-        android:layout_marginBottom="@dimen/margin_info_button_live_view"
-        android:contentDescription="@string/button_link_snapshots"
-        android:src="@drawable/ic_info"
-        android:visibility="gone"
-        app:layout_constraintEnd_toEndOf="parent"
-        tools:ignore="MissingConstraints" />
+        <com.safefleet.mobile.commons.widgets.linearProgressBar.SafeFleetLinearProgressBar
+            android:id="@+id/progressBatteryLevel"
+            android:layout_width="@dimen/no_dp"
+            android:layout_height="10dp"
+            android:layout_marginHorizontal="10dp"
+            app:layout_constraintStart_toEndOf="@id/imageViewBattery"
+            app:layout_constraintEnd_toStartOf="@id/guideline2"
+            app:layout_constraintBottom_toBottomOf="@id/imageViewBattery" />
+
+        <ImageView
+            android:id="@+id/imageViewStorage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="14dp"
+            android:background="@drawable/ic_memory"
+            android:contentDescription="@string/memory_level"
+            app:layout_constraintStart_toStartOf="@id/guideline2"
+            app:layout_constraintBottom_toBottomOf="@id/imageViewBattery" />
+
+        <TextView
+            android:id="@+id/textViewStorageLevels"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="11sp"
+            android:text="@string/storage_level_placeholder"
+            android:paddingEnd="3dp"
+            tools:ignore="RtlSymmetry,SmallSp"
+            app:layout_constraintTop_toTopOf="@id/imageViewBattery"
+            app:layout_constraintStart_toStartOf="@id/progressStorageLevel" />
+
+        <com.safefleet.mobile.commons.widgets.linearProgressBar.SafeFleetLinearProgressBar
+            android:id="@+id/progressStorageLevel"
+            android:layout_width="@dimen/no_dp"
+            android:layout_height="10dp"
+            android:layout_marginHorizontal="10dp"
+            app:layout_constraintStart_toEndOf="@id/imageViewStorage"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="@id/imageViewStorage" />
+
+        <View
+            android:id="@+id/viewLiveStreamingShadow"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/live_view_surface_view_height_default"
+            android:layout_marginTop="80dp"
+            android:background="@color/whiteTransparentShadow"
+            android:visibility="invisible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/viewLoading"
+            android:layout_width="@dimen/loading_dialog_size"
+            android:layout_height="@dimen/loading_dialog_size"
+            android:visibility="invisible"
+            android:layout_marginTop="55dp"
+            app:lottie_rawRes="@raw/circular_loading_black"
+            app:lottie_autoPlay="true"
+            app:lottie_loop="true"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/viewLiveStreamingShadow"
+            app:layout_constraintBottom_toTopOf="@id/textViewLoading" />
+
+        <TextView
+            android:id="@+id/textViewLoading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/taking_picture"
+            android:layout_marginBottom="55dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/viewLoading"
+            app:layout_constraintBottom_toBottomOf="@id/viewLiveStreamingShadow"
+            android:visibility="invisible"
+            android:textSize="@dimen/live_view_label_text_size" />
+
+        <TextView
+            android:id="@+id/textLiveViewSwitch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/live_view_label"
+            android:textAlignment="center"
+            android:textSize="@dimen/live_view_label_text_size"
+            app:layout_constraintBottom_toBottomOf="@id/buttonSwitchLiveView"
+            app:layout_constraintStart_toStartOf="@id/buttonSnapshot"
+            app:layout_constraintTop_toTopOf="@id/buttonSwitchLiveView" />
+
+        <com.safefleet.mobile.commons.widgets.SafeFleetSwitch
+            android:id="@+id/buttonSwitchLiveView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:clickable="true"
+            android:focusable="true"
+            app:layout_constraintBottom_toTopOf="@id/dividerView"
+            app:layout_constraintStart_toEndOf="@id/textLiveViewSwitch"
+            app:layout_constraintTop_toBottomOf="parent" />
+
+        <ImageView
+            android:id="@+id/imageRecordingIndicator"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="20dp"
+            android:contentDescription="@string/image_video_recording"
+            android:src="@drawable/ic_recording_circle"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="@id/buttonSwitchLiveView"
+            app:layout_constraintStart_toStartOf="@+id/guideline2"
+            app:layout_constraintTop_toTopOf="@id/buttonSwitchLiveView" />
+
+        <TextView
+            android:id="@+id/textLiveViewRecording"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="10dp"
+            android:paddingVertical="@dimen/no_dp"
+            android:text="@string/recording"
+            android:textAlignment="center"
+            android:textColor="@color/red"
+            android:textSize="@dimen/live_view_label_text_size"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="@id/buttonSwitchLiveView"
+            app:layout_constraintStart_toEndOf="@id/imageRecordingIndicator"
+            app:layout_constraintTop_toTopOf="@id/buttonSwitchLiveView" />
+
+        <ImageView
+            android:id="@+id/buttonOpenHelpPage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/button_link_snapshots"
+            android:src="@drawable/ic_info"
+            app:layout_constraintBottom_toBottomOf="@id/buttonSwitchLiveView"
+            app:layout_constraintEnd_toEndOf="@id/buttonRecord"
+            app:layout_constraintTop_toTopOf="@+id/buttonSwitchLiveView" />
+
+        <View
+            android:id="@+id/dividerView"
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_marginTop="10dp"
+            android:background="@color/grey"
+            app:layout_constraintTop_toBottomOf="@id/buttonSwitchLiveView" />
+
+        <com.lawmobile.presentation.widgets.CustomSnapshotButton
+            android:id="@+id/buttonSnapshot"
+            android:layout_width="wrap_content"
+            android:layout_height="128dp"
+            android:layout_marginBottom="16dp"
+            android:contentDescription="@string/button_snapshot"
+            app:layout_constraintBottom_toTopOf="@id/buttonSnapshotList"
+            app:layout_constraintEnd_toStartOf="@+id/guideline2"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <com.lawmobile.presentation.widgets.CustomRecordButton
+            android:id="@+id/buttonRecord"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/no_dp"
+            android:contentDescription="@string/button_streaming"
+            app:layout_constraintBottom_toBottomOf="@id/buttonSnapshot"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/guideline2"
+            app:layout_constraintTop_toTopOf="@id/buttonSnapshot" />
+
+        <View
+            android:id="@+id/viewDisableButtons"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/no_dp"
+            android:background="@color/whiteTransparentShadow"
+            android:clickable="false"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toTopOf="@id/buttonSnapshotList"
+            app:layout_constraintTop_toBottomOf="@id/dividerView" />
+
+        <Button
+            android:id="@+id/buttonSnapshotList"
+            android:layout_width="@dimen/no_dp"
+            android:layout_height="@dimen/live_view_secondary_button_height"
+            android:background="@color/transparent"
+            android:contentDescription="@string/snapshot_list"
+            android:drawableStart="@drawable/ic_view_snapshots"
+            android:paddingStart="30dp"
+            android:text="@string/view_snapshots"
+            android:textAllCaps="false"
+            android:textColor="@color/darkBlue"
+            android:textSize="15sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/buttonVideoList"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:ignore="RtlSymmetry" />
+
+        <Button
+            android:id="@+id/buttonVideoList"
+            android:layout_width="@dimen/no_dp"
+            android:layout_height="@dimen/live_view_secondary_button_height"
+            android:background="@color/transparent"
+            android:contentDescription="@string/record_list"
+            android:drawableStart="@drawable/ic_view_videos"
+            android:orientation="horizontal"
+            android:paddingHorizontal="30dp"
+            android:text="@string/videos"
+            android:textAllCaps="false"
+            android:textColor="@color/darkBlue"
+            android:textSize="15sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/guideline2" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintGuide_percent="0.50"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -9,11 +9,8 @@
     <string name="the_camera_was_disconnected">Camera disconnected</string>
     <string name="the_camera_was_disconnected_description">BWC disconnected, please close the app and connect again</string>
     <string name="loading_wait">Loading…</string>
-    <string name="taking_snapshot">Taking snapshot…</string>
     <string name="connection_finished">Connection Finished</string>
     <string name="connection_finished_description">After 5 minutes without interaction the BWC disconnects</string>
-    <string name="confirm_app_exit_description">Are you sure want to exit FMA?</string>
-    <string name="confirm_app_exit_title">Exit FMA</string>
     <string name="gps_necessary_title">Location is required</string>
     <string name="gps_necessary_description">Please turn ON location/GPS in order to use the app</string>
 
@@ -33,21 +30,19 @@
 
     <!-- Live view -->
     <string name="image_description_full_screen_size">Full Screen size</string>
-    <string name="image_description_bottom_image">Bottom Image</string>
-    <string name="image_description_back_to_normal_size_screen">Back to normal size screen</string>
-    <string name="live_view_label">LIVE VIEW</string>
+    <string name="live_view_label">Live view</string>
 
     <!-- Snapshots -->
     <string name="live_view_take_photo_success">Snapshot Taken</string>
     <string name="live_view_take_photo_failed">Failed snapshot</string>
     <string name="button_snapshot">Button Snapshot</string>
     <string name="button_streaming">Button Streaming</string>
-    <string name="snap">SNAP</string>
-    <string name="record">RECORD</string>
+    <string name="take_snapshots">Take Snapshots</string>
+    <string name="record_video">Record Video</string>
     <string name="snapshot_list">Snapshot List</string>
-    <string name="snapshots">SNAPSHOTS</string>
+    <string name="view_snapshots">View Snapshots</string>
     <string name="record_list">Record List</string>
-    <string name="videos">VIDEOS</string>
+    <string name="videos">View Videos</string>
 
     <!-- List of Snapshots and videos from camera -->
     <string name="file_list_failed_load_files">Failed to Load Files</string>
@@ -140,7 +135,33 @@
     <string name="success_connection_to_camera">You have successfully connected to the camera</string>
     <string name="try_again_button_pairing">Try Again</string>
     <string name="error_connection_to_camera">There was a problem connecting to your camera</string>
-    <string name="snackbar_alert">snackbar alert</string>
+    <string name="focus_mobile_app_logo">focus mobile app logo</string>
+    <string name="camera_status">Camera status</string>
+    <string name="memory_level">memory level</string>
+    <string name="battery_level">battery level</string>
+    <string name="recording">Recording</string>
+    <string name="stop">Stop</string>
+    <string name="taking_picture">Taking picture</string>
+    <string name="starting_recording">Starting recording</string>
+    <string name="stopping_recording">Stopping recording</string>
+    <string name="battery_percent"><![CDATA[<b>%1$d %%</b> - %2$s hour left]]></string>
+    <string name="storage_level"><![CDATA[Used <b>%1$d GB</b> - Free <b>%2$d GB</b>]]></string>
+    <string name="battery_level_error">Error retrieving battery level</string>
+    <string name="storage_level_error">Error retrieving storage level</string>
+    <string name="battery_percent_placeholder">100% - 10 hour left</string>
+    <string name="storage_level_placeholder">Used 0GB - Free 67GB</string>
+    <string name="app_bar_name_default">James</string>
+    <string name="app_bar_last_name_default">Mendez</string>
+    <string name="_1">1.</string>
+    <string name="instruction_1">Enable wifi hostpot on X1 by holding the \"hotspot button\". Wifi symbol should be displayed on X1 screen when enabled.</string>
+    <string name="_2">2.</string>
+    <string name="instruction_2">Enable wifi on phone</string>
+    <string name="_3">3.</string>
+    <string name="instruction_3">Turn off mobile data on phone</string>
+    <string name="_4">4.</string>
+    <string name="instruction_4">Enter Serial number and connect</string>
+    <string name="got_it">Got it!</string>
+    <string name="close_instructions">close instructions</string>
 
     <string-array name="gender_spinner">
         <item>Select</item>

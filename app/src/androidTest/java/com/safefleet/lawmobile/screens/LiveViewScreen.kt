@@ -22,17 +22,17 @@ class LiveViewScreen : BaseScreen() {
         assertDisplayed(R.id.toggleFullScreenLiveView)
 
         assertDisplayed(R.id.buttonSnapshot)
-        assertDisplayed(R.string.snap)
+        assertDisplayed(R.string.take_snapshots)
 
         assertDisplayed(R.id.buttonRecord)
-        assertDisplayed(R.string.record)
+        assertDisplayed(R.string.record_video)
 
         assertDisplayed(R.id.buttonOpenHelpPage)
 
         assertDisplayed(R.id.textLiveViewSwitch, R.string.live_view_label)
 
         assertDisplayed(R.id.buttonSnapshotList)
-        assertDisplayed(R.string.snapshots)
+        assertDisplayed(R.string.view_snapshots)
 
         assertDisplayed(R.id.buttonVideoList)
         assertDisplayed(R.string.videos)

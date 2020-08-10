@@ -5,8 +5,10 @@ import android.content.Intent
 import android.graphics.drawable.AnimatedVectorDrawable
 import android.os.Bundle
 import android.provider.Settings
+import androidx.cardview.widget.CardView
 import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.extensions.attachFragmentWithAnimation
 import com.lawmobile.presentation.extensions.showErrorSnackBar
@@ -17,12 +19,18 @@ import com.lawmobile.presentation.ui.login.pairingPhoneWithCamera.PairingResultF
 import com.lawmobile.presentation.ui.login.pairingPhoneWithCamera.StartPairingFragment
 import com.lawmobile.presentation.ui.login.validateOfficerPassword.ValidateOfficerPasswordFragment
 import kotlinx.android.synthetic.main.activity_login.*
+import kotlinx.android.synthetic.main.bottom_sheet_instructions_connect_camera.*
 import javax.inject.Inject
 
 class LoginActivity : BaseActivity() {
 
     @Inject
     lateinit var loginActivityViewModel: LoginActivityViewModel
+    val sheetBehavior: BottomSheetBehavior<CardView> by lazy {
+        BottomSheetBehavior.from(
+            bottomSheetInstructions
+        )
+    }
 
     private val connectionSuccess: (isSuccess: Boolean) -> Unit = {
         if (it) showValidateOfficerPasswordFragment()
@@ -41,7 +49,22 @@ class LoginActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
+        overridePendingTransition(0, R.anim.fade_out)
+        configureBottomSheet()
         startAnimation()
+    }
+
+    private fun configureBottomSheet() {
+        sheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+        buttonDismissInstructions.setOnClickListener {
+            if (sheetBehavior.state != BottomSheetBehavior.STATE_EXPANDED)
+                sheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+            else sheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+        }
+        buttonCloseInstructions.setOnClickListener {
+            sheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+        }
+
     }
 
     private fun startAnimation() {
@@ -86,7 +109,8 @@ class LoginActivity : BaseActivity() {
     }
 
     private fun startLiveViewActivity() {
-        startActivity(Intent(this, LiveActivity::class.java))
+        val liveActivityIntent = Intent(this, LiveActivity::class.java)
+        startActivity(liveActivityIntent)
         this.finish()
     }
 
@@ -116,7 +140,7 @@ class LoginActivity : BaseActivity() {
             fragment = ValidateOfficerPasswordFragment.createInstance(validateSuccessPasswordOfficer),
             tag = ValidateOfficerPasswordFragment.TAG,
             animationIn = R.anim.slide_in_right,
-            animationOut = android.R.anim.fade_out
+            animationOut = 0
         )
     }
 

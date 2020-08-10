@@ -7,7 +7,6 @@
     tools:context=".ui.snapshotDetail.SnapshotDetailActivity">
 
     <ImageView
-        android:id="@+id/imageViewBackground"
         android:layout_width="@dimen/no_dp"
         android:layout_height="@dimen/no_dp"
         android:contentDescription="@string/background"

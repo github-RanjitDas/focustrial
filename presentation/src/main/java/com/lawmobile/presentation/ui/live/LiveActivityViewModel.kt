@@ -10,6 +10,8 @@ import com.lawmobile.presentation.ui.base.BaseViewModel
 import com.lawmobile.presentation.utils.VLCMediaPlayer
 import com.safefleet.mobile.avml.cameras.entities.CameraConnectCatalog
 import com.safefleet.mobile.commons.helpers.Result
+import com.safefleet.mobile.commons.helpers.doIfError
+import com.safefleet.mobile.commons.helpers.doIfSuccess
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -27,6 +29,12 @@ class LiveActivityViewModel @Inject constructor(
 
     private val resultTakePhotoMediatorLiveData = MediatorLiveData<Result<Unit>>()
     val resultTakePhotoLiveData: LiveData<Result<Unit>> get() = resultTakePhotoMediatorLiveData
+
+    private val batteryLevelMediatorLiveData = MediatorLiveData<Result<Int>>()
+    val batteryLevelLiveData: LiveData<Result<Int>> get() = batteryLevelMediatorLiveData
+
+    private val storageMediatorLiveData = MediatorLiveData<Result<List<Int>>>()
+    val storageLiveData: LiveData<Result<List<Int>>> get() = storageMediatorLiveData
 
     private val catalogInfoMediatorLiveData =
         MediatorLiveData<Result<List<CameraConnectCatalog>>>()
@@ -76,5 +84,40 @@ class LiveActivityViewModel @Inject constructor(
         }
     }
 
+    fun getBatteryLevel() {
+        viewModelScope.launch {
+            batteryLevelMediatorLiveData.postValue(
+                liveStreamingUseCase.getBatteryLevel()
+            )
+        }
+    }
 
+    fun getStorageLevels() {
+        viewModelScope.launch {
+            val gigabyteList = mutableListOf<Int>()
+            with(liveStreamingUseCase.getFreeStorage()) {
+                doIfSuccess { free ->
+                    gigabyteList.add(free.toInt() / GIGABYTE)
+                    with(liveStreamingUseCase.getTotalStorage()) {
+                        doIfSuccess { total ->
+                            val totalGigabytes = (total.toInt() / GIGABYTE)
+                            gigabyteList.add(totalGigabytes - gigabyteList[0])
+                            gigabyteList.add(totalGigabytes)
+                            storageMediatorLiveData.postValue(Result.Success(gigabyteList))
+                        }
+                        doIfError {
+                            storageMediatorLiveData.postValue(Result.Error(it))
+                        }
+                    }
+                }
+                doIfError {
+                    storageMediatorLiveData.postValue(Result.Error(it))
+                }
+            }
+        }
+    }
+
+    companion object {
+        private const val GIGABYTE = 1000000
+    }
 }

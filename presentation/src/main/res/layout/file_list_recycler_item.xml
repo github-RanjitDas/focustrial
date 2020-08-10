@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="@dimen/file_list_item_height"
     android:layout_marginBottom="@dimen/item_file_bottom_margin"
-    android:background="@drawable/file_list_item_background"
+    android:background="@drawable/background_file_list_item"
     android:orientation="horizontal"
     android:weightSum="1">
 

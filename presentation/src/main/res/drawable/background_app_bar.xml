@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <gradient
+        android:startColor="#004C85"
+        android:endColor="#0077AE"
+        android:type="linear"
+        android:angle="@integer/mtb_from" />
+</shape>

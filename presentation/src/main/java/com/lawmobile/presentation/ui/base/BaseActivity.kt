@@ -34,10 +34,10 @@ open class BaseActivity : DaggerAppCompatActivity() {
     var isAlertShowing = MutableLiveData<Boolean>()
     private var loadingDialog: AlertDialog? = null
 
-    fun killApp() {
+    fun logout() {
         baseViewModel.deactivateCameraHotspot()
-        finishAffinity()
-        exitProcess(0)
+        startActivity(Intent(this, LoginActivity::class.java))
+        finish()
     }
 
     fun restartApp() {
