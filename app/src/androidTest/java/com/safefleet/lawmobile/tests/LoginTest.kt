@@ -18,7 +18,6 @@ import org.junit.runners.MethodSorters
 class LoginTest : EspressoBaseTest<LoginActivity>(LoginActivity::class.java) {
     // This class tests FMA-248 User story
     companion object {
-        val OFFICER_NAME = TestLoginData.OFFICER_NAME.value
         val OFFICER_PASSWORD = TestLoginData.OFFICER_PASSWORD.value
 
         const val INVALID_OFFICER_PASSWORD = "950887928"

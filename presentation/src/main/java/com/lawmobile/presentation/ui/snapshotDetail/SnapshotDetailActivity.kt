@@ -2,6 +2,7 @@ package com.lawmobile.presentation.ui.snapshotDetail
 
 import android.os.Bundle
 import android.widget.Toast
+import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.Observer
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.extensions.convertBitmap
@@ -45,7 +46,8 @@ class SnapshotDetailActivity : BaseActivity() {
             photoItemDetailHolder.setImageBitmap(byteArray.convertBitmap())
         } catch (e: Exception) {
             photoItemDetailHolder.setImageDrawable(
-                resources.getDrawable(
+                ResourcesCompat.getDrawable(
+                    resources,
                     R.drawable.ic_failed_image,
                     null
                 )

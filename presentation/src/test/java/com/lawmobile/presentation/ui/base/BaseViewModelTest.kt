@@ -7,7 +7,10 @@ import io.mockk.coVerify
 import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.setMain
+import org.junit.Assert
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
@@ -38,4 +41,14 @@ internal class BaseViewModelTest {
             baseViewModel.cameraConnectService.disconnectCamera()
         }
     }
+
+    @Test
+    fun waitToFinish() {
+        baseViewModel.waitToFinish(100)
+        runBlocking {
+            delay(150)
+            Assert.assertTrue(baseViewModel.isWaitFinishedLiveData.value!!)
+        }
+    }
+
 }

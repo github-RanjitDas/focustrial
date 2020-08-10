@@ -2,6 +2,7 @@ package com.lawmobile.presentation.ui.linkSnapshotsToVideo
 
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.lawmobile.domain.entities.DomainInformationImage
 import com.lawmobile.presentation.R
@@ -70,7 +71,11 @@ class LinkSnapshotsAdapter :
             snapshotView.run {
                 if (isSelected)
                     snapshotItemLayout.background =
-                        resources.getDrawable(R.drawable.snapshot_link_item_background, null)
+                        ResourcesCompat.getDrawable(
+                            resources,
+                            R.drawable.background_snapshot_link_item,
+                            null
+                        )
                 else snapshotItemLayout.background = null
             }
         }

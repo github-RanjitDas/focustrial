@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/bottomSheetInstructions"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:behavior_hideable="true"
+        app:cardCornerRadius="@dimen/instructions_corner_radius"
+        app:layout_behavior="@string/bottom_sheet_behavior">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/transparent">
+
+            <TextView
+                android:id="@+id/textViewInstructionsTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:padding="@dimen/instructions_title_padding"
+                android:text="@string/instructions_to_link_camera"
+                android:textSize="@dimen/instructions_text_size"
+                android:textStyle="bold"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageButton
+                android:id="@+id/buttonCloseInstructions"
+                android:layout_width="@dimen/button_close_instructions_size"
+                android:layout_height="@dimen/button_close_instructions_size"
+                android:layout_marginEnd="@dimen/button_close_instructions_margin_end"
+                android:background="@color/transparent"
+                android:contentDescription="@string/close_instructions"
+                android:src="@drawable/ic_close"
+                app:layout_constraintBottom_toBottomOf="@id/textViewInstructionsTitle"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/textViewInstructionsTitle" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/instructions_divider_size"
+                android:background="@color/grey"
+                app:layout_constraintTop_toBottomOf="@id/textViewInstructionsTitle" />
+
+            <ImageView
+                android:id="@+id/imageViewWifiInstructions"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/instructions_to_link_camera"
+                android:paddingVertical="@dimen/instructions_image_padding_vertical"
+                android:src="@drawable/ic_wifi_camera"
+                app:layout_constraintTop_toBottomOf="@id/textViewInstructionsTitle" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="@dimen/instructions_step_number_padding_horizontal"
+                android:text="@string/_1"
+                android:textSize="@dimen/instructions_text_size"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toStartOf="@id/textViewInstruction1"
+                app:layout_constraintTop_toTopOf="@id/textViewInstruction1" />
+
+            <TextView
+                android:id="@+id/textViewInstruction1"
+                android:layout_width="@dimen/no_dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/instructions_step_margin_start"
+                android:layout_marginEnd="@dimen/instructions_step_margin_end"
+                android:text="@string/instruction_1"
+                android:textSize="@dimen/instructions_text_size"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/imageViewWifiInstructions" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="@dimen/instructions_step_number_padding_horizontal"
+                android:text="@string/_2"
+                android:textSize="@dimen/instructions_text_size"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toStartOf="@id/textViewInstruction2"
+                app:layout_constraintTop_toTopOf="@id/textViewInstruction2" />
+
+            <TextView
+                android:id="@+id/textViewInstruction2"
+                android:layout_width="@dimen/no_dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/instructions_step_margin_start"
+                android:layout_marginEnd="@dimen/instructions_step_margin_end"
+                android:layout_marginTop="@dimen/instructions_step_margin_top"
+                android:text="@string/instruction_2"
+                android:textSize="@dimen/instructions_text_size"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/textViewInstruction1" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="@dimen/instructions_step_number_padding_horizontal"
+                android:text="@string/_3"
+                android:textSize="@dimen/instructions_text_size"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toStartOf="@id/textViewInstruction3"
+                app:layout_constraintTop_toTopOf="@id/textViewInstruction3" />
+
+            <TextView
+                android:id="@+id/textViewInstruction3"
+                android:layout_width="@dimen/no_dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/instructions_step_margin_start"
+                android:layout_marginEnd="@dimen/instructions_step_margin_end"
+                android:layout_marginTop="@dimen/instructions_step_margin_top"
+                android:text="@string/instruction_3"
+                android:textSize="@dimen/instructions_text_size"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/textViewInstruction2" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="@dimen/instructions_step_number_padding_horizontal"
+                android:text="@string/_4"
+                android:textSize="@dimen/instructions_text_size"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toStartOf="@id/textViewInstruction4"
+                app:layout_constraintTop_toTopOf="@id/textViewInstruction4" />
+
+            <TextView
+                android:id="@+id/textViewInstruction4"
+                android:layout_width="@dimen/no_dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/instructions_step_margin_start"
+                android:layout_marginEnd="@dimen/instructions_step_margin_end"
+                android:layout_marginTop="@dimen/instructions_step_margin_top"
+                android:text="@string/instruction_4"
+                android:textSize="@dimen/instructions_text_size"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/textViewInstruction3" />
+
+            <Button
+                android:id="@+id/buttonDismissInstructions"
+                android:layout_width="@dimen/no_dp"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/button_dismiss_instructions_spacing"
+                android:layout_marginTop="@dimen/button_dismiss_instructions_margin_top"
+                android:layout_marginBottom="@dimen/button_dismiss_instructions_spacing"
+                android:background="@drawable/background_button_accept"
+                android:text="@string/got_it"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:textSize="@dimen/button_dismiss_instructions_text_size"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/textViewInstruction4" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.cardview.widget.CardView>
+
+</merge>

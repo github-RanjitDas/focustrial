@@ -20,27 +20,50 @@
     <dimen name="pairing_phone_camera_button_go_margin_top">50dp</dimen>
     <dimen name="pairing_phone_camera_progress_bar_size">250dp</dimen>
 
-    <!-- Validate password officer-->
-
     <!-- Live view -->
-    <dimen name="live_view_switch_button_width">60dp</dimen>
-    <dimen name="live_view_switch_button_height">22dp</dimen>
-    <dimen name="live_view_main_button_margin_top">50dp</dimen>
-    <dimen name="live_view_main_button_margin_shorter">24dp</dimen>
-    <dimen name="live_view_toggle_full_screen_width">24dp</dimen>
-    <dimen name="live_view_toggle_full_screen_height">24dp</dimen>
-    <dimen name="live_view_image_recording_size">50dp</dimen>
+    <dimen name="live_view_toggle_full_screen_size">30dp</dimen>
     <dimen name="live_view_surface_view_height_default">220dp</dimen>
-    <dimen name="live_view_bottom_white_image_height">120dp</dimen>
-    <dimen name="live_view_secondary_button_width">123dp</dimen>
-    <dimen name="live_view_secondary_button_height">113dp</dimen>
-    <dimen name="live_view_label_padding">5dp</dimen>
-    <dimen name="live_view_label_text_size">15sp</dimen>
-    <dimen name="live_view_text_size">11sp</dimen>
+    <dimen name="live_view_secondary_button_height">60dp</dimen>
+    <dimen name="live_view_label_text_size">16sp</dimen>
     <dimen name="live_view_text_label_padding_right">10dp</dimen>
     <dimen name="live_view_text_label_padding_left">5dp</dimen>
     <dimen name="dialog_height_parent">120dp</dimen>
     <dimen name="item_file_bottom_margin">1dp</dimen>
+    <dimen name="live_view_app_bar_height">65dp</dimen>
+    <dimen name="app_bar_logo_width">135dp</dimen>
+    <dimen name="app_bar_logo_height">45dp</dimen>
+    <dimen name="app_bar_logo_margin_horizontal">11dp</dimen>
+    <dimen name="app_bar_divider_width">1dp</dimen>
+    <dimen name="app_bar_divider_margin_vertical">20dp</dimen>
+    <dimen name="app_bar_logout_padding">14dp</dimen>
+    <dimen name="camera_status_margin_horizontal">14dp</dimen>
+    <dimen name="camera_status_margin_vertical">10dp</dimen>
+    <dimen name="battery_margin_top">10dp</dimen>
+    <dimen name="battery_percent_text_size">11sp</dimen>
+    <dimen name="battery_level_height">10dp</dimen>
+    <dimen name="battery_level_margin_horizontal">10dp</dimen>
+    <dimen name="storage_margin_horizontal">14dp</dimen>
+    <dimen name="storage_levels_text_size">11sp</dimen>
+    <dimen name="storage_levels_padding_end">3dp</dimen>
+    <dimen name="storage_level_height">10dp</dimen>
+    <dimen name="storage_level_margin_horizontal">10dp</dimen>
+    <dimen name="live_streaming_margin_top">80dp</dimen>
+    <dimen name="loading_margin_top">55dp</dimen>
+    <dimen name="loading_margin_bottom">55dp</dimen>
+    <dimen name="toggle_full_screen_padding">5dp</dimen>
+    <dimen name="switch_margin">10dp</dimen>
+    <dimen name="recording_indicator_margin_horizontal">20dp</dimen>
+    <dimen name="recording_padding_horizontal">10dp</dimen>
+    <dimen name="live_view_divider_margin_top">10dp</dimen>
+    <dimen name="button_snapshot_height">128dp</dimen>
+    <dimen name="button_snapshot_margin_bottom">16dp</dimen>
+    <dimen name="button_snapshot_list_padding_start">30dp</dimen>
+    <dimen name="button_snapshot_list_text_size">15sp</dimen>
+    <dimen name="button_video_list_padding_horizontal">30dp</dimen>
+    <dimen name="button_video_list_text_size">15sp</dimen>
+    <dimen name="app_bar_name_padding_horizontal">17.5dp</dimen>
+    <dimen name="app_bar_last_name_padding_horizontal">17.5dp</dimen>
+    <dimen name="live_view_divider_height">0.5dp</dimen>
 
     <!-- File List -->
     <dimen name="file_list_text_size">17sp</dimen>
@@ -74,7 +97,6 @@
     <dimen name="snapshot_link_recycler_padding_horizontal">10dp</dimen>
     <dimen name="snapshot_link_recycler_padding_vertical">30dp</dimen>
     <dimen name="snapshot_link_item_height">100dp</dimen>
-    <dimen name="margin_info_button_live_view">8dp</dimen>
     <dimen name="padding_horizontal_metadata_fields">8dp</dimen>
 
     <!-- link_snapshots -->
@@ -96,4 +118,33 @@
     <dimen name="custom_snackbar_icon_margin">16dp</dimen>
     <dimen name="custom_snackbar_text_padding">10dp</dimen>
     <dimen name="custom_snackbar_text_size">12sp</dimen>
+    <dimen name="validate_fragment_padding_top">50dp</dimen>
+    <dimen name="snackbar_view_padding">8dp</dimen>
+
+    <!--instructions bottom sheet-->
+    <dimen name="instructions_corner_radius">10dp</dimen>
+    <dimen name="instructions_title_padding">20dp</dimen>
+    <dimen name="instructions_text_size">16sp</dimen>
+    <dimen name="button_close_instructions_size">18dp</dimen>
+    <dimen name="button_close_instructions_margin_end">20dp</dimen>
+    <dimen name="instructions_divider_size">1dp</dimen>
+    <dimen name="instructions_image_padding_vertical">50dp</dimen>
+    <dimen name="instructions_step_number_padding_horizontal">6dp</dimen>
+    <dimen name="instructions_step_margin_start">66dp</dimen>
+    <dimen name="instructions_step_margin_end">55dp</dimen>
+    <dimen name="instructions_step_margin_top">20dp</dimen>
+    <dimen name="button_dismiss_instructions_spacing">30dp</dimen>
+    <dimen name="button_dismiss_instructions_margin_top">60dp</dimen>
+    <dimen name="button_dismiss_instructions_text_size">20sp</dimen>
+
+    <!--    custom buttons-->
+    <dimen name="button_custom_record_padding_horizontal">51.5dp</dimen>
+    <dimen name="button_custom_record_padding_top">39dp</dimen>
+    <dimen name="button_custom_record_padding_bottom">59dp</dimen>
+    <dimen name="button_custom_record_text_margin_bottom">20dp</dimen>
+    <dimen name="button_custom_snapshot_padding_horizontal">54dp</dimen>
+    <dimen name="button_custom_snapshot_padding_top">37dp</dimen>
+    <dimen name="button_custom_snapshot_padding_bottom">56dp</dimen>
+    <dimen name="button_custom_snapshot_text_margin_bottom">20dp</dimen>
+
 </resources>

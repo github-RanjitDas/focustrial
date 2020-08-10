@@ -76,7 +76,7 @@
         android:gravity="center"
         android:paddingTop="@dimen/file_list_title_top"
         android:paddingEnd="@dimen/live_view_text_label_padding_right"
-        android:text="@string/snapshots"
+        android:text="@string/view_snapshots"
         app:layout_constraintBottom_toBottomOf="@id/buttonSnapshotListSwitch"
         app:layout_constraintEnd_toEndOf="@id/buttonSnapshotListSwitch"
         app:layout_constraintStart_toStartOf="@id/buttonSnapshotListSwitch"

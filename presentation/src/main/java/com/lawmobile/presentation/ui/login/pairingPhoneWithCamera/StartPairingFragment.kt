@@ -10,6 +10,7 @@ import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.entities.AlertInformation
 import com.lawmobile.presentation.extensions.createAlertInformation
@@ -17,7 +18,7 @@ import com.lawmobile.presentation.extensions.isPermissionGranted
 import com.lawmobile.presentation.extensions.showErrorSnackBar
 import com.lawmobile.presentation.ui.base.BaseActivity
 import com.lawmobile.presentation.ui.base.BaseFragment
-import com.lawmobile.presentation.ui.helpSection.HelpPageActivity
+import com.lawmobile.presentation.ui.login.LoginActivity
 import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.android.synthetic.main.fragment_start_pairing.*
 import java.lang.Exception
@@ -48,8 +49,12 @@ class StartPairingFragment : BaseFragment() {
             verifyPermissionsToStartPairing()
         }
         buttonInstructionsToLinkCamera.setOnClickListener {
-            openHelpPage()
+            showBottomSheet()
         }
+    }
+
+    private fun showBottomSheet() {
+        (activity as LoginActivity).sheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
     }
 
     private fun verifyPermissionsToStartPairing() {
@@ -122,11 +127,6 @@ class StartPairingFragment : BaseFragment() {
             })
 
         activity?.createAlertInformation(alertInformation)
-    }
-
-    private fun openHelpPage() {
-        val intent = Intent(context, HelpPageActivity::class.java)
-        startActivity(intent)
     }
 
     companion object {

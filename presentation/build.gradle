@@ -65,7 +65,7 @@ dependencies {
     implementation "androidx.test.espresso:espresso-idling-resource:$espresso_version"
 
     //Material
-    implementation "com.google.android.material:material:$android_material_version"
+    api "com.google.android.material:material:$android_material_version"
 
     // ViewModel and LiveData
     api "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"

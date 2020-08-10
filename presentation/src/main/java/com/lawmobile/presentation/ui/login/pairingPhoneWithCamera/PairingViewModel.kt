@@ -32,6 +32,10 @@ class PairingViewModel @Inject constructor(
         }
     }
 
+    fun resetProgress() {
+        progressConnectionWithTheCamera.value = Result.Success(0)
+    }
+
     fun isValidNumberCameraBWC(codeCamera: String): Boolean =
         codeCamera.contains(CAMERA_SSID_IDENTIFIER)
 

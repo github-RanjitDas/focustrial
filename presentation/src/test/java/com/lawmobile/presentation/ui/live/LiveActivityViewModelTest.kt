@@ -120,9 +120,7 @@ class LiveActivityViewModelTest {
 
     @Test
     fun testGetCatalogInfoError() {
-        coEvery { liveStreamingUseCase.getCatalogInfo() } returns Result.Error(
-            mockk()
-        )
+        coEvery { liveStreamingUseCase.getCatalogInfo() } returns Result.Error(mockk())
         runBlocking {
             liveActivityViewModel.getCatalogInfo()
             Assert.assertTrue(liveActivityViewModel.catalogInfoLiveData.value is Result.Error)
@@ -130,4 +128,63 @@ class LiveActivityViewModelTest {
         coVerify { liveStreamingUseCase.getCatalogInfo() }
     }
 
+    @Test
+    fun getBatteryLevelSuccess() {
+        coEvery { liveStreamingUseCase.getBatteryLevel() } returns Result.Success(23)
+        runBlocking {
+            liveActivityViewModel.getBatteryLevel()
+            Assert.assertTrue(liveActivityViewModel.batteryLevelLiveData.value is Result.Success)
+        }
+        coVerify { liveStreamingUseCase.getBatteryLevel() }
+    }
+
+    @Test
+    fun getBatteryLevelError() {
+        coEvery { liveStreamingUseCase.getBatteryLevel() } returns Result.Error(mockk())
+        runBlocking {
+            liveActivityViewModel.getBatteryLevel()
+            Assert.assertTrue(liveActivityViewModel.batteryLevelLiveData.value is Result.Error)
+        }
+        coVerify { liveStreamingUseCase.getBatteryLevel() }
+    }
+
+    @Test
+    fun getStorageLevelsSuccess() {
+        coEvery { liveStreamingUseCase.getFreeStorage() } returns Result.Success("63456789")
+        coEvery { liveStreamingUseCase.getTotalStorage() } returns Result.Success("67456789")
+        runBlocking {
+            liveActivityViewModel.getStorageLevels()
+            Assert.assertTrue(liveActivityViewModel.storageLiveData.value is Result.Success)
+        }
+        coVerify {
+            liveStreamingUseCase.getFreeStorage()
+            liveStreamingUseCase.getTotalStorage()
+        }
+    }
+
+    @Test
+    fun getStorageLevelsFreeStorageError() {
+        coEvery { liveStreamingUseCase.getFreeStorage() } returns Result.Error(mockk())
+        runBlocking {
+            liveActivityViewModel.getStorageLevels()
+            Assert.assertTrue(liveActivityViewModel.storageLiveData.value is Result.Error)
+        }
+        coVerify {
+            liveStreamingUseCase.getFreeStorage()
+        }
+    }
+
+    @Test
+    fun getStorageLevelsTotalStorageError() {
+        coEvery { liveStreamingUseCase.getFreeStorage() } returns Result.Success("63456789")
+        coEvery { liveStreamingUseCase.getTotalStorage() } returns Result.Error(mockk())
+        runBlocking {
+            liveActivityViewModel.getStorageLevels()
+            Assert.assertTrue(liveActivityViewModel.storageLiveData.value is Result.Error)
+        }
+        coVerify {
+            liveStreamingUseCase.getFreeStorage()
+            liveStreamingUseCase.getTotalStorage()
+        }
+    }
 }

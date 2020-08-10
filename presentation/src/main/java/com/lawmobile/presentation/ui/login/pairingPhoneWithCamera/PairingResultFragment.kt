@@ -1,12 +1,12 @@
 package com.lawmobile.presentation.ui.login.pairingPhoneWithCamera
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
+import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
 import com.lawmobile.domain.entities.CameraInfo
@@ -34,6 +34,7 @@ class PairingResultFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        pairingViewModel.resetProgress()
         setObservers()
         setListeners()
         setAnimation()
@@ -109,14 +110,14 @@ class PairingResultFragment : BaseFragment() {
         }
     }
 
-    @SuppressLint("ResourceType")
     private fun showSuccessResult() {
         pairingProgressLayout.isVisible = false
         pairingResultLayout.isVisible = true
         buttonRetry.isVisible = false
         imageViewResultPairing.setImageDrawable(
-            resources.getDrawable(
-                R.drawable.ic_successful,
+            ResourcesCompat.getDrawable(
+                resources,
+                R.drawable.ic_successful_green,
                 null
             )
         )
@@ -130,7 +131,8 @@ class PairingResultFragment : BaseFragment() {
         pairingResultLayout.isVisible = true
         buttonRetry.isVisible = true
         imageViewResultPairing.setImageDrawable(
-            resources.getDrawable(
+            ResourcesCompat.getDrawable(
+                resources,
                 R.drawable.ic_error_big,
                 null
             )
