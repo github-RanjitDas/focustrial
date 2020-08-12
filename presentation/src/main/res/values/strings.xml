@@ -13,6 +13,10 @@
     <string name="connection_finished_description">After 5 minutes without interaction the BWC disconnects</string>
     <string name="gps_necessary_title">Location is required</string>
     <string name="gps_necessary_description">Please turn ON location/GPS in order to use the app</string>
+    <string name="battery_alert_title">Low battery</string>
+    <string name="battery_alert_description">Low battery in your body-worn camera, please charge your body-worn camera</string>
+    <string name="storage_alert_title">Low memory capacity</string>
+    <string name="storage_alert_description">Your body-worn camera reached 95% of its memory capacity</string>
 
     <!-- Login -->
     <string name="please_enable_permission">Please enable permission from settings</string>

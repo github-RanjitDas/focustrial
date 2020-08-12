@@ -12,6 +12,7 @@ import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
 import com.lawmobile.domain.entities.CameraInfo
 import com.lawmobile.presentation.R
+import com.lawmobile.presentation.entities.AlertInformation
 import com.lawmobile.presentation.extensions.*
 import com.lawmobile.presentation.ui.base.BaseActivity
 import com.lawmobile.presentation.ui.fileList.FileListActivity
@@ -27,6 +28,7 @@ import com.safefleet.mobile.commons.helpers.doIfError
 import com.safefleet.mobile.commons.helpers.doIfSuccess
 import com.safefleet.mobile.commons.widgets.linearProgressBar.SafeFleetLinearProgressBarBehavior.ASCENDANT
 import com.safefleet.mobile.commons.widgets.linearProgressBar.SafeFleetLinearProgressBarBehavior.DESCENDANT
+import com.safefleet.mobile.commons.widgets.linearProgressBar.SafeFleetLinearProgressBarRanges.MEDIUM_ASCENDANT_RANGE
 import com.safefleet.mobile.commons.widgets.linearProgressBar.SafeFleetLinearProgressBarRanges.HIGH_ASCENDANT_RANGE
 import com.safefleet.mobile.commons.widgets.linearProgressBar.SafeFleetLinearProgressBarRanges.LOW_DESCENDANT_RANGE
 import kotlinx.android.synthetic.main.activity_live_view.*
@@ -57,7 +59,6 @@ class LiveActivity : BaseActivity() {
 
     private fun getOrientation(): Int =
         resources.configuration.orientation
-
 
     private fun setOfficerName() {
         textViewOfficerName.text = CameraInfo.officerName.split(" ")[0]
@@ -189,13 +190,13 @@ class LiveActivity : BaseActivity() {
     }
 
     private fun setCatalogInfo(catalogInfoList: Result<List<CameraConnectCatalog>>) {
-        when (catalogInfoList) {
-            is Result.Success -> {
+        with(catalogInfoList) {
+            doIfSuccess { catalogInfoList ->
                 val eventNames =
-                    catalogInfoList.data.filter { it.type == CatalogTypes.EVENT.value }
+                    catalogInfoList.filter { it.type == CatalogTypes.EVENT.value }
                 CameraInfo.events.addAll(eventNames)
             }
-            is Result.Error -> {
+            doIfError {
                 liveViewAppBar.showErrorSnackBar(getString(R.string.catalog_error))
             }
         }
@@ -204,24 +205,10 @@ class LiveActivity : BaseActivity() {
 
     private fun setBatteryLevel(result: Result<Int>) {
         with(result) {
-            doIfSuccess {
-                progressBatteryLevel.setProgress(it, DESCENDANT)
-
-                if (it in LOW_DESCENDANT_RANGE.value) {
-                    imageViewBattery.backgroundTintList =
-                        ContextCompat.getColorStateList(this@LiveActivity, R.color.red)
-                } else {
-                    imageViewBattery.backgroundTintList =
-                        ContextCompat.getColorStateList(this@LiveActivity, R.color.darkBlue)
-                }
-
-                val hoursLeft =
-                    ((it * BATTERY_TOTAL_HOURS) / TOTAL_PERCENTAGE).toString().subSequence(0, 3)
-
-                textViewBatteryPercent.text =
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
-                        Html.fromHtml(getString(R.string.battery_percent, it, hoursLeft), 0)
-                    else getString(R.string.battery_percent, it, hoursLeft)
+            doIfSuccess { batteryPercent ->
+                progressBatteryLevel.setProgress(batteryPercent, DESCENDANT)
+                setColorInBattery(batteryPercent)
+                setTextInProgressBattery(batteryPercent)
             }
             doIfError {
                 liveViewAppBar.showErrorSnackBar(getString(R.string.battery_level_error))
@@ -230,43 +217,89 @@ class LiveActivity : BaseActivity() {
         liveActivityViewModel.getStorageLevels()
     }
 
+    private fun setColorInBattery(batteryPercent: Int) {
+        if (batteryPercent in LOW_DESCENDANT_RANGE.value || batteryPercent in MEDIUM_ASCENDANT_RANGE.value) {
+            imageViewBattery.backgroundTintList =
+                ContextCompat.getColorStateList(this@LiveActivity, R.color.red)
+            createAlertForInformationCamera(
+                R.string.battery_alert_title,
+                R.string.battery_alert_description
+            )
+        } else {
+            imageViewBattery.backgroundTintList =
+                ContextCompat.getColorStateList(this@LiveActivity, R.color.darkBlue)
+        }
+    }
+
+    private fun setTextInProgressBattery(batteryPercent: Int) {
+        val hoursLeft =
+            ((batteryPercent * BATTERY_TOTAL_HOURS) / TOTAL_PERCENTAGE).toString().subSequence(0, 3)
+        val textBatteryPercent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
+            Html.fromHtml(getString(R.string.battery_percent, batteryPercent, hoursLeft), 0)
+        else getString(R.string.battery_percent, batteryPercent, hoursLeft)
+        textViewBatteryPercent.text = textBatteryPercent
+    }
+
     private fun setStorageLevels(result: Result<List<Int>>) {
         with(result) {
             doIfSuccess {
-                val remainingPercent =
-                    TOTAL_PERCENTAGE - ((it[FREE_STORAGE_POSITION] * TOTAL_PERCENTAGE) / it[TOTAL_STORAGE_POSITION])
-                progressStorageLevel.setProgress(
-                    remainingPercent,
-                    ASCENDANT
-                )
-
-                if (remainingPercent in HIGH_ASCENDANT_RANGE.value) {
-                    imageViewStorage.backgroundTintList =
-                        ContextCompat.getColorStateList(this@LiveActivity, R.color.red)
-                } else {
-                    imageViewStorage.backgroundTintList =
-                        ContextCompat.getColorStateList(this@LiveActivity, R.color.darkBlue)
-                }
-
-                textViewStorageLevels.text =
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
-                        Html.fromHtml(
-                            getString(
-                                R.string.storage_level,
-                                it[USED_STORAGE_POSITION],
-                                it[FREE_STORAGE_POSITION]
-                            ), 0
-                        )
-                    else getString(
-                        R.string.storage_level,
-                        it[USED_STORAGE_POSITION],
-                        it[FREE_STORAGE_POSITION]
-                    )
+                setColorInStorageLevel(it)
+                setTextStorageLevel(it)
             }
             doIfError {
                 liveViewAppBar.showErrorSnackBar(getString(R.string.storage_level_error))
             }
         }
+    }
+
+    private fun setColorInStorageLevel(information: List<Int>) {
+        val remainingPercent =
+            TOTAL_PERCENTAGE - ((information[FREE_STORAGE_POSITION] * TOTAL_PERCENTAGE) / information[TOTAL_STORAGE_POSITION])
+        progressStorageLevel.setProgress(
+            remainingPercent,
+            ASCENDANT
+        )
+
+        if (remainingPercent in HIGH_ASCENDANT_RANGE.value) {
+            imageViewStorage.backgroundTintList =
+                ContextCompat.getColorStateList(this@LiveActivity, R.color.red)
+        } else {
+            imageViewStorage.backgroundTintList =
+                ContextCompat.getColorStateList(this@LiveActivity, R.color.darkBlue)
+        }
+
+        if (remainingPercent == PERCENT_TO_SHOW_ALERT_MEMORY_CAPACITY) {
+            createAlertForInformationCamera(
+                R.string.storage_alert_title,
+                R.string.storage_alert_description
+            )
+        }
+    }
+
+    private fun setTextStorageLevel(information: List<Int>) {
+        val textToStorage = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            Html.fromHtml(getStringStorageLevel(information), 0)
+        } else {
+            getStringStorageLevel(information)
+        }
+
+        textViewStorageLevels.text = textToStorage
+    }
+
+    private fun getStringStorageLevel(information: List<Int>): String = getString(
+        R.string.storage_level,
+        information[USED_STORAGE_POSITION],
+        information[FREE_STORAGE_POSITION]
+    )
+
+    private fun createAlertForInformationCamera(title: Int, message: Int) {
+        val alertInformation = AlertInformation(
+            title = title,
+            message = message,
+            onClickPositiveButton = { dialogInterface ->
+                dialogInterface.dismiss()
+            })
+        this.createAlertInformation(alertInformation)
     }
 
     private fun manageResultTakePhoto(result: Result<Unit>) {
@@ -357,5 +390,6 @@ class LiveActivity : BaseActivity() {
         private const val USED_STORAGE_POSITION = 1
         private const val TOTAL_STORAGE_POSITION = 2
         private const val TOTAL_PERCENTAGE = 100
+        private const val PERCENT_TO_SHOW_ALERT_MEMORY_CAPACITY = 95
     }
 }
