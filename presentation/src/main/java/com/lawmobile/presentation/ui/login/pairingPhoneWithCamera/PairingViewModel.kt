@@ -1,5 +1,6 @@
 package com.lawmobile.presentation.ui.login.pairingPhoneWithCamera
 
+import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.lawmobile.domain.usecase.pairingPhoneWithCamera.PairingPhoneWithCameraUseCase
@@ -7,9 +8,8 @@ import com.lawmobile.presentation.ui.base.BaseViewModel
 import com.lawmobile.presentation.utils.WifiHelper
 import com.safefleet.mobile.commons.helpers.Result
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-class PairingViewModel @Inject constructor(
+class PairingViewModel @ViewModelInject constructor(
     private val pairingPhoneWithCameraUseCase: PairingPhoneWithCameraUseCase,
     private val wifiHelper: WifiHelper
 ) :

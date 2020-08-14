@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import com.lawmobile.domain.entities.CameraInfo
 import com.lawmobile.domain.entities.DomainUser
@@ -16,12 +17,10 @@ import com.lawmobile.presentation.utils.EncodePassword
 import com.safefleet.mobile.commons.helpers.Result
 import com.safefleet.mobile.commons.helpers.hideKeyboard
 import kotlinx.android.synthetic.main.fragment_validate_officer_password.*
-import javax.inject.Inject
 
 class ValidateOfficerPasswordFragment : BaseFragment() {
 
-    @Inject
-    lateinit var validateOfficerPasswordViewModel: ValidateOfficerPasswordViewModel
+    private val validateOfficerPasswordViewModel: ValidateOfficerPasswordViewModel by viewModels()
     private var domainUser: DomainUser? = null
     private lateinit var validateSuccessPasswordOfficer: (isSuccess: Boolean) -> Unit
 

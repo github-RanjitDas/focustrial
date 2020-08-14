@@ -9,23 +9,22 @@ import com.lawmobile.domain.usecase.linkSnapshotsToVideo.LinkSnapshotsUseCaseImp
 import com.safefleet.mobile.avml.cameras.external.CameraConnectService
 import dagger.Module
 import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.components.ActivityComponent
 
+@InstallIn(ActivityComponent::class)
 @Module
 class LinkSnapshotsModule {
 
-    @Module
     companion object {
-        @JvmStatic
         @Provides
         fun provideLinkSnapshotsRemoteDataSource(cameraConnectService: CameraConnectService): LinkSnapshotsRemoteDataSource =
             LinkSnapshotsRemoteDataSourceImpl(cameraConnectService)
 
-        @JvmStatic
         @Provides
         fun provideLinkSnapshotsRepository(linkSnapshotsRemoteDataSource: LinkSnapshotsRemoteDataSource): LinkSnapshotsRepository =
             LinkSnapshotsRepositoryImpl(linkSnapshotsRemoteDataSource)
 
-        @JvmStatic
         @Provides
         fun provideLinkSnapshotsUseCase(linkSnapshotsRepository: LinkSnapshotsRepository): LinkSnapshotsUseCase =
             LinkSnapshotsUseCaseImpl(linkSnapshotsRepository)

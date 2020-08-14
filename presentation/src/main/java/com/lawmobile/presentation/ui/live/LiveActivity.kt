@@ -7,6 +7,7 @@ import android.os.Build
 import android.os.Bundle
 import android.text.Html
 import android.view.animation.AnimationUtils
+import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
@@ -28,17 +29,13 @@ import com.safefleet.mobile.commons.helpers.doIfError
 import com.safefleet.mobile.commons.helpers.doIfSuccess
 import com.safefleet.mobile.commons.widgets.linearProgressBar.SafeFleetLinearProgressBarBehavior.ASCENDANT
 import com.safefleet.mobile.commons.widgets.linearProgressBar.SafeFleetLinearProgressBarBehavior.DESCENDANT
-import com.safefleet.mobile.commons.widgets.linearProgressBar.SafeFleetLinearProgressBarRanges.MEDIUM_ASCENDANT_RANGE
-import com.safefleet.mobile.commons.widgets.linearProgressBar.SafeFleetLinearProgressBarRanges.HIGH_ASCENDANT_RANGE
-import com.safefleet.mobile.commons.widgets.linearProgressBar.SafeFleetLinearProgressBarRanges.LOW_DESCENDANT_RANGE
+import com.safefleet.mobile.commons.widgets.linearProgressBar.SafeFleetLinearProgressBarRanges.*
 import kotlinx.android.synthetic.main.activity_live_view.*
 import kotlinx.android.synthetic.main.live_view_app_bar.*
-import javax.inject.Inject
 
 class LiveActivity : BaseActivity() {
 
-    @Inject
-    lateinit var liveActivityViewModel: LiveActivityViewModel
+    private val liveActivityViewModel: LiveActivityViewModel by viewModels()
     private var isViewLoaded = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -218,16 +215,19 @@ class LiveActivity : BaseActivity() {
     }
 
     private fun setColorInBattery(batteryPercent: Int) {
-        if (batteryPercent in LOW_DESCENDANT_RANGE.value || batteryPercent in MEDIUM_ASCENDANT_RANGE.value) {
+        if (batteryPercent in LOW_DESCENDANT_RANGE.value || batteryPercent in MEDIUM_DESCENDANT_RANGE.value) {
             imageViewBattery.backgroundTintList =
                 ContextCompat.getColorStateList(this@LiveActivity, R.color.red)
+        } else {
+            imageViewBattery.backgroundTintList =
+                ContextCompat.getColorStateList(this@LiveActivity, R.color.darkBlue)
+        }
+
+        if (batteryPercent in LOW_DESCENDANT_RANGE.value){
             createAlertForInformationCamera(
                 R.string.battery_alert_title,
                 R.string.battery_alert_description
             )
-        } else {
-            imageViewBattery.backgroundTintList =
-                ContextCompat.getColorStateList(this@LiveActivity, R.color.darkBlue)
         }
     }
 

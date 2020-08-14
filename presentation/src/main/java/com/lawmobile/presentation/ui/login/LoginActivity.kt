@@ -5,6 +5,7 @@ import android.content.Intent
 import android.graphics.drawable.AnimatedVectorDrawable
 import android.os.Bundle
 import android.provider.Settings
+import androidx.activity.viewModels
 import androidx.cardview.widget.CardView
 import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
@@ -20,12 +21,10 @@ import com.lawmobile.presentation.ui.login.pairingPhoneWithCamera.StartPairingFr
 import com.lawmobile.presentation.ui.login.validateOfficerPassword.ValidateOfficerPasswordFragment
 import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.android.synthetic.main.bottom_sheet_instructions_connect_camera.*
-import javax.inject.Inject
 
 class LoginActivity : BaseActivity() {
 
-    @Inject
-    lateinit var loginActivityViewModel: LoginActivityViewModel
+    private val loginActivityViewModel: LoginActivityViewModel by viewModels()
     val sheetBehavior: BottomSheetBehavior<CardView> by lazy {
         BottomSheetBehavior.from(
             bottomSheetInstructions

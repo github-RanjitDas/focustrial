@@ -8,6 +8,7 @@ import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
@@ -29,12 +30,10 @@ import com.safefleet.mobile.commons.helpers.Result
 import kotlinx.android.synthetic.main.activity_file_list.*
 import kotlinx.android.synthetic.main.alert_dialog_associate_partner_id.view.*
 import maes.tech.intentanim.CustomIntent
-import javax.inject.Inject
 
 class FileListActivity : BaseActivity() {
 
-    @Inject
-    lateinit var fileListViewModel: FileListViewModel
+    private val fileListViewModel: FileListViewModel by viewModels()
     private lateinit var fileListAdapter: FileListAdapter
     private val snapshotListFragment = SnapshotListFragment.getActualInstance()
     private val videoListFragment = VideoListFragment.getActualInstance()

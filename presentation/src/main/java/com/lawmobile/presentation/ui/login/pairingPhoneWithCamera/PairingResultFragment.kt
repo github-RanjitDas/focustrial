@@ -8,6 +8,7 @@ import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.isVisible
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import com.lawmobile.domain.entities.CameraInfo
 import com.lawmobile.presentation.R
@@ -16,12 +17,10 @@ import com.lawmobile.presentation.ui.base.BaseFragment
 import com.safefleet.mobile.commons.helpers.Result
 import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.android.synthetic.main.fragment_pairing_result.*
-import javax.inject.Inject
 
 class PairingResultFragment : BaseFragment() {
 
-    @Inject
-    lateinit var pairingViewModel: PairingViewModel
+    private val pairingViewModel: PairingViewModel by viewModels()
     lateinit var connectionSuccess: (isSuccess: Boolean) -> Unit
     private lateinit var animation: Animation
 

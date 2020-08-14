@@ -10,6 +10,7 @@ import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.viewModels
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.entities.AlertInformation
@@ -21,14 +22,10 @@ import com.lawmobile.presentation.ui.base.BaseFragment
 import com.lawmobile.presentation.ui.login.LoginActivity
 import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.android.synthetic.main.fragment_start_pairing.*
-import java.lang.Exception
-import javax.inject.Inject
-
 
 class StartPairingFragment : BaseFragment() {
 
-    @Inject
-    lateinit var pairingViewModel: PairingViewModel
+    private val pairingViewModel: PairingViewModel by viewModels()
     lateinit var validateRequirements: (isSuccess: Boolean) -> Unit
 
     override fun onCreateView(
@@ -70,7 +67,7 @@ class StartPairingFragment : BaseFragment() {
 
     private fun isGPSActive(): Boolean {
         val locationManager =
-            context!!.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+            requireContext().getSystemService(Context.LOCATION_SERVICE) as LocationManager
         var gpsEnable = false
         try {
             gpsEnable = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)

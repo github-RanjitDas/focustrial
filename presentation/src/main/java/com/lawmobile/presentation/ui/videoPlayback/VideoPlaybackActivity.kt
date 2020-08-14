@@ -10,6 +10,7 @@ import android.util.Log
 import android.widget.ArrayAdapter
 import android.widget.SeekBar
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.lifecycle.Observer
 import com.lawmobile.domain.entities.CameraInfo
 import com.lawmobile.domain.entities.DomainInformationVideo
@@ -29,13 +30,11 @@ import com.safefleet.mobile.avml.cameras.entities.VideoMetadata
 import com.safefleet.mobile.commons.helpers.Result
 import com.safefleet.mobile.commons.helpers.hideKeyboard
 import kotlinx.android.synthetic.main.activity_video_playback.*
-import javax.inject.Inject
 
 
 class VideoPlaybackActivity : BaseActivity() {
 
-    @Inject
-    lateinit var videoPlaybackViewModel: VideoPlaybackViewModel
+    private val videoPlaybackViewModel: VideoPlaybackViewModel by viewModels()
 
     private val eventList = mutableListOf<String>()
     private val raceList = mutableListOf<String>()

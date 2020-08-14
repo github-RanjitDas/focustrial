@@ -2,6 +2,7 @@ package com.lawmobile.presentation.ui.live
 
 import android.media.MediaActionSound
 import android.view.SurfaceView
+import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.viewModelScope
@@ -13,9 +14,8 @@ import com.safefleet.mobile.commons.helpers.Result
 import com.safefleet.mobile.commons.helpers.doIfError
 import com.safefleet.mobile.commons.helpers.doIfSuccess
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-class LiveActivityViewModel @Inject constructor(
+class LiveActivityViewModel @ViewModelInject constructor(
     private val vlcMediaPlayer: VLCMediaPlayer,
     private val liveStreamingUseCase: LiveStreamingUseCase,
     private val mediaActionSound: MediaActionSound
