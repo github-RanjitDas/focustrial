@@ -33,21 +33,21 @@ node ('docker-builds-slave') {
             stage('Clean builds'){
                 logger.stage()
                 timeout(5){
-                    sh "gradle clean"
+                    sh "./gradlew clean"
                 }
             }
 
             stage('Build project'){
                 logger.stage()
                 timeout(15) {
-                    sh "gradle buildDebug --stacktrace"
+                    sh "./gradlew buildDebug --stacktrace"
                 }
             }
 
             stage('Unit Tests') {
                 logger.stage()
                 timeout(5) {
-                    sh "gradle testDebugUnitTestCoverage --stacktrace"
+                    sh "./gradlew testDebugUnitTestCoverage --stacktrace"
                 }
             }
 
@@ -67,7 +67,7 @@ node ('docker-builds-slave') {
             stage('Mutation Tests') {
                 logger.stage()
                 timeout(20) {
-                    sh "gradle pitestDebug --stacktrace"
+                    sh "./gradlew pitestDebug --stacktrace"
                     archiveArtifacts "presentation/build/pitHistory.txt"
                     archiveArtifacts "domain/build/pitHistory.txt"
                     archiveArtifacts "data/build/pitHistory.txt"
@@ -79,7 +79,7 @@ node ('docker-builds-slave') {
                 logger.stage()
                 timeout(15) {
                     withSonarQubeEnv('Seon SonarQube') {
-                        sh "gradle sonarqube"
+                        sh "./gradlew sonarqube"
                     }
                     waitForQualityGate abortPipeline: true
                 }
@@ -89,7 +89,7 @@ node ('docker-builds-slave') {
                 stage('Generate APK'){
                     logger.stage()
                     timeout(10){
-                        sh "gradle assembleDebug --stacktrace"
+                        sh "./gradlew assembleDebug --stacktrace"
                     }
                 }
 
@@ -112,7 +112,7 @@ node ('docker-builds-slave') {
                             sh """cat > $WORKSPACE/keystore.jks_64 <<  EOL\n$android_keystore\nEOL"""
                             sh "base64 -d keystore.jks_64 > app/keystore.jks"
                         }
-                        sh "gradle bundleRelease --stacktrace"
+                        sh "./gradlew bundleRelease --stacktrace"
                     }
                 }
 
