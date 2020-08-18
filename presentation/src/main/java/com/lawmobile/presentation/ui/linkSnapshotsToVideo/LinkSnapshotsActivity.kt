@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
@@ -19,12 +20,10 @@ import com.lawmobile.presentation.utils.Constants.SNAPSHOTS_LINKED
 import com.lawmobile.presentation.utils.Constants.SNAPSHOTS_SELECTED
 import com.safefleet.mobile.commons.helpers.Result
 import kotlinx.android.synthetic.main.activity_link_snapshots.*
-import javax.inject.Inject
 
 class LinkSnapshotsActivity : BaseActivity() {
 
-    @Inject
-    lateinit var linkSnapshotsViewModel: LinkSnapshotsViewModel
+    private val linkSnapshotsViewModel: LinkSnapshotsViewModel by viewModels()
 
     private lateinit var linkSnapshotsAdapter: LinkSnapshotsAdapter
     private var snapshotsLinked: ArrayList<String?>? = null

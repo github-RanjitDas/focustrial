@@ -5,7 +5,10 @@ import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.safefleet.mobile.avml.cameras.external.CameraConnectService
-import kotlinx.coroutines.*
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 open class BaseViewModel @Inject constructor() : ViewModel() {

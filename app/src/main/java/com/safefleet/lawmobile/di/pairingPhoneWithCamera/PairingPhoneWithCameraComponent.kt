@@ -1,7 +1,13 @@
 package com.safefleet.lawmobile.di.pairingPhoneWithCamera
 
-import dagger.Component
-import dagger.android.AndroidInjectionModule
+import dagger.Subcomponent
+import dagger.hilt.android.scopes.FragmentScoped
 
-@Component(modules = [PairingPhoneWithCameraModule::class, AndroidInjectionModule::class])
-interface PairingPhoneWithCameraComponent
+@FragmentScoped
+@Subcomponent(modules = [PairingPhoneWithCameraModule::class])
+interface PairingPhoneWithCameraComponent {
+    @Subcomponent.Factory
+    interface Factory {
+        fun create(): PairingPhoneWithCameraComponent
+    }
+}

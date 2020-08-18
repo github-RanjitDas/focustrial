@@ -2,6 +2,7 @@ package com.lawmobile.presentation.ui.snapshotDetail
 
 import android.os.Bundle
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.Observer
 import com.lawmobile.presentation.R
@@ -14,12 +15,10 @@ import com.safefleet.mobile.avml.cameras.entities.CameraConnectFile
 import com.safefleet.mobile.commons.helpers.Result
 import kotlinx.android.synthetic.main.activity_file_list.textViewFileListBack
 import kotlinx.android.synthetic.main.activity_snapshot_item_detail.*
-import javax.inject.Inject
 
 class SnapshotDetailActivity : BaseActivity() {
 
-    @Inject
-    lateinit var snapshotDetailViewModel: SnapshotDetailViewModel
+    private val snapshotDetailViewModel: SnapshotDetailViewModel by viewModels()
     private lateinit var file: CameraConnectFile
 
     override fun onCreate(savedInstanceState: Bundle?) {

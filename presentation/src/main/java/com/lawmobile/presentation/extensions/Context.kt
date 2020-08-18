@@ -2,6 +2,7 @@ package com.lawmobile.presentation.extensions
 
 import android.content.Context
 import android.content.Intent
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import com.lawmobile.presentation.R
@@ -9,6 +10,7 @@ import com.lawmobile.presentation.entities.AlertInformation
 import com.lawmobile.presentation.entities.NeutralAlertInformation
 import com.lawmobile.presentation.ui.base.BaseActivity
 import com.lawmobile.presentation.ui.login.LoginActivity
+import com.lawmobile.presentation.utils.CameraHelper
 import com.safefleet.mobile.commons.widgets.SafeFleetConfirmationDialog
 
 fun Context.createAlertInformation(alertInformation: AlertInformation) {
@@ -90,4 +92,15 @@ fun Context.createAlertMobileDataActive(neutralAlertInformation: NeutralAlertInf
 
 fun Context.showToast(message: String, duration: Int) {
     Toast.makeText(this, message, duration).show()
+}
+
+fun Context.checkSession(callback: (View) -> Unit, view: View) {
+    val isSessionExpired = checkIfSessionIsExpired()
+    if (isSessionExpired) {
+        this.createAlertSessionExpired()
+    } else if (!CameraHelper.getInstance().checkWithAlertIfTheCameraIsConnected()) {
+        this.createAlertErrorConnection()
+    } else {
+        callback.invoke(view)
+    }
 }

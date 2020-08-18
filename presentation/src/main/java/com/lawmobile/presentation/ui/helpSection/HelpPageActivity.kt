@@ -3,6 +3,7 @@ package com.lawmobile.presentation.ui.helpSection
 import android.os.Bundle
 import android.view.MenuItem
 import com.lawmobile.presentation.R
+import com.lawmobile.presentation.extensions.checkIfSessionIsExpired
 import com.lawmobile.presentation.extensions.createAlertErrorConnection
 import com.lawmobile.presentation.extensions.createAlertSessionExpired
 import com.lawmobile.presentation.ui.base.BaseActivity

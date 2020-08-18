@@ -1,6 +1,7 @@
 package com.lawmobile.presentation.ui.videoPlayback
 
 import android.view.SurfaceView
+import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.viewModelScope
@@ -12,9 +13,8 @@ import com.safefleet.mobile.avml.cameras.entities.CameraConnectFile
 import com.safefleet.mobile.avml.cameras.entities.CameraConnectVideoMetadata
 import com.safefleet.mobile.commons.helpers.Result
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-class VideoPlaybackViewModel @Inject constructor(
+class VideoPlaybackViewModel @ViewModelInject constructor(
     private val videoPlaybackUseCase: VideoPlaybackUseCase,
     private val vlcMediaPlayer: VLCMediaPlayer
 ) : BaseViewModel() {

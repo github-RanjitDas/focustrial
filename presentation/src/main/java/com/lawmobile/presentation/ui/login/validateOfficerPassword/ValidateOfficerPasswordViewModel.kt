@@ -1,5 +1,6 @@
 package com.lawmobile.presentation.ui.login.validateOfficerPassword
 
+import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.viewModelScope
@@ -9,9 +10,8 @@ import com.lawmobile.presentation.ui.base.BaseViewModel
 import com.lawmobile.presentation.utils.CameraHelper
 import com.safefleet.mobile.commons.helpers.Result
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-class ValidateOfficerPasswordViewModel @Inject constructor(
+class ValidateOfficerPasswordViewModel @ViewModelInject constructor(
     private val validatePasswordOfficerUseCase: ValidatePasswordOfficerUseCase,
     private val cameraHelper: CameraHelper
 ) : BaseViewModel() {

@@ -1,7 +1,13 @@
 package com.safefleet.lawmobile.di.liveStreaming
 
-import dagger.Component
-import dagger.android.AndroidInjectionModule
+import com.safefleet.lawmobile.di.ActivityScope
+import dagger.Subcomponent
 
-@Component(modules = [LiveStreamingModule::class, AndroidInjectionModule::class])
-interface LiveStreamingComponent
+@ActivityScope
+@Subcomponent(modules = [LiveStreamingModule::class])
+interface LiveStreamingComponent {
+    @Subcomponent.Factory
+    interface Factory {
+        fun create(): LiveStreamingComponent
+    }
+}

@@ -12,27 +12,26 @@ import com.safefleet.mobile.avml.cameras.external.CameraType
 import com.safefleet.mobile.avml.cameras.external.x1.CameraHelperX1
 import dagger.Module
 import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.components.ApplicationComponent
 import java.net.Socket
 import javax.inject.Singleton
 
 @Module
+@InstallIn(ApplicationComponent::class)
 class CameraServiceModule {
 
-    @Module
     companion object {
-        @JvmStatic
         @Provides
         @Singleton
         fun provideCameraPreferences(sharedPreferences: SharedPreferences): CameraPreferences =
             CameraPreferences(sharedPreferences)
 
-        @JvmStatic
         @Provides
         @Singleton
         fun provideCameraHelperX1(): CameraHelperX1 =
             CameraHelperX1(Gson(), Socket(), Socket())
 
-        @JvmStatic
         @Provides
         @Singleton
         fun provideCameraService(
@@ -44,7 +43,6 @@ class CameraServiceModule {
             }
         }
 
-        @JvmStatic
         @Provides
         @Singleton
         fun provideCameraHelper(

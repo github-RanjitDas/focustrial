@@ -1,7 +1,13 @@
 package com.safefleet.lawmobile.di.linkSnapshotsToVideo
 
-import dagger.Component
-import dagger.android.AndroidInjectionModule
+import com.safefleet.lawmobile.di.ActivityScope
+import dagger.Subcomponent
 
-@Component(modules = [LinkSnapshotsModule::class, AndroidInjectionModule::class])
-interface LinkSnapshotsComponent
+@ActivityScope
+@Subcomponent(modules = [LinkSnapshotsModule::class])
+interface LinkSnapshotsComponent {
+    @Subcomponent.Factory
+    interface Factory {
+        fun create(): LinkSnapshotsComponent
+    }
+}

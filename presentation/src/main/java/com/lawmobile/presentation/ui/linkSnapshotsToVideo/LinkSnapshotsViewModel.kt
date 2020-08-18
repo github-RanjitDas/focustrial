@@ -1,5 +1,6 @@
 package com.lawmobile.presentation.ui.linkSnapshotsToVideo
 
+import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.viewModelScope
@@ -8,9 +9,8 @@ import com.lawmobile.domain.usecase.linkSnapshotsToVideo.LinkSnapshotsUseCase
 import com.lawmobile.presentation.ui.base.BaseViewModel
 import com.safefleet.mobile.commons.helpers.Result
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-class LinkSnapshotsViewModel @Inject constructor(private val linkSnapshotsUseCase: LinkSnapshotsUseCase) :
+class LinkSnapshotsViewModel @ViewModelInject constructor(private val linkSnapshotsUseCase: LinkSnapshotsUseCase) :
     BaseViewModel() {
 
     private val imageBytesListMediatorLiveData =

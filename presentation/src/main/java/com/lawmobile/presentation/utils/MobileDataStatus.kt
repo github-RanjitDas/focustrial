@@ -5,8 +5,9 @@ import android.net.Network
 import android.net.NetworkCapabilities
 import android.net.NetworkRequest
 import androidx.lifecycle.LiveData
+import javax.inject.Inject
 
-class MobileDataStatus(private val connectivityManager: ConnectivityManager) : LiveData<Boolean>() {
+class MobileDataStatus @Inject constructor(private val connectivityManager: ConnectivityManager) : LiveData<Boolean>() {
 
     private val networkCallback = object : ConnectivityManager.NetworkCallback() {
         override fun onAvailable(network: Network?) {

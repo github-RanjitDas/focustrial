@@ -1,8 +1,14 @@
 package com.safefleet.lawmobile.di.validatePasswordOfficer
 
-import dagger.Component
-import dagger.android.AndroidInjectionModule
+import dagger.Subcomponent
+import dagger.hilt.android.scopes.FragmentScoped
 
 
-@Component(modules = [ValidatePasswordOfficerModule::class, AndroidInjectionModule::class])
-interface ValidatePasswordOfficerComponent
+@FragmentScoped
+@Subcomponent(modules = [ValidatePasswordOfficerModule::class])
+interface ValidatePasswordOfficerComponent {
+    @Subcomponent.Factory
+    interface Factory {
+        fun create(): ValidatePasswordOfficerComponent
+    }
+}

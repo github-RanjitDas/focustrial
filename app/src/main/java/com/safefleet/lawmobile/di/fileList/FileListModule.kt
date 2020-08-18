@@ -9,23 +9,22 @@ import com.lawmobile.domain.usecase.fileList.FileListUseCaseImpl
 import com.safefleet.mobile.avml.cameras.external.CameraConnectService
 import dagger.Module
 import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.components.ActivityComponent
 
+@InstallIn(ActivityComponent::class)
 @Module
 class FileListModule {
 
-    @Module
     companion object {
-        @JvmStatic
         @Provides
         fun provideFileListRemoteDataSource(cameraConnectService: CameraConnectService): FileListRemoteDataSource =
             FileListRemoteDataSourceImpl(cameraConnectService)
 
-        @JvmStatic
         @Provides
         fun provideFileListRepository(fileListRemoteDataSource: FileListRemoteDataSource): FileListRepository =
             FileListRepositoryImpl(fileListRemoteDataSource)
 
-        @JvmStatic
         @Provides
         fun provideFileListUseCase(fileListRepository: FileListRepository): FileListUseCase =
             FileListUseCaseImpl(fileListRepository)

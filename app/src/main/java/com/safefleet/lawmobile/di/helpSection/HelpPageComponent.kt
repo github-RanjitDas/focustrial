@@ -1,7 +1,13 @@
 package com.safefleet.lawmobile.di.helpSection
 
-import dagger.Component
-import dagger.android.AndroidInjectionModule
+import com.safefleet.lawmobile.di.ActivityScope
+import dagger.Subcomponent
 
-@Component(modules = [HelpPageModule::class, AndroidInjectionModule::class])
-interface HelpPageComponent
+@ActivityScope
+@Subcomponent(modules = [HelpPageModule::class])
+interface HelpPageComponent {
+    @Subcomponent.Factory
+    interface Factory {
+        fun create(): HelpPageComponent
+    }
+}

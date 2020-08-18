@@ -5,22 +5,25 @@ import android.os.Bundle
 import android.os.Process
 import android.view.WindowManager
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.entities.NeutralAlertInformation
+import com.lawmobile.presentation.extensions.checkIfSessionIsExpired
 import com.lawmobile.presentation.extensions.createAlertMobileDataActive
 import com.lawmobile.presentation.extensions.createAlertProgress
 import com.lawmobile.presentation.extensions.createAlertSessionExpired
 import com.lawmobile.presentation.ui.login.LoginActivity
 import com.lawmobile.presentation.utils.EspressoIdlingResource
 import com.lawmobile.presentation.utils.MobileDataStatus
-import dagger.android.support.DaggerAppCompatActivity
+import dagger.hilt.android.AndroidEntryPoint
 import java.sql.Timestamp
 import javax.inject.Inject
 import kotlin.system.exitProcess
 
-open class BaseActivity : DaggerAppCompatActivity() {
+@AndroidEntryPoint
+open class BaseActivity : AppCompatActivity() {
 
     @Inject
     lateinit var baseViewModel: BaseViewModel
@@ -101,11 +104,6 @@ open class BaseActivity : DaggerAppCompatActivity() {
         lastInteraction = Timestamp(System.currentTimeMillis())
     }
 
-    fun checkIfSessionIsExpired(): Boolean {
-        val timeNow = Timestamp(System.currentTimeMillis())
-        return (timeNow.time - lastInteraction.time) > MAX_TIME_SESSION
-    }
-
     fun showLoadingDialog() {
         baseViewModel.waitToFinish(LOADING_TIMEOUT)
         EspressoIdlingResource.increment()
@@ -124,7 +122,7 @@ open class BaseActivity : DaggerAppCompatActivity() {
         const val LOADING_TIMEOUT = 15000L
         const val PERMISSION_FOR_LOCATION = 100
         const val MAX_TIME_SESSION = 300000
-        private lateinit var lastInteraction: Timestamp
+        lateinit var lastInteraction: Timestamp
     }
 
 }
