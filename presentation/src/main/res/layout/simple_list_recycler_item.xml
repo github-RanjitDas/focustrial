@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/simpleListLayout"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/file_list_item_height"
+    android:layout_marginBottom="@dimen/item_file_bottom_margin"
+    android:layout_marginHorizontal="@dimen/margin_10dp"
+    android:orientation="horizontal">
+
+    <LinearLayout
+        android:layout_width="@dimen/no_dp"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/guideline2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.safefleet.mobile.commons.widgets.SafeFleetCheckBox2
+            android:id="@+id/checkboxSimpleListItem"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:paddingHorizontal="@dimen/file_list_checkbox_margin_start"
+            android:paddingVertical="@dimen/padding_14dp" />
+
+        <TextView
+            android:id="@+id/dateSimpleListItem"
+            android:layout_width="@dimen/no_dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_weight="0.3"
+            android:autoLink="web"
+            android:gravity="center_vertical"
+            android:linksClickable="true"
+            android:text="@string/file_list_date_default"
+            android:textColor="@color/blue"
+            android:textSize="@dimen/text_size_16sp" />
+
+    </LinearLayout>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintGuide_percent="0.65"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:id="@+id/dividerSimpleListItem"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/live_view_divider_height"
+        android:background="@color/FMABlue"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+    <TextView
+        android:id="@+id/eventSimpleListItem"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:layout_weight="0.3"
+        android:layout_marginStart="@dimen/margin_20dp"
+        android:gravity="center_vertical"
+        android:text="@string/file_list_event_default"
+        android:textSize="@dimen/text_size_16sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/guideline2"
+        app:layout_constraintTop_toTopOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

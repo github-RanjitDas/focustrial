@@ -18,7 +18,7 @@ import com.lawmobile.presentation.R
 import com.lawmobile.presentation.entities.AlertInformation
 import com.lawmobile.presentation.extensions.*
 import com.lawmobile.presentation.ui.base.BaseActivity
-import com.lawmobile.presentation.ui.linkSnapshotsToVideo.LinkSnapshotsActivity
+import com.lawmobile.presentation.ui.thumbnailList.ThumbnailFileListFragment
 import com.lawmobile.presentation.utils.Constants.CAMERA_CONNECT_FILE
 import com.lawmobile.presentation.utils.Constants.SNAPSHOTS_DATE_SELECTED
 import com.lawmobile.presentation.utils.Constants.SNAPSHOTS_LINKED
@@ -122,7 +122,7 @@ class VideoPlaybackActivity : BaseActivity() {
     }
 
     private fun setObservers() {
-        isAlertShowing.observe(this, Observer(::managePlaybackOnAlert))
+        isMobileDataAlertShowing.observe(this, Observer(::managePlaybackOnAlert))
         videoPlaybackViewModel.domainInformationVideoLiveData.observe(
             this,
             Observer(::manageGetVideoInformationResult)
@@ -265,7 +265,7 @@ class VideoPlaybackActivity : BaseActivity() {
             onBackPressed()
         }
         buttonLinkSnapshots.setOnClickListenerCheckConnection {
-            val intent = Intent(this, LinkSnapshotsActivity::class.java)
+            val intent = Intent(this, ThumbnailFileListFragment::class.java)
             linkedPhotoList?.run {
                 intent.putStringArrayListExtra(
                     SNAPSHOTS_LINKED,

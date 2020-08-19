@@ -4,17 +4,16 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.View
 import android.widget.TextView
-import androidx.constraintlayout.widget.ConstraintLayout
 import com.lawmobile.presentation.R
+import com.safefleet.mobile.commons.widgets.SafeFleetClickable
 import kotlinx.android.synthetic.main.button_custom_record.view.*
 
 class CustomRecordButton @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
-) : ConstraintLayout(context, attrs, defStyleAttr), View.OnClickListener {
+) : SafeFleetClickable(context, attrs, defStyleAttr), View.OnClickListener {
 
-    var onClicked: ((View) -> Unit)? = null
     private var buttonText: TextView
 
     init {

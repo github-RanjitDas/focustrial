@@ -1,9 +1,9 @@
 package com.safefleet.lawmobile.di.helpSection
 
-import com.safefleet.lawmobile.di.ActivityScope
 import dagger.Subcomponent
+import dagger.hilt.android.scopes.ActivityScoped
 
-@ActivityScope
+@ActivityScoped
 @Subcomponent(modules = [HelpPageModule::class])
 interface HelpPageComponent {
     @Subcomponent.Factory

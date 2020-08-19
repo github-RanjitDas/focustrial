@@ -1,10 +1,9 @@
 package com.safefleet.lawmobile.di.login
 
-import com.safefleet.lawmobile.di.ActivityScope
 import dagger.Subcomponent
+import dagger.hilt.android.scopes.ActivityScoped
 
-
-@ActivityScope
+@ActivityScoped
 @Subcomponent(modules = [LoginModule::class])
 interface LoginComponent {
     @Subcomponent.Factory

@@ -1,12 +1,11 @@
 package com.lawmobile.data.repository.fileList
 
 import com.lawmobile.data.datasource.remote.fileList.FileListRemoteDataSource
-import com.lawmobile.data.entities.FileList
 import com.lawmobile.data.entities.RemoteVideoMetadata
 import com.lawmobile.data.entities.VideoListMetadata
-import com.lawmobile.domain.entities.DomainInformationFile
-import com.lawmobile.domain.entities.DomainInformationFileResponse
-import com.safefleet.mobile.avml.cameras.entities.*
+import com.safefleet.mobile.avml.cameras.entities.CameraConnectFile
+import com.safefleet.mobile.avml.cameras.entities.CameraConnectVideoMetadata
+import com.safefleet.mobile.avml.cameras.entities.VideoMetadata
 import com.safefleet.mobile.commons.helpers.Result
 import io.mockk.*
 import kotlinx.coroutines.delay
@@ -14,9 +13,7 @@ import kotlinx.coroutines.runBlocking
 import org.junit.Assert
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.TestInstance
 
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 internal class FileListRepositoryImplTest {
 
     private val fileListRemoteDataSource: FileListRemoteDataSource = mockk()
@@ -28,185 +25,6 @@ internal class FileListRepositoryImplTest {
     @BeforeEach
     fun setup() {
         clearAllMocks()
-    }
-
-    @Test
-    fun testGetSnapshotListFlow() {
-        val cameraConnectFile: CameraConnectFile = mockk(relaxed = true)
-        val cameraResponse: CameraConnectFileResponseWithErrors = mockk{
-            every { items } returns  arrayListOf(cameraConnectFile)
-            every { errors } returns arrayListOf()
-        }
-        coEvery { fileListRemoteDataSource.getSnapshotList() } returns Result.Success(cameraResponse)
-        runBlocking {
-            fileListRepositoryImpl.getSnapshotList()
-        }
-        coVerify { fileListRemoteDataSource.getSnapshotList() }
-    }
-
-    @Test
-    fun testGetSnapshotListSuccess() {
-        val cameraConnectFile: CameraConnectFile = mockk()
-        val cameraResponse = CameraConnectFileResponseWithErrors()
-        cameraResponse.items.addAll(arrayListOf(cameraConnectFile))
-
-        coEvery { fileListRemoteDataSource.getSnapshotList() } returns Result.Success(cameraResponse)
-        FileList.listOfImages = emptyList()
-
-        val listDomain = listOf(DomainInformationFile(cameraConnectFile, null))
-        val domainInformationFileResponse = DomainInformationFileResponse()
-        domainInformationFileResponse.listItems.addAll(listDomain)
-        runBlocking {
-            val result = fileListRepositoryImpl.getSnapshotList() as Result.Success
-            Assert.assertEquals(result.data.listItems, domainInformationFileResponse.listItems)
-            Assert.assertEquals(result.data.errors, domainInformationFileResponse.errors)
-        }
-    }
-
-
-    @Test
-    fun testGetSnapshotListSuccessWithLessValuesInDataSource() {
-        val cameraConnectFile: CameraConnectFile = mockk(relaxed = true)
-        val cameraResponse = CameraConnectFileResponseWithErrors()
-        cameraResponse.items.addAll(arrayListOf(cameraConnectFile,cameraConnectFile))
-        coEvery { fileListRemoteDataSource.getSnapshotList() } returns Result.Success(cameraResponse)
-        FileList.listOfImages = listOf(
-            DomainInformationFile(cameraConnectFile, null),
-            DomainInformationFile(cameraConnectFile, null)
-        )
-        val domainInformationFileResponse = DomainInformationFileResponse()
-        domainInformationFileResponse.listItems.addAll(FileList.listOfImages)
-        runBlocking {
-            val result = fileListRepositoryImpl.getSnapshotList() as Result.Success
-            Assert.assertEquals(result.data.listItems, domainInformationFileResponse.listItems)
-            Assert.assertEquals(result.data.errors, domainInformationFileResponse.errors)
-        }
-    }
-
-    @Test
-    fun testGetSnapshotListSuccessWithEqualsValuesInDataSource() {
-        mockkObject(FileList)
-        every { FileList.changeListOfImages(any()) } just Runs
-
-        val cameraConnectFile: CameraConnectFile = mockk(relaxed = true)
-        val cameraResponse = CameraConnectFileResponseWithErrors()
-        cameraResponse.items.addAll(arrayListOf(cameraConnectFile,cameraConnectFile))
-        coEvery { fileListRemoteDataSource.getSnapshotList() } returns Result.Success(cameraResponse)
-        val listImages = listOf(
-            DomainInformationFile(cameraConnectFile, null),
-            DomainInformationFile(cameraConnectFile, null)
-        )
-        FileList.listOfImages = listImages
-        runBlocking {
-            val result = fileListRepositoryImpl.getSnapshotList() as Result.Success
-            Assert.assertEquals(result.data.listItems, listImages)
-        }
-
-        coVerify { FileList.changeListOfImages(listImages) }
-    }
-
-    @Test
-    fun testGetSnapshotListFailed() {
-        val result = Result.Error(mockk())
-        coEvery { fileListRemoteDataSource.getSnapshotList() } returns result
-        runBlocking {
-            Assert.assertEquals(fileListRepositoryImpl.getSnapshotList(), result)
-        }
-    }
-
-    @Test
-    fun testGetVideoListFlow() {
-        val cameraConnectFile: CameraConnectFile = mockk(relaxed = true)
-        val cameraResponse: CameraConnectFileResponseWithErrors = mockk{
-            every { items } returns  arrayListOf(cameraConnectFile)
-            every { errors } returns arrayListOf()
-        }
-        coEvery { fileListRemoteDataSource.getVideoList() } returns Result.Success(cameraResponse)
-        runBlocking {
-            fileListRepositoryImpl.getVideoList()
-        }
-        coVerify { fileListRemoteDataSource.getVideoList() }
-    }
-
-    @Test
-    fun testGetVideoListSuccess() {
-        mockkObject(VideoListMetadata)
-        every { VideoListMetadata.getVideoMetadata(any()) } returns null
-        val cameraConnectFile: CameraConnectFile = mockk(relaxed = true)
-        val cameraResponse = CameraConnectFileResponseWithErrors()
-        cameraResponse.items.addAll(arrayListOf(cameraConnectFile))
-        coEvery { fileListRemoteDataSource.getVideoList() } returns Result.Success(cameraResponse)
-        FileList.listOfVideos = emptyList()
-        val listDomain = listOf(DomainInformationFile(cameraConnectFile, null))
-        val domainInformationFileResponse = DomainInformationFileResponse()
-        domainInformationFileResponse.listItems.addAll(listDomain)
-        runBlocking {
-            val result = fileListRepositoryImpl.getVideoList() as Result.Success
-
-            Assert.assertEquals(result.data.listItems, domainInformationFileResponse.listItems)
-            Assert.assertEquals(result.data.errors, result.data.errors)
-        }
-    }
-
-    @Test
-    fun testGetVideoListSuccessLessInResponseDataSource() {
-        mockkObject(VideoListMetadata)
-        every { VideoListMetadata.getVideoMetadata(any()) } returns null
-        val cameraConnectFile: CameraConnectFile = mockk(relaxed = true)
-        val cameraResponse: CameraConnectFileResponseWithErrors = mockk{
-            every { items } returns  arrayListOf(cameraConnectFile)
-            every { errors } returns arrayListOf("20201228/")
-        }
-        coEvery { fileListRemoteDataSource.getVideoList() } returns Result.Success(cameraResponse)
-        FileList.listOfVideos = listOf(
-            DomainInformationFile(cameraConnectFile, null),
-            DomainInformationFile(cameraConnectFile, null)
-        )
-        val domainInformationFileResponse = DomainInformationFileResponse()
-        domainInformationFileResponse.listItems.addAll(FileList.listOfVideos)
-        domainInformationFileResponse.errors.addAll(arrayListOf("20201228/"))
-        runBlocking {
-            val result = fileListRepositoryImpl.getVideoList() as Result.Success
-            Assert.assertEquals(result.data.listItems, domainInformationFileResponse.listItems)
-            Assert.assertEquals(result.data.errors, domainInformationFileResponse.errors)
-        }
-    }
-
-    @Test
-    fun testGetVideoListSuccessEqualsInResponseDataSource() {
-        mockkObject(VideoListMetadata)
-        every { VideoListMetadata.getVideoMetadata(any()) } returns null
-        mockkObject(FileList)
-        every { FileList.changeListOfVideos(any()) } just Runs
-        val cameraConnectFile: CameraConnectFile = mockk(relaxed = true)
-        val cameraResponse: CameraConnectFileResponseWithErrors = mockk{
-            every { items } returns  arrayListOf(cameraConnectFile, cameraConnectFile)
-            every { errors } returns arrayListOf()
-        }
-        coEvery { fileListRemoteDataSource.getVideoList() } returns Result.Success(cameraResponse)
-        val listOfVideos = listOf(
-            DomainInformationFile(cameraConnectFile, null),
-            DomainInformationFile(cameraConnectFile, null)
-        )
-        FileList.listOfVideos = listOfVideos
-        runBlocking {
-            val result = fileListRepositoryImpl.getVideoList() as Result.Success
-            Assert.assertEquals(
-                result.data.listItems,
-                listOfVideos
-            )
-        }
-
-        coVerify { FileList.changeListOfVideos(listOfVideos) }
-    }
-
-    @Test
-    fun testGetVideoListFailed() {
-        val result = Result.Error(mockk())
-        coEvery { fileListRemoteDataSource.getVideoList() } returns result
-        runBlocking {
-            Assert.assertEquals(fileListRepositoryImpl.getVideoList(), result)
-        }
     }
 
     @Test

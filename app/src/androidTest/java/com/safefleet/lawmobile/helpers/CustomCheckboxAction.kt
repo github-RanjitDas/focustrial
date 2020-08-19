@@ -7,7 +7,7 @@ import androidx.test.espresso.UiController
 import androidx.test.espresso.ViewAction
 import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.ViewMatchers
-import com.lawmobile.presentation.ui.fileList.FileListAdapter
+import com.lawmobile.presentation.ui.simpleList.SimpleFileListAdapter
 import com.safefleet.lawmobile.R
 import org.hamcrest.Matcher
 
@@ -36,9 +36,9 @@ object CustomCheckboxAction {
     fun selectCheckboxOnRecyclerPosition(@IdRes recyclerID: Int, position: Int) {
         Espresso.onView(ViewMatchers.withId(recyclerID))
             .perform(
-                RecyclerViewActions.actionOnItemAtPosition<FileListAdapter.FileListViewHolder>(
+                RecyclerViewActions.actionOnItemAtPosition<SimpleFileListAdapter.SimpleListViewHolder>(
                     position,
-                    clickChildViewWithId(R.id.checkboxFileListItem)
+                    clickChildViewWithId(R.id.checkboxImageListItem)
                 )
             )
     }

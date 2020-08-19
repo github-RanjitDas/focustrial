@@ -17,13 +17,4 @@ class Alert {
         assertDisplayed(R.string.the_camera_was_disconnected)
     }
 
-    fun isMobileDataEnableAlertDisplayed() {
-        assertDisplayed(R.string.mobile_data_status_title)
-        assertDisplayed(R.string.mobile_data_status_message)
-
-        // Verify alert cannot be dismissed
-        assertNotContains(R.string.cancel)
-        Espresso.pressBack()
-    }
-
 }

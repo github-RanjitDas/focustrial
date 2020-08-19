@@ -33,7 +33,7 @@ class SnapshotListTest : EspressoBaseTest<LoginActivity>(LoginActivity::class.ja
 
     @Before
     fun setRecyclerView() {
-        fileListScreen.recyclerView = R.id.snapshotListRecycler
+        fileListScreen.recyclerView = R.id.fileListRecycler
     }
 
     @Test
@@ -79,9 +79,6 @@ class SnapshotListTest : EspressoBaseTest<LoginActivity>(LoginActivity::class.ja
             isCheckboxSelected(14)
             isCheckboxSelected(7)
             isCheckboxUnselected(0)
-
-            switchToVideosList()
-            switchToSnapshotsList()
 
             areCheckboxesUnselected(
                 startPosition = 0,
@@ -167,7 +164,6 @@ class SnapshotListTest : EspressoBaseTest<LoginActivity>(LoginActivity::class.ja
 
         mockUtils.disconnectCamera()
 
-        fileListScreen.switchToVideosList()
         fileListScreen.isDisconnectionAlertDisplayed()
     }
 }

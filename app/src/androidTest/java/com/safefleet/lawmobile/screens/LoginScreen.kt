@@ -17,9 +17,6 @@ class LoginScreen : BaseScreen() {
     fun isWaitingForCameraTextDisplayed() =
         assertDisplayed(R.id.textWaitingForCamera, R.string.waiting_for_camera)
 
-    fun isConnectingToCameraTextDisplayed() =
-        assertDisplayed(R.id.textConnectingToCamera, R.string.connecting_to_camera)
-
     fun isWelcomeTextDisplayed() =
         assertContains(R.id.textViewPassword, R.string.welcome_officer)
 

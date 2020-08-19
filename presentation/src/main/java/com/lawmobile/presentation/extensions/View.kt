@@ -4,9 +4,7 @@ import android.view.View
 import com.google.android.material.snackbar.Snackbar
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.ui.base.BaseActivity
-import com.lawmobile.presentation.widgets.CustomRecordButton
-import com.lawmobile.presentation.widgets.CustomSnapshotButton
-import com.safefleet.mobile.commons.widgets.SafeFleetSwitch
+import com.safefleet.mobile.commons.widgets.SafeFleetClickable
 import com.safefleet.mobile.commons.widgets.snackbar.SafeFleetSnackBar
 import com.safefleet.mobile.commons.widgets.snackbar.SafeFleetSnackBarSettings
 import java.sql.Timestamp
@@ -17,21 +15,9 @@ fun View.setOnClickListenerCheckConnection(callback: (View) -> Unit) {
     }
 }
 
-fun SafeFleetSwitch.setSwitchListenerCheckConnection(callback: (View) -> Unit) {
+fun SafeFleetClickable.setClickListenerCheckConnection(callback: (View) -> Unit) {
     onClicked = {
         context.checkSession(callback, it)
-    }
-}
-
-fun CustomRecordButton.setCustomListenerCheckConnection(callback: (View) -> Unit) {
-    onClicked = {
-        context.checkSession( callback, it)
-    }
-}
-
-fun CustomSnapshotButton.setCustomListenerCheckConnection(callback: (View) -> Unit) {
-    onClicked = {
-        context.checkSession( callback, it)
     }
 }
 

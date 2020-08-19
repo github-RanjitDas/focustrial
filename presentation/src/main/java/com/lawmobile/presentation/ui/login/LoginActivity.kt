@@ -56,9 +56,7 @@ class LoginActivity : BaseActivity() {
     private fun configureBottomSheet() {
         sheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
         buttonDismissInstructions.setOnClickListener {
-            if (sheetBehavior.state != BottomSheetBehavior.STATE_EXPANDED)
-                sheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
-            else sheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+            sheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
         }
         buttonCloseInstructions.setOnClickListener {
             sheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN

@@ -26,7 +26,6 @@
     <string name="instructions_to_link_camera">Instructions to link camera</string>
     <string name="connecting_to_camera">Connecting to Camera</string>
     <string name="welcome_officer">Please enter your password</string>
-    <string name="exit">EXIT</string>
     <string name="enter_password">Password</string>
     <string name="incorrect_password">Incorrect password, please try again</string>
     <string name="wifi_is_off">The WiFi is off</string>
@@ -50,12 +49,8 @@
 
     <!-- List of Snapshots and videos from camera -->
     <string name="file_list_failed_load_files">Failed to Load Files</string>
-    <string name="file_list_date_default">DATE</string>
-    <string name="file_list_duration_default">DURATION</string>
-    <string name="file_list_event_default">EVENT</string>
-    <string name="button_snapshot_list_switch">buttonSnapshotListSwitch</string>
-    <string name="button_video_list_switch">buttonVideoListSwitch</string>
-    <string name="white_background">White Background</string>
+    <string name="file_list_date_default"><u>Date</u></string>
+    <string name="file_list_event_default">Event</string>
     <string name="no_images_found">No images found</string>
     <string name="no_videos_found">No videos found</string>
     <string name="back">BACK</string>
@@ -107,26 +102,18 @@
     <string name="default_text">DEFAULT TEXT</string>
 
     <!-- link_snapshots -->
-    <string name="link_snapshot_message_loading">Loading snapshots</string>
 
     <!-- Partner Id -->
-    <string name="partner_id_title">ASSOCIATE PARTNER ID</string>
-    <string name="partner_id_edit_text_hint">ENTER PARTNER ID</string>
     <string name="associate_partner_id_content_description">Associate partner ID</string>
     <string name="file_list_associate_partner_id_success">Partner ID associated successfully</string>
     <string name="file_list_associate_partner_id_error">Partner ID could not be associated</string>
-    <string name="partner_id_button_disabled_message">You must select at least one file to associate</string>
     <string name="associate_partner_to_file_button">Associate partner to file button</string>
-    <string name="add_snapshot">ADD</string>
-    <string name="filename">FILENAME</string>
-    <string name="link_images_error">Something went wrong getting the images, please try again</string>
+    <string name="link_images_error">Something went wrong retrieving the images, please try again</string>
     <string name="image_linked_success">Images added successfully</string>
     <string name="button_link_snapshots">buttonLinkSnapshots</string>
-    <string name="photo_for_associate_to_video">photo for associate to video</string>
     <string name="metadata_confirmation">Are you sure?</string>
     <string name="metadata_confirmation_message">There are unsaved changes</string>
     <string name="valid_partner_id_message">You must enter a valid Partner ID</string>
-    <string name="no_new_photo_selected_message">You have not selected any new photo</string>
     <string name="mobile_data_status_title">Mobile Data</string>
     <string name="mobile_data_status_message">Please disable mobile data to continue</string>
     <string name="linked_photos_metadata_title">LINKED PHOTOS</string>
@@ -166,6 +153,17 @@
     <string name="instruction_4">Enter Serial number and connect</string>
     <string name="got_it">Got it!</string>
     <string name="close_instructions">close instructions</string>
+    <string name="snapshots_title">Snapshots</string>
+    <string name="videos_title">Videos</string>
+    <string name="assign_to_officer">Assign to Officer</string>
+    <string name="select_snapshots_to_associate">Select snapshots to associate</string>
+    <string name="date_and_time">Date and time</string>
+    <string name="event">Event</string>
+    <string name="officer_id_hint">Officer ID</string>
+    <string name="assign_to_officer_subtitle">Enter officer ID</string>
+    <string name="file_item_image">file item image</string>
+    <string name="select_videos_to_associate">Select videos to associate</string>
+    <string name="button_help">\?</string>
 
     <string-array name="gender_spinner">
         <item>Select</item>

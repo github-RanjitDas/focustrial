@@ -1,6 +1,5 @@
 package com.lawmobile.presentation.ui.fileList
 
-import com.lawmobile.domain.entities.DomainInformationFileResponse
 import com.lawmobile.domain.usecase.fileList.FileListUseCase
 import com.lawmobile.presentation.InstantExecutorExtension
 import com.safefleet.mobile.commons.helpers.Result
@@ -29,44 +28,6 @@ class FileListViewModelTest {
     @BeforeEach
     fun setUp() {
         Dispatchers.setMain(Dispatchers.Unconfined)
-    }
-
-    @Test
-    fun testGetSnapshotListSuccess() {
-        val domainInformationFileResponse:DomainInformationFileResponse = mockk()
-        val result = Result.Success(domainInformationFileResponse)
-        coEvery { fileListUseCase.getSnapshotList() } returns result
-        fileListViewModel.getSnapshotList()
-        Assert.assertEquals(fileListViewModel.snapshotListLiveData.value, result)
-        coVerify { fileListUseCase.getSnapshotList() }
-    }
-
-    @Test
-    fun testGetVideoListSuccess() {
-        val domainInformationFileResponse:DomainInformationFileResponse = mockk()
-        val result = Result.Success(domainInformationFileResponse)
-        coEvery { fileListUseCase.getVideoList() } returns result
-        fileListViewModel.getVideoList()
-        Assert.assertEquals(fileListViewModel.videoListLiveData.value, result)
-        coVerify { fileListUseCase.getVideoList() }
-    }
-
-    @Test
-    fun testGetSnapshotListError() {
-        val result = Result.Error(mockk())
-        coEvery { fileListUseCase.getSnapshotList() } returns result
-        fileListViewModel.getSnapshotList()
-        Assert.assertEquals(fileListViewModel.snapshotListLiveData.value, result)
-        coVerify { fileListUseCase.getSnapshotList() }
-    }
-
-    @Test
-    fun testGetVideoListError() {
-        val result = Result.Error(mockk())
-        coEvery { fileListUseCase.getVideoList() } returns result
-        fileListViewModel.getVideoList()
-        Assert.assertEquals(fileListViewModel.videoListLiveData.value, result)
-        coVerify { fileListUseCase.getVideoList() }
     }
 
     @Test
