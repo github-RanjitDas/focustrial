@@ -41,4 +41,11 @@ class PairingPhoneWithCameraRepositoryImplTest {
             progressCamera
         )
     }
+
+    @Test
+    fun testIsPossibleTheConnection() {
+        coEvery { pairingPhoneWithCameraRemoteDataSource.isPossibleTheConnection(any()) } returns Result.Success(Unit)
+        runBlocking { pairingPhoneWithCameraRepositoryImpl.isPossibleTheConnection("10.10.10.4") }
+        coVerify { pairingPhoneWithCameraRemoteDataSource.isPossibleTheConnection("10.10.10.4") }
+    }
 }

@@ -1,6 +1,8 @@
 package com.lawmobile.presentation.ui.login.pairingPhoneWithCamera
 
 import androidx.hilt.lifecycle.ViewModelInject
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.lawmobile.domain.usecase.pairingPhoneWithCamera.PairingPhoneWithCameraUseCase
@@ -18,6 +20,9 @@ class PairingViewModel @ViewModelInject constructor(
     val progressConnectionWithTheCamera: MutableLiveData<Result<Int>> =
         pairingPhoneWithCameraUseCase.progressPairingCamera as MutableLiveData<Result<Int>>
 
+    private val validateConnectionMediatorLiveData: MediatorLiveData<Result<Unit>> = MediatorLiveData()
+    val validateConnectionLiveData: LiveData<Result<Unit>> get() = validateConnectionMediatorLiveData
+
     fun getProgressConnectionWithTheCamera() {
         val gateway = wifiHelper.getGatewayAddress()
         val ipAddress = wifiHelper.getIpAddress()
@@ -29,6 +34,18 @@ class PairingViewModel @ViewModelInject constructor(
 
         viewModelScope.launch {
             pairingPhoneWithCameraUseCase.loadPairingCamera(gateway, ipAddress)
+        }
+    }
+
+    fun isPossibleConnection(){
+        val gateway = wifiHelper.getGatewayAddress()
+        if (gateway.isEmpty()) {
+            validateConnectionMediatorLiveData.postValue(
+                Result.Error(Exception(EXCEPTION_GET_PARAMS_TO_CONNECT))
+            )
+        }
+        viewModelScope.launch {
+            validateConnectionMediatorLiveData.postValue(pairingPhoneWithCameraUseCase.isPossibleTheConnection(gateway))
         }
     }
 

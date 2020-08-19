@@ -14,4 +14,8 @@ open class PairingPhoneWithCameraRemoteDataSourceImpl(
     override suspend fun loadPairingCamera(hostnameToConnect: String, ipAddressClient: String) {
         cameraConnectService.loadPairingCamera(hostnameToConnect, ipAddressClient)
     }
+
+    override suspend fun isPossibleTheConnection(hostnameToConnect: String): Result<Unit> {
+        return cameraConnectService.isPossibleTheConnection(hostnameToConnect)
+    }
 }

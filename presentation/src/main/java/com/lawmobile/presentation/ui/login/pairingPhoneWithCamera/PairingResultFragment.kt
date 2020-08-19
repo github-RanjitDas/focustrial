@@ -12,10 +12,8 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import com.lawmobile.domain.entities.CameraInfo
 import com.lawmobile.presentation.R
-import com.lawmobile.presentation.extensions.showErrorSnackBar
 import com.lawmobile.presentation.ui.base.BaseFragment
 import com.safefleet.mobile.commons.helpers.Result
-import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.android.synthetic.main.fragment_pairing_result.*
 
 class PairingResultFragment : BaseFragment() {
@@ -60,14 +58,14 @@ class PairingResultFragment : BaseFragment() {
 
     private fun startConnectionToHotspotCamera() {
         showLoadingProgress()
-        val serialNumberCamera = pairingViewModel.getNetworkName()
+        saveSerialNumberIfItIsCorrect()
+        verifyConnectionWithTheCamera()
+    }
 
+    private fun saveSerialNumberIfItIsCorrect(){
+        val serialNumberCamera = pairingViewModel.getNetworkName()
         if (pairingViewModel.isValidNumberCameraBWC(serialNumberCamera)) {
             CameraInfo.serialNumber = serialNumberCamera
-            verifyConnectionWithTheCamera()
-        } else {
-            activity?.fragmentContainer?.showErrorSnackBar(getString(R.string.verify_camera_wifi))
-            showErrorResult()
         }
     }
 
