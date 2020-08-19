@@ -13,7 +13,6 @@ import com.lawmobile.presentation.ui.base.BaseActivity
 import com.lawmobile.presentation.utils.Constants
 import com.safefleet.mobile.avml.cameras.entities.CameraConnectFile
 import com.safefleet.mobile.commons.helpers.Result
-import kotlinx.android.synthetic.main.activity_file_list.textViewFileListBack
 import kotlinx.android.synthetic.main.activity_snapshot_item_detail.*
 
 class SnapshotDetailActivity : BaseActivity() {

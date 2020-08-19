@@ -36,6 +36,5 @@ class ValidatePasswordOfficerModule {
         fun provideValidatePasswordOfficerUseCase(validatePasswordOfficerRepository: ValidatePasswordOfficerRepository): ValidatePasswordOfficerUseCase =
             ValidatePasswordOfficerUseCaseImpl(validatePasswordOfficerRepository)
 
-
     }
 }

@@ -11,7 +11,6 @@ import com.schibsted.spain.barista.assertion.BaristaListAssertions
 import com.schibsted.spain.barista.assertion.BaristaVisibilityAssertions.assertDisplayed
 import com.schibsted.spain.barista.interaction.BaristaClickInteractions.clickOn
 import com.schibsted.spain.barista.interaction.BaristaListInteractions
-import com.schibsted.spain.barista.interaction.BaristaSleepInteractions
 
 class FileListScreen : BaseScreen() {
 
@@ -67,21 +66,7 @@ class FileListScreen : BaseScreen() {
         return this
     }
 
-    fun isSnapshotListDisplayed() = assertDisplayed(R.id.snapshotListRecycler)
-
-    fun isVideoListDisplayed() = assertDisplayed(R.id.videoListRecycler)
-
-    fun switchToVideosList() {
-        BaristaSleepInteractions.sleep(500)
-        clickOn(R.id.buttonVideoListSwitch)
-        BaristaSleepInteractions.sleep(2000)
-    }
-
-    fun switchToSnapshotsList() {
-        BaristaSleepInteractions.sleep(500)
-        clickOn(R.id.buttonSnapshotListSwitch)
-        BaristaSleepInteractions.sleep(2000)
-    }
+    fun isFileListDisplayed() = assertDisplayed(R.id.fileListRecycler)
 
     fun areNoFilesFound(@StringRes toastMessage: Int) =
         assertDisplayed(R.id.noFilesTextView, toastMessage)

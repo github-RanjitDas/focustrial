@@ -26,7 +26,7 @@ class SnapshotDetailTest : EspressoBaseTest<LoginActivity>(LoginActivity::class.
 
     @Before
     fun setRecyclerView() {
-        fileListScreen.recyclerView = R.id.snapshotListRecycler
+        fileListScreen.recyclerView = R.id.fileListRecycler
     }
 
     @Test

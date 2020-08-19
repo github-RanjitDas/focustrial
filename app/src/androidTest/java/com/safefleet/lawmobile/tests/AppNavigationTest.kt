@@ -26,10 +26,7 @@ class AppNavigationTest : EspressoBaseTest<LoginActivity>(LoginActivity::class.j
     fun verifySwitchBetweenSnapshotsAndVideosList_FMA_564() {
         with(fileListScreen) {
             liveViewScreen.openSnapshotList()
-            isSnapshotListDisplayed()
-
-            switchToVideosList()
-            isVideoListDisplayed()
+            isFileListDisplayed()
         }
     }
 

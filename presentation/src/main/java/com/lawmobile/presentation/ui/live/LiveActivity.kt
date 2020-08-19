@@ -99,13 +99,13 @@ class LiveActivity : BaseActivity() {
             changeOrientationLive()
         }
 
-        buttonSnapshot.setCustomListenerCheckConnection {
+        buttonSnapshot.setClickListenerCheckConnection {
             showShadowLoading(getString(R.string.taking_picture))
             activateSwitch(true)
             liveActivityViewModel.takePhoto()
         }
 
-        buttonRecord.setCustomListenerCheckConnection {
+        buttonRecord.setClickListenerCheckConnection {
             if (!isRecordingVideo) showShadowLoading(getString(R.string.starting_recording))
             else showShadowLoading(getString(R.string.stopping_recording))
             buttonSwitchLiveView.isActivated = true
@@ -113,7 +113,7 @@ class LiveActivity : BaseActivity() {
             manageRecordingVideo()
         }
 
-        buttonSwitchLiveView.setSwitchListenerCheckConnection {
+        buttonSwitchLiveView.setClickListenerCheckConnection {
             activateSwitch(buttonSwitchLiveView.isActivated)
         }
 

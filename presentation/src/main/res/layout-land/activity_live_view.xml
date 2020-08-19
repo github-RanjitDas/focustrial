@@ -44,8 +44,8 @@
             android:id="@+id/textViewCameraStatus"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="14dp"
-            android:layout_marginVertical="10dp"
+            android:layout_marginHorizontal="@dimen/camera_status_margin_horizontal"
+            android:layout_marginVertical="@dimen/camera_status_margin_vertical"
             android:text="@string/camera_status"
             android:textColor="@color/black"
             app:layout_constraintStart_toStartOf="parent"
@@ -55,7 +55,7 @@
             android:id="@+id/imageViewBattery"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="@dimen/battery_margin_top"
             android:background="@drawable/ic_battery"
             android:contentDescription="@string/battery_level"
             app:layout_constraintStart_toStartOf="@id/textViewCameraStatus"
@@ -65,11 +65,11 @@
             android:id="@+id/textViewBatteryPercent"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="11sp"
             android:text="@string/battery_percent_placeholder"
-            tools:ignore="SmallSp"
+            android:textSize="@dimen/battery_percent_text_size"
+            app:layout_constraintStart_toStartOf="@id/progressBatteryLevel"
             app:layout_constraintTop_toTopOf="@id/imageViewBattery"
-            app:layout_constraintStart_toStartOf="@id/progressBatteryLevel" />
+            tools:ignore="SmallSp" />
 
         <com.safefleet.mobile.commons.widgets.linearProgressBar.SafeFleetLinearProgressBar
             android:id="@+id/progressBatteryLevel"
@@ -163,10 +163,10 @@
             android:id="@+id/buttonSwitchLiveView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"
+            android:layout_margin="@dimen/switch_margin"
             android:clickable="true"
             android:focusable="true"
-            app:layout_constraintBottom_toTopOf="@id/dividerView"
+            app:layout_constraintBottom_toTopOf="@id/dividerSimpleListItem"
             app:layout_constraintStart_toEndOf="@id/textLiveViewSwitch"
             app:layout_constraintTop_toBottomOf="parent" />
 
@@ -208,10 +208,10 @@
             app:layout_constraintTop_toTopOf="@+id/buttonSwitchLiveView" />
 
         <View
-            android:id="@+id/dividerView"
+            android:id="@+id/dividerSimpleListItem"
             android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:layout_marginTop="10dp"
+            android:layout_height="@dimen/live_view_divider_height"
+            android:layout_marginTop="@dimen/live_view_divider_margin_top"
             android:background="@color/grey"
             app:layout_constraintTop_toBottomOf="@id/buttonSwitchLiveView" />
 
@@ -244,7 +244,7 @@
             android:focusable="true"
             android:visibility="invisible"
             app:layout_constraintBottom_toTopOf="@id/buttonSnapshotList"
-            app:layout_constraintTop_toBottomOf="@id/dividerView" />
+            app:layout_constraintTop_toBottomOf="@id/dividerSimpleListItem" />
 
         <Button
             android:id="@+id/buttonSnapshotList"

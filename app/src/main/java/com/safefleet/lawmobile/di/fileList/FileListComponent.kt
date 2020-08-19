@@ -1,9 +1,9 @@
 package com.safefleet.lawmobile.di.fileList
 
-import com.safefleet.lawmobile.di.ActivityScope
 import dagger.Subcomponent
+import dagger.hilt.android.scopes.ActivityScoped
 
-@ActivityScope
+@ActivityScoped
 @Subcomponent(modules = [FileListModule::class])
 interface FileListComponent {
     @Subcomponent.Factory

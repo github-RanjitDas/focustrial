@@ -13,7 +13,4 @@ open class BaseScreen {
         alert.isDisconnectionAlertDisplayed()
     }
 
-    fun isMobileDataEnableAlertDisplayed() {
-        alert.isMobileDataEnableAlertDisplayed()
-    }
 }

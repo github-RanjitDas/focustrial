@@ -1,9 +1,9 @@
 package com.safefleet.lawmobile.di.snapshotDetail
 
-import com.safefleet.lawmobile.di.ActivityScope
 import dagger.Subcomponent
+import dagger.hilt.android.scopes.ActivityScoped
 
-@ActivityScope
+@ActivityScoped
 @Subcomponent(modules = [SnapshotDetailModule::class])
 interface SnapshotDetailComponent {
     @Subcomponent.Factory

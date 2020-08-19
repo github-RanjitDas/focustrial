@@ -1,9 +1,9 @@
 package com.safefleet.lawmobile.di.videoPlayback
 
-import com.safefleet.lawmobile.di.ActivityScope
 import dagger.Subcomponent
+import dagger.hilt.android.scopes.ActivityScoped
 
-@ActivityScope
+@ActivityScoped
 @Subcomponent(modules = [VideoPlaybackModule::class])
 interface VideoPlaybackComponent {
     @Subcomponent.Factory

@@ -24,7 +24,6 @@ import javax.inject.Singleton
 @InstallIn(ApplicationComponent::class)
 class AppModule {
 
-
     companion object {
 
         private const val PREF_NAME = "authentication"
