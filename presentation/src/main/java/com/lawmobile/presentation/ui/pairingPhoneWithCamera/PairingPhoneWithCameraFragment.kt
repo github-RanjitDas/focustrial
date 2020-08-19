@@ -32,6 +32,7 @@ class PairingPhoneWithCameraFragment : BaseFragment() {
     @Inject
     lateinit var pairingPhoneWithCameraViewModel: PairingPhoneWithCameraViewModel
     lateinit var connectionSuccess: (isSuccess: Boolean) -> Unit
+    private var startByDefaultPairing: Boolean = false
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -44,36 +45,59 @@ class PairingPhoneWithCameraFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         configureListeners()
+        configureObservers()
+        if (startByDefaultPairing) {
+            startWithProgressPairing(pairingVisible = true)
+            setProgressInViewOfProgress(0)
+            Thread.sleep(1500)
+            startTheConnection()
+        }
+    }
+
+    private fun configureObservers() {
+        pairingPhoneWithCameraViewModel.progressConnectionWithTheCamera.observe(
+            viewLifecycleOwner,
+            Observer {
+                manageResponseProgressInConnectionCamera(it)
+            }
+        )
     }
 
     private fun configureListeners() {
         imageButtonGo.setOnClickListener {
-
-            if ((activity as BaseActivity).isPermissionGranted(Manifest.permission.ACCESS_FINE_LOCATION)) {
-                if (isGpSActive()){
-                    startConnectionToHotspotCamera()
-                }else {
-                    val alertInformation = AlertInformation(R.string.gps_necessary_title, R.string.gps_necessary_description,{
-                        it.dismiss()
-                    })
-                    context?.createAlertInformation(alertInformation)
-                }
-            } else {
-                showAlertToNavigateToPermissions()
-            }
+            startPairingInTapButtonGo()
         }
         textInstructionsToLinkCamera.setOnClickListener {
             openHelpPage()
         }
     }
 
-    private fun isGpSActive() : Boolean{
+    private fun startPairingInTapButtonGo() {
+        if ((activity as BaseActivity).isPermissionGranted(Manifest.permission.ACCESS_FINE_LOCATION)) {
+            if (isGpSActive()) {
+                startConnectionToHotspotCamera()
+            } else {
+                val alertInformation = AlertInformation(
+                    R.string.gps_necessary_title,
+                    R.string.gps_necessary_description,
+                    {
+                        it.dismiss()
+                    })
+                context?.createAlertInformation(alertInformation)
+            }
+        } else {
+            showAlertToNavigateToPermissions()
+        }
+    }
+
+    private fun isGpSActive(): Boolean {
         val locationManager =
             context!!.getSystemService(Context.LOCATION_SERVICE) as LocationManager
         var gpsEnable = false
         try {
             gpsEnable = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
-        }catch (e: Exception){}
+        } catch (e: Exception) {
+        }
 
         return gpsEnable
     }
@@ -101,14 +125,21 @@ class PairingPhoneWithCameraFragment : BaseFragment() {
         }
 
         val serialNumberCamera = pairingPhoneWithCameraViewModel.getNetworkName()
-
         if (pairingPhoneWithCameraViewModel.isValidNumberCameraBWC(serialNumberCamera)) {
-            CameraInfo.serialNumber = serialNumberCamera
-            startWithProgressPairing(true)
-            verifyConnectionWithTheCamera()
-        } else {
-            activity?.showToast("Verify the connection to the camera wifi", Toast.LENGTH_SHORT)
+            CameraInfo.serialNumber = serialNumberCamera.replace("X57", "57")
+            startTheConnection()
+            return
         }
+
+        startWithProgressPairing(pairingVisible = true)
+        setProgressInViewOfProgress(0)
+        Thread.sleep(1500)
+        startTheConnection()
+    }
+
+    private fun startTheConnection() {
+        startWithProgressPairing(true)
+        verifyConnectionWithTheCamera()
     }
 
     private fun createAlertToNavigateWifiSettings() {
@@ -131,18 +162,15 @@ class PairingPhoneWithCameraFragment : BaseFragment() {
 
     private fun verifyProgressConnectionWithTheCamera() {
         pairingPhoneWithCameraViewModel.getProgressConnectionWithTheCamera()
-        pairingPhoneWithCameraViewModel.progressConnectionWithTheCamera.observe(
-            viewLifecycleOwner,
-            Observer {
-                manageResponseProgressInConnectionCamera(it)
-            }
-        )
     }
 
     private fun manageResponseProgressInConnectionCamera(result: Result<Int>) {
         when (result) {
             is Result.Success -> setProgressInViewOfProgress(result.data)
-            is Result.Error -> startWithProgressPairing(false)
+            is Result.Error -> {
+                activity?.showToast("Verify the connection to the camera WiFi", Toast.LENGTH_SHORT)
+                startWithProgressPairing(false)
+            }
         }
     }
 
@@ -177,7 +205,13 @@ class PairingPhoneWithCameraFragment : BaseFragment() {
         val TAG = PairingPhoneWithCameraFragment::class.java.simpleName
         private const val PERCENT_TOTAL_CONNECTION_CAMERA = 100
 
-        fun createInstance(connectionSuccess: (isSuccess: Boolean) -> Unit): PairingPhoneWithCameraFragment =
-            PairingPhoneWithCameraFragment().apply { this.connectionSuccess = connectionSuccess }
+        fun createInstance(
+            connectionSuccess: (isSuccess: Boolean) -> Unit,
+            startByDefaultPairing: Boolean
+        ): PairingPhoneWithCameraFragment =
+            PairingPhoneWithCameraFragment().apply {
+                this.connectionSuccess = connectionSuccess
+                this.startByDefaultPairing = startByDefaultPairing
+            }
     }
 }

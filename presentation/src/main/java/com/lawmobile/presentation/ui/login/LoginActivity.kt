@@ -19,6 +19,7 @@ class LoginActivity : BaseActivity() {
 
     private lateinit var connectionSuccess: (isSuccess: Boolean) -> Unit
     private lateinit var validateSuccessPasswordOfficer: (isSuccess: Boolean) -> Unit
+    private lateinit var failedGetUser: () -> Unit
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,6 +58,10 @@ class LoginActivity : BaseActivity() {
                     .show()
             }
         }
+
+        failedGetUser = {
+            showFragmentPairingCamera(startByDefaultPairing = true)
+        }
     }
 
     private fun startLiveViewActivity() {
@@ -64,18 +69,22 @@ class LoginActivity : BaseActivity() {
         this.finish()
     }
 
-    private fun showFragmentPairingCamera() {
+    private fun showFragmentPairingCamera(startByDefaultPairing: Boolean = false) {
         supportFragmentManager.attachFragment(
             containerId = R.id.constrainContainer,
-            fragment = PairingPhoneWithCameraFragment.createInstance(connectionSuccess),
+            fragment = PairingPhoneWithCameraFragment.createInstance(connectionSuccess, startByDefaultPairing),
             tag = PairingPhoneWithCameraFragment.TAG
         )
     }
 
     private fun showFragmentValidatePasswordOfficer() {
+
         supportFragmentManager.attachFragment(
             containerId = R.id.constrainContainer,
-            fragment = ValidatePasswordOfficerFragment.createInstance(validateSuccessPasswordOfficer),
+            fragment = ValidatePasswordOfficerFragment.createInstance(
+                validateSuccessPasswordOfficer,
+                failedGetUser
+            ),
             tag = ValidatePasswordOfficerFragment.TAG
         )
     }
