@@ -13,4 +13,8 @@ class PairingPhoneWithCameraUseCaseImpl(private val pairingPhoneWithCameraReposi
         pairingPhoneWithCameraRepository.loadPairingCamera(hostnameToConnect, ipAddressClient)
     }
 
+    override suspend fun isPossibleTheConnection(hostnameToConnect: String): Result<Unit> {
+        return pairingPhoneWithCameraRepository.isPossibleTheConnection(hostnameToConnect)
+    }
+
 }

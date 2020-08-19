@@ -9,6 +9,7 @@ import com.safefleet.mobile.commons.helpers.Result
 import io.mockk.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.setMain
 import org.junit.Assert
 import org.junit.jupiter.api.BeforeEach
@@ -105,5 +106,22 @@ class PairingViewModelTest {
     fun isWifiEnableFalse() {
         every { wifiHelper.isWifiEnable() } returns false
         Assert.assertFalse(viewModel.isWifiEnable())
+    }
+
+    @Test
+    fun testIsPossibleTheConnectionSuccess() {
+        every { wifiHelper.getGatewayAddress() } returns DEFAULT_GATEWAY_ADDRESS
+        every { wifiHelper.getIpAddress() } returns DEFAULT_GATEWAY_ADDRESS
+        coEvery { pairingPhoneWithCameraUseCase.isPossibleTheConnection(any()) } returns Result.Success(Unit)
+        runBlocking { viewModel.isPossibleConnection() }
+        coVerify { pairingPhoneWithCameraUseCase.isPossibleTheConnection(any()) }
+    }
+
+    @Test
+    fun testIsPossibleTheConnectionErrorInGateway() {
+        every { wifiHelper.getGatewayAddress() } returns ""
+        viewModel.isPossibleConnection()
+        val error = viewModel.validateConnectionLiveData.value as Result.Error
+        Assert.assertEquals(error.exception.message, EXCEPTION_GET_PARAMS_TO_CONNECT)
     }
 }

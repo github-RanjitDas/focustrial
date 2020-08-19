@@ -38,4 +38,11 @@ class PairingPhoneWithCameraRemoteDataSourceImplTest {
 
         coVerify { cameraConnectService.loadPairingCamera("", "") }
     }
+
+    @Test
+    fun testIsPossibleTheConnection() {
+        coEvery { cameraConnectService.isPossibleTheConnection(any()) } returns Result.Success(Unit)
+        runBlocking { pairingPhoneWithCameraRemoteDataSourceImpl.isPossibleTheConnection("10.10.10.4") }
+        coVerify { cameraConnectService.isPossibleTheConnection("10.10.10.4") }
+    }
 }

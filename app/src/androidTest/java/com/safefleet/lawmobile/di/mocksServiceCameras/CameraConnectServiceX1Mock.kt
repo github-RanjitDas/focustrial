@@ -111,6 +111,9 @@ class CameraConnectServiceX1Mock : CameraConnectService {
     }
 
     override fun isCameraConnected(gatewayConnection: String): Boolean = true
+    override suspend fun isPossibleTheConnection(hostnameToConnect: String): Result<Unit> {
+        return Result.Success(Unit)
+    }
 
     override suspend fun loadPairingCamera(hostnameToConnect: String, ipAddressClient: String) {
         progressPairingCameraMediator.postValue(Result.Success(100))

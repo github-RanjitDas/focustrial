@@ -11,8 +11,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.lawmobile.presentation.R
+import com.safefleet.mobile.commons.helpers.doIfSuccess
 import com.lawmobile.presentation.entities.AlertInformation
 import com.lawmobile.presentation.extensions.createAlertInformation
 import com.lawmobile.presentation.extensions.isPermissionGranted
@@ -20,6 +22,8 @@ import com.lawmobile.presentation.extensions.showErrorSnackBar
 import com.lawmobile.presentation.ui.base.BaseActivity
 import com.lawmobile.presentation.ui.base.BaseFragment
 import com.lawmobile.presentation.ui.login.LoginActivity
+import com.safefleet.mobile.commons.helpers.Result
+import com.safefleet.mobile.commons.helpers.doIfError
 import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.android.synthetic.main.fragment_start_pairing.*
 
@@ -38,16 +42,21 @@ class StartPairingFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        configureListeners()
+        setObservers()
+        setListeners()
     }
 
-    private fun configureListeners() {
+    private fun setListeners() {
         buttonLogin.setOnClickListener {
             verifyPermissionsToStartPairing()
         }
         buttonInstructionsToLinkCamera.setOnClickListener {
             showBottomSheet()
         }
+    }
+
+    private fun setObservers(){
+        pairingViewModel.validateConnectionLiveData.observe(viewLifecycleOwner, Observer(::manageIsPossibleConnection))
     }
 
     private fun showBottomSheet() {
@@ -85,7 +94,7 @@ class StartPairingFragment : BaseFragment() {
         }
         val serialNumberCamera = pairingViewModel.getNetworkName()
         if (!pairingViewModel.isValidNumberCameraBWC(serialNumberCamera)) {
-            activity?.fragmentContainer?.showErrorSnackBar(getString(R.string.verify_camera_wifi))
+            pairingViewModel.isPossibleConnection()
             return
         }
         validateRequirements(true)
@@ -113,6 +122,15 @@ class StartPairingFragment : BaseFragment() {
         val uri: Uri = Uri.fromParts("package", activity?.packageName, null)
         intent.data = uri
         startActivity(intent)
+    }
+
+    private fun manageIsPossibleConnection(result: Result<Unit>){
+        with(result){
+            doIfSuccess { validateRequirements(true) }
+            doIfError {
+                activity?.fragmentContainer?.showErrorSnackBar(getString(R.string.verify_camera_wifi))
+            }
+        }
     }
 
     private fun createAlertToNavigateWifiSettings() {
