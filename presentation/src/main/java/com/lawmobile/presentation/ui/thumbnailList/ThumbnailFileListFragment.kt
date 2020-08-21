@@ -23,7 +23,6 @@ import com.safefleet.mobile.avml.cameras.entities.CameraConnectFile
 import com.safefleet.mobile.commons.helpers.Result
 import com.safefleet.mobile.commons.helpers.doIfError
 import com.safefleet.mobile.commons.helpers.doIfSuccess
-import kotlinx.android.synthetic.main.activity_file_list.*
 import kotlinx.android.synthetic.main.fragment_file_list.*
 
 class ThumbnailFileListFragment : BaseFragment() {
@@ -120,7 +119,7 @@ class ThumbnailFileListFragment : BaseFragment() {
                 }
             }
             doIfError {
-                activity?.constraintLayoutFileList?.showErrorSnackBar(
+                fileListLayout.showErrorSnackBar(
                     it.message ?: getString(R.string.link_images_error)
                 )
                 (activity as BaseActivity).hideLoadingDialog()
@@ -190,11 +189,6 @@ class ThumbnailFileListFragment : BaseFragment() {
             if (index >= 0) imageList[index].isAssociatedToVideo = true
         }
         return imageList
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        instance = null
     }
 
     companion object {

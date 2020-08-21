@@ -14,7 +14,6 @@
     <!--  Pairing Phone with Camera -->
     <dimen name="pairing_phone_camera_text_title_margin_top">20dp</dimen>
     <dimen name="pairing_phone_camera_input_height">40dp</dimen>
-    <dimen name="pairing_phone_camera_input_margin_top">30dp</dimen>
     <dimen name="pairing_phone_camera_input_edit_padding_sides">5dp</dimen>
     <dimen name="pairing_phone_camera_button_go_size">150dp</dimen>
     <dimen name="pairing_phone_camera_button_go_margin_top">50dp</dimen>
@@ -96,14 +95,12 @@
     <dimen name="link_snapshots_loading_size">50dp</dimen>
     <dimen name="button_retry_text_size">20sp</dimen>
     <dimen name="result_pairing_image_padding">15dp</dimen>
-    <dimen name="password_label_margin_bottom">30dp</dimen>
     <dimen name="password_text_input_margin_bottom">80dp</dimen>
     <dimen name="button_login_text_size">20sp</dimen>
     <dimen name="custom_snackbar_icon_size">30dp</dimen>
     <dimen name="custom_snackbar_icon_margin">16dp</dimen>
     <dimen name="custom_snackbar_text_padding">10dp</dimen>
     <dimen name="custom_snackbar_text_size">12sp</dimen>
-    <dimen name="validate_fragment_padding_top">50dp</dimen>
     <dimen name="snackbar_view_padding">8dp</dimen>
 
     <!--instructions bottom sheet-->

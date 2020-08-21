@@ -23,11 +23,24 @@ class CustomRecordButton @JvmOverloads constructor(
         buttonCustomRecord.setOnClickListener(this)
     }
 
+    override fun isActivated(): Boolean {
+        return buttonCustomRecord.isActivated
+    }
+
+    override fun setActivated(activated: Boolean) {
+        buttonCustomRecord.isActivated = activated
+        changeButtonState()
+    }
+
     override fun onClick(v: View) {
         onClicked?.invoke(v)
         isActivated = !isActivated
-        val density = resources.displayMetrics.density
 
+        changeButtonState()
+    }
+
+    private fun changeButtonState() {
+        val density = resources.displayMetrics.density
         with(buttonCustomRecord) {
             if (isActivated) {
                 setBackgroundResource(R.drawable.background_recording_active)

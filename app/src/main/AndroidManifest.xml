@@ -43,16 +43,19 @@
 
         <activity
             android:name="com.lawmobile.presentation.ui.fileList.FileListActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
             tools:ignore="LockedOrientationActivity" />
 
         <activity
             android:name="com.lawmobile.presentation.ui.snapshotDetail.SnapshotDetailActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
             tools:ignore="LockedOrientationActivity" />
 
         <activity
             android:name="com.lawmobile.presentation.ui.helpSection.HelpPageActivity"
+            android:screenOrientation="portrait"
             android:label="User Guide"
             android:parentActivityName="com.lawmobile.presentation.ui.login.LoginActivity" />
 

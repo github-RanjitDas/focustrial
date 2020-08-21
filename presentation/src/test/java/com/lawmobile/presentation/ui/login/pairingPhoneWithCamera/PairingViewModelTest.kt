@@ -124,4 +124,10 @@ class PairingViewModelTest {
         val error = viewModel.validateConnectionLiveData.value as Result.Error
         Assert.assertEquals(error.exception.message, EXCEPTION_GET_PARAMS_TO_CONNECT)
     }
+
+    @Test
+    fun testResetProgress() {
+        viewModel.resetProgress()
+        Assert.assertTrue(viewModel.progressConnectionWithTheCamera.value == Result.Success(0))
+    }
 }

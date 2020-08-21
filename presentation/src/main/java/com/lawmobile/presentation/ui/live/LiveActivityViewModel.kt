@@ -10,6 +10,7 @@ import com.lawmobile.domain.usecase.liveStreaming.LiveStreamingUseCase
 import com.lawmobile.presentation.ui.base.BaseViewModel
 import com.lawmobile.presentation.utils.VLCMediaPlayer
 import com.safefleet.mobile.avml.cameras.entities.CameraConnectCatalog
+import com.safefleet.mobile.commons.helpers.Event
 import com.safefleet.mobile.commons.helpers.Result
 import com.safefleet.mobile.commons.helpers.doIfError
 import com.safefleet.mobile.commons.helpers.doIfSuccess
@@ -21,20 +22,20 @@ class LiveActivityViewModel @ViewModelInject constructor(
     private val mediaActionSound: MediaActionSound
 ) : BaseViewModel() {
 
-    private val startRecordVideoMediator: MediatorLiveData<Result<Unit>> = MediatorLiveData()
-    val startRecordVideo: LiveData<Result<Unit>> get() = startRecordVideoMediator
+    private val resultRecordVideoMediator: MediatorLiveData<Result<Unit>> = MediatorLiveData()
+    val resultRecordVideoLiveData: LiveData<Result<Unit>> get() = resultRecordVideoMediator
 
-    private val stopRecordVideoMediator: MediatorLiveData<Result<Unit>> = MediatorLiveData()
-    val stopRecordVideo: LiveData<Result<Unit>> get() = stopRecordVideoMediator
+    private val resultStopVideoMediator: MediatorLiveData<Result<Unit>> = MediatorLiveData()
+    val resultStopVideoLiveData: LiveData<Result<Unit>> get() = resultStopVideoMediator
 
-    private val resultTakePhotoMediatorLiveData = MediatorLiveData<Result<Unit>>()
-    val resultTakePhotoLiveData: LiveData<Result<Unit>> get() = resultTakePhotoMediatorLiveData
+    private val resultTakePhotoMediatorLiveData = MediatorLiveData<Event<Result<Unit>>>()
+    val resultTakePhotoLiveData: LiveData<Event<Result<Unit>>> get() = resultTakePhotoMediatorLiveData
 
-    private val batteryLevelMediatorLiveData = MediatorLiveData<Result<Int>>()
-    val batteryLevelLiveData: LiveData<Result<Int>> get() = batteryLevelMediatorLiveData
+    private val batteryLevelMediatorLiveData = MediatorLiveData<Event<Result<Int>>>()
+    val batteryLevelLiveData: LiveData<Event<Result<Int>>> get() = batteryLevelMediatorLiveData
 
-    private val storageMediatorLiveData = MediatorLiveData<Result<List<Int>>>()
-    val storageLiveData: LiveData<Result<List<Int>>> get() = storageMediatorLiveData
+    private val storageMediatorLiveData = MediatorLiveData<Event<Result<List<Int>>>>()
+    val storageLiveData: LiveData<Event<Result<List<Int>>>> get() = storageMediatorLiveData
 
     private val catalogInfoMediatorLiveData =
         MediatorLiveData<Result<List<CameraConnectCatalog>>>()
@@ -64,7 +65,7 @@ class LiveActivityViewModel @ViewModelInject constructor(
 
     fun takePhoto() {
         viewModelScope.launch {
-            resultTakePhotoMediatorLiveData.postValue(liveStreamingUseCase.takePhoto())
+            resultTakePhotoMediatorLiveData.postValue(Event(liveStreamingUseCase.takePhoto()))
         }
     }
 
@@ -74,20 +75,20 @@ class LiveActivityViewModel @ViewModelInject constructor(
 
     fun startRecordVideo() {
         viewModelScope.launch {
-            startRecordVideoMediator.postValue(liveStreamingUseCase.startRecordVideo())
+            resultRecordVideoMediator.postValue(liveStreamingUseCase.startRecordVideo())
         }
     }
 
     fun stopRecordVideo() {
         viewModelScope.launch {
-            stopRecordVideoMediator.postValue(liveStreamingUseCase.stopRecordVideo())
+            resultStopVideoMediator.postValue(liveStreamingUseCase.stopRecordVideo())
         }
     }
 
     fun getBatteryLevel() {
         viewModelScope.launch {
             batteryLevelMediatorLiveData.postValue(
-                liveStreamingUseCase.getBatteryLevel()
+                Event(liveStreamingUseCase.getBatteryLevel())
             )
         }
     }
@@ -103,15 +104,15 @@ class LiveActivityViewModel @ViewModelInject constructor(
                             val totalGigabytes = (total.toInt() / GIGABYTE)
                             gigabyteList.add(totalGigabytes - gigabyteList[0])
                             gigabyteList.add(totalGigabytes)
-                            storageMediatorLiveData.postValue(Result.Success(gigabyteList))
+                            storageMediatorLiveData.postValue(Event(Result.Success(gigabyteList)))
                         }
                         doIfError {
-                            storageMediatorLiveData.postValue(Result.Error(it))
+                            storageMediatorLiveData.postValue(Event(Result.Error(it)))
                         }
                     }
                 }
                 doIfError {
-                    storageMediatorLiveData.postValue(Result.Error(it))
+                    storageMediatorLiveData.postValue(Event(Result.Error(it)))
                 }
             }
         }

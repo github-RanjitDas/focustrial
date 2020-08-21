@@ -9,4 +9,5 @@ object CameraInfo {
     var officerId = ""
     var serialNumber = ""
     var officerName = ""
+    var areNewChanges = false
 }
