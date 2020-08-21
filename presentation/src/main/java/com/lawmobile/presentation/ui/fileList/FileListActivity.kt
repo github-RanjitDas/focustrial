@@ -221,4 +221,10 @@ class FileListActivity : BaseActivity() {
         }
         hideLoadingDialog()
     }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        SimpleFileListFragment.instance = null
+        ThumbnailFileListFragment.instance = null
+    }
 }

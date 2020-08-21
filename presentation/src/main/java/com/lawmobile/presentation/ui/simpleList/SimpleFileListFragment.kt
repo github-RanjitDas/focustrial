@@ -9,6 +9,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.lawmobile.domain.entities.CameraInfo
 import com.lawmobile.domain.entities.DomainInformationFile
 import com.lawmobile.domain.entities.DomainInformationFileResponse
 import com.lawmobile.presentation.R
@@ -28,7 +29,6 @@ import com.safefleet.mobile.avml.cameras.entities.CameraConnectFile
 import com.safefleet.mobile.commons.helpers.Result
 import com.safefleet.mobile.commons.helpers.doIfError
 import com.safefleet.mobile.commons.helpers.doIfSuccess
-import kotlinx.android.synthetic.main.activity_file_list.*
 import kotlinx.android.synthetic.main.fragment_file_list.*
 
 class SimpleFileListFragment : BaseFragment() {
@@ -114,7 +114,7 @@ class SimpleFileListFragment : BaseFragment() {
                 (activity as BaseActivity).hideLoadingDialog()
             }
             doIfError {
-                constraintLayoutFileList.showErrorSnackBar(getString(R.string.file_list_failed_load_files))
+                fileListLayout.showErrorSnackBar(getString(R.string.file_list_failed_load_files))
                 (activity as BaseActivity).hideLoadingDialog()
             }
         }
@@ -158,30 +158,21 @@ class SimpleFileListFragment : BaseFragment() {
             it.dismiss()
         }, null, customMessage)
         activity?.createAlertInformation(alertInformation)
+        CameraInfo.areNewChanges = true
     }
 
     override fun onResume() {
         super.onResume()
-        when (listType) {
-            SNAPSHOT_LIST -> {
-                simpleListViewModel.getSnapshotList()
-            }
-            VIDEO_LIST -> {
-                simpleListViewModel.getVideoList()
-            }
+        if (CameraInfo.areNewChanges) {
+            getFileList()
+            CameraInfo.areNewChanges = false
         }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        instance = null
     }
 
     companion object {
         var instance: SimpleFileListFragment? = null
         fun getActualInstance(): SimpleFileListFragment {
-            val instanceFragment = instance
-                ?: SimpleFileListFragment()
+            val instanceFragment = instance ?: SimpleFileListFragment()
             instance = instanceFragment
             return instance!!
         }

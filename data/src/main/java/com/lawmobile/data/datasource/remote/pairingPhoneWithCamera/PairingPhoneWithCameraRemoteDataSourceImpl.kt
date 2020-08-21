@@ -6,8 +6,7 @@ import com.safefleet.mobile.commons.helpers.Result
 
 open class PairingPhoneWithCameraRemoteDataSourceImpl(
     private val cameraConnectService: CameraConnectService
-) :
-    PairingPhoneWithCameraRemoteDataSource {
+) : PairingPhoneWithCameraRemoteDataSource {
     override var progressPairingCamera: LiveData<Result<Int>> =
         cameraConnectService.progressPairingCamera
 

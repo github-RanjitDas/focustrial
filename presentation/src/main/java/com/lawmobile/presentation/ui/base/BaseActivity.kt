@@ -126,6 +126,7 @@ open class BaseActivity : AppCompatActivity() {
 
     private fun handleTimeout(timedOut: Boolean) {
         if (timedOut && isLoading) {
+            hideLoadingDialog()
             finish()
             this.showToast(getString(R.string.loading_files_error), Toast.LENGTH_SHORT)
         }

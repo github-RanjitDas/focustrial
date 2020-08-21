@@ -26,11 +26,19 @@ internal class EspressoIdlingResourceTest {
     }
 
     @Test
-    fun decrement() {
+    fun decrementNotIdle() {
         if (EspressoIdlingResource.countingIdlingResource.isIdleNow) {
             EspressoIdlingResource.increment()
         }
         EspressoIdlingResource.decrement()
+        Assert.assertTrue(EspressoIdlingResource.countingIdlingResource.isIdleNow)
+    }
+
+    @Test
+    fun decrementIsIdle() {
+        while (!EspressoIdlingResource.countingIdlingResource.isIdleNow) {
+            EspressoIdlingResource.decrement()
+        }
         Assert.assertTrue(EspressoIdlingResource.countingIdlingResource.isIdleNow)
     }
 }

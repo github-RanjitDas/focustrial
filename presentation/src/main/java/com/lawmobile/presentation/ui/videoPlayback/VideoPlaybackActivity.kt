@@ -284,6 +284,7 @@ class VideoPlaybackActivity : BaseActivity() {
             this.showToast(getString(R.string.event_mandatory), Toast.LENGTH_SHORT)
             return
         }
+        CameraInfo.areNewChanges = true
         showLoadingDialog()
         videoPlaybackViewModel.saveVideoMetadata(getNewMetadataFromForm())
         isVideoMetadataChangesSaved = true
