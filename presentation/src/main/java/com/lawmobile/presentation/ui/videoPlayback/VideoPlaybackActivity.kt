@@ -319,7 +319,7 @@ class VideoPlaybackActivity : BaseActivity() {
 
     private fun setVideoInformation() {
         videoNameValue.text = connectVideo?.name
-        startTimeValue.text = connectVideo?.getVideoStartTime()
+        startTimeValue.text = connectVideo?.getCreationDate()
         durationValue.text = totalDurationVideoInMilliSeconds.convertMilliSecondsToString()
     }
 

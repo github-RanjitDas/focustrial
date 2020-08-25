@@ -75,7 +75,7 @@ node ('docker-builds-slave') {
                 }
             }
 
-            /*stage('Sonar Quality') {
+            stage('Sonar Quality') {
                 logger.stage()
                 timeout(15) {
                     withSonarQubeEnv('Seon SonarQube') {
@@ -83,7 +83,7 @@ node ('docker-builds-slave') {
                     }
                     waitForQualityGate abortPipeline: true
                 }
-            }*/
+            }
 
             if(env.BRANCH_NAME == 'develop') {
                 stage('Generate APK'){

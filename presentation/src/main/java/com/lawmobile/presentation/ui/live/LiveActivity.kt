@@ -358,6 +358,7 @@ class LiveActivity : BaseActivity() {
             doIfError {
                 liveViewAppBar.showErrorSnackBar(getString(R.string.error_saving_video))
                 buttonRecord.isActivated = false
+                showRecordingIndicator(false)
             }
         }
         hideShadowLoading()
