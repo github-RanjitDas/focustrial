@@ -14,6 +14,7 @@ import com.lawmobile.presentation.extensions.text
 import com.lawmobile.presentation.ui.base.BaseFragment
 import com.lawmobile.presentation.ui.login.LoginActivity
 import com.lawmobile.presentation.utils.EncodePassword
+import com.lawmobile.presentation.utils.EspressoIdlingResource
 import com.safefleet.mobile.commons.helpers.Result
 import com.safefleet.mobile.commons.helpers.hideKeyboard
 import kotlinx.android.synthetic.main.fragment_validate_officer_password.*
@@ -63,6 +64,7 @@ class ValidateOfficerPasswordFragment : BaseFragment() {
     private fun configureListeners() {
         buttonLogin.setOnClickListenerCheckConnection {
             (activity as LoginActivity).hideKeyboard()
+            EspressoIdlingResource.increment()
             verifyPasswordOfficer()
         }
     }

@@ -19,6 +19,7 @@ import com.lawmobile.presentation.ui.live.LiveActivity
 import com.lawmobile.presentation.ui.login.pairingPhoneWithCamera.PairingResultFragment
 import com.lawmobile.presentation.ui.login.pairingPhoneWithCamera.StartPairingFragment
 import com.lawmobile.presentation.ui.login.validateOfficerPassword.ValidateOfficerPasswordFragment
+import com.lawmobile.presentation.utils.EspressoIdlingResource
 import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.android.synthetic.main.bottom_sheet_instructions_connect_camera.*
 
@@ -39,6 +40,7 @@ class LoginActivity : BaseActivity() {
         if (it) startLiveViewActivity()
         else {
             fragmentContainer.showErrorSnackBar(getString(R.string.incorrect_password))
+            EspressoIdlingResource.decrement()
         }
     }
     private val validateRequirements: (isSuccess: Boolean) -> Unit = {

@@ -23,5 +23,4 @@ object EspressoIdlingResource {
             Log.d("EspressoIdlingResource", "empty: " + countingIdlingResource.isIdleNow.toString())
         }
     }
-
 }

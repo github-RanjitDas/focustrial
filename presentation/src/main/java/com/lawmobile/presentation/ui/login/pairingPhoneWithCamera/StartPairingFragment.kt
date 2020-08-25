@@ -14,7 +14,6 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.lawmobile.presentation.R
-import com.safefleet.mobile.commons.helpers.doIfSuccess
 import com.lawmobile.presentation.entities.AlertInformation
 import com.lawmobile.presentation.extensions.createAlertInformation
 import com.lawmobile.presentation.extensions.isPermissionGranted
@@ -24,6 +23,7 @@ import com.lawmobile.presentation.ui.base.BaseFragment
 import com.lawmobile.presentation.ui.login.LoginActivity
 import com.safefleet.mobile.commons.helpers.Result
 import com.safefleet.mobile.commons.helpers.doIfError
+import com.safefleet.mobile.commons.helpers.doIfSuccess
 import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.android.synthetic.main.fragment_start_pairing.*
 
@@ -47,7 +47,7 @@ class StartPairingFragment : BaseFragment() {
     }
 
     private fun setListeners() {
-        buttonLogin.setOnClickListener {
+        buttonGo.setOnClickListener {
             verifyPermissionsToStartPairing()
         }
         buttonInstructionsToLinkCamera.setOnClickListener {
@@ -55,8 +55,11 @@ class StartPairingFragment : BaseFragment() {
         }
     }
 
-    private fun setObservers(){
-        pairingViewModel.validateConnectionLiveData.observe(viewLifecycleOwner, Observer(::manageIsPossibleConnection))
+    private fun setObservers() {
+        pairingViewModel.validateConnectionLiveData.observe(
+            viewLifecycleOwner,
+            Observer(::manageIsPossibleConnection)
+        )
     }
 
     private fun showBottomSheet() {
@@ -109,10 +112,12 @@ class StartPairingFragment : BaseFragment() {
     }
 
     private fun showAlertToGPSEnable() {
-        val alertInformation = AlertInformation(R.string.gps_necessary_title,
+        val alertInformation = AlertInformation(
+            R.string.gps_necessary_title,
             R.string.gps_necessary_description,
-            { dialogInterface ->  dialogInterface.cancel() },
-            null)
+            { dialogInterface -> dialogInterface.cancel() },
+            null
+        )
         activity?.createAlertInformation(alertInformation)
     }
 
@@ -124,8 +129,8 @@ class StartPairingFragment : BaseFragment() {
         startActivity(intent)
     }
 
-    private fun manageIsPossibleConnection(result: Result<Unit>){
-        with(result){
+    private fun manageIsPossibleConnection(result: Result<Unit>) {
+        with(result) {
             doIfSuccess { validateRequirements(true) }
             doIfError {
                 activity?.fragmentContainer?.showErrorSnackBar(getString(R.string.verify_camera_wifi))

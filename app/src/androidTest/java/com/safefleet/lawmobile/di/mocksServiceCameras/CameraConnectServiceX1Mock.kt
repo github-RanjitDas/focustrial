@@ -30,7 +30,7 @@ class CameraConnectServiceX1Mock : CameraConnectService {
     }
 
     override suspend fun getBatteryLevel(): Result<Int> {
-        return Result.Success(10)
+        return Result.Success(90)
     }
 
     override suspend fun getImageBytes(cameraConnectFile: CameraConnectFile): Result<ByteArray> {
@@ -57,10 +57,6 @@ class CameraConnectServiceX1Mock : CameraConnectService {
     }
 
     override suspend fun getNumberOfVideos(): Result<String> {
-        return Result.Success("10")
-    }
-
-    override suspend fun getTotalStorage(): Result<String> {
         return Result.Success("10")
     }
 
@@ -111,6 +107,7 @@ class CameraConnectServiceX1Mock : CameraConnectService {
     }
 
     override fun isCameraConnected(gatewayConnection: String): Boolean = true
+
     override suspend fun isPossibleTheConnection(hostnameToConnect: String): Result<Unit> {
         return Result.Success(Unit)
     }
@@ -154,6 +151,10 @@ class CameraConnectServiceX1Mock : CameraConnectService {
     }
 
     override suspend fun getFreeStorage(): Result<String> {
-        return Result.Success("10")
+        return Result.Success("50000000")
+    }
+
+    override suspend fun getTotalStorage(): Result<String> {
+        return Result.Success("60000000")
     }
 }

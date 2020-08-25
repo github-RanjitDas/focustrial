@@ -11,7 +11,7 @@ import com.lawmobile.presentation.extensions.convertBitmap
 import com.lawmobile.presentation.extensions.getCreationDate
 import com.lawmobile.presentation.extensions.setOnClickListenerCheckConnection
 import com.safefleet.mobile.commons.helpers.inflate
-import kotlinx.android.synthetic.main.image_list_recycler_item.view.*
+import kotlinx.android.synthetic.main.thumbnail_list_recycler_item.view.*
 
 class ThumbnailFileListAdapter(
     private val onImageClick: ((DomainInformationImage) -> Unit),
@@ -27,7 +27,7 @@ class ThumbnailFileListAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ThumbnailListViewHolder {
         return ThumbnailListViewHolder(
-            parent.inflate(R.layout.image_list_recycler_item),
+            parent.inflate(R.layout.thumbnail_list_recycler_item),
             onImageClick,
             onImageCheck
         )

@@ -1,6 +1,11 @@
 package com.safefleet.lawmobile.screens
 
+import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.matcher.ViewMatchers.withId
 import com.safefleet.lawmobile.R
+import com.safefleet.lawmobile.helpers.isActivated
+import com.safefleet.lawmobile.helpers.isNotActivated
 import com.schibsted.spain.barista.assertion.BaristaBackgroundAssertions.assertHasBackground
 import com.schibsted.spain.barista.assertion.BaristaVisibilityAssertions.assertDisplayed
 import com.schibsted.spain.barista.assertion.BaristaVisibilityAssertions.assertNotDisplayed
@@ -8,6 +13,11 @@ import com.schibsted.spain.barista.assertion.BaristaVisibilityAssertions.assertN
 import com.schibsted.spain.barista.interaction.BaristaClickInteractions.clickOn
 
 class LiveViewScreen : BaseScreen() {
+
+    fun logout() {
+        clickOn(R.id.buttonLogout)
+        clickOn(R.string.accept)
+    }
 
     fun isLiveViewNotDisplayed() {
         assertNotExist(R.id.buttonSwitchLiveView)
@@ -20,6 +30,14 @@ class LiveViewScreen : BaseScreen() {
     fun isLiveViewDisplayed() {
         assertDisplayed(R.id.liveStreamingView)
         assertDisplayed(R.id.toggleFullScreenLiveView)
+
+        assertDisplayed(R.id.imageViewBattery)
+        assertDisplayed(R.id.textViewBatteryPercent)
+        assertDisplayed(R.id.progressBatteryLevel)
+
+        assertDisplayed(R.id.imageViewStorage)
+        assertDisplayed(R.id.textViewStorageLevels)
+        assertDisplayed(R.id.progressStorageLevel)
 
         assertDisplayed(R.id.buttonSnapshot)
         assertDisplayed(R.string.take_snapshots)
@@ -56,13 +74,13 @@ class LiveViewScreen : BaseScreen() {
     }
 
     fun isRecordingNotInProgress() {
-        assertHasBackground(R.id.buttonRecord, R.drawable.ic_record)
-        assertNotDisplayed(R.id.imageRecordingIndicator)
+        onView(withId(R.id.buttonRecord)).check(matches(isNotActivated()))
+        assertNotDisplayed(R.id.textLiveViewRecording)
     }
 
     fun isRecordingInProgress() {
-        assertHasBackground(R.id.buttonRecord, R.drawable.ic_record_active)
-        assertDisplayed(R.id.imageRecordingIndicator)
+        onView(withId(R.id.buttonRecord)).check(matches(isActivated()))
+        assertDisplayed(R.id.textLiveViewRecording)
     }
 
     fun isUserGuideDisplayed() {
@@ -81,17 +99,16 @@ class LiveViewScreen : BaseScreen() {
 
     fun takeSnapshot() {
         clickOn(R.id.buttonSnapshot)
-        toastMessage.isToastDisplayed(R.string.live_view_take_photo_success)
-        toastMessage.waitUntilToastDisappears(R.string.live_view_take_photo_success)
+        assertDisplayed(R.string.live_view_take_photo_success)
     }
 
     fun startRecording() {
-        this.isRecordingNotInProgress()
-        clickOn(R.id.buttonRecord)
+        isRecordingNotInProgress()
+        clickOn(R.string.record_video)
     }
 
     fun stopRecording() {
-        this.isRecordingInProgress()
-        clickOn(R.id.buttonRecord)
+        isRecordingInProgress()
+        clickOn(com.lawmobile.presentation.R.drawable.ic_record_active)
     }
 }

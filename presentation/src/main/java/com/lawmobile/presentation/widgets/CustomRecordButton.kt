@@ -21,6 +21,7 @@ class CustomRecordButton @JvmOverloads constructor(
         buttonText = findViewById(R.id.textViewButtonRecord)
         setOnClickListener(this)
         buttonCustomRecord.setOnClickListener(this)
+        textViewButtonRecord.setOnClickListener(this)
     }
 
     override fun isActivated(): Boolean {

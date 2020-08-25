@@ -5,7 +5,6 @@ import android.net.wifi.WifiManager
 import java.math.BigInteger
 import java.net.Inet4Address
 
-
 open class WifiHelper(private val wifiManager: WifiManager) {
 
     fun isWifiEnable(): Boolean = wifiManager.isWifiEnabled

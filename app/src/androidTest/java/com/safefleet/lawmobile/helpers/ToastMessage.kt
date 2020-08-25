@@ -10,9 +10,9 @@ import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withText
+import com.schibsted.spain.barista.assertion.BaristaVisibilityAssertions.assertNotDisplayed
 import org.hamcrest.Description
 import org.hamcrest.TypeSafeMatcher
-
 
 /**
  * Author: http://www.qaautomated.com/2016/01/how-to-test-toast-message-using-espresso.html
@@ -63,9 +63,9 @@ class ToastMessage {
     }
 
     fun waitUntilToastDisappears(@StringRes stringId: Int) {
-        for (i in 1..5) {
+        for (i in 1..100) {
             try {
-                isToastNotDisplayed(stringId)
+                assertNotDisplayed(stringId)
                 break
             } catch (e: Error) {
                 Thread.sleep(500)

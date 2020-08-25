@@ -28,13 +28,17 @@ class VideoListTest : EspressoBaseTest<LoginActivity>(LoginActivity::class.java)
     @Before
     fun login() = LoginScreen().login()
 
-    @Before
-    fun setRecyclerView() {
-        fileListScreen.recyclerView = R.id.fileListRecycler
+    private fun setSimpleRecyclerView() {
+        with(fileListScreen) {
+            recyclerView = R.id.fileListRecycler
+            targetView = R.id.dateSimpleListItem
+            targetCheckBox = R.id.checkboxSimpleListItem
+        }
     }
 
     @Test
     fun verifyNoVideosTaken_FMA_559() {
+        setSimpleRecyclerView()
         mockUtils.clearVideosOnX1()
 
         with(liveViewScreen) {
