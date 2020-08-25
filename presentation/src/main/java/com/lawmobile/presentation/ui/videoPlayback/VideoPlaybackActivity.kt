@@ -148,10 +148,13 @@ class VideoPlaybackActivity : BaseActivity() {
 
     private fun manageSaveVideoResult(result: Result<Unit>) {
         when (result) {
-            is Result.Success -> this.showToast(
-                getString(R.string.video_metadata_saved_success),
-                Toast.LENGTH_SHORT
-            )
+            is Result.Success -> {
+                this.showToast(
+                    getString(R.string.video_metadata_saved_success),
+                    Toast.LENGTH_SHORT
+                )
+                finish()
+            }
             is Result.Error -> this.showToast(
                 getString(R.string.video_metadata_save_error),
                 Toast.LENGTH_SHORT
@@ -334,7 +337,7 @@ class VideoPlaybackActivity : BaseActivity() {
         buttonPlay.setImageResource(R.drawable.ic_media_pause)
         updateLiveOrPlaybackActive(true)
         videoPlaybackViewModel.playVLCMediaPlayer()
-        if (currentProgressInVideo in 1..99){
+        if (currentProgressInVideo in 1..99) {
             setProgressToVideo(currentProgressInVideo)
         }
     }
@@ -492,7 +495,7 @@ class VideoPlaybackActivity : BaseActivity() {
     private fun configureObserveCurrentTimeVideo() {
         videoPlaybackViewModel.currentTimeVideo.observe(this, Observer {
             updateCurrentTimeInVideo()
-            if (it != currentTimeVideoInMilliSeconds){
+            if (it != currentTimeVideoInMilliSeconds) {
                 currentTimeVideoInMilliSeconds = it
                 updateProgressVideoInView()
             }
