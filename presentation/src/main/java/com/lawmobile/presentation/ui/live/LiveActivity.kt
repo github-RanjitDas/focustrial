@@ -21,6 +21,7 @@ import com.lawmobile.presentation.ui.helpSection.HelpPageActivity
 import com.lawmobile.presentation.utils.Constants.FILE_LIST_SELECTOR
 import com.lawmobile.presentation.utils.Constants.SNAPSHOT_LIST
 import com.lawmobile.presentation.utils.Constants.VIDEO_LIST
+import com.lawmobile.presentation.utils.EspressoIdlingResource
 import com.safefleet.mobile.avml.cameras.entities.CameraConnectCatalog
 import com.safefleet.mobile.avml.cameras.entities.CatalogTypes
 import com.safefleet.mobile.commons.animations.Animations
@@ -258,6 +259,7 @@ class LiveActivity : BaseActivity() {
                 liveViewAppBar.showErrorSnackBar(getString(R.string.storage_level_error))
             }
         }
+        EspressoIdlingResource.decrement()
     }
 
     private fun setColorInStorageLevel(information: List<Int>) {
@@ -325,6 +327,7 @@ class LiveActivity : BaseActivity() {
     }
 
     private fun hideShadowLoading() {
+        EspressoIdlingResource.decrement()
         viewLiveStreamingShadow.isVisible = false
         viewDisableButtons.isVisible = false
         viewLoading.isVisible = false
@@ -332,6 +335,7 @@ class LiveActivity : BaseActivity() {
     }
 
     private fun showShadowLoading(message: String) {
+        EspressoIdlingResource.increment()
         buttonSwitchLiveView.isActivated = true
         viewLiveStreamingShadow.isVisible = true
         viewDisableButtons.isVisible = true

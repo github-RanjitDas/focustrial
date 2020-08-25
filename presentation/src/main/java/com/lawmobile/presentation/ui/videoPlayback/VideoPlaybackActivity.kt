@@ -148,13 +148,10 @@ class VideoPlaybackActivity : BaseActivity() {
 
     private fun manageSaveVideoResult(result: Result<Unit>) {
         when (result) {
-            is Result.Success -> {
-                this.showToast(
-                    getString(R.string.video_metadata_saved_success),
-                    Toast.LENGTH_SHORT
-                )
-                finish()
-            }
+            is Result.Success -> this.showToast(
+                getString(R.string.video_metadata_saved_success),
+                Toast.LENGTH_SHORT
+            )
             is Result.Error -> this.showToast(
                 getString(R.string.video_metadata_save_error),
                 Toast.LENGTH_SHORT

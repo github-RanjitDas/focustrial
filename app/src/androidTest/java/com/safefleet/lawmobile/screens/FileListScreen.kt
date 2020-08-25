@@ -3,9 +3,10 @@ package com.safefleet.lawmobile.screens
 import androidx.annotation.IdRes
 import androidx.annotation.StringRes
 import androidx.test.espresso.assertion.ViewAssertions
-import androidx.test.espresso.matcher.ViewMatchers
 import com.safefleet.lawmobile.R
 import com.safefleet.lawmobile.helpers.CustomCheckboxAction
+import com.safefleet.lawmobile.helpers.isActivated
+import com.safefleet.lawmobile.helpers.isNotActivated
 import com.safefleet.mobile.avml.cameras.entities.CameraConnectFile
 import com.schibsted.spain.barista.assertion.BaristaListAssertions
 import com.schibsted.spain.barista.assertion.BaristaVisibilityAssertions.assertDisplayed
@@ -16,6 +17,12 @@ class FileListScreen : BaseScreen() {
 
     @IdRes
     var recyclerView: Int = 0
+
+    @IdRes
+    var targetView: Int = 0
+
+    @IdRes
+    var targetCheckBox: Int = 0
 
     fun areCheckboxesUnselected(startPosition: Int, endPosition: Int) {
         for (position in (startPosition..endPosition)) {
@@ -31,6 +38,7 @@ class FileListScreen : BaseScreen() {
         BaristaListAssertions.assertDisplayedAtPosition(
             recyclerView,
             position,
+            targetView,
             fileDate
         )
     }
@@ -39,12 +47,16 @@ class FileListScreen : BaseScreen() {
         val sortedFilesList = filesList.sortedByDescending { it.date }
 
         for ((itemCount, file) in sortedFilesList.withIndex()) {
-            this.isFileDisplayedAtPosition(file.date, itemCount)
+            isFileDisplayedAtPosition(file.date, itemCount)
         }
     }
 
     fun selectCheckboxOnPosition(position: Int): FileListScreen {
-        CustomCheckboxAction.selectCheckboxOnRecyclerPosition(recyclerView, position)
+        CustomCheckboxAction.selectCheckboxOnRecyclerPosition(
+            recyclerView,
+            targetCheckBox,
+            position
+        )
         return this
     }
 
@@ -52,7 +64,8 @@ class FileListScreen : BaseScreen() {
         BaristaListAssertions.assertCustomAssertionAtPosition(
             recyclerView,
             position,
-            viewAssertion = ViewAssertions.matches(ViewMatchers.withChild(ViewMatchers.isChecked()))
+            targetCheckBox,
+            ViewAssertions.matches(isActivated())
         )
         return this
     }
@@ -61,18 +74,21 @@ class FileListScreen : BaseScreen() {
         BaristaListAssertions.assertCustomAssertionAtPosition(
             recyclerView,
             position,
-            viewAssertion = ViewAssertions.matches(ViewMatchers.withChild(ViewMatchers.isNotChecked()))
+            targetCheckBox,
+            ViewAssertions.matches(isNotActivated())
         )
         return this
     }
 
     fun isFileListDisplayed() = assertDisplayed(R.id.fileListRecycler)
 
-    fun areNoFilesFound(@StringRes toastMessage: Int) =
-        assertDisplayed(R.id.noFilesTextView, toastMessage)
+    fun areNoFilesFound(@StringRes message: Int) =
+        assertDisplayed(R.id.noFilesTextView, message)
 
-    fun goBack() = clickOn(R.id.textViewFileListBack)
+    fun goBack() = clickOn(R.id.backArrowFileListAppBar)
 
     fun clickOnItemInPosition(position: Int) =
         BaristaListInteractions.clickListItem(recyclerView, position)
+
+    fun clickOnSelectFilesToAssociate() = clickOn(R.id.buttonSelectSnapshotsToAssociate)
 }

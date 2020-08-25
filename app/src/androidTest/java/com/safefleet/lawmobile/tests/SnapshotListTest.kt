@@ -8,6 +8,7 @@ import com.safefleet.lawmobile.screens.FileListScreen
 import com.safefleet.lawmobile.screens.LiveViewScreen
 import com.safefleet.lawmobile.screens.LoginScreen
 import com.safefleet.lawmobile.testData.CameraFilesData
+import com.schibsted.spain.barista.interaction.BaristaSleepInteractions
 import org.junit.Before
 import org.junit.FixMethodOrder
 import org.junit.Test
@@ -31,13 +32,17 @@ class SnapshotListTest : EspressoBaseTest<LoginActivity>(LoginActivity::class.ja
     @Before
     fun login() = LoginScreen().login()
 
-    @Before
-    fun setRecyclerView() {
-        fileListScreen.recyclerView = R.id.fileListRecycler
+    private fun setSimpleRecyclerView() {
+        with(fileListScreen) {
+            recyclerView = R.id.fileListRecycler
+            targetView = R.id.dateSimpleListItem
+            targetCheckBox = R.id.checkboxSimpleListItem
+        }
     }
 
     @Test
     fun b_verifyNoSnapshotsTaken_FMA_559() {
+        setSimpleRecyclerView()
         mockUtils.clearSnapshotsOnX1()
         with(liveViewScreen) {
             openSnapshotList()
@@ -49,6 +54,8 @@ class SnapshotListTest : EspressoBaseTest<LoginActivity>(LoginActivity::class.ja
             takeSnapshot()
             takeSnapshot()
 
+            BaristaSleepInteractions.sleep(2000)
+
             openSnapshotList()
 
             fileListScreen.areFilesSortedByDate(
@@ -59,9 +66,11 @@ class SnapshotListTest : EspressoBaseTest<LoginActivity>(LoginActivity::class.ja
 
     @Test
     fun a_verifyCheckboxWhenSnapshotsDontFit_FMA_560() {
+        setSimpleRecyclerView()
         liveViewScreen.openSnapshotList()
 
         with(fileListScreen) {
+            clickOnSelectFilesToAssociate()
             areFilesSortedByDate(snapshotsList.items)
 
             selectCheckboxOnPosition(0)
@@ -80,6 +89,9 @@ class SnapshotListTest : EspressoBaseTest<LoginActivity>(LoginActivity::class.ja
             isCheckboxSelected(7)
             isCheckboxUnselected(0)
 
+            selectCheckboxOnPosition(7)
+            selectCheckboxOnPosition(14)
+
             areCheckboxesUnselected(
                 startPosition = 0,
                 endPosition = snapshotsQuantity - 1
@@ -89,7 +101,7 @@ class SnapshotListTest : EspressoBaseTest<LoginActivity>(LoginActivity::class.ja
 
     @Test
     fun verifyCheckboxFunctionality_FMA_561() {
-        liveViewScreen.switchLiveViewToggle()
+        setSimpleRecyclerView()
         liveViewScreen.openSnapshotList()
 
         with(fileListScreen) {
@@ -116,7 +128,7 @@ class SnapshotListTest : EspressoBaseTest<LoginActivity>(LoginActivity::class.ja
 
     @Test
     fun verifyScrollWhenSnapshotsDontFit_FMA_562() {
-        liveViewScreen.switchLiveViewToggle()
+        setSimpleRecyclerView()
         liveViewScreen.openSnapshotList()
 
         with(fileListScreen) {
@@ -130,6 +142,7 @@ class SnapshotListTest : EspressoBaseTest<LoginActivity>(LoginActivity::class.ja
 
     @Test
     fun c_verifyUpdatingSnapshotsList_FMA_563() {
+        setSimpleRecyclerView()
         mockUtils.clearSnapshotsOnX1()
         val takenSnapshots = extraSnapshotsList.items.subList(0, 3)
 
@@ -144,6 +157,8 @@ class SnapshotListTest : EspressoBaseTest<LoginActivity>(LoginActivity::class.ja
             takeSnapshot()
             takeSnapshot()
 
+            BaristaSleepInteractions.sleep(2000)
+
             openSnapshotList()
 
             fileListScreen.areFilesSortedByDate(takenSnapshots)
@@ -152,6 +167,7 @@ class SnapshotListTest : EspressoBaseTest<LoginActivity>(LoginActivity::class.ja
 
     @Test
     fun verifyDisconnectionOpeningSnapsList_FMA_566() {
+        setSimpleRecyclerView()
         mockUtils.disconnectCamera()
 
         liveViewScreen.openSnapshotList()
@@ -160,9 +176,13 @@ class SnapshotListTest : EspressoBaseTest<LoginActivity>(LoginActivity::class.ja
 
     @Test
     fun verifyDisconnectionSwitchToVideosList_FMA_567() {
+        setSimpleRecyclerView()
         liveViewScreen.openSnapshotList()
+        fileListScreen.goBack()
 
         mockUtils.disconnectCamera()
+
+        liveViewScreen.openVideoList()
 
         fileListScreen.isDisconnectionAlertDisplayed()
     }

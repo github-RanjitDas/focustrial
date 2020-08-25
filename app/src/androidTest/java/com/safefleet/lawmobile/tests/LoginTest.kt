@@ -3,10 +3,10 @@ package com.safefleet.lawmobile.tests
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
 import com.lawmobile.presentation.ui.login.LoginActivity
-import com.safefleet.lawmobile.helpers.DeviceUtils
 import com.safefleet.lawmobile.screens.LiveViewScreen
 import com.safefleet.lawmobile.screens.LoginScreen
 import com.safefleet.lawmobile.testData.TestLoginData
+import com.schibsted.spain.barista.interaction.BaristaSleepInteractions
 import org.junit.FixMethodOrder
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -24,22 +24,26 @@ class LoginTest : EspressoBaseTest<LoginActivity>(LoginActivity::class.java) {
 
         val loginScreen = LoginScreen()
         val liveViewScreen = LiveViewScreen()
-        val deviceUtils = DeviceUtils()
     }
 
     @Test
     fun b_verifyAppLogin_FMA_261_289() {
         with(loginScreen) {
             isLogoDisplayed()
-            isWaitingForCameraTextDisplayed()
+            isConnectToCameraTextDisplayed()
             isInstructionsTextDisplayed()
 
-            go()
+            clickOnGo()
 
-            isWelcomeTextDisplayed()
+            isResultPairingSuccessImageDisplayed()
+            isResultPairingSuccessTextDisplayed()
+
+            BaristaSleepInteractions.sleep(1000)
+
+            isPasswordTextDisplayed()
 
             typePassword(OFFICER_PASSWORD)
-            go()
+            clickOnLogin()
 
             liveViewScreen.isLiveViewDisplayed()
         }
@@ -48,12 +52,17 @@ class LoginTest : EspressoBaseTest<LoginActivity>(LoginActivity::class.java) {
     @Test
     fun d_verifyInvalidPasswordLogin_FMA_288() {
         with(loginScreen) {
-            go()
+            clickOnGo()
 
-            isWelcomeTextDisplayed()
+            isResultPairingSuccessImageDisplayed()
+            isResultPairingSuccessTextDisplayed()
+
+            BaristaSleepInteractions.sleep(1000)
+
+            isPasswordTextDisplayed()
 
             typePassword(INVALID_OFFICER_PASSWORD)
-            go()
+            clickOnLogin()
 
             isIncorrectPasswordToastDisplayed()
             liveViewScreen.isLiveViewNotDisplayed()
@@ -63,10 +72,15 @@ class LoginTest : EspressoBaseTest<LoginActivity>(LoginActivity::class.java) {
     @Test
     fun c_verifyEmptyPasswordLogin_FMA_288() {
         with(loginScreen) {
-            go()
+            clickOnGo()
 
-            isWelcomeTextDisplayed()
-            go()
+            isResultPairingSuccessImageDisplayed()
+            isResultPairingSuccessTextDisplayed()
+
+            BaristaSleepInteractions.sleep(1000)
+
+            isPasswordTextDisplayed()
+            clickOnLogin()
 
             isIncorrectPasswordToastDisplayed()
             liveViewScreen.isLiveViewNotDisplayed()
@@ -76,18 +90,31 @@ class LoginTest : EspressoBaseTest<LoginActivity>(LoginActivity::class.java) {
     @Test
     fun a_verifyPairingForTheSecondTime_FMA_286() {
         with(loginScreen) {
-            go()
+            clickOnGo()
+
+            isResultPairingSuccessImageDisplayed()
+            isResultPairingSuccessTextDisplayed()
+
+            BaristaSleepInteractions.sleep(1000)
+
+            isPasswordTextDisplayed()
             typePassword(OFFICER_PASSWORD)
-            go()
+            clickOnLogin()
+
             liveViewScreen.isLiveViewDisplayed()
 
-            deviceUtils.restartApp()
+            liveViewScreen.logout()
 
-            go()
-            isWelcomeTextDisplayed()
+            clickOnGo()
 
+            isResultPairingSuccessImageDisplayed()
+            isResultPairingSuccessTextDisplayed()
+
+            BaristaSleepInteractions.sleep(1000)
+
+            isPasswordTextDisplayed()
             typePassword(OFFICER_PASSWORD)
-            go()
+            clickOnLogin()
 
             liveViewScreen.isLiveViewDisplayed()
         }
@@ -96,14 +123,45 @@ class LoginTest : EspressoBaseTest<LoginActivity>(LoginActivity::class.java) {
     @Test
     fun e_verifyLoginDisconnectionScenario_FMA_292() {
         with(loginScreen) {
+            clickOnGo()
+
+            isResultPairingSuccessImageDisplayed()
+            isResultPairingSuccessTextDisplayed()
+
+            BaristaSleepInteractions.sleep(1000)
+
+            isPasswordTextDisplayed()
+
             mockUtils.disconnectCamera()
 
-            isWaitingForCameraTextDisplayed()
-            go()
             typePassword(OFFICER_PASSWORD)
-            go()
+            clickOnLogin()
 
             isDisconnectionAlertDisplayed()
+        }
+    }
+
+    /*@Test
+    fun f_verifyPairingDisconnectionScenario_FMA_() {
+        with(loginScreen) {
+            mockUtils.disconnectCameraWifi()
+            clickOnGo()
+
+            //isVerifyConnectionToCameraWifiDisplayed()
+        }
+    }*/
+
+    @Test
+    fun g_verifyInstructionsToConnectCamera_FMA_() {
+        with(loginScreen) {
+            clickOnCameraInstructions()
+
+            isInstructionsTitleDisplayed()
+            isInstructionsImageDisplayed()
+            isInstructionsTextDisplayed()
+            isInstructionsGotItButtonDisplayed()
+
+            clickOnGotIt()
         }
     }
 }

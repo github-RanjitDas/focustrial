@@ -150,7 +150,7 @@
     <string name="_3">3.</string>
     <string name="instruction_3">Turn off mobile data on phone</string>
     <string name="_4">4.</string>
-    <string name="instruction_4">Enter Serial number and connect</string>
+    <string name="instruction_4">Connect to camera WiFi and press go</string>
     <string name="got_it">Got it!</string>
     <string name="close_instructions">close instructions</string>
     <string name="snapshots_title">Snapshots</string>
