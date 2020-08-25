@@ -8,7 +8,7 @@ import com.lawmobile.domain.entities.DomainInformationImage
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.entities.SnapshotsToLink
 import com.lawmobile.presentation.extensions.convertBitmap
-import com.lawmobile.presentation.extensions.getVideoStartTime
+import com.lawmobile.presentation.extensions.getCreationDate
 import com.lawmobile.presentation.extensions.setOnClickListenerCheckConnection
 import com.safefleet.mobile.commons.helpers.inflate
 import kotlinx.android.synthetic.main.image_list_recycler_item.view.*
@@ -66,7 +66,7 @@ class ThumbnailFileListAdapter(
         private fun setDataToViews(imageFile: DomainInformationImage) {
             with(thumbnailView) {
                 dateImageListItem.text =
-                    imageFile.cameraConnectFile.getVideoStartTime()
+                    imageFile.cameraConnectFile.getCreationDate()
                 val image = imageFile.imageBytes.convertBitmap()
                 photoImageListItem.setImageBitmap(image)
                 checkboxImageListItem.isActivated = imageFile.isAssociatedToVideo

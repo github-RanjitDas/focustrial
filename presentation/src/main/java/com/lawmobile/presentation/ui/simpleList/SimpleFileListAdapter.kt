@@ -8,7 +8,7 @@ import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.lawmobile.domain.entities.DomainInformationFile
 import com.lawmobile.presentation.R
-import com.lawmobile.presentation.extensions.getVideoStartTime
+import com.lawmobile.presentation.extensions.getCreationDate
 import com.lawmobile.presentation.extensions.setOnClickListenerCheckConnection
 import com.safefleet.mobile.commons.helpers.convertDpToPixel
 import com.safefleet.mobile.commons.helpers.inflate
@@ -55,10 +55,10 @@ class SimpleFileListAdapter(
 
     fun sortByDateAndTime() {
         if (isSortedAscendingByDateAndTime) {
-            fileList = fileList.sortedByDescending { it.cameraConnectFile.date }
+            fileList = fileList.sortedBy { it.cameraConnectFile.getCreationDate() }
             isSortedAscendingByDateAndTime = false
         } else {
-            fileList = fileList.sortedBy { it.cameraConnectFile.date }
+            fileList = fileList.sortedByDescending { it.cameraConnectFile.getCreationDate() }
             isSortedAscendingByDateAndTime = true
         }
     }
@@ -91,8 +91,8 @@ class SimpleFileListAdapter(
                 with(remoteCameraFile) {
                     dateSimpleListItem.text =
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
-                            Html.fromHtml(cameraConnectFile.getVideoStartTime(), 0)
-                        else cameraConnectFile.getVideoStartTime()
+                            Html.fromHtml(cameraConnectFile.getCreationDate(), 0)
+                        else cameraConnectFile.getCreationDate()
                     eventSimpleListItem.text =
                         cameraConnectVideoMetadata?.metadata?.event?.name ?: ""
                 }

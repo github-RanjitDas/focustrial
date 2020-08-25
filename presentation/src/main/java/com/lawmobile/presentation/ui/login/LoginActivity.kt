@@ -148,6 +148,13 @@ class LoginActivity : BaseActivity() {
         )
     }
 
+    override fun onStop() {
+        super.onStop()
+        imageViewFMALogo.isVisible = false
+        imageViewFMALogoNoAnimation.isVisible = true
+        imageViewSafeFleet.isVisible = true
+    }
+
     override fun onBackPressed() {}
 
     companion object {
