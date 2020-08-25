@@ -213,21 +213,26 @@ class LiveActivity : BaseActivity() {
     }
 
     private fun setColorInBattery(batteryPercent: Int) {
-        if (batteryPercent in LOW_DESCENDANT_RANGE.value || batteryPercent in MEDIUM_DESCENDANT_RANGE.value) {
-            imageViewBattery.backgroundTintList =
-                ContextCompat.getColorStateList(this@LiveActivity, R.color.red)
-            imageViewBattery.startAnimation(blinkAnimation)
-        } else {
-            imageViewBattery.backgroundTintList =
-                ContextCompat.getColorStateList(this@LiveActivity, R.color.darkBlue)
-            imageViewBattery.clearAnimation()
-        }
-
-        if (batteryPercent in LOW_DESCENDANT_RANGE.value) {
-            createAlertForInformationCamera(
-                R.string.battery_alert_title,
-                R.string.battery_alert_description
-            )
+        when (batteryPercent) {
+            in LOW_DESCENDANT_RANGE.value -> {
+                imageViewBattery.backgroundTintList =
+                    ContextCompat.getColorStateList(this@LiveActivity, R.color.red)
+                imageViewBattery.startAnimation(blinkAnimation)
+                createAlertForInformationCamera(
+                    R.string.battery_alert_title,
+                    R.string.battery_alert_description
+                )
+            }
+            in MEDIUM_DESCENDANT_RANGE.value -> {
+                imageViewBattery.backgroundTintList =
+                    ContextCompat.getColorStateList(this@LiveActivity, R.color.red)
+                imageViewBattery.clearAnimation()
+            }
+            else -> {
+                imageViewBattery.backgroundTintList =
+                    ContextCompat.getColorStateList(this@LiveActivity, R.color.darkBlue)
+                imageViewBattery.clearAnimation()
+            }
         }
     }
 
