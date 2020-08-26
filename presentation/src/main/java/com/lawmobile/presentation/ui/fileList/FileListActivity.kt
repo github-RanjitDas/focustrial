@@ -47,7 +47,12 @@ class FileListActivity : BaseActivity() {
         listType = intent.extras?.getString(FILE_LIST_SELECTOR)
 
         setObservers()
-        setThumbnailListFragment()
+
+        when (listType) {
+            VIDEO_LIST -> setSimpleFileListFragment()
+            SNAPSHOT_LIST -> setThumbnailListFragment()
+        }
+
         setListeners()
         configureBottomSheet()
     }
