@@ -218,7 +218,7 @@ class LiveActivity : BaseActivity() {
             in LOW_DESCENDANT_RANGE.value -> {
                 imageViewBattery.backgroundTintList =
                     ContextCompat.getColorStateList(this@LiveActivity, R.color.red)
-                imageViewBattery.startAnimation(blinkAnimation)
+                imageViewBattery.startAnimationIfEnabled(blinkAnimation)
                 createAlertForInformationCamera(
                     R.string.battery_alert_title,
                     R.string.battery_alert_description
@@ -273,7 +273,7 @@ class LiveActivity : BaseActivity() {
         if (remainingPercent in HIGH_ASCENDANT_RANGE.value) {
             imageViewStorage.backgroundTintList =
                 ContextCompat.getColorStateList(this@LiveActivity, R.color.red)
-            imageViewStorage.startAnimation(blinkAnimation)
+            imageViewStorage.startAnimationIfEnabled(blinkAnimation)
         } else {
             imageViewStorage.backgroundTintList =
                 ContextCompat.getColorStateList(this@LiveActivity, R.color.darkBlue)
@@ -374,7 +374,7 @@ class LiveActivity : BaseActivity() {
         buttonRecord.isActivated = isRecordingVideo
         if (show) {
             val animation = Animations.createBlinkAnimation(BLINK_ANIMATION_DURATION)
-            imageRecordingIndicator.startAnimation(animation)
+            imageRecordingIndicator.startAnimationIfEnabled(animation)
         } else {
             imageRecordingIndicator.clearAnimation()
         }

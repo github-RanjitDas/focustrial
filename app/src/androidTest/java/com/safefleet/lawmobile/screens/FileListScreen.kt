@@ -51,33 +51,30 @@ class FileListScreen : BaseScreen() {
         }
     }
 
-    fun selectCheckboxOnPosition(position: Int): FileListScreen {
+    fun selectCheckboxOnPosition(position: Int) {
         CustomCheckboxAction.selectCheckboxOnRecyclerPosition(
             recyclerView,
             targetCheckBox,
             position
         )
-        return this
     }
 
-    fun isCheckboxSelected(position: Int): FileListScreen {
+    fun isCheckboxSelected(position: Int) {
         BaristaListAssertions.assertCustomAssertionAtPosition(
             recyclerView,
             position,
             targetCheckBox,
             ViewAssertions.matches(isActivated())
         )
-        return this
     }
 
-    fun isCheckboxUnselected(position: Int): FileListScreen {
+    fun isCheckboxUnselected(position: Int) {
         BaristaListAssertions.assertCustomAssertionAtPosition(
             recyclerView,
             position,
             targetCheckBox,
             ViewAssertions.matches(isNotActivated())
         )
-        return this
     }
 
     fun isFileListDisplayed() = assertDisplayed(R.id.fileListRecycler)
@@ -91,4 +88,6 @@ class FileListScreen : BaseScreen() {
         BaristaListInteractions.clickListItem(recyclerView, position)
 
     fun clickOnSelectFilesToAssociate() = clickOn(R.id.buttonSelectSnapshotsToAssociate)
+
+    fun clickOnSimpleListButton() = clickOn(R.id.buttonSimpleList)
 }

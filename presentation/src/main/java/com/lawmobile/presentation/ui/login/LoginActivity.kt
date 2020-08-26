@@ -4,7 +4,6 @@ import android.Manifest
 import android.content.Intent
 import android.graphics.drawable.AnimatedVectorDrawable
 import android.os.Bundle
-import android.provider.Settings
 import androidx.activity.viewModels
 import androidx.cardview.widget.CardView
 import androidx.core.view.isVisible
@@ -12,6 +11,7 @@ import androidx.lifecycle.Observer
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.extensions.attachFragmentWithAnimation
+import com.lawmobile.presentation.extensions.isAnimationsEnabled
 import com.lawmobile.presentation.extensions.showErrorSnackBar
 import com.lawmobile.presentation.extensions.verifyForAskingPermission
 import com.lawmobile.presentation.ui.base.BaseActivity
@@ -63,7 +63,6 @@ class LoginActivity : BaseActivity() {
         buttonCloseInstructions.setOnClickListener {
             sheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
         }
-
     }
 
     private fun startAnimation() {
@@ -81,23 +80,6 @@ class LoginActivity : BaseActivity() {
             showLoginViews(true)
         }
     }
-
-    private fun isAnimationsEnabled() =
-        Settings.System.getFloat(
-            contentResolver,
-            Settings.Global.TRANSITION_ANIMATION_SCALE,
-            0F
-        ) != 0F
-                && Settings.System.getFloat(
-            contentResolver,
-            Settings.Global.WINDOW_ANIMATION_SCALE,
-            0F
-        ) != 0F
-                && Settings.System.getFloat(
-            contentResolver,
-            Settings.Global.ANIMATOR_DURATION_SCALE,
-            0F
-        ) != 0F
 
     private fun showLoginViews(isFinished: Boolean) {
         if (isFinished) {

@@ -33,7 +33,7 @@ android {
     }
 
     testOptions {
-        animationsDisabled true
+        animationsDisabled = true
         unitTests.all {
             useJUnitPlatform()
             jacoco {

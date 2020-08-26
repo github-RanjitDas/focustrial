@@ -1,6 +1,7 @@
 package com.lawmobile.presentation.extensions
 
 import android.view.View
+import android.view.animation.Animation
 import com.google.android.material.snackbar.Snackbar
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.ui.base.BaseActivity
@@ -11,7 +12,7 @@ import java.sql.Timestamp
 
 fun View.setOnClickListenerCheckConnection(callback: (View) -> Unit) {
     this.setOnClickListener {
-        context.checkSession( callback, it)
+        context.checkSession(callback, it)
     }
 }
 
@@ -40,9 +41,15 @@ fun View.showSuccessSnackBar(message: String) {
             message,
             Snackbar.LENGTH_SHORT,
             R.drawable.ic_successful_white,
-            this.context.getColor(R.color.greenSuccess)
+            context.getColor(R.color.greenSuccess)
         )
     )?.show()
+}
+
+fun View.startAnimationIfEnabled(animation: Animation) {
+    if (context.isAnimationsEnabled()) {
+        startAnimation(animation)
+    }
 }
 
 fun checkIfSessionIsExpired(): Boolean {

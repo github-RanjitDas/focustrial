@@ -2,6 +2,7 @@ package com.lawmobile.presentation.extensions
 
 import android.content.Context
 import android.content.Intent
+import android.provider.Settings
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
@@ -104,3 +105,20 @@ fun Context.checkSession(callback: (View) -> Unit, view: View) {
         callback.invoke(view)
     }
 }
+
+fun Context.isAnimationsEnabled() =
+    Settings.System.getFloat(
+        contentResolver,
+        Settings.Global.TRANSITION_ANIMATION_SCALE,
+        0F
+    ) != 0F
+            && Settings.System.getFloat(
+        contentResolver,
+        Settings.Global.WINDOW_ANIMATION_SCALE,
+        0F
+    ) != 0F
+            && Settings.System.getFloat(
+        contentResolver,
+        Settings.Global.ANIMATOR_DURATION_SCALE,
+        0F
+    ) != 0F

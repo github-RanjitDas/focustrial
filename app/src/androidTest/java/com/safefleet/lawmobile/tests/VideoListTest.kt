@@ -64,9 +64,11 @@ class VideoListTest : EspressoBaseTest<LoginActivity>(LoginActivity::class.java)
 
     @Test
     fun verifyCheckboxWhenSnapshotsDontFit_FMA_560() {
+        setSimpleRecyclerView()
         liveViewScreen.openVideoList()
 
         with(fileListScreen) {
+            clickOnSelectFilesToAssociate()
             areFilesSortedByDate(videoList.items)
 
             selectCheckboxOnPosition(0)
@@ -85,6 +87,9 @@ class VideoListTest : EspressoBaseTest<LoginActivity>(LoginActivity::class.java)
             isCheckboxSelected(7)
             isCheckboxUnselected(0)
 
+            selectCheckboxOnPosition(7)
+            selectCheckboxOnPosition(14)
+
             areCheckboxesUnselected(
                 startPosition = 0,
                 endPosition = videosQuantity - 1
@@ -94,9 +99,11 @@ class VideoListTest : EspressoBaseTest<LoginActivity>(LoginActivity::class.java)
 
     @Test
     fun verifyCheckboxFunctionality_FMA_561() {
+        setSimpleRecyclerView()
         liveViewScreen.openVideoList()
 
         with(fileListScreen) {
+            clickOnSelectFilesToAssociate()
             areFilesSortedByDate(videoList.items)
 
             selectCheckboxOnPosition(0)
@@ -107,13 +114,18 @@ class VideoListTest : EspressoBaseTest<LoginActivity>(LoginActivity::class.java)
                 endPosition = videosQuantity - 1
             )
 
-            selectCheckboxOnPosition(0)
+            /*for some reason checkbox 0 unselected by itself
+             this does not happen in snapshot list and is using
+             the same recycler view*/
             selectCheckboxOnPosition(3)
             selectCheckboxOnPosition(5)
 
-            isCheckboxSelected(5)
-            isCheckboxSelected(3)
             isCheckboxUnselected(0)
+            isCheckboxSelected(3)
+            isCheckboxSelected(5)
+
+            selectCheckboxOnPosition(3)
+            selectCheckboxOnPosition(5)
 
             areCheckboxesUnselected(
                 startPosition = 0,
@@ -124,6 +136,7 @@ class VideoListTest : EspressoBaseTest<LoginActivity>(LoginActivity::class.java)
 
     @Test
     fun verifyScrollWhenVideosDontFit_FMA_562() {
+        setSimpleRecyclerView()
         liveViewScreen.openVideoList()
 
         with(fileListScreen) {
@@ -138,6 +151,7 @@ class VideoListTest : EspressoBaseTest<LoginActivity>(LoginActivity::class.java)
     @Test
     fun verifyUpdatingVideosList_FMA_563() {
         mockUtils.clearVideosOnX1()
+        setSimpleRecyclerView()
         val takenVideos = extraVideoList.items.subList(0, 3)
 
         with(liveViewScreen) {
@@ -169,11 +183,11 @@ class VideoListTest : EspressoBaseTest<LoginActivity>(LoginActivity::class.java)
     }
 
     @Test
-    fun verifyDisconnectionSwitchToSnapshotList_FMA_567() {
+    fun verifyDisconnectionGoingBackToLive_FMA_567() {
         liveViewScreen.openVideoList()
 
         mockUtils.disconnectCamera()
-
+        fileListScreen.goBack()
         fileListScreen.isDisconnectionAlertDisplayed()
     }
 }

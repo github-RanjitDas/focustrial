@@ -8,6 +8,7 @@ import com.safefleet.lawmobile.testData.TestLoginData
 import com.safefleet.mobile.avml.cameras.entities.*
 import com.safefleet.mobile.avml.cameras.external.CameraConnectService
 import com.safefleet.mobile.commons.helpers.Result
+import io.mockk.mockk
 
 class CameraConnectServiceX1Mock : CameraConnectService {
     private val progressPairingCameraMediator: MediatorLiveData<Result<Int>> = MediatorLiveData()
@@ -34,8 +35,7 @@ class CameraConnectServiceX1Mock : CameraConnectService {
     }
 
     override suspend fun getImageBytes(cameraConnectFile: CameraConnectFile): Result<ByteArray> {
-        val bytes = byteArrayOf(1, 2, 3, 0, 17, 0, 34, 0, 9)
-        return Result.Success(bytes)
+        return Result.Error(mockk())
     }
 
     override suspend fun getInformationResourcesVideo(cameraConnectFile: CameraConnectFile): Result<CameraConnectVideoInfo> {
