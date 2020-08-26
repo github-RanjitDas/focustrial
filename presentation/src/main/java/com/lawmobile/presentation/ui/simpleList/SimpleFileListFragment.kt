@@ -54,6 +54,7 @@ class SimpleFileListFragment : BaseFragment() {
     }
 
     private fun getFileList() {
+        (activity as BaseActivity).showLoadingDialog()
         when (listType) {
             VIDEO_LIST -> {
                 simpleListViewModel.getVideoList()

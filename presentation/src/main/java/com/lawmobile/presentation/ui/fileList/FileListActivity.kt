@@ -44,11 +44,10 @@ class FileListActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_file_list)
 
-        showLoadingDialog()
         listType = intent.extras?.getString(FILE_LIST_SELECTOR)
 
         setObservers()
-        setSimpleFileListFragment()
+        setThumbnailListFragment()
         setListeners()
         configureBottomSheet()
     }
@@ -83,7 +82,7 @@ class FileListActivity : BaseActivity() {
     }
 
     private fun setListeners() {
-        buttonThumbnailList.setClickListenerCheckConnection(::setImageListFragment)
+        buttonThumbnailList.setClickListenerCheckConnection { setThumbnailListFragment() }
         buttonSimpleList.setClickListenerCheckConnection { setSimpleFileListFragment() }
         backArrowFileListAppBar.setOnClickListenerCheckConnection { onBackPressed() }
         buttonSelectSnapshotsToAssociate.setOnClickListenerCheckConnection { showCheckBoxes() }
@@ -144,8 +143,8 @@ class FileListActivity : BaseActivity() {
         sheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
     }
 
-    private fun setImageListFragment(v: View) {
-        v.isActivated = true
+    private fun setThumbnailListFragment() {
+        buttonThumbnailList.isActivated = true
         resetButtonAssociate()
         actualFragment = THUMBNAIL_FILE_LIST
         thumbnailFileListFragment.onImageCheck = ::enableAssociatePartnerButton
