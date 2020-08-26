@@ -1,6 +1,5 @@
 package com.safefleet.lawmobile.helpers
 
-import com.lawmobile.presentation.ui.login.pairingPhoneWithCamera.PairingViewModel
 import com.lawmobile.presentation.utils.CameraHelper
 import com.safefleet.lawmobile.di.mocksServiceCameras.CameraConnectServiceX1Mock
 import com.safefleet.lawmobile.testData.CameraFilesData

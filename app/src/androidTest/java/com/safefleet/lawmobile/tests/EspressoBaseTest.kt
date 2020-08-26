@@ -27,7 +27,7 @@ open class EspressoBaseTest<T : Activity>(testActivityClass: Class<T>) {
     val activityTestRule = ActivityTestRule(testActivityClass)
 
     @get:Rule
-    var espressoIdlingResourcesRule = EspressoIdlingResourceRule()
+    val espressoIdlingResourcesRule = EspressoIdlingResourceRule()
 
     @Rule
     @JvmField

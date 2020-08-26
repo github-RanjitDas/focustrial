@@ -34,7 +34,7 @@ android {
 
     testOptions {
 
-        animationsDisabled true
+        animationsDisabled = true
         unitTests.returnDefaultValues = true
         unitTests.all {
             useJUnitPlatform()

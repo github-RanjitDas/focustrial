@@ -46,6 +46,7 @@ class SnapshotListTest : EspressoBaseTest<LoginActivity>(LoginActivity::class.ja
         mockUtils.clearSnapshotsOnX1()
         with(liveViewScreen) {
             openSnapshotList()
+            fileListScreen.clickOnSimpleListButton()
 
             fileListScreen.areNoFilesFound(R.string.no_images_found)
             fileListScreen.goBack()
@@ -57,6 +58,7 @@ class SnapshotListTest : EspressoBaseTest<LoginActivity>(LoginActivity::class.ja
             BaristaSleepInteractions.sleep(2000)
 
             openSnapshotList()
+            fileListScreen.clickOnSimpleListButton()
 
             fileListScreen.areFilesSortedByDate(
                 extraSnapshotsList.items.subList(0, 3)
@@ -70,6 +72,7 @@ class SnapshotListTest : EspressoBaseTest<LoginActivity>(LoginActivity::class.ja
         liveViewScreen.openSnapshotList()
 
         with(fileListScreen) {
+            clickOnSimpleListButton()
             clickOnSelectFilesToAssociate()
             areFilesSortedByDate(snapshotsList.items)
 
@@ -105,6 +108,7 @@ class SnapshotListTest : EspressoBaseTest<LoginActivity>(LoginActivity::class.ja
         liveViewScreen.openSnapshotList()
 
         with(fileListScreen) {
+            clickOnSimpleListButton()
             areFilesSortedByDate(snapshotsList.items)
 
             selectCheckboxOnPosition(0)
@@ -132,6 +136,7 @@ class SnapshotListTest : EspressoBaseTest<LoginActivity>(LoginActivity::class.ja
         liveViewScreen.openSnapshotList()
 
         with(fileListScreen) {
+            clickOnSimpleListButton()
             scrollListToPosition(snapshotsQuantity - 1)
             scrollListToPosition(0)
             scrollListToPosition(snapshotsQuantity - 1)
@@ -148,6 +153,7 @@ class SnapshotListTest : EspressoBaseTest<LoginActivity>(LoginActivity::class.ja
 
         with(liveViewScreen) {
             openSnapshotList()
+            fileListScreen.clickOnSimpleListButton()
 
             fileListScreen.goBack()
 
@@ -160,6 +166,9 @@ class SnapshotListTest : EspressoBaseTest<LoginActivity>(LoginActivity::class.ja
             BaristaSleepInteractions.sleep(2000)
 
             openSnapshotList()
+            fileListScreen.clickOnSimpleListButton()
+
+            BaristaSleepInteractions.sleep(2000)
 
             fileListScreen.areFilesSortedByDate(takenSnapshots)
         }

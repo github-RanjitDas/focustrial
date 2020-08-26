@@ -104,11 +104,11 @@ class LiveViewScreen : BaseScreen() {
 
     fun startRecording() {
         isRecordingNotInProgress()
-        clickOn(R.string.record_video)
+        clickOn(R.id.buttonRecord)
     }
 
     fun stopRecording() {
         isRecordingInProgress()
-        clickOn(com.lawmobile.presentation.R.drawable.ic_record_active)
+        clickOn(R.id.buttonRecord)
     }
 }
