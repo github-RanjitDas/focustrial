@@ -1,4 +1,4 @@
-package com.lawmobile.presentation.extensions
+package com.lawmobile.domain.extensions
 
 import com.safefleet.mobile.avml.cameras.entities.CameraConnectFile
 

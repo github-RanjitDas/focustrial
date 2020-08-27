@@ -6,7 +6,6 @@ import androidx.test.espresso.matcher.ViewMatchers.withId
 import com.safefleet.lawmobile.R
 import com.safefleet.lawmobile.helpers.isActivated
 import com.safefleet.lawmobile.helpers.isNotActivated
-import com.schibsted.spain.barista.assertion.BaristaBackgroundAssertions.assertHasBackground
 import com.schibsted.spain.barista.assertion.BaristaVisibilityAssertions.assertDisplayed
 import com.schibsted.spain.barista.assertion.BaristaVisibilityAssertions.assertNotDisplayed
 import com.schibsted.spain.barista.assertion.BaristaVisibilityAssertions.assertNotExist
@@ -66,11 +65,11 @@ class LiveViewScreen : BaseScreen() {
     }
 
     fun isLiveViewToggleDisabled() {
-        assertHasBackground(R.id.buttonSwitchLiveView, R.drawable.ic_switch_off)
+        onView(withId(R.id.buttonSwitchLiveView)).check(matches(isNotActivated()))
     }
 
     fun isLiveViewToggleEnabled() {
-        assertHasBackground(R.id.buttonSwitchLiveView, R.drawable.ic_switch_on)
+        onView(withId(R.id.buttonSwitchLiveView)).check(matches(isActivated()))
     }
 
     fun isRecordingNotInProgress() {

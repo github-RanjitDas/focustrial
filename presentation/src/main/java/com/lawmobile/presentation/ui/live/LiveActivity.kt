@@ -354,6 +354,7 @@ class LiveActivity : BaseActivity() {
     }
 
     private fun manageResultInRecordingVideo(result: Result<Unit>) {
+        hideShadowLoading()
         with(result) {
             doIfSuccess {
                 isRecordingVideo = !isRecordingVideo
@@ -365,7 +366,6 @@ class LiveActivity : BaseActivity() {
                 showRecordingIndicator(false)
             }
         }
-        hideShadowLoading()
     }
 
     private fun showRecordingIndicator(show: Boolean) {
