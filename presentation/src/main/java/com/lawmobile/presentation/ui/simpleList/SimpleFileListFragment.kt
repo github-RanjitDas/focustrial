@@ -15,6 +15,7 @@ import com.lawmobile.domain.entities.DomainInformationFileResponse
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.entities.AlertInformation
 import com.lawmobile.presentation.extensions.createAlertInformation
+import com.lawmobile.domain.extensions.getCreationDate
 import com.lawmobile.presentation.extensions.setOnClickListenerCheckConnection
 import com.lawmobile.presentation.extensions.showErrorSnackBar
 import com.lawmobile.presentation.ui.base.BaseActivity
@@ -95,6 +96,7 @@ class SimpleFileListFragment : BaseFragment() {
     }
 
     private fun handleFileListResult(result: Result<DomainInformationFileResponse>) {
+        (activity as BaseActivity).hideLoadingDialog()
         with(result) {
             doIfSuccess {
                 if (it.errors.isNotEmpty()) {
@@ -112,11 +114,9 @@ class SimpleFileListFragment : BaseFragment() {
                         VIDEO_LIST -> noFilesTextView.text = getString(R.string.no_videos_found)
                     }
                 }
-                (activity as BaseActivity).hideLoadingDialog()
             }
             doIfError {
                 fileListLayout.showErrorSnackBar(getString(R.string.file_list_failed_load_files))
-                (activity as BaseActivity).hideLoadingDialog()
             }
         }
     }
@@ -127,7 +127,8 @@ class SimpleFileListFragment : BaseFragment() {
                 ::onFileClick,
                 onFileCheck
             )
-        simpleFileListAdapter?.fileList = listItems.sortedByDescending { it.cameraConnectFile.date }
+        simpleFileListAdapter?.fileList =
+            listItems.sortedByDescending { it.cameraConnectFile.getCreationDate() }
         setFileRecyclerView()
     }
 

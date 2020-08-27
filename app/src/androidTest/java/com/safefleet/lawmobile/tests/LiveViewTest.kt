@@ -7,9 +7,12 @@ import com.safefleet.lawmobile.helpers.DeviceUtils
 import com.safefleet.lawmobile.screens.LiveViewScreen
 import com.safefleet.lawmobile.screens.LoginScreen
 import org.junit.Before
+import org.junit.FixMethodOrder
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.junit.runners.MethodSorters
 
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @LargeTest
 @RunWith(AndroidJUnit4::class)
 class LiveViewTest : EspressoBaseTest<LoginActivity>(LoginActivity::class.java) {

@@ -4,6 +4,7 @@ import com.lawmobile.data.datasource.remote.thumbnailList.ThumbnailListRemoteDat
 import com.lawmobile.data.entities.FileList
 import com.lawmobile.domain.entities.DomainInformationFile
 import com.lawmobile.domain.entities.DomainInformationImage
+import com.lawmobile.domain.extensions.getCreationDate
 import com.lawmobile.domain.repository.thumbnailList.ThumbnailListRepository
 import com.safefleet.mobile.avml.cameras.entities.CameraConnectFile
 import com.safefleet.mobile.commons.helpers.Result
@@ -47,7 +48,7 @@ class ThumbnailListRepositoryImpl(
                 is Result.Success -> {
                     if (response.data.items.size > FileList.listOfImages.size)
                         FileList.listOfImages =
-                            response.data.items.sortedByDescending { it.date }.map {
+                            response.data.items.sortedByDescending { it.getCreationDate() }.map {
                                 DomainInformationFile(it, null)
                             }
                     Result.Success(Unit)

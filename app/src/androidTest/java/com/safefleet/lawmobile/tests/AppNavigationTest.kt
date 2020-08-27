@@ -7,9 +7,12 @@ import com.safefleet.lawmobile.screens.FileListScreen
 import com.safefleet.lawmobile.screens.LiveViewScreen
 import com.safefleet.lawmobile.screens.LoginScreen
 import org.junit.Before
+import org.junit.FixMethodOrder
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.junit.runners.MethodSorters
 
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @LargeTest
 @RunWith(AndroidJUnit4::class)
 class AppNavigationTest : EspressoBaseTest<LoginActivity>(LoginActivity::class.java) {
@@ -20,18 +23,24 @@ class AppNavigationTest : EspressoBaseTest<LoginActivity>(LoginActivity::class.j
     }
 
     @Before
-    fun login() = LoginScreen().login()
+    fun login() {
+        LoginScreen().login()
+    }
 
     @Test
-    fun verifySwitchBetweenSnapshotsAndVideosList_FMA_564() {
+    fun b_verifySwitchBetweenSnapshotsAndVideosList_FMA_564() {
         with(fileListScreen) {
             liveViewScreen.openSnapshotList()
+            clickOnSimpleListButton()
+            isFileListDisplayed()
+            goBack()
+            liveViewScreen.openVideoList()
             isFileListDisplayed()
         }
     }
 
     @Test
-    fun verifyLiveViewToggleBehaviorAfterNavigation_FMA_214() {
+    fun c_verifyLiveViewToggleBehaviorAfterNavigation_FMA_214() {
         with(liveViewScreen) {
             isLiveViewDisplayed()
             isLiveViewToggleEnabled()
@@ -51,7 +60,7 @@ class AppNavigationTest : EspressoBaseTest<LoginActivity>(LoginActivity::class.j
     }
 
     @Test
-    fun verifyRecordingAfterNavigation_FMA_549() {
+    fun a_verifyRecordingAfterNavigation_FMA_549() {
         with(liveViewScreen) {
             isLiveViewDisplayed()
 
@@ -72,5 +81,4 @@ class AppNavigationTest : EspressoBaseTest<LoginActivity>(LoginActivity::class.j
             isRecordingNotInProgress()
         }
     }
-
 }

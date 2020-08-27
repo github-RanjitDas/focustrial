@@ -8,7 +8,7 @@ import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.lawmobile.domain.entities.DomainInformationFile
 import com.lawmobile.presentation.R
-import com.lawmobile.presentation.extensions.getCreationDate
+import com.lawmobile.domain.extensions.getCreationDate
 import com.lawmobile.presentation.extensions.setOnClickListenerCheckConnection
 import com.safefleet.mobile.commons.helpers.convertDpToPixel
 import com.safefleet.mobile.commons.helpers.inflate

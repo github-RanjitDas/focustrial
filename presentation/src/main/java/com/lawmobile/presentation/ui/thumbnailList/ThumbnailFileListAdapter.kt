@@ -8,7 +8,7 @@ import com.lawmobile.domain.entities.DomainInformationImage
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.entities.SnapshotsToLink
 import com.lawmobile.presentation.extensions.convertBitmap
-import com.lawmobile.presentation.extensions.getCreationDate
+import com.lawmobile.domain.extensions.getCreationDate
 import com.lawmobile.presentation.extensions.setOnClickListenerCheckConnection
 import com.safefleet.mobile.commons.helpers.inflate
 import kotlinx.android.synthetic.main.thumbnail_list_recycler_item.view.*
