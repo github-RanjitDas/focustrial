@@ -39,7 +39,7 @@
     <dimen name="battery_percent_text_size">11sp</dimen>
     <dimen name="battery_level_height">10dp</dimen>
     <dimen name="battery_level_margin_horizontal">10dp</dimen>
-    <dimen name="storage_margin_horizontal">14dp</dimen>
+    <dimen name="storage_margin_horizontal">10dp</dimen>
     <dimen name="storage_levels_text_size">11sp</dimen>
     <dimen name="storage_levels_padding_end">3dp</dimen>
     <dimen name="storage_level_height">10dp</dimen>

@@ -131,16 +131,19 @@ internal class FileListRepositoryImplTest {
     }
 
     @Test
-    fun testSavePartnerIdSnapshotFlow() {
+    fun testSavePartnerIdSnapshotsFlow() {
         val cameraConnectFile: CameraConnectFile = mockk(relaxed = true)
 
-        coEvery { fileListRemoteDataSource.savePartnerIdSnapshot(any()) } returns Result.Success(
+        coEvery { fileListRemoteDataSource.savePartnerIdInAllSnapshots(any()) } returns Result.Success(
             Unit
         )
+        coEvery { fileListRemoteDataSource.getSavedPhotosMetadata() } returns  Result.Success(
+            emptyList())
+        coEvery { fileListRemoteDataSource.savePartnerIdSnapshot(any()) } returns Result.Success(Unit)
         runBlocking {
             fileListRepositoryImpl.savePartnerIdSnapshot(listOf(cameraConnectFile), "")
         }
-        coVerify { fileListRemoteDataSource.savePartnerIdSnapshot(any()) }
+        coVerify { fileListRemoteDataSource.savePartnerIdInAllSnapshots(any()) }
     }
 
     @Test
@@ -148,8 +151,10 @@ internal class FileListRepositoryImplTest {
         val result = Result.Success(Unit)
         val cameraConnectFile: CameraConnectFile = mockk(relaxed = true)
 
-        coEvery { fileListRemoteDataSource.savePartnerIdSnapshot(any()) } returns result
-
+        coEvery { fileListRemoteDataSource.savePartnerIdInAllSnapshots(any()) } returns result
+        coEvery { fileListRemoteDataSource.savePartnerIdSnapshot(any()) } returns Result.Success(Unit)
+        coEvery { fileListRemoteDataSource.getSavedPhotosMetadata() } returns  Result.Success(
+            emptyList())
         runBlocking {
             Assert.assertEquals(
                 fileListRepositoryImpl.savePartnerIdSnapshot(
@@ -162,7 +167,7 @@ internal class FileListRepositoryImplTest {
 
         coVerify {
             delay(100)
-            fileListRemoteDataSource.savePartnerIdSnapshot(any())
+            fileListRemoteDataSource.savePartnerIdInAllSnapshots(any())
         }
     }
 
@@ -170,8 +175,10 @@ internal class FileListRepositoryImplTest {
     fun testSavePartnerIdSnapshotFailed() {
         val cameraConnectFile: CameraConnectFile = mockk(relaxed = true)
 
-        coEvery { fileListRemoteDataSource.savePartnerIdSnapshot(any()) } returns Result.Error(mockk())
-
+        coEvery { fileListRemoteDataSource.savePartnerIdInAllSnapshots(any()) } returns Result.Error(mockk())
+        coEvery { fileListRemoteDataSource.savePartnerIdSnapshot(any()) } returns Result.Success(Unit)
+        coEvery { fileListRemoteDataSource.getSavedPhotosMetadata() } returns  Result.Success(
+            emptyList())
         runBlocking {
             Assert.assertTrue(
                 fileListRepositoryImpl.savePartnerIdSnapshot(
