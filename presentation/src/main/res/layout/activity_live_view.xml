@@ -70,13 +70,14 @@
 
         <TextView
             android:id="@+id/textViewStorageLevels"
-            android:layout_width="wrap_content"
+            android:layout_width="@dimen/no_dp"
             android:layout_height="wrap_content"
             android:paddingEnd="@dimen/storage_levels_padding_end"
             android:text="@string/storage_level_placeholder"
             android:textSize="@dimen/storage_levels_text_size"
+            app:layout_constraintBottom_toTopOf="@+id/progressStorageLevel"
+            app:layout_constraintEnd_toEndOf="@+id/progressStorageLevel"
             app:layout_constraintStart_toStartOf="@id/progressStorageLevel"
-            app:layout_constraintTop_toTopOf="@id/imageViewBattery"
             tools:ignore="RtlSymmetry,SmallSp" />
 
         <com.safefleet.mobile.commons.widgets.linearProgressBar.SafeFleetLinearProgressBar
@@ -207,7 +208,7 @@
             android:background="@drawable/background_button_help"
             app:layout_constraintBottom_toBottomOf="@id/textViewCameraStatus"
             app:layout_constraintEnd_toEndOf="@id/progressStorageLevel"
-            app:layout_constraintTop_toTopOf="@+id/textViewCameraStatus" />
+             />
 
         <View
             android:id="@+id/dividerSimpleListItem"

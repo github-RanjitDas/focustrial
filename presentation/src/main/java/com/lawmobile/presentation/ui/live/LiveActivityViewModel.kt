@@ -14,6 +14,7 @@ import com.safefleet.mobile.commons.helpers.Event
 import com.safefleet.mobile.commons.helpers.Result
 import com.safefleet.mobile.commons.helpers.doIfError
 import com.safefleet.mobile.commons.helpers.doIfSuccess
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class LiveActivityViewModel @ViewModelInject constructor(
@@ -34,8 +35,8 @@ class LiveActivityViewModel @ViewModelInject constructor(
     private val batteryLevelMediatorLiveData = MediatorLiveData<Event<Result<Int>>>()
     val batteryLevelLiveData: LiveData<Event<Result<Int>>> get() = batteryLevelMediatorLiveData
 
-    private val storageMediatorLiveData = MediatorLiveData<Event<Result<List<Int>>>>()
-    val storageLiveData: LiveData<Event<Result<List<Int>>>> get() = storageMediatorLiveData
+    private val storageMediatorLiveData = MediatorLiveData<Event<Result<List<Double>>>>()
+    val storageLiveData: LiveData<Event<Result<List<Double>>>> get() = storageMediatorLiveData
 
     private val catalogInfoMediatorLiveData =
         MediatorLiveData<Result<List<CameraConnectCatalog>>>()
@@ -95,15 +96,19 @@ class LiveActivityViewModel @ViewModelInject constructor(
 
     fun getStorageLevels() {
         viewModelScope.launch {
-            val gigabyteList = mutableListOf<Int>()
+            delay(200)
+            val gigabyteList = mutableListOf<Double>()
             with(liveStreamingUseCase.getFreeStorage()) {
-                doIfSuccess { free ->
-                    gigabyteList.add(free.toInt() / GIGABYTE)
+                doIfSuccess { freeKb ->
+                    val storageFreeMb = freeKb.toDouble() / SCALE_BYTES
+                    gigabyteList.add(storageFreeMb)
                     with(liveStreamingUseCase.getTotalStorage()) {
-                        doIfSuccess { total ->
-                            val totalGigabytes = (total.toInt() / GIGABYTE)
-                            gigabyteList.add(totalGigabytes - gigabyteList[0])
-                            gigabyteList.add(totalGigabytes)
+                        doIfSuccess { totalKb ->
+                            delay(200)
+                            val totalMb = (totalKb.toDouble() / SCALE_BYTES)
+                            val usedBytes = totalMb - storageFreeMb
+                            gigabyteList.add(usedBytes)
+                            gigabyteList.add(totalMb)
                             storageMediatorLiveData.postValue(Event(Result.Success(gigabyteList)))
                         }
                         doIfError {
@@ -119,6 +124,6 @@ class LiveActivityViewModel @ViewModelInject constructor(
     }
 
     companion object {
-        private const val GIGABYTE = 1000000
+        const val SCALE_BYTES = 1024
     }
 }

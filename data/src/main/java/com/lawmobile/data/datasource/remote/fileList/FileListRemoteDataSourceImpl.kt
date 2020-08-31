@@ -11,6 +11,12 @@ class FileListRemoteDataSourceImpl(private val cameraConnectService: CameraConne
     override suspend fun savePartnerIdVideos(cameraConnectVideoMetadata: CameraConnectVideoMetadata): Result<Unit> =
         cameraConnectService.saveVideoMetadata(cameraConnectVideoMetadata)
 
+    override suspend fun savePartnerIdInAllSnapshots(list: List<CameraConnectPhotoMetadata>): Result<Unit> =
+        cameraConnectService.saveAllPhotoMetadata(list)
+
+    override suspend fun getSavedPhotosMetadata(): Result<List<CameraConnectPhotoMetadata>>  =
+        cameraConnectService.getMetadataOfPhotos()
+
     override suspend fun savePartnerIdSnapshot(cameraConnectPhotoMetadata: CameraConnectPhotoMetadata): Result<Unit> =
         cameraConnectService.savePhotoMetadata(cameraConnectPhotoMetadata)
 }

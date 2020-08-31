@@ -57,25 +57,44 @@ class FileListRepositoryImpl(private val fileListRemoteDataSource: FileListRemot
         cameraConnectFileList: List<CameraConnectFile>,
         partnerID: String
     ): Result<Unit> {
+        val itemsFinal = mutableListOf<CameraConnectPhotoMetadata>()
+        val listPhotosSaved = ArrayList<CameraConnectPhotoMetadata>()
+        val resultGetMetadataOfPhotos = fileListRemoteDataSource.getSavedPhotosMetadata()
+        if (resultGetMetadataOfPhotos is Result.Error) {
+            return resultGetMetadataOfPhotos
+        }
+
+        listPhotosSaved.addAll((resultGetMetadataOfPhotos as Result.Success).data)
+        itemsFinal.addAll(listPhotosSaved)
         val errorsInFiles = ArrayList<String>()
-        cameraConnectFileList.forEach {
+        cameraConnectFileList.forEach { fileItem ->
+            itemsFinal.removeAll { it.fileName == fileItem.name }
             val partnerMetadata = PhotoMetadata(partnerID = partnerID)
-            val cameraConnectSnapshotMetadata = CameraConnectPhotoMetadata(
-                fileName = it.name,
+            val cameraPhotoMetadata = CameraConnectPhotoMetadata(
+                fileName = fileItem.name,
                 officerId = CameraInfo.officerId,
-                path = it.path,
+                path = fileItem.path,
                 x1sn = CameraInfo.serialNumber,
                 metadata = partnerMetadata,
-                nameFolder = it.nameFolder
+                nameFolder = fileItem.nameFolder
             )
-            delay(200)
-            val result =
-                fileListRemoteDataSource.savePartnerIdSnapshot(cameraConnectSnapshotMetadata)
-            if (result is Result.Error) {
-                errorsInFiles.add(it.name)
+
+            delay(150)
+            val resultPartnerOnly =
+                fileListRemoteDataSource.savePartnerIdSnapshot(cameraPhotoMetadata)
+            itemsFinal.removeAll { it.fileName == fileItem.name }
+            itemsFinal.add(cameraPhotoMetadata)
+            if (resultPartnerOnly is Result.Error) {
+                errorsInFiles.add(cameraPhotoMetadata.fileName)
             }
         }
-        return if (errorsInFiles.isEmpty()) Result.Success(Unit)
-        else Result.Error(Exception("Partner ID could not be associated to: $errorsInFiles"))
+        delay(300)
+        val resultJSONOnly = fileListRemoteDataSource.savePartnerIdInAllSnapshots(itemsFinal)
+        if (resultJSONOnly is Result.Success) {
+            return if (errorsInFiles.isEmpty()) Result.Success(Unit)
+            else Result.Error(java.lang.Exception("Partner ID could not be associated to: $errorsInFiles"))
+        }
+
+        return Result.Error(java.lang.Exception("Partner ID could not be associated"))
     }
 }

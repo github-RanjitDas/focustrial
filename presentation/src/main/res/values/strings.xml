@@ -136,11 +136,11 @@
     <string name="starting_recording">Starting recording</string>
     <string name="stopping_recording">Stopping recording</string>
     <string name="battery_percent"><![CDATA[<b>%1$d %%</b> - %2$s hour left]]></string>
-    <string name="storage_level"><![CDATA[Used <b>%1$d GB</b> - Free <b>%2$d GB</b>]]></string>
+    <string name="storage_level"><![CDATA[Used  &nbsp;&nbsp; -  &nbsp;&nbsp; Free <br/><b>%1$s </b> - <b>%2$s </b>]]></string>
     <string name="battery_level_error">Error retrieving battery level</string>
     <string name="storage_level_error">Error retrieving storage level</string>
     <string name="battery_percent_placeholder">100% - 10 hour left</string>
-    <string name="storage_level_placeholder">Used 0GB - Free 67GB</string>
+    <string name="storage_level_placeholder">Used \  - \  Free\n 272 MB - 57.7GB</string>
     <string name="app_bar_name_default">James</string>
     <string name="app_bar_last_name_default">Mendez</string>
     <string name="_1">1.</string>

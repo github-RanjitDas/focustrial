@@ -9,7 +9,11 @@ interface FileListRemoteDataSource {
         cameraConnectVideoMetadata: CameraConnectVideoMetadata
     ): Result<Unit>
 
-    suspend fun savePartnerIdSnapshot(
-        cameraConnectPhotoMetadata: CameraConnectPhotoMetadata
+    suspend fun savePartnerIdInAllSnapshots(
+        list: List<CameraConnectPhotoMetadata>
     ): Result<Unit>
+
+    suspend fun getSavedPhotosMetadata(): Result<List<CameraConnectPhotoMetadata>>
+
+    suspend fun savePartnerIdSnapshot(cameraConnectPhotoMetadata: CameraConnectPhotoMetadata): Result<Unit>
 }

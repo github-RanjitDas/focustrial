@@ -18,6 +18,7 @@ import com.lawmobile.presentation.extensions.*
 import com.lawmobile.presentation.ui.base.BaseActivity
 import com.lawmobile.presentation.ui.fileList.FileListActivity
 import com.lawmobile.presentation.ui.helpSection.HelpPageActivity
+import com.lawmobile.presentation.ui.live.LiveActivityViewModel.Companion.SCALE_BYTES
 import com.lawmobile.presentation.utils.Constants.FILE_LIST_SELECTOR
 import com.lawmobile.presentation.utils.Constants.SNAPSHOT_LIST
 import com.lawmobile.presentation.utils.Constants.VIDEO_LIST
@@ -246,31 +247,31 @@ class LiveActivity : BaseActivity() {
         textViewBatteryPercent.text = textBatteryPercent
     }
 
-    private fun setStorageLevels(result: Event<Result<List<Int>>>) {
+    private fun setStorageLevels(result: Event<Result<List<Double>>>) {
         result.getContentIfNotHandled()?.run {
             doIfSuccess {
                 setColorInStorageLevel(it)
                 setTextStorageLevel(it)
             }
             doIfError {
-                val defaultList = listOf(60, 0, 60)
-                setColorInStorageLevel(defaultList)
-                setTextStorageLevel(defaultList)
+                val default = listOf(60.0, 0.0, 60.0)
+                setColorInStorageLevel(default)
+                setTextStorageLevel(default)
                 liveViewAppBar.showErrorSnackBar(getString(R.string.storage_level_error))
             }
         }
         EspressoIdlingResource.decrement()
     }
 
-    private fun setColorInStorageLevel(information: List<Int>) {
+    private fun setColorInStorageLevel(information: List<Double>) {
         val remainingPercent =
             TOTAL_PERCENTAGE - ((information[FREE_STORAGE_POSITION] * TOTAL_PERCENTAGE) / information[TOTAL_STORAGE_POSITION])
         progressStorageLevel.setProgress(
-            remainingPercent,
+            remainingPercent.toInt(),
             ASCENDANT
         )
 
-        if (remainingPercent in HIGH_ASCENDANT_RANGE.value) {
+        if (remainingPercent.toInt() in HIGH_ASCENDANT_RANGE.value) {
             imageViewStorage.backgroundTintList =
                 ContextCompat.getColorStateList(this@LiveActivity, R.color.red)
             imageViewStorage.startAnimationIfEnabled(blinkAnimation)
@@ -279,7 +280,7 @@ class LiveActivity : BaseActivity() {
                 ContextCompat.getColorStateList(this@LiveActivity, R.color.darkBlue)
         }
 
-        if (remainingPercent == PERCENT_TO_SHOW_ALERT_MEMORY_CAPACITY) {
+        if (remainingPercent.toInt() == PERCENT_TO_SHOW_ALERT_MEMORY_CAPACITY) {
             createAlertForInformationCamera(
                 R.string.storage_alert_title,
                 R.string.storage_alert_description
@@ -287,7 +288,7 @@ class LiveActivity : BaseActivity() {
         }
     }
 
-    private fun setTextStorageLevel(information: List<Int>) {
+    private fun setTextStorageLevel(information: List<Double>) {
         val textToStorage = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             Html.fromHtml(getStringStorageLevel(information), 0)
         } else {
@@ -297,11 +298,21 @@ class LiveActivity : BaseActivity() {
         textViewStorageLevels.text = textToStorage
     }
 
-    private fun getStringStorageLevel(information: List<Int>): String = getString(
-        R.string.storage_level,
-        information[USED_STORAGE_POSITION],
-        information[FREE_STORAGE_POSITION]
-    )
+    private fun getStringStorageLevel(information: List<Double>): String {
+        val used = information[USED_STORAGE_POSITION]
+        val free = information[FREE_STORAGE_POSITION]
+        var usedFormat = String.format("%.0f", used) + " MB"
+        var freeFormat = String.format("%.0f", free) + " MB"
+        if (used >= SCALE_BYTES) {
+            usedFormat = String.format("%.1f", used / SCALE_BYTES) + " GB"
+        }
+
+        if (free >= SCALE_BYTES) {
+            freeFormat = String.format("%.1f", free / SCALE_BYTES) + " GB"
+        }
+
+        return getString(R.string.storage_level, usedFormat, freeFormat)
+    }
 
     private fun createAlertForInformationCamera(title: Int, message: Int) {
         val alertInformation = AlertInformation(

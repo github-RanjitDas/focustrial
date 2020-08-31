@@ -2,7 +2,6 @@ package com.lawmobile.data.repository.thumbnailList
 
 import com.lawmobile.data.datasource.remote.thumbnailList.ThumbnailListRemoteDataSource
 import com.lawmobile.data.entities.FileList
-import com.lawmobile.domain.extensions.getCreationDate
 import com.safefleet.mobile.avml.cameras.entities.CameraConnectFile
 import com.safefleet.mobile.avml.cameras.entities.CameraConnectFileResponseWithErrors
 import com.safefleet.mobile.commons.helpers.Result

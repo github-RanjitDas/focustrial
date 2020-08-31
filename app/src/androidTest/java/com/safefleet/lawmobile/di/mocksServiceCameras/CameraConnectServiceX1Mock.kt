@@ -52,6 +52,10 @@ class CameraConnectServiceX1Mock : CameraConnectService {
         return Result.Success(videoList)
     }
 
+    override suspend fun getMetadataOfPhotos(): Result<List<CameraConnectPhotoMetadata>> {
+        return  Result.Success(emptyList())
+    }
+
     override suspend fun getNumberOfSnapshots(): Result<String> {
         return Result.Success("10")
     }
@@ -114,6 +118,10 @@ class CameraConnectServiceX1Mock : CameraConnectService {
 
     override suspend fun loadPairingCamera(hostnameToConnect: String, ipAddressClient: String) {
         progressPairingCameraMediator.postValue(Result.Success(100))
+    }
+
+    override suspend fun saveAllPhotoMetadata(list: List<CameraConnectPhotoMetadata>): Result<Unit> {
+        return Result.Success(Unit)
     }
 
     override suspend fun savePhotoMetadata(cameraConnectPhotoMetadata: CameraConnectPhotoMetadata): Result<Unit> {

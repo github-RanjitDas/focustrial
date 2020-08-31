@@ -54,20 +54,29 @@ internal class FileListRemoteDataSourceImplTest {
     }
 
     @Test
+    fun testSavePartnerIdSnapshotsFlow() {
+        coEvery { cameraConnectService.saveAllPhotoMetadata(any()) } returns Result.Success(Unit)
+        runBlocking {
+            fileListRemoteDataSourceImpl.savePartnerIdInAllSnapshots(mockk())
+        }
+        coVerify { cameraConnectService.saveAllPhotoMetadata(any()) }
+    }
+
+    @Test
     fun testSavePartnerIdSnapshotSuccess() {
         val result = Result.Success(Unit)
-        coEvery { cameraConnectService.savePhotoMetadata(any()) } returns result
+        coEvery { cameraConnectService.saveAllPhotoMetadata(any()) } returns result
         runBlocking {
-            Assert.assertEquals(fileListRemoteDataSourceImpl.savePartnerIdSnapshot(mockk()), result)
+            Assert.assertEquals(fileListRemoteDataSourceImpl.savePartnerIdInAllSnapshots(mockk()), result)
         }
     }
 
     @Test
     fun testSavePartnerIdSnapshotFailed() {
         val result = Result.Error(mockk())
-        coEvery { cameraConnectService.savePhotoMetadata(any()) } returns result
+        coEvery { cameraConnectService.saveAllPhotoMetadata(any()) } returns result
         runBlocking {
-            Assert.assertEquals(fileListRemoteDataSourceImpl.savePartnerIdSnapshot(mockk()), result)
+            Assert.assertEquals(fileListRemoteDataSourceImpl.savePartnerIdInAllSnapshots(mockk()), result)
         }
     }
 }

@@ -9,6 +9,7 @@ import com.safefleet.mobile.commons.helpers.Result
 import io.mockk.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.setMain
 import org.junit.Assert
@@ -162,19 +163,20 @@ class LiveActivityViewModelTest {
     fun getStorageLevelsSuccess() {
         val freeStorage = 63456789
         val totalStorage = 67456789
-        val gigabyte = 1000000
-        val usedStorage = (totalStorage / gigabyte) - (freeStorage / gigabyte)
+        val scaleByte = 1024
+        val usedStorage = (totalStorage.toDouble() / scaleByte) - (freeStorage.toDouble() / scaleByte)
 
         coEvery { liveStreamingUseCase.getFreeStorage() } returns Result.Success(freeStorage.toString())
         coEvery { liveStreamingUseCase.getTotalStorage() } returns Result.Success(totalStorage.toString())
 
         runBlocking {
             liveActivityViewModel.getStorageLevels()
+            delay(500)
             val storage =
-                (liveActivityViewModel.storageLiveData.value?.getContent() as Result.Success<List<Int>>).data
-            Assert.assertEquals(storage[0], freeStorage / gigabyte)
-            Assert.assertEquals(storage[1], usedStorage)
-            Assert.assertEquals(storage[2], totalStorage / gigabyte)
+                (liveActivityViewModel.storageLiveData.value?.getContent() as Result.Success<List<Double>>).data
+            Assert.assertEquals(storage[0].toInt(), freeStorage / scaleByte)
+            Assert.assertEquals(storage[1].toInt(), usedStorage.toInt())
+            Assert.assertEquals(storage[2].toInt(), totalStorage / scaleByte)
         }
         coVerify {
             liveStreamingUseCase.getFreeStorage()
@@ -188,6 +190,7 @@ class LiveActivityViewModelTest {
         coEvery { liveStreamingUseCase.getFreeStorage() } returns result
         runBlocking {
             liveActivityViewModel.getStorageLevels()
+            delay(500)
             Assert.assertEquals(liveActivityViewModel.storageLiveData.value?.getContent(), result)
         }
         coVerify {
@@ -202,6 +205,7 @@ class LiveActivityViewModelTest {
         coEvery { liveStreamingUseCase.getTotalStorage() } returns result
         runBlocking {
             liveActivityViewModel.getStorageLevels()
+            delay(500)
             Assert.assertEquals(liveActivityViewModel.storageLiveData.value?.getContent(), result)
         }
         coVerify {
