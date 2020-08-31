@@ -22,8 +22,6 @@ class LoginScreen : BaseScreen() {
     fun typePassword(officerPassword: String = TestLoginData.OFFICER_PASSWORD.value) =
         writeTo(R.id.editTextOfficerPassword, officerPassword)
 
-    fun isLoginButtonDisplayed() = assertDisplayed(R.id.buttonLogin)
-
     fun clickOnGo() = clickOn(R.id.buttonGo)
 
     fun clickOnLogin() = clickOn(R.id.buttonLogin)
@@ -44,28 +42,11 @@ class LoginScreen : BaseScreen() {
 
     fun clickOnGotIt() = clickOn(R.id.buttonDismissInstructions)
 
-    fun isConnectingToCameraTextDisplayed() =
-        assertContains(R.id.textViewConnectingToCamera, R.string.connecting_to_camera)
-
-    fun isCircularLoadingDisplayed() = assertDisplayed(R.id.circularProgressbar)
-
-    fun isProgressDisplayed() = assertDisplayed(R.id.textViewProgressConnection)
-
     fun isResultPairingSuccessImageDisplayed() =
         assertHasDrawable(R.id.imageViewResultPairing, R.drawable.ic_successful_green)
 
-    fun isResultPairingErrorImageDisplayed() =
-        assertHasDrawable(R.id.imageViewResultPairing, R.drawable.ic_error_big)
-
     fun isResultPairingSuccessTextDisplayed() =
         assertContains(R.id.textViewResultPairing, R.string.success_connection_to_camera)
-
-    fun isResultPairingErrorTextDisplayed() =
-        assertContains(R.id.textViewResultPairing, R.string.error_connection_to_camera)
-
-    fun isRetryButtonDisplayed() = assertDisplayed(R.id.buttonRetry)
-
-    fun isVerifyConnectionToCameraWifiDisplayed() = assertDisplayed(R.string.verify_camera_wifi)
 
     fun isIncorrectPasswordToastDisplayed() {
         assertDisplayed(R.string.incorrect_password)

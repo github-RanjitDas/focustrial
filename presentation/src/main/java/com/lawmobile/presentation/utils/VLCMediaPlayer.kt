@@ -12,10 +12,10 @@ class VLCMediaPlayer(private val libVLC: LibVLC, private val mediaPlayer: MediaP
     fun createMediaPlayer(url: String, view: SurfaceView) {
         val media = Media(libVLC, Uri.parse(url))
         media.setHWDecoderEnabled(true, true)
-        media.addOption(":clock-jitter=0")
-        media.addOption(":clock-synchro=0")
-        media.addOption(":network-caching=1000")
-        media.addOption(":file-caching=1000")
+        media.addOption(CLOCK_JITTER)
+        media.addOption(CLOCK_SYNC)
+        media.addOption(NETWORK_CACHING)
+        media.addOption(FILE_CACHING)
         mediaPlayer.media = media
         media.release()
         if (mediaPlayer.vlcVout.areViewsAttached()) mediaPlayer.vlcVout.detachViews()
@@ -38,9 +38,7 @@ class VLCMediaPlayer(private val libVLC: LibVLC, private val mediaPlayer: MediaP
     }
 
     fun stopMediaPlayer() {
-        if (mediaPlayer.isPlaying) {
-            mediaPlayer.stop()
-        }
+        mediaPlayer.stop()
         mediaPlayer.vlcVout.detachViews()
     }
 
@@ -82,6 +80,10 @@ class VLCMediaPlayer(private val libVLC: LibVLC, private val mediaPlayer: MediaP
     }
 
     companion object {
+        const val CLOCK_JITTER = ":clock-jitter=0"
+        const val CLOCK_SYNC = ":clock-synchro=0"
+        const val NETWORK_CACHING = ":network-caching=1000"
+        const val FILE_CACHING = ":file-caching=1000"
         const val ASPECT_RATIO_4_3 = "4:3"
         const val ASPECT_RATIO_16_9 = "16:9"
         const val ASPECT_RATIO_21_9 = "21:9"

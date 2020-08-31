@@ -25,7 +25,7 @@
             android:id="@+id/fileListAppBarTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/snapshots_title"
+            android:text="@string/title"
             android:textColor="@color/colorWhite"
             android:textSize="@dimen/file_list_title_size"
             app:layout_constraintBottom_toBottomOf="parent"

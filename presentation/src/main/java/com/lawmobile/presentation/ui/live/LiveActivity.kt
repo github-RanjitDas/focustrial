@@ -57,9 +57,6 @@ class LiveActivity : BaseActivity() {
         }
     }
 
-    private fun isInPortraitMode() =
-        resources.configuration.orientation == SCREEN_ORIENTATION_PORTRAIT
-
     private fun setOfficerName() {
         textViewOfficerName.text = CameraInfo.officerName.split(" ")[0]
         textViewOfficerLastName.text = CameraInfo.officerName.split(" ")[1]
@@ -143,7 +140,11 @@ class LiveActivity : BaseActivity() {
     }
 
     private fun refreshActivityInformation(isViewLoaded: Boolean) {
-        if (isViewLoaded) liveActivityViewModel.getBatteryLevel()
+        if (isViewLoaded) {
+            if (CameraInfo.events.isEmpty()) {
+                liveActivityViewModel.getCatalogInfo()
+            } else liveActivityViewModel.getBatteryLevel()
+        }
     }
 
     private fun startFileListIntent(fileType: String) {
@@ -420,7 +421,7 @@ class LiveActivity : BaseActivity() {
     companion object {
         private var cameFromLandscape = false
         private const val BLINK_ANIMATION_DURATION = 1000L
-        private const val BATTERY_TOTAL_HOURS = 8f
+        private const val BATTERY_TOTAL_HOURS = 10f
         private const val VIEW_LOADING_TIME = 600L
         private const val FREE_STORAGE_POSITION = 0
         private const val USED_STORAGE_POSITION = 1

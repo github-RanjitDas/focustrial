@@ -1,6 +1,7 @@
 package com.lawmobile.presentation.ui.base
 
 import android.content.Intent
+import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.os.Process
 import android.view.WindowManager
@@ -119,6 +120,9 @@ open class BaseActivity : AppCompatActivity() {
         loadingDialog = null
         EspressoIdlingResource.decrement()
     }
+
+    fun isInPortraitMode() =
+        resources.configuration.orientation == ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
 
     private fun handleTimeout(timedOut: Boolean) {
         if (timedOut && isLoading) {

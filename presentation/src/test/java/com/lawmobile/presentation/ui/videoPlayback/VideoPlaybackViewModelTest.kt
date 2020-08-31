@@ -75,7 +75,7 @@ class VideoPlaybackViewModelTest {
     @Test
     fun testPlayVLCMediaPlayer() {
         every { vlcMediaPlayer.playMediaPlayer() } just Runs
-        videoPlaybackViewModel.playVLCMediaPlayer()
+        videoPlaybackViewModel.playMediaPlayer()
         verify { vlcMediaPlayer.playMediaPlayer() }
     }
 

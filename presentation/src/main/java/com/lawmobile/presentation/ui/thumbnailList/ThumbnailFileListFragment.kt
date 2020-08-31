@@ -14,7 +14,6 @@ import com.lawmobile.domain.entities.DomainInformationImage
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.entities.SnapshotsToLink
 import com.lawmobile.presentation.extensions.showErrorSnackBar
-import com.lawmobile.presentation.ui.base.BaseActivity
 import com.lawmobile.presentation.ui.base.BaseFragment
 import com.lawmobile.presentation.ui.fileList.FileListActivity
 import com.lawmobile.presentation.ui.snapshotDetail.SnapshotDetailActivity
@@ -62,7 +61,7 @@ class ThumbnailFileListFragment : BaseFragment() {
     }
 
     private fun onImageClick(file: DomainInformationImage) {
-        (activity as BaseActivity).showLoadingDialog()
+        showLoadingDialog()
         startFileListIntent(file.cameraConnectFile)
     }
 
@@ -70,7 +69,7 @@ class ThumbnailFileListFragment : BaseFragment() {
         val fileListIntent = Intent()
         context?.let { fileListIntent.setClass(it, SnapshotDetailActivity::class.java) }
         fileListIntent.putExtra(Constants.CAMERA_CONNECT_FILE, cameraConnectFile)
-        (activity as BaseActivity).hideLoadingDialog()
+        hideLoadingDialog()
         startActivity(fileListIntent)
     }
 
@@ -83,7 +82,7 @@ class ThumbnailFileListFragment : BaseFragment() {
     }
 
     private fun configureLoadingViews() {
-        (activity as BaseActivity).showLoadingDialog()
+        showLoadingDialog()
         loadingThumbnailView.isVisible = false
     }
 
@@ -115,14 +114,14 @@ class ThumbnailFileListFragment : BaseFragment() {
                     noFilesTextView.text = getString(R.string.no_images_found)
                     fileListRecycler.isVisible = false
                     noFilesTextView.isVisible = true
-                    (activity as BaseActivity).hideLoadingDialog()
+                    hideLoadingDialog()
                 }
             }
             doIfError {
                 fileListLayout.showErrorSnackBar(
                     it.message ?: getString(R.string.link_images_error)
                 )
-                (activity as BaseActivity).hideLoadingDialog()
+                hideLoadingDialog()
             }
         }
     }
@@ -151,7 +150,7 @@ class ThumbnailFileListFragment : BaseFragment() {
             }
         }
         isLoading = false
-        (activity as BaseActivity).hideLoadingDialog()
+        hideLoadingDialog()
     }
 
     private fun scrollListenerForPagination() = object : RecyclerView.OnScrollListener() {

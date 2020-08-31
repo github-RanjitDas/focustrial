@@ -61,24 +61,24 @@
     <string name="play_pause_button_video_playback">Play/Pause button video playback</string>
     <string name="aspect_video_playback">Aspect video playback</string>
     <string name="video_default_time">00:00</string>
-    <string name="playback_start_time">START TIME</string>
-    <string name="playback_duration">DURATION</string>
-    <string name="playback_event">EVENT</string>
-    <string name="playback_partner_id">PARTNER ID</string>
-    <string name="playback_ticket_1">TICKET #1</string>
-    <string name="playback_ticket_2">TICKET #2</string>
-    <string name="playback_case_1">CASE #1</string>
-    <string name="playback_case_2">CASE #2</string>
-    <string name="playback_dispatch_1">DISPATCH #1</string>
-    <string name="playback_dispatch_2">DISPATCH #2</string>
-    <string name="playback_location">LOCATION</string>
-    <string name="playback_remarks">REMARKS</string>
-    <string name="playback_first_name">FIRST NAME</string>
-    <string name="playback_last_name">LAST NAME</string>
-    <string name="playback_gender">GENDER</string>
-    <string name="playback_race">RACE</string>
-    <string name="playback_driver_license">DRIVER LICENSE</string>
-    <string name="playback_license_plate">LICENSE PLATE</string>
+    <string name="playback_start_time">Start Time</string>
+    <string name="playback_duration">Duration</string>
+    <string name="playback_event">Event</string>
+    <string name="playback_partner_id">Partner ID</string>
+    <string name="playback_ticket_1">Ticket #1</string>
+    <string name="playback_ticket_2">Ticket #2</string>
+    <string name="playback_case_1">Case #1</string>
+    <string name="playback_case_2">Case #2</string>
+    <string name="playback_dispatch_1">Dispatch #1</string>
+    <string name="playback_dispatch_2">Dispatch #2</string>
+    <string name="playback_location">Location</string>
+    <string name="playback_remarks">Remarks</string>
+    <string name="playback_first_name">First Name</string>
+    <string name="playback_last_name">Last Name</string>
+    <string name="playback_gender">Gender</string>
+    <string name="playback_race">Race</string>
+    <string name="playback_driver_license">Driver License</string>
+    <string name="playback_license_plate">License Plate</string>
     <string name="select">Select</string>
     <string name="event_mandatory">Event type field is mandatory</string>
     <string name="catalog_error">Could not get the catalog lists</string>
@@ -96,9 +96,8 @@
     <string name="snapshot_item_detail_photo_content_description">Photo from BWC</string>
     <string name="snapshot_detail_load_failed">Error loading snapshot</string>
     <string name="image_video_recording">Image video recording</string>
-    <string name="cancel_metadata" tools:ignore="ButtonCase">CANCEL</string>
-    <string name="save_metadata">SAVE</string>
-    <string name="playback_video_name">VIDEO NAME</string>
+    <string name="save_metadata">Save</string>
+    <string name="playback_video_name">Name</string>
     <string name="default_text">DEFAULT TEXT</string>
 
     <!-- link_snapshots -->
@@ -116,7 +115,7 @@
     <string name="valid_partner_id_message">You must enter a valid Partner ID</string>
     <string name="mobile_data_status_title">Mobile Data</string>
     <string name="mobile_data_status_message">Please disable mobile data to continue</string>
-    <string name="linked_photos_metadata_title">LINKED PHOTOS</string>
+    <string name="linked_photos_metadata_title">Linked Photos</string>
     <string name="no_linked_photos">No linked photos</string>
     <string name="loading_files_error">Could not retrieve the files, please try again</string>
     <string name="verify_camera_wifi">Please verify the connection to the camera WiFi</string>
@@ -164,6 +163,11 @@
     <string name="file_item_image">file item image</string>
     <string name="select_videos_to_associate">Select videos to associate</string>
     <string name="button_help">\?</string>
+    <string name="add_images">Add images</string>
+    <string name="associate_image_to_video">Associate image to video</string>
+    <string name="video_detail">Video Detail</string>
+    <string name="time_divider"> / </string>
+    <string name="title">Title</string>
 
     <string-array name="gender_spinner">
         <item>Select</item>

@@ -22,12 +22,11 @@ fun BaseActivity.verifyForAskingPermission(permission: String, requestCode: Int)
 @SuppressLint("InflateParams")
 fun BaseActivity.createAlertProgress(textLoading: Int = R.string.loading_wait): AlertDialog {
     val builder = AlertDialog.Builder(this)
-    val view = this.layoutInflater.inflate(R.layout.loading_dialog, null)
+    val view = layoutInflater.inflate(R.layout.loading_dialog, null)
     val textView = view.findViewById<TextView>(R.id.textViewLoading)
     textView.setText(textLoading)
     builder.apply {
         setView(view)
-        setCancelable(false)
         setCancelable(false)
     }
     val dialog = builder.create()
