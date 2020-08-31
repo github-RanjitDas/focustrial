@@ -34,19 +34,24 @@ open class BaseFragment : Fragment() {
     }
 
     fun showLoadingDialog() {
-        EspressoIdlingResource.increment()
-        isLoading = true
-        baseViewModel.waitToFinish(BaseActivity.LOADING_TIMEOUT)
-        loadingDialog = (activity as BaseActivity).createAlertProgress()
-        loadingDialog?.show()
+        if (!isLoading) {
+            EspressoIdlingResource.increment()
+            isLoading = true
+            baseViewModel.waitToFinish(BaseActivity.LOADING_TIMEOUT)
+            loadingDialog = (activity as BaseActivity).createAlertProgress()
+            loadingDialog?.show()
+        }
+
     }
 
     fun hideLoadingDialog() {
-        isLoading = false
-        baseViewModel.cancelWait()
-        loadingDialog?.dismiss()
-        loadingDialog = null
-        EspressoIdlingResource.decrement()
+        if (isLoading){
+            isLoading = false
+            baseViewModel.cancelWait()
+            loadingDialog?.dismiss()
+            loadingDialog = null
+            EspressoIdlingResource.decrement()
+        }
     }
 
     private fun handleTimeout(timedOut: Boolean) {
