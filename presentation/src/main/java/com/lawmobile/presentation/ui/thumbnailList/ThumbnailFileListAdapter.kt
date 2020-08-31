@@ -12,6 +12,7 @@ import com.lawmobile.domain.extensions.getCreationDate
 import com.lawmobile.presentation.extensions.setOnClickListenerCheckConnection
 import com.safefleet.mobile.commons.helpers.inflate
 import kotlinx.android.synthetic.main.thumbnail_list_recycler_item.view.*
+import java.lang.Exception
 
 class ThumbnailFileListAdapter(
     private val onImageClick: ((DomainInformationImage) -> Unit),
@@ -20,10 +21,6 @@ class ThumbnailFileListAdapter(
 
     var showCheckBoxes = false
     var fileList = ArrayList<DomainInformationImage>()
-        set(value) {
-            field = value
-            notifyDataSetChanged()
-        }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ThumbnailListViewHolder {
         return ThumbnailListViewHolder(
@@ -50,6 +47,26 @@ class ThumbnailFileListAdapter(
         fileList = tmpList
     }
 
+    fun getItemsWithImageToLoading(): List<DomainInformationImage> {
+        return fileList.filter { it.imageBytes == null }
+    }
+
+    fun itemWithImagesLoaded(): List<DomainInformationImage> {
+        return fileList.filter { it.imageBytes != null }
+    }
+
+    fun addItemToList(domainInformationImage: DomainInformationImage) {
+        val indexOrFirst =
+            fileList.indexOfFirst { it.cameraConnectFile.name == domainInformationImage.cameraConnectFile.name }
+        if (indexOrFirst != -1) {
+            fileList[indexOrFirst] = domainInformationImage
+        } else {
+            fileList.add(domainInformationImage)
+        }
+
+        notifyDataSetChanged()
+    }
+
     inner class ThumbnailListViewHolder(
         private val thumbnailView: View,
         private val onImageClick: ((DomainInformationImage) -> Unit),
@@ -67,8 +84,24 @@ class ThumbnailFileListAdapter(
             with(thumbnailView) {
                 dateImageListItem.text =
                     imageFile.cameraConnectFile.getCreationDate()
-                val image = imageFile.imageBytes.convertBitmap()
-                photoImageListItem.setImageBitmap(image)
+                imageFile.imageBytes?.let {
+                    try {
+                        val image = it.convertBitmap()
+                        photoImageListItem.setImageBitmap(image)
+                        photoImageListItem.isVisible = true
+                        photoImageLoading.isVisible = false
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                        val domain =
+                            fileList.first { item -> item.cameraConnectFile.name == imageFile.cameraConnectFile.name }
+                        domain.imageBytes = null
+                        addItemToList(domain)
+                    }
+                } ?: run {
+                    photoImageListItem.isVisible = false
+                    photoImageLoading.isVisible = true
+                }
+
                 checkboxImageListItem.isActivated = imageFile.isAssociatedToVideo
             }
         }

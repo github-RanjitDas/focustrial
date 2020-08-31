@@ -4,7 +4,7 @@ import com.safefleet.mobile.avml.cameras.entities.CameraConnectFile
 
 data class DomainInformationImage(
     val cameraConnectFile: CameraConnectFile,
-    val imageBytes: ByteArray,
+    var imageBytes: ByteArray? = null,
     var isAssociatedToVideo: Boolean = false
 ) {
     override fun equals(other: Any?): Boolean {
@@ -13,12 +13,19 @@ data class DomainInformationImage(
 
         other as DomainInformationImage
 
-        if (!imageBytes.contentEquals(other.imageBytes)) return false
+        other.imageBytes?.let {otherBytes ->
+            imageBytes?.let { currentBytes ->
+                if (currentBytes.contentEquals(otherBytes)) return true
+            }
+        }
 
         return true
     }
 
     override fun hashCode(): Int {
-        return imageBytes.contentHashCode()
+        imageBytes?.let {
+            return it.contentHashCode()
+        }
+        return  0
     }
 }

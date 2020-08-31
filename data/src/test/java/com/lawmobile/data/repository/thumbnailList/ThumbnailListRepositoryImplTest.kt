@@ -2,6 +2,7 @@ package com.lawmobile.data.repository.thumbnailList
 
 import com.lawmobile.data.datasource.remote.thumbnailList.ThumbnailListRemoteDataSource
 import com.lawmobile.data.entities.FileList
+import com.lawmobile.domain.entities.DomainInformationFile
 import com.safefleet.mobile.avml.cameras.entities.CameraConnectFile
 import com.safefleet.mobile.avml.cameras.entities.CameraConnectFileResponseWithErrors
 import com.safefleet.mobile.commons.helpers.Result
@@ -28,9 +29,10 @@ internal class ThumbnailListRepositoryImplTest {
     fun testGetImageByteListFlow() {
         FileList.listOfImages = listOf(mockk(relaxed = true), mockk(relaxed = true))
         coEvery { thumbnailListRemoteDataSource.getImageBytes(any()) } returns Result.Success("Hola".toByteArray())
-
+        val cameraConnectFile =
+            CameraConnectFile("1010202000", "10-10-2020 12:00:00", "", "1010202000")
         runBlocking {
-            linkSnapshotsRepositoryImpl.getImageByteList(1)
+            linkSnapshotsRepositoryImpl.getImageByteList(cameraConnectFile)
         }
 
         coVerify {
@@ -39,30 +41,15 @@ internal class ThumbnailListRepositoryImplTest {
     }
 
     @Test
-    fun testGetImageByteListSnapshotListError() {
-        FileList.listOfImages = emptyList()
-        coEvery { thumbnailListRemoteDataSource.getSnapshotList() } returns Result.Error(mockk())
-
-        runBlocking {
-            val result = linkSnapshotsRepositoryImpl.getImageByteList(1)
-            Assert.assertTrue(result is Result.Error)
-        }
-    }
-
-    @Test
     fun testGetImageByteListError() {
-        FileList.listOfImages = emptyList()
-        val cameraConnectFile: CameraConnectFile = mockk(relaxed = true)
-        val cameraResponse: CameraConnectFileResponseWithErrors = mockk {
-            every { items } returns arrayListOf(cameraConnectFile)
-        }
-        coEvery { thumbnailListRemoteDataSource.getSnapshotList() } returns Result.Success(
-            cameraResponse
-        )
+        val cameraConnectFile =
+            CameraConnectFile("1010202000", "10-10-2020 12:00:00", "", "1010202000")
+        val domainInformationFile = DomainInformationFile(cameraConnectFile)
+        FileList.listOfImages = listOf(domainInformationFile, domainInformationFile)
         coEvery { thumbnailListRemoteDataSource.getImageBytes(any()) } returns Result.Error(mockk())
 
         runBlocking {
-            val result = linkSnapshotsRepositoryImpl.getImageByteList(1)
+            val result = linkSnapshotsRepositoryImpl.getImageByteList(cameraConnectFile)
             Assert.assertTrue(result is Result.Error)
         }
     }
@@ -83,17 +70,84 @@ internal class ThumbnailListRepositoryImplTest {
         coEvery { thumbnailListRemoteDataSource.getImageBytes(any()) } returns Result.Success("Hola".toByteArray())
 
         runBlocking {
-            val result = linkSnapshotsRepositoryImpl.getImageByteList(1)
+            val result = linkSnapshotsRepositoryImpl.getImageByteList(cameraConnectFile)
             Assert.assertTrue(result is Result.Success)
         }
 
     }
 
     @Test
-    fun testGetImageListSizeValue() {
+    fun testGetImageListFlow() {
         FileList.listOfImages = listOf(mockk(), mockk())
+        val cameraConnectFileResponseWithErrors = CameraConnectFileResponseWithErrors()
+        cameraConnectFileResponseWithErrors.items.addAll(listOf(mockk(), mockk()))
+        coEvery { thumbnailListRemoteDataSource.getSnapshotList() } returns Result.Success(
+            cameraConnectFileResponseWithErrors
+        )
+        runBlocking {
+            linkSnapshotsRepositoryImpl.getImageList()
+        }
 
-        val result = linkSnapshotsRepositoryImpl.getImageListSize()
-        Assert.assertEquals(2, result)
+        coVerify { thumbnailListRemoteDataSource.getSnapshotList() }
+    }
+
+    @Test
+    fun testGetImageListSuccessMoreItems() {
+        val cameraConnectFile =
+            CameraConnectFile("1010202000", "10-10-2020 12:00:00", "", "1010202000")
+        val domainInformationFile = DomainInformationFile(cameraConnectFile)
+        FileList.listOfImages = listOf(domainInformationFile, domainInformationFile)
+        val cameraConnectFileResponseWithErrors = CameraConnectFileResponseWithErrors()
+        cameraConnectFileResponseWithErrors.items.addAll(
+            listOf(
+                cameraConnectFile,
+                cameraConnectFile,
+                cameraConnectFile
+            )
+        )
+        coEvery { thumbnailListRemoteDataSource.getSnapshotList() } returns Result.Success(
+            cameraConnectFileResponseWithErrors
+        )
+        runBlocking {
+            val result = linkSnapshotsRepositoryImpl.getImageList()
+            Assert.assertEquals((result as Result.Success).data.size, 3)
+        }
+    }
+
+    @Test
+    fun testGetImageListSuccessMoreLessItems() {
+        val cameraConnectFile =
+            CameraConnectFile("1010202000", "10-10-2020 12:00:00", "", "1010202000")
+        val domainInformationFile = DomainInformationFile(cameraConnectFile)
+        FileList.listOfImages = listOf(
+            domainInformationFile,
+            domainInformationFile,
+            domainInformationFile,
+            domainInformationFile
+        )
+        val cameraConnectFileResponseWithErrors = CameraConnectFileResponseWithErrors()
+        cameraConnectFileResponseWithErrors.items.addAll(
+            listOf(
+                cameraConnectFile,
+                cameraConnectFile
+            )
+        )
+        coEvery { thumbnailListRemoteDataSource.getSnapshotList() } returns Result.Success(
+            cameraConnectFileResponseWithErrors
+        )
+        runBlocking {
+            val result = linkSnapshotsRepositoryImpl.getImageList()
+            Assert.assertEquals((result as Result.Success).data.size, 4)
+        }
+    }
+
+    @Test
+    fun testGetImageListError() {
+        FileList.listOfImages = emptyList()
+        coEvery { thumbnailListRemoteDataSource.getSnapshotList() } returns Result.Error(Exception("Exception"))
+        runBlocking {
+            val result = linkSnapshotsRepositoryImpl.getImageList()
+            Assert.assertTrue(result is Result.Error)
+        }
     }
 }
