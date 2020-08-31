@@ -59,15 +59,12 @@ class AppModule {
         fun provideGSON() = Gson()
 
         @Provides
-        @Singleton
         fun provideLibVLC(@ApplicationContext context: Context): LibVLC = LibVLC(context)
 
         @Provides
-        @Singleton
         fun provideMediaPlayer(libVLC: LibVLC): MediaPlayer = MediaPlayer(libVLC)
 
         @Provides
-        @Singleton
         fun provideVLCMediaPlayer(libVLC: LibVLC, mediaPlayer: MediaPlayer): VLCMediaPlayer =
             VLCMediaPlayer(libVLC, mediaPlayer)
 
