@@ -90,7 +90,6 @@
     <dimen name="button_go_text_size">50sp</dimen>
     <dimen name="button_instructions_margin_top">70dp</dimen>
     <dimen name="button_instructions_text_size">15sp</dimen>
-    <dimen name="link_snapshots_loading_size">50dp</dimen>
     <dimen name="button_retry_text_size">20sp</dimen>
     <dimen name="result_pairing_image_padding">15dp</dimen>
     <dimen name="password_text_input_margin_bottom">80dp</dimen>

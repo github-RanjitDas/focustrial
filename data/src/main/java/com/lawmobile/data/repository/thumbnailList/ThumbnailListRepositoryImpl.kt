@@ -19,13 +19,10 @@ class ThumbnailListRepositoryImpl(
     private val errors = mutableListOf<String>()
     private lateinit var snapshotFile: CameraConnectFile
 
-    override suspend fun getImageByteList(currentPage: Int): Result<List<DomainInformationImage>> {
+    override suspend fun getImageByteList(cameraConnectFile: CameraConnectFile): Result<List<DomainInformationImage>> {
         val items = mutableListOf<DomainInformationImage>()
 
-        val listResult = getSnapshotList()
-        if (listResult is Result.Error) return listResult
-
-        imageFlow(currentPage).collect { result ->
+        imageFlow(cameraConnectFile).collect { result ->
             when (result) {
                 is Result.Success -> items.add(
                     DomainInformationImage(
@@ -42,41 +39,34 @@ class ThumbnailListRepositoryImpl(
         else Result.Error(Exception("Error retrieving image of files: $errors"))
     }
 
-    private suspend fun getSnapshotList(): Result<Unit> {
-        return if (FileList.listOfImages.isEmpty()) {
-            return when (val response = thumbnailListRemoteDataSource.getSnapshotList()) {
-                is Result.Success -> {
-                    if (response.data.items.size > FileList.listOfImages.size)
-                        FileList.listOfImages =
-                            response.data.items.sortedByDescending { it.getCreationDate() }.map {
-                                DomainInformationFile(it, null)
-                            }
-                    Result.Success(Unit)
+    override suspend fun getImageList(): Result<List<DomainInformationFile>> {
+        when (val response = thumbnailListRemoteDataSource.getSnapshotList()) {
+            is Result.Success -> {
+                if (response.data.items.size > FileList.listOfImages.size) {
+                    FileList.listOfImages =
+                        response.data.items.sortedByDescending { it.getCreationDate() }.map {
+                            DomainInformationFile(it, null)
+                        }
                 }
-                is Result.Error -> Result.Error(Exception("Error retrieving image list"))
+
+                return Result.Success(FileList.listOfImages)
             }
-        } else Result.Success(Unit)
-    }
-
-    override fun getImageListSize(): Int = FileList.listOfImages.size
-
-    private fun imageFlow(currentPage: Int) = flow {
-        for (i in IMAGES_PER_PAGE * (currentPage - 1) until IMAGES_PER_PAGE * currentPage) {
-            if (isNotLastSnapshot(i)) {
-                FileList.listOfImages[i].run {
-                    delay(370)
-                    cameraConnectFile.let {
-                        snapshotFile = it
-                        emit(thumbnailListRemoteDataSource.getImageBytes(it))
-                    }
+            is Result.Error -> {
+                if (FileList.listOfImages.isEmpty()) {
+                    return Result.Error(Exception("Error retrieving image list"))
                 }
+                return Result.Success(FileList.listOfImages)
             }
         }
     }
 
-    private fun isNotLastSnapshot(i: Int) = i < FileList.listOfImages.size
-
-    companion object {
-        const val IMAGES_PER_PAGE = 2
+    private fun imageFlow(cameraConnectFile: CameraConnectFile) = flow {
+        delay(300)
+        cameraConnectFile.let {
+            snapshotFile = it
+            emit(thumbnailListRemoteDataSource.getImageBytes(it))
+        }
     }
+
+
 }
