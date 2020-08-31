@@ -12,13 +12,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.lawmobile.domain.entities.CameraInfo
 import com.lawmobile.domain.entities.DomainInformationFile
 import com.lawmobile.domain.entities.DomainInformationFileResponse
+import com.lawmobile.domain.extensions.getCreationDate
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.entities.AlertInformation
 import com.lawmobile.presentation.extensions.createAlertInformation
-import com.lawmobile.domain.extensions.getCreationDate
 import com.lawmobile.presentation.extensions.setOnClickListenerCheckConnection
 import com.lawmobile.presentation.extensions.showErrorSnackBar
-import com.lawmobile.presentation.ui.base.BaseActivity
 import com.lawmobile.presentation.ui.base.BaseFragment
 import com.lawmobile.presentation.ui.snapshotDetail.SnapshotDetailActivity
 import com.lawmobile.presentation.ui.videoPlayback.VideoPlaybackActivity
@@ -55,7 +54,7 @@ class SimpleFileListFragment : BaseFragment() {
     }
 
     private fun getFileList() {
-        (activity as BaseActivity).showLoadingDialog()
+        showLoadingDialog()
         when (listType) {
             VIDEO_LIST -> {
                 simpleListViewModel.getVideoList()
@@ -96,7 +95,6 @@ class SimpleFileListFragment : BaseFragment() {
     }
 
     private fun handleFileListResult(result: Result<DomainInformationFileResponse>) {
-        (activity as BaseActivity).hideLoadingDialog()
         with(result) {
             doIfSuccess {
                 if (it.errors.isNotEmpty()) {
@@ -119,6 +117,7 @@ class SimpleFileListFragment : BaseFragment() {
                 fileListLayout.showErrorSnackBar(getString(R.string.file_list_failed_load_files))
             }
         }
+        hideLoadingDialog()
     }
 
     private fun setAdapter(listItems: ArrayList<DomainInformationFile>) {
@@ -133,7 +132,7 @@ class SimpleFileListFragment : BaseFragment() {
     }
 
     private fun onFileClick(file: DomainInformationFile) {
-        (activity as BaseActivity).showLoadingDialog()
+        showLoadingDialog()
         startFileListIntent(file.cameraConnectFile)
     }
 
@@ -147,7 +146,7 @@ class SimpleFileListFragment : BaseFragment() {
             }
         }
         fileListIntent.putExtra(Constants.CAMERA_CONNECT_FILE, cameraConnectFile)
-        (activity as BaseActivity).hideLoadingDialog()
+        hideLoadingDialog()
         startActivity(fileListIntent)
     }
 

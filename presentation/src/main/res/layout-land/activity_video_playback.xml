@@ -6,6 +6,11 @@
     android:layout_height="match_parent"
     tools:context=".ui.videoPlayback.VideoPlaybackActivity">
 
+    <include
+        layout="@layout/custom_app_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
     <SurfaceView
         android:id="@+id/surfaceVideoPlayback"
         android:layout_width="match_parent"
@@ -84,655 +89,602 @@
             android:id="@+id/seekProgressVideo"
             android:layout_width="@dimen/no_dp"
             android:layout_height="wrap_content"
-            android:progressTint="@color/colorPrimaryLight"
-            android:thumbTint="@color/colorPrimaryLight"
+            android:progressTint="@color/white"
+            android:scaleY="2"
+            android:thumb="@color/transparent"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/textViewPlayerDuration"
-            app:layout_constraintStart_toEndOf="@+id/textViewPlayerTime"
+            app:layout_constraintEnd_toStartOf="@+id/guidelineProgressEnd"
+            app:layout_constraintStart_toEndOf="@+id/guidelineProgressStart"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guidelineProgressStart"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.16" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guidelineProgressEnd"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.77" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/no_dp"
-        android:background="@drawable/background"
-        android:paddingTop="@dimen/metadata_form_spacing"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/margin_30dp"
+        android:paddingHorizontal="@dimen/padding_40dp"
+        android:paddingTop="@dimen/padding_25dp"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@id/surfaceVideoPlayback">
 
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            app:layout_constraintBottom_toTopOf="@id/cancelButtonVideoPlayback"
-            app:layout_constraintTop_toTopOf="parent">
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingHorizontal="@dimen/metadata_form_spacing">
-
-                <androidx.constraintlayout.widget.Guideline
-                    android:id="@+id/guidelinePlayback"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    app:layout_constraintGuide_percent="0.4" />
-
-                <TextView
-                    android:id="@+id/videoNameTitle"
-                    android:layout_width="@dimen/no_dp"
-                    android:layout_height="wrap_content"
-                    android:text="@string/playback_video_name"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/video_playback_metadata_text_size"
-                    android:textStyle="bold"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toLeftOf="@id/guidelinePlayback"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <TextView
-                    android:id="@+id/videoNameValue"
-                    android:layout_width="@dimen/no_dp"
-                    android:layout_height="wrap_content"
-                    android:text="@string/default_text"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/video_playback_metadata_text_size"
-                    app:layout_constraintLeft_toRightOf="@id/guidelinePlayback"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <TextView
-                    android:id="@+id/startTimeTitle"
-                    android:layout_width="@dimen/no_dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/video_playback_metadata_spacing"
-                    android:text="@string/playback_start_time"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/video_playback_metadata_text_size"
-                    android:textStyle="bold"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toLeftOf="@id/guidelinePlayback"
-                    app:layout_constraintTop_toBottomOf="@id/videoNameTitle" />
-
-                <TextView
-                    android:id="@+id/startTimeValue"
-                    android:layout_width="@dimen/no_dp"
-                    android:layout_height="wrap_content"
-                    android:text="@string/default_text"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/video_playback_metadata_text_size"
-                    app:layout_constraintLeft_toRightOf="@id/guidelinePlayback"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/startTimeTitle" />
-
-                <TextView
-                    android:id="@+id/durationTitle"
-                    android:layout_width="@dimen/no_dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/video_playback_metadata_spacing"
-                    android:text="@string/playback_duration"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/video_playback_metadata_text_size"
-                    android:textStyle="bold"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toLeftOf="@id/guidelinePlayback"
-                    app:layout_constraintTop_toBottomOf="@id/startTimeTitle" />
-
-                <TextView
-                    android:id="@+id/durationValue"
-                    android:layout_width="@dimen/no_dp"
-                    android:layout_height="wrap_content"
-                    android:text="@string/default_text"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/video_playback_metadata_text_size"
-                    app:layout_constraintLeft_toRightOf="@id/guidelinePlayback"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/durationTitle" />
-
-                <TextView
-                    android:id="@+id/eventTitle"
-                    android:layout_width="@dimen/no_dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/video_playback_metadata_spacing"
-                    android:text="@string/playback_event"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/video_playback_metadata_text_size"
-                    android:textStyle="bold"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toLeftOf="@id/guidelinePlayback"
-                    app:layout_constraintTop_toBottomOf="@id/durationTitle" />
-
-                <Spinner
-                    android:id="@+id/eventValue"
-                    android:layout_width="@dimen/no_dp"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/background_metadata_spinner"
-                    android:entries="@array/event_spinner"
-                    android:popupBackground="@color/colorGrey"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/video_playback_metadata_text_size"
-                    app:layout_constraintBottom_toBottomOf="@id/eventTitle"
-                    app:layout_constraintLeft_toRightOf="@id/guidelinePlayback"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/eventTitle" />
-
-                <TextView
-                    android:id="@+id/partnerIdTitle"
-                    android:layout_width="@dimen/no_dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/video_playback_metadata_spacing"
-                    android:text="@string/playback_partner_id"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/video_playback_metadata_text_size"
-                    android:textStyle="bold"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toLeftOf="@id/guidelinePlayback"
-                    app:layout_constraintTop_toBottomOf="@id/eventTitle" />
-
-                <EditText
-                    android:id="@+id/partnerIdValue"
-                    android:layout_width="@dimen/no_dp"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/background_metadata_edit_text"
-                    android:inputType="text"
-                    android:maxLength="20"
-                    android:padding="@dimen/video_playback_edit_metadata_padding"
-                    android:singleLine="true"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/video_playback_metadata_text_size"
-                    app:layout_constraintBottom_toBottomOf="@id/partnerIdTitle"
-                    app:layout_constraintLeft_toRightOf="@id/guidelinePlayback"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/partnerIdTitle"
-                    tools:ignore="Autofill,LabelFor" />
-
-                <TextView
-                    android:id="@+id/ticket1Title"
-                    android:layout_width="@dimen/no_dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/video_playback_metadata_spacing"
-                    android:text="@string/playback_ticket_1"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/video_playback_metadata_text_size"
-                    android:textStyle="bold"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toLeftOf="@id/guidelinePlayback"
-                    app:layout_constraintTop_toBottomOf="@id/partnerIdTitle" />
-
-                <EditText
-                    android:id="@+id/ticket1Value"
-                    android:layout_width="@dimen/no_dp"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/background_metadata_edit_text"
-                    android:inputType="text"
-                    android:maxLength="20"
-                    android:padding="@dimen/video_playback_edit_metadata_padding"
-                    android:singleLine="true"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/video_playback_metadata_text_size"
-                    app:layout_constraintBottom_toBottomOf="@id/ticket1Title"
-                    app:layout_constraintLeft_toRightOf="@id/guidelinePlayback"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/ticket1Title"
-                    tools:ignore="Autofill,LabelFor" />
-
-                <TextView
-                    android:id="@+id/ticket2Title"
-                    android:layout_width="@dimen/no_dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/video_playback_metadata_spacing"
-                    android:text="@string/playback_ticket_2"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/video_playback_metadata_text_size"
-                    android:textStyle="bold"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toLeftOf="@id/guidelinePlayback"
-                    app:layout_constraintTop_toBottomOf="@id/ticket1Title" />
-
-                <EditText
-                    android:id="@+id/ticket2Value"
-                    android:layout_width="@dimen/no_dp"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/background_metadata_edit_text"
-                    android:inputType="text"
-                    android:maxLength="20"
-                    android:padding="@dimen/video_playback_edit_metadata_padding"
-                    android:singleLine="true"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/video_playback_metadata_text_size"
-                    app:layout_constraintBottom_toBottomOf="@id/ticket2Title"
-                    app:layout_constraintLeft_toRightOf="@id/guidelinePlayback"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/ticket2Title"
-                    tools:ignore="Autofill,LabelFor" />
-
-                <TextView
-                    android:id="@+id/case1Title"
-                    android:layout_width="@dimen/no_dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/video_playback_metadata_spacing"
-                    android:text="@string/playback_case_1"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/video_playback_metadata_text_size"
-                    android:textStyle="bold"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toLeftOf="@id/guidelinePlayback"
-                    app:layout_constraintTop_toBottomOf="@id/ticket2Title" />
-
-                <EditText
-                    android:id="@+id/case1Value"
-                    android:layout_width="@dimen/no_dp"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/background_metadata_edit_text"
-                    android:inputType="text"
-                    android:maxLength="50"
-                    android:padding="@dimen/video_playback_edit_metadata_padding"
-                    android:singleLine="true"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/video_playback_metadata_text_size"
-                    app:layout_constraintBottom_toBottomOf="@id/case1Title"
-                    app:layout_constraintLeft_toRightOf="@id/guidelinePlayback"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/case1Title"
-                    tools:ignore="Autofill,LabelFor" />
-
-                <TextView
-                    android:id="@+id/case2Title"
-                    android:layout_width="@dimen/no_dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/video_playback_metadata_spacing"
-                    android:text="@string/playback_case_2"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/video_playback_metadata_text_size"
-                    android:textStyle="bold"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toLeftOf="@id/guidelinePlayback"
-                    app:layout_constraintTop_toBottomOf="@id/case1Title" />
-
-                <EditText
-                    android:id="@+id/case2Value"
-                    android:layout_width="@dimen/no_dp"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/background_metadata_edit_text"
-                    android:inputType="text"
-                    android:maxLength="50"
-                    android:padding="@dimen/video_playback_edit_metadata_padding"
-                    android:singleLine="true"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/video_playback_metadata_text_size"
-                    app:layout_constraintBottom_toBottomOf="@id/case2Title"
-                    app:layout_constraintLeft_toRightOf="@id/guidelinePlayback"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/case2Title"
-                    tools:ignore="Autofill,LabelFor" />
-
-                <TextView
-                    android:id="@+id/dispatch1Title"
-                    android:layout_width="@dimen/no_dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/video_playback_metadata_spacing"
-                    android:text="@string/playback_dispatch_1"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/video_playback_metadata_text_size"
-                    android:textStyle="bold"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toLeftOf="@id/guidelinePlayback"
-                    app:layout_constraintTop_toBottomOf="@id/case2Title" />
-
-                <EditText
-                    android:id="@+id/dispatch1Value"
-                    android:layout_width="@dimen/no_dp"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/background_metadata_edit_text"
-                    android:inputType="text"
-                    android:maxLength="30"
-                    android:padding="@dimen/video_playback_edit_metadata_padding"
-                    android:singleLine="true"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/video_playback_metadata_text_size"
-                    app:layout_constraintBottom_toBottomOf="@id/dispatch1Title"
-                    app:layout_constraintLeft_toRightOf="@id/guidelinePlayback"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/dispatch1Title"
-                    tools:ignore="Autofill,LabelFor" />
-
-                <TextView
-                    android:id="@+id/dispatch2Title"
-                    android:layout_width="@dimen/no_dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/video_playback_metadata_spacing"
-                    android:text="@string/playback_dispatch_2"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/video_playback_metadata_text_size"
-                    android:textStyle="bold"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toLeftOf="@id/guidelinePlayback"
-                    app:layout_constraintTop_toBottomOf="@id/dispatch1Title" />
-
-                <EditText
-                    android:id="@+id/dispatch2Value"
-                    android:layout_width="@dimen/no_dp"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/background_metadata_edit_text"
-                    android:inputType="text"
-                    android:maxLength="30"
-                    android:padding="@dimen/video_playback_edit_metadata_padding"
-                    android:singleLine="true"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/video_playback_metadata_text_size"
-                    app:layout_constraintBottom_toBottomOf="@id/dispatch2Title"
-                    app:layout_constraintLeft_toRightOf="@id/guidelinePlayback"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/dispatch2Title"
-                    tools:ignore="Autofill,LabelFor" />
-
-                <TextView
-                    android:id="@+id/locationTitle"
-                    android:layout_width="@dimen/no_dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/video_playback_metadata_spacing"
-                    android:text="@string/playback_location"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/video_playback_metadata_text_size"
-                    android:textStyle="bold"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toLeftOf="@id/guidelinePlayback"
-                    app:layout_constraintTop_toBottomOf="@id/dispatch2Title" />
-
-                <EditText
-                    android:id="@+id/locationValue"
-                    android:layout_width="@dimen/no_dp"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/background_metadata_edit_text"
-                    android:inputType="text"
-                    android:maxLength="30"
-                    android:padding="@dimen/video_playback_edit_metadata_padding"
-                    android:singleLine="true"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/video_playback_metadata_text_size"
-                    app:layout_constraintBottom_toBottomOf="@id/locationTitle"
-                    app:layout_constraintLeft_toRightOf="@id/guidelinePlayback"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/locationTitle"
-                    tools:ignore="Autofill,LabelFor" />
-
-                <TextView
-                    android:id="@+id/remarksTitle"
-                    android:layout_width="@dimen/no_dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/video_playback_metadata_spacing"
-                    android:text="@string/playback_remarks"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/video_playback_metadata_text_size"
-                    android:textStyle="bold"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toLeftOf="@id/guidelinePlayback"
-                    app:layout_constraintTop_toBottomOf="@id/locationTitle" />
-
-                <EditText
-                    android:id="@+id/remarksValue"
-                    android:layout_width="@dimen/no_dp"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/background_metadata_edit_text"
-                    android:inputType="text"
-                    android:maxLength="100"
-                    android:padding="@dimen/video_playback_edit_metadata_padding"
-                    android:singleLine="true"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/video_playback_metadata_text_size"
-                    app:layout_constraintBottom_toBottomOf="@id/remarksTitle"
-                    app:layout_constraintLeft_toRightOf="@id/guidelinePlayback"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/remarksTitle"
-                    tools:ignore="Autofill,LabelFor" />
-
-                <TextView
-                    android:id="@+id/firstNameTitle"
-                    android:layout_width="@dimen/no_dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/video_playback_metadata_spacing"
-                    android:text="@string/playback_first_name"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/video_playback_metadata_text_size"
-                    android:textStyle="bold"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toLeftOf="@id/guidelinePlayback"
-                    app:layout_constraintTop_toBottomOf="@id/remarksTitle" />
-
-                <EditText
-                    android:id="@+id/firstNameValue"
-                    android:layout_width="@dimen/no_dp"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/background_metadata_edit_text"
-                    android:inputType="text"
-                    android:maxLength="30"
-                    android:padding="@dimen/video_playback_edit_metadata_padding"
-                    android:singleLine="true"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/video_playback_metadata_text_size"
-                    app:layout_constraintBottom_toBottomOf="@id/firstNameTitle"
-                    app:layout_constraintLeft_toRightOf="@id/guidelinePlayback"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/firstNameTitle"
-                    tools:ignore="Autofill,LabelFor" />
-
-                <TextView
-                    android:id="@+id/lastNameTitle"
-                    android:layout_width="@dimen/no_dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/video_playback_metadata_spacing"
-                    android:text="@string/playback_last_name"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/video_playback_metadata_text_size"
-                    android:textStyle="bold"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toLeftOf="@id/guidelinePlayback"
-                    app:layout_constraintTop_toBottomOf="@id/firstNameTitle" />
-
-                <EditText
-                    android:id="@+id/lastNameValue"
-                    android:layout_width="@dimen/no_dp"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/background_metadata_edit_text"
-                    android:inputType="text"
-                    android:maxLength="30"
-                    android:padding="@dimen/video_playback_edit_metadata_padding"
-                    android:singleLine="true"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/video_playback_metadata_text_size"
-                    app:layout_constraintBottom_toBottomOf="@id/lastNameTitle"
-                    app:layout_constraintLeft_toRightOf="@id/guidelinePlayback"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/lastNameTitle"
-                    tools:ignore="Autofill,LabelFor" />
-
-                <TextView
-                    android:id="@+id/genderTitle"
-                    android:layout_width="@dimen/no_dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/video_playback_metadata_spacing"
-                    android:text="@string/playback_gender"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/video_playback_metadata_text_size"
-                    android:textStyle="bold"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toLeftOf="@id/guidelinePlayback"
-                    app:layout_constraintTop_toBottomOf="@id/lastNameTitle" />
-
-                <Spinner
-                    android:id="@+id/genderValue"
-                    android:layout_width="@dimen/no_dp"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/background_metadata_spinner"
-                    android:entries="@array/gender_spinner"
-                    android:popupBackground="@color/colorGrey"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/video_playback_metadata_text_size"
-                    app:layout_constraintBottom_toBottomOf="@id/genderTitle"
-                    app:layout_constraintLeft_toRightOf="@id/guidelinePlayback"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/genderTitle" />
-
-                <TextView
-                    android:id="@+id/raceTitle"
-                    android:layout_width="@dimen/no_dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/video_playback_metadata_spacing"
-                    android:text="@string/playback_race"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/video_playback_metadata_text_size"
-                    android:textStyle="bold"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toLeftOf="@id/guidelinePlayback"
-                    app:layout_constraintTop_toBottomOf="@id/genderTitle" />
-
-                <Spinner
-                    android:id="@+id/raceValue"
-                    android:layout_width="@dimen/no_dp"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/background_metadata_spinner"
-                    android:entries="@array/race_spinner"
-                    android:popupBackground="@color/colorGrey"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/video_playback_metadata_text_size"
-                    app:layout_constraintBottom_toBottomOf="@id/raceTitle"
-                    app:layout_constraintLeft_toRightOf="@id/guidelinePlayback"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/raceTitle" />
-
-                <TextView
-                    android:id="@+id/driverLicenseTitle"
-                    android:layout_width="@dimen/no_dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/video_playback_metadata_spacing"
-                    android:text="@string/playback_driver_license"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/video_playback_metadata_text_size"
-                    android:textStyle="bold"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toLeftOf="@id/guidelinePlayback"
-                    app:layout_constraintTop_toBottomOf="@id/raceTitle" />
-
-                <EditText
-                    android:id="@+id/driverLicenseValue"
-                    android:layout_width="@dimen/no_dp"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/background_metadata_edit_text"
-                    android:inputType="text"
-                    android:maxLength="30"
-                    android:padding="@dimen/video_playback_edit_metadata_padding"
-                    android:singleLine="true"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/video_playback_metadata_text_size"
-                    app:layout_constraintBottom_toBottomOf="@id/driverLicenseTitle"
-                    app:layout_constraintLeft_toRightOf="@id/guidelinePlayback"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/driverLicenseTitle"
-                    tools:ignore="Autofill,LabelFor" />
-
-                <TextView
-                    android:id="@+id/licensePlateTitle"
-                    android:layout_width="@dimen/no_dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/video_playback_metadata_spacing"
-                    android:text="@string/playback_license_plate"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/video_playback_metadata_text_size"
-                    android:textStyle="bold"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toLeftOf="@id/guidelinePlayback"
-                    app:layout_constraintTop_toBottomOf="@id/driverLicenseTitle" />
-
-                <EditText
-                    android:id="@+id/licensePlateValue"
-                    android:layout_width="@dimen/no_dp"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/background_metadata_edit_text"
-                    android:inputType="text"
-                    android:maxLength="30"
-                    android:padding="@dimen/video_playback_edit_metadata_padding"
-                    android:singleLine="true"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/video_playback_metadata_text_size"
-                    app:layout_constraintBottom_toBottomOf="@id/licensePlateTitle"
-                    app:layout_constraintLeft_toRightOf="@id/guidelinePlayback"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/licensePlateTitle"
-                    tools:ignore="Autofill,LabelFor" />
-
-                <TextView
-                    android:id="@+id/linkedPhotosTitle"
-                    android:layout_width="@dimen/no_dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/video_playback_metadata_spacing"
-                    android:layout_marginBottom="20dp"
-                    android:text="@string/linked_photos_metadata_title"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/video_playback_metadata_text_size"
-                    android:textStyle="bold"
-                    android:visibility="gone"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toLeftOf="@id/guidelinePlayback"
-                    app:layout_constraintTop_toBottomOf="@id/licensePlateTitle" />
-
-                <TextView
-                    android:id="@+id/linkedPhotosValue"
-                    android:layout_width="@dimen/no_dp"
-                    android:layout_height="wrap_content"
-                    android:padding="@dimen/video_playback_edit_metadata_padding"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/video_playback_metadata_text_size"
-                    android:visibility="gone"
-                    app:layout_constraintBottom_toBottomOf="@+id/linkedPhotosTitle"
-                    app:layout_constraintHorizontal_bias="0.0"
-                    app:layout_constraintLeft_toRightOf="@id/guidelinePlayback"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/linkedPhotosTitle"
-                    tools:ignore="Autofill,LabelFor" />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-        </ScrollView>
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guidelinePlayback"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.5" />
 
         <TextView
-            android:id="@+id/cancelButtonVideoPlayback"
-            android:layout_width="wrap_content"
+            android:id="@+id/videoNameTitle"
+            android:layout_width="@dimen/no_dp"
             android:layout_height="wrap_content"
-            android:clickable="true"
-            android:focusable="true"
-            android:padding="@dimen/metadata_form_spacing"
-            android:text="@string/cancel_metadata"
-            android:textColor="@color/white"
+            android:text="@string/playback_video_name"
+            android:textSize="@dimen/video_playback_metadata_text_size"
+            app:layout_constraintEnd_toStartOf="@id/guidelinePlayback"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/videoNameValue"
+            android:layout_width="@dimen/no_dp"
+            android:layout_height="wrap_content"
+            android:text="@string/default_text"
             android:textSize="@dimen/video_playback_metadata_text_size"
             android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent" />
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/videoNameTitle" />
 
-        <ImageView
-            android:id="@+id/buttonLinkSnapshots"
+        <TextView
+            android:id="@+id/startTimeTitle"
+            android:layout_width="@dimen/no_dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/video_playback_metadata_spacing"
+            android:text="@string/playback_start_time"
+            android:textSize="@dimen/video_playback_metadata_text_size"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/videoNameValue" />
+
+        <TextView
+            android:id="@+id/startTimeValue"
+            android:layout_width="@dimen/no_dp"
+            android:layout_height="wrap_content"
+            android:text="@string/default_text"
+            android:textSize="@dimen/video_playback_metadata_text_size"
+            android:textStyle="bold"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/startTimeTitle" />
+
+        <TextView
+            android:id="@+id/durationTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:contentDescription="@string/button_link_snapshots"
-            android:src="@drawable/ic_link"
-            android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:text="@string/playback_duration"
+            android:textSize="@dimen/video_playback_metadata_text_size"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="@id/guidelinePlayback"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/saveButtonVideoPlayback"
-            android:layout_width="wrap_content"
+            android:id="@+id/durationValue"
+            android:layout_width="@dimen/no_dp"
             android:layout_height="wrap_content"
-            android:padding="@dimen/metadata_form_spacing"
-            android:text="@string/save_metadata"
-            android:textColor="@color/white"
+            android:text="@string/default_text"
             android:textSize="@dimen/video_playback_metadata_text_size"
             android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintRight_toRightOf="parent" />
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintStart_toStartOf="@id/durationTitle"
+            app:layout_constraintTop_toBottomOf="@id/durationTitle" />
+
+        <TextView
+            android:id="@+id/eventTitle"
+            android:layout_width="@dimen/no_dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/video_playback_metadata_spacing"
+            android:text="@string/playback_event"
+            android:textSize="@dimen/video_playback_metadata_text_size"
+            android:textStyle="bold"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/guidelinePlayback"
+            app:layout_constraintTop_toBottomOf="@id/startTimeValue" />
+
+        <Spinner
+            android:id="@+id/eventValue"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_5dp"
+            android:background="@drawable/shape_unchecked_box"
+            android:entries="@array/event_spinner"
+            android:textSize="@dimen/video_playback_metadata_text_size"
+            app:layout_constraintTop_toBottomOf="@id/eventTitle" />
+
+        <TextView
+            android:id="@+id/partnerIdTitle"
+            android:layout_width="@dimen/no_dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/video_playback_metadata_spacing"
+            android:text="@string/playback_partner_id"
+            android:textSize="@dimen/video_playback_metadata_text_size"
+            android:textStyle="bold"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/guidelinePlayback"
+            app:layout_constraintTop_toBottomOf="@id/eventValue" />
+
+        <EditText
+            android:id="@+id/partnerIdValue"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_5dp"
+            android:background="@drawable/shape_unchecked_box"
+            android:inputType="text"
+            android:maxLength="20"
+            android:padding="@dimen/padding_12dp"
+            android:singleLine="true"
+            android:textColor="@color/black"
+            android:textSize="@dimen/video_playback_metadata_text_size"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/partnerIdTitle"
+            tools:ignore="Autofill,LabelFor" />
+
+        <TextView
+            android:id="@+id/ticket1Title"
+            android:layout_width="@dimen/no_dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/video_playback_metadata_spacing"
+            android:text="@string/playback_ticket_1"
+            android:textSize="@dimen/video_playback_metadata_text_size"
+            android:textStyle="bold"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/guidelinePlayback"
+            app:layout_constraintTop_toBottomOf="@id/partnerIdValue" />
+
+        <EditText
+            android:id="@+id/ticket1Value"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_5dp"
+            android:background="@drawable/shape_unchecked_box"
+            android:inputType="text"
+            android:maxLength="20"
+            android:padding="@dimen/padding_12dp"
+            android:singleLine="true"
+            android:textColor="@color/black"
+            android:textSize="@dimen/video_playback_metadata_text_size"
+            app:layout_constraintTop_toBottomOf="@id/ticket1Title"
+            tools:ignore="Autofill,LabelFor" />
+
+        <TextView
+            android:id="@+id/ticket2Title"
+            android:layout_width="@dimen/no_dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/video_playback_metadata_spacing"
+            android:text="@string/playback_ticket_2"
+            android:textSize="@dimen/video_playback_metadata_text_size"
+            android:textStyle="bold"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/guidelinePlayback"
+            app:layout_constraintTop_toBottomOf="@id/ticket1Value" />
+
+        <EditText
+            android:id="@+id/ticket2Value"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_5dp"
+            android:background="@drawable/shape_unchecked_box"
+            android:inputType="text"
+            android:maxLength="20"
+            android:padding="@dimen/padding_12dp"
+            android:singleLine="true"
+            android:textColor="@color/black"
+            android:textSize="@dimen/video_playback_metadata_text_size"
+            app:layout_constraintTop_toBottomOf="@id/ticket2Title"
+            tools:ignore="Autofill,LabelFor" />
+
+        <TextView
+            android:id="@+id/case1Title"
+            android:layout_width="@dimen/no_dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/video_playback_metadata_spacing"
+            android:text="@string/playback_case_1"
+            android:textSize="@dimen/video_playback_metadata_text_size"
+            android:textStyle="bold"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/guidelinePlayback"
+            app:layout_constraintTop_toBottomOf="@id/ticket2Value" />
+
+        <EditText
+            android:id="@+id/case1Value"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_5dp"
+            android:background="@drawable/shape_unchecked_box"
+            android:inputType="text"
+            android:maxLength="50"
+            android:padding="@dimen/padding_12dp"
+            android:singleLine="true"
+            android:textColor="@color/black"
+            android:textSize="@dimen/video_playback_metadata_text_size"
+            app:layout_constraintTop_toBottomOf="@id/case1Title"
+            tools:ignore="Autofill,LabelFor" />
+
+        <TextView
+            android:id="@+id/case2Title"
+            android:layout_width="@dimen/no_dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/video_playback_metadata_spacing"
+            android:text="@string/playback_case_2"
+            android:textSize="@dimen/video_playback_metadata_text_size"
+            android:textStyle="bold"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/guidelinePlayback"
+            app:layout_constraintTop_toBottomOf="@id/case1Value" />
+
+        <EditText
+            android:id="@+id/case2Value"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_5dp"
+            android:background="@drawable/shape_unchecked_box"
+            android:inputType="text"
+            android:maxLength="50"
+            android:padding="@dimen/padding_12dp"
+            android:singleLine="true"
+            android:textColor="@color/black"
+            android:textSize="@dimen/video_playback_metadata_text_size"
+            app:layout_constraintTop_toBottomOf="@id/case2Title"
+            tools:ignore="Autofill,LabelFor" />
+
+        <TextView
+            android:id="@+id/dispatch1Title"
+            android:layout_width="@dimen/no_dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/video_playback_metadata_spacing"
+            android:text="@string/playback_dispatch_1"
+            android:textSize="@dimen/video_playback_metadata_text_size"
+            android:textStyle="bold"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/guidelinePlayback"
+            app:layout_constraintTop_toBottomOf="@id/case2Value" />
+
+        <EditText
+            android:id="@+id/dispatch1Value"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_5dp"
+            android:background="@drawable/shape_unchecked_box"
+            android:inputType="text"
+            android:maxLength="30"
+            android:padding="@dimen/padding_12dp"
+            android:singleLine="true"
+            android:textColor="@color/black"
+            android:textSize="@dimen/video_playback_metadata_text_size"
+            app:layout_constraintTop_toBottomOf="@id/dispatch1Title"
+            tools:ignore="Autofill,LabelFor" />
+
+        <TextView
+            android:id="@+id/dispatch2Title"
+            android:layout_width="@dimen/no_dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/video_playback_metadata_spacing"
+            android:text="@string/playback_dispatch_2"
+            android:textSize="@dimen/video_playback_metadata_text_size"
+            android:textStyle="bold"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/guidelinePlayback"
+            app:layout_constraintTop_toBottomOf="@id/dispatch1Value" />
+
+        <EditText
+            android:id="@+id/dispatch2Value"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_5dp"
+            android:background="@drawable/shape_unchecked_box"
+            android:inputType="text"
+            android:maxLength="30"
+            android:padding="@dimen/padding_12dp"
+            android:singleLine="true"
+            android:textColor="@color/black"
+            android:textSize="@dimen/video_playback_metadata_text_size"
+            app:layout_constraintTop_toBottomOf="@id/dispatch2Title"
+            tools:ignore="Autofill,LabelFor" />
+
+        <TextView
+            android:id="@+id/locationTitle"
+            android:layout_width="@dimen/no_dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/video_playback_metadata_spacing"
+            android:text="@string/playback_location"
+            android:textSize="@dimen/video_playback_metadata_text_size"
+            android:textStyle="bold"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/guidelinePlayback"
+            app:layout_constraintTop_toBottomOf="@id/dispatch2Value" />
+
+        <EditText
+            android:id="@+id/locationValue"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_5dp"
+            android:background="@drawable/shape_unchecked_box"
+            android:inputType="text"
+            android:maxLength="30"
+            android:padding="@dimen/padding_12dp"
+            android:singleLine="true"
+            android:textColor="@color/black"
+            android:textSize="@dimen/video_playback_metadata_text_size"
+            app:layout_constraintTop_toBottomOf="@id/locationTitle"
+            tools:ignore="Autofill,LabelFor" />
+
+        <TextView
+            android:id="@+id/remarksTitle"
+            android:layout_width="@dimen/no_dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/video_playback_metadata_spacing"
+            android:text="@string/playback_remarks"
+            android:textSize="@dimen/video_playback_metadata_text_size"
+            android:textStyle="bold"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/guidelinePlayback"
+            app:layout_constraintTop_toBottomOf="@id/locationValue" />
+
+        <EditText
+            android:id="@+id/remarksValue"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_5dp"
+            android:background="@drawable/shape_unchecked_box"
+            android:inputType="text"
+            android:maxLength="100"
+            android:padding="@dimen/padding_12dp"
+            android:singleLine="true"
+            android:textColor="@color/black"
+            android:textSize="@dimen/video_playback_metadata_text_size"
+            app:layout_constraintTop_toBottomOf="@id/remarksTitle"
+            tools:ignore="Autofill,LabelFor" />
+
+        <TextView
+            android:id="@+id/firstNameTitle"
+            android:layout_width="@dimen/no_dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/video_playback_metadata_spacing"
+            android:text="@string/playback_first_name"
+            android:textSize="@dimen/video_playback_metadata_text_size"
+            android:textStyle="bold"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/guidelinePlayback"
+            app:layout_constraintTop_toBottomOf="@id/remarksValue" />
+
+        <EditText
+            android:id="@+id/firstNameValue"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_5dp"
+            android:background="@drawable/shape_unchecked_box"
+            android:inputType="text"
+            android:maxLength="30"
+            android:padding="@dimen/padding_12dp"
+            android:singleLine="true"
+            android:textColor="@color/black"
+            android:textSize="@dimen/video_playback_metadata_text_size"
+            app:layout_constraintTop_toBottomOf="@id/firstNameTitle"
+            tools:ignore="Autofill,LabelFor" />
+
+        <TextView
+            android:id="@+id/lastNameTitle"
+            android:layout_width="@dimen/no_dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/video_playback_metadata_spacing"
+            android:text="@string/playback_last_name"
+            android:textSize="@dimen/video_playback_metadata_text_size"
+            android:textStyle="bold"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/guidelinePlayback"
+            app:layout_constraintTop_toBottomOf="@id/firstNameValue" />
+
+        <EditText
+            android:id="@+id/lastNameValue"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_5dp"
+            android:background="@drawable/shape_unchecked_box"
+            android:inputType="text"
+            android:maxLength="30"
+            android:padding="@dimen/padding_12dp"
+            android:singleLine="true"
+            android:textColor="@color/black"
+            android:textSize="@dimen/video_playback_metadata_text_size"
+            app:layout_constraintTop_toBottomOf="@id/lastNameTitle"
+            tools:ignore="Autofill,LabelFor" />
+
+        <TextView
+            android:id="@+id/genderTitle"
+            android:layout_width="@dimen/no_dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/video_playback_metadata_spacing"
+            android:text="@string/playback_gender"
+            android:textSize="@dimen/video_playback_metadata_text_size"
+            android:textStyle="bold"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/guidelinePlayback"
+            app:layout_constraintTop_toBottomOf="@id/lastNameValue" />
+
+        <Spinner
+            android:id="@+id/genderValue"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_5dp"
+            android:background="@drawable/shape_unchecked_box"
+            android:entries="@array/gender_spinner"
+            android:textSize="@dimen/video_playback_metadata_text_size"
+            app:layout_constraintTop_toBottomOf="@id/genderTitle" />
+
+        <TextView
+            android:id="@+id/raceTitle"
+            android:layout_width="@dimen/no_dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/video_playback_metadata_spacing"
+            android:text="@string/playback_race"
+            android:textSize="@dimen/video_playback_metadata_text_size"
+            android:textStyle="bold"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/guidelinePlayback"
+            app:layout_constraintTop_toBottomOf="@id/genderValue" />
+
+        <Spinner
+            android:id="@+id/raceValue"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_5dp"
+            android:background="@drawable/shape_unchecked_box"
+            android:entries="@array/race_spinner"
+            android:textSize="@dimen/video_playback_metadata_text_size"
+            app:layout_constraintTop_toBottomOf="@id/raceTitle" />
+
+        <TextView
+            android:id="@+id/driverLicenseTitle"
+            android:layout_width="@dimen/no_dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/video_playback_metadata_spacing"
+            android:text="@string/playback_driver_license"
+            android:textSize="@dimen/video_playback_metadata_text_size"
+            android:textStyle="bold"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/guidelinePlayback"
+            app:layout_constraintTop_toBottomOf="@id/raceValue" />
+
+        <EditText
+            android:id="@+id/driverLicenseValue"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_5dp"
+            android:background="@drawable/shape_unchecked_box"
+            android:inputType="text"
+            android:maxLength="30"
+            android:padding="@dimen/padding_12dp"
+            android:singleLine="true"
+            android:textColor="@color/black"
+            android:textSize="@dimen/video_playback_metadata_text_size"
+            app:layout_constraintTop_toBottomOf="@id/driverLicenseTitle"
+            tools:ignore="Autofill,LabelFor" />
+
+        <TextView
+            android:id="@+id/licensePlateTitle"
+            android:layout_width="@dimen/no_dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/video_playback_metadata_spacing"
+            android:text="@string/playback_license_plate"
+            android:textSize="@dimen/video_playback_metadata_text_size"
+            android:textStyle="bold"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/guidelinePlayback"
+            app:layout_constraintTop_toBottomOf="@id/driverLicenseValue" />
+
+        <EditText
+            android:id="@+id/licensePlateValue"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_5dp"
+            android:background="@drawable/shape_unchecked_box"
+            android:inputType="text"
+            android:maxLength="30"
+            android:padding="@dimen/padding_12dp"
+            android:singleLine="true"
+            android:textColor="@color/black"
+            android:textSize="@dimen/video_playback_metadata_text_size"
+            app:layout_constraintTop_toBottomOf="@id/licensePlateTitle"
+            tools:ignore="Autofill,LabelFor" />
+
+        <TextView
+            android:id="@+id/linkedPhotosTitle"
+            android:layout_width="@dimen/no_dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/video_playback_metadata_spacing"
+            android:layout_marginBottom="@dimen/video_playback_metadata_spacing"
+            android:text="@string/linked_photos_metadata_title"
+            android:textSize="@dimen/video_playback_metadata_text_size"
+            android:textStyle="bold"
+            android:visibility="gone"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/guidelinePlayback"
+            app:layout_constraintTop_toBottomOf="@id/licensePlateValue" />
+
+        <TextView
+            android:id="@+id/linkedPhotosValue"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_5dp"
+            android:padding="@dimen/padding_12dp"
+            android:paddingStart="@dimen/padding_horizontal_metadata_fields"
+            android:paddingEnd="@dimen/no_dp"
+            android:text="@string/no_linked_photos"
+            android:textSize="@dimen/video_playback_metadata_text_size"
+            android:visibility="gone"
+            app:layout_constraintTop_toBottomOf="@+id/linkedPhotosTitle"
+            tools:ignore="Autofill,LabelFor" />
+
+        <TextView
+            android:id="@+id/associateImageTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/video_playback_metadata_spacing"
+            android:text="@string/associate_image_to_video"
+            android:textSize="@dimen/video_playback_metadata_text_size"
+            android:textStyle="bold"
+            android:visibility="gone"
+            app:layout_constraintTop_toBottomOf="@+id/linkedPhotosValue"
+            tools:ignore="Autofill,LabelFor" />
+
+        <Button
+            android:id="@+id/buttonLinkSnapshots"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_5dp"
+            android:background="@drawable/shape_add_images"
+            android:clickable="false"
+            android:contentDescription="@string/button_link_snapshots"
+            android:drawableStart="@drawable/ic_plus"
+            android:paddingHorizontal="@dimen/padding_50dp"
+            android:text="@string/add_images"
+            android:textAllCaps="false"
+            android:textColor="@color/lightBlue"
+            android:textSize="@dimen/text_size_16sp"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/associateImageTitle" />
+
+        <Button
+            android:id="@+id/saveButtonVideoPlayback"
+            android:layout_width="@dimen/no_dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_40dp"
+            android:background="@drawable/background_button_accept"
+            android:padding="@dimen/padding_13dp"
+            android:text="@string/save_metadata"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_size_20sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/buttonLinkSnapshots" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

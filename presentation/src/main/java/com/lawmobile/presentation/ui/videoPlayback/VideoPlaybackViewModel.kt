@@ -62,7 +62,7 @@ class VideoPlaybackViewModel @ViewModelInject constructor(
         vlcMediaPlayer.createMediaPlayer(url, view)
     }
 
-    fun playVLCMediaPlayer() {
+    fun playMediaPlayer() {
         vlcMediaPlayer.playMediaPlayer()
     }
 

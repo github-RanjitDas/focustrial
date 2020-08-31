@@ -25,7 +25,7 @@ import com.safefleet.mobile.commons.helpers.hideKeyboard
 import kotlinx.android.synthetic.main.activity_file_list.*
 import kotlinx.android.synthetic.main.bottom_sheet_assign_to_officer.*
 import kotlinx.android.synthetic.main.bottom_sheet_instructions_connect_camera.bottomSheetInstructions
-import kotlinx.android.synthetic.main.file_list_app_bar.*
+import kotlinx.android.synthetic.main.custom_app_bar.*
 
 class FileListActivity : BaseActivity() {
 
@@ -47,6 +47,7 @@ class FileListActivity : BaseActivity() {
         listType = intent.extras?.getString(FILE_LIST_SELECTOR)
 
         setObservers()
+        setCustomAppBar()
 
         when (listType) {
             VIDEO_LIST -> setSimpleFileListFragment()
@@ -55,6 +56,19 @@ class FileListActivity : BaseActivity() {
 
         setListeners()
         configureBottomSheet()
+    }
+
+    private fun setCustomAppBar() {
+        when (listType) {
+            SNAPSHOT_LIST -> {
+                fileListAppBarTitle.text = getString(R.string.snapshots_title)
+            }
+            VIDEO_LIST -> {
+                fileListAppBarTitle.text = getString(R.string.videos_title)
+                buttonThumbnailList.isVisible = false
+                buttonSimpleList.isVisible = false
+            }
+        }
     }
 
     private fun setObservers() {
@@ -67,16 +81,6 @@ class FileListActivity : BaseActivity() {
         buttonSimpleList.isActivated = true
         buttonThumbnailList.isActivated = false
         resetButtonAssociate()
-        when (listType) {
-            SNAPSHOT_LIST -> {
-                fileListAppBarTitle.text = getString(R.string.snapshots_title)
-            }
-            VIDEO_LIST -> {
-                fileListAppBarTitle.text = getString(R.string.videos_title)
-                buttonThumbnailList.isVisible = false
-                buttonSimpleList.isVisible = false
-            }
-        }
         simpleFileListFragment.onFileCheck = ::enableAssociatePartnerButton
         simpleFileListFragment.arguments = Bundle().apply { putString(FILE_LIST_TYPE, listType) }
         supportFragmentManager.attachFragment(
@@ -116,13 +120,13 @@ class FileListActivity : BaseActivity() {
     }
 
     private fun associatePartnerId(partnerId: String) {
-        showLoadingDialog()
 
         if (partnerId.isEmpty()) {
             constraintLayoutFileList.showErrorSnackBar(getString(R.string.valid_partner_id_message))
-            hideLoadingDialog()
             return
         }
+
+        showLoadingDialog()
 
         val listSelected = when (actualFragment) {
             SIMPLE_FILE_LIST -> simpleFileListFragment.simpleFileListAdapter?.fileList?.filter { it.isChecked }

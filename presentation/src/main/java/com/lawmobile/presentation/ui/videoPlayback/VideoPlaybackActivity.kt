@@ -11,13 +11,17 @@ import android.widget.ArrayAdapter
 import android.widget.SeekBar
 import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
 import com.lawmobile.domain.entities.CameraInfo
 import com.lawmobile.domain.entities.DomainInformationVideo
 import com.lawmobile.domain.extensions.getCreationDate
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.entities.AlertInformation
-import com.lawmobile.presentation.extensions.*
+import com.lawmobile.presentation.extensions.convertMilliSecondsToString
+import com.lawmobile.presentation.extensions.createAlertInformation
+import com.lawmobile.presentation.extensions.setOnClickListenerCheckConnection
+import com.lawmobile.presentation.extensions.showToast
 import com.lawmobile.presentation.ui.base.BaseActivity
 import com.lawmobile.presentation.ui.thumbnailList.ThumbnailFileListFragment
 import com.lawmobile.presentation.utils.Constants.CAMERA_CONNECT_FILE
@@ -31,6 +35,7 @@ import com.safefleet.mobile.avml.cameras.entities.VideoMetadata
 import com.safefleet.mobile.commons.helpers.Result
 import com.safefleet.mobile.commons.helpers.hideKeyboard
 import kotlinx.android.synthetic.main.activity_video_playback.*
+import kotlinx.android.synthetic.main.custom_app_bar.*
 
 
 class VideoPlaybackActivity : BaseActivity() {
@@ -51,16 +56,12 @@ class VideoPlaybackActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_video_playback)
+        setAppBar()
         showLoadingDialog()
         setCatalogLists()
         addEditTextFilter()
         setObservers()
         configureListeners()
-    }
-
-    override fun onResume() {
-        super.onResume()
-
         hideKeyboard()
         verifyIfSelectedVideoWasChanged()
 
@@ -76,6 +77,12 @@ class VideoPlaybackActivity : BaseActivity() {
         }
 
         getVideoMetadata()
+    }
+
+    private fun setAppBar() {
+        fileListAppBarTitle.text = getString(R.string.video_detail)
+        buttonSimpleList.isVisible = false
+        buttonThumbnailList.isVisible = false
     }
 
     override fun onPause() {
@@ -149,10 +156,13 @@ class VideoPlaybackActivity : BaseActivity() {
 
     private fun manageSaveVideoResult(result: Result<Unit>) {
         when (result) {
-            is Result.Success -> this.showToast(
-                getString(R.string.video_metadata_saved_success),
-                Toast.LENGTH_SHORT
-            )
+            is Result.Success -> {
+                this.showToast(
+                    getString(R.string.video_metadata_saved_success),
+                    Toast.LENGTH_SHORT
+                )
+                finish()
+            }
             is Result.Error -> this.showToast(
                 getString(R.string.video_metadata_save_error),
                 Toast.LENGTH_SHORT
@@ -254,7 +264,7 @@ class VideoPlaybackActivity : BaseActivity() {
             manageButtonPlayPause()
         }
         buttonFullScreen.setOnClickListenerCheckConnection {
-            changeOrientationScreen()
+            changeScreenOrientation()
         }
         buttonAspect.setOnClickListenerCheckConnection {
             videoPlaybackViewModel.changeAspectRatio()
@@ -262,7 +272,7 @@ class VideoPlaybackActivity : BaseActivity() {
         saveButtonVideoPlayback.setOnClickListenerCheckConnection {
             saveVideoMetadataInCamera()
         }
-        cancelButtonVideoPlayback.setOnClickListenerCheckConnection {
+        backArrowFileListAppBar.setOnClickListenerCheckConnection {
             onBackPressed()
         }
         buttonLinkSnapshots.setOnClickListenerCheckConnection {
@@ -334,7 +344,7 @@ class VideoPlaybackActivity : BaseActivity() {
     private fun playVideoPlayback() {
         buttonPlay.setImageResource(R.drawable.ic_media_pause)
         updateLiveOrPlaybackActive(true)
-        videoPlaybackViewModel.playVLCMediaPlayer()
+        videoPlaybackViewModel.playMediaPlayer()
         if (currentProgressInVideo in 1..99) {
             setProgressToVideo(currentProgressInVideo)
         }
@@ -346,9 +356,12 @@ class VideoPlaybackActivity : BaseActivity() {
         videoPlaybackViewModel.pauseMediaPlayer()
     }
 
-    private fun changeOrientationScreen() {
+    private fun changeScreenOrientation() {
+        if (!videoPlaybackViewModel.isMediaPlayerPlaying())
+            videoPlaybackViewModel.playMediaPlayer()
+
         requestedOrientation =
-            if (resources.configuration.orientation == ActivityInfo.SCREEN_ORIENTATION_PORTRAIT) {
+            if (isInPortraitMode()) {
                 ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
             } else {
                 ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
@@ -356,17 +369,21 @@ class VideoPlaybackActivity : BaseActivity() {
     }
 
     override fun onBackPressed() {
-        if (areLinkedSnapshotsChangesSaved && !verifyVideoMetadataWasEdited()) {
+        if (isInPortraitMode()) {
             videoPlaybackViewModel.stopMediaPlayer()
-            super.onBackPressed()
+            if (areLinkedSnapshotsChangesSaved && !verifyVideoMetadataWasEdited()) {
+                finish()
+            } else {
+                val alertInformation = AlertInformation(
+                    R.string.metadata_confirmation,
+                    R.string.metadata_confirmation_message,
+                    ::closeWithoutSave,
+                    {}, null
+                )
+                this.createAlertInformation(alertInformation)
+            }
         } else {
-            val alertInformation = AlertInformation(
-                R.string.metadata_confirmation,
-                R.string.metadata_confirmation_message,
-                ::closeWithoutSave,
-                {}, null
-            )
-            this.createAlertInformation(alertInformation)
+            changeScreenOrientation()
         }
     }
 
@@ -500,7 +517,7 @@ class VideoPlaybackActivity : BaseActivity() {
 
             if (currentProgressInVideo == 100 && videoPlaybackViewModel.isMediaPlayerPlaying()) {
                 updateLastInteraction()
-                pauseVideoPlayback()
+                buttonPlay.setImageResource(R.drawable.ic_media_play)
             }
         })
     }
