@@ -67,15 +67,15 @@
     <dimen name="file_list_checkbox_margin_start">18dp</dimen>
 
     <!-- Video playback -->
-    <dimen name="video_playback_surface_view_height">220dp</dimen>
+    <dimen name="video_playback_surface_view_height">212dp</dimen>
     <dimen name="video_playback_size_buttons">24dp</dimen>
     <dimen name="video_playback_button_play_margin_sides">8dp</dimen>
     <dimen name="video_playback_text_view_player_time_margin_sides">10dp</dimen>
     <dimen name="video_playback_button_full_screen_margin_sides">8dp</dimen>
     <dimen name="video_playback_button_aspect_margin_sides">20dp</dimen>
     <dimen name="video_playback_text_view_player_length_margin_sides">10dp</dimen>
-    <dimen name="video_playback_padding_bottom_buttons">10dp</dimen>
-    <dimen name="video_playback_padding_top_buttons">5dp</dimen>
+    <dimen name="video_playback_padding_bottom_buttons">8dp</dimen>
+    <dimen name="video_playback_padding_top_buttons">9dp</dimen>
     <dimen name="snapshot_item_detail_32dp">32dp</dimen>
     <dimen name="snapshot_item_detail_16dp">16dp</dimen>
     <dimen name="video_playback_metadata_text_size">16sp</dimen>

@@ -33,10 +33,12 @@ import com.safefleet.mobile.avml.cameras.entities.CameraConnectVideoMetadata
 import com.safefleet.mobile.avml.cameras.entities.PhotoAssociated
 import com.safefleet.mobile.avml.cameras.entities.VideoMetadata
 import com.safefleet.mobile.commons.helpers.Result
+import com.safefleet.mobile.commons.helpers.doIfError
+import com.safefleet.mobile.commons.helpers.doIfSuccess
 import com.safefleet.mobile.commons.helpers.hideKeyboard
 import kotlinx.android.synthetic.main.activity_video_playback.*
 import kotlinx.android.synthetic.main.custom_app_bar.*
-
+import org.videolan.libvlc.MediaPlayer
 
 class VideoPlaybackActivity : BaseActivity() {
 
@@ -56,6 +58,7 @@ class VideoPlaybackActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_video_playback)
+
         setAppBar()
         showLoadingDialog()
         setCatalogLists()
@@ -66,12 +69,10 @@ class VideoPlaybackActivity : BaseActivity() {
         verifyIfSelectedVideoWasChanged()
 
         domainInformationVideo?.let {
-            createVideoPlaybackInSurface(it)
-            playVideoPlayback()
-            setProgressToVideo(currentProgressInVideo)
-            updateCurrentTimeInVideo()
-            configureObserveCurrentTimeVideo()
             setVideoInformation()
+            currentTimeVideoInMilliSeconds = 0
+            currentProgressInVideo = 0
+            createVideoPlaybackInSurface(it)
         } ?: run {
             getInformationOfVideo()
         }
@@ -79,16 +80,28 @@ class VideoPlaybackActivity : BaseActivity() {
         getVideoMetadata()
     }
 
-    private fun setAppBar() {
-        fileListAppBarTitle.text = getString(R.string.video_detail)
-        buttonSimpleList.isVisible = false
-        buttonThumbnailList.isVisible = false
+    override fun onResume() {
+        super.onResume()
+        if (!videoPlaybackViewModel.isMediaPlayerPlaying()) {
+            domainInformationVideo?.let {
+                createVideoPlaybackInSurface(it)
+                updateVideoCurrentTime()
+                playVideoPlayback()
+            }
+        }
     }
 
     override fun onPause() {
         super.onPause()
-        if (videoPlaybackViewModel.isMediaPlayerPlaying())
-            manageButtonPlayPause()
+        if (videoPlaybackViewModel.isMediaPlayerPlaying()) {
+            pauseVideoPlayback()
+        }
+    }
+
+    private fun setAppBar() {
+        fileListAppBarTitle.text = getString(R.string.video_detail)
+        buttonSimpleList.isVisible = false
+        buttonThumbnailList.isVisible = false
     }
 
     private fun addEditTextFilter() {
@@ -143,6 +156,22 @@ class VideoPlaybackActivity : BaseActivity() {
             this,
             Observer(::manageGetVideoMetadataResult)
         )
+        videoPlaybackViewModel.currentTimeVideo.observe(this, Observer(::manageCurrentTimeInVideo))
+    }
+
+    private fun manageCurrentTimeInVideo(time: Long) {
+        updateVideoCurrentTime()
+        if (time > currentTimeVideoInMilliSeconds) {
+            currentTimeVideoInMilliSeconds = time
+            updateProgressVideoInView()
+        }
+
+        if (currentProgressInVideo == 100 && videoPlaybackViewModel.isMediaPlayerPlaying()) {
+            updateLastInteraction()
+            buttonPlay.setImageResource(R.drawable.ic_media_play)
+            updateLiveOrPlaybackActive(false)
+            buttonAspect.isClickable = false
+        }
     }
 
     private fun managePlaybackOnAlert(isShowing: Boolean) {
@@ -173,15 +202,18 @@ class VideoPlaybackActivity : BaseActivity() {
     }
 
     private fun manageGetVideoMetadataResult(result: Result<CameraConnectVideoMetadata>) {
-        when (result) {
-            is Result.Success -> {
-                currentMetadata = result.data
-                setVideoMetadata(result.data)
+        with(result) {
+            doIfSuccess {
+                currentMetadata = it
+                setVideoMetadata(it)
             }
-            is Result.Error -> this.showToast(
-                getString(R.string.get_video_metadata_error),
-                Toast.LENGTH_SHORT
-            )
+            doIfError {
+                this@VideoPlaybackActivity.showToast(
+                    getString(R.string.get_video_metadata_error),
+                    Toast.LENGTH_SHORT
+                )
+                finish()
+            }
         }
     }
 
@@ -192,14 +224,13 @@ class VideoPlaybackActivity : BaseActivity() {
                 domainInformationVideo = result.data
                 createVideoPlaybackInSurface(result.data)
                 playVideoPlayback()
-                updateCurrentTimeInVideo()
-                configureObserveCurrentTimeVideo()
+                updateVideoCurrentTime()
                 setVideoInformation()
             }
             is Result.Error -> {
                 if (isAllowedToAttemptToGetInformation()) {
                     currentAttempts += 1
-                    connectVideo?.let { videoPlaybackViewModel.getInformationResourcesVideo(it) }
+                    connectVideo?.let(videoPlaybackViewModel::getInformationOfVideo)
                     return
                 }
 
@@ -288,9 +319,27 @@ class VideoPlaybackActivity : BaseActivity() {
             startActivityForResult(intent, 1)
         }
         configureListenerSeekBar()
+        configureMediaEventListener()
+    }
+
+    private fun configureMediaEventListener() {
+        videoPlaybackViewModel.setMediaEventListener(
+            MediaPlayer.EventListener {
+                when (it.type) {
+                    MediaPlayer.Event.EncounteredError -> {
+                        videoPlaybackViewModel.stopMediaPlayer()
+                        domainInformationVideo?.let(::createVideoPlaybackInSurface)
+                    }
+                    MediaPlayer.Event.MediaChanged -> {
+                        playVideoPlayback()
+                    }
+                }
+            }
+        )
     }
 
     private fun saveVideoMetadataInCamera() {
+        hideKeyboard()
         if (eventValue.selectedItem == eventList[0]) {
             this.showToast(getString(R.string.event_mandatory), Toast.LENGTH_SHORT)
             return
@@ -303,7 +352,12 @@ class VideoPlaybackActivity : BaseActivity() {
 
     private fun manageButtonPlayPause() {
         if (videoPlaybackViewModel.isMediaPlayerPlaying()) {
-            pauseVideoPlayback()
+            if (currentProgressInVideo == 100) {
+                currentProgressInVideo = 0
+                playVideoPlayback()
+            } else {
+                pauseVideoPlayback()
+            }
         } else {
             playVideoPlayback()
         }
@@ -312,7 +366,7 @@ class VideoPlaybackActivity : BaseActivity() {
     private fun getInformationOfVideo() {
         connectVideo = getCameraConnectFileFromIntent()
         connectVideo?.run {
-            videoPlaybackViewModel.getInformationResourcesVideo(this)
+            videoPlaybackViewModel.getInformationOfVideo(this)
         }
     }
 
@@ -345,21 +399,18 @@ class VideoPlaybackActivity : BaseActivity() {
         buttonPlay.setImageResource(R.drawable.ic_media_pause)
         updateLiveOrPlaybackActive(true)
         videoPlaybackViewModel.playMediaPlayer()
-        if (currentProgressInVideo in 1..99) {
-            setProgressToVideo(currentProgressInVideo)
-        }
+        setProgressToVideo(currentProgressInVideo)
+        buttonAspect.isClickable = true
     }
 
     private fun pauseVideoPlayback() {
         buttonPlay.setImageResource(R.drawable.ic_media_play)
         updateLiveOrPlaybackActive(false)
         videoPlaybackViewModel.pauseMediaPlayer()
+        buttonAspect.isClickable = false
     }
 
     private fun changeScreenOrientation() {
-        if (!videoPlaybackViewModel.isMediaPlayerPlaying())
-            videoPlaybackViewModel.playMediaPlayer()
-
         requestedOrientation =
             if (isInPortraitMode()) {
                 ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
@@ -503,23 +554,8 @@ class VideoPlaybackActivity : BaseActivity() {
         finish()
     }
 
-    private fun updateCurrentTimeInVideo() {
+    private fun updateVideoCurrentTime() {
         videoPlaybackViewModel.getTimeInMillisMediaPlayer()
-    }
-
-    private fun configureObserveCurrentTimeVideo() {
-        videoPlaybackViewModel.currentTimeVideo.observe(this, Observer {
-            updateCurrentTimeInVideo()
-            if (it != currentTimeVideoInMilliSeconds) {
-                currentTimeVideoInMilliSeconds = it
-                updateProgressVideoInView()
-            }
-
-            if (currentProgressInVideo == 100 && videoPlaybackViewModel.isMediaPlayerPlaying()) {
-                updateLastInteraction()
-                buttonPlay.setImageResource(R.drawable.ic_media_play)
-            }
-        })
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -589,10 +625,10 @@ class VideoPlaybackActivity : BaseActivity() {
     }
 
     private fun setProgressToVideo(progress: Int) {
-        Thread.sleep(500)
         videoPlaybackViewModel.setProgressMediaPlayer(progress.toFloat())
         seekProgressVideo.progress = progress
-        updateCurrentTimeInVideo()
+        currentTimeVideoInMilliSeconds = totalDurationVideoInMilliSeconds * (progress / 100)
+        updateVideoCurrentTime()
     }
 
     private fun restartObjectOfCompanion() {

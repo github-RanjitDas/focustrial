@@ -9,20 +9,35 @@ import org.videolan.libvlc.MediaPlayer
 
 class VLCMediaPlayer(private val libVLC: LibVLC, private val mediaPlayer: MediaPlayer) {
 
+    private var currentMedia: Media? = null
+
     fun createMediaPlayer(url: String, view: SurfaceView) {
-        val media = Media(libVLC, Uri.parse(url))
-        media.setHWDecoderEnabled(true, true)
-        media.addOption(CLOCK_JITTER)
-        media.addOption(CLOCK_SYNC)
-        media.addOption(NETWORK_CACHING)
-        media.addOption(FILE_CACHING)
-        mediaPlayer.media = media
-        media.release()
+        releaseMedia()
+        setMediaToPlayer(url)
+        detachAllViews()
+        attachViewToPlayer(view)
+    }
+
+    private fun attachViewToPlayer(view: SurfaceView) {
         if (mediaPlayer.vlcVout.areViewsAttached()) mediaPlayer.vlcVout.detachViews()
         mediaPlayer.vlcVout.setVideoView(view)
         mediaPlayer.vlcVout.attachViews { _, _, _, _, _, _, _ ->
             setSizeInMediaPlayer(view)
         }
+    }
+
+    private fun setMediaToPlayer(url: String) {
+        currentMedia = Media(libVLC, Uri.parse(url))
+        currentMedia?.setHWDecoderEnabled(true, true)
+        currentMedia?.addOption(CLOCK_JITTER)
+        currentMedia?.addOption(CLOCK_SYNC)
+        currentMedia?.addOption(NETWORK_CACHING)
+        currentMedia?.addOption(FILE_CACHING)
+        mediaPlayer.media = currentMedia
+    }
+
+    fun setMediaEventListener(listener: MediaPlayer.EventListener) {
+        mediaPlayer.setEventListener(listener)
     }
 
     fun setSizeInMediaPlayer(view: SurfaceView) {
@@ -39,7 +54,8 @@ class VLCMediaPlayer(private val libVLC: LibVLC, private val mediaPlayer: MediaP
 
     fun stopMediaPlayer() {
         mediaPlayer.stop()
-        mediaPlayer.vlcVout.detachViews()
+        detachAllViews()
+        releaseMedia()
     }
 
     fun pauseMediaPlayer() {
@@ -71,6 +87,20 @@ class VLCMediaPlayer(private val libVLC: LibVLC, private val mediaPlayer: MediaP
         mediaPlayer.time =
             ((progress.toDouble() * mediaPlayer.media.duration.toDouble()) / 100).toLong()
 
+    }
+
+    private fun detachAllViews() {
+        while (mediaPlayer.vlcVout.areViewsAttached()) {
+            mediaPlayer.vlcVout.detachViews()
+        }
+    }
+
+    private fun releaseMedia() {
+        currentMedia?.run {
+            while (!isReleased) {
+                currentMedia?.release()
+            }
+        }
     }
 
     private fun getAspectRatio() = mediaPlayer.aspectRatio

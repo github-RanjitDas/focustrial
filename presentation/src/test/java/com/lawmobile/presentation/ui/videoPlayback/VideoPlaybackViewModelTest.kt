@@ -43,7 +43,7 @@ class VideoPlaybackViewModelTest {
             mockk()
         )
         runBlocking {
-            videoPlaybackViewModel.getInformationResourcesVideo(cameraConnectFile)
+            videoPlaybackViewModel.getInformationOfVideo(cameraConnectFile)
             Assert.assertTrue(videoPlaybackViewModel.domainInformationVideoLiveData.value is Result.Success)
         }
 
@@ -57,7 +57,7 @@ class VideoPlaybackViewModelTest {
             mockk()
         )
         runBlocking {
-            videoPlaybackViewModel.getInformationResourcesVideo(cameraConnectFile)
+            videoPlaybackViewModel.getInformationOfVideo(cameraConnectFile)
             Assert.assertTrue(videoPlaybackViewModel.domainInformationVideoLiveData.value is Result.Error)
         }
 
