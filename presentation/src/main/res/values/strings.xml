@@ -34,6 +34,8 @@
     <!-- Live view -->
     <string name="image_description_full_screen_size">Full Screen size</string>
     <string name="live_view_label">Live view</string>
+    <string name="logout">Exit FMA</string>
+    <string name="logout_message">Are you sure want to exit from the app?</string>
 
     <!-- Snapshots -->
     <string name="live_view_take_photo_success">Snapshot Taken</string>
@@ -85,6 +87,8 @@
     <string name="get_video_metadata_error">Could not get video metadata</string>
     <string name="video_metadata_saved_success">Video metadata saved successfully</string>
     <string name="video_metadata_save_error">Video metadata could not be saved</string>
+    <string name="unsaved_changes">Unsaved changes</string>
+    <string name="unsaved_changes_message">There are unsaved changes, do you want to continue?</string>
 
     <!-- Snapshot detail -->
     <string name="snapshot_item_detail_photo_name_title">PHOTO NAME: </string>

@@ -1,7 +1,6 @@
 package com.lawmobile.presentation.ui.videoPlayback
 
 import android.app.Activity
-import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.os.Bundle
@@ -17,11 +16,7 @@ import com.lawmobile.domain.entities.CameraInfo
 import com.lawmobile.domain.entities.DomainInformationVideo
 import com.lawmobile.domain.extensions.getCreationDate
 import com.lawmobile.presentation.R
-import com.lawmobile.presentation.entities.AlertInformation
-import com.lawmobile.presentation.extensions.convertMilliSecondsToString
-import com.lawmobile.presentation.extensions.createAlertInformation
-import com.lawmobile.presentation.extensions.setOnClickListenerCheckConnection
-import com.lawmobile.presentation.extensions.showToast
+import com.lawmobile.presentation.extensions.*
 import com.lawmobile.presentation.ui.base.BaseActivity
 import com.lawmobile.presentation.ui.thumbnailList.ThumbnailFileListFragment
 import com.lawmobile.presentation.utils.Constants.CAMERA_CONNECT_FILE
@@ -341,7 +336,7 @@ class VideoPlaybackActivity : BaseActivity() {
     private fun saveVideoMetadataInCamera() {
         hideKeyboard()
         if (eventValue.selectedItem == eventList[0]) {
-            this.showToast(getString(R.string.event_mandatory), Toast.LENGTH_SHORT)
+            parentViewVideoPlayback.showErrorSnackBar(getString(R.string.event_mandatory))
             return
         }
         CameraInfo.areNewChanges = true
@@ -425,13 +420,7 @@ class VideoPlaybackActivity : BaseActivity() {
             if (areLinkedSnapshotsChangesSaved && !verifyVideoMetadataWasEdited()) {
                 finish()
             } else {
-                val alertInformation = AlertInformation(
-                    R.string.metadata_confirmation,
-                    R.string.metadata_confirmation_message,
-                    ::closeWithoutSave,
-                    {}, null
-                )
-                this.createAlertInformation(alertInformation)
+                this.createAlertDialogMetadataExit()
             }
         } else {
             changeScreenOrientation()
@@ -547,11 +536,6 @@ class VideoPlaybackActivity : BaseActivity() {
             if (driverLicense.isNullOrEmpty()) driverLicense = ""
             if (licensePlate.isNullOrEmpty()) licensePlate = ""
         }
-    }
-
-    private fun closeWithoutSave(dialogInterface: DialogInterface) {
-        dialogInterface.dismiss()
-        finish()
     }
 
     private fun updateVideoCurrentTime() {
