@@ -21,7 +21,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:padding="@dimen/instructions_title_padding"
-                android:text="@string/assign_to_officer"
+                android:text="@string/assign_with_an_officer"
                 android:textSize="@dimen/text_size_16sp"
                 android:textStyle="bold"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -78,7 +78,7 @@
                 android:layout_marginHorizontal="@dimen/button_dismiss_instructions_spacing"
                 android:layout_marginVertical="@dimen/margin_30dp"
                 android:background="@drawable/background_button_accept"
-                android:text="@string/assign_to_officer"
+                android:text="@string/assign_with_an_officer"
                 android:textAllCaps="false"
                 android:textColor="@color/white"
                 android:textSize="@dimen/text_size_20sp"

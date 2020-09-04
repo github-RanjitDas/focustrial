@@ -65,7 +65,7 @@
             android:layout_margin="@dimen/margin_30dp"
             android:background="@drawable/background_button_accept"
             android:contentDescription="@string/associate_partner_to_file_button"
-            android:text="@string/assign_to_officer"
+            android:text="@string/assign_with_an_officer"
             android:textAllCaps="false"
             android:textColor="@color/colorWhite"
             android:textSize="@dimen/text_size_20sp"
