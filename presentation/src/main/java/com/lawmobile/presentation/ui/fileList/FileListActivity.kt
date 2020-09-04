@@ -7,6 +7,8 @@ import androidx.cardview.widget.CardView
 import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.lawmobile.domain.entities.DomainInformationImage
+import com.lawmobile.domain.extensions.getCreationDate
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.extensions.*
 import com.lawmobile.presentation.ui.base.BaseActivity
@@ -26,14 +28,15 @@ import kotlinx.android.synthetic.main.activity_file_list.*
 import kotlinx.android.synthetic.main.bottom_sheet_assign_to_officer.*
 import kotlinx.android.synthetic.main.bottom_sheet_instructions_connect_camera.bottomSheetInstructions
 import kotlinx.android.synthetic.main.custom_app_bar.*
+import kotlinx.android.synthetic.main.file_list_filter_dialog.*
 
 class FileListActivity : BaseActivity() {
 
     private val fileListViewModel: FileListViewModel by viewModels()
     private val simpleFileListFragment = SimpleFileListFragment.getActualInstance()
-    private val thumbnailFileListFragment = ThumbnailFileListFragment.getActualInstance()
+    private var thumbnailFileListFragment = ThumbnailFileListFragment.getActualInstance()
     private var listType: String? = null
-    private var actualFragment: String = SIMPLE_FILE_LIST
+    private lateinit var actualFragment: String
     private val sheetBehavior: BottomSheetBehavior<CardView> by lazy {
         BottomSheetBehavior.from(
             bottomSheetInstructions
@@ -96,6 +99,60 @@ class FileListActivity : BaseActivity() {
         backArrowFileListAppBar.setOnClickListenerCheckConnection { onBackPressed() }
         buttonSelectSnapshotsToAssociate.setOnClickListenerCheckConnection { showCheckBoxes() }
         buttonAssociatePartnerIdList.setOnClickListenerCheckConnection { showAssignToOfficerBottomSheet() }
+        buttonOpenFilters?.setOnClickListenerCheckConnection { showFilterDialog() }
+    }
+
+    private fun showFilterDialog() {
+        this.createFilterDialog().apply {
+            when (listType) {
+                VIDEO_LIST -> eventsSpinnerFilter.isVisible = true
+                SNAPSHOT_LIST -> eventsSpinnerFilter.isVisible = false
+            }
+
+            onApplyClick = {
+                applyFiltersToLists(it)
+                dismiss()
+            }
+        }
+    }
+
+    private fun applyFiltersToLists(filters: List<String>) {
+        when (actualFragment) {
+            SIMPLE_FILE_LIST -> {
+                var filteredList = simpleFileListFragment.simpleFileListAdapter?.fileList
+
+                if (filters[START_DATE_POSITION].isNotEmpty()) {
+                    filteredList =
+                        filteredList?.filter { it.cameraConnectFile.getCreationDate() >= filters[0] }
+                }
+                if (filters[END_DATE_POSITION].isNotEmpty()) {
+                    filteredList =
+                        filteredList?.filter { it.cameraConnectFile.getCreationDate() <= filters[1] }
+                }
+                if (filters[EVENT_POSITION].isNotEmpty()) {
+                    filteredList =
+                        filteredList?.filter { it.cameraConnectVideoMetadata?.metadata?.event?.name == filters[2] }
+                }
+
+                if (filteredList != null)
+                    simpleFileListFragment.simpleFileListAdapter?.fileList = filteredList
+            }
+            THUMBNAIL_FILE_LIST -> {
+                var filteredList = thumbnailFileListFragment.thumbnailFileListAdapter?.fileList
+
+                if (filters[START_DATE_POSITION].isNotEmpty()) {
+                    filteredList =
+                        filteredList?.filter { it.cameraConnectFile.getCreationDate() >= filters[0] } as ArrayList<DomainInformationImage>
+                }
+                if (filters[END_DATE_POSITION].isNotEmpty()) {
+                    filteredList =
+                        filteredList?.filter { it.cameraConnectFile.getCreationDate() <= filters[1] } as ArrayList<DomainInformationImage>
+                }
+
+                if (filteredList != null)
+                    thumbnailFileListFragment.thumbnailFileListAdapter?.fileList = filteredList
+            }
+        }
     }
 
     private fun configureBottomSheet() {
@@ -153,9 +210,10 @@ class FileListActivity : BaseActivity() {
     }
 
     private fun setThumbnailListFragment() {
+        actualFragment = THUMBNAIL_FILE_LIST
         buttonThumbnailList.isActivated = true
         resetButtonAssociate()
-        actualFragment = THUMBNAIL_FILE_LIST
+        thumbnailFileListFragment = ThumbnailFileListFragment.getActualInstance(true)
         thumbnailFileListFragment.onImageCheck = ::enableAssociatePartnerButton
         supportFragmentManager.attachFragment(
             R.id.fragmentListHolder,
@@ -234,5 +292,11 @@ class FileListActivity : BaseActivity() {
         super.onBackPressed()
         SimpleFileListFragment.instance = null
         ThumbnailFileListFragment.instance = null
+    }
+
+    companion object {
+        const val START_DATE_POSITION = 0
+        const val END_DATE_POSITION = 1
+        const val EVENT_POSITION = 2
     }
 }

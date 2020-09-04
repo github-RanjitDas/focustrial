@@ -18,7 +18,6 @@ import com.lawmobile.presentation.entities.SnapshotsToLink
 import com.lawmobile.presentation.extensions.showErrorSnackBar
 import com.lawmobile.presentation.extensions.showToast
 import com.lawmobile.presentation.ui.base.BaseFragment
-import com.lawmobile.presentation.ui.fileList.FileListActivity
 import com.lawmobile.presentation.ui.snapshotDetail.SnapshotDetailActivity
 import com.lawmobile.presentation.utils.Constants
 import com.safefleet.mobile.avml.cameras.entities.CameraConnectFile
@@ -113,16 +112,17 @@ class ThumbnailFileListFragment : BaseFragment() {
     }
 
     private fun handleImageList(result: Result<List<DomainInformationFile>>) {
+        hideLoadingDialog()
         with(result) {
             doIfSuccess {
-                if (it.size > imageListNames.size) {
+                if (it.size >= imageListNames.size) {
                     setImageLoadingInAdapter(it)
+                    manageVisibilityItemsInView()
                 }
-                manageVisibilityItemsInView()
             }
             doIfError {
                 activity?.showToast(
-                    it.localizedMessage ?: "Error getting images",
+                    it.localizedMessage ?: getString(R.string.link_images_error),
                     Toast.LENGTH_LONG
                 )
             }
@@ -137,10 +137,9 @@ class ThumbnailFileListFragment : BaseFragment() {
                     noFilesTextView.isVisible = false
                     setImagesInAdapter(it)
                 } else {
-                    noFilesTextView.text = getString(R.string.no_images_found)
-                    fileListRecycler.isVisible = false
-                    noFilesTextView.isVisible = true
-                    hideLoadingDialog()
+                    fileListLayout.showErrorSnackBar(
+                        getString(R.string.link_images_error)
+                    )
                 }
             }
             doIfError {
@@ -148,25 +147,27 @@ class ThumbnailFileListFragment : BaseFragment() {
                 fileListLayout.showErrorSnackBar(
                     it.message ?: getString(R.string.link_images_error)
                 )
-                hideLoadingDialog()
             }
         }
     }
 
     private fun manageVisibilityItemsInView() {
-        if (imageListNames.size >= 0) {
+        if (imageListNames.size > 0) {
             fileListRecycler.isVisible = true
-            (activity as FileListActivity).noFilesTextView.isVisible = false
+            noFilesTextView.isVisible = false
             thumbnailListFragmentViewModel.getImageBytesList(imageListNames.first().cameraConnectFile)
             isLoading = true
-            return
+        } else {
+            fileListRecycler.isVisible = false
+            noFilesTextView.text = getString(R.string.no_images_found)
+            noFilesTextView.isVisible = true
+            hideLoadingDialog()
         }
-
-        fileListRecycler.isVisible = false
-        (activity as FileListActivity).noFilesTextView.isVisible = true
     }
 
     private fun setImageLoadingInAdapter(list: List<DomainInformationFile>) {
+        thumbnailFileListAdapter?.fileList = ArrayList()
+        imageListNames = ArrayList()
         imageListNames.addAll(list)
         imageListNames.forEach { domainFile ->
             val domain = DomainInformationImage(domainFile.cameraConnectFile)
@@ -175,7 +176,6 @@ class ThumbnailFileListFragment : BaseFragment() {
     }
 
     private fun setImagesInAdapter(it: List<DomainInformationImage>) {
-
         it.forEach {
             temporalImageListBytes.add(it)
         }
@@ -187,7 +187,6 @@ class ThumbnailFileListFragment : BaseFragment() {
         }
 
         isLoading = false
-        hideLoadingDialog()
         uploadNewImage()
     }
 
@@ -208,7 +207,7 @@ class ThumbnailFileListFragment : BaseFragment() {
         }
     }
 
-    private fun uploadNewImage(){
+    private fun uploadNewImage() {
         val lastPosition =
             (fileListRecycler.layoutManager as GridLayoutManager).findLastVisibleItemPosition()
         val subList = thumbnailFileListAdapter?.fileList?.subList(0, lastPosition + 1)
@@ -236,7 +235,10 @@ class ThumbnailFileListFragment : BaseFragment() {
 
     companion object {
         var instance: ThumbnailFileListFragment? = null
-        fun getActualInstance(): ThumbnailFileListFragment {
+        fun getActualInstance(recreateInstance: Boolean = false): ThumbnailFileListFragment {
+            if (recreateInstance) {
+                return ThumbnailFileListFragment()
+            }
             this.instance = instance ?: ThumbnailFileListFragment()
             return instance!!
         }

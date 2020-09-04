@@ -168,6 +168,11 @@
     <string name="video_detail">Video Detail</string>
     <string name="time_divider"> / </string>
     <string name="title">Title</string>
+    <string name="filter_by_date">Filter by date</string>
+    <string name="apply">Apply</string>
+    <string name="start_date_filter">Start date</string>
+    <string name="end_date_filter">End date</string>
+    <string name="none">None</string>
 
     <string-array name="gender_spinner">
         <item>Select</item>
