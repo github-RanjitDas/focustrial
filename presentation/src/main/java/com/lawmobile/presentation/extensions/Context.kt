@@ -67,12 +67,34 @@ fun Context.createAlertSessionExpired() {
 
 fun Context.createAlertConfirmAppExit() {
     val activity = this as BaseActivity
-    SafeFleetConfirmationDialog(this, true).apply {
+    SafeFleetConfirmationDialog(
+        this,
+        true,
+        getString(R.string.logout),
+        getString(R.string.logout_message)
+    ).apply {
         onResponseClicked = {
             if (it) {
                 startActivity(Intent(context, LoginActivity::class.java))
                 dismiss()
                 activity.logout()
+            }
+        }
+        show()
+    }
+}
+
+fun Context.createAlertDialogMetadataExit() {
+    val activity = this as BaseActivity
+    SafeFleetConfirmationDialog(
+        this,
+        true,
+        getString(R.string.unsaved_changes),
+        getString(R.string.unsaved_changes_message)
+    ).apply {
+        onResponseClicked = {
+            if (it) {
+                activity.finish()
             }
         }
         show()
