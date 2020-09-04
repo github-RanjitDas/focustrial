@@ -26,12 +26,13 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layoutPlaybackControls"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/video_playback_background_buttons"
-            android:paddingTop="@dimen/video_playback_padding_top_buttons"
+            android:background="@color/black"
+            android:paddingTop="@dimen/no_dp"
             android:paddingBottom="@dimen/video_playback_padding_bottom_buttons"
-            app:layout_constraintBottom_toBottomOf="@+id/surfaceVideoPlayback"
+            app:layout_constraintTop_toBottomOf="@+id/surfaceVideoPlayback"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent">
 
@@ -127,7 +128,7 @@
             android:paddingHorizontal="@dimen/padding_40dp"
             android:paddingTop="@dimen/padding_25dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/surfaceVideoPlayback">
+            app:layout_constraintTop_toBottomOf="@id/layoutPlaybackControls">
 
             <androidx.constraintlayout.widget.Guideline
                 android:id="@+id/guidelinePlayback"

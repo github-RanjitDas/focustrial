@@ -13,6 +13,7 @@ import com.safefleet.mobile.avml.cameras.entities.CameraConnectFile
 import com.safefleet.mobile.avml.cameras.entities.CameraConnectVideoMetadata
 import com.safefleet.mobile.commons.helpers.Result
 import kotlinx.coroutines.launch
+import org.videolan.libvlc.MediaPlayer
 
 class VideoPlaybackViewModel @ViewModelInject constructor(
     private val videoPlaybackUseCase: VideoPlaybackUseCase,
@@ -31,10 +32,10 @@ class VideoPlaybackViewModel @ViewModelInject constructor(
         MediatorLiveData<Result<CameraConnectVideoMetadata>>()
     val videoMetadataLiveData get() = videoMetadataMediatorLiveData
 
-    private val currentTimeVideoMediator by lazy { MediatorLiveData<Long>() }
+    private val currentTimeVideoMediator = MediatorLiveData<Long>()
     val currentTimeVideo: LiveData<Long> get() = currentTimeVideoMediator
 
-    fun getInformationResourcesVideo(cameraConnectFile: CameraConnectFile) {
+    fun getInformationOfVideo(cameraConnectFile: CameraConnectFile) {
         viewModelScope.launch {
             domainInformationVideoMediatorLiveData.postValue(
                 videoPlaybackUseCase.getInformationResourcesVideo(cameraConnectFile)
@@ -86,5 +87,9 @@ class VideoPlaybackViewModel @ViewModelInject constructor(
 
     fun setProgressMediaPlayer(progress: Float) {
         vlcMediaPlayer.setProgressMediaPlayer(progress)
+    }
+
+    fun setMediaEventListener(listener: MediaPlayer.EventListener) {
+        vlcMediaPlayer.setMediaEventListener(listener)
     }
 }

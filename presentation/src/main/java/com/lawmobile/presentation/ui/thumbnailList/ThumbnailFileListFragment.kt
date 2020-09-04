@@ -50,7 +50,6 @@ class ThumbnailFileListFragment : BaseFragment() {
 
         configureLayoutItems()
         configureLoadingViews()
-
         thumbnailFileListAdapter = ThumbnailFileListAdapter(::onImageClick, onImageCheck)
         setThumbnailRecyclerView()
     }

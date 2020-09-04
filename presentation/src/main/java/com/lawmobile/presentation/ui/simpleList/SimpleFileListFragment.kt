@@ -42,7 +42,7 @@ class SimpleFileListFragment : BaseFragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        setObserver()
+        setObservers()
         return inflater.inflate(R.layout.fragment_file_list, container, false)
     }
 
@@ -87,7 +87,7 @@ class SimpleFileListFragment : BaseFragment() {
         }
     }
 
-    private fun setObserver() {
+    private fun setObservers() {
         simpleListViewModel.fileListLiveData.observe(
             viewLifecycleOwner,
             Observer(::handleFileListResult)

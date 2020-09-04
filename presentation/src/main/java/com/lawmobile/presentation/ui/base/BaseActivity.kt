@@ -138,5 +138,4 @@ open class BaseActivity : AppCompatActivity() {
         const val MAX_TIME_SESSION = 300000
         lateinit var lastInteraction: Timestamp
     }
-
 }
