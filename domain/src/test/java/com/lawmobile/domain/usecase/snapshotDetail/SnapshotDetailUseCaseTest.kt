@@ -47,4 +47,29 @@ class SnapshotDetailUseCaseTest {
 
         coVerify { snapshotDetailRepository.getImageBytes(cameraConnectFile) }
     }
+
+    @Test
+    fun testSavePartnerIdSnapshotFlow(){
+        coEvery { snapshotDetailRepository.savePartnerIdSnapshot(any(), "partnerId") } returns Result.Success(Unit)
+        runBlocking {
+            val result = snapshotDetailUseCaseImpl.savePartnerIdSnapshot(mockk(),"partnerId")
+            Assert.assertTrue(result is Result.Success)
+        }
+        coVerify {
+            snapshotDetailRepository.savePartnerIdSnapshot(any(), "partnerId")
+        }
+    }
+
+    @Test
+    fun testGetInformationOfPhoto() {
+        coEvery { snapshotDetailRepository.getInformationOfPhoto(any()) } returns  Result.Success(mockk())
+        runBlocking {
+            val result = snapshotDetailUseCaseImpl.getInformationOfPhoto(mockk())
+            Assert.assertTrue(result is Result.Success)
+        }
+
+        coVerify {
+            snapshotDetailRepository.getInformationOfPhoto(any())
+        }
+    }
 }

@@ -121,7 +121,6 @@ open class BaseActivity : AppCompatActivity() {
         resources.configuration.orientation == ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
 
     companion object {
-        const val LOADING_TIMEOUT = 20000L
         const val PERMISSION_FOR_LOCATION = 100
         const val MAX_TIME_SESSION = 300000
         lateinit var lastInteraction: Timestamp

@@ -45,4 +45,29 @@ class SnapshotDetailRemoteDataSourceImplTest {
 
         coVerify { cameraConnectService.getImageBytes(cameraConnectFile) }
     }
+
+    @Test
+    fun testSavePartnerIdSnapshotFlow(){
+        coEvery { cameraConnectService.savePhotoMetadata(any()) } returns Result.Success(Unit)
+        runBlocking {
+            val result = snapshotDetailRemoteDataSourceImpl.savePartnerIdSnapshot(mockk())
+            Assert.assertTrue(result is Result.Success)
+        }
+        coVerify {
+            cameraConnectService.savePhotoMetadata(any())
+        }
+    }
+
+    @Test
+    fun testGetInformationOfPhoto() {
+        coEvery { cameraConnectService.getPhotoMetadata(any()) } returns  Result.Success(mockk())
+        runBlocking {
+            val result = snapshotDetailRemoteDataSourceImpl.getInformationOfPhoto(mockk())
+            Assert.assertTrue(result is Result.Success)
+        }
+
+        coVerify {
+            cameraConnectService.getPhotoMetadata(any())
+        }
+    }
 }

@@ -62,9 +62,14 @@
     <dimen name="live_view_divider_height">0.5dp</dimen>
 
     <!-- File List -->
-    <dimen name="file_list_text_size">17sp</dimen>
     <dimen name="file_list_item_height">50dp</dimen>
     <dimen name="file_list_checkbox_margin_start">18dp</dimen>
+
+    <dimen name="snapshot_detail_height_image">220dp</dimen>
+    <dimen name="snapshot_detail_margin_start_text">40dp</dimen>
+    <dimen name="snapshot_detail_margin_top_title">20dp</dimen>
+    <dimen name="snapshot_detail_margin_top_text">5dp</dimen>
+    <dimen name="snapshot_detail_margin_bottom_scroll">15dp</dimen>
 
     <!-- Video playback -->
     <dimen name="video_playback_surface_view_height">212dp</dimen>
@@ -76,8 +81,7 @@
     <dimen name="video_playback_text_view_player_length_margin_sides">10dp</dimen>
     <dimen name="video_playback_padding_bottom_buttons">8dp</dimen>
     <dimen name="video_playback_padding_top_buttons">9dp</dimen>
-    <dimen name="snapshot_item_detail_32dp">32dp</dimen>
-    <dimen name="snapshot_item_detail_16dp">16dp</dimen>
+
     <dimen name="video_playback_metadata_text_size">16sp</dimen>
     <dimen name="video_playback_metadata_spacing">20dp</dimen>
     <dimen name="snapshot_link_item_height">85dp</dimen>

@@ -26,6 +26,7 @@ ext.pitestExclusions = [
         '**.extensions.**',
         "**.*Fragment*",
 
+        //Class to error #line is not valid line for pointer
         "com.lawmobile.data.repository.videoPlayback.VideoPlaybackRepositoryImpl*",
         "com.lawmobile.domain.CameraInfo*",
         "com.lawmobile.data.entities.VideoListMetadata*",
@@ -35,5 +36,6 @@ ext.pitestExclusions = [
         "com.lawmobile.data.repository.simpleList.SimpleListRepositoryImpl*",
         "com.lawmobile.presentation.utils.MobileDataStatus*",
         "com.lawmobile.data.repository.fileList.FileListRepositoryImpl*",
-        "com.lawmobile.data.repository.liveStreaming.LiveStreamingRepositoryImpl*"
+        "com.lawmobile.data.repository.liveStreaming.LiveStreamingRepositoryImpl*",
+        "com.lawmobile.data.repository.snapshotDetail.SnapshotDetailRepositoryImpl*"
 ]

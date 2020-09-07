@@ -26,7 +26,6 @@ import com.safefleet.mobile.commons.helpers.doIfSuccess
 import com.safefleet.mobile.commons.helpers.hideKeyboard
 import kotlinx.android.synthetic.main.activity_file_list.*
 import kotlinx.android.synthetic.main.bottom_sheet_assign_to_officer.*
-import kotlinx.android.synthetic.main.bottom_sheet_instructions_connect_camera.bottomSheetInstructions
 import kotlinx.android.synthetic.main.custom_app_bar.*
 import kotlinx.android.synthetic.main.file_list_filter_dialog.*
 
@@ -39,7 +38,7 @@ class FileListActivity : BaseActivity() {
     private lateinit var actualFragment: String
     private val sheetBehavior: BottomSheetBehavior<CardView> by lazy {
         BottomSheetBehavior.from(
-            bottomSheetInstructions
+            bottomSheetPartnerId
         )
     }
 
