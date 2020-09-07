@@ -5,14 +5,16 @@ import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.os.Process
 import android.view.WindowManager
-import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.entities.NeutralAlertInformation
-import com.lawmobile.presentation.extensions.*
+import com.lawmobile.presentation.extensions.checkIfSessionIsExpired
+import com.lawmobile.presentation.extensions.createAlertMobileDataActive
+import com.lawmobile.presentation.extensions.createAlertProgress
+import com.lawmobile.presentation.extensions.createAlertSessionExpired
 import com.lawmobile.presentation.ui.login.LoginActivity
 import com.lawmobile.presentation.utils.EspressoIdlingResource
 import com.lawmobile.presentation.utils.MobileDataStatus
@@ -35,7 +37,6 @@ open class BaseActivity : AppCompatActivity() {
     var isRecordingVideo: Boolean = false
     var isMobileDataAlertShowing = MutableLiveData<Boolean>()
     private var loadingDialog: AlertDialog? = null
-    private var isLoading = false
 
     fun logout() {
         baseViewModel.deactivateCameraHotspot()
@@ -57,7 +58,6 @@ open class BaseActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         createMobileDataDialog()
         mobileDataStatus.observe(this, Observer(::showMobileDataDialog))
-        baseViewModel.isWaitFinishedLiveData.observe(this, Observer(::handleTimeout))
         updateLastInteraction()
     }
 
@@ -106,16 +106,12 @@ open class BaseActivity : AppCompatActivity() {
     }
 
     fun showLoadingDialog() {
-        isLoading = true
-        baseViewModel.waitToFinish(LOADING_TIMEOUT)
         EspressoIdlingResource.increment()
         loadingDialog = this.createAlertProgress()
         loadingDialog?.show()
     }
 
     fun hideLoadingDialog() {
-        isLoading = false
-        baseViewModel.cancelWait()
         loadingDialog?.dismiss()
         loadingDialog = null
         EspressoIdlingResource.decrement()
@@ -123,14 +119,6 @@ open class BaseActivity : AppCompatActivity() {
 
     fun isInPortraitMode() =
         resources.configuration.orientation == ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-
-    private fun handleTimeout(timedOut: Boolean) {
-        if (timedOut && isLoading) {
-            hideLoadingDialog()
-            finish()
-            this.showToast(getString(R.string.loading_files_error), Toast.LENGTH_SHORT)
-        }
-    }
 
     companion object {
         const val LOADING_TIMEOUT = 20000L

@@ -7,10 +7,13 @@ import androidx.lifecycle.viewModelScope
 import com.lawmobile.domain.entities.DomainInformationFile
 import com.lawmobile.domain.entities.DomainInformationImage
 import com.lawmobile.domain.usecase.thumbnailList.ThumbnailListUseCase
+import com.lawmobile.presentation.ui.base.BaseActivity.Companion.LOADING_TIMEOUT
 import com.lawmobile.presentation.ui.base.BaseViewModel
 import com.safefleet.mobile.avml.cameras.entities.CameraConnectFile
 import com.safefleet.mobile.commons.helpers.Result
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withTimeout
+import java.lang.Exception
 
 class ThumbnailListFragmentViewModel @ViewModelInject constructor(private val thumbnailListUseCase: ThumbnailListUseCase) :
     BaseViewModel() {
@@ -33,9 +36,17 @@ class ThumbnailListFragmentViewModel @ViewModelInject constructor(private val th
 
     fun getImageList() {
         viewModelScope.launch {
-            imageListMediatorLiveData.postValue(
-                thumbnailListUseCase.getImageList()
-            )
+            try {
+                withTimeout(LOADING_TIMEOUT) {
+                    imageListMediatorLiveData.postValue(
+                        thumbnailListUseCase.getImageList()
+                    )
+                }
+            } catch (e: Exception) {
+                imageListMediatorLiveData.postValue(
+                    Result.Error(e)
+                )
+            }
         }
     }
 }

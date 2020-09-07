@@ -122,9 +122,10 @@ class ThumbnailFileListFragment : BaseFragment() {
             }
             doIfError {
                 activity?.showToast(
-                    it.localizedMessage ?: getString(R.string.link_images_error),
+                    getString(R.string.file_list_failed_load_files),
                     Toast.LENGTH_LONG
                 )
+                activity?.finish()
             }
         }
     }
@@ -138,14 +139,14 @@ class ThumbnailFileListFragment : BaseFragment() {
                     setImagesInAdapter(it)
                 } else {
                     fileListLayout.showErrorSnackBar(
-                        getString(R.string.link_images_error)
+                        getString(R.string.thumbnail_bytes_error)
                     )
                 }
             }
             doIfError {
                 isLoading = false
                 fileListLayout.showErrorSnackBar(
-                    it.message ?: getString(R.string.link_images_error)
+                    it.message ?: getString(R.string.thumbnail_bytes_error)
                 )
             }
         }

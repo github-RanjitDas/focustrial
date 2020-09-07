@@ -294,6 +294,12 @@ class FileListActivity : BaseActivity() {
         ThumbnailFileListFragment.instance = null
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        SimpleFileListFragment.instance = null
+        ThumbnailFileListFragment.instance = null
+    }
+
     companion object {
         const val START_DATE_POSITION = 0
         const val END_DATE_POSITION = 1

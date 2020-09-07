@@ -374,7 +374,6 @@ class LiveActivity : BaseActivity() {
             }
             doIfError {
                 liveViewAppBar.showErrorSnackBar(getString(R.string.error_saving_video))
-                buttonRecord.isActivated = false
                 showRecordingIndicator(false)
             }
         }
@@ -383,7 +382,7 @@ class LiveActivity : BaseActivity() {
     private fun showRecordingIndicator(show: Boolean) {
         imageRecordingIndicator.isVisible = show
         textLiveViewRecording.isVisible = show
-        buttonRecord.isActivated = isRecordingVideo
+        buttonRecord.isActivated = show
         if (show) {
             val animation = Animations.createBlinkAnimation(BLINK_ANIMATION_DURATION)
             imageRecordingIndicator.startAnimationIfEnabled(animation)
