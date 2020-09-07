@@ -63,10 +63,11 @@ class VideoPlaybackActivity : BaseActivity() {
         hideKeyboard()
         verifyIfSelectedVideoWasChanged()
 
+        currentTimeVideoInMilliSeconds = 0
+        currentProgressInVideo = 0
+
         domainInformationVideo?.let {
             setVideoInformation()
-            currentTimeVideoInMilliSeconds = 0
-            currentProgressInVideo = 0
             createVideoPlaybackInSurface(it)
         } ?: run {
             getInformationOfVideo()

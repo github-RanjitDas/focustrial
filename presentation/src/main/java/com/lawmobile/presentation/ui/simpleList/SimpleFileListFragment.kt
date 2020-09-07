@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
@@ -17,7 +18,7 @@ import com.lawmobile.presentation.R
 import com.lawmobile.presentation.entities.AlertInformation
 import com.lawmobile.presentation.extensions.createAlertInformation
 import com.lawmobile.presentation.extensions.setOnClickListenerCheckConnection
-import com.lawmobile.presentation.extensions.showErrorSnackBar
+import com.lawmobile.presentation.extensions.showToast
 import com.lawmobile.presentation.ui.base.BaseFragment
 import com.lawmobile.presentation.ui.snapshotDetail.SnapshotDetailActivity
 import com.lawmobile.presentation.ui.videoPlayback.VideoPlaybackActivity
@@ -38,6 +39,7 @@ class SimpleFileListFragment : BaseFragment() {
     private var listType: String? = null
     private var tempFileList = mutableListOf<DomainInformationFile>()
     var onFileCheck: ((Boolean) -> Unit)? = null
+    private var loadedOnCreate = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -51,6 +53,7 @@ class SimpleFileListFragment : BaseFragment() {
         super.onViewCreated(view, savedInstanceState)
         setListeners()
         listType = arguments?.getString(FILE_LIST_TYPE)
+        loadedOnCreate = true
         getFileList()
     }
 
@@ -116,7 +119,11 @@ class SimpleFileListFragment : BaseFragment() {
                 }
             }
             doIfError {
-                fileListLayout.showErrorSnackBar(getString(R.string.file_list_failed_load_files))
+                activity?.showToast(
+                    getString(R.string.file_list_failed_load_files),
+                    Toast.LENGTH_SHORT
+                )
+                activity?.finish()
             }
         }
         hideLoadingDialog()
@@ -166,10 +173,11 @@ class SimpleFileListFragment : BaseFragment() {
 
     override fun onResume() {
         super.onResume()
-        if (CameraInfo.areNewChanges) {
+        if (CameraInfo.areNewChanges && !loadedOnCreate) {
             getFileList()
             CameraInfo.areNewChanges = false
         }
+        loadedOnCreate = false
     }
 
     companion object {
