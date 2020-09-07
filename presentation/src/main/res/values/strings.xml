@@ -1,6 +1,6 @@
 <?xml version= "1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="background">background</string>
+
     <string name="focus_logo_background">Focus logo background</string>
     <string name="OK">OK</string>
     <string name="cancel">Cancel</string>
@@ -55,7 +55,6 @@
     <string name="file_list_event_default">Event</string>
     <string name="no_images_found">No images found</string>
     <string name="no_videos_found">No videos found</string>
-    <string name="back">BACK</string>
     <string name="getting_files_error">Getting files error</string>
     <string name="getting_files_error_description">Access to a specific folder failed, folder name :</string>
 
@@ -91,19 +90,19 @@
     <string name="unsaved_changes_message">There are unsaved changes, do you want to continue?</string>
 
     <!-- Snapshot detail -->
-    <string name="snapshot_item_detail_photo_name_title">PHOTO NAME: </string>
+    <string name="snapshot_item_detail_title">Snapshot Detail</string>
+    <string name="snapshot_item_detail_photo_name_title">Name</string>
     <string name="snapshot_item_detail_photo_name_value">Default</string>
-    <string name="snapshot_item_detail_date_time_title">DATE TIME: </string>
+    <string name="snapshot_item_detail_date_time_title">Date Time</string>
+    <string name="snapshot_item_detail_officer_assigned_title">Officer Assigned</string>
     <string name="snapshot_item_detail_date_time_value">YYYY-MM-DD HH:MM:SS</string>
-    <string name="snapshot_item_detail_size_title">SIZE(bytes): </string>
-    <string name="snapshot_item_detail_size_value">0</string>
     <string name="snapshot_item_detail_photo_content_description">Photo from BWC</string>
     <string name="snapshot_detail_load_failed">Error loading snapshot</string>
     <string name="image_video_recording">Image video recording</string>
     <string name="save_metadata">Save</string>
     <string name="playback_video_name">Name</string>
     <string name="default_text">DEFAULT TEXT</string>
-
+    <string name="snapshot_item_detail_get_information_metadata_error">Could not be get the Metadata of snapshot</string>
     <!-- link_snapshots -->
 
     <!-- Partner Id -->

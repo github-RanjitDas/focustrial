@@ -1,12 +1,15 @@
 package com.lawmobile.data.repository.fileList
 
 import com.lawmobile.data.datasource.remote.fileList.FileListRemoteDataSource
+import com.lawmobile.data.entities.FileList
 import com.lawmobile.data.entities.RemoteVideoMetadata
 import com.lawmobile.data.entities.VideoListMetadata
 import com.lawmobile.domain.entities.CameraInfo
+import com.lawmobile.domain.entities.DomainInformationImageMetadata
 import com.lawmobile.domain.repository.fileList.FileListRepository
 import com.safefleet.mobile.avml.cameras.entities.*
 import com.safefleet.mobile.commons.helpers.Result
+import com.safefleet.mobile.commons.helpers.doIfSuccess
 import kotlinx.coroutines.delay
 
 class FileListRepositoryImpl(private val fileListRemoteDataSource: FileListRemoteDataSource) :
@@ -86,11 +89,13 @@ class FileListRepositoryImpl(private val fileListRemoteDataSource: FileListRemot
             itemsFinal.add(cameraPhotoMetadata)
             if (resultPartnerOnly is Result.Error) {
                 errorsInFiles.add(cameraPhotoMetadata.fileName)
+            } else {
+                FileList.updateItemInListImageMetadata(DomainInformationImageMetadata(cameraPhotoMetadata))
             }
         }
         delay(300)
         val resultJSONOnly = fileListRemoteDataSource.savePartnerIdInAllSnapshots(itemsFinal)
-        if (resultJSONOnly is Result.Success) {
+        resultJSONOnly.doIfSuccess {
             return if (errorsInFiles.isEmpty()) Result.Success(Unit)
             else Result.Error(java.lang.Exception("Partner ID could not be associated to: $errorsInFiles"))
         }

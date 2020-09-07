@@ -29,4 +29,8 @@ open class BaseViewModel @Inject constructor() : ViewModel() {
             isWaitFinishedMediator.postValue(true)
         }
     }
+
+    companion object {
+        const val LOADING_TIMEOUT = 20000L
+    }
 }

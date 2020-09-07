@@ -64,6 +64,10 @@ class CameraConnectServiceX1Mock : CameraConnectService {
         return Result.Success("10")
     }
 
+    override suspend fun getPhotoMetadata(cameraConnectFile: CameraConnectFile): Result<CameraConnectPhotoMetadata> {
+        return  Result.Success(CameraConnectPhotoMetadata("",""))
+    }
+
     override fun getUrlForLiveStream(): String = ""
 
     override suspend fun getUserResponse(): Result<CameraConnectUserResponse> {

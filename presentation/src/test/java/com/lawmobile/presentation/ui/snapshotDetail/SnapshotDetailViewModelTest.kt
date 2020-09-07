@@ -61,4 +61,62 @@ class SnapshotDetailViewModelTest {
 
         coVerify { snapshotDetailUseCase.getImageBytes(cameraConnectFile) }
     }
+
+    @Test
+    fun testSavePartnerIdSuccess() {
+        coEvery {
+            snapshotDetailUseCase.savePartnerIdSnapshot(
+                any(),
+                any()
+            )
+        } returns Result.Success(Unit)
+        runBlocking {
+            snapshotDetailViewModel.savePartnerId(mockk(relaxed = true), "partnerId")
+            val valueLiveData = snapshotDetailViewModel.savePartnerIdLiveData.value
+            Assert.assertTrue(valueLiveData is Result.Success)
+        }
+
+        coVerify { snapshotDetailUseCase.savePartnerIdSnapshot(any(), any()) }
+    }
+
+    @Test
+    fun testSavePartnerIdError() {
+        coEvery {
+            snapshotDetailUseCase.savePartnerIdSnapshot(
+                any(),
+                any()
+            )
+        } returns Result.Error(mockk())
+        runBlocking {
+            snapshotDetailViewModel.savePartnerId(mockk(relaxed = true), "partnerId")
+            val valueLiveData = snapshotDetailViewModel.savePartnerIdLiveData.value
+            Assert.assertTrue(valueLiveData is Result.Error)
+        }
+    }
+
+    @Test
+    fun testGetInformationImageMetadataSuccess() {
+        coEvery {
+            snapshotDetailUseCase.getInformationOfPhoto(any())
+        } returns Result.Success(mockk(relaxed = true))
+        runBlocking {
+            snapshotDetailViewModel.getInformationImageMetadata(mockk())
+            val valueLiveData = snapshotDetailViewModel.informationImageLiveData.value
+            Assert.assertTrue(valueLiveData is Result.Success)
+        }
+
+        coVerify { snapshotDetailUseCase.getInformationOfPhoto(any()) }
+    }
+
+    @Test
+    fun testGetInformationImageMetadataError() {
+        coEvery {
+            snapshotDetailUseCase.getInformationOfPhoto(any())
+        } returns Result.Error(mockk())
+        runBlocking {
+            snapshotDetailViewModel.getInformationImageMetadata(mockk())
+            val valueLiveData = snapshotDetailViewModel.informationImageLiveData.value
+            Assert.assertTrue(valueLiveData is Result.Error)
+        }
+    }
 }
