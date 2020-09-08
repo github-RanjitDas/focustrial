@@ -7,13 +7,13 @@ import androidx.cardview.widget.CardView
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
+import com.bumptech.glide.Glide
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.lawmobile.domain.entities.DomainInformationImageMetadata
 import com.lawmobile.presentation.R
-import com.lawmobile.presentation.extensions.convertBitmap
-import com.lawmobile.presentation.extensions.setOnClickListenerCheckConnection
-import com.lawmobile.presentation.extensions.showErrorSnackBar
-import com.lawmobile.presentation.extensions.showSuccessSnackBar
+import com.lawmobile.presentation.entities.FilePathSaved
+import com.lawmobile.presentation.entities.ImageWithPathSaved
+import com.lawmobile.presentation.extensions.*
 import com.lawmobile.presentation.ui.base.BaseActivity
 import com.lawmobile.presentation.utils.Constants
 import com.safefleet.mobile.avml.cameras.entities.CameraConnectFile
@@ -24,6 +24,7 @@ import com.safefleet.mobile.commons.helpers.hideKeyboard
 import kotlinx.android.synthetic.main.activity_snapshot_item_detail.*
 import kotlinx.android.synthetic.main.bottom_sheet_assign_to_officer.*
 import kotlinx.android.synthetic.main.custom_app_bar.*
+import java.io.File
 
 class SnapshotDetailActivity : BaseActivity() {
 
@@ -79,7 +80,14 @@ class SnapshotDetailActivity : BaseActivity() {
 
     private fun manageGetBytesImage(result: Result<ByteArray>) {
         with(result) {
-            doIfSuccess { setImageAndData(it) }
+            doIfSuccess {
+                val path = it.getPathFromTemporalFile(
+                    context = applicationContext,
+                    name = file.name
+                )
+                FilePathSaved.saveImageWithPath(ImageWithPathSaved(file.name, path))
+                setImageAndData(path)
+            }
             doIfError {
                 constraintLayoutDetail.showErrorSnackBar(getString(R.string.snapshot_detail_load_failed))
             }
@@ -97,6 +105,14 @@ class SnapshotDetailActivity : BaseActivity() {
             }
         }
 
+        val fileSaved = FilePathSaved.getImageIfExist(file.name)
+        fileSaved?.let {
+            if (File(it.absolutePath).exists()) {
+                setImageAndData(it.absolutePath)
+                hideLoadingDialog()
+                return
+            }
+        }
         snapshotDetailViewModel.getImageBytes(file)
     }
 
@@ -155,9 +171,9 @@ class SnapshotDetailActivity : BaseActivity() {
         snapshotDetailViewModel.savePartnerId(file, partnerId)
     }
 
-    private fun setImageAndData(byteArray: ByteArray) {
+    private fun setImageAndData(path: String) {
         try {
-            photoItemDetailHolder.setImageBitmap(byteArray.convertBitmap())
+            Glide.with(this).load(File(path)).into(photoItemDetailHolder)
         } catch (e: Exception) {
             photoItemDetailHolder.setImageDrawable(
                 ResourcesCompat.getDrawable(
