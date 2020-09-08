@@ -53,7 +53,7 @@ class CameraConnectServiceX1Mock : CameraConnectService {
     }
 
     override suspend fun getMetadataOfPhotos(): Result<List<CameraConnectPhotoMetadata>> {
-        return  Result.Success(emptyList())
+        return Result.Success(emptyList())
     }
 
     override suspend fun getNumberOfSnapshots(): Result<String> {
@@ -65,7 +65,7 @@ class CameraConnectServiceX1Mock : CameraConnectService {
     }
 
     override suspend fun getPhotoMetadata(cameraConnectFile: CameraConnectFile): Result<CameraConnectPhotoMetadata> {
-        return  Result.Success(CameraConnectPhotoMetadata("",""))
+        return Result.Success(CameraConnectPhotoMetadata("", ""))
     }
 
     override fun getUrlForLiveStream(): String = ""
@@ -159,7 +159,17 @@ class CameraConnectServiceX1Mock : CameraConnectService {
     }
 
     override suspend fun getCatalogInfo(): Result<List<CameraConnectCatalog>> {
-        return Result.Success(listOf(CameraConnectCatalog("1", "Default", "Default")))
+        return Result.Success(
+            listOf(
+                CameraConnectCatalog("1", "Default", "Event"),
+                CameraConnectCatalog("2", "Disk Clean", "Event"),
+                CameraConnectCatalog("3", "Jenn Main", "Event"),
+                CameraConnectCatalog("1", "Male", "Gender"),
+                CameraConnectCatalog("2", "Female", "Gender"),
+                CameraConnectCatalog("1", "White", "Race"),
+                CameraConnectCatalog("2", "Black", "Race")
+            )
+        )
     }
 
     override suspend fun getFreeStorage(): Result<String> {

@@ -11,6 +11,7 @@ import com.safefleet.mobile.avml.cameras.entities.CameraConnectFile
 import com.schibsted.spain.barista.assertion.BaristaListAssertions
 import com.schibsted.spain.barista.assertion.BaristaVisibilityAssertions.assertDisplayed
 import com.schibsted.spain.barista.interaction.BaristaClickInteractions.clickOn
+import com.schibsted.spain.barista.interaction.BaristaEditTextInteractions.writeTo
 import com.schibsted.spain.barista.interaction.BaristaListInteractions
 
 class FileListScreen : BaseScreen() {
@@ -77,17 +78,26 @@ class FileListScreen : BaseScreen() {
         )
     }
 
+    fun checkFileEvent(event: String?) = event?.let { assertDisplayed(it) }
+
     fun isFileListDisplayed() = assertDisplayed(R.id.fileListRecycler)
 
     fun areNoFilesFound(@StringRes message: Int) =
         assertDisplayed(R.id.noFilesTextView, message)
 
-    fun goBack() = clickOn(R.id.backArrowFileListAppBar)
+    fun clickOnBack() = clickOn(R.id.backArrowFileListAppBar)
 
     fun clickOnItemInPosition(position: Int) =
         BaristaListInteractions.clickListItem(recyclerView, position)
 
     fun clickOnSelectFilesToAssociate() = clickOn(R.id.buttonSelectSnapshotsToAssociate)
 
+    fun clickOnAssociateWithAnOfficer() = clickOn(R.string.associate_with_an_officer)
+
+    fun clickOnButtonAssignToOfficer() = clickOn(R.id.buttonAssignToOfficer)
+
     fun clickOnSimpleListButton() = clickOn(R.id.buttonSimpleList)
+
+    fun typeOfficerIdToAssociate(officerId: String) =
+        writeTo(R.id.editTextAssignToOfficer, officerId)
 }

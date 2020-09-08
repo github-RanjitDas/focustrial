@@ -87,7 +87,14 @@ class AppModule {
                 every { pauseMediaPlayer() } returns Unit
                 every { setProgressMediaPlayer(any()) } returns Unit
                 every { isMediaPlayerPlaying() } returns false
-                every { getTimeInMillisMediaPlayer() } returns 1L
+                every { getTimeInMillisMediaPlayer() } returns 1000L andThenMany (listOf(
+                    2000L,
+                    3000L,
+                    4000L,
+                    5000L,
+                    8000L,
+                    10000L
+                ))
             }
 
         @Provides

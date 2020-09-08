@@ -49,7 +49,7 @@ class SnapshotListTest : EspressoBaseTest<LoginActivity>(LoginActivity::class.ja
             fileListScreen.clickOnSimpleListButton()
 
             fileListScreen.areNoFilesFound(R.string.no_images_found)
-            fileListScreen.goBack()
+            fileListScreen.clickOnBack()
 
             takeSnapshot()
             takeSnapshot()
@@ -155,7 +155,7 @@ class SnapshotListTest : EspressoBaseTest<LoginActivity>(LoginActivity::class.ja
             openSnapshotList()
             fileListScreen.clickOnSimpleListButton()
 
-            fileListScreen.goBack()
+            fileListScreen.clickOnBack()
 
             isLiveViewDisplayed()
 
@@ -187,12 +187,30 @@ class SnapshotListTest : EspressoBaseTest<LoginActivity>(LoginActivity::class.ja
     fun verifyDisconnectionSwitchToVideosList_FMA_567() {
         setSimpleRecyclerView()
         liveViewScreen.openSnapshotList()
-        fileListScreen.goBack()
+        fileListScreen.clickOnBack()
 
         mockUtils.disconnectCamera()
 
         liveViewScreen.openVideoList()
 
         fileListScreen.isDisconnectionAlertDisplayed()
+    }
+
+    @Test
+    fun associateSnapshotToPartner_FMA_1176() {
+        setSimpleRecyclerView()
+        liveViewScreen.openSnapshotList()
+
+        with(fileListScreen) {
+            clickOnSimpleListButton()
+            BaristaSleepInteractions.sleep(2000)
+            clickOnSelectFilesToAssociate()
+            selectCheckboxOnPosition(1)
+            selectCheckboxOnPosition(3)
+            selectCheckboxOnPosition(5)
+            clickOnAssociateWithAnOfficer()
+            typeOfficerIdToAssociate("murbanob")
+            clickOnButtonAssignToOfficer()
+        }
     }
 }

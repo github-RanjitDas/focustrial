@@ -5,7 +5,7 @@ import com.safefleet.lawmobile.R
 import com.schibsted.spain.barista.assertion.BaristaVisibilityAssertions.assertDisplayed
 import com.schibsted.spain.barista.assertion.BaristaVisibilityAssertions.assertNotContains
 
-class Alert {
+object Alert {
 
     fun isDisconnectionAlertDisplayed() {
         assertDisplayed(R.string.the_camera_was_disconnected)
@@ -15,6 +15,13 @@ class Alert {
         assertNotContains(R.string.cancel)
         Espresso.pressBack()
         assertDisplayed(R.string.the_camera_was_disconnected)
+    }
+
+    fun isMetadataChangesDisplayed() {
+        assertDisplayed(R.string.unsaved_changes)
+        assertDisplayed(R.string.unsaved_changes_message)
+        assertDisplayed(R.string.cancel)
+        assertDisplayed(R.string.accept)
     }
 
 }

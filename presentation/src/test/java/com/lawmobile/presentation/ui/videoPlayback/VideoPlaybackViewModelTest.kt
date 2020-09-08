@@ -115,8 +115,7 @@ class VideoPlaybackViewModelTest {
     @Test
     fun testGetTimeInMillisMediaPlayer() {
         every { vlcMediaPlayer.getTimeInMillisMediaPlayer() } returns 1000L
-        videoPlaybackViewModel.getTimeInMillisMediaPlayer()
-        Assert.assertEquals(1000L, videoPlaybackViewModel.currentTimeVideo.value)
+        Assert.assertEquals(1000L, videoPlaybackViewModel.getTimeInMillisMediaPlayer())
         verify { vlcMediaPlayer.getTimeInMillisMediaPlayer() }
     }
 
