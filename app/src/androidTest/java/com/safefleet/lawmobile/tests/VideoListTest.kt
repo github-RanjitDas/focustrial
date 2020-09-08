@@ -45,7 +45,7 @@ class VideoListTest : EspressoBaseTest<LoginActivity>(LoginActivity::class.java)
             openVideoList()
 
             fileListScreen.areNoFilesFound(R.string.no_videos_found)
-            fileListScreen.goBack()
+            fileListScreen.clickOnBack()
 
             startRecording()
             stopRecording()
@@ -157,7 +157,7 @@ class VideoListTest : EspressoBaseTest<LoginActivity>(LoginActivity::class.java)
         with(liveViewScreen) {
             openVideoList()
 
-            fileListScreen.goBack()
+            fileListScreen.clickOnBack()
 
             isLiveViewDisplayed()
 
@@ -187,7 +187,23 @@ class VideoListTest : EspressoBaseTest<LoginActivity>(LoginActivity::class.java)
         liveViewScreen.openVideoList()
 
         mockUtils.disconnectCamera()
-        fileListScreen.goBack()
+        fileListScreen.clickOnBack()
         fileListScreen.isDisconnectionAlertDisplayed()
+    }
+
+    @Test
+    fun associateVideoToPartner_FMA_1176() {
+        setSimpleRecyclerView()
+        liveViewScreen.openVideoList()
+
+        with(fileListScreen) {
+            clickOnSelectFilesToAssociate()
+            selectCheckboxOnPosition(1)
+            selectCheckboxOnPosition(3)
+            selectCheckboxOnPosition(5)
+            clickOnAssociateWithAnOfficer()
+            typeOfficerIdToAssociate("murbanob")
+            clickOnButtonAssignToOfficer()
+        }
     }
 }

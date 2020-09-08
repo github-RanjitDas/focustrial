@@ -94,6 +94,7 @@ fun Context.createAlertDialogMetadataExit() {
     ).apply {
         onResponseClicked = {
             if (it) {
+                dismiss()
                 activity.finish()
             }
         }

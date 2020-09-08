@@ -2,7 +2,6 @@ package com.lawmobile.presentation.ui.videoPlayback
 
 import android.view.SurfaceView
 import androidx.hilt.lifecycle.ViewModelInject
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.viewModelScope
 import com.lawmobile.domain.entities.DomainInformationVideo
@@ -31,9 +30,6 @@ class VideoPlaybackViewModel @ViewModelInject constructor(
     private val videoMetadataMediatorLiveData =
         MediatorLiveData<Result<CameraConnectVideoMetadata>>()
     val videoMetadataLiveData get() = videoMetadataMediatorLiveData
-
-    private val currentTimeVideoMediator = MediatorLiveData<Long>()
-    val currentTimeVideo: LiveData<Long> get() = currentTimeVideoMediator
 
     fun getInformationOfVideo(cameraConnectFile: CameraConnectFile) {
         viewModelScope.launch {
@@ -81,9 +77,8 @@ class VideoPlaybackViewModel @ViewModelInject constructor(
 
     fun isMediaPlayerPlaying() = vlcMediaPlayer.isMediaPlayerPlaying()
 
-    fun getTimeInMillisMediaPlayer() {
-        currentTimeVideoMediator.postValue(vlcMediaPlayer.getTimeInMillisMediaPlayer())
-    }
+    fun getTimeInMillisMediaPlayer() =
+        vlcMediaPlayer.getTimeInMillisMediaPlayer()
 
     fun setProgressMediaPlayer(progress: Float) {
         vlcMediaPlayer.setProgressMediaPlayer(progress)

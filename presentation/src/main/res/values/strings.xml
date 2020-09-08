@@ -154,7 +154,7 @@
     <string name="close_instructions">close instructions</string>
     <string name="snapshots_title">Snapshots</string>
     <string name="videos_title">Videos</string>
-    <string name="assign_with_an_officer">Associate with an officer</string>
+    <string name="associate_with_an_officer">Associate with an officer</string>
     <string name="select_snapshots_to_associate">Select snapshots to associate</string>
     <string name="date_and_time">Date and time</string>
     <string name="event">Event</string>

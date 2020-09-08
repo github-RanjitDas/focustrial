@@ -5,10 +5,8 @@ import com.safefleet.lawmobile.helpers.Alert
 
 open class BaseScreen {
 
-    private val alert = Alert()
-
     fun isDisconnectionAlertDisplayed() {
-        alert.isDisconnectionAlertDisplayed()
+        Alert.isDisconnectionAlertDisplayed()
     }
 
 }

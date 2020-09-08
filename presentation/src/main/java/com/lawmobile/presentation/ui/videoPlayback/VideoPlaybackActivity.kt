@@ -81,7 +81,6 @@ class VideoPlaybackActivity : BaseActivity() {
         if (!videoPlaybackViewModel.isMediaPlayerPlaying()) {
             domainInformationVideo?.let {
                 createVideoPlaybackInSurface(it)
-                updateVideoCurrentTime()
                 playVideoPlayback()
             }
         }
@@ -152,11 +151,9 @@ class VideoPlaybackActivity : BaseActivity() {
             this,
             Observer(::manageGetVideoMetadataResult)
         )
-        videoPlaybackViewModel.currentTimeVideo.observe(this, Observer(::manageCurrentTimeInVideo))
     }
 
     private fun manageCurrentTimeInVideo(time: Long) {
-        updateVideoCurrentTime()
         if (time > currentTimeVideoInMilliSeconds) {
             currentTimeVideoInMilliSeconds = time
             updateProgressVideoInView()
@@ -220,7 +217,6 @@ class VideoPlaybackActivity : BaseActivity() {
                 domainInformationVideo = result.data
                 createVideoPlaybackInSurface(result.data)
                 playVideoPlayback()
-                updateVideoCurrentTime()
                 setVideoInformation()
             }
             is Result.Error -> {
@@ -328,6 +324,9 @@ class VideoPlaybackActivity : BaseActivity() {
                     }
                     MediaPlayer.Event.MediaChanged -> {
                         playVideoPlayback()
+                    }
+                    MediaPlayer.Event.TimeChanged -> {
+                        manageCurrentTimeInVideo(videoPlaybackViewModel.getTimeInMillisMediaPlayer())
                     }
                 }
             }
@@ -539,10 +538,6 @@ class VideoPlaybackActivity : BaseActivity() {
         }
     }
 
-    private fun updateVideoCurrentTime() {
-        videoPlaybackViewModel.getTimeInMillisMediaPlayer()
-    }
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == 1) {
@@ -613,7 +608,6 @@ class VideoPlaybackActivity : BaseActivity() {
         videoPlaybackViewModel.setProgressMediaPlayer(progress.toFloat())
         seekProgressVideo.progress = progress
         currentTimeVideoInMilliSeconds = totalDurationVideoInMilliSeconds * (progress / 100)
-        updateVideoCurrentTime()
     }
 
     private fun restartObjectOfCompanion() {

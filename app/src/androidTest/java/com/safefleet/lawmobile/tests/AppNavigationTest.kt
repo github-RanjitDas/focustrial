@@ -33,7 +33,7 @@ class AppNavigationTest : EspressoBaseTest<LoginActivity>(LoginActivity::class.j
             liveViewScreen.openSnapshotList()
             clickOnSimpleListButton()
             isFileListDisplayed()
-            goBack()
+            clickOnBack()
             liveViewScreen.openVideoList()
             isFileListDisplayed()
         }
@@ -49,7 +49,7 @@ class AppNavigationTest : EspressoBaseTest<LoginActivity>(LoginActivity::class.j
             isLiveViewToggleDisabled()
 
             openSnapshotList()
-            fileListScreen.goBack()
+            fileListScreen.clickOnBack()
 
             isLiveViewDisplayed()
             isLiveViewToggleDisabled()
@@ -68,12 +68,12 @@ class AppNavigationTest : EspressoBaseTest<LoginActivity>(LoginActivity::class.j
             isRecordingInProgress()
 
             openSnapshotList()
-            fileListScreen.goBack()
+            fileListScreen.clickOnBack()
 
             isRecordingInProgress()
 
             openVideoList()
-            fileListScreen.goBack()
+            fileListScreen.clickOnBack()
 
             isRecordingInProgress()
 
