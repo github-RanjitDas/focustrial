@@ -14,7 +14,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.lawmobile.domain.entities.DomainInformationFile
 import com.lawmobile.domain.entities.DomainInformationImage
 import com.lawmobile.presentation.R
+import com.lawmobile.presentation.entities.FilePathSaved
+import com.lawmobile.presentation.entities.ImageWithPathSaved
 import com.lawmobile.presentation.entities.SnapshotsToLink
+import com.lawmobile.presentation.extensions.getPathFromTemporalFile
 import com.lawmobile.presentation.extensions.showErrorSnackBar
 import com.lawmobile.presentation.extensions.showToast
 import com.lawmobile.presentation.ui.base.BaseFragment
@@ -25,6 +28,7 @@ import com.safefleet.mobile.commons.helpers.Result
 import com.safefleet.mobile.commons.helpers.doIfError
 import com.safefleet.mobile.commons.helpers.doIfSuccess
 import kotlinx.android.synthetic.main.fragment_file_list.*
+import java.io.File
 
 class ThumbnailFileListFragment : BaseFragment() {
 
@@ -156,8 +160,10 @@ class ThumbnailFileListFragment : BaseFragment() {
         if (imageListNames.size > 0) {
             fileListRecycler.isVisible = true
             noFilesTextView.isVisible = false
-            thumbnailListFragmentViewModel.getImageBytesList(imageListNames.first().cameraConnectFile)
+            val itemToLoad = imageListNames.first().cameraConnectFile
             isLoading = true
+            thumbnailListFragmentViewModel.getImageBytesList(itemToLoad)
+
         } else {
             fileListRecycler.isVisible = false
             noFilesTextView.text = getString(R.string.no_images_found)
@@ -178,6 +184,20 @@ class ThumbnailFileListFragment : BaseFragment() {
 
     private fun setImagesInAdapter(it: List<DomainInformationImage>) {
         it.forEach {
+            if (it.imageBytes != null){
+                activity?.let { context ->
+                    val internalPath =
+                        it.imageBytes!!.getPathFromTemporalFile(context, it.cameraConnectFile.name)
+                    it.internalPath = internalPath
+
+                    FilePathSaved.saveImageWithPath(
+                        ImageWithPathSaved(
+                            it.cameraConnectFile.name,
+                            internalPath
+                        )
+                    )
+                }
+            }
             temporalImageListBytes.add(it)
         }
 
@@ -212,11 +232,21 @@ class ThumbnailFileListFragment : BaseFragment() {
         val lastPosition =
             (fileListRecycler.layoutManager as GridLayoutManager).findLastVisibleItemPosition()
         val subList = thumbnailFileListAdapter?.fileList?.subList(0, lastPosition + 1)
-            ?.filter { it.imageBytes == null }
+            ?.filter { it.internalPath == null }
 
         if (!subList.isNullOrEmpty()) {
             isLoading = true
-            thumbnailListFragmentViewModel.getImageBytesList(subList.first().cameraConnectFile)
+            val itemToLoad = subList.first().cameraConnectFile
+            val item = FilePathSaved.getImageIfExist(itemToLoad.name)
+            item?.let {
+                val domainInformation = DomainInformationImage(itemToLoad, null, false, it.absolutePath)
+                if (File(it.absolutePath).exists()){
+                    setImagesInAdapter(listOf(domainInformation))
+                    return
+                }
+            }
+
+            thumbnailListFragmentViewModel.getImageBytesList(itemToLoad)
         }
     }
 

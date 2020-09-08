@@ -4,14 +4,15 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.lawmobile.domain.entities.DomainInformationImage
 import com.lawmobile.domain.extensions.getCreationDate
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.entities.SnapshotsToLink
-import com.lawmobile.presentation.extensions.convertBitmap
 import com.lawmobile.presentation.extensions.setOnClickListenerCheckConnection
 import com.safefleet.mobile.commons.helpers.inflate
 import kotlinx.android.synthetic.main.thumbnail_list_recycler_item.view.*
+import java.io.File
 
 class ThumbnailFileListAdapter(
     private val onImageClick: ((DomainInformationImage) -> Unit),
@@ -51,11 +52,11 @@ class ThumbnailFileListAdapter(
     }
 
     fun getItemsWithImageToLoading(): List<DomainInformationImage> {
-        return fileList.filter { it.imageBytes == null }
+        return fileList.filter { it.internalPath == null }
     }
 
     fun itemWithImagesLoaded(): List<DomainInformationImage> {
-        return fileList.filter { it.imageBytes != null }
+        return fileList.filter { it.internalPath != null }
     }
 
     fun addItemToList(domainInformationImage: DomainInformationImage) {
@@ -87,17 +88,16 @@ class ThumbnailFileListAdapter(
             with(thumbnailView) {
                 dateImageListItem.text =
                     imageFile.cameraConnectFile.getCreationDate()
-                imageFile.imageBytes?.let {
+                imageFile.internalPath?.let {
                     try {
-                        val image = it.convertBitmap()
-                        photoImageListItem.setImageBitmap(image)
+                        Glide.with(this).load(File(it)).into(photoImageListItem)
                         photoImageListItem.isVisible = true
                         photoImageLoading.isVisible = false
                     } catch (e: Exception) {
                         e.printStackTrace()
                         val domain =
                             fileList.first { item -> item.cameraConnectFile.name == imageFile.cameraConnectFile.name }
-                        domain.imageBytes = null
+                        domain.internalPath = null
                         addItemToList(domain)
                     }
                 } ?: run {
