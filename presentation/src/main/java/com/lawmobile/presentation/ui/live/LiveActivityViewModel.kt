@@ -9,6 +9,7 @@ import androidx.lifecycle.viewModelScope
 import com.lawmobile.domain.usecase.liveStreaming.LiveStreamingUseCase
 import com.lawmobile.presentation.ui.base.BaseViewModel
 import com.lawmobile.presentation.utils.VLCMediaPlayer
+import com.lawmobile.presentation.utils.getResultWithRetry
 import com.safefleet.mobile.avml.cameras.entities.CameraConnectCatalog
 import com.safefleet.mobile.commons.helpers.Event
 import com.safefleet.mobile.commons.helpers.Result
@@ -88,23 +89,29 @@ class LiveActivityViewModel @ViewModelInject constructor(
 
     fun getBatteryLevel() {
         viewModelScope.launch {
+            val batteryLevel: Result<Int> =
+                getResultWithRetry(RETRY_ATTEMPTS) { liveStreamingUseCase.getBatteryLevel() }
             batteryLevelMediatorLiveData.postValue(
-                Event(liveStreamingUseCase.getBatteryLevel())
+                Event(batteryLevel)
             )
         }
     }
 
     fun getStorageLevels() {
         viewModelScope.launch {
-            delay(200)
             val gigabyteList = mutableListOf<Double>()
-            with(liveStreamingUseCase.getFreeStorage()) {
+            val freeStorageResult =
+                getResultWithRetry(RETRY_ATTEMPTS) { liveStreamingUseCase.getFreeStorage() }
+            with(freeStorageResult) {
                 doIfSuccess { freeKb ->
                     val storageFreeMb = freeKb.toDouble() / SCALE_BYTES
                     gigabyteList.add(storageFreeMb)
-                    with(liveStreamingUseCase.getTotalStorage()) {
+                    delay(200)
+                    val totalStorageResult =
+                        getResultWithRetry(RETRY_ATTEMPTS) { liveStreamingUseCase.getTotalStorage() }
+
+                    with(totalStorageResult) {
                         doIfSuccess { totalKb ->
-                            delay(200)
                             val totalMb = (totalKb.toDouble() / SCALE_BYTES)
                             val usedBytes = totalMb - storageFreeMb
                             gigabyteList.add(usedBytes)
@@ -125,5 +132,6 @@ class LiveActivityViewModel @ViewModelInject constructor(
 
     companion object {
         const val SCALE_BYTES = 1024
+        const val RETRY_ATTEMPTS = 5
     }
 }

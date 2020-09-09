@@ -24,7 +24,9 @@ object CustomCheckboxAction {
 
             override fun perform(uiController: UiController?, view: View) {
                 val v = view.findViewById<View>(id)
+                v.isPressed = true
                 v.performClick()
+                v.isPressed = false
             }
         }
     }
