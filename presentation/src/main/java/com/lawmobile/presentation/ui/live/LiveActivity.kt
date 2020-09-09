@@ -41,6 +41,8 @@ class LiveActivity : BaseActivity() {
     private val liveActivityViewModel: LiveActivityViewModel by viewModels()
     private val blinkAnimation = Animations.createBlinkAnimation(BLINK_ANIMATION_DURATION)
     private var isViewLoaded = false
+    private var isBatteryAlertShowed = false
+    private var isStorageAlertShowed = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -221,10 +223,14 @@ class LiveActivity : BaseActivity() {
                 imageViewBattery.backgroundTintList =
                     ContextCompat.getColorStateList(this@LiveActivity, R.color.red)
                 imageViewBattery.startAnimationIfEnabled(blinkAnimation)
-                createAlertForInformationCamera(
-                    R.string.battery_alert_title,
-                    R.string.battery_alert_description
-                )
+                if (!isBatteryAlertShowed) {
+                    createAlertForInformationCamera(
+                        R.string.battery_alert_title,
+                        R.string.battery_alert_description
+                    )
+                    isBatteryAlertShowed = true
+                }
+
             }
             in MEDIUM_DESCENDANT_RANGE.value -> {
                 imageViewBattery.backgroundTintList =
@@ -281,7 +287,8 @@ class LiveActivity : BaseActivity() {
                 ContextCompat.getColorStateList(this@LiveActivity, R.color.darkBlue)
         }
 
-        if (remainingPercent.toInt() == PERCENT_TO_SHOW_ALERT_MEMORY_CAPACITY) {
+        if (remainingPercent.toInt() == PERCENT_TO_SHOW_ALERT_MEMORY_CAPACITY && !isStorageAlertShowed) {
+            isStorageAlertShowed = true
             createAlertForInformationCamera(
                 R.string.storage_alert_title,
                 R.string.storage_alert_description
@@ -421,7 +428,7 @@ class LiveActivity : BaseActivity() {
         private var cameFromLandscape = false
         private const val BLINK_ANIMATION_DURATION = 1000L
         private const val BATTERY_TOTAL_HOURS = 10f
-        private const val VIEW_LOADING_TIME = 600L
+        private const val VIEW_LOADING_TIME = 800L
         private const val FREE_STORAGE_POSITION = 0
         private const val USED_STORAGE_POSITION = 1
         private const val TOTAL_STORAGE_POSITION = 2
