@@ -89,7 +89,7 @@ class SimpleFileListFragment : BaseFragment() {
     private fun setFileRecyclerView() {
         fileListRecycler?.apply {
             setHasFixedSize(true)
-            layoutManager = LinearLayoutManager(context)
+            layoutManager = LinearLayoutManager(requireContext())
             adapter = simpleFileListAdapter
         }
     }
