@@ -172,7 +172,7 @@
     <string name="apply">Apply</string>
     <string name="start_date_filter">Start date</string>
     <string name="end_date_filter">End date</string>
-    <string name="none">None</string>
+    <string name="no_event">No event</string>
 
     <string-array name="gender_spinner">
         <item>Select</item>

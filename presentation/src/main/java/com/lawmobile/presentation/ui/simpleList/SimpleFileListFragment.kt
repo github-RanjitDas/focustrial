@@ -37,7 +37,6 @@ class SimpleFileListFragment : BaseFragment() {
     private val simpleListViewModel: SimpleListViewModel by viewModels()
     var simpleFileListAdapter: SimpleFileListAdapter? = null
     private var listType: String? = null
-    private var tempFileList = mutableListOf<DomainInformationFile>()
     var onFileCheck: ((Boolean) -> Unit)? = null
     private var loadedOnCreate = false
 
@@ -68,6 +67,10 @@ class SimpleFileListFragment : BaseFragment() {
                 simpleListViewModel.getSnapshotList()
             }
         }
+    }
+
+    fun resetList() {
+        simpleFileListAdapter?.resetList()
     }
 
     private fun setListeners() {
@@ -108,7 +111,6 @@ class SimpleFileListFragment : BaseFragment() {
                     fileListRecycler.isVisible = true
                     noFilesTextView.isVisible = false
                     setAdapter(it.listItems)
-                    tempFileList = it.listItems
                 } else {
                     noFilesTextView.isVisible = true
                     fileListRecycler.isVisible = false
@@ -137,6 +139,7 @@ class SimpleFileListFragment : BaseFragment() {
             )
         simpleFileListAdapter?.fileList =
             listItems.sortedByDescending { it.cameraConnectFile.getCreationDate() }
+        simpleFileListAdapter?.run { fileListBackup = fileList }
         setFileRecyclerView()
     }
 

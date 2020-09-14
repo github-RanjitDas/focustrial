@@ -62,6 +62,10 @@ class ThumbnailFileListFragment : BaseFragment() {
         thumbnailListFragmentViewModel.getImageList()
     }
 
+    fun resetList() {
+        thumbnailFileListAdapter?.resetList()
+    }
+
     private fun configureLayoutItems() {
         textViewEvent.isVisible = false
         textViewDateAndTime.isVisible = false
@@ -176,6 +180,7 @@ class ThumbnailFileListFragment : BaseFragment() {
         thumbnailFileListAdapter?.fileList = ArrayList()
         imageListNames = ArrayList()
         imageListNames.addAll(list)
+
         imageListNames.forEach { domainFile ->
             val domain = DomainInformationImage(domainFile.cameraConnectFile)
             thumbnailFileListAdapter?.addItemToList(domain)

@@ -27,6 +27,7 @@ class SimpleFileListAdapter(
             field = value
             notifyDataSetChanged()
         }
+    var fileListBackup: List<DomainInformationFile> = emptyList()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SimpleListViewHolder {
         return SimpleListViewHolder(
@@ -42,6 +43,10 @@ class SimpleFileListAdapter(
 
     override fun getItemCount(): Int {
         return fileList.size
+    }
+
+    fun resetList() {
+        fileList = fileListBackup
     }
 
     fun uncheckAllItems() {

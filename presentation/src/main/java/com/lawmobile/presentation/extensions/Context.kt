@@ -151,30 +151,30 @@ fun Context.isAnimationsEnabled() =
         0F
     ) != 0F
 
-fun Context.showDatePickerDialog(textView: TextView) {
+fun Context.showDateAndTimePickerDialog(textView: TextView, hour: Int, minute: Int) {
     val current = System.currentTimeMillis().convertMilliSecondsToDate().split("-")
     val pickerDialog = DatePickerDialog(
         this,
         { _, year, month, dayOfMonth ->
             val date = fixDate(year, month + 1, dayOfMonth)
             textView.text = date
-            showTimePickerDialog(textView)
+            showTimePickerDialog(textView, hour, minute)
         },
         current[0].toInt(), current[1].toInt() - 1, current[2].toInt()
     )
     pickerDialog.show()
 }
 
-fun Context.showTimePickerDialog(textView: TextView) {
-    val current = System.currentTimeMillis().convertMilliSecondsToHour().split(":")
+fun Context.showTimePickerDialog(textView: TextView, hour: Int, minute: Int) {
     val pickerDialog = TimePickerDialog(
         this,
         { _, hour, minute ->
             val time = textView.text.toString() + " " + fixTime(hour, minute)
             textView.text = time
         },
-        current[0].toInt(), current[1].toInt(), true
+        hour, minute, true
     )
+
     pickerDialog.show()
 }
 
