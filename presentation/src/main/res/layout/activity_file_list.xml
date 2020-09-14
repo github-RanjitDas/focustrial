@@ -34,16 +34,41 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <ScrollView
+            android:id="@+id/scrollFilterTags"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/margin_15dp"
+            android:layout_marginTop="@dimen/margin_11dp"
+            android:orientation="horizontal"
+            android:visibility="gone"
+            app:layout_constraintTop_toBottomOf="@id/buttonSelectSnapshotsToAssociate">
+
+            <HorizontalScrollView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <GridLayout
+                    android:id="@+id/layoutFilterTags"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:columnCount="2"
+                    android:useDefaultMargins="true" />
+
+            </HorizontalScrollView>
+
+        </ScrollView>
+
         <FrameLayout
             android:id="@+id/fragmentListHolder"
             android:layout_width="@dimen/no_dp"
             android:layout_height="@dimen/no_dp"
-            android:layout_marginTop="@dimen/margin_30dp"
+            android:layout_marginTop="@dimen/margin_15dp"
             android:layout_marginBottom="@dimen/margin_20dp"
             app:layout_constraintBottom_toTopOf="@id/buttonAssociatePartnerIdList"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/buttonSelectSnapshotsToAssociate" />
+            app:layout_constraintTop_toBottomOf="@id/scrollFilterTags" />
 
         <ImageButton
             android:id="@+id/buttonOpenFilters"

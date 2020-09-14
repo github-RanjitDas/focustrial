@@ -20,10 +20,12 @@ import com.lawmobile.presentation.utils.Constants.SIMPLE_FILE_LIST
 import com.lawmobile.presentation.utils.Constants.SNAPSHOT_LIST
 import com.lawmobile.presentation.utils.Constants.THUMBNAIL_FILE_LIST
 import com.lawmobile.presentation.utils.Constants.VIDEO_LIST
+import com.lawmobile.presentation.widgets.CustomFilterDialog
 import com.safefleet.mobile.commons.helpers.Result
 import com.safefleet.mobile.commons.helpers.doIfError
 import com.safefleet.mobile.commons.helpers.doIfSuccess
 import com.safefleet.mobile.commons.helpers.hideKeyboard
+import com.safefleet.mobile.commons.widgets.SafeFleetFilterTag
 import kotlinx.android.synthetic.main.activity_file_list.*
 import kotlinx.android.synthetic.main.bottom_sheet_assign_to_officer.*
 import kotlinx.android.synthetic.main.custom_app_bar.*
@@ -36,6 +38,7 @@ class FileListActivity : BaseActivity() {
     private var thumbnailFileListFragment = ThumbnailFileListFragment.getActualInstance()
     private var listType: String? = null
     private lateinit var actualFragment: String
+    private var currentFilterList = mutableListOf<String>()
     private val sheetBehavior: BottomSheetBehavior<CardView> by lazy {
         BottomSheetBehavior.from(
             bottomSheetPartnerId
@@ -109,47 +112,143 @@ class FileListActivity : BaseActivity() {
             }
 
             onApplyClick = {
-                applyFiltersToLists(it)
+                currentFilterList = it as MutableList<String>
+                applyFiltersToLists(currentFilterList)
                 dismiss()
             }
         }
     }
 
     private fun applyFiltersToLists(filters: List<String>) {
+        var dateTag = ""
+        layoutFilterTags.removeAllViews()
+
         when (actualFragment) {
             SIMPLE_FILE_LIST -> {
+                simpleFileListFragment.resetList()
                 var filteredList = simpleFileListFragment.simpleFileListAdapter?.fileList
 
-                if (filters[START_DATE_POSITION].isNotEmpty()) {
+                filters[START_DATE_POSITION].ifIsNotEmptyLet { startDate ->
+                    val dateWithoutHour = startDate.split(" ")[0]
                     filteredList =
-                        filteredList?.filter { it.cameraConnectFile.getCreationDate() >= filters[0] }
-                }
-                if (filters[END_DATE_POSITION].isNotEmpty()) {
-                    filteredList =
-                        filteredList?.filter { it.cameraConnectFile.getCreationDate() <= filters[1] }
-                }
-                if (filters[EVENT_POSITION].isNotEmpty()) {
-                    filteredList =
-                        filteredList?.filter { it.cameraConnectVideoMetadata?.metadata?.event?.name == filters[2] }
+                        filteredList?.filter { it.cameraConnectFile.getCreationDate() >= startDate }
+
+                    if (filters[END_DATE_POSITION].isEmpty())
+                        createTagInPosition(
+                            layoutFilterTags.childCount,
+                            START_DATE_TAG + dateWithoutHour
+                        )
+                    else dateTag = dateWithoutHour
                 }
 
-                if (filteredList != null)
-                    simpleFileListFragment.simpleFileListAdapter?.fileList = filteredList
+                filters[END_DATE_POSITION].ifIsNotEmptyLet { endDate ->
+                    val dateWithoutHour = endDate.split(" ")[0]
+                    filteredList =
+                        filteredList?.filter { it.cameraConnectFile.getCreationDate() <= endDate }
+
+                    if (filters[START_DATE_POSITION].isEmpty())
+                        createTagInPosition(
+                            layoutFilterTags.childCount,
+                            END_DATE_TAG + dateWithoutHour
+                        )
+                    else {
+                        dateTag += DATE_RANGE_TAG + dateWithoutHour
+                        createTagInPosition(layoutFilterTags.childCount, dateTag)
+                    }
+                }
+
+                filters[EVENT_POSITION].ifIsNotEmptyLet { event ->
+                    filteredList =
+                        filteredList?.filter {
+                            it.cameraConnectVideoMetadata?.metadata?.event?.name ==
+                                    if (event == getString(R.string.no_event)) null else event
+                        }
+                    createTagInPosition(layoutFilterTags.childCount, EVENT_TAG + event)
+                }
+
+                filteredList?.let {
+                    simpleFileListFragment.simpleFileListAdapter?.fileList = it
+                }
+
+                scrollFilterTags.isVisible = filteredList != null
             }
             THUMBNAIL_FILE_LIST -> {
+                thumbnailFileListFragment.resetList()
                 var filteredList = thumbnailFileListFragment.thumbnailFileListAdapter?.fileList
 
-                if (filters[START_DATE_POSITION].isNotEmpty()) {
+                filters[START_DATE_POSITION].ifIsNotEmptyLet { startDate ->
+                    val dateWithoutHour = startDate.split(" ")[0]
                     filteredList =
-                        filteredList?.filter { it.cameraConnectFile.getCreationDate() >= filters[0] } as ArrayList<DomainInformationImage>
-                }
-                if (filters[END_DATE_POSITION].isNotEmpty()) {
-                    filteredList =
-                        filteredList?.filter { it.cameraConnectFile.getCreationDate() <= filters[1] } as ArrayList<DomainInformationImage>
+                        filteredList?.filter { it.cameraConnectFile.getCreationDate() >= startDate } as ArrayList<DomainInformationImage>
+
+                    if (filters[END_DATE_POSITION].isEmpty())
+                        createTagInPosition(
+                            layoutFilterTags.childCount,
+                            START_DATE_TAG + dateWithoutHour
+                        )
+                    else dateTag = dateWithoutHour
                 }
 
-                if (filteredList != null)
-                    thumbnailFileListFragment.thumbnailFileListAdapter?.fileList = filteredList
+                filters[END_DATE_POSITION].ifIsNotEmptyLet { endDate ->
+                    val dateWithoutHour = endDate.split(" ")[0]
+                    filteredList =
+                        filteredList?.filter { it.cameraConnectFile.getCreationDate() <= endDate } as ArrayList<DomainInformationImage>
+
+                    if (filters[START_DATE_POSITION].isEmpty())
+                        createTagInPosition(
+                            layoutFilterTags.childCount,
+                            END_DATE_TAG + dateWithoutHour
+                        )
+                    else {
+                        dateTag += DATE_RANGE_TAG + dateWithoutHour
+                        createTagInPosition(layoutFilterTags.childCount, dateTag)
+                    }
+                }
+
+                filteredList?.let {
+                    thumbnailFileListFragment.thumbnailFileListAdapter?.fileList = it
+                }
+
+                scrollFilterTags.isVisible = filteredList != null
+            }
+        }
+    }
+
+    private fun createTagInPosition(position: Int, text: String) {
+        layoutFilterTags.addView(
+            SafeFleetFilterTag(this, null, 0).apply {
+                tagText = text
+                onClicked = {
+                    clearFilterOfTag(text)
+                    applyFiltersToLists(currentFilterList)
+                }
+            }, position
+        )
+    }
+
+    private fun clearFilterOfTag(text: String) {
+        when {
+            text.contains(DATE_RANGE_TAG) -> {
+                with(currentFilterList) {
+                    set(START_DATE_POSITION, "")
+                    set(END_DATE_POSITION, "")
+                }
+                with(CustomFilterDialog) {
+                    startDate = getString(R.string.start_date_filter)
+                    endDate = getString(R.string.end_date_filter)
+                }
+            }
+            text.contains(START_DATE_TAG) -> {
+                currentFilterList[START_DATE_POSITION] = ""
+                CustomFilterDialog.startDate = getString(R.string.start_date_filter)
+            }
+            text.contains(END_DATE_TAG) -> {
+                currentFilterList[END_DATE_POSITION] = ""
+                CustomFilterDialog.endDate = getString(R.string.end_date_filter)
+            }
+            text == currentFilterList[EVENT_POSITION] -> {
+                currentFilterList[EVENT_POSITION] = ""
+                CustomFilterDialog.event = 0
             }
         }
     }
@@ -287,21 +386,29 @@ class FileListActivity : BaseActivity() {
         hideLoadingDialog()
     }
 
-    override fun onBackPressed() {
-        super.onBackPressed()
+    private fun destroyInstances() {
         SimpleFileListFragment.instance = null
         ThumbnailFileListFragment.instance = null
+        CustomFilterDialog.resetCompanion()
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        destroyInstances()
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        SimpleFileListFragment.instance = null
-        ThumbnailFileListFragment.instance = null
+        destroyInstances()
     }
 
     companion object {
         const val START_DATE_POSITION = 0
         const val END_DATE_POSITION = 1
         const val EVENT_POSITION = 2
+        const val START_DATE_TAG = "After: "
+        const val END_DATE_TAG = "Before: "
+        const val DATE_RANGE_TAG = " / "
+        const val EVENT_TAG = ""
     }
 }

@@ -25,6 +25,7 @@ class ThumbnailFileListAdapter(
             field = value
             notifyDataSetChanged()
         }
+    private var fileListBackup = ArrayList<DomainInformationImage>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ThumbnailListViewHolder {
         return ThumbnailListViewHolder(
@@ -40,6 +41,10 @@ class ThumbnailFileListAdapter(
 
     override fun onBindViewHolder(thumbnailListViewHolder: ThumbnailListViewHolder, position: Int) {
         thumbnailListViewHolder.bind(fileList[position])
+    }
+
+    fun resetList() {
+        fileList = fileListBackup
     }
 
     fun uncheckAllItems() {
@@ -62,10 +67,12 @@ class ThumbnailFileListAdapter(
     fun addItemToList(domainInformationImage: DomainInformationImage) {
         val indexOrFirst =
             fileList.indexOfFirst { it.cameraConnectFile.name == domainInformationImage.cameraConnectFile.name }
-        if (indexOrFirst != -1) {
+        if (indexOrFirst >= 0) {
             fileList[indexOrFirst] = domainInformationImage
+            fileListBackup[indexOrFirst] = domainInformationImage
         } else {
             fileList.add(domainInformationImage)
+            fileListBackup.add(domainInformationImage)
         }
 
         notifyDataSetChanged()

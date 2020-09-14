@@ -27,12 +27,3 @@ fun Long.convertMilliSecondsToDate(): String {
     calendar.timeInMillis = this
     return formatter.format(calendar.time)
 }
-
-@SuppressLint("SimpleDateFormat")
-fun Long.convertMilliSecondsToHour(): String {
-    val dateFormat = "hh:mm:ss"
-    val formatter = SimpleDateFormat(dateFormat)
-    val calendar: Calendar = Calendar.getInstance()
-    calendar.timeInMillis = this
-    return formatter.format(calendar.time)
-}
