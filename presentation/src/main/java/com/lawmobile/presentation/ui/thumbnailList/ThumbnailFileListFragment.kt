@@ -98,8 +98,8 @@ class ThumbnailFileListFragment : BaseFragment() {
     }
 
     private fun setThumbnailRecyclerView() {
-        fileListRecycler.apply {
-            val manager = GridLayoutManager(context, 2)
+        fileListRecycler?.apply {
+            val manager = GridLayoutManager(requireContext(), 2)
             setHasFixedSize(true)
             layoutManager = manager
             adapter = thumbnailFileListAdapter
