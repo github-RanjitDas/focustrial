@@ -145,7 +145,7 @@ class VideoPlaybackActivity : BaseActivity() {
         )
         videoPlaybackViewModel.saveVideoMetadataLiveData.observe(
             this,
-            Observer(::manageSaveVideoResult)
+            Observer(::manageSaveVideoMetadataResult)
         )
         videoPlaybackViewModel.videoMetadataLiveData.observe(
             this,
@@ -176,7 +176,7 @@ class VideoPlaybackActivity : BaseActivity() {
         }
     }
 
-    private fun manageSaveVideoResult(result: Result<Unit>) {
+    private fun manageSaveVideoMetadataResult(result: Result<Unit>) {
         when (result) {
             is Result.Success -> {
                 this.showToast(
@@ -225,9 +225,7 @@ class VideoPlaybackActivity : BaseActivity() {
                     connectVideo?.let(videoPlaybackViewModel::getInformationOfVideo)
                     return
                 }
-
-                val messageToast = result.exception.message ?: ERROR_IN_GET_INFORMATION_OF_VIDEO
-                this.showToast(messageToast, Toast.LENGTH_SHORT)
+                this.showToast(getString(R.string.error_get_information_metadata), Toast.LENGTH_SHORT)
                 finish()
             }
         }
@@ -624,7 +622,6 @@ class VideoPlaybackActivity : BaseActivity() {
         private var totalDurationVideoInMilliSeconds: Long = 0
         private var currentTimeVideoInMilliSeconds: Long = 0
         private var currentProgressInVideo = 0
-        const val ERROR_IN_GET_INFORMATION_OF_VIDEO = "Error in get information of video"
         const val ATTEMPTS_ALLOWED = 2
     }
 }

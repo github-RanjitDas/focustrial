@@ -82,8 +82,8 @@
     <string name="playback_license_plate">License Plate</string>
     <string name="select">Select</string>
     <string name="event_mandatory">Event type field is mandatory</string>
-    <string name="catalog_error">Could not get the catalog lists</string>
-    <string name="get_video_metadata_error">Could not get video metadata</string>
+    <string name="catalog_error">Unable to get events, please retry or checkout BWC again</string>
+    <string name="get_video_metadata_error">Could not get video metadata, please try again</string>
     <string name="video_metadata_saved_success">Video metadata saved successfully</string>
     <string name="video_metadata_save_error">Video metadata could not be saved</string>
     <string name="unsaved_changes">Unsaved changes</string>
@@ -98,13 +98,13 @@
     <string name="snapshot_item_detail_video_assigned_title">Assigned to video</string>
     <string name="snapshot_item_detail_date_time_value">YYYY-MM-DD HH:MM:SS</string>
     <string name="snapshot_item_detail_photo_content_description">Photo from BWC</string>
-    <string name="snapshot_detail_load_failed">Error loading snapshot</string>
+    <string name="snapshot_detail_load_failed">Unable to open snapshot, please go back and try again.</string>
     <string name="image_video_recording">Image video recording</string>
     <string name="save_metadata">Save</string>
     <string name="none">None</string>
     <string name="playback_video_name">Name</string>
     <string name="default_text">DEFAULT TEXT</string>
-    <string name="snapshot_item_detail_get_information_metadata_error">Could not be get the Metadata of snapshot</string>
+    <string name="snapshot_item_detail_get_information_metadata_error">Could not be get the metadata, please go back and try again.</string>
     <!-- link_snapshots -->
 
     <!-- Partner Id -->
@@ -175,6 +175,8 @@
     <string name="start_date_filter">Start date</string>
     <string name="end_date_filter">End date</string>
     <string name="no_event">No event</string>
+    <string name="error_get_information_metadata">Unable to get video information, please try again</string>
+    <string name="error_getting_officer_information">Unable to open officer information, please retry or checkout BWC</string>
 
     <string-array name="gender_spinner">
         <item>Select</item>

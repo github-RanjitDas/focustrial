@@ -92,7 +92,7 @@ class LoginActivity : BaseActivity() {
     private fun startLiveViewActivity() {
         val liveActivityIntent = Intent(this, LiveActivity::class.java)
         startActivity(liveActivityIntent)
-        this.finish()
+        finish()
     }
 
     private fun showFragmentPairingCamera() {

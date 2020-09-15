@@ -43,9 +43,9 @@ class LiveActivityViewModel @ViewModelInject constructor(
 
     fun getCatalogInfo() {
         viewModelScope.launch {
-            catalogInfoMediatorLiveData.postValue(
-                liveStreamingUseCase.getCatalogInfo()
-            )
+            val catalogInfo =
+                getResultWithAttempts(RETRY_ATTEMPTS) { liveStreamingUseCase.getCatalogInfo() }
+            catalogInfoMediatorLiveData.postValue(catalogInfo)
         }
     }
 

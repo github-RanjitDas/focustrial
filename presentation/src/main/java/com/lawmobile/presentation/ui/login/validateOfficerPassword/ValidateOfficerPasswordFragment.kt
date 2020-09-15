@@ -6,10 +6,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import com.google.android.material.snackbar.Snackbar
 import com.lawmobile.domain.entities.CameraInfo
 import com.lawmobile.domain.entities.DomainUser
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.extensions.setOnClickListenerCheckConnection
+import com.lawmobile.presentation.extensions.showErrorSnackBar
 import com.lawmobile.presentation.extensions.text
 import com.lawmobile.presentation.ui.base.BaseFragment
 import com.lawmobile.presentation.ui.login.LoginActivity
@@ -56,7 +58,12 @@ class ValidateOfficerPasswordFragment : BaseFragment() {
                 }
             }
             is Result.Error -> {
-                validateSuccessPasswordOfficer(false)
+                rootLayoutValidateOfficer.showErrorSnackBar(
+                    getString(R.string.error_getting_officer_information),
+                    Snackbar.LENGTH_INDEFINITE
+                ) {
+                    validateOfficerPasswordViewModel.getUserInformation()
+                }
             }
         }
     }
