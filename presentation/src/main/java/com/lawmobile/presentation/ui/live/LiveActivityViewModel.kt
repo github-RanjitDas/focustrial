@@ -9,12 +9,8 @@ import androidx.lifecycle.viewModelScope
 import com.lawmobile.domain.usecase.liveStreaming.LiveStreamingUseCase
 import com.lawmobile.presentation.ui.base.BaseViewModel
 import com.lawmobile.presentation.utils.VLCMediaPlayer
-import com.lawmobile.presentation.utils.getResultWithRetry
 import com.safefleet.mobile.avml.cameras.entities.CameraConnectCatalog
-import com.safefleet.mobile.commons.helpers.Event
-import com.safefleet.mobile.commons.helpers.Result
-import com.safefleet.mobile.commons.helpers.doIfError
-import com.safefleet.mobile.commons.helpers.doIfSuccess
+import com.safefleet.mobile.commons.helpers.*
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -90,7 +86,7 @@ class LiveActivityViewModel @ViewModelInject constructor(
     fun getBatteryLevel() {
         viewModelScope.launch {
             val batteryLevel: Result<Int> =
-                getResultWithRetry(RETRY_ATTEMPTS) { liveStreamingUseCase.getBatteryLevel() }
+                getResultWithAttempts(RETRY_ATTEMPTS) { liveStreamingUseCase.getBatteryLevel() }
             batteryLevelMediatorLiveData.postValue(
                 Event(batteryLevel)
             )
@@ -101,14 +97,14 @@ class LiveActivityViewModel @ViewModelInject constructor(
         viewModelScope.launch {
             val gigabyteList = mutableListOf<Double>()
             val freeStorageResult =
-                getResultWithRetry(RETRY_ATTEMPTS) { liveStreamingUseCase.getFreeStorage() }
+                getResultWithAttempts(RETRY_ATTEMPTS) { liveStreamingUseCase.getFreeStorage() }
             with(freeStorageResult) {
                 doIfSuccess { freeKb ->
                     val storageFreeMb = freeKb.toDouble() / SCALE_BYTES
                     gigabyteList.add(storageFreeMb)
                     delay(200)
                     val totalStorageResult =
-                        getResultWithRetry(RETRY_ATTEMPTS) { liveStreamingUseCase.getTotalStorage() }
+                        getResultWithAttempts(RETRY_ATTEMPTS) { liveStreamingUseCase.getTotalStorage() }
 
                     with(totalStorageResult) {
                         doIfSuccess { totalKb ->

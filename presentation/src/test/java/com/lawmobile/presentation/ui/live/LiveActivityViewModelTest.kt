@@ -151,6 +151,7 @@ class LiveActivityViewModelTest {
         coEvery { liveStreamingUseCase.getBatteryLevel() } returns result
         runBlocking {
             liveActivityViewModel.getBatteryLevel()
+            delay(1500)
             Assert.assertEquals(
                 liveActivityViewModel.batteryLevelLiveData.value?.getContent(),
                 result
@@ -190,7 +191,7 @@ class LiveActivityViewModelTest {
         coEvery { liveStreamingUseCase.getFreeStorage() } returns result
         runBlocking {
             liveActivityViewModel.getStorageLevels()
-            delay(500)
+            delay(2000)
             Assert.assertEquals(liveActivityViewModel.storageLiveData.value?.getContent(), result)
         }
         coVerify {
@@ -205,7 +206,7 @@ class LiveActivityViewModelTest {
         coEvery { liveStreamingUseCase.getTotalStorage() } returns result
         runBlocking {
             liveActivityViewModel.getStorageLevels()
-            delay(500)
+            delay(2000)
             Assert.assertEquals(liveActivityViewModel.storageLiveData.value?.getContent(), result)
         }
         coVerify {

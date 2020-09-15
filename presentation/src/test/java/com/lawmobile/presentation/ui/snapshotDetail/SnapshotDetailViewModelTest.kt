@@ -9,6 +9,7 @@ import io.mockk.coVerify
 import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.setMain
 import org.junit.Assert
@@ -42,7 +43,8 @@ class SnapshotDetailViewModelTest {
         )
         runBlocking {
             snapshotDetailViewModel.getImageBytes(cameraConnectFile)
-            Assert.assertTrue(snapshotDetailViewModel.imageBytesLiveData.value is Result.Success)
+            val response = snapshotDetailViewModel.imageBytesLiveData.value?.getContent()
+            Assert.assertTrue(response is Result.Success)
         }
 
         coVerify { snapshotDetailUseCase.getImageBytes(cameraConnectFile) }
@@ -56,7 +58,9 @@ class SnapshotDetailViewModelTest {
         )
         runBlocking {
             snapshotDetailViewModel.getImageBytes(cameraConnectFile)
-            Assert.assertTrue(snapshotDetailViewModel.imageBytesLiveData.value is Result.Error)
+            delay(1000)
+            val response = snapshotDetailViewModel.imageBytesLiveData.value?.getContent()
+            Assert.assertTrue(response is Result.Error)
         }
 
         coVerify { snapshotDetailUseCase.getImageBytes(cameraConnectFile) }
@@ -101,7 +105,7 @@ class SnapshotDetailViewModelTest {
         } returns Result.Success(mockk(relaxed = true))
         runBlocking {
             snapshotDetailViewModel.getInformationImageMetadata(mockk())
-            val valueLiveData = snapshotDetailViewModel.informationImageLiveData.value
+            val valueLiveData = snapshotDetailViewModel.informationImageLiveData.value?.getContent()
             Assert.assertTrue(valueLiveData is Result.Success)
         }
 
@@ -115,7 +119,7 @@ class SnapshotDetailViewModelTest {
         } returns Result.Error(mockk())
         runBlocking {
             snapshotDetailViewModel.getInformationImageMetadata(mockk())
-            val valueLiveData = snapshotDetailViewModel.informationImageLiveData.value
+            val valueLiveData = snapshotDetailViewModel.informationImageLiveData.value?.getContent()
             Assert.assertTrue(valueLiveData is Result.Error)
         }
     }

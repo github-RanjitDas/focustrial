@@ -6,7 +6,6 @@ import android.view.WindowManager.LayoutParams.TYPE_TOAST
 import androidx.annotation.StringRes
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.Root
-import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withText
@@ -54,22 +53,5 @@ object ToastMessage {
         onView(withText(stringId))
             .inRoot(ToastMatcher(maxFailures = 10))
             .check(matches(isDisplayed()))
-    }
-
-    private fun isToastNotDisplayed(@StringRes stringId: Int) {
-        onView(withText(stringId))
-            .inRoot(ToastMatcher())
-            .check(doesNotExist())
-    }
-
-    fun waitUntilToastDisappears(@StringRes stringId: Int) {
-        for (i in 1..5) {
-            try {
-                isToastNotDisplayed(stringId)
-                break
-            } catch (e: Error) {
-                Thread.sleep(500)
-            }
-        }
     }
 }

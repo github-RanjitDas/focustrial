@@ -90,7 +90,10 @@ class FileListRepositoryImpl(private val fileListRemoteDataSource: FileListRemot
             if (resultPartnerOnly is Result.Error) {
                 errorsInFiles.add(cameraPhotoMetadata.fileName)
             } else {
-                FileList.updateItemInListImageMetadata(DomainInformationImageMetadata(cameraPhotoMetadata))
+                val item = FileList.getItemInListImageOfMetadata(fileItem.name)
+                val newItemPhoto =
+                    DomainInformationImageMetadata(cameraPhotoMetadata, item?.videosAssociated)
+                FileList.updateItemInListImageMetadata(newItemPhoto)
             }
         }
         delay(300)

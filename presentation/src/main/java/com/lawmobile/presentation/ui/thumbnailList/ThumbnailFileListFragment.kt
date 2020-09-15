@@ -29,13 +29,16 @@ import com.safefleet.mobile.commons.helpers.doIfError
 import com.safefleet.mobile.commons.helpers.doIfSuccess
 import kotlinx.android.synthetic.main.fragment_file_list.*
 import java.io.File
+import java.lang.Exception
 
 class ThumbnailFileListFragment : BaseFragment() {
 
     private val thumbnailListFragmentViewModel: ThumbnailListFragmentViewModel by viewModels()
     private var temporalImageListBytes = ArrayList<DomainInformationImage>()
     private var imageListNames = ArrayList<DomainInformationFile>()
+    private var errorsNames: ArrayList<String> = arrayListOf()
     private var isLoading = false
+    private var currentImageLoading: CameraConnectFile? = null
 
     var onImageCheck: ((Boolean) -> Unit)? = null
     var thumbnailFileListAdapter: ThumbnailFileListAdapter? = null
@@ -146,17 +149,23 @@ class ThumbnailFileListFragment : BaseFragment() {
                     noFilesTextView.isVisible = false
                     setImagesInAdapter(it)
                 } else {
-                    fileListLayout.showErrorSnackBar(
-                        getString(R.string.thumbnail_bytes_error)
-                    )
+                    fileListLayout.showErrorSnackBar(getString(R.string.thumbnail_bytes_error))
                 }
             }
-            doIfError {
-                isLoading = false
-                fileListLayout.showErrorSnackBar(
-                    it.message ?: getString(R.string.thumbnail_bytes_error)
-                )
-            }
+            doIfError { manageErrorInGetBytes(it) }
+        }
+    }
+
+    private fun manageErrorInGetBytes(exception: Exception) {
+        isLoading = false
+        val message = exception.message ?: getString(R.string.thumbnail_bytes_error)
+        fileListLayout.showErrorSnackBar(message)
+        currentImageLoading?.let { cameraConnectFile ->
+            errorsNames.add(cameraConnectFile.name)
+            FilePathSaved.saveImageWithPath(
+                ImageWithPathSaved(cameraConnectFile.name, PATH_ERROR_IN_PHOTO)
+            )
+            uploadImagesInAdapterWithPath()
         }
     }
 
@@ -189,23 +198,23 @@ class ThumbnailFileListFragment : BaseFragment() {
 
     private fun setImagesInAdapter(it: List<DomainInformationImage>) {
         it.forEach {
-            if (it.imageBytes != null){
+            if (it.imageBytes != null) {
                 activity?.let { context ->
-                    val internalPath =
+                    it.internalPath =
                         it.imageBytes!!.getPathFromTemporalFile(context, it.cameraConnectFile.name)
-                    it.internalPath = internalPath
 
                     FilePathSaved.saveImageWithPath(
-                        ImageWithPathSaved(
-                            it.cameraConnectFile.name,
-                            internalPath
-                        )
+                        ImageWithPathSaved(it.cameraConnectFile.name, it.internalPath!!)
                     )
                 }
             }
             temporalImageListBytes.add(it)
         }
 
+        uploadImagesInAdapterWithPath()
+    }
+
+    private fun uploadImagesInAdapterWithPath() {
         val imageList =
             setImagesLinkedToVideo(temporalImageListBytes, SnapshotsToLink.selectedImages)
         imageList.forEach {
@@ -241,17 +250,22 @@ class ThumbnailFileListFragment : BaseFragment() {
 
         if (!subList.isNullOrEmpty()) {
             isLoading = true
-            val itemToLoad = subList.first().cameraConnectFile
-            val item = FilePathSaved.getImageIfExist(itemToLoad.name)
-            item?.let {
-                val domainInformation = DomainInformationImage(itemToLoad, null, false, it.absolutePath)
-                if (File(it.absolutePath).exists()){
-                    setImagesInAdapter(listOf(domainInformation))
-                    return
+            val itemToLoad =
+                subList.firstOrNull { !errorsNames.contains(it.cameraConnectFile.name) }?.cameraConnectFile
+            itemToLoad?.let { itemToLoaded ->
+                val item = FilePathSaved.getImageIfExist(itemToLoaded.name)
+                item?.let {
+                    val domainInformation =
+                        DomainInformationImage(itemToLoaded, null, false, it.absolutePath)
+                    if (File(it.absolutePath).exists()) {
+                        setImagesInAdapter(listOf(domainInformation))
+                        return
+                    }
                 }
-            }
 
-            thumbnailListFragmentViewModel.getImageBytesList(itemToLoad)
+                currentImageLoading = itemToLoaded
+                thumbnailListFragmentViewModel.getImageBytesList(itemToLoaded)
+            }
         }
     }
 
@@ -278,5 +292,7 @@ class ThumbnailFileListFragment : BaseFragment() {
             this.instance = instance ?: ThumbnailFileListFragment()
             return instance!!
         }
+
+        const val PATH_ERROR_IN_PHOTO = "errorPath"
     }
 }

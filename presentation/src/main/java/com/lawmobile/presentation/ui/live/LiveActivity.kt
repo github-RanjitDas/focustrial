@@ -60,8 +60,12 @@ class LiveActivity : BaseActivity() {
     }
 
     private fun setOfficerName() {
-        textViewOfficerName.text = CameraInfo.officerName.split(" ")[0]
-        textViewOfficerLastName.text = CameraInfo.officerName.split(" ")[1]
+        try{
+            textViewOfficerName.text = CameraInfo.officerName.split(" ")[0]
+            textViewOfficerLastName.text = CameraInfo.officerName.split(" ")[1]
+        }catch (e:Exception){
+            e.printStackTrace()
+        }
     }
 
     override fun onResume() {

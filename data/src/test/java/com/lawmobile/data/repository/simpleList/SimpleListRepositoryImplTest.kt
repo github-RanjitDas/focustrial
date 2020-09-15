@@ -119,11 +119,9 @@ internal class SimpleListRepositoryImplTest {
 
     @Test
     fun testGetVideoListFlow() {
-        val cameraConnectFile: CameraConnectFile = mockk(relaxed = true)
-        val cameraResponse: CameraConnectFileResponseWithErrors = mockk {
-            every { items } returns arrayListOf(cameraConnectFile)
-            every { errors } returns arrayListOf()
-        }
+        val cameraConnectFile = CameraConnectFile("fileName.PNG", "date", "path", "nameFolder/")
+        val cameraResponse = CameraConnectFileResponseWithErrors()
+        cameraResponse.items.add(cameraConnectFile)
         coEvery { simpleListRemoteDataSource.getVideoList() } returns Result.Success(cameraResponse)
         runBlocking {
             simpleListRepositoryImpl.getVideoList()

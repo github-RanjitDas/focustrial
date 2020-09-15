@@ -3,6 +3,8 @@ package com.lawmobile.data.repository.snapshotDetail
 import com.lawmobile.data.datasource.remote.snapshotDetail.SnapshotDetailRemoteDataSource
 import com.lawmobile.data.entities.FileList
 import com.safefleet.mobile.avml.cameras.entities.CameraConnectFile
+import com.safefleet.mobile.avml.cameras.entities.CameraConnectFileResponseWithErrors
+import com.safefleet.mobile.avml.cameras.entities.CameraConnectPhotoMetadata
 import com.safefleet.mobile.commons.helpers.Result
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -20,7 +22,7 @@ class SnapshotDetailRepositoryImplTest {
 
     @Test
     fun testGetInformationResourcesVideoSuccess() {
-        val cameraConnectFile: CameraConnectFile = mockk()
+        val cameraConnectFile = CameraConnectFile("fileName.PNG", "date", "path", "nameFolder/")
         val byte = ByteArray(1)
         coEvery { snapshotDetailRemoteDataSource.getImageBytes(cameraConnectFile) } returns Result.Success(
             byte
@@ -36,9 +38,9 @@ class SnapshotDetailRepositoryImplTest {
 
     @Test
     fun testGetImageBytesError() {
-        val cameraConnectFile: CameraConnectFile = mockk()
+        val cameraConnectFile = CameraConnectFile("fileName.PNG", "date", "path", "nameFolder/")
         coEvery { snapshotDetailRemoteDataSource.getImageBytes(cameraConnectFile) } returns Result.Error(
-            mockk()
+            Exception("")
         )
         runBlocking {
             val result =
@@ -54,9 +56,11 @@ class SnapshotDetailRepositoryImplTest {
         coEvery { snapshotDetailRemoteDataSource.savePartnerIdSnapshot(any()) } returns Result.Success(
             Unit
         )
+        val cameraConnectFile = CameraConnectFile("fileName.PNG", "date", "path", "nameFolder/")
+        FileList.listOfMetadataImages = ArrayList()
         runBlocking {
             snapshotDetailRepositoryImpl.savePartnerIdSnapshot(
-                mockk(relaxed = true),
+                cameraConnectFile,
                 "partnerId"
             )
         }
@@ -65,10 +69,13 @@ class SnapshotDetailRepositoryImplTest {
 
     @Test
     fun testSavePartnerIdSnapshotSuccessWithInformationInFileList() {
-        coEvery { snapshotDetailRemoteDataSource.savePartnerIdSnapshot(any()) } returns Result.Success(Unit)
+        coEvery { snapshotDetailRemoteDataSource.savePartnerIdSnapshot(any()) } returns Result.Success(
+            Unit
+        )
         runBlocking {
             val cameraConnectFile = CameraConnectFile("fileName.PNG", "date", "path", "nameFolder/")
-            val response = snapshotDetailRepositoryImpl.savePartnerIdSnapshot(cameraConnectFile, "partnerId")
+            val response =
+                snapshotDetailRepositoryImpl.savePartnerIdSnapshot(cameraConnectFile, "partnerId")
             Assert.assertTrue(response is Result.Success)
             val item = FileList.getItemInListImageOfMetadata("fileName.PNG")
             Assert.assertEquals(item?.cameraConnectPhotoMetadata?.metadata?.partnerID, "partnerId")
@@ -80,12 +87,86 @@ class SnapshotDetailRepositoryImplTest {
         coEvery { snapshotDetailRemoteDataSource.savePartnerIdSnapshot(any()) } returns Result.Error(
             Exception("")
         )
+        val cameraConnectFile = CameraConnectFile("fileName.PNG", "date", "path", "nameFolder/")
         runBlocking {
             val response = snapshotDetailRepositoryImpl.savePartnerIdSnapshot(
-                mockk(relaxed = true),
+                cameraConnectFile,
                 "partnerId"
             )
             Assert.assertTrue(response is Result.Error)
         }
+    }
+
+    @Test
+    fun testGetInformationOfPhotoError() {
+        FileList.listOfMetadataImages = ArrayList()
+        coEvery { snapshotDetailRemoteDataSource.getInformationOfPhoto(any()) } returns Result.Error(
+            mockk()
+        )
+        val cameraSend = CameraConnectFile("name", "date", "path", "nameFol")
+
+        runBlocking {
+            val response = snapshotDetailRepositoryImpl.getInformationOfPhoto(cameraSend)
+            Assert.assertTrue(response is Result.Error)
+        }
+    }
+
+    @Test
+    fun testGetInformationOfPhotoErrorInVideoList() {
+        FileList.listOfMetadataImages = ArrayList()
+        coEvery { snapshotDetailRemoteDataSource.getInformationOfPhoto(any()) } returns Result.Success(
+            CameraConnectPhotoMetadata("fileName.PNG")
+        )
+        coEvery { snapshotDetailRemoteDataSource.getVideoList() } returns Result.Error(mockk())
+
+        val cameraSend = CameraConnectFile("name", "date", "path", "nameFol")
+
+        runBlocking {
+            val response = snapshotDetailRepositoryImpl.getInformationOfPhoto(cameraSend)
+            Assert.assertTrue(response is Result.Error)
+        }
+    }
+
+    @Test
+    fun testGetInformationOfPhotoErrorInVideoMetadata() {
+        FileList.listOfMetadataImages = ArrayList()
+        coEvery { snapshotDetailRemoteDataSource.getInformationOfPhoto(any()) } returns Result.Success(
+            CameraConnectPhotoMetadata("fileName.PNG")
+        )
+        val cameraConnectFile = CameraConnectFile("fileName.MP4", "date", "path", "nameFolder/")
+        val responseCamera = CameraConnectFileResponseWithErrors()
+        responseCamera.items.add(cameraConnectFile)
+        responseCamera.errors.clear()
+        coEvery { snapshotDetailRemoteDataSource.getVideoList() } returns Result.Success(
+            responseCamera
+        )
+
+        coEvery { snapshotDetailRemoteDataSource.getMetadataOfVideo(any()) } returns Result.Error(
+            mockk())
+        val cameraSend = CameraConnectFile("name", "date", "path", "nameFol")
+
+        runBlocking {
+            val response = snapshotDetailRepositoryImpl.getInformationOfPhoto(cameraSend)
+            Assert.assertTrue(response is Result.Error)
+        }
+    }
+
+    @Test
+    fun testGetInformationOfPhotoFlowInformationPhoto() {
+        FileList.listOfMetadataImages = ArrayList()
+        coEvery { snapshotDetailRemoteDataSource.getInformationOfPhoto(any()) } returns Result.Success(
+            CameraConnectPhotoMetadata("fileName.PNG")
+        )
+        val cameraConnectFile = CameraConnectFile("fileName.MP4", "date", "path", "nameFolder/")
+        val responseCamera = CameraConnectFileResponseWithErrors()
+        responseCamera.items.add(cameraConnectFile)
+        responseCamera.errors.clear()
+        coEvery { snapshotDetailRemoteDataSource.getVideoList() } returns Result.Error(mockk())
+        val cameraSend = CameraConnectFile("name", "date", "path", "nameFol")
+        runBlocking {
+            snapshotDetailRepositoryImpl.getInformationOfPhoto(cameraSend)
+        }
+
+        coVerify { snapshotDetailRemoteDataSource.getInformationOfPhoto(cameraSend) }
     }
 }
