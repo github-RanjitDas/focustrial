@@ -126,6 +126,7 @@ class LiveActivityViewModelTest {
         coEvery { liveStreamingUseCase.getCatalogInfo() } returns Result.Error(mockk())
         runBlocking {
             liveActivityViewModel.getCatalogInfo()
+            delay(1500)
             Assert.assertTrue(liveActivityViewModel.catalogInfoLiveData.value is Result.Error)
         }
         coVerify { liveStreamingUseCase.getCatalogInfo() }

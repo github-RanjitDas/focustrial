@@ -22,15 +22,15 @@ fun SafeFleetClickable.setClickListenerCheckConnection(callback: (View) -> Unit)
     }
 }
 
-fun View.showErrorSnackBar(message: String) {
+fun View.showErrorSnackBar(message: String, duration: Int = Snackbar.LENGTH_SHORT, onRetryClick: ((View) -> Unit)? = null) {
     SafeFleetSnackBar.make(
         SafeFleetSnackBarSettings(
             this,
             message,
-            Snackbar.LENGTH_SHORT,
+            duration,
             R.drawable.ic_warning,
             this.context.getColor(R.color.red)
-        )
+        ), onRetryClick
     )?.show()
 }
 
