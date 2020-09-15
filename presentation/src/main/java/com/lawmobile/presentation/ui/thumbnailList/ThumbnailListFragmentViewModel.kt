@@ -34,9 +34,13 @@ class ThumbnailListFragmentViewModel @ViewModelInject constructor(private val th
 
     fun getImageList() {
         viewModelScope.launch {
-            imageListMediatorLiveData.postValueWithTimeout(LOADING_TIMEOUT){
+            imageListMediatorLiveData.postValueWithTimeout(LOADING_TIMEOUT_INFORMATION_SNAPSHOT){
                 thumbnailListUseCase.getImageList()
             }
         }
+    }
+
+    companion object {
+        private const val LOADING_TIMEOUT_INFORMATION_SNAPSHOT = 35000L
     }
 }

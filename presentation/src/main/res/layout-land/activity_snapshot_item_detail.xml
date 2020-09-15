@@ -13,6 +13,8 @@
         tools:context=".ui.snapshotDetail.SnapshotDetailActivity">
 
         <include
+            android:visibility="gone"
+            android:id="@+id/tapBar"
             layout="@layout/custom_app_bar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
@@ -21,24 +23,12 @@
             android:id="@+id/photoItemDetailHolder"
             android:layout_width="@dimen/no_dp"
             android:scaleType="fitXY"
-            android:layout_height="@dimen/snapshot_detail_height_image"
-            android:layout_marginTop="@dimen/live_view_app_bar_height"
+            android:layout_height="@dimen/no_dp"
             android:contentDescription="@string/snapshot_item_detail_photo_content_description"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <ImageView
-            android:id="@+id/imageReload"
-            android:visibility="gone"
-            style="@style/buttonPlayBackVideo"
-            android:src="@drawable/ic_refresh"
-            android:layout_marginTop="@dimen/live_view_app_bar_height"
-            android:contentDescription="@string/snapshot_item_detail_photo_content_description"
-            app:layout_constraintBottom_toBottomOf="@+id/photoItemDetailHolder"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/layoutDetailControls"
@@ -51,18 +41,30 @@
 
             <ImageButton
                 android:id="@+id/buttonFullScreen"
-                android:layout_width="@dimen/video_playback_size_buttons"
-                android:layout_height="@dimen/video_playback_size_buttons"
-                android:background="@color/transparent"
+                style="@style/buttonPlayBackVideo"
+                android:layout_marginTop="@dimen/margin_5dp"
+                android:layout_marginEnd="@dimen/margin_5dp"
                 android:contentDescription="@string/image_description_full_screen_size"
-                android:src="@drawable/ic_full_size"
+                android:src="@drawable/ic_media_fullscreen_shrink"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
+        <ImageView
+            android:id="@+id/imageReload"
+            android:visibility="gone"
+            style="@style/buttonPlayBackVideo"
+            android:src="@drawable/ic_refresh"
+            android:contentDescription="@string/snapshot_item_detail_photo_content_description"
+            app:layout_constraintBottom_toBottomOf="@+id/photoItemDetailHolder"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
         <Button
+            android:visibility="gone"
             android:id="@+id/buttonAssociatePartnerIdList"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -78,12 +80,14 @@
             app:layout_constraintStart_toStartOf="parent" />
 
         <ScrollView
+            android:visibility="gone"
+            android:id="@+id/scrollInformation"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toTopOf="@+id/buttonAssociatePartnerIdList"
             android:layout_width="match_parent"
             android:layout_marginBottom="@dimen/snapshot_detail_margin_bottom_scroll"
-            app:layout_constraintTop_toBottomOf="@+id/photoItemDetailHolder"
+            app:layout_constraintTop_toBottomOf="@+id/layoutDetailControls"
             android:layout_height="@dimen/no_dp">
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -197,6 +201,9 @@
         app:layout_anchor="@+id/constraintLayoutDetail"
         app:layout_anchorGravity="center" />
 
-    <include layout="@layout/bottom_sheet_assign_to_officer" />
+    <include
+        android:visibility="gone"
+        layout="@layout/bottom_sheet_assign_to_officer"
+        />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

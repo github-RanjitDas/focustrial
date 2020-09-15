@@ -6,7 +6,7 @@ import com.lawmobile.domain.entities.DomainInformationImageMetadata
 object FileList {
     var listOfVideos = emptyList<DomainInformationFile>()
     var listOfImages = emptyList<DomainInformationFile>()
-    private var listOfMetadataImages = ArrayList<DomainInformationImageMetadata>()
+    var listOfMetadataImages = ArrayList<DomainInformationImageMetadata>()
 
     fun changeListOfImages(newListOfImages: List<DomainInformationFile>) {
         this.listOfImages = newListOfImages

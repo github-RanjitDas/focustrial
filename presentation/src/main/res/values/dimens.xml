@@ -65,10 +65,12 @@
     <dimen name="file_list_item_height">50dp</dimen>
     <dimen name="file_list_checkbox_margin_start">18dp</dimen>
 
-    <dimen name="snapshot_detail_height_image">220dp</dimen>
+    <dimen name="snapshot_detail_height_image">210dp</dimen>
     <dimen name="snapshot_detail_margin_start_text">40dp</dimen>
-    <dimen name="snapshot_detail_margin_top_title">20dp</dimen>
+    <dimen name="snapshot_detail_margin_top_title">15dp</dimen>
+    <dimen name="snapshot_detail_margin_top_name">15dp</dimen>
     <dimen name="snapshot_detail_margin_top_text">5dp</dimen>
+    <dimen name="snapshot_detail_padding_button_full_size">5dp</dimen>
     <dimen name="snapshot_detail_margin_bottom_scroll">15dp</dimen>
 
     <!-- Video playback -->

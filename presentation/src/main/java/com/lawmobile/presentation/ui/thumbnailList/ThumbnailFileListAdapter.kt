@@ -10,6 +10,7 @@ import com.lawmobile.domain.extensions.getCreationDate
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.entities.SnapshotsToLink
 import com.lawmobile.presentation.extensions.setOnClickListenerCheckConnection
+import com.lawmobile.presentation.ui.thumbnailList.ThumbnailFileListFragment.Companion.PATH_ERROR_IN_PHOTO
 import com.safefleet.mobile.commons.helpers.inflate
 import kotlinx.android.synthetic.main.thumbnail_list_recycler_item.view.*
 import java.io.File
@@ -93,13 +94,22 @@ class ThumbnailFileListAdapter(
 
         private fun setDataToViews(imageFile: DomainInformationImage) {
             with(thumbnailView) {
-                dateImageListItem.text =
-                    imageFile.cameraConnectFile.getCreationDate()
+                dateImageListItem.text = imageFile.cameraConnectFile.getCreationDate()
+                manageImagePath(imageFile)
+                checkboxImageListItem.isActivated = imageFile.isAssociatedToVideo
+            }
+        }
+
+        private fun manageImagePath(imageFile: DomainInformationImage) {
+            with(thumbnailView) {
                 imageFile.internalPath?.let {
                     try {
-                        Glide.with(this).load(File(it)).into(photoImageListItem)
                         photoImageListItem.isVisible = true
                         photoImageLoading.isVisible = false
+                        imageErrorThumbnail.isVisible = it == PATH_ERROR_IN_PHOTO
+                        if (it != PATH_ERROR_IN_PHOTO) {
+                            Glide.with(this).load(File(it)).into(photoImageListItem)
+                        }
                     } catch (e: Exception) {
                         e.printStackTrace()
                         val domain =
@@ -111,9 +121,8 @@ class ThumbnailFileListAdapter(
                     photoImageListItem.isVisible = false
                     photoImageLoading.isVisible = true
                 }
-
-                checkboxImageListItem.isActivated = imageFile.isAssociatedToVideo
             }
+
         }
 
         private fun enableCheckBoxes(imageFile: DomainInformationImage) {

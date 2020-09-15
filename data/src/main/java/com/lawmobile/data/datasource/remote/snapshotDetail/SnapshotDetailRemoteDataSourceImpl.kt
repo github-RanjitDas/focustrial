@@ -1,7 +1,9 @@
 package com.lawmobile.data.datasource.remote.snapshotDetail
 
 import com.safefleet.mobile.avml.cameras.entities.CameraConnectFile
+import com.safefleet.mobile.avml.cameras.entities.CameraConnectFileResponseWithErrors
 import com.safefleet.mobile.avml.cameras.entities.CameraConnectPhotoMetadata
+import com.safefleet.mobile.avml.cameras.entities.CameraConnectVideoMetadata
 import com.safefleet.mobile.avml.cameras.external.CameraConnectService
 import com.safefleet.mobile.commons.helpers.Result
 
@@ -17,5 +19,13 @@ class SnapshotDetailRemoteDataSourceImpl(private val cameraConnectService: Camer
 
     override suspend fun getInformationOfPhoto(cameraFile: CameraConnectFile): Result<CameraConnectPhotoMetadata> {
         return cameraConnectService.getPhotoMetadata(cameraFile)
+    }
+
+    override suspend fun getVideoList(): Result<CameraConnectFileResponseWithErrors> {
+        return  cameraConnectService.getListOfVideos()
+    }
+
+    override suspend fun getMetadataOfVideo(cameraConnectFile: CameraConnectFile): Result<CameraConnectVideoMetadata> {
+        return cameraConnectService.getVideoMetadata(cameraConnectFile.name, cameraConnectFile.nameFolder)
     }
 }

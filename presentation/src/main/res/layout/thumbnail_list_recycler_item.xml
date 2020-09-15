@@ -28,6 +28,20 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
+            android:id="@+id/imageErrorThumbnail"
+            android:contentDescription="@string/snapshot_item_detail_title"
+            android:layout_width="@dimen/file_list_item_height"
+            android:layout_height="@dimen/file_list_item_height"
+            android:scaleType="fitXY"
+            android:src="@drawable/ic_failed_image"
+            android:background="@color/transparent"
+            app:layout_constraintBottom_toBottomOf="@+id/photoImageBackground"
+            app:layout_constraintEnd_toEndOf="@+id/photoImageBackground"
+            app:layout_constraintStart_toStartOf="@+id/photoImageBackground"
+            app:layout_constraintTop_toTopOf="@+id/photoImageBackground"
+            app:tint="@color/black" />
+
+        <ImageView
             android:id="@+id/photoImageListItem"
             android:layout_width="match_parent"
             android:visibility="invisible"

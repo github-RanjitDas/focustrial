@@ -95,11 +95,13 @@
     <string name="snapshot_item_detail_photo_name_value">Default</string>
     <string name="snapshot_item_detail_date_time_title">Date Time</string>
     <string name="snapshot_item_detail_officer_assigned_title">Officer Assigned</string>
+    <string name="snapshot_item_detail_video_assigned_title">Assigned to video</string>
     <string name="snapshot_item_detail_date_time_value">YYYY-MM-DD HH:MM:SS</string>
     <string name="snapshot_item_detail_photo_content_description">Photo from BWC</string>
     <string name="snapshot_detail_load_failed">Error loading snapshot</string>
     <string name="image_video_recording">Image video recording</string>
     <string name="save_metadata">Save</string>
+    <string name="none">None</string>
     <string name="playback_video_name">Name</string>
     <string name="default_text">DEFAULT TEXT</string>
     <string name="snapshot_item_detail_get_information_metadata_error">Could not be get the Metadata of snapshot</string>
