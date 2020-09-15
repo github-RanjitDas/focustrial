@@ -183,7 +183,7 @@ class VideoPlaybackActivity : BaseActivity() {
                     getString(R.string.video_metadata_saved_success),
                     Toast.LENGTH_SHORT
                 )
-                finish()
+                onBackPressed()
             }
             is Result.Error -> this.showToast(
                 getString(R.string.video_metadata_save_error),
@@ -319,7 +319,6 @@ class VideoPlaybackActivity : BaseActivity() {
             MediaPlayer.EventListener {
                 when (it.type) {
                     MediaPlayer.Event.EncounteredError -> {
-                        videoPlaybackViewModel.stopMediaPlayer()
                         domainInformationVideo?.let(::createVideoPlaybackInSurface)
                     }
                     MediaPlayer.Event.MediaChanged -> {
@@ -417,11 +416,12 @@ class VideoPlaybackActivity : BaseActivity() {
     override fun onBackPressed() {
         if (isInPortraitMode()) {
             videoPlaybackViewModel.stopMediaPlayer()
-            if (areLinkedSnapshotsChangesSaved && !verifyVideoMetadataWasEdited()) {
-                finish()
-            } else {
+            if (!areLinkedSnapshotsChangesSaved || verifyVideoMetadataWasEdited()) {
                 this.createAlertDialogMetadataExit()
+                return
             }
+
+            super.onBackPressed()
         } else {
             changeScreenOrientation()
         }
@@ -605,6 +605,7 @@ class VideoPlaybackActivity : BaseActivity() {
     }
 
     private fun setProgressToVideo(progress: Int) {
+        currentProgressInVideo = progress
         videoPlaybackViewModel.setProgressMediaPlayer(progress.toFloat())
         seekProgressVideo.progress = progress
         currentTimeVideoInMilliSeconds = totalDurationVideoInMilliSeconds * (progress / 100)
