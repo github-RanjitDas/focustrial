@@ -7,7 +7,6 @@ import androidx.cardview.widget.CardView
 import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.android.material.snackbar.Snackbar
 import com.lawmobile.domain.entities.DomainInformationImage
 import com.lawmobile.domain.extensions.getCreationDate
 import com.lawmobile.presentation.R
@@ -351,8 +350,14 @@ class FileListActivity : BaseActivity() {
             text = getString(R.string.cancel)
         }
         when (actualFragment) {
-            SIMPLE_FILE_LIST -> simpleFileListFragment.showCheckBoxes()
-            THUMBNAIL_FILE_LIST -> thumbnailFileListFragment.showCheckBoxes()
+            SIMPLE_FILE_LIST -> {
+                simpleFileListFragment.showCheckBoxes()
+                simpleFileListFragment.simpleFileListAdapter?.uncheckAllItems()
+            }
+            THUMBNAIL_FILE_LIST -> {
+                thumbnailFileListFragment.showCheckBoxes()
+                thumbnailFileListFragment.thumbnailFileListAdapter?.uncheckAllItems()
+            }
         }
     }
 
