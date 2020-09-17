@@ -6,6 +6,7 @@ import com.lawmobile.domain.entities.CameraInfo
 import com.lawmobile.presentation.utils.CameraHelper
 import com.lawmobile.presentation.utils.WifiHelper
 import com.safefleet.mobile.avml.cameras.external.*
+import com.safefleet.mobile.avml.cameras.external.socket.SocketHelper
 import com.safefleet.mobile.avml.cameras.external.x1.CameraConnectServiceX1
 import com.safefleet.mobile.avml.cameras.external.x1.CameraHelperX1
 import dagger.Module
@@ -27,9 +28,12 @@ class CameraServiceModule {
             CameraPreferences(sharedPreferences)
 
         @Provides
+        fun provideSocketHelper(): SocketHelper = SocketHelper(Socket())
+
+        @Provides
         @Singleton
-        fun provideCameraHelperX1(): CameraHelperX1 =
-            CameraHelperX1(Gson(), Socket(), Socket())
+        fun provideCameraHelperX1(cmdHelper: SocketHelper, dataHelper: SocketHelper): CameraHelperX1 =
+            CameraHelperX1(Gson(), cmdHelper, dataHelper)
 
         @Provides
         @Singleton
