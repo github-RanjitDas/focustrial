@@ -9,6 +9,7 @@ import com.safefleet.lawmobile.di.mocksServiceCameras.CameraConnectServiceX1Mock
 import com.safefleet.mobile.avml.cameras.external.CameraConnectService
 import com.safefleet.mobile.avml.cameras.external.CameraPreferences
 import com.safefleet.mobile.avml.cameras.external.CameraType
+import com.safefleet.mobile.avml.cameras.external.socket.SocketHelper
 import com.safefleet.mobile.avml.cameras.external.x1.CameraHelperX1
 import dagger.Module
 import dagger.Provides
@@ -28,9 +29,12 @@ class CameraServiceModule {
             CameraPreferences(sharedPreferences)
 
         @Provides
+        fun provideSocketHelper(): SocketHelper = SocketHelper(Socket())
+
+        @Provides
         @Singleton
-        fun provideCameraHelperX1(): CameraHelperX1 =
-            CameraHelperX1(Gson(), Socket(), Socket())
+        fun provideCameraHelperX1(cmdHelper: SocketHelper, dataHelper: SocketHelper): CameraHelperX1 =
+            CameraHelperX1(Gson(), cmdHelper, dataHelper)
 
         @Provides
         @Singleton
