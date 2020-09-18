@@ -58,12 +58,7 @@ class ValidateOfficerPasswordFragment : BaseFragment() {
                 }
             }
             is Result.Error -> {
-                rootLayoutValidateOfficer.showErrorSnackBar(
-                    getString(R.string.error_getting_officer_information),
-                    Snackbar.LENGTH_INDEFINITE
-                ) {
-                    validateOfficerPasswordViewModel.getUserInformation()
-                }
+                showErrorInGetInformationOfUser()
             }
         }
     }
@@ -77,6 +72,10 @@ class ValidateOfficerPasswordFragment : BaseFragment() {
     }
 
     private fun verifyPasswordOfficer() {
+        if (domainUser?.password == null) {
+            showErrorInGetInformationOfUser()
+            return
+        }
         val sha256Password =
             EncodePassword.encodePasswordOfficer(textInputOfficerPassword.text())
         if (sha256Password.isNotEmpty() && sha256Password == domainUser?.password) {
@@ -85,6 +84,15 @@ class ValidateOfficerPasswordFragment : BaseFragment() {
         }
 
         validateSuccessPasswordOfficer(false)
+    }
+
+    private fun showErrorInGetInformationOfUser() {
+        rootLayoutValidateOfficer.showErrorSnackBar(
+            getString(R.string.error_getting_officer_information),
+            Snackbar.LENGTH_INDEFINITE
+        ) {
+            validateOfficerPasswordViewModel.getUserInformation()
+        }
     }
 
     companion object {
