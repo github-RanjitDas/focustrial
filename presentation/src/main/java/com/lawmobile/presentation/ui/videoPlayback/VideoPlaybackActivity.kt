@@ -12,6 +12,7 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
+import com.google.android.material.snackbar.Snackbar
 import com.lawmobile.domain.entities.CameraInfo
 import com.lawmobile.domain.entities.DomainInformationVideo
 import com.lawmobile.domain.extensions.getCreationDate
@@ -78,6 +79,7 @@ class VideoPlaybackActivity : BaseActivity() {
 
     override fun onResume() {
         super.onResume()
+        verifyEventEmpty()
         if (!videoPlaybackViewModel.isMediaPlayerPlaying()) {
             domainInformationVideo?.let {
                 createVideoPlaybackInSurface(it)
@@ -126,6 +128,12 @@ class VideoPlaybackActivity : BaseActivity() {
         return arrayOf(filterLength, filterComma)
     }
 
+    private fun verifyEventEmpty(){
+        if (CameraInfo.events.isEmpty()){
+            showErrorInEvents()
+        }
+    }
+
     private fun setCatalogLists() {
         eventList.add(getString(R.string.select))
         eventList.addAll(CameraInfo.events.map { it.name })
@@ -135,6 +143,13 @@ class VideoPlaybackActivity : BaseActivity() {
         eventValue.adapter = ArrayAdapter(this, R.layout.spinner_item, eventList)
         raceValue.adapter = ArrayAdapter(this, R.layout.spinner_item, raceList)
         genderValue.adapter = ArrayAdapter(this, R.layout.spinner_item, genderList)
+    }
+
+    private fun showErrorInEvents(){
+        parentViewVideoPlayback.showErrorSnackBar(
+            getString(R.string.catalog_error_video_playback),
+            Snackbar.LENGTH_LONG
+        )
     }
 
     private fun setObservers() {

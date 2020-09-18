@@ -11,7 +11,6 @@ import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
-import com.google.android.material.snackbar.Snackbar
 import com.lawmobile.domain.entities.CameraInfo
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.entities.AlertInformation
@@ -204,7 +203,7 @@ class LiveActivity : BaseActivity() {
             doIfError {
                 liveViewAppBar.showErrorSnackBar(
                     getString(R.string.catalog_error),
-                    Snackbar.LENGTH_INDEFINITE
+                    CATALOG_ERROR_ANIMATION_DURATION
                 ) {
                     liveActivityViewModel.getCatalogInfo()
                 }
@@ -437,6 +436,7 @@ class LiveActivity : BaseActivity() {
     companion object {
         private var cameFromLandscape = false
         private const val BLINK_ANIMATION_DURATION = 1000L
+        private const val CATALOG_ERROR_ANIMATION_DURATION = 7000
         private const val BATTERY_TOTAL_HOURS = 10f
         private const val VIEW_LOADING_TIME = 800L
         private const val FREE_STORAGE_POSITION = 0

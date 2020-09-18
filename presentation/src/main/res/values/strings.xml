@@ -83,6 +83,7 @@
     <string name="select">Select</string>
     <string name="event_mandatory">Event type field is mandatory</string>
     <string name="catalog_error">Unable to get events, please retry or checkout BWC again</string>
+    <string name="catalog_error_video_playback">Unable to get events, please checkout BWC again</string>
     <string name="get_video_metadata_error">Could not get video metadata, please try again</string>
     <string name="video_metadata_saved_success">Video metadata saved successfully</string>
     <string name="video_metadata_save_error">Video metadata could not be saved</string>
