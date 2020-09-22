@@ -4,7 +4,7 @@ object FilePathSaved {
     private val filesPathSavedImages: ArrayList<ImageWithPathSaved> = ArrayList()
 
     fun saveImageWithPath(image: ImageWithPathSaved) {
-        val index = filesPathSavedImages.indexOfFirst { it == image }
+        val index = filesPathSavedImages.indexOfFirst { it.name == image.name }
         if (index != -1) {
             filesPathSavedImages[index] = image
             return

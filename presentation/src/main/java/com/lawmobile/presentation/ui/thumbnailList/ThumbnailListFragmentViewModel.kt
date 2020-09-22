@@ -11,6 +11,7 @@ import com.lawmobile.presentation.extensions.postValueWithTimeout
 import com.lawmobile.presentation.ui.base.BaseViewModel
 import com.safefleet.mobile.avml.cameras.entities.CameraConnectFile
 import com.safefleet.mobile.commons.helpers.Result
+import com.safefleet.mobile.commons.helpers.getResultWithAttempts
 import kotlinx.coroutines.launch
 
 class ThumbnailListFragmentViewModel @ViewModelInject constructor(private val thumbnailListUseCase: ThumbnailListUseCase) :
@@ -24,17 +25,21 @@ class ThumbnailListFragmentViewModel @ViewModelInject constructor(private val th
         MediatorLiveData<Result<List<DomainInformationFile>>>()
     val imageListLiveData: LiveData<Result<List<DomainInformationFile>>> get() = imageListMediatorLiveData
 
-    fun getImageBytesList(cameraConnectFile: CameraConnectFile) {
+    fun getImageBytes(cameraConnectFile: CameraConnectFile) {
         viewModelScope.launch {
-            thumbnailBytesListMediatorLiveData.postValue(
-                thumbnailListUseCase.getImagesByteList(cameraConnectFile)
-            )
+            thumbnailBytesListMediatorLiveData.postValueWithTimeout(
+                LOADING_TIMEOUT_BYTES_SNAPSHOT
+            ) {
+                getResultWithAttempts(ATTEMPTS_TO_GET_BYTES) {
+                    thumbnailListUseCase.getImagesByteList(cameraConnectFile)
+                }
+            }
         }
     }
 
     fun getImageList() {
         viewModelScope.launch {
-            imageListMediatorLiveData.postValueWithTimeout(LOADING_TIMEOUT_INFORMATION_SNAPSHOT){
+            imageListMediatorLiveData.postValueWithTimeout(LOADING_TIMEOUT_INFORMATION_SNAPSHOT) {
                 thumbnailListUseCase.getImageList()
             }
         }
@@ -42,5 +47,7 @@ class ThumbnailListFragmentViewModel @ViewModelInject constructor(private val th
 
     companion object {
         private const val LOADING_TIMEOUT_INFORMATION_SNAPSHOT = 35000L
+        private const val LOADING_TIMEOUT_BYTES_SNAPSHOT = 20000L
+        private const val ATTEMPTS_TO_GET_BYTES = 2
     }
 }

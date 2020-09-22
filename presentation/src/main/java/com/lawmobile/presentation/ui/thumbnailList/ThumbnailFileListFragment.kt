@@ -53,7 +53,6 @@ class ThumbnailFileListFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         configureLayoutItems()
         configureLoadingViews()
         thumbnailFileListAdapter = ThumbnailFileListAdapter(::onImageClick, onImageCheck)
@@ -86,6 +85,7 @@ class ThumbnailFileListFragment : BaseFragment() {
         fileListIntent.putExtra(Constants.CAMERA_CONNECT_FILE, cameraConnectFile)
         hideLoadingDialog()
         startActivity(fileListIntent)
+        activity?.finish()
     }
 
     fun showCheckBoxes() {
@@ -165,6 +165,14 @@ class ThumbnailFileListFragment : BaseFragment() {
             FilePathSaved.saveImageWithPath(
                 ImageWithPathSaved(cameraConnectFile.name, PATH_ERROR_IN_PHOTO)
             )
+            temporalImageListBytes.add(
+                DomainInformationImage(
+                    cameraConnectFile,
+                    null,
+                    false,
+                    PATH_ERROR_IN_PHOTO
+                )
+            )
             uploadImagesInAdapterWithPath()
         }
     }
@@ -175,7 +183,7 @@ class ThumbnailFileListFragment : BaseFragment() {
             noFilesTextView.isVisible = false
             val itemToLoad = imageListNames.first().cameraConnectFile
             isLoading = true
-            thumbnailListFragmentViewModel.getImageBytesList(itemToLoad)
+            thumbnailListFragmentViewModel.getImageBytes(itemToLoad)
 
         } else {
             fileListRecycler.isVisible = false
@@ -264,7 +272,7 @@ class ThumbnailFileListFragment : BaseFragment() {
                 }
 
                 currentImageLoading = itemToLoaded
-                thumbnailListFragmentViewModel.getImageBytesList(itemToLoaded)
+                thumbnailListFragmentViewModel.getImageBytes(itemToLoaded)
             }
         }
     }

@@ -8,6 +8,7 @@ import com.safefleet.mobile.commons.helpers.Result
 import io.mockk.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.setMain
 import org.junit.Assert
@@ -41,7 +42,7 @@ internal class ThumbnailFileListFragmentViewModelTest {
         coEvery { thumbnailListUseCase.getImagesByteList(cameraConnectFile) } returns result
 
         runBlocking {
-            thumbnailListFragmentViewModel.getImageBytesList(cameraConnectFile)
+            thumbnailListFragmentViewModel.getImageBytes(cameraConnectFile)
             Assert.assertEquals(result, thumbnailListFragmentViewModel.thumbnailListLiveData.value)
         }
 
@@ -55,7 +56,7 @@ internal class ThumbnailFileListFragmentViewModelTest {
         coEvery { thumbnailListUseCase.getImagesByteList(cameraConnectFile) } returns Result.Success(listOf(mockk()))
 
         runBlocking {
-            thumbnailListFragmentViewModel.getImageBytesList(cameraConnectFile)
+            thumbnailListFragmentViewModel.getImageBytes(cameraConnectFile)
             Assert.assertTrue(thumbnailListFragmentViewModel.thumbnailListLiveData.value is Result.Success)
         }
     }
@@ -67,7 +68,8 @@ internal class ThumbnailFileListFragmentViewModelTest {
         coEvery { thumbnailListUseCase.getImagesByteList(cameraConnectFile) } returns Result.Error(mockk())
 
         runBlocking {
-            thumbnailListFragmentViewModel.getImageBytesList(cameraConnectFile)
+            thumbnailListFragmentViewModel.getImageBytes(cameraConnectFile)
+            delay(2000)
             Assert.assertTrue(thumbnailListFragmentViewModel.thumbnailListLiveData.value is Result.Error)
         }
     }

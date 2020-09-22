@@ -63,6 +63,20 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <ImageView
+            android:visibility="gone"
+            android:id="@+id/imageFailed"
+            android:layout_height="@dimen/snapshot_detail_height_image"
+            android:layout_width="@dimen/live_view_app_bar_height"
+            app:tint="@color/black"
+            android:src="@drawable/ic_failed_image"
+            android:layout_marginTop="@dimen/live_view_app_bar_height"
+            android:contentDescription="@string/snapshot_item_detail_photo_content_description"
+            app:layout_constraintBottom_toBottomOf="@+id/photoItemDetailHolder"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
         <Button
             android:visibility="gone"
             android:id="@+id/buttonAssociatePartnerIdList"

@@ -9,6 +9,7 @@ import com.lawmobile.domain.entities.DomainInformationImage
 import com.lawmobile.domain.extensions.getCreationDate
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.entities.SnapshotsToLink
+import com.lawmobile.presentation.extensions.imageHasCorrectFormat
 import com.lawmobile.presentation.extensions.setOnClickListenerCheckConnection
 import com.lawmobile.presentation.ui.thumbnailList.ThumbnailFileListFragment.Companion.PATH_ERROR_IN_PHOTO
 import com.safefleet.mobile.commons.helpers.inflate
@@ -103,12 +104,19 @@ class ThumbnailFileListAdapter(
         private fun manageImagePath(imageFile: DomainInformationImage) {
             with(thumbnailView) {
                 imageFile.internalPath?.let {
+                    if (!it.imageHasCorrectFormat()) {
+                        imageErrorThumbnail.isVisible = true
+                        photoImageLoading.isVisible = false
+                        photoImageListItem.isVisible = false
+                        return
+                    }
+
                     try {
-                        photoImageListItem.isVisible = true
                         photoImageLoading.isVisible = false
                         imageErrorThumbnail.isVisible = it == PATH_ERROR_IN_PHOTO
                         if (it != PATH_ERROR_IN_PHOTO) {
                             Glide.with(this).load(File(it)).into(photoImageListItem)
+                            photoImageListItem.isVisible = true
                         }
                     } catch (e: Exception) {
                         e.printStackTrace()
