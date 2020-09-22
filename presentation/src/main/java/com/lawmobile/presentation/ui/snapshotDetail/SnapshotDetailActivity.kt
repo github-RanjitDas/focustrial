@@ -1,8 +1,8 @@
 package com.lawmobile.presentation.ui.snapshotDetail
 
+import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.content.res.Configuration
-import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.view.View
 import androidx.activity.viewModels
@@ -15,13 +15,12 @@ import com.lawmobile.domain.entities.DomainInformationImageMetadata
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.entities.FilePathSaved
 import com.lawmobile.presentation.entities.ImageWithPathSaved
-import com.lawmobile.presentation.extensions.getPathFromTemporalFile
-import com.lawmobile.presentation.extensions.setOnClickListenerCheckConnection
-import com.lawmobile.presentation.extensions.showErrorSnackBar
-import com.lawmobile.presentation.extensions.showSuccessSnackBar
+import com.lawmobile.presentation.extensions.*
 import com.lawmobile.presentation.ui.base.BaseActivity
+import com.lawmobile.presentation.ui.fileList.FileListActivity
 import com.lawmobile.presentation.ui.thumbnailList.ThumbnailFileListFragment.Companion.PATH_ERROR_IN_PHOTO
 import com.lawmobile.presentation.utils.Constants
+import com.lawmobile.presentation.utils.Constants.SNAPSHOT_LIST
 import com.safefleet.mobile.avml.cameras.entities.CameraConnectFile
 import com.safefleet.mobile.commons.helpers.*
 import kotlinx.android.synthetic.main.activity_snapshot_item_detail.*
@@ -55,6 +54,7 @@ class SnapshotDetailActivity : BaseActivity() {
 
     override fun onResume() {
         super.onResume()
+        restartVisibility()
         showLoadingDialog()
         snapshotDetailViewModel.getInformationImageMetadata(file)
         hideKeyboard()
@@ -80,8 +80,10 @@ class SnapshotDetailActivity : BaseActivity() {
         }
         backArrowFileListAppBar.setOnClickListenerCheckConnection { onBackPressed() }
         buttonFullScreen.setOnClickListenerCheckConnection { changeOrientationInView() }
-        photoItemDetailHolder.setOnClickListenerCheckConnection { changeOrientationInView() }
-        imageReload.setOnClickListenerCheckConnection { snapshotDetailViewModel.getImageBytes(file) }
+        imageReload.setOnClickListenerCheckConnection {
+            showLoadingDialog()
+            snapshotDetailViewModel.getImageBytes(file)
+        }
     }
 
     private fun changeOrientationInView() {
@@ -109,15 +111,14 @@ class SnapshotDetailActivity : BaseActivity() {
                         context = applicationContext,
                         name = file.name
                     )
-                    FilePathSaved.saveImageWithPath(ImageWithPathSaved(file.name, path))
                     setImageWithPath(path)
                     setInformationOfSnapshot()
                 }
                 doIfError {
+                    imageReload.isVisible = true
                     constraintLayoutDetail.showErrorSnackBar(getString(R.string.snapshot_detail_load_failed))
                 }
             }
-
         }
         hideLoadingDialog()
     }
@@ -201,18 +202,16 @@ class SnapshotDetailActivity : BaseActivity() {
     }
 
     private fun setImageWithPath(path: String) {
-        val options = BitmapFactory.Options()
-        options.inJustDecodeBounds = true
-        BitmapFactory.decodeFile(path, options)
-        if (options.outWidth != -1 && options.outHeight != -1) {
+        if (path.imageHasCorrectFormat()) {
             try {
+                FilePathSaved.saveImageWithPath(ImageWithPathSaved(file.name, path))
                 Glide.with(this).load(File(path)).into(photoItemDetailHolder)
                 imageReload.isVisible = false
             } catch (e: Exception) {
-                imageReload.isVisible = true
+                imageFailed.isVisible = true
             }
         } else {
-            imageReload.isVisible = true
+            imageFailed.isVisible = true
         }
     }
 
@@ -223,15 +222,6 @@ class SnapshotDetailActivity : BaseActivity() {
             officerValue.text = it
         }
         setInTextVideosAssociated()
-    }
-
-    override fun onBackPressed() {
-        if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            changeOrientationInView()
-            return
-        }
-
-        super.onBackPressed()
     }
 
     private fun setInTextVideosAssociated() {
@@ -247,4 +237,28 @@ class SnapshotDetailActivity : BaseActivity() {
             }
         }
     }
+
+    override fun onBackPressed() {
+        if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            changeOrientationInView()
+            return
+        }
+
+        startToFileList()
+    }
+
+    private fun startToFileList() {
+        val fileListIntent = Intent(this, FileListActivity::class.java)
+        fileListIntent.putExtra(Constants.FILE_LIST_SELECTOR, SNAPSHOT_LIST)
+        startActivity(fileListIntent)
+        finish()
+    }
+
+    private fun restartVisibility() {
+        photoItemDetailHolder.isVisible = true
+        imageReload.isVisible = false
+        imageFailed.isVisible = false
+    }
+
+
 }

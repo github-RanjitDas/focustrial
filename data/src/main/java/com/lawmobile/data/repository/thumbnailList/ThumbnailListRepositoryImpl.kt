@@ -16,10 +16,10 @@ class ThumbnailListRepositoryImpl(
     private val thumbnailListRemoteDataSource: ThumbnailListRemoteDataSource
 ) : ThumbnailListRepository {
 
-    private val errors = mutableListOf<String>()
     private lateinit var snapshotFile: CameraConnectFile
 
     override suspend fun getImageByteList(cameraConnectFile: CameraConnectFile): Result<List<DomainInformationImage>> {
+        val errors = mutableListOf<String>()
         val items = mutableListOf<DomainInformationImage>()
 
         imageFlow(cameraConnectFile).collect { result ->

@@ -157,9 +157,11 @@ class SimpleFileListFragment : BaseFragment() {
                 else -> throw Exception("List type not supported")
             }
         }
+
         fileListIntent.putExtra(Constants.CAMERA_CONNECT_FILE, cameraConnectFile)
         hideLoadingDialog()
         startActivity(fileListIntent)
+        if (listType == SNAPSHOT_LIST) activity?.finish()
     }
 
     private fun showErrors(errors: ArrayList<String>) {
