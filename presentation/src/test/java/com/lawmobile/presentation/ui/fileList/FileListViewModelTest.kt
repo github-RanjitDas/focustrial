@@ -110,7 +110,7 @@ class FileListViewModelTest {
     @Test
     fun testLoadingTimeout() {
         fileListViewModel.loadingTimeout()
-        runBlocking { delay(10000) }
+        runBlocking { delay(15000) }
         Assert.assertEquals(true, fileListViewModel.timeoutLiveData.value)
     }
 }
