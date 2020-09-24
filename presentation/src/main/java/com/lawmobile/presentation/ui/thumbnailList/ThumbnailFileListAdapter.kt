@@ -8,7 +8,7 @@ import com.bumptech.glide.Glide
 import com.lawmobile.domain.entities.DomainInformationImage
 import com.lawmobile.domain.extensions.getCreationDate
 import com.lawmobile.presentation.R
-import com.lawmobile.presentation.entities.SnapshotsToLink
+import com.lawmobile.presentation.entities.SnapshotsAssociatedByUser
 import com.lawmobile.presentation.extensions.imageHasCorrectFormat
 import com.lawmobile.presentation.extensions.setOnClickListenerCheckConnection
 import com.lawmobile.presentation.ui.thumbnailList.ThumbnailFileListFragment.Companion.PATH_ERROR_IN_PHOTO
@@ -22,12 +22,12 @@ class ThumbnailFileListAdapter(
 ) : RecyclerView.Adapter<ThumbnailFileListAdapter.ThumbnailListViewHolder>() {
 
     var showCheckBoxes = false
-    var fileList = ArrayList<DomainInformationImage>()
+    var fileList = mutableListOf<DomainInformationImage>()
         set(value) {
             field = value
             notifyDataSetChanged()
         }
-    private var fileListBackup = ArrayList<DomainInformationImage>()
+    private var fileListBackup = mutableListOf<DomainInformationImage>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ThumbnailListViewHolder {
         return ThumbnailListViewHolder(
@@ -52,7 +52,7 @@ class ThumbnailFileListAdapter(
     fun uncheckAllItems() {
         val tmpList = fileList
         tmpList.forEach {
-            it.isAssociatedToVideo = false
+            it.isSelected = false
         }
         onImageCheck?.invoke(false)
         fileList = tmpList
@@ -70,8 +70,11 @@ class ThumbnailFileListAdapter(
         val indexOrFirst =
             fileList.indexOfFirst { it.cameraConnectFile.name == domainInformationImage.cameraConnectFile.name }
         if (indexOrFirst >= 0) {
-            fileList[indexOrFirst] = domainInformationImage
-            fileListBackup[indexOrFirst] = domainInformationImage
+            fileList[indexOrFirst] =
+                domainInformationImage.apply {
+                    isSelected = fileList[indexOrFirst].isSelected
+                }
+            fileListBackup[indexOrFirst] = fileList[indexOrFirst]
         } else {
             fileList.add(domainInformationImage)
             fileListBackup.add(domainInformationImage)
@@ -97,7 +100,7 @@ class ThumbnailFileListAdapter(
             with(thumbnailView) {
                 dateImageListItem.text = imageFile.cameraConnectFile.getCreationDate()
                 manageImagePath(imageFile)
-                checkboxImageListItem.isActivated = imageFile.isAssociatedToVideo
+                checkboxImageListItem.isActivated = imageFile.isSelected
             }
         }
 
@@ -137,7 +140,7 @@ class ThumbnailFileListAdapter(
             with(thumbnailView.checkboxImageListItem) {
                 isVisible = showCheckBoxes
                 if (showCheckBoxes) {
-                    isActivated = imageFile.isAssociatedToVideo
+                    isActivated = imageFile.isSelected
                     onChecked = { buttonView, isChecked ->
                         if (buttonView.isPressed) {
                             onCheckedImage(imageFile, isChecked)
@@ -147,15 +150,14 @@ class ThumbnailFileListAdapter(
             }
         }
 
-        private fun isAnyFileChecked() = fileList.any { it.isAssociatedToVideo }
+        private fun isAnyFileChecked() = fileList.any { it.isSelected }
 
         private fun setListener(imageFile: DomainInformationImage) {
             with(thumbnailView) {
                 imageListLayout.setOnClickListenerCheckConnection {
                     if (showCheckBoxes) {
-                        imageFile.isAssociatedToVideo = !imageFile.isAssociatedToVideo
-                        updateLinkedImages(imageFile)
-                        checkboxImageListItem.isActivated = imageFile.isAssociatedToVideo
+                        imageFile.isSelected = !imageFile.isSelected
+                        checkboxImageListItem.isActivated = imageFile.isSelected
                         onCheckedImage(imageFile, checkboxImageListItem.isActivated)
                     } else {
                         onImageClick.invoke(imageFile)
@@ -167,22 +169,9 @@ class ThumbnailFileListAdapter(
         private fun onCheckedImage(imageFile: DomainInformationImage, isChecked: Boolean) {
             val index =
                 fileList.indexOfFirst { it.cameraConnectFile.name == imageFile.cameraConnectFile.name }
-            fileList[index].isAssociatedToVideo = isChecked
+            fileList[index].isSelected = isChecked
+            SnapshotsAssociatedByUser.updateAssociatedSnapshots(imageFile.cameraConnectFile)
             onImageCheck?.invoke(isAnyFileChecked())
-        }
-
-        private fun updateLinkedImages(imageFile: DomainInformationImage) {
-            val result =
-                SnapshotsToLink.selectedImages.find { it == imageFile.cameraConnectFile.name }
-            val resultDates =
-                SnapshotsToLink.selectedImagesDate.find { it == imageFile.cameraConnectFile.date }
-            if (result == null) {
-                SnapshotsToLink.selectedImages.add(imageFile.cameraConnectFile.name)
-                SnapshotsToLink.selectedImagesDate.add(imageFile.cameraConnectFile.date)
-            } else {
-                SnapshotsToLink.selectedImages.remove(result)
-                SnapshotsToLink.selectedImagesDate.remove(resultDates)
-            }
         }
     }
 }

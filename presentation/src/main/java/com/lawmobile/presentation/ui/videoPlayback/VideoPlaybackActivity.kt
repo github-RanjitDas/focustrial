@@ -1,29 +1,28 @@
 package com.lawmobile.presentation.ui.videoPlayback
 
-import android.app.Activity
-import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.text.InputFilter
 import android.util.Log
+import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.SeekBar
 import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.cardview.widget.CardView
 import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.snackbar.Snackbar
 import com.lawmobile.domain.entities.CameraInfo
 import com.lawmobile.domain.entities.DomainInformationVideo
 import com.lawmobile.domain.extensions.getCreationDate
 import com.lawmobile.presentation.R
+import com.lawmobile.presentation.entities.SnapshotsAssociatedByUser
 import com.lawmobile.presentation.extensions.*
+import com.lawmobile.presentation.ui.associateSnapshots.AssociateSnapshotsFragment
 import com.lawmobile.presentation.ui.base.BaseActivity
-import com.lawmobile.presentation.ui.thumbnailList.ThumbnailFileListFragment
 import com.lawmobile.presentation.utils.Constants.CAMERA_CONNECT_FILE
-import com.lawmobile.presentation.utils.Constants.SNAPSHOTS_DATE_SELECTED
-import com.lawmobile.presentation.utils.Constants.SNAPSHOTS_LINKED
-import com.lawmobile.presentation.utils.Constants.SNAPSHOTS_SELECTED
 import com.safefleet.mobile.avml.cameras.entities.CameraConnectFile
 import com.safefleet.mobile.avml.cameras.entities.CameraConnectVideoMetadata
 import com.safefleet.mobile.avml.cameras.entities.PhotoAssociated
@@ -32,24 +31,28 @@ import com.safefleet.mobile.commons.helpers.Result
 import com.safefleet.mobile.commons.helpers.doIfError
 import com.safefleet.mobile.commons.helpers.doIfSuccess
 import com.safefleet.mobile.commons.helpers.hideKeyboard
+import com.safefleet.mobile.commons.widgets.SafeFleetFilterTag
 import kotlinx.android.synthetic.main.activity_video_playback.*
+import kotlinx.android.synthetic.main.bottom_sheet_associate_snapshots.*
 import kotlinx.android.synthetic.main.custom_app_bar.*
 import org.videolan.libvlc.MediaPlayer
 
 class VideoPlaybackActivity : BaseActivity() {
 
     private val videoPlaybackViewModel: VideoPlaybackViewModel by viewModels()
-
     private val eventList = mutableListOf<String>()
     private val raceList = mutableListOf<String>()
     private val genderList = mutableListOf<String>()
-    private var linkedPhotoList: ArrayList<PhotoAssociated>? = ArrayList()
-    private var linkedPhotoDateList: ArrayList<String>? = ArrayList()
 
     private var currentAttempts = 0
     private var areLinkedSnapshotsChangesSaved = true
     private var isVideoMetadataChangesSaved = false
     private lateinit var currentMetadata: CameraConnectVideoMetadata
+
+    private var associateSnapshotsFragment = AssociateSnapshotsFragment.getActualInstance()
+    private val bottomSheetBehavior: BottomSheetBehavior<CardView> by lazy {
+        BottomSheetBehavior.from(bottomSheetAssociate)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,6 +60,7 @@ class VideoPlaybackActivity : BaseActivity() {
 
         setAppBar()
         showLoadingDialog()
+        configureBottomSheet()
         setCatalogLists()
         addEditTextFilter()
         setObservers()
@@ -95,6 +99,30 @@ class VideoPlaybackActivity : BaseActivity() {
         }
     }
 
+    private fun configureBottomSheet() {
+        bottomSheetBehavior.isDraggable = false
+        bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+
+        buttonCloseAssociateSnapshots.setOnClickListener {
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+        }
+
+        bottomSheetBehavior.addBottomSheetCallback(object :
+            BottomSheetBehavior.BottomSheetCallback() {
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {}
+
+            override fun onStateChanged(bottomSheet: View, newState: Int) {
+                when (newState) {
+                    BottomSheetBehavior.STATE_HIDDEN -> {
+                        shadowPlaybackView?.isVisible = false
+                        supportFragmentManager.detachFragment(fragmentAssociateHolder.id)
+                    }
+                    else -> shadowPlaybackView?.isVisible = true
+                }
+            }
+        })
+    }
+
     private fun setAppBar() {
         fileListAppBarTitle.text = getString(R.string.video_detail)
         buttonSimpleList.isVisible = false
@@ -128,8 +156,8 @@ class VideoPlaybackActivity : BaseActivity() {
         return arrayOf(filterLength, filterComma)
     }
 
-    private fun verifyEventEmpty(){
-        if (CameraInfo.events.isEmpty()){
+    private fun verifyEventEmpty() {
+        if (CameraInfo.events.isEmpty()) {
             showErrorInEvents()
         }
     }
@@ -145,7 +173,7 @@ class VideoPlaybackActivity : BaseActivity() {
         genderValue.adapter = ArrayAdapter(this, R.layout.spinner_item, genderList)
     }
 
-    private fun showErrorInEvents(){
+    private fun showErrorInEvents() {
         parentViewVideoPlayback.showErrorSnackBar(
             getString(R.string.catalog_error_video_playback),
             Snackbar.LENGTH_LONG
@@ -166,6 +194,30 @@ class VideoPlaybackActivity : BaseActivity() {
             this,
             Observer(::manageGetVideoMetadataResult)
         )
+    }
+
+    private fun configureListeners() {
+        buttonPlay.setOnClickListenerCheckConnection {
+            manageButtonPlayPause()
+        }
+        buttonFullScreen.setOnClickListenerCheckConnection {
+            changeScreenOrientation()
+        }
+        buttonAspect.setOnClickListenerCheckConnection {
+            videoPlaybackViewModel.changeAspectRatio()
+        }
+        saveButtonVideoPlayback.setOnClickListenerCheckConnection {
+            saveVideoMetadataInCamera()
+        }
+        backArrowFileListAppBar.setOnClickListenerCheckConnection {
+            onBackPressed()
+        }
+        buttonAssociateSnapshots.setOnClickListenerCheckConnection {
+            showAssociateSnapshotsBottomSheet()
+        }
+        configureListenerSeekBar()
+        configureMediaEventListener()
+        associateSnapshotsFragment.onSnapshotsAssociated = ::handleAssociateSnapshots
     }
 
     private fun manageCurrentTimeInVideo(time: Long) {
@@ -226,28 +278,31 @@ class VideoPlaybackActivity : BaseActivity() {
     }
 
     private fun manageGetVideoInformationResult(result: Result<DomainInformationVideo>) {
-        when (result) {
-            is Result.Success -> {
-                totalDurationVideoInMilliSeconds = result.data.duration.toLong() * 1000
-                domainInformationVideo = result.data
-                createVideoPlaybackInSurface(result.data)
+        with(result) {
+            doIfSuccess {
+                totalDurationVideoInMilliSeconds = it.duration.toLong() * 1000
+                domainInformationVideo = it
+                createVideoPlaybackInSurface(it)
                 playVideoPlayback()
                 setVideoInformation()
             }
-            is Result.Error -> {
+            doIfError {
                 if (isAllowedToAttemptToGetInformation()) {
                     currentAttempts += 1
                     connectVideo?.let(videoPlaybackViewModel::getInformationOfVideo)
-                    return
+                } else {
+                    baseContext.showToast(
+                        getString(R.string.error_get_information_metadata),
+                        Toast.LENGTH_SHORT
+                    )
+                    finish()
                 }
-                this.showToast(getString(R.string.error_get_information_metadata), Toast.LENGTH_SHORT)
-                finish()
             }
         }
     }
 
-    private fun setVideoMetadata(cameraConnectVideoMetadata: CameraConnectVideoMetadata) {
-        cameraConnectVideoMetadata.metadata?.run {
+    private fun setVideoMetadata(videoMetadata: CameraConnectVideoMetadata) {
+        videoMetadata.metadata?.run {
             eventValue.setSelection(getSpinnerSelection(eventList, event?.name))
             partnerIdValue.setText(partnerID)
             ticket1Value.setText(ticketNumber)
@@ -265,22 +320,14 @@ class VideoPlaybackActivity : BaseActivity() {
             driverLicenseValue.setText(driverLicense)
             licensePlateValue.setText(licensePlate)
         }
-        if (linkedPhotoList.isNullOrEmpty()) {
-            linkedPhotoList =
-                cameraConnectVideoMetadata.photos as ArrayList<PhotoAssociated>?
-            linkedPhotoDateList =
-                cameraConnectVideoMetadata.photos?.map { it.date } as ArrayList<String>?
-        }
-        updateLinkedPhotosField()
-        hideLoadingDialog()
-    }
 
-    private fun updateLinkedPhotosField() {
-        linkedPhotosValue.text = ""
-        linkedPhotoDateList?.forEach {
-            linkedPhotosValue.append(it)
-            linkedPhotosValue.append("\n")
+        (videoMetadata.photos as MutableList<PhotoAssociated>?)?.let {
+            associateSnapshotsFragment.replaceSnapshotsAssociatedFromMetadata(it)
+            SnapshotsAssociatedByUser.value = it
         }
+
+        showSnapshotsAssociated()
+        hideLoadingDialog()
     }
 
     private fun getSpinnerSelection(list: List<String>, value: String?): Int {
@@ -295,36 +342,53 @@ class VideoPlaybackActivity : BaseActivity() {
         }
     }
 
-    private fun configureListeners() {
-        buttonPlay.setOnClickListenerCheckConnection {
-            manageButtonPlayPause()
-        }
-        buttonFullScreen.setOnClickListenerCheckConnection {
-            changeScreenOrientation()
-        }
-        buttonAspect.setOnClickListenerCheckConnection {
-            videoPlaybackViewModel.changeAspectRatio()
-        }
-        saveButtonVideoPlayback.setOnClickListenerCheckConnection {
-            saveVideoMetadataInCamera()
-        }
-        backArrowFileListAppBar.setOnClickListenerCheckConnection {
-            onBackPressed()
-        }
-        buttonLinkSnapshots.setOnClickListenerCheckConnection {
-            val intent = Intent(this, ThumbnailFileListFragment::class.java)
-            linkedPhotoList?.run {
-                intent.putStringArrayListExtra(
-                    SNAPSHOTS_LINKED,
-                    map { it.name } as ArrayList<String>)
-                intent.putStringArrayListExtra(
-                    SNAPSHOTS_DATE_SELECTED,
-                    map { it.date } as ArrayList<String>)
+    private fun handleAssociateSnapshots() {
+        bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+        associateSnapshotsFragment.replaceSnapshotsAssociatedFromMetadata(SnapshotsAssociatedByUser.value)
+        showSnapshotsAssociated()
+        parentViewVideoPlayback.showSuccessSnackBar("Snapshots added successfully")
+    }
+
+    private fun showSnapshotsAssociated() {
+        layoutAssociatedSnapshots?.removeAllViews()
+        layoutAssociatedSnapshots?.isVisible = !SnapshotsAssociatedByUser.value.isNullOrEmpty()
+        SnapshotsAssociatedByUser.value.forEach {
+            layoutAssociatedSnapshots?.childCount?.let { position ->
+                createTagInPosition(position, it.date)
             }
-            startActivityForResult(intent, 1)
         }
-        configureListenerSeekBar()
-        configureMediaEventListener()
+    }
+
+    private fun createTagInPosition(position: Int, text: String) {
+        layoutAssociatedSnapshots?.addView(
+            SafeFleetFilterTag(this, null, 0).apply {
+                tagText = text
+                onClicked = {
+                    removeAssociatedSnapshot(text)
+                    showSnapshotsAssociated()
+                }
+            }, position
+        )
+    }
+
+    private fun removeAssociatedSnapshot(date: String) {
+        val index = SnapshotsAssociatedByUser.value.indexOfFirst {
+            it.date == date
+        }
+        if (index >= 0){
+            SnapshotsAssociatedByUser.value.removeAt(index)
+            associateSnapshotsFragment.replaceSnapshotsAssociatedFromMetadata(SnapshotsAssociatedByUser.value)
+        }
+    }
+
+    private fun showAssociateSnapshotsBottomSheet() {
+        pauseVideoPlayback()
+        supportFragmentManager.attachFragment(
+            R.id.fragmentAssociateHolder,
+            associateSnapshotsFragment,
+            AssociateSnapshotsFragment.TAG
+        )
+        bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
     }
 
     private fun configureMediaEventListener() {
@@ -383,9 +447,9 @@ class VideoPlaybackActivity : BaseActivity() {
         }
     }
 
-    private fun getCameraConnectFileFromIntent(): CameraConnectFile {
-        return intent?.getSerializableExtra(CAMERA_CONNECT_FILE) as CameraConnectFile
-    }
+    private fun getCameraConnectFileFromIntent() =
+        intent?.getSerializableExtra(CAMERA_CONNECT_FILE) as CameraConnectFile
+
 
     private fun isAllowedToAttemptToGetInformation() = currentAttempts <= ATTEMPTS_ALLOWED
 
@@ -428,13 +492,14 @@ class VideoPlaybackActivity : BaseActivity() {
 
     override fun onBackPressed() {
         if (isInPortraitMode()) {
-            videoPlaybackViewModel.stopMediaPlayer()
-            if (!areLinkedSnapshotsChangesSaved || verifyVideoMetadataWasEdited()) {
-                this.createAlertDialogMetadataExit()
-                return
+            if (bottomSheetBehavior.state == BottomSheetBehavior.STATE_HIDDEN) {
+                videoPlaybackViewModel.stopMediaPlayer()
+                if (!areLinkedSnapshotsChangesSaved || verifyVideoMetadataWasEdited())
+                    this.createAlertDialogMetadataExit()
+                else super.onBackPressed()
+            } else {
+                bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
             }
-
-            super.onBackPressed()
         } else {
             changeScreenOrientation()
         }
@@ -529,7 +594,7 @@ class VideoPlaybackActivity : BaseActivity() {
                 driverLicense = driverLicenseValue.text.toString(),
                 licensePlate = licensePlateValue.text.toString()
             ),
-            linkedPhotoList
+            SnapshotsAssociatedByUser.value
         )
     }
 
@@ -549,33 +614,6 @@ class VideoPlaybackActivity : BaseActivity() {
             if (driverLicense.isNullOrEmpty()) driverLicense = ""
             if (licensePlate.isNullOrEmpty()) licensePlate = ""
         }
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == 1) {
-            if (resultCode == Activity.RESULT_OK) {
-                this.showToast(getString(R.string.image_linked_success), Toast.LENGTH_SHORT)
-                handleLinkedSnapshotsResult(data)
-            }
-        }
-    }
-
-    private fun handleLinkedSnapshotsResult(data: Intent?) {
-        val snapshotsNameList = data?.getStringArrayListExtra(SNAPSHOTS_SELECTED)
-        val tmpList: ArrayList<PhotoAssociated>? = ArrayList()
-        linkedPhotoDateList = data?.getStringArrayListExtra(SNAPSHOTS_DATE_SELECTED)
-        snapshotsNameList?.forEachIndexed { index, fileName ->
-            tmpList?.add(
-                PhotoAssociated(
-                    fileName,
-                    linkedPhotoDateList?.get(index) ?: ""
-                )
-            )
-        }
-        linkedPhotoList = tmpList
-        areLinkedSnapshotsChangesSaved = false
-        updateLinkedPhotosField()
     }
 
     private fun updateProgressVideoInView() {
@@ -629,6 +667,12 @@ class VideoPlaybackActivity : BaseActivity() {
         totalDurationVideoInMilliSeconds = 0
         currentTimeVideoInMilliSeconds = 0
         currentProgressInVideo = 0
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        AssociateSnapshotsFragment.destroyInstance()
+        SnapshotsAssociatedByUser.cleanList()
     }
 
     companion object {

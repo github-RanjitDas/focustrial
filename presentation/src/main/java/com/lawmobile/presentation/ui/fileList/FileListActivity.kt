@@ -7,8 +7,9 @@ import androidx.cardview.widget.CardView
 import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.lawmobile.domain.entities.DomainInformationFile
+import com.lawmobile.domain.entities.DomainInformationForList
 import com.lawmobile.domain.entities.DomainInformationImage
-import com.lawmobile.domain.extensions.getCreationDate
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.extensions.*
 import com.lawmobile.presentation.ui.base.BaseActivity
@@ -25,7 +26,6 @@ import com.safefleet.mobile.commons.helpers.Result
 import com.safefleet.mobile.commons.helpers.doIfError
 import com.safefleet.mobile.commons.helpers.doIfSuccess
 import com.safefleet.mobile.commons.helpers.hideKeyboard
-import com.safefleet.mobile.commons.widgets.SafeFleetFilterTag
 import kotlinx.android.synthetic.main.activity_file_list.*
 import kotlinx.android.synthetic.main.bottom_sheet_assign_to_officer.*
 import kotlinx.android.synthetic.main.custom_app_bar.*
@@ -36,13 +36,10 @@ class FileListActivity : BaseActivity() {
     private val fileListViewModel: FileListViewModel by viewModels()
     private val simpleFileListFragment = SimpleFileListFragment.getActualInstance()
     private var thumbnailFileListFragment = ThumbnailFileListFragment.getActualInstance()
-    private var listType: String? = null
     private lateinit var actualFragment: String
-    private var currentFilterList = mutableListOf<String>()
-    private val sheetBehavior: BottomSheetBehavior<CardView> by lazy {
-        BottomSheetBehavior.from(
-            bottomSheetPartnerId
-        )
+    private var listType: String? = null
+    private val bottomSheetBehavior: BottomSheetBehavior<CardView> by lazy {
+        BottomSheetBehavior.from(bottomSheetPartnerId)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -95,6 +92,19 @@ class FileListActivity : BaseActivity() {
         )
     }
 
+    private fun setThumbnailListFragment() {
+        actualFragment = THUMBNAIL_FILE_LIST
+        buttonThumbnailList.isActivated = true
+        resetButtonAssociate()
+        thumbnailFileListFragment.onImageCheck = ::enableAssociatePartnerButton
+        supportFragmentManager.attachFragment(
+            R.id.fragmentListHolder,
+            thumbnailFileListFragment,
+            THUMBNAIL_FILE_LIST
+        )
+        buttonSimpleList.isActivated = false
+    }
+
     private fun setListeners() {
         buttonThumbnailList.setClickListenerCheckConnection { setThumbnailListFragment() }
         buttonSimpleList.setClickListenerCheckConnection { setSimpleFileListFragment() }
@@ -105,164 +115,61 @@ class FileListActivity : BaseActivity() {
     }
 
     private fun showFilterDialog() {
-        this.createFilterDialog().apply {
-            when (listType) {
-                VIDEO_LIST -> eventsSpinnerFilter.isVisible = true
-                SNAPSHOT_LIST -> eventsSpinnerFilter.isVisible = false
-            }
-
-            onApplyClick = {
-                currentFilterList = it as MutableList<String>
-                applyFiltersToLists(currentFilterList)
-                dismiss()
-            }
-        }
-    }
-
-    private fun applyFiltersToLists(filters: List<String>) {
-        var dateTag = ""
-        layoutFilterTags.removeAllViews()
+        var listToFilter = mutableListOf<DomainInformationForList>()
 
         when (actualFragment) {
             SIMPLE_FILE_LIST -> {
-                simpleFileListFragment.resetList()
-                var filteredList = simpleFileListFragment.simpleFileListAdapter?.fileList
+                listToFilter =
+                    (simpleFileListFragment.simpleFileListAdapter?.fileList
+                        ?: emptyList<DomainInformationForList>()) as MutableList
 
-                filters[START_DATE_POSITION].ifIsNotEmptyLet { startDate ->
-                    val dateWithoutHour = startDate.split(" ")[0]
-                    filteredList =
-                        filteredList?.filter { it.cameraConnectFile.getCreationDate() >= startDate }
-
-                    if (filters[END_DATE_POSITION].isEmpty())
-                        createTagInPosition(
-                            layoutFilterTags.childCount,
-                            START_DATE_TAG + dateWithoutHour
-                        )
-                    else dateTag = dateWithoutHour
-                }
-
-                filters[END_DATE_POSITION].ifIsNotEmptyLet { endDate ->
-                    val dateWithoutHour = endDate.split(" ")[0]
-                    filteredList =
-                        filteredList?.filter { it.cameraConnectFile.getCreationDate() <= endDate }
-
-                    if (filters[START_DATE_POSITION].isEmpty())
-                        createTagInPosition(
-                            layoutFilterTags.childCount,
-                            END_DATE_TAG + dateWithoutHour
-                        )
-                    else {
-                        dateTag += DATE_RANGE_TAG + dateWithoutHour
-                        createTagInPosition(layoutFilterTags.childCount, dateTag)
-                    }
-                }
-
-                filters[EVENT_POSITION].ifIsNotEmptyLet { event ->
-                    filteredList =
-                        filteredList?.filter {
-                            it.cameraConnectVideoMetadata?.metadata?.event?.name ==
-                                    if (event == getString(R.string.no_event)) null else event
-                        }
-                    createTagInPosition(layoutFilterTags.childCount, EVENT_TAG + event)
-                }
-
-                filteredList?.let {
-                    simpleFileListFragment.simpleFileListAdapter?.fileList = it
-                }
-
-                scrollFilterTags.isVisible = filteredList != null
             }
             THUMBNAIL_FILE_LIST -> {
-                thumbnailFileListFragment.resetList()
-                var filteredList = thumbnailFileListFragment.thumbnailFileListAdapter?.fileList
-
-                filters[START_DATE_POSITION].ifIsNotEmptyLet { startDate ->
-                    val dateWithoutHour = startDate.split(" ")[0]
-                    filteredList =
-                        filteredList?.filter { it.cameraConnectFile.getCreationDate() >= startDate } as ArrayList<DomainInformationImage>
-
-                    if (filters[END_DATE_POSITION].isEmpty())
-                        createTagInPosition(
-                            layoutFilterTags.childCount,
-                            START_DATE_TAG + dateWithoutHour
-                        )
-                    else dateTag = dateWithoutHour
-                }
-
-                filters[END_DATE_POSITION].ifIsNotEmptyLet { endDate ->
-                    val dateWithoutHour = endDate.split(" ")[0]
-                    filteredList =
-                        filteredList?.filter { it.cameraConnectFile.getCreationDate() <= endDate } as ArrayList<DomainInformationImage>
-
-                    if (filters[START_DATE_POSITION].isEmpty())
-                        createTagInPosition(
-                            layoutFilterTags.childCount,
-                            END_DATE_TAG + dateWithoutHour
-                        )
-                    else {
-                        dateTag += DATE_RANGE_TAG + dateWithoutHour
-                        createTagInPosition(layoutFilterTags.childCount, dateTag)
-                    }
-                }
-
-                filteredList?.let {
-                    thumbnailFileListFragment.thumbnailFileListAdapter?.fileList = it
-                }
-
-                scrollFilterTags.isVisible = filteredList != null
+                listToFilter = (thumbnailFileListFragment.thumbnailFileListAdapter?.fileList
+                    ?: emptyList<DomainInformationForList>()) as MutableList
             }
         }
-    }
 
-    private fun createTagInPosition(position: Int, text: String) {
-        layoutFilterTags.addView(
-            SafeFleetFilterTag(this, null, 0).apply {
-                tagText = text
-                onClicked = {
-                    clearFilterOfTag(text)
-                    applyFiltersToLists(currentFilterList)
+        if (!listToFilter.isNullOrEmpty()) {
+            this.createFilterDialog(layoutFilterTags, listToFilter).apply {
+                when (listType) {
+                    VIDEO_LIST -> eventsSpinnerFilter.isVisible = true
+                    SNAPSHOT_LIST -> eventsSpinnerFilter.isVisible = false
                 }
-            }, position
-        )
-    }
-
-    private fun clearFilterOfTag(text: String) {
-        when {
-            text.contains(DATE_RANGE_TAG) -> {
-                with(currentFilterList) {
-                    set(START_DATE_POSITION, "")
-                    set(END_DATE_POSITION, "")
+                onApplyClick = {
+                    this@FileListActivity.scrollFilterTags.isVisible = it
+                    when (actualFragment) {
+                        SIMPLE_FILE_LIST -> {
+                            with(simpleFileListFragment) {
+                                resetList()
+                                simpleFileListAdapter?.fileList =
+                                    CustomFilterDialog.filteredList.filterIsInstance<DomainInformationFile>() as MutableList<DomainInformationFile>
+                            }
+                        }
+                        THUMBNAIL_FILE_LIST -> {
+                            with(thumbnailFileListFragment) {
+                                resetList()
+                                thumbnailFileListAdapter?.fileList =
+                                    CustomFilterDialog.filteredList.filterIsInstance<DomainInformationImage>() as MutableList<DomainInformationImage>
+                            }
+                        }
+                    }
                 }
-                with(CustomFilterDialog) {
-                    startDate = getString(R.string.start_date_filter)
-                    endDate = getString(R.string.end_date_filter)
-                }
-            }
-            text.contains(START_DATE_TAG) -> {
-                currentFilterList[START_DATE_POSITION] = ""
-                CustomFilterDialog.startDate = getString(R.string.start_date_filter)
-            }
-            text.contains(END_DATE_TAG) -> {
-                currentFilterList[END_DATE_POSITION] = ""
-                CustomFilterDialog.endDate = getString(R.string.end_date_filter)
-            }
-            text == currentFilterList[EVENT_POSITION] -> {
-                currentFilterList[EVENT_POSITION] = ""
-                CustomFilterDialog.event = 0
             }
         }
     }
 
     private fun configureBottomSheet() {
-        sheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+        bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
         buttonAssignToOfficer.setOnClickListenerCheckConnection {
             associatePartnerId(editTextAssignToOfficer.text.toString())
             hideKeyboard()
         }
-        buttonCloseAssignToOfficer.setOnClickListenerCheckConnection {
-            sheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+        buttonCloseAssignToOfficer.setOnClickListener {
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
         }
-        sheetBehavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
+        bottomSheetBehavior.addBottomSheetCallback(object :
+            BottomSheetBehavior.BottomSheetCallback() {
             override fun onSlide(bottomSheet: View, slideOffset: Float) {}
 
             override fun onStateChanged(bottomSheet: View, newState: Int) {
@@ -284,9 +191,9 @@ class FileListActivity : BaseActivity() {
         showLoadingDialog()
 
         val listSelected = when (actualFragment) {
-            SIMPLE_FILE_LIST -> simpleFileListFragment.simpleFileListAdapter?.fileList?.filter { it.isChecked }
+            SIMPLE_FILE_LIST -> simpleFileListFragment.simpleFileListAdapter?.fileList?.filter { it.isSelected }
                 ?.map { it.cameraConnectFile }
-            THUMBNAIL_FILE_LIST -> thumbnailFileListFragment.thumbnailFileListAdapter?.fileList?.filter { it.isAssociatedToVideo }
+            THUMBNAIL_FILE_LIST -> thumbnailFileListFragment.thumbnailFileListAdapter?.fileList?.filter { it.isSelected }
                 ?.map { it.cameraConnectFile }
             else -> throw Exception("List type not supported")
         }
@@ -304,22 +211,9 @@ class FileListActivity : BaseActivity() {
             }
         }
 
-        sheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+        bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
     }
 
-    private fun setThumbnailListFragment() {
-        actualFragment = THUMBNAIL_FILE_LIST
-        buttonThumbnailList.isActivated = true
-        resetButtonAssociate()
-        thumbnailFileListFragment = ThumbnailFileListFragment.getActualInstance(true)
-        thumbnailFileListFragment.onImageCheck = ::enableAssociatePartnerButton
-        supportFragmentManager.attachFragment(
-            R.id.fragmentListHolder,
-            thumbnailFileListFragment,
-            THUMBNAIL_FILE_LIST
-        )
-        buttonSimpleList.isActivated = false
-    }
 
     private fun resetButtonAssociate() {
         with(buttonSelectSnapshotsToAssociate) {
@@ -367,7 +261,7 @@ class FileListActivity : BaseActivity() {
     }
 
     private fun showAssignToOfficerBottomSheet() {
-        sheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+        bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
     }
 
     private fun enableAssociatePartnerButton(activate: Boolean) {
@@ -393,8 +287,8 @@ class FileListActivity : BaseActivity() {
     }
 
     private fun destroyInstances() {
-        SimpleFileListFragment.instance = null
-        ThumbnailFileListFragment.instance = null
+        SimpleFileListFragment.destroyInstance()
+        ThumbnailFileListFragment.destroyInstance()
         CustomFilterDialog.resetCompanion()
     }
 
@@ -406,15 +300,5 @@ class FileListActivity : BaseActivity() {
     override fun onDestroy() {
         super.onDestroy()
         destroyInstances()
-    }
-
-    companion object {
-        const val START_DATE_POSITION = 0
-        const val END_DATE_POSITION = 1
-        const val EVENT_POSITION = 2
-        const val START_DATE_TAG = "After: "
-        const val END_DATE_TAG = "Before: "
-        const val DATE_RANGE_TAG = " / "
-        const val EVENT_TAG = ""
     }
 }

@@ -16,11 +16,11 @@ suspend fun <T : Any> MediatorLiveData<Result<T>>.postValueWithTimeout(
             mediator.postValue(value.invoke(this))
         }
     } catch (e: Exception) {
-        this.postValue(Result.Error(e))
+        postValue(Result.Error(e))
     }
 }
 
-suspend fun <T : Any> MediatorLiveData<Event<Result<T>>>.postValueWithTimeoutEvent(
+suspend fun <T : Any> MediatorLiveData<Event<Result<T>>>.postEventValueWithTimeout(
     timeOut: Long,
     value: suspend CoroutineScope.() -> Event<Result<T>>
 ) {
@@ -30,6 +30,6 @@ suspend fun <T : Any> MediatorLiveData<Event<Result<T>>>.postValueWithTimeoutEve
             mediator.postValue(value.invoke(this))
         }
     } catch (e: Exception) {
-        this.postValue(Event(Result.Error(e)))
+        postValue(Event(Result.Error(e)))
     }
 }

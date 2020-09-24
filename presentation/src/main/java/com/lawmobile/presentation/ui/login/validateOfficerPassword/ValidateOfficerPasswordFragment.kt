@@ -80,10 +80,10 @@ class ValidateOfficerPasswordFragment : BaseFragment() {
             EncodePassword.encodePasswordOfficer(textInputOfficerPassword.text())
         if (sha256Password.isNotEmpty() && sha256Password == domainUser?.password) {
             validateSuccessPasswordOfficer(true)
-            return
+        } else {
+            validateSuccessPasswordOfficer(false)
         }
 
-        validateSuccessPasswordOfficer(false)
     }
 
     private fun showErrorInGetInformationOfUser() {

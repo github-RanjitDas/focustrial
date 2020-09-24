@@ -5,20 +5,19 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.core.view.isVisible
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.snackbar.Snackbar
 import com.lawmobile.domain.entities.CameraInfo
 import com.lawmobile.domain.entities.DomainInformationFile
 import com.lawmobile.domain.entities.DomainInformationFileResponse
 import com.lawmobile.domain.extensions.getCreationDate
 import com.lawmobile.presentation.R
-import com.lawmobile.presentation.entities.AlertInformation
-import com.lawmobile.presentation.extensions.createAlertInformation
+import com.lawmobile.presentation.entities.SnapshotsAssociatedByUser
 import com.lawmobile.presentation.extensions.setOnClickListenerCheckConnection
-import com.lawmobile.presentation.extensions.showToast
+import com.lawmobile.presentation.extensions.showErrorSnackBar
 import com.lawmobile.presentation.ui.base.BaseFragment
 import com.lawmobile.presentation.ui.snapshotDetail.SnapshotDetailActivity
 import com.lawmobile.presentation.ui.videoPlayback.VideoPlaybackActivity
@@ -31,14 +30,15 @@ import com.safefleet.mobile.commons.helpers.Result
 import com.safefleet.mobile.commons.helpers.doIfError
 import com.safefleet.mobile.commons.helpers.doIfSuccess
 import kotlinx.android.synthetic.main.fragment_file_list.*
+import kotlin.collections.ArrayList
 
 class SimpleFileListFragment : BaseFragment() {
 
-    private val simpleListViewModel: SimpleListViewModel by viewModels()
+    private val simpleListViewModel: SimpleListViewModel by activityViewModels()
     var simpleFileListAdapter: SimpleFileListAdapter? = null
     private var listType: String? = null
     var onFileCheck: ((Boolean) -> Unit)? = null
-    private var loadedOnCreate = false
+    private var isLoadedOnCreate = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -52,7 +52,7 @@ class SimpleFileListFragment : BaseFragment() {
         super.onViewCreated(view, savedInstanceState)
         setListeners()
         listType = arguments?.getString(FILE_LIST_TYPE)
-        loadedOnCreate = true
+        isLoadedOnCreate = true
         getFileList()
     }
 
@@ -69,6 +69,17 @@ class SimpleFileListFragment : BaseFragment() {
         }
     }
 
+    private fun setAssociatedRecyclerView() {
+        simpleFileListAdapter?.run {
+            fileList.let { completeList ->
+                fileList = SnapshotsAssociatedByUser
+                    .getListOfImagesAssociatedToVideo(completeList)
+                    .filterIsInstance<DomainInformationFile>() as MutableList
+            }
+        }
+        setRecyclerView()
+    }
+
     fun resetList() {
         simpleFileListAdapter?.resetList()
     }
@@ -83,10 +94,10 @@ class SimpleFileListFragment : BaseFragment() {
             showCheckBoxes = !showCheckBoxes
             if (!showCheckBoxes) uncheckAllItems()
         }
-        setFileRecyclerView()
+        setRecyclerView()
     }
 
-    private fun setFileRecyclerView() {
+    private fun setRecyclerView() {
         fileListRecycler?.apply {
             setHasFixedSize(true)
             layoutManager = LinearLayoutManager(requireContext())
@@ -105,7 +116,7 @@ class SimpleFileListFragment : BaseFragment() {
         with(result) {
             doIfSuccess {
                 if (it.errors.isNotEmpty()) {
-                    showErrors(it.errors)
+                    handleErrors(it.errors)
                 }
                 if (it.listItems.isNotEmpty()) {
                     fileListRecycler.isVisible = true
@@ -121,14 +132,28 @@ class SimpleFileListFragment : BaseFragment() {
                 }
             }
             doIfError {
-                activity?.showToast(
+                fileListLayout.showErrorSnackBar(
                     getString(R.string.file_list_failed_load_files),
-                    Toast.LENGTH_SHORT
-                )
-                activity?.finish()
+                    Snackbar.LENGTH_INDEFINITE
+                ) {
+                    getFileList()
+                }
             }
         }
         hideLoadingDialog()
+    }
+
+    private fun handleErrors(errors: ArrayList<String>) {
+        fileListLayout.showErrorSnackBar(
+            getString(R.string.getting_files_error_description),
+            Snackbar.LENGTH_LONG
+        ){
+            when(listType){
+                SNAPSHOT_LIST -> simpleListViewModel.getSnapshotList()
+                VIDEO_LIST -> simpleListViewModel.getVideoList()
+            }
+        }
+        showFailedFoldersInLog(errors)
     }
 
     private fun setAdapter(listItems: ArrayList<DomainInformationFile>) {
@@ -136,11 +161,14 @@ class SimpleFileListFragment : BaseFragment() {
             SimpleFileListAdapter(
                 ::onFileClick,
                 onFileCheck
-            )
-        simpleFileListAdapter?.fileList =
-            listItems.sortedByDescending { it.cameraConnectFile.getCreationDate() }
-        simpleFileListAdapter?.run { fileListBackup = fileList }
-        setFileRecyclerView()
+            ).apply {
+                showCheckBoxes = checkableListInit
+                fileList =
+                    listItems.sortedByDescending { it.cameraConnectFile.getCreationDate() } as MutableList
+                fileListBackup = fileList
+            }
+        if (checkableListInit) setAssociatedRecyclerView()
+        else setRecyclerView()
     }
 
     private fun onFileClick(file: DomainInformationFile) {
@@ -164,33 +192,28 @@ class SimpleFileListFragment : BaseFragment() {
         if (listType == SNAPSHOT_LIST) activity?.finish()
     }
 
-    private fun showErrors(errors: ArrayList<String>) {
-        var customMessage = getString(R.string.getting_files_error_description) + "\n"
-        errors.forEach {
-            customMessage += it + "\n"
-        }
-        val alertInformation = AlertInformation(R.string.getting_files_error, null, {
-            it.dismiss()
-        }, null, customMessage)
-        activity?.createAlertInformation(alertInformation)
-        CameraInfo.areNewChanges = true
-    }
-
     override fun onResume() {
         super.onResume()
-        if (CameraInfo.areNewChanges && !loadedOnCreate) {
+        if (CameraInfo.areNewChanges && !isLoadedOnCreate) {
             getFileList()
             CameraInfo.areNewChanges = false
         }
-        loadedOnCreate = false
+        isLoadedOnCreate = false
     }
 
     companion object {
-        var instance: SimpleFileListFragment? = null
+        private var instance: SimpleFileListFragment? = null
         fun getActualInstance(): SimpleFileListFragment {
-            val instanceFragment = instance ?: SimpleFileListFragment()
-            instance = instanceFragment
+            val fragmentInstance = instance ?: SimpleFileListFragment()
+            instance = fragmentInstance
             return instance!!
         }
+
+        fun destroyInstance() {
+            instance = null
+            checkableListInit = false
+        }
+
+        var checkableListInit = false
     }
 }

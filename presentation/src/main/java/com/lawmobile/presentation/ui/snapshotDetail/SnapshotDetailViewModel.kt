@@ -7,7 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.lawmobile.domain.entities.DomainInformationImageMetadata
 import com.lawmobile.domain.usecase.snapshotDetail.SnapshotDetailUseCase
 import com.lawmobile.presentation.extensions.postValueWithTimeout
-import com.lawmobile.presentation.extensions.postValueWithTimeoutEvent
+import com.lawmobile.presentation.extensions.postEventValueWithTimeout
 import com.lawmobile.presentation.ui.base.BaseViewModel
 import com.safefleet.mobile.avml.cameras.entities.CameraConnectFile
 import com.safefleet.mobile.commons.helpers.Event
@@ -32,7 +32,7 @@ class SnapshotDetailViewModel @ViewModelInject constructor(
 
     fun getImageBytes(cameraConnectFile: CameraConnectFile) {
         viewModelScope.launch {
-            imageBytesMediator.postValueWithTimeoutEvent(LOADING_TIMEOUT) {
+            imageBytesMediator.postEventValueWithTimeout(LOADING_TIMEOUT) {
                 Event(getResultWithAttempts(ATTEMPTS_TO_GET_BYTES) {
                     snapshotDetailUseCase.getImageBytes(cameraConnectFile)
                 })
@@ -50,7 +50,7 @@ class SnapshotDetailViewModel @ViewModelInject constructor(
 
     fun getInformationImageMetadata(cameraConnectFile: CameraConnectFile) {
         viewModelScope.launch {
-            informationVideoMediator.postValueWithTimeoutEvent(LOADING_TIMEOUT) {
+            informationVideoMediator.postEventValueWithTimeout(LOADING_TIMEOUT) {
                 Event(snapshotDetailUseCase.getInformationOfPhoto(cameraConnectFile))
             }
         }

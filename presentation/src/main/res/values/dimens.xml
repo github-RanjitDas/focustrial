@@ -87,7 +87,6 @@
     <dimen name="video_playback_metadata_text_size">16sp</dimen>
     <dimen name="video_playback_metadata_spacing">20dp</dimen>
     <dimen name="snapshot_link_item_height">85dp</dimen>
-    <dimen name="padding_horizontal_metadata_fields">8dp</dimen>
 
     <!-- link_snapshots -->
     <dimen name="margin_top_button_retry">60dp</dimen>
@@ -107,7 +106,6 @@
     <dimen name="snackbar_view_padding">8dp</dimen>
 
     <!--instructions bottom sheet-->
-    <dimen name="instructions_corner_radius">10dp</dimen>
     <dimen name="instructions_title_padding">20dp</dimen>
     <dimen name="instructions_text_size">16sp</dimen>
     <dimen name="button_close_instructions_size">18dp</dimen>
@@ -158,5 +156,8 @@
     <dimen name="width_filter_dialog">290dp</dimen>
     <dimen name="margin_15dp">15dp</dimen>
     <dimen name="margin_11dp">11dp</dimen>
+    <dimen name="margin_13dp">13dp</dimen>
+    <dimen name="margin_26dp">26dp</dimen>
+    <dimen name="margin_25dp">25dp</dimen>
 
 </resources>

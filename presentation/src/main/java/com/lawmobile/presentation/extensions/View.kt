@@ -11,7 +11,7 @@ import com.safefleet.mobile.commons.widgets.snackbar.SafeFleetSnackBarSettings
 import java.sql.Timestamp
 
 fun View.setOnClickListenerCheckConnection(callback: (View) -> Unit) {
-    this.setOnClickListener {
+    setOnClickListener {
         context.checkSession(callback, it)
     }
 }

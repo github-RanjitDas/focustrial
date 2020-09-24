@@ -16,6 +16,14 @@ fun FragmentManager.attachFragment(
     transaction.commit()
 }
 
+fun FragmentManager.detachFragment(
+    containerId: Int
+) {
+    findFragmentById(containerId)?.let {
+        beginTransaction().remove(it).commit()
+    }
+}
+
 fun FragmentManager.attachFragmentWithAnimation(
     containerId: Int,
     fragment: BaseFragment,
@@ -30,3 +38,4 @@ fun FragmentManager.attachFragmentWithAnimation(
     if (isInStack) transaction.addToBackStack(tag)
     transaction.commit()
 }
+

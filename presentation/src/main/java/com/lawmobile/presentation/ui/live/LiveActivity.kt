@@ -294,6 +294,7 @@ class LiveActivity : BaseActivity() {
         } else {
             imageViewStorage.backgroundTintList =
                 ContextCompat.getColorStateList(this@LiveActivity, R.color.darkBlue)
+            imageViewStorage.clearAnimation()
         }
 
         if (remainingPercent.toInt() == PERCENT_TO_SHOW_ALERT_MEMORY_CAPACITY && !isStorageAlertShowed) {
