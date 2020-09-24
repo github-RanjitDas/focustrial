@@ -81,6 +81,7 @@
     <string name="playback_driver_license">Driver License</string>
     <string name="playback_license_plate">License Plate</string>
     <string name="select">Select</string>
+    <string name="select_event">Select event</string>
     <string name="event_mandatory">Event type field is mandatory</string>
     <string name="catalog_error">Unable to get events, please retry or checkout BWC again</string>
     <string name="catalog_error_video_playback">Unable to get events, please checkout BWC again</string>
@@ -168,7 +169,7 @@
     <string name="video_detail">Video Detail</string>
     <string name="time_divider"> / </string>
     <string name="title">Title</string>
-    <string name="filter_by_date">Filter by date</string>
+    <string name="filter_title">Filter</string>
     <string name="apply">Apply</string>
     <string name="start_date_filter">Start date</string>
     <string name="end_date_filter">End date</string>

@@ -42,7 +42,7 @@ class CustomFilterDialog constructor(
 
     private fun setEventsSpinner() {
         val events =
-            mutableListOf(context.getString(R.string.select), context.getString(R.string.no_event))
+            mutableListOf(context.getString(R.string.select_event), context.getString(R.string.no_event))
         events.addAll(CameraInfo.events.map { it.name })
         eventsSpinnerFilter.adapter = ArrayAdapter(context, R.layout.spinner_item, events)
     }
