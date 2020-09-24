@@ -32,7 +32,7 @@ internal class ThumbnailListRepositoryImplTest {
         val cameraConnectFile =
             CameraConnectFile("1010202000", "10-10-2020 12:00:00", "", "1010202000")
         runBlocking {
-            linkSnapshotsRepositoryImpl.getImageByteList(cameraConnectFile)
+            linkSnapshotsRepositoryImpl.getImageBytes(cameraConnectFile)
         }
 
         coVerify {
@@ -49,7 +49,7 @@ internal class ThumbnailListRepositoryImplTest {
         coEvery { thumbnailListRemoteDataSource.getImageBytes(any()) } returns Result.Error(mockk())
 
         runBlocking {
-            val result = linkSnapshotsRepositoryImpl.getImageByteList(cameraConnectFile)
+            val result = linkSnapshotsRepositoryImpl.getImageBytes(cameraConnectFile)
             Assert.assertTrue(result is Result.Error)
         }
     }
@@ -70,7 +70,7 @@ internal class ThumbnailListRepositoryImplTest {
         coEvery { thumbnailListRemoteDataSource.getImageBytes(any()) } returns Result.Success("Hola".toByteArray())
 
         runBlocking {
-            val result = linkSnapshotsRepositoryImpl.getImageByteList(cameraConnectFile)
+            val result = linkSnapshotsRepositoryImpl.getImageBytes(cameraConnectFile)
             Assert.assertTrue(result is Result.Success)
         }
 
@@ -80,12 +80,12 @@ internal class ThumbnailListRepositoryImplTest {
     fun testGetImageListFlow() {
         FileList.listOfImages = listOf(mockk(), mockk())
         val cameraConnectFileResponseWithErrors = CameraConnectFileResponseWithErrors()
-        cameraConnectFileResponseWithErrors.items.addAll(listOf(mockk(), mockk()))
+        cameraConnectFileResponseWithErrors.items.addAll(listOf(mockk(relaxed = true), mockk(relaxed = true)))
         coEvery { thumbnailListRemoteDataSource.getSnapshotList() } returns Result.Success(
             cameraConnectFileResponseWithErrors
         )
         runBlocking {
-            linkSnapshotsRepositoryImpl.getImageList()
+            linkSnapshotsRepositoryImpl.getSnapshotList()
         }
 
         coVerify { thumbnailListRemoteDataSource.getSnapshotList() }
@@ -109,8 +109,8 @@ internal class ThumbnailListRepositoryImplTest {
             cameraConnectFileResponseWithErrors
         )
         runBlocking {
-            val result = linkSnapshotsRepositoryImpl.getImageList()
-            Assert.assertEquals((result as Result.Success).data.size, 3)
+            val result = linkSnapshotsRepositoryImpl.getSnapshotList()
+            Assert.assertEquals((result as Result.Success).data.listItems.size, 3)
         }
     }
 
@@ -136,8 +136,8 @@ internal class ThumbnailListRepositoryImplTest {
             cameraConnectFileResponseWithErrors
         )
         runBlocking {
-            val result = linkSnapshotsRepositoryImpl.getImageList()
-            Assert.assertEquals((result as Result.Success).data.size, 4)
+            val result = linkSnapshotsRepositoryImpl.getSnapshotList()
+            Assert.assertEquals((result as Result.Success).data.listItems.size, 4)
         }
     }
 
@@ -146,7 +146,7 @@ internal class ThumbnailListRepositoryImplTest {
         FileList.listOfImages = emptyList()
         coEvery { thumbnailListRemoteDataSource.getSnapshotList() } returns Result.Error(Exception("Exception"))
         runBlocking {
-            val result = linkSnapshotsRepositoryImpl.getImageList()
+            val result = linkSnapshotsRepositoryImpl.getSnapshotList()
             Assert.assertTrue(result is Result.Error)
         }
     }

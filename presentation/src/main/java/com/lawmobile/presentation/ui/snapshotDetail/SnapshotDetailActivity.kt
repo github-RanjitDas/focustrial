@@ -13,13 +13,14 @@ import com.bumptech.glide.Glide
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.lawmobile.domain.entities.DomainInformationImageMetadata
 import com.lawmobile.presentation.R
-import com.lawmobile.presentation.entities.FilePathSaved
+import com.lawmobile.presentation.entities.ImageFilesPathManager
 import com.lawmobile.presentation.entities.ImageWithPathSaved
 import com.lawmobile.presentation.extensions.*
 import com.lawmobile.presentation.ui.base.BaseActivity
 import com.lawmobile.presentation.ui.fileList.FileListActivity
 import com.lawmobile.presentation.ui.thumbnailList.ThumbnailFileListFragment.Companion.PATH_ERROR_IN_PHOTO
 import com.lawmobile.presentation.utils.Constants
+import com.lawmobile.presentation.utils.Constants.FILE_LIST_SELECTOR
 import com.lawmobile.presentation.utils.Constants.SNAPSHOT_LIST
 import com.safefleet.mobile.avml.cameras.entities.CameraConnectFile
 import com.safefleet.mobile.commons.helpers.*
@@ -134,7 +135,7 @@ class SnapshotDetailActivity : BaseActivity() {
                 }
             }
 
-            val fileSaved = FilePathSaved.getImageIfExist(file.name)
+            val fileSaved = ImageFilesPathManager.getImageIfExist(file.name)
             fileSaved?.let {
                 if (it.absolutePath != PATH_ERROR_IN_PHOTO && File(it.absolutePath).exists()) {
                     hideLoadingDialog()
@@ -204,7 +205,7 @@ class SnapshotDetailActivity : BaseActivity() {
     private fun setImageWithPath(path: String) {
         if (path.imageHasCorrectFormat()) {
             try {
-                FilePathSaved.saveImageWithPath(ImageWithPathSaved(file.name, path))
+                ImageFilesPathManager.saveImageWithPath(ImageWithPathSaved(file.name, path))
                 Glide.with(this).load(File(path)).into(photoItemDetailHolder)
                 imageReload.isVisible = false
             } catch (e: Exception) {
@@ -249,7 +250,7 @@ class SnapshotDetailActivity : BaseActivity() {
 
     private fun startToFileList() {
         val fileListIntent = Intent(this, FileListActivity::class.java)
-        fileListIntent.putExtra(Constants.FILE_LIST_SELECTOR, SNAPSHOT_LIST)
+        fileListIntent.putExtra(FILE_LIST_SELECTOR, SNAPSHOT_LIST)
         startActivity(fileListIntent)
         finish()
     }
@@ -259,6 +260,5 @@ class SnapshotDetailActivity : BaseActivity() {
         imageReload.isVisible = false
         imageFailed.isVisible = false
     }
-
 
 }

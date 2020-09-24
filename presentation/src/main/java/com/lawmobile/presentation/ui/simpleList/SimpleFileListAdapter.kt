@@ -7,8 +7,9 @@ import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.lawmobile.domain.entities.DomainInformationFile
-import com.lawmobile.presentation.R
 import com.lawmobile.domain.extensions.getCreationDate
+import com.lawmobile.presentation.R
+import com.lawmobile.presentation.entities.SnapshotsAssociatedByUser
 import com.lawmobile.presentation.extensions.setOnClickListenerCheckConnection
 import com.safefleet.mobile.commons.helpers.convertDpToPixel
 import com.safefleet.mobile.commons.helpers.inflate
@@ -22,12 +23,12 @@ class SimpleFileListAdapter(
     var showCheckBoxes = false
     private var isSortedAscendingByDateAndTime = true
     private var isSortedAscendingByEvent = false
-    var fileList: List<DomainInformationFile> = emptyList()
+    var fileList = mutableListOf<DomainInformationFile>()
         set(value) {
             field = value
             notifyDataSetChanged()
         }
-    var fileListBackup: List<DomainInformationFile> = emptyList()
+    var fileListBackup = mutableListOf<DomainInformationFile>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SimpleListViewHolder {
         return SimpleListViewHolder(
@@ -52,7 +53,7 @@ class SimpleFileListAdapter(
     fun uncheckAllItems() {
         val tmpList = fileList
         tmpList.forEach {
-            it.isChecked = false
+            it.isSelected = false
         }
         onFileCheck?.invoke(false)
         fileList = tmpList
@@ -60,10 +61,10 @@ class SimpleFileListAdapter(
 
     fun sortByDateAndTime() {
         if (isSortedAscendingByDateAndTime) {
-            fileList = fileList.sortedBy { it.cameraConnectFile.getCreationDate() }
+            fileList = fileList.sortedBy { it.cameraConnectFile.getCreationDate() } as MutableList
             isSortedAscendingByDateAndTime = false
         } else {
-            fileList = fileList.sortedByDescending { it.cameraConnectFile.getCreationDate() }
+            fileList = fileList.sortedByDescending { it.cameraConnectFile.getCreationDate() } as MutableList
             isSortedAscendingByDateAndTime = true
         }
     }
@@ -71,10 +72,10 @@ class SimpleFileListAdapter(
     fun sortByEvent() {
         if (isSortedAscendingByEvent) {
             fileList =
-                fileList.sortedByDescending { it.cameraConnectVideoMetadata?.metadata?.event?.name }
+                fileList.sortedByDescending { it.cameraConnectVideoMetadata?.metadata?.event?.name } as MutableList
             isSortedAscendingByEvent = false
         } else {
-            fileList = fileList.sortedBy { it.cameraConnectVideoMetadata?.metadata?.event?.name }
+            fileList = fileList.sortedBy { it.cameraConnectVideoMetadata?.metadata?.event?.name } as MutableList
             isSortedAscendingByEvent = true
         }
     }
@@ -108,7 +109,7 @@ class SimpleFileListAdapter(
             with(fileView.checkboxSimpleListItem) {
                 isVisible = showCheckBoxes
                 if (showCheckBoxes) {
-                    isActivated = remoteCameraFile.isChecked
+                    isActivated = remoteCameraFile.isSelected
                     onChecked = { buttonView, isChecked ->
                         if (buttonView.isPressed) {
                             onCheckedFile(remoteCameraFile, isChecked)
@@ -127,25 +128,37 @@ class SimpleFileListAdapter(
 
         private fun setListener(remoteCameraFile: DomainInformationFile) {
             with(fileView) {
+                checkboxSimpleListItem.setOnClickListenerCheckConnection {
+                    selectItemFromTheList(remoteCameraFile)
+                }
                 simpleListLayout.setOnClickListenerCheckConnection {
-                    if (showCheckBoxes) {
-                        checkboxSimpleListItem.isActivated = !checkboxSimpleListItem.isActivated
-                        onCheckedFile(remoteCameraFile, checkboxSimpleListItem.isActivated)
-                    } else {
-                        onFileClick.invoke(remoteCameraFile)
-                    }
+                    selectItemFromTheList(remoteCameraFile)
+                }
+
+            }
+        }
+
+        private fun selectItemFromTheList(remoteCameraFile: DomainInformationFile){
+            with(fileView) {
+                if (showCheckBoxes) {
+                    checkboxSimpleListItem.isActivated = !checkboxSimpleListItem.isActivated
+                    onCheckedFile(remoteCameraFile, checkboxSimpleListItem.isActivated)
+                    SnapshotsAssociatedByUser.updateAssociatedSnapshots(remoteCameraFile.cameraConnectFile)
+                } else {
+                    onFileClick.invoke(remoteCameraFile)
                 }
             }
+
         }
 
         private fun onCheckedFile(remoteCameraFile: DomainInformationFile, isChecked: Boolean) {
             val index =
                 fileList.indexOfFirst { it.cameraConnectFile.name == remoteCameraFile.cameraConnectFile.name }
-            fileList[index].isChecked = isChecked
+            fileList[index].isSelected = isChecked
             onFileCheck?.invoke(isAnyFileChecked())
         }
 
-        private fun isAnyFileChecked() = fileList.any { it.isChecked }
+        private fun isAnyFileChecked() = fileList.any { it.isSelected }
     }
 }
 

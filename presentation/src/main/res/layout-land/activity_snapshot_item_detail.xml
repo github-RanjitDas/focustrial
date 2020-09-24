@@ -14,7 +14,6 @@
 
         <include
             android:visibility="gone"
-            android:id="@+id/tapBar"
             layout="@layout/custom_app_bar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
@@ -95,7 +94,6 @@
 
         <ScrollView
             android:visibility="gone"
-            android:id="@+id/scrollInformation"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toTopOf="@+id/buttonAssociatePartnerIdList"

@@ -3,7 +3,6 @@ package com.lawmobile.presentation.ui.base
 import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.os.Bundle
-import android.os.Process
 import android.view.WindowManager
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -21,7 +20,6 @@ import com.lawmobile.presentation.utils.MobileDataStatus
 import dagger.hilt.android.AndroidEntryPoint
 import java.sql.Timestamp
 import javax.inject.Inject
-import kotlin.system.exitProcess
 
 @AndroidEntryPoint
 open class BaseActivity : AppCompatActivity() {
@@ -42,15 +40,6 @@ open class BaseActivity : AppCompatActivity() {
         baseViewModel.deactivateCameraHotspot()
         startActivity(Intent(this, LoginActivity::class.java))
         finish()
-    }
-
-    fun restartApp() {
-        val intent: Intent? = this.baseContext.packageManager
-            .getLaunchIntentForPackage(this.baseContext.packageName)
-        intent?.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        startActivity(intent)
-        Process.killProcess(Process.myPid())
-        exitProcess(0)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

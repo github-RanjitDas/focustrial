@@ -625,34 +625,6 @@
             tools:ignore="Autofill,LabelFor" />
 
         <TextView
-            android:id="@+id/linkedPhotosTitle"
-            android:layout_width="@dimen/no_dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/video_playback_metadata_spacing"
-            android:layout_marginBottom="@dimen/video_playback_metadata_spacing"
-            android:text="@string/linked_photos_metadata_title"
-            android:textSize="@dimen/video_playback_metadata_text_size"
-            android:textStyle="bold"
-            android:visibility="gone"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toLeftOf="@id/guidelinePlayback"
-            app:layout_constraintTop_toBottomOf="@id/licensePlateValue" />
-
-        <TextView
-            android:id="@+id/linkedPhotosValue"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_5dp"
-            android:padding="@dimen/padding_12dp"
-            android:paddingStart="@dimen/padding_horizontal_metadata_fields"
-            android:paddingEnd="@dimen/no_dp"
-            android:text="@string/no_linked_photos"
-            android:textSize="@dimen/video_playback_metadata_text_size"
-            android:visibility="gone"
-            app:layout_constraintTop_toBottomOf="@+id/linkedPhotosTitle"
-            tools:ignore="Autofill,LabelFor" />
-
-        <TextView
             android:id="@+id/associateImageTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -661,11 +633,11 @@
             android:textSize="@dimen/video_playback_metadata_text_size"
             android:textStyle="bold"
             android:visibility="gone"
-            app:layout_constraintTop_toBottomOf="@+id/linkedPhotosValue"
+            app:layout_constraintTop_toBottomOf="@+id/licensePlateValue"
             tools:ignore="Autofill,LabelFor" />
 
         <Button
-            android:id="@+id/buttonLinkSnapshots"
+            android:id="@+id/buttonAssociateSnapshots"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_5dp"
@@ -683,6 +655,19 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/associateImageTitle" />
 
+        <GridLayout
+            android:id="@+id/layoutAssociatedSnapshots"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/video_playback_metadata_spacing"
+            android:paddingVertical="@dimen/padding_5dp"
+            android:paddingHorizontal="@dimen/padding_50dp"
+            android:background="@drawable/shape_unchecked_box"
+            android:visibility="gone"
+            android:columnCount="1"
+            android:useDefaultMargins="true"
+            app:layout_constraintTop_toBottomOf="@id/buttonAssociateSnapshots" />
+
         <Button
             android:id="@+id/saveButtonVideoPlayback"
             android:layout_width="@dimen/no_dp"
@@ -696,8 +681,17 @@
             android:textSize="@dimen/text_size_20sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/buttonLinkSnapshots" />
+            app:layout_constraintTop_toBottomOf="@id/buttonAssociateSnapshots" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <View
+        android:id="@+id/shadowPlaybackView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/blackTransparent"
+        android:clickable="true"
+        android:focusable="true"
+        android:visibility="gone" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -4,11 +4,14 @@ import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.Context
 import android.content.Intent
+import android.os.Process
 import android.provider.Settings
 import android.view.View
+import android.widget.GridLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import com.lawmobile.domain.entities.DomainInformationForList
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.entities.AlertInformation
 import com.lawmobile.presentation.entities.NeutralAlertInformation
@@ -17,6 +20,7 @@ import com.lawmobile.presentation.ui.login.LoginActivity
 import com.lawmobile.presentation.utils.CameraHelper
 import com.lawmobile.presentation.widgets.CustomFilterDialog
 import com.safefleet.mobile.commons.widgets.SafeFleetConfirmationDialog
+import kotlin.system.exitProcess
 
 fun Context.createAlertInformation(alertInformation: AlertInformation) {
     val builder = AlertDialog.Builder(this)
@@ -56,13 +60,21 @@ fun Context.createAlertErrorConnection() {
 }
 
 fun Context.createAlertSessionExpired() {
-    val activity = this as BaseActivity
     val alertInformation =
         AlertInformation(
             R.string.connection_finished, R.string.connection_finished_description,
-            { activity.restartApp() }, null
+            { restartApp() }, null
         )
-    this.createAlertInformation(alertInformation)
+    createAlertInformation(alertInformation)
+}
+
+fun Context.restartApp() {
+    val intent: Intent? = this.packageManager
+        .getLaunchIntentForPackage(this.packageName)
+    intent?.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+    startActivity(intent)
+    Process.killProcess(Process.myPid())
+    exitProcess(0)
 }
 
 fun Context.createAlertConfirmAppExit() {
@@ -168,7 +180,7 @@ fun Context.showDateAndTimePickerDialog(textView: TextView, hour: Int, minute: I
 fun Context.showTimePickerDialog(textView: TextView, hour: Int, minute: Int) {
     val pickerDialog = TimePickerDialog(
         this,
-        { _, hour, minute ->
+        { _, _, _ ->
             val time = textView.text.toString() + " " + fixTime(hour, minute)
             textView.text = time
         },
@@ -178,8 +190,8 @@ fun Context.showTimePickerDialog(textView: TextView, hour: Int, minute: Int) {
     pickerDialog.show()
 }
 
-fun Context.createFilterDialog(): CustomFilterDialog {
-    return CustomFilterDialog(this, true).apply { show() }
+fun Context.createFilterDialog(gridLayout: GridLayout, listToFilter: List<DomainInformationForList>): CustomFilterDialog {
+    return CustomFilterDialog(this, true, gridLayout, listToFilter).apply { show() }
 }
 
 private fun fixDate(year: Int, _month: Int, _day: Int): String {

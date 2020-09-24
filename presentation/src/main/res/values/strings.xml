@@ -50,13 +50,13 @@
     <string name="videos">View Videos</string>
 
     <!-- List of Snapshots and videos from camera -->
-    <string name="file_list_failed_load_files">Could not load files, please try again</string>
+    <string name="file_list_failed_load_files">Could not load files, please retry or checkout BWC again</string>
     <string name="file_list_date_default"><u>Date</u></string>
     <string name="file_list_event_default">Event</string>
     <string name="no_images_found">No images found</string>
     <string name="no_videos_found">No videos found</string>
     <string name="getting_files_error">Getting files error</string>
-    <string name="getting_files_error_description">Access to a specific folder failed, folder name :</string>
+    <string name="getting_files_error_description">The system failed to retrieve all the requested files, please try again</string>
 
     <!-- Video playback -->
     <string name="play_pause_button_video_playback">Play/Pause button video playback</string>
@@ -114,13 +114,10 @@
     <string name="file_list_associate_partner_id_error">Partner ID could not be associated</string>
     <string name="associate_partner_to_file_button">Associate partner to file button</string>
     <string name="thumbnail_bytes_error">Something went wrong retrieving the bytes of the image</string>
-    <string name="image_linked_success">Images added successfully</string>
     <string name="button_link_snapshots">buttonLinkSnapshots</string>
     <string name="valid_partner_id_message">You must enter a valid Partner ID</string>
     <string name="mobile_data_status_title">Mobile Data</string>
     <string name="mobile_data_status_message">Please disable mobile data to continue</string>
-    <string name="linked_photos_metadata_title">Linked Photos</string>
-    <string name="no_linked_photos">No linked photos</string>
     <string name="verify_camera_wifi">Please verify the connection to the camera WiFi</string>
     <string name="error_saving_video">Error checking video saved in camera, please wait and try again</string>
     <string name="go">GO</string>
@@ -178,6 +175,9 @@
     <string name="no_event">No event</string>
     <string name="error_get_information_metadata">Unable to get video information, please try again</string>
     <string name="error_getting_officer_information">Unable to open officer information, please retry or checkout BWC</string>
+    <string name="associate_snapshots_to_video">Associate snapshots to video</string>
+    <string name="associate_images">Associate Images</string>
+    <string name="no_new_photo_selected_message">Not selected any new photos</string>
 
     <string-array name="gender_spinner">
         <item>Select</item>

@@ -1,6 +1,7 @@
 package com.lawmobile.presentation.entities
 
-object FilePathSaved {
+object ImageFilesPathManager {
+
     private val filesPathSavedImages: ArrayList<ImageWithPathSaved> = ArrayList()
 
     fun saveImageWithPath(image: ImageWithPathSaved) {

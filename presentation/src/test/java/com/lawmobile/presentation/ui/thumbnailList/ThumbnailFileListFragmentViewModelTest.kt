@@ -5,7 +5,10 @@ import com.lawmobile.domain.usecase.thumbnailList.ThumbnailListUseCase
 import com.lawmobile.presentation.InstantExecutorExtension
 import com.safefleet.mobile.avml.cameras.entities.CameraConnectFile
 import com.safefleet.mobile.commons.helpers.Result
-import io.mockk.*
+import io.mockk.clearAllMocks
+import io.mockk.coEvery
+import io.mockk.coVerify
+import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
@@ -16,7 +19,6 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.api.extension.ExtendWith
-import java.lang.Exception
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @ExtendWith(InstantExecutorExtension::class)
@@ -38,26 +40,28 @@ internal class ThumbnailFileListFragmentViewModelTest {
     fun testGetImageBytesListFlow() {
         val cameraConnectFile =
             CameraConnectFile("1010202000", "10-10-2020 12:00:00", "", "1010202000")
-        val result = Result.Success(listOf<DomainInformationImage>(mockk()))
-        coEvery { thumbnailListUseCase.getImagesByteList(cameraConnectFile) } returns result
+        val result = Result.Success(mockk<DomainInformationImage>())
+        coEvery { thumbnailListUseCase.getImageBytes(cameraConnectFile) } returns result
 
         runBlocking {
             thumbnailListFragmentViewModel.getImageBytes(cameraConnectFile)
-            Assert.assertEquals(result, thumbnailListFragmentViewModel.thumbnailListLiveData.value)
+            Assert.assertEquals(result, thumbnailListFragmentViewModel.thumbnailListLiveData.value?.getContent())
         }
 
-        coVerify { thumbnailListUseCase.getImagesByteList(cameraConnectFile) }
+        coVerify { thumbnailListUseCase.getImageBytes(cameraConnectFile) }
     }
 
     @Test
     fun testGetImageBytesListSuccess() {
         val cameraConnectFile =
             CameraConnectFile("1010202000", "10-10-2020 12:00:00", "", "1010202000")
-        coEvery { thumbnailListUseCase.getImagesByteList(cameraConnectFile) } returns Result.Success(listOf(mockk()))
+        coEvery { thumbnailListUseCase.getImageBytes(cameraConnectFile) } returns Result.Success(
+            mockk()
+        )
 
         runBlocking {
             thumbnailListFragmentViewModel.getImageBytes(cameraConnectFile)
-            Assert.assertTrue(thumbnailListFragmentViewModel.thumbnailListLiveData.value is Result.Success)
+            Assert.assertTrue(thumbnailListFragmentViewModel.thumbnailListLiveData.value?.getContent() is Result.Success)
         }
     }
 
@@ -65,37 +69,36 @@ internal class ThumbnailFileListFragmentViewModelTest {
     fun testGetImageBytesListError() {
         val cameraConnectFile =
             CameraConnectFile("1010202000", "10-10-2020 12:00:00", "", "1010202000")
-        coEvery { thumbnailListUseCase.getImagesByteList(cameraConnectFile) } returns Result.Error(mockk())
+        coEvery { thumbnailListUseCase.getImageBytes(cameraConnectFile) } returns Result.Error(mockk())
 
         runBlocking {
             thumbnailListFragmentViewModel.getImageBytes(cameraConnectFile)
             delay(2000)
-            Assert.assertTrue(thumbnailListFragmentViewModel.thumbnailListLiveData.value is Result.Error)
+            Assert.assertTrue(thumbnailListFragmentViewModel.thumbnailListLiveData.value?.getContent() is Result.Error)
         }
     }
 
     @Test
     fun testGetImageListFlow() {
-        coEvery { thumbnailListUseCase.getImageList() } returns Result.Success(emptyList())
-        runBlocking { thumbnailListFragmentViewModel.getImageList() }
-        coVerify { thumbnailListUseCase.getImageList() }
+        coEvery { thumbnailListUseCase.getSnapshotList() } returns Result.Success(mockk())
+        runBlocking { thumbnailListFragmentViewModel.getSnapshotList() }
+        coVerify { thumbnailListUseCase.getSnapshotList() }
     }
 
     @Test
     fun testGetImageListSuccess() {
-        coEvery { thumbnailListUseCase.getImageList() } returns Result.Success(emptyList())
+        coEvery { thumbnailListUseCase.getSnapshotList() } returns Result.Success(mockk(relaxed = true))
         runBlocking {
-            thumbnailListFragmentViewModel.getImageList()
-            val result = thumbnailListFragmentViewModel.imageListLiveData.value as Result.Success
-            Assert.assertTrue(result.data.isEmpty())
+            thumbnailListFragmentViewModel.getSnapshotList()
+            thumbnailListFragmentViewModel.imageListLiveData.value as Result.Success
         }
     }
 
     @Test
     fun testGetImageListError() {
-        coEvery { thumbnailListUseCase.getImageList() } returns Result.Error(Exception(""))
+        coEvery { thumbnailListUseCase.getSnapshotList() } returns Result.Error(Exception(""))
         runBlocking {
-            thumbnailListFragmentViewModel.getImageList()
+            thumbnailListFragmentViewModel.getSnapshotList()
             val result = thumbnailListFragmentViewModel.imageListLiveData.value
             Assert.assertTrue(result is Result.Error)
         }

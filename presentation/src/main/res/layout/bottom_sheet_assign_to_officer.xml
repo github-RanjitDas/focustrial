@@ -7,13 +7,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:behavior_hideable="true"
-        app:cardCornerRadius="@dimen/instructions_corner_radius"
+        app:cardBackgroundColor="@color/transparent"
+        app:cardElevation="@dimen/no_dp"
         app:layout_behavior="@string/bottom_sheet_behavior">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/transparent">
+            android:background="@drawable/background_bottom_sheet">
 
             <TextView
                 android:id="@+id/textViewInstructionsTitle"
