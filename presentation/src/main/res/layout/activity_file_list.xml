@@ -24,7 +24,7 @@
             android:layout_marginStart="@dimen/margin_20dp"
             android:layout_marginTop="@dimen/margin_top_associate_snapshots_button"
             android:background="@drawable/background_button_cancel"
-            android:drawableStart="@drawable/associate_snapshots_selector"
+            android:drawableStart="@drawable/selector_associate_snapshots"
             android:drawablePadding="@dimen/padding_10dp"
             android:paddingHorizontal="@dimen/padding_horizontal_buttons"
             android:text="@string/select_snapshots_to_associate"

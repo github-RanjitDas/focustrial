@@ -5,9 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
-import com.lawmobile.domain.entities.DomainInformationFile
 import com.lawmobile.domain.entities.DomainInformationForList
-import com.lawmobile.domain.entities.DomainInformationImage
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.entities.SnapshotsAssociatedByUser
 import com.lawmobile.presentation.extensions.*
@@ -18,7 +16,6 @@ import com.lawmobile.presentation.utils.Constants.FILE_LIST_TYPE
 import com.lawmobile.presentation.utils.Constants.SIMPLE_FILE_LIST
 import com.lawmobile.presentation.utils.Constants.SNAPSHOT_LIST
 import com.lawmobile.presentation.utils.Constants.THUMBNAIL_FILE_LIST
-import com.lawmobile.presentation.widgets.CustomFilterDialog
 import com.safefleet.mobile.avml.cameras.entities.PhotoAssociated
 import kotlinx.android.synthetic.main.file_list_filter_dialog.*
 import kotlinx.android.synthetic.main.fragment_associate_snapshots.*
@@ -83,7 +80,7 @@ class AssociateSnapshotsFragment : BaseFragment() {
     }
 
     private fun showFilterDialog() {
-        var listToFilter : List<DomainInformationForList> = emptyList()
+        var listToFilter: List<DomainInformationForList> = emptyList()
 
         when (actualFragment) {
             SIMPLE_FILE_LIST -> {
@@ -107,22 +104,10 @@ class AssociateSnapshotsFragment : BaseFragment() {
     private fun handleOnApplyFilter(it: Boolean) {
         this@AssociateSnapshotsFragment.scrollFilterAssociateTags.isVisible = it
         when (actualFragment) {
-            SIMPLE_FILE_LIST -> {
-                with(simpleFileListFragment) {
-                    resetList()
-                    simpleFileListAdapter?.fileList =
-                        CustomFilterDialog.filteredList.filterIsInstance<DomainInformationFile>()
-                                as MutableList<DomainInformationFile>
-                }
-            }
-            THUMBNAIL_FILE_LIST -> {
-                with(thumbnailFileListFragment) {
-                    resetList()
-                    thumbnailFileListAdapter?.fileList =
-                        CustomFilterDialog.filteredList.filterIsInstance<DomainInformationImage>()
-                                as MutableList<DomainInformationImage>
-                }
-            }
+            SIMPLE_FILE_LIST ->
+                simpleFileListFragment.applyFiltersToList(buttonFilterAssociateImages, !it)
+            THUMBNAIL_FILE_LIST ->
+                thumbnailFileListFragment.applyFiltersToList(buttonFilterAssociateImages, !it)
         }
     }
 
@@ -165,6 +150,9 @@ class AssociateSnapshotsFragment : BaseFragment() {
             instance = fragmentInstance
             return instance!!
         }
-        fun destroyInstance() { instance = null }
+
+        fun destroyInstance() {
+            instance = null
+        }
     }
 }
