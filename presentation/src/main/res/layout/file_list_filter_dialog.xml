@@ -68,7 +68,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
-                android:text="@string/filter_by_date"
+                android:text="@string/filter_title"
                 android:textSize="@dimen/text_size_16sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
