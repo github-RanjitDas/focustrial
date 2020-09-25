@@ -7,9 +7,7 @@ import androidx.cardview.widget.CardView
 import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.lawmobile.domain.entities.DomainInformationFile
 import com.lawmobile.domain.entities.DomainInformationForList
-import com.lawmobile.domain.entities.DomainInformationImage
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.extensions.*
 import com.lawmobile.presentation.ui.base.BaseActivity
@@ -136,26 +134,18 @@ class FileListActivity : BaseActivity() {
                     VIDEO_LIST -> eventsSpinnerFilter.isVisible = true
                     SNAPSHOT_LIST -> eventsSpinnerFilter.isVisible = false
                 }
-                onApplyClick = {
-                    this@FileListActivity.scrollFilterTags.isVisible = it
-                    when (actualFragment) {
-                        SIMPLE_FILE_LIST -> {
-                            with(simpleFileListFragment) {
-                                resetList()
-                                simpleFileListAdapter?.fileList =
-                                    CustomFilterDialog.filteredList.filterIsInstance<DomainInformationFile>() as MutableList<DomainInformationFile>
-                            }
-                        }
-                        THUMBNAIL_FILE_LIST -> {
-                            with(thumbnailFileListFragment) {
-                                resetList()
-                                thumbnailFileListAdapter?.fileList =
-                                    CustomFilterDialog.filteredList.filterIsInstance<DomainInformationImage>() as MutableList<DomainInformationImage>
-                            }
-                        }
-                    }
-                }
+                onApplyClick = ::handleOnApplyClick
             }
+        }
+    }
+
+    private fun handleOnApplyClick(it: Boolean) {
+        scrollFilterTags.isVisible = it
+        when (actualFragment) {
+            SIMPLE_FILE_LIST ->
+                simpleFileListFragment.applyFiltersToList(buttonOpenFilters, it)
+            THUMBNAIL_FILE_LIST ->
+                thumbnailFileListFragment.applyFiltersToList(buttonOpenFilters, it)
         }
     }
 

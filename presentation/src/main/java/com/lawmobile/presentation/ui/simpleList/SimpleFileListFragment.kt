@@ -5,6 +5,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
+import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
@@ -25,6 +27,7 @@ import com.lawmobile.presentation.utils.Constants
 import com.lawmobile.presentation.utils.Constants.FILE_LIST_TYPE
 import com.lawmobile.presentation.utils.Constants.SNAPSHOT_LIST
 import com.lawmobile.presentation.utils.Constants.VIDEO_LIST
+import com.lawmobile.presentation.widgets.CustomFilterDialog
 import com.safefleet.mobile.avml.cameras.entities.CameraConnectFile
 import com.safefleet.mobile.commons.helpers.Result
 import com.safefleet.mobile.commons.helpers.doIfError
@@ -80,8 +83,29 @@ class SimpleFileListFragment : BaseFragment() {
         setRecyclerView()
     }
 
-    fun resetList() {
+    fun applyFiltersToList(
+        button: ImageButton,
+        it: Boolean
+    ) {
         simpleFileListAdapter?.resetList()
+        simpleFileListAdapter?.fileList =
+            CustomFilterDialog.filteredList.filterIsInstance<DomainInformationFile>()
+                    as MutableList<DomainInformationFile>
+        button.apply {
+            background = if (it) {
+                setImageResource(R.drawable.ic_filter_white)
+                ContextCompat.getDrawable(
+                    context,
+                    R.drawable.background_button_blue
+                )
+            } else {
+                setImageResource(R.drawable.ic_filter)
+                ContextCompat.getDrawable(
+                    context,
+                    R.drawable.background_button_cancel
+                )
+            }
+        }
     }
 
     private fun setListeners() {

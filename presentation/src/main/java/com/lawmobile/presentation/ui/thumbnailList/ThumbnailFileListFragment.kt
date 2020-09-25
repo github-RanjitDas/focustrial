@@ -5,6 +5,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
+import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
@@ -23,6 +25,7 @@ import com.lawmobile.presentation.extensions.showErrorSnackBar
 import com.lawmobile.presentation.ui.base.BaseFragment
 import com.lawmobile.presentation.ui.snapshotDetail.SnapshotDetailActivity
 import com.lawmobile.presentation.utils.Constants.CAMERA_CONNECT_FILE
+import com.lawmobile.presentation.widgets.CustomFilterDialog
 import com.safefleet.mobile.avml.cameras.entities.CameraConnectFile
 import com.safefleet.mobile.commons.helpers.Event
 import com.safefleet.mobile.commons.helpers.Result
@@ -105,8 +108,29 @@ class ThumbnailFileListFragment : BaseFragment() {
         itemToLoad?.let { thumbnailListFragmentViewModel.getImageBytes(it) }
     }
 
-    fun resetList() {
+    fun applyFiltersToList(
+        button: ImageButton,
+        it: Boolean
+    ) {
         thumbnailFileListAdapter?.resetList()
+        thumbnailFileListAdapter?.fileList =
+            CustomFilterDialog.filteredList.filterIsInstance<DomainInformationImage>()
+                    as MutableList<DomainInformationImage>
+        button.apply {
+            background = if (it) {
+                setImageResource(R.drawable.ic_filter_white)
+                ContextCompat.getDrawable(
+                    context,
+                    R.drawable.background_button_blue
+                )
+            } else {
+                setImageResource(R.drawable.ic_filter)
+                ContextCompat.getDrawable(
+                    context,
+                    R.drawable.background_button_cancel
+                )
+            }
+        }
     }
 
     private fun onImageClick(file: DomainInformationImage) {
