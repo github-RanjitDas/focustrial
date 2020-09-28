@@ -100,7 +100,7 @@
     <string name="snapshot_item_detail_video_assigned_title">Assigned to video</string>
     <string name="snapshot_item_detail_date_time_value">YYYY-MM-DD HH:MM:SS</string>
     <string name="snapshot_item_detail_photo_content_description">Photo from BWC</string>
-    <string name="snapshot_detail_load_failed">Unable to open snapshot, please go back and try again.</string>
+    <string name="snapshot_detail_load_failed">Unable to open snapshot, please go back or try again.</string>
     <string name="image_video_recording">Image video recording</string>
     <string name="save_metadata">Save</string>
     <string name="none">None</string>

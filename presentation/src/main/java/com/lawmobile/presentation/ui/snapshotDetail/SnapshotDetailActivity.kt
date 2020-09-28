@@ -117,12 +117,6 @@ class SnapshotDetailActivity : BaseActivity() {
                 }
                 doIfError {
                     imageReload.isVisible = true
-                    constraintLayoutDetail.showErrorSnackBar(
-                        getString(R.string.snapshot_detail_load_failed),
-                        SNAPSHOT_DETAIL_ERROR_ANIMATION_DURATION
-                    ) {
-                        snapshotDetailViewModel.getImageBytes(file)
-                    }
                 }
             }
         }
@@ -220,9 +214,20 @@ class SnapshotDetailActivity : BaseActivity() {
                 imageReload.isVisible = false
             } catch (e: Exception) {
                 imageFailed.isVisible = true
+                showFailedLoadImageError()
             }
         } else {
             imageFailed.isVisible = true
+            showFailedLoadImageError()
+        }
+    }
+
+    private fun showFailedLoadImageError() {
+        constraintLayoutDetail.showErrorSnackBar(
+            getString(R.string.snapshot_detail_load_failed),
+            SNAPSHOT_DETAIL_ERROR_ANIMATION_DURATION
+        ) {
+            snapshotDetailViewModel.getImageBytes(file)
         }
     }
 
