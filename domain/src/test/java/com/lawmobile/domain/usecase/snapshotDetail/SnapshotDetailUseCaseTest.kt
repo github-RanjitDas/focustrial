@@ -50,13 +50,13 @@ class SnapshotDetailUseCaseTest {
 
     @Test
     fun testSavePartnerIdSnapshotFlow(){
-        coEvery { snapshotDetailRepository.savePartnerIdSnapshot(any(), "partnerId") } returns Result.Success(Unit)
+        coEvery { snapshotDetailRepository.saveSnapshotPartnerId(any(), "partnerId") } returns Result.Success(Unit)
         runBlocking {
             val result = snapshotDetailUseCaseImpl.savePartnerIdSnapshot(mockk(),"partnerId")
             Assert.assertTrue(result is Result.Success)
         }
         coVerify {
-            snapshotDetailRepository.savePartnerIdSnapshot(any(), "partnerId")
+            snapshotDetailRepository.saveSnapshotPartnerId(any(), "partnerId")
         }
     }
 

@@ -7,6 +7,6 @@ import com.safefleet.mobile.commons.helpers.Result
 
 interface SnapshotDetailRepository: BaseRepository {
     suspend fun getImageBytes(cameraConnectFile: CameraConnectFile): Result<ByteArray>
-    suspend fun savePartnerIdSnapshot(cameraFile: CameraConnectFile,partnerId: String): Result<Unit>
+    suspend fun saveSnapshotPartnerId(cameraFile: CameraConnectFile, partnerId: String): Result<Unit>
     suspend fun getInformationOfPhoto(cameraFile: CameraConnectFile): Result<DomainInformationImageMetadata>
 }

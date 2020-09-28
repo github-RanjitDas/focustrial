@@ -20,28 +20,54 @@ class SnapshotDetailRepositoryImpl(private val snapshotDetailRemoteDataSource: S
         return snapshotDetailRemoteDataSource.getImageBytes(cameraConnectFile)
     }
 
-    override suspend fun savePartnerIdSnapshot(
+    override suspend fun saveSnapshotPartnerId(
         cameraFile: CameraConnectFile,
         partnerId: String
     ): Result<Unit> {
-        val partnerMetadata = PhotoMetadata(partnerID = partnerId)
-        val cameraPhotoMetadata = CameraConnectPhotoMetadata(
-            fileName = cameraFile.name,
-            officerId = CameraInfo.officerId,
-            path = cameraFile.path,
-            x1sn = CameraInfo.serialNumber,
-            metadata = partnerMetadata,
-            nameFolder = cameraFile.nameFolder
-        )
-        val response = snapshotDetailRemoteDataSource.savePartnerIdSnapshot(cameraPhotoMetadata)
-        response.doIfSuccess {
-            val item = FileList.getItemInListImageOfMetadata(cameraFile.name)
-            val newItemPhoto =
-                DomainInformationImageMetadata(cameraPhotoMetadata, item?.videosAssociated)
-            FileList.updateItemInListImageMetadata(newItemPhoto)
+        val itemsFinal = mutableListOf<CameraConnectPhotoMetadata>()
+        val listPhotosSaved = ArrayList<CameraConnectPhotoMetadata>()
+        val resultGetMetadataOfPhotos = snapshotDetailRemoteDataSource.getSavedPhotosMetadata()
+        if (resultGetMetadataOfPhotos is Result.Error) {
+            return resultGetMetadataOfPhotos
         }
 
-        return response
+        listPhotosSaved.addAll((resultGetMetadataOfPhotos as Result.Success).data)
+        itemsFinal.addAll(listPhotosSaved)
+        val errorsInFiles = ArrayList<String>()
+
+            itemsFinal.removeAll { it.fileName == cameraFile.name }
+            val partnerMetadata = PhotoMetadata(partnerID = partnerId)
+            val cameraPhotoMetadata = CameraConnectPhotoMetadata(
+                fileName = cameraFile.name,
+                officerId = CameraInfo.officerId,
+                path = cameraFile.path,
+                x1sn = CameraInfo.serialNumber,
+                metadata = partnerMetadata,
+                nameFolder = cameraFile.nameFolder
+            )
+
+            delay(150)
+            val resultPartnerOnly =
+                snapshotDetailRemoteDataSource.savePartnerIdSnapshot(cameraPhotoMetadata)
+            itemsFinal.removeAll { it.fileName == cameraFile.name }
+            itemsFinal.add(cameraPhotoMetadata)
+            if (resultPartnerOnly is Result.Error) {
+                errorsInFiles.add(cameraPhotoMetadata.fileName)
+            } else {
+                val item = FileList.getItemInListImageOfMetadata(cameraFile.name)
+                val newItemPhoto =
+                    DomainInformationImageMetadata(cameraPhotoMetadata, item?.videosAssociated)
+                FileList.updateItemInListImageMetadata(newItemPhoto)
+            }
+
+        delay(300)
+        val resultJSONOnly = snapshotDetailRemoteDataSource.savePartnerIdInAllSnapshots(itemsFinal)
+        resultJSONOnly.doIfSuccess {
+            return if (errorsInFiles.isEmpty()) Result.Success(Unit)
+            else Result.Error(java.lang.Exception("Partner ID could not be associated to: $errorsInFiles"))
+        }
+
+        return Result.Error(java.lang.Exception("Partner ID could not be associated"))
     }
 
     override suspend fun getInformationOfPhoto(cameraFile: CameraConnectFile): Result<DomainInformationImageMetadata> {

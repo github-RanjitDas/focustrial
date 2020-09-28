@@ -3,7 +3,6 @@
 package com.safefleet.lawmobile.di
 
 import android.content.Context
-import android.content.SharedPreferences
 import android.net.ConnectivityManager
 import android.net.wifi.WifiConfiguration
 import android.net.wifi.WifiManager
@@ -29,19 +28,12 @@ class AppModule {
     
     companion object {
 
-        private const val PREF_NAME = "authentication"
-
         @Provides
         @Singleton
         fun provideWifiManager(@ApplicationContext context: Context): WifiManager =
             context.applicationContext.getSystemService(
                 Context.WIFI_SERVICE
             ) as WifiManager
-
-        @Provides
-        @Singleton
-        fun providePreferences(@ApplicationContext context: Context): SharedPreferences =
-            context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
 
         @Provides
         @Singleton

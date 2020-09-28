@@ -56,15 +56,23 @@ class SnapshotDetailRepositoryImplTest {
         coEvery { snapshotDetailRemoteDataSource.savePartnerIdSnapshot(any()) } returns Result.Success(
             Unit
         )
+        coEvery { snapshotDetailRemoteDataSource.getSavedPhotosMetadata() } returns Result.Success(
+            emptyList()
+        )
+        coEvery { snapshotDetailRemoteDataSource.savePartnerIdInAllSnapshots(any()) } returns Result.Success(Unit)
         val cameraConnectFile = CameraConnectFile("fileName.PNG", "date", "path", "nameFolder/")
         FileList.listOfMetadataImages = ArrayList()
         runBlocking {
-            snapshotDetailRepositoryImpl.savePartnerIdSnapshot(
+            snapshotDetailRepositoryImpl.saveSnapshotPartnerId(
                 cameraConnectFile,
                 "partnerId"
             )
         }
-        coVerify { snapshotDetailRemoteDataSource.savePartnerIdSnapshot(any()) }
+        coVerify {
+            snapshotDetailRemoteDataSource.savePartnerIdSnapshot(any())
+            snapshotDetailRemoteDataSource.getSavedPhotosMetadata()
+            snapshotDetailRemoteDataSource.savePartnerIdInAllSnapshots(any())
+        }
     }
 
     @Test
@@ -72,10 +80,14 @@ class SnapshotDetailRepositoryImplTest {
         coEvery { snapshotDetailRemoteDataSource.savePartnerIdSnapshot(any()) } returns Result.Success(
             Unit
         )
+        coEvery { snapshotDetailRemoteDataSource.getSavedPhotosMetadata() } returns Result.Success(
+            emptyList()
+        )
+        coEvery { snapshotDetailRemoteDataSource.savePartnerIdInAllSnapshots(any()) } returns Result.Success(Unit)
         runBlocking {
             val cameraConnectFile = CameraConnectFile("fileName.PNG", "date", "path", "nameFolder/")
             val response =
-                snapshotDetailRepositoryImpl.savePartnerIdSnapshot(cameraConnectFile, "partnerId")
+                snapshotDetailRepositoryImpl.saveSnapshotPartnerId(cameraConnectFile, "partnerId")
             Assert.assertTrue(response is Result.Success)
             val item = FileList.getItemInListImageOfMetadata("fileName.PNG")
             Assert.assertEquals(item?.cameraConnectPhotoMetadata?.metadata?.partnerID, "partnerId")
@@ -87,9 +99,13 @@ class SnapshotDetailRepositoryImplTest {
         coEvery { snapshotDetailRemoteDataSource.savePartnerIdSnapshot(any()) } returns Result.Error(
             Exception("")
         )
+        coEvery { snapshotDetailRemoteDataSource.getSavedPhotosMetadata() } returns Result.Success(
+            emptyList()
+        )
+        coEvery { snapshotDetailRemoteDataSource.savePartnerIdInAllSnapshots(any()) } returns Result.Success(Unit)
         val cameraConnectFile = CameraConnectFile("fileName.PNG", "date", "path", "nameFolder/")
         runBlocking {
-            val response = snapshotDetailRepositoryImpl.savePartnerIdSnapshot(
+            val response = snapshotDetailRepositoryImpl.saveSnapshotPartnerId(
                 cameraConnectFile,
                 "partnerId"
             )
@@ -142,7 +158,8 @@ class SnapshotDetailRepositoryImplTest {
         )
 
         coEvery { snapshotDetailRemoteDataSource.getMetadataOfVideo(any()) } returns Result.Error(
-            mockk())
+            mockk()
+        )
         val cameraSend = CameraConnectFile("name", "date", "path", "nameFol")
 
         runBlocking {
