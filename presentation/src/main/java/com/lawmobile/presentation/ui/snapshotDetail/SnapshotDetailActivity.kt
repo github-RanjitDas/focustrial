@@ -117,7 +117,12 @@ class SnapshotDetailActivity : BaseActivity() {
                 }
                 doIfError {
                     imageReload.isVisible = true
-                    constraintLayoutDetail.showErrorSnackBar(getString(R.string.snapshot_detail_load_failed))
+                    constraintLayoutDetail.showErrorSnackBar(
+                        getString(R.string.snapshot_detail_load_failed),
+                        SNAPSHOT_DETAIL_ERROR_ANIMATION_DURATION
+                    ) {
+                        snapshotDetailViewModel.getImageBytes(file)
+                    }
                 }
             }
         }
@@ -131,7 +136,12 @@ class SnapshotDetailActivity : BaseActivity() {
                     domainInformationImageMetadata = it
                 }
                 doIfError {
-                    constraintLayoutDetail.showErrorSnackBar(getString(R.string.snapshot_item_detail_get_information_metadata_error))
+                    constraintLayoutDetail.showErrorSnackBar(
+                        getString(R.string.snapshot_item_detail_get_information_metadata_error),
+                        SNAPSHOT_DETAIL_ERROR_ANIMATION_DURATION
+                    ) {
+                        snapshotDetailViewModel.getInformationImageMetadata(file)
+                    }
                 }
             }
 
@@ -259,6 +269,10 @@ class SnapshotDetailActivity : BaseActivity() {
         photoItemDetailHolder.isVisible = true
         imageReload.isVisible = false
         imageFailed.isVisible = false
+    }
+
+    companion object {
+        private const val SNAPSHOT_DETAIL_ERROR_ANIMATION_DURATION = 7000
     }
 
 }

@@ -106,7 +106,7 @@
     <string name="none">None</string>
     <string name="playback_video_name">Name</string>
     <string name="default_text">DEFAULT TEXT</string>
-    <string name="snapshot_item_detail_get_information_metadata_error">Could not be get the metadata, please go back and try again.</string>
+    <string name="snapshot_item_detail_get_information_metadata_error">Unable to open snapshot details information, please try again.</string>
     <!-- link_snapshots -->
 
     <!-- Partner Id -->
