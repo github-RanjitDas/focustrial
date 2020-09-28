@@ -109,4 +109,18 @@ class SnapshotDetailRemoteDataSourceImplTest {
             cameraConnectService.getVideoMetadata("name", "folder")
         }
     }
+
+    @Test
+    fun testSavePartnerIdInAllSnapshots() {
+        coEvery { cameraConnectService.saveAllPhotoMetadata(any()) } returns Result.Success(Unit)
+        runBlocking { snapshotDetailRemoteDataSourceImpl.savePartnerIdInAllSnapshots(emptyList()) }
+        coVerify { cameraConnectService.saveAllPhotoMetadata(emptyList()) }
+    }
+
+    @Test
+    fun testGetSavedPhotosMetadata() {
+        coEvery { cameraConnectService.getMetadataOfPhotos() } returns Result.Success(mockk())
+        runBlocking { snapshotDetailRemoteDataSourceImpl.getSavedPhotosMetadata() }
+        coVerify { cameraConnectService.getMetadataOfPhotos() }
+    }
 }

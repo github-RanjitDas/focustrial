@@ -12,4 +12,9 @@ interface SnapshotDetailRemoteDataSource {
     suspend fun getInformationOfPhoto(cameraFile: CameraConnectFile): Result<CameraConnectPhotoMetadata>
     suspend fun getVideoList(): Result<CameraConnectFileResponseWithErrors>
     suspend fun getMetadataOfVideo(cameraConnectFile: CameraConnectFile): Result<CameraConnectVideoMetadata>
+    suspend fun savePartnerIdInAllSnapshots(
+        list: List<CameraConnectPhotoMetadata>
+    ): Result<Unit>
+
+    suspend fun getSavedPhotosMetadata(): Result<List<CameraConnectPhotoMetadata>>
 }

@@ -1,11 +1,11 @@
 package com.safefleet.lawmobile.di.cameraService
 
-import android.content.SharedPreferences
 import com.google.gson.Gson
 import com.lawmobile.domain.entities.CameraInfo
 import com.lawmobile.presentation.utils.CameraHelper
 import com.lawmobile.presentation.utils.WifiHelper
-import com.safefleet.mobile.avml.cameras.external.*
+import com.safefleet.mobile.avml.cameras.external.CameraConnectService
+import com.safefleet.mobile.avml.cameras.external.CameraType
 import com.safefleet.mobile.avml.cameras.external.socket.SocketHelper
 import com.safefleet.mobile.avml.cameras.external.x1.CameraConnectServiceX1
 import com.safefleet.mobile.avml.cameras.external.x1.CameraHelperX1
@@ -23,11 +23,6 @@ class CameraServiceModule {
     companion object {
 
         @Provides
-        @Singleton
-        fun provideCameraPreferences(sharedPreferences: SharedPreferences): CameraPreferences =
-            CameraPreferences(sharedPreferences)
-
-        @Provides
         fun provideSocketHelper(): SocketHelper = SocketHelper(Socket())
 
         @Provides
@@ -37,12 +32,9 @@ class CameraServiceModule {
 
         @Provides
         @Singleton
-        fun provideCameraService(
-            cameraHelperX1: CameraHelperX1,
-            cameraPreferences: CameraPreferences
-        ): CameraConnectService {
+        fun provideCameraService(cameraHelperX1: CameraHelperX1): CameraConnectService {
             return when (CameraInfo.cameraType) {
-                CameraType.X1 -> CameraConnectServiceX1(cameraHelperX1, cameraPreferences)
+                CameraType.X1 -> CameraConnectServiceX1(cameraHelperX1)
             }
         }
 

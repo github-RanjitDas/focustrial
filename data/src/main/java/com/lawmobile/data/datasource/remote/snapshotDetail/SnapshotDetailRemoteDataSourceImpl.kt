@@ -28,4 +28,10 @@ class SnapshotDetailRemoteDataSourceImpl(private val cameraConnectService: Camer
     override suspend fun getMetadataOfVideo(cameraConnectFile: CameraConnectFile): Result<CameraConnectVideoMetadata> {
         return cameraConnectService.getVideoMetadata(cameraConnectFile.name, cameraConnectFile.nameFolder)
     }
+
+    override suspend fun savePartnerIdInAllSnapshots(list: List<CameraConnectPhotoMetadata>): Result<Unit> =
+        cameraConnectService.saveAllPhotoMetadata(list)
+
+    override suspend fun getSavedPhotosMetadata(): Result<List<CameraConnectPhotoMetadata>>  =
+        cameraConnectService.getMetadataOfPhotos()
 }

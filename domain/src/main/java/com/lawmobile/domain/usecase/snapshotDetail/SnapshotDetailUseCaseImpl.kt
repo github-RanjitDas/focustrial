@@ -15,7 +15,7 @@ class SnapshotDetailUseCaseImpl(private val snapshotDetailRepository: SnapshotDe
         cameraFile: CameraConnectFile,
         partnerId: String
     ): Result<Unit> {
-        return snapshotDetailRepository.savePartnerIdSnapshot(cameraFile, partnerId)
+        return snapshotDetailRepository.saveSnapshotPartnerId(cameraFile, partnerId)
     }
 
     override suspend fun getInformationOfPhoto(cameraFile: CameraConnectFile): Result<DomainInformationImageMetadata> {
