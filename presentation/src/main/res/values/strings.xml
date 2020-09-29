@@ -132,7 +132,7 @@
     <string name="battery_level">battery level</string>
     <string name="recording">Recording</string>
     <string name="stop">Stop</string>
-    <string name="taking_picture">Taking picture</string>
+    <string name="taking_snapshot">Taking snapshot</string>
     <string name="starting_recording">Starting recording</string>
     <string name="stopping_recording">Stopping recording</string>
     <string name="battery_percent"><![CDATA[<b>%1$d %%</b> - %2$s hour left]]></string>

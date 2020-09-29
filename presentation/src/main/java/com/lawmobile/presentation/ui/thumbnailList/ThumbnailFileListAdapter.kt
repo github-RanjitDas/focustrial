@@ -27,7 +27,7 @@ class ThumbnailFileListAdapter(
             field = value
             notifyDataSetChanged()
         }
-    private var fileListBackup = mutableListOf<DomainInformationImage>()
+    var fileListBackup = mutableListOf<DomainInformationImage>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ThumbnailListViewHolder {
         return ThumbnailListViewHolder(
@@ -43,10 +43,6 @@ class ThumbnailFileListAdapter(
 
     override fun onBindViewHolder(thumbnailListViewHolder: ThumbnailListViewHolder, position: Int) {
         thumbnailListViewHolder.bind(fileList[position])
-    }
-
-    fun resetList() {
-        fileList = fileListBackup
     }
 
     fun uncheckAllItems() {

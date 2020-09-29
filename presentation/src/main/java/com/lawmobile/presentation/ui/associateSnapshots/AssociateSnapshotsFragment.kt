@@ -4,18 +4,21 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import com.lawmobile.domain.entities.DomainInformationForList
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.entities.SnapshotsAssociatedByUser
 import com.lawmobile.presentation.extensions.*
 import com.lawmobile.presentation.ui.base.BaseFragment
+import com.lawmobile.presentation.ui.fileList.FileListBaseFragment.Companion.checkableListInit
 import com.lawmobile.presentation.ui.simpleList.SimpleFileListFragment
 import com.lawmobile.presentation.ui.thumbnailList.ThumbnailFileListFragment
 import com.lawmobile.presentation.utils.Constants.FILE_LIST_TYPE
 import com.lawmobile.presentation.utils.Constants.SIMPLE_FILE_LIST
 import com.lawmobile.presentation.utils.Constants.SNAPSHOT_LIST
 import com.lawmobile.presentation.utils.Constants.THUMBNAIL_FILE_LIST
+import com.lawmobile.presentation.widgets.CustomFilterDialog
 import com.safefleet.mobile.avml.cameras.entities.PhotoAssociated
 import kotlinx.android.synthetic.main.file_list_filter_dialog.*
 import kotlinx.android.synthetic.main.fragment_associate_snapshots.*
@@ -27,6 +30,7 @@ class AssociateSnapshotsFragment : BaseFragment() {
     private lateinit var actualFragment: String
     private var snapshotsAssociatedFromMetadata: MutableList<PhotoAssociated>? = null
     var onSnapshotsAssociated: (() -> Unit)? = null
+    private var filterDialog: CustomFilterDialog? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -39,6 +43,7 @@ class AssociateSnapshotsFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        checkableListInit = true
         simpleFileListFragment.arguments =
             Bundle().apply { putString(FILE_LIST_TYPE, SNAPSHOT_LIST) }
         setListeners()
@@ -93,26 +98,50 @@ class AssociateSnapshotsFragment : BaseFragment() {
             }
         }
 
-        if (!listToFilter.isNullOrEmpty()) {
-            requireActivity().createFilterDialog(layoutAssociateFilterTags, listToFilter).apply {
-                eventsSpinnerFilter.isVisible = false
-                onApplyClick = ::handleOnApplyFilter
-            }
+        if (filterDialog == null) {
+            filterDialog =
+                layoutAssociateFilterTags.createFilterDialog(::handleOnApplyFilter)
+        }
+
+        filterDialog?.apply {
+            this.listToFilter = listToFilter
+            show()
+            eventsSpinnerFilter.isVisible = false
+            simpleFileListFragment.filter = this
+            thumbnailFileListFragment.filter = this
         }
     }
 
     private fun handleOnApplyFilter(it: Boolean) {
-        this@AssociateSnapshotsFragment.scrollFilterAssociateTags.isVisible = it
+        scrollFilterAssociateTags.isVisible = it
+        updateButtonFilterState(it)
         when (actualFragment) {
             SIMPLE_FILE_LIST ->
-                simpleFileListFragment.applyFiltersToList(buttonFilterAssociateImages, !it)
+                simpleFileListFragment.applyFiltersToList()
             THUMBNAIL_FILE_LIST ->
-                thumbnailFileListFragment.applyFiltersToList(buttonFilterAssociateImages, !it)
+                thumbnailFileListFragment.applyFiltersToList()
+        }
+    }
+
+    private fun updateButtonFilterState(it: Boolean) {
+        with(buttonFilterAssociateImages) {
+            background = if (it) {
+                setImageResource(R.drawable.ic_filter_white)
+                ContextCompat.getDrawable(
+                    context,
+                    R.drawable.background_button_blue
+                )
+            } else {
+                setImageResource(R.drawable.ic_filter)
+                ContextCompat.getDrawable(
+                    context,
+                    R.drawable.background_button_cancel
+                )
+            }
         }
     }
 
     private fun setSimpleFileListFragment() {
-        SimpleFileListFragment.checkableListInit = true
         actualFragment = SIMPLE_FILE_LIST
         simpleFileListFragment
         buttonSimpleListAssociate.isActivated = true
@@ -125,7 +154,6 @@ class AssociateSnapshotsFragment : BaseFragment() {
     }
 
     private fun setThumbnailListFragment() {
-        ThumbnailFileListFragment.checkableListInit = true
         actualFragment = THUMBNAIL_FILE_LIST
         buttonThumbnailListAssociate.isActivated = true
         buttonSimpleListAssociate.isActivated = false
@@ -137,22 +165,11 @@ class AssociateSnapshotsFragment : BaseFragment() {
     }
 
     override fun onDestroy() {
-        SimpleFileListFragment.destroyInstance()
-        ThumbnailFileListFragment.destroyInstance()
+        checkableListInit = false
         super.onDestroy()
     }
 
     companion object {
         val TAG = AssociateSnapshotsFragment::class.java.simpleName
-        private var instance: AssociateSnapshotsFragment? = null
-        fun getActualInstance(): AssociateSnapshotsFragment {
-            val fragmentInstance = instance ?: AssociateSnapshotsFragment()
-            instance = fragmentInstance
-            return instance!!
-        }
-
-        fun destroyInstance() {
-            instance = null
-        }
     }
 }

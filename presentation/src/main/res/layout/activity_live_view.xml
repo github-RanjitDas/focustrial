@@ -128,7 +128,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/loading_margin_bottom"
-            android:text="@string/taking_picture"
+            android:text="@string/taking_snapshot"
             android:textSize="@dimen/live_view_label_text_size"
             android:visibility="invisible"
             app:layout_constraintBottom_toBottomOf="@id/viewLiveStreamingShadow"
