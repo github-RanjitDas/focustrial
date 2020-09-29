@@ -174,7 +174,7 @@ class VideoPlaybackActivity : BaseActivity() {
     }
 
     private fun showErrorInEvents() {
-        parentViewVideoPlayback.showErrorSnackBar(
+        layoutVideoPlayback.showErrorSnackBar(
             getString(R.string.catalog_error_video_playback),
             Snackbar.LENGTH_LONG
         )
@@ -347,7 +347,7 @@ class VideoPlaybackActivity : BaseActivity() {
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
         associateSnapshotsFragment.replaceSnapshotsAssociatedFromMetadata(SnapshotsAssociatedByUser.value)
         showSnapshotsAssociated()
-        parentViewVideoPlayback.showSuccessSnackBar("Snapshots added successfully")
+        layoutVideoPlayback.showSuccessSnackBar(getString(R.string.snapshots_added_success))
     }
 
     private fun showSnapshotsAssociated() {
@@ -413,7 +413,7 @@ class VideoPlaybackActivity : BaseActivity() {
     private fun saveVideoMetadataInCamera() {
         hideKeyboard()
         if (eventValue.selectedItem == eventList[0]) {
-            parentViewVideoPlayback.showErrorSnackBar(getString(R.string.event_mandatory))
+            layoutVideoPlayback.showErrorSnackBar(getString(R.string.event_mandatory))
             return
         }
         CameraInfo.areNewChanges = true
