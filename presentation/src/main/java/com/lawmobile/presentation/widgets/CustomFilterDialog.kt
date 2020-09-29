@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.GridLayout
+import androidx.core.view.isVisible
 import com.lawmobile.domain.entities.CameraInfo
 import com.lawmobile.domain.entities.DomainInformationFile
 import com.lawmobile.domain.entities.DomainInformationForList
@@ -24,7 +25,7 @@ class CustomFilterDialog constructor(
     var currentFilters = mutableListOf<String>()
     var filteredList: List<DomainInformationForList> = emptyList()
 
-    private var startDate = "Start date"
+    private var startDate = context.getString(R.string.start_date_filter)
     private var endDate = "End date"
     private var event = 0
 
@@ -37,9 +38,16 @@ class CustomFilterDialog constructor(
         closeFilterView.setOnClickListener(this)
         startDateTextView.setOnClickListener(this)
         endDateTextView.setOnClickListener(this)
+        buttonClearStartDate.setOnClickListener(this)
+        buttonClearEndDate.setOnClickListener(this)
 
         setEventsSpinner()
         setDefaultFilters()
+    }
+
+    override fun show() {
+        super.show()
+        showClearButtons()
     }
 
     private fun setEventsSpinner() {
@@ -58,6 +66,19 @@ class CustomFilterDialog constructor(
         eventsSpinnerFilter.setSelection(event)
     }
 
+    private fun showClearButtons() {
+        buttonClearStartDate.isVisible = try {
+            currentFilters[START_DATE_POSITION].isNotEmpty()
+        } catch (e: Exception) {
+            false
+        }
+        buttonClearEndDate.isVisible = try {
+            currentFilters[END_DATE_POSITION].isNotEmpty()
+        } catch (e: Exception) {
+            false
+        }
+    }
+
     override fun onClick(v: View?) {
         when (v) {
             buttonApplyFilter -> {
@@ -66,9 +87,27 @@ class CustomFilterDialog constructor(
                 dismiss()
             }
             buttonCancelFilter, closeFilterView -> dismiss()
-            startDateTextView -> context.showDateAndTimePickerDialog(startDateTextView, 0, 0)
-            endDateTextView -> context.showDateAndTimePickerDialog(endDateTextView, 23, 59)
+            startDateTextView ->
+                startDateTextView.showDateAndTimePickerDialog(0, 0) {
+                    buttonClearStartDate.isVisible = true
+                }
+            endDateTextView ->
+                endDateTextView.showDateAndTimePickerDialog(23, 59) {
+                    buttonClearEndDate.isVisible = true
+                }
+            buttonClearStartDate -> clearStartDateFilter()
+            buttonClearEndDate -> clearEndDateFilter()
         }
+    }
+
+    private fun clearStartDateFilter() {
+        startDateTextView.text = context.getString(R.string.start_date_filter)
+        buttonClearStartDate.isVisible = false
+    }
+
+    private fun clearEndDateFilter() {
+        endDateTextView.text = context.getString(R.string.end_date_filter)
+        buttonClearEndDate.isVisible = false
     }
 
     private fun saveFiltersAsDefault() {
@@ -140,6 +179,7 @@ class CustomFilterDialog constructor(
         filteredList = filteringList
 
         saveFiltersAsDefault()
+        showClearButtons()
         val isAnyFilter = currentFilters.any { it != "" }
         onApplyClick.invoke(isAnyFilter)
     }

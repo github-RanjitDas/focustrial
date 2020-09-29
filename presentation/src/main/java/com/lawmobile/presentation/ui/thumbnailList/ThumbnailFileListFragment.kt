@@ -29,7 +29,7 @@ import com.safefleet.mobile.commons.helpers.doIfSuccess
 import kotlinx.android.synthetic.main.fragment_file_list.*
 import java.io.File
 
-class ThumbnailFileListFragment: FileListBaseFragment() {
+class ThumbnailFileListFragment : FileListBaseFragment() {
 
     private val thumbnailListFragmentViewModel: ThumbnailListFragmentViewModel by activityViewModels()
     private var errorNames: ArrayList<String> = arrayListOf()
@@ -193,10 +193,10 @@ class ThumbnailFileListFragment: FileListBaseFragment() {
         }
     }
 
-    private fun manageErrorInGetBytes(exception: Exception) {
+    private fun manageErrorInGetBytes(e: Exception) {
+        e.printStackTrace()
         isLoading = false
-        val message = exception.message ?: getString(R.string.thumbnail_bytes_error)
-        fileListLayout.showErrorSnackBar(message)
+        fileListLayout.showErrorSnackBar(getString(R.string.thumbnail_bytes_error))
 
         currentImageLoading?.let { cameraConnectFile ->
             errorNames.add(cameraConnectFile.name)
@@ -245,7 +245,7 @@ class ThumbnailFileListFragment: FileListBaseFragment() {
         }
     }
 
-    private fun getVisibleSubListToLoad(): List<DomainInformationImage>{
+    private fun getVisibleSubListToLoad(): List<DomainInformationImage> {
         var lastPosition = gridLayoutManager.findLastVisibleItemPosition() + 1
         var subList: List<DomainInformationImage>? = null
         var isPositionOutOfBounds = true
