@@ -114,7 +114,7 @@
     <string name="file_list_associate_partner_id_success">Partner ID associated successfully</string>
     <string name="file_list_associate_partner_id_error">Partner ID could not be associated</string>
     <string name="associate_partner_to_file_button">Associate partner to file button</string>
-    <string name="thumbnail_bytes_error">Something went wrong retrieving the bytes of the image</string>
+    <string name="thumbnail_bytes_error">Something went wrong loading an image</string>
     <string name="button_link_snapshots">buttonLinkSnapshots</string>
     <string name="valid_partner_id_message">You must enter a valid Partner ID</string>
     <string name="mobile_data_status_title">Mobile Data</string>
