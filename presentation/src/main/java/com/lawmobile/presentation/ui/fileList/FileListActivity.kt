@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.activity.viewModels
 import androidx.cardview.widget.CardView
+import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -11,6 +12,7 @@ import com.lawmobile.domain.entities.DomainInformationForList
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.extensions.*
 import com.lawmobile.presentation.ui.base.BaseActivity
+import com.lawmobile.presentation.ui.fileList.FileListBaseFragment.Companion.checkableListInit
 import com.lawmobile.presentation.ui.simpleList.SimpleFileListFragment
 import com.lawmobile.presentation.ui.thumbnailList.ThumbnailFileListFragment
 import com.lawmobile.presentation.utils.Constants.FILE_LIST_SELECTOR
@@ -32,10 +34,15 @@ import kotlinx.android.synthetic.main.file_list_filter_dialog.*
 class FileListActivity : BaseActivity() {
 
     private val fileListViewModel: FileListViewModel by viewModels()
-    private val simpleFileListFragment = SimpleFileListFragment.getActualInstance()
-    private var thumbnailFileListFragment = ThumbnailFileListFragment.getActualInstance()
+
+    private val simpleFileListFragment = SimpleFileListFragment()
+    private var thumbnailFileListFragment = ThumbnailFileListFragment()
+
     private lateinit var actualFragment: String
     private var listType: String? = null
+
+    private var filterDialog: CustomFilterDialog? = null
+
     private val bottomSheetBehavior: BottomSheetBehavior<CardView> by lazy {
         BottomSheetBehavior.from(bottomSheetPartnerId)
     }
@@ -95,6 +102,7 @@ class FileListActivity : BaseActivity() {
         buttonThumbnailList.isActivated = true
         resetButtonAssociate()
         thumbnailFileListFragment.onImageCheck = ::enableAssociatePartnerButton
+        thumbnailFileListFragment.arguments = Bundle().apply { putString(FILE_LIST_TYPE, listType) }
         supportFragmentManager.attachFragment(
             R.id.fragmentListHolder,
             thumbnailFileListFragment,
@@ -116,36 +124,58 @@ class FileListActivity : BaseActivity() {
         var listToFilter = mutableListOf<DomainInformationForList>()
 
         when (actualFragment) {
-            SIMPLE_FILE_LIST -> {
-                listToFilter =
-                    (simpleFileListFragment.simpleFileListAdapter?.fileList
-                        ?: emptyList<DomainInformationForList>()) as MutableList
-
-            }
-            THUMBNAIL_FILE_LIST -> {
-                listToFilter = (thumbnailFileListFragment.thumbnailFileListAdapter?.fileList
+            SIMPLE_FILE_LIST ->
+                listToFilter = simpleFileListFragment.fileListBackup.toMutableList()
+            THUMBNAIL_FILE_LIST ->
+                listToFilter = (thumbnailFileListFragment.thumbnailFileListAdapter?.fileListBackup
                     ?: emptyList<DomainInformationForList>()) as MutableList
-            }
         }
 
-        if (!listToFilter.isNullOrEmpty()) {
-            this.createFilterDialog(layoutFilterTags, listToFilter).apply {
-                when (listType) {
-                    VIDEO_LIST -> eventsSpinnerFilter.isVisible = true
-                    SNAPSHOT_LIST -> eventsSpinnerFilter.isVisible = false
-                }
-                onApplyClick = ::handleOnApplyClick
-            }
+        if (filterDialog == null) {
+            filterDialog =
+                layoutFilterTags.createFilterDialog(::handleOnApplyFilterClick)
         }
+
+        filterDialog?.apply {
+            this.listToFilter = listToFilter
+            show()
+            when (listType) {
+                VIDEO_LIST -> eventsSpinnerFilter.isVisible = true
+                SNAPSHOT_LIST -> eventsSpinnerFilter.isVisible = false
+            }
+            simpleFileListFragment.filter = this
+            thumbnailFileListFragment.filter = this
+        }
+
     }
 
-    private fun handleOnApplyClick(it: Boolean) {
+    private fun handleOnApplyFilterClick(it: Boolean) {
         scrollFilterTags.isVisible = it
+        updateFilterButtonState(it)
         when (actualFragment) {
             SIMPLE_FILE_LIST ->
-                simpleFileListFragment.applyFiltersToList(buttonOpenFilters, it)
+                simpleFileListFragment.applyFiltersToList()
             THUMBNAIL_FILE_LIST ->
-                thumbnailFileListFragment.applyFiltersToList(buttonOpenFilters, it)
+                thumbnailFileListFragment.applyFiltersToList()
+        }
+
+    }
+
+    private fun updateFilterButtonState(it: Boolean) {
+        with(buttonOpenFilters) {
+            background = if (it) {
+                setImageResource(R.drawable.ic_filter_white)
+                ContextCompat.getDrawable(
+                    context,
+                    R.drawable.background_button_blue
+                )
+            } else {
+                setImageResource(R.drawable.ic_filter)
+                ContextCompat.getDrawable(
+                    context,
+                    R.drawable.background_button_cancel
+                )
+            }
         }
     }
 
@@ -276,19 +306,8 @@ class FileListActivity : BaseActivity() {
         hideLoadingDialog()
     }
 
-    private fun destroyInstances() {
-        SimpleFileListFragment.destroyInstance()
-        ThumbnailFileListFragment.destroyInstance()
-        CustomFilterDialog.resetCompanion()
-    }
-
     override fun onBackPressed() {
         super.onBackPressed()
-        destroyInstances()
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        destroyInstances()
+        checkableListInit = false
     }
 }

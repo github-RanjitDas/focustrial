@@ -106,7 +106,7 @@ class LiveActivity : BaseActivity() {
         }
 
         buttonSnapshot.setClickListenerCheckConnection {
-            showShadowLoading(getString(R.string.taking_picture))
+            showShadowLoading(getString(R.string.taking_snapshot))
             activateSwitch(true)
             liveActivityViewModel.takePhoto()
         }

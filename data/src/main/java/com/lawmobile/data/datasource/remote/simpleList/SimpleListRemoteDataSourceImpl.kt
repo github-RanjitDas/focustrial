@@ -6,6 +6,7 @@ import com.safefleet.mobile.avml.cameras.entities.CameraConnectFile
 import com.safefleet.mobile.avml.cameras.entities.CameraConnectFileResponseWithErrors
 import com.safefleet.mobile.avml.cameras.external.CameraConnectService
 import com.safefleet.mobile.commons.helpers.Result
+import com.safefleet.mobile.commons.helpers.getResultWithAttempts
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
@@ -17,7 +18,7 @@ class SimpleListRemoteDataSourceImpl(private val cameraConnectService: CameraCon
         cameraConnectService.getListOfImages()
 
     override suspend fun getVideoList(): Result<CameraConnectFileResponseWithErrors> {
-        val response = withContext(Dispatchers.Default) { cameraConnectService.getListOfVideos() }
+        val response = withContext(Dispatchers.IO) { cameraConnectService.getListOfVideos() }
         if (response is Result.Success) {
             getMetadataForVideoList(response.data.items)
         }
@@ -30,7 +31,9 @@ class SimpleListRemoteDataSourceImpl(private val cameraConnectService: CameraCon
             if (metadata == null) {
                 delay(100)
                 val videoMetadataResponse =
-                    cameraConnectService.getVideoMetadata(it.name, it.nameFolder)
+                    getResultWithAttempts(GET_METADATA_ATTEMPTS){
+                        cameraConnectService.getVideoMetadata(it.name, it.nameFolder)
+                    }
                 if (videoMetadataResponse is Result.Success) {
                     VideoListMetadata.saveOrUpdateVideoMetadata(
                         RemoteVideoMetadata(
@@ -41,5 +44,9 @@ class SimpleListRemoteDataSourceImpl(private val cameraConnectService: CameraCon
                 }
             }
         }
+    }
+
+    companion object {
+        private const val GET_METADATA_ATTEMPTS = 5
     }
 }

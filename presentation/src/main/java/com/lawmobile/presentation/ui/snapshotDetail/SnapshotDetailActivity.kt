@@ -1,6 +1,5 @@
 package com.lawmobile.presentation.ui.snapshotDetail
 
-import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.os.Bundle
@@ -17,11 +16,8 @@ import com.lawmobile.presentation.entities.ImageFilesPathManager
 import com.lawmobile.presentation.entities.ImageWithPathSaved
 import com.lawmobile.presentation.extensions.*
 import com.lawmobile.presentation.ui.base.BaseActivity
-import com.lawmobile.presentation.ui.fileList.FileListActivity
 import com.lawmobile.presentation.ui.thumbnailList.ThumbnailFileListFragment.Companion.PATH_ERROR_IN_PHOTO
 import com.lawmobile.presentation.utils.Constants
-import com.lawmobile.presentation.utils.Constants.FILE_LIST_SELECTOR
-import com.lawmobile.presentation.utils.Constants.SNAPSHOT_LIST
 import com.safefleet.mobile.avml.cameras.entities.CameraConnectFile
 import com.safefleet.mobile.commons.helpers.*
 import kotlinx.android.synthetic.main.activity_snapshot_item_detail.*
@@ -257,17 +253,9 @@ class SnapshotDetailActivity : BaseActivity() {
     override fun onBackPressed() {
         if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
             changeOrientationInView()
-            return
+        } else {
+            super.onBackPressed()
         }
-
-        startToFileList()
-    }
-
-    private fun startToFileList() {
-        val fileListIntent = Intent(this, FileListActivity::class.java)
-        fileListIntent.putExtra(FILE_LIST_SELECTOR, SNAPSHOT_LIST)
-        startActivity(fileListIntent)
-        finish()
     }
 
     private fun restartVisibility() {

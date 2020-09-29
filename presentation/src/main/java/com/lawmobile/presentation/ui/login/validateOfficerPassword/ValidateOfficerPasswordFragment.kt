@@ -13,6 +13,7 @@ import com.lawmobile.presentation.R
 import com.lawmobile.presentation.extensions.setOnClickListenerCheckConnection
 import com.lawmobile.presentation.extensions.showErrorSnackBar
 import com.lawmobile.presentation.extensions.text
+import com.lawmobile.presentation.ui.base.BaseActivity
 import com.lawmobile.presentation.ui.base.BaseFragment
 import com.lawmobile.presentation.ui.login.LoginActivity
 import com.lawmobile.presentation.utils.EncodePassword
@@ -65,7 +66,7 @@ class ValidateOfficerPasswordFragment : BaseFragment() {
 
     private fun configureListeners() {
         buttonLogin.setOnClickListenerCheckConnection {
-            (activity as LoginActivity).hideKeyboard()
+            (activity as BaseActivity).hideKeyboard()
             EspressoIdlingResource.increment()
             verifyPasswordOfficer()
         }
@@ -87,6 +88,7 @@ class ValidateOfficerPasswordFragment : BaseFragment() {
     }
 
     private fun showErrorInGetInformationOfUser() {
+        (activity as BaseActivity).hideKeyboard()
         rootLayoutValidateOfficer.showErrorSnackBar(
             getString(R.string.error_getting_officer_information),
             Snackbar.LENGTH_INDEFINITE

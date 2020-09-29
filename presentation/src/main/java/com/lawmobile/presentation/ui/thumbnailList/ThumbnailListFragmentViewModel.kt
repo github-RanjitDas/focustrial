@@ -32,30 +32,33 @@ class ThumbnailListFragmentViewModel @ViewModelInject constructor(private val th
 
     fun getImageBytes(cameraConnectFile: CameraConnectFile) {
         job = viewModelScope.launch {
-            val result = getResultWithAttempts(ATTEMPTS_TO_GET_BYTES) {
-                thumbnailListUseCase.getImageBytes(cameraConnectFile)
-            }
             thumbnailBytesListMediatorLiveData.postEventValueWithTimeout(
-                LOADING_TIMEOUT_BYTES_SNAPSHOT
-            ){ Event(result) }
+                LOADING_TIMEOUT_SNAPSHOT_BYTES
+            ) {
+                Event(
+                    getResultWithAttempts(ATTEMPTS_TO_GET_BYTES) {
+                        thumbnailListUseCase.getImageBytes(cameraConnectFile)
+                    }
+                )
+            }
         }
     }
 
     fun getSnapshotList() {
         viewModelScope.launch {
-            imageListMediatorLiveData.postValueWithTimeout(LOADING_TIMEOUT_INFORMATION_SNAPSHOT){
+            imageListMediatorLiveData.postValueWithTimeout(LOADING_TIMEOUT_SNAPSHOT_INFORMATION) {
                 thumbnailListUseCase.getSnapshotList()
             }
         }
     }
 
-    fun cancelGetImageBytes(){
+    fun cancelGetImageBytes() {
         job?.cancel()
     }
 
     companion object {
-        private const val LOADING_TIMEOUT_INFORMATION_SNAPSHOT = 35000L
-        private const val LOADING_TIMEOUT_BYTES_SNAPSHOT = 20000L
+        private const val LOADING_TIMEOUT_SNAPSHOT_INFORMATION = 35000L
+        private const val LOADING_TIMEOUT_SNAPSHOT_BYTES = 15000L
         private const val ATTEMPTS_TO_GET_BYTES = 2
     }
 }

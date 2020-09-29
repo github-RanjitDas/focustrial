@@ -7,18 +7,15 @@ import android.content.Intent
 import android.os.Process
 import android.provider.Settings
 import android.view.View
-import android.widget.GridLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import com.lawmobile.domain.entities.DomainInformationForList
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.entities.AlertInformation
 import com.lawmobile.presentation.entities.NeutralAlertInformation
 import com.lawmobile.presentation.ui.base.BaseActivity
 import com.lawmobile.presentation.ui.login.LoginActivity
 import com.lawmobile.presentation.utils.CameraHelper
-import com.lawmobile.presentation.widgets.CustomFilterDialog
 import com.safefleet.mobile.commons.widgets.SafeFleetConfirmationDialog
 import kotlin.system.exitProcess
 
@@ -188,10 +185,6 @@ fun Context.showTimePickerDialog(textView: TextView, hour: Int, minute: Int) {
     )
 
     pickerDialog.show()
-}
-
-fun Context.createFilterDialog(gridLayout: GridLayout, listToFilter: List<DomainInformationForList>): CustomFilterDialog {
-    return CustomFilterDialog(this, true, gridLayout, listToFilter).apply { show() }
 }
 
 private fun fixDate(year: Int, _month: Int, _day: Int): String {

@@ -49,7 +49,7 @@ class VideoPlaybackActivity : BaseActivity() {
     private var isVideoMetadataChangesSaved = false
     private lateinit var currentMetadata: CameraConnectVideoMetadata
 
-    private var associateSnapshotsFragment = AssociateSnapshotsFragment.getActualInstance()
+    private var associateSnapshotsFragment = AssociateSnapshotsFragment()
     private val bottomSheetBehavior: BottomSheetBehavior<CardView> by lazy {
         BottomSheetBehavior.from(bottomSheetAssociate)
     }
@@ -266,6 +266,7 @@ class VideoPlaybackActivity : BaseActivity() {
             doIfSuccess {
                 currentMetadata = it
                 setVideoMetadata(it)
+                CameraInfo.areNewChanges = true
             }
             doIfError {
                 this@VideoPlaybackActivity.showToast(
@@ -671,7 +672,6 @@ class VideoPlaybackActivity : BaseActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        AssociateSnapshotsFragment.destroyInstance()
         SnapshotsAssociatedByUser.cleanList()
     }
 
