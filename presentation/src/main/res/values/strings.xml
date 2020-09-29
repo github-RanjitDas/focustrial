@@ -179,6 +179,7 @@
     <string name="associate_snapshots_to_video">Associate snapshots to video</string>
     <string name="associate_images">Associate Images</string>
     <string name="no_new_photo_selected_message">Not selected any new photos</string>
+    <string name="snapshots_added_success">Snapshots added successfully</string>
 
     <string-array name="gender_spinner">
         <item>Select</item>

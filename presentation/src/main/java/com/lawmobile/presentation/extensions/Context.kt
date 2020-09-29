@@ -1,13 +1,10 @@
 package com.lawmobile.presentation.extensions
 
-import android.app.DatePickerDialog
-import android.app.TimePickerDialog
 import android.content.Context
 import android.content.Intent
 import android.os.Process
 import android.provider.Settings
 import android.view.View
-import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import com.lawmobile.presentation.R
