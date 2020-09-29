@@ -111,13 +111,13 @@
     <dimen name="button_close_instructions_size">18dp</dimen>
     <dimen name="button_close_instructions_margin_end">20dp</dimen>
     <dimen name="instructions_divider_size">1dp</dimen>
-    <dimen name="instructions_image_padding_vertical">50dp</dimen>
+    <dimen name="instructions_image_padding_vertical">25dp</dimen>
     <dimen name="instructions_step_number_padding_horizontal">6dp</dimen>
     <dimen name="instructions_step_margin_start">66dp</dimen>
     <dimen name="instructions_step_margin_end">55dp</dimen>
-    <dimen name="instructions_step_margin_top">20dp</dimen>
+    <dimen name="instructions_step_margin_top">15dp</dimen>
     <dimen name="button_dismiss_instructions_spacing">30dp</dimen>
-    <dimen name="button_dismiss_instructions_margin_top">60dp</dimen>
+    <dimen name="button_dismiss_instructions_margin_top">30dp</dimen>
     <dimen name="text_size_20sp">20sp</dimen>
 
     <!--    custom buttons-->
@@ -159,5 +159,4 @@
     <dimen name="margin_13dp">13dp</dimen>
     <dimen name="margin_26dp">26dp</dimen>
     <dimen name="margin_25dp">25dp</dimen>
-
 </resources>

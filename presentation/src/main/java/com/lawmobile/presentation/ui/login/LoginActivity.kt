@@ -56,6 +56,7 @@ class LoginActivity : BaseActivity() {
     }
 
     private fun configureBottomSheet() {
+        sheetBehavior.isDraggable = false
         sheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
         buttonDismissInstructions.setOnClickListener {
             sheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
