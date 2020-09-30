@@ -16,7 +16,7 @@ import org.junit.runner.RunWith
 
 @LargeTest
 @RunWith(AndroidJUnit4::class)
-class VideoPlaybackTest : EspressoBaseTest<LoginActivity>(LoginActivity::class.java) {
+class VideoPlaybackTest : EspressoStartActivityBaseTest<LoginActivity>(LoginActivity::class.java) {
 
     companion object {
         private val fileListScreen = FileListScreen()

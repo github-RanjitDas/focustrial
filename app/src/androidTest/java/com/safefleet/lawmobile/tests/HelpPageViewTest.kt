@@ -12,7 +12,7 @@ import org.junit.runner.RunWith
 
 @LargeTest
 @RunWith(AndroidJUnit4::class)
-class HelpPageViewTest : EspressoBaseTest<LoginActivity>(LoginActivity::class.java) {
+class HelpPageViewTest : EspressoStartActivityBaseTest<LoginActivity>(LoginActivity::class.java) {
 
     companion object {
         private val liveViewScreen = LiveViewScreen()
@@ -24,14 +24,6 @@ class HelpPageViewTest : EspressoBaseTest<LoginActivity>(LoginActivity::class.ja
     fun openUserGuideFromLiveView_FMA_845() {
         LoginScreen().login()
         with(liveViewScreen) {
-            openHelpPage()
-            isUserGuideDisplayed()
-        }
-    }
-
-    @Test
-    fun openUserGuideFromPairingScreen_FMA_846() {
-        with(pairingScreen) {
             openHelpPage()
             isUserGuideDisplayed()
         }

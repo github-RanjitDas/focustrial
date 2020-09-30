@@ -24,6 +24,7 @@ class CameraConnectServiceX1Mock : CameraConnectService {
         var videoList = CameraFilesData.DEFAULT_VIDEO_LIST.value
         var takenPhotos = 0
         var takenVideos = 0
+        var result: Result<Int> = Result.Success(100)
     }
 
     override suspend fun disconnectCamera(): Result<Unit> {
@@ -121,7 +122,7 @@ class CameraConnectServiceX1Mock : CameraConnectService {
     }
 
     override suspend fun loadPairingCamera(hostnameToConnect: String, ipAddressClient: String) {
-        progressPairingCameraMediator.postValue(Result.Success(100))
+        progressPairingCameraMediator.postValue(result)
     }
 
     override suspend fun saveAllPhotoMetadata(list: List<CameraConnectPhotoMetadata>): Result<Unit> {

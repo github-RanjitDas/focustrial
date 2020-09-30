@@ -14,7 +14,7 @@ import org.junit.runner.RunWith
 
 @LargeTest
 @RunWith(AndroidJUnit4::class)
-class VideoListTest : EspressoBaseTest<LoginActivity>(LoginActivity::class.java) {
+class VideoListTest : EspressoStartActivityBaseTest<LoginActivity>(LoginActivity::class.java) {
     companion object {
         private val videoList = CameraFilesData.DEFAULT_VIDEO_LIST.value
         private val videosQuantity = videoList.items.size
@@ -114,9 +114,7 @@ class VideoListTest : EspressoBaseTest<LoginActivity>(LoginActivity::class.java)
                 endPosition = videosQuantity - 1
             )
 
-            /*for some reason checkbox 0 unselected by itself
-             this does not happen in snapshot list and is using
-             the same recycler view*/
+            selectCheckboxOnPosition(0)
             selectCheckboxOnPosition(3)
             selectCheckboxOnPosition(5)
 

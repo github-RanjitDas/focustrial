@@ -25,8 +25,9 @@ import javax.inject.Singleton
 @Module
 @InstallIn(ApplicationComponent::class)
 class AppModule {
-    
+
     companion object {
+        var wifiEnabled = true
 
         @Provides
         @Singleton
@@ -41,13 +42,16 @@ class AppModule {
             context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 
         @Provides
-        @Singleton
         fun provideWifiHelper(wifiManager: WifiManager): WifiHelper = mockk {
             every { getGatewayAddress() } returns "192.168.42.1"
             every { getIpAddress() } returns "192.168.42.2"
             every { isEqualsValueWithSSID(TestLoginData.SSID.value) } returns true
             every { isEqualsValueWithSSID(TestLoginData.INVALID_SSID.value) } returns false
-            every { isWifiEnable() } returns true
+            if (wifiEnabled) {
+                every { isWifiEnable() } returns true
+            } else {
+                every { isWifiEnable() } returns false andThen true
+            }
             every { getSSIDWiFi() } returns TestLoginData.SSID.value
         }
 

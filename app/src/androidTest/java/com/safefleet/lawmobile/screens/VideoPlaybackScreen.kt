@@ -12,7 +12,6 @@ class VideoPlaybackScreen : BaseScreen() {
 
     fun clickOnSave() = clickOn(R.id.saveButtonVideoPlayback)
     fun clickOnBack() = clickOn(R.id.backArrowFileListAppBar)
-    fun clickOnCancel() = clickOn(R.string.cancel)
     fun clickOnAccept() = clickOn(R.string.accept)
 
     fun selectEvent(data: CameraConnectVideoMetadata) {

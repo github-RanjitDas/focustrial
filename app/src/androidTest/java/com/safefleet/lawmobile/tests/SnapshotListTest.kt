@@ -18,7 +18,7 @@ import org.junit.runners.MethodSorters
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @LargeTest
 @RunWith(AndroidJUnit4::class)
-class SnapshotListTest : EspressoBaseTest<LoginActivity>(LoginActivity::class.java) {
+class SnapshotListTest : EspressoStartActivityBaseTest<LoginActivity>(LoginActivity::class.java) {
     companion object {
         private val snapshotsList = CameraFilesData.DEFAULT_SNAPSHOT_LIST.value
         private val snapshotsQuantity = snapshotsList.items.size
@@ -110,6 +110,8 @@ class SnapshotListTest : EspressoBaseTest<LoginActivity>(LoginActivity::class.ja
         with(fileListScreen) {
             clickOnSimpleListButton()
             areFilesSortedByDate(snapshotsList.items)
+
+            clickOnSelectFilesToAssociate()
 
             selectCheckboxOnPosition(0)
             isCheckboxSelected(0)
