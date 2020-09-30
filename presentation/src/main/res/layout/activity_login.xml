@@ -27,7 +27,7 @@
             android:src="@drawable/ic_logo_focus_anim" />
 
         <ImageView
-            android:id="@+id/imageViewSafeFleet"
+            android:id="@+id/imageViewSafeFleetFooterLogo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:contentDescription="@string/focus_logo_background"
@@ -42,7 +42,7 @@
             android:paddingStart="@dimen/login_constrain_parent_padding"
             android:paddingEnd="@dimen/login_constrain_parent_padding"
             android:visibility="visible"
-            app:layout_constraintBottom_toTopOf="@+id/imageViewSafeFleet"
+            app:layout_constraintBottom_toTopOf="@+id/imageViewSafeFleetFooterLogo"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/loginGuideline1" />

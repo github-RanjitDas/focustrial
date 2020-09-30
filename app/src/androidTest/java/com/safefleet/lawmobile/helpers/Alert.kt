@@ -24,4 +24,9 @@ object Alert {
         assertDisplayed(R.string.accept)
     }
 
+    fun isWifiOffAlertDisplayed() {
+        assertDisplayed(R.string.wifi_is_off)
+        assertDisplayed(R.string.please_turn_wifi_on)
+        assertDisplayed(R.string.OK)
+    }
 }

@@ -15,7 +15,7 @@ import org.junit.runners.MethodSorters
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @LargeTest
 @RunWith(AndroidJUnit4::class)
-class AppNavigationTest : EspressoBaseTest<LoginActivity>(LoginActivity::class.java) {
+class AppNavigationTest : EspressoStartActivityBaseTest<LoginActivity>(LoginActivity::class.java) {
 
     companion object {
         val liveViewScreen = LiveViewScreen()

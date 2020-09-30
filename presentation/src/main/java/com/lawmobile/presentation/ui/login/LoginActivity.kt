@@ -84,7 +84,7 @@ class LoginActivity : BaseActivity() {
 
     private fun showLoginViews(isFinished: Boolean) {
         if (isFinished) {
-            imageViewSafeFleet.isVisible = true
+            imageViewSafeFleetFooterLogo.isVisible = true
             showFragmentPairingCamera()
             verifyLocationPermission()
         }
@@ -137,7 +137,7 @@ class LoginActivity : BaseActivity() {
         super.onStop()
         imageViewFMALogo.isVisible = false
         imageViewFMALogoNoAnimation.isVisible = true
-        imageViewSafeFleet.isVisible = true
+        imageViewSafeFleetFooterLogo.isVisible = true
     }
 
     override fun onBackPressed() {}
