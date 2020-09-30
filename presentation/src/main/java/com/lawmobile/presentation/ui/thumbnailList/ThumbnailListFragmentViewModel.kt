@@ -56,6 +56,8 @@ class ThumbnailListFragmentViewModel @ViewModelInject constructor(private val th
         job?.cancel()
     }
 
+    fun isJobCancelled() = job?.isCancelled
+
     companion object {
         private const val LOADING_TIMEOUT_SNAPSHOT_INFORMATION = 35000L
         private const val LOADING_TIMEOUT_SNAPSHOT_BYTES = 15000L

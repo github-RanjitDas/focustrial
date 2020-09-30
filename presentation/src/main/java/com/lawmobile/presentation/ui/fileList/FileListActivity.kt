@@ -121,14 +121,13 @@ class FileListActivity : BaseActivity() {
     }
 
     private fun showFilterDialog() {
-        var listToFilter = mutableListOf<DomainInformationForList>()
+        var listToFilter = listOf<DomainInformationForList>()
 
         when (actualFragment) {
             SIMPLE_FILE_LIST ->
-                listToFilter = simpleFileListFragment.fileListBackup.toMutableList()
+                listToFilter = simpleFileListFragment.fileListBackup
             THUMBNAIL_FILE_LIST ->
-                listToFilter = (thumbnailFileListFragment.thumbnailFileListAdapter?.fileListBackup
-                    ?: emptyList<DomainInformationForList>()) as MutableList
+                listToFilter = thumbnailFileListFragment.fileListBackup
         }
 
         if (filterDialog == null) {

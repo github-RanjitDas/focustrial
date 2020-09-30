@@ -59,7 +59,8 @@ class SimpleFileListAdapter(
             fileList = fileList.sortedBy { it.cameraConnectFile.getCreationDate() } as MutableList
             isSortedAscendingByDateAndTime = false
         } else {
-            fileList = fileList.sortedByDescending { it.cameraConnectFile.getCreationDate() } as MutableList
+            fileList =
+                fileList.sortedByDescending { it.cameraConnectFile.getCreationDate() } as MutableList
             isSortedAscendingByDateAndTime = true
         }
     }
@@ -70,7 +71,8 @@ class SimpleFileListAdapter(
                 fileList.sortedByDescending { it.cameraConnectVideoMetadata?.metadata?.event?.name } as MutableList
             isSortedAscendingByEvent = false
         } else {
-            fileList = fileList.sortedBy { it.cameraConnectVideoMetadata?.metadata?.event?.name } as MutableList
+            fileList =
+                fileList.sortedBy { it.cameraConnectVideoMetadata?.metadata?.event?.name } as MutableList
             isSortedAscendingByEvent = true
         }
     }
@@ -133,7 +135,7 @@ class SimpleFileListAdapter(
             }
         }
 
-        private fun selectItemFromTheList(remoteCameraFile: DomainInformationFile){
+        private fun selectItemFromTheList(remoteCameraFile: DomainInformationFile) {
             with(fileView) {
                 if (showCheckBoxes) {
                     checkboxSimpleListItem.isActivated = !checkboxSimpleListItem.isActivated
@@ -143,7 +145,6 @@ class SimpleFileListAdapter(
                     onFileClick.invoke(remoteCameraFile)
                 }
             }
-
         }
 
         private fun onCheckedFile(remoteCameraFile: DomainInformationFile, isChecked: Boolean) {
