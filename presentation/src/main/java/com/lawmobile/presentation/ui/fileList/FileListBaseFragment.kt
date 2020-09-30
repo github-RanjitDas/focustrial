@@ -23,16 +23,16 @@ open class FileListBaseFragment: BaseFragment() {
     var filter: CustomFilterDialog? = null
 
     fun showFileListRecycler() {
-        fileListRecycler.isVisible = true
-        noFilesTextView.isVisible = false
+        fileListRecycler?.isVisible = true
+        noFilesTextView?.isVisible = false
     }
 
     fun showEmptyListMessage() {
-        noFilesTextView.isVisible = true
-        fileListRecycler.isVisible = false
+        noFilesTextView?.isVisible = true
+        fileListRecycler?.isVisible = false
         when (listType) {
-            SNAPSHOT_LIST -> noFilesTextView.text = getString(R.string.no_images_found)
-            VIDEO_LIST -> noFilesTextView.text = getString(R.string.no_videos_found)
+            SNAPSHOT_LIST -> noFilesTextView?.text = getString(R.string.no_images_found)
+            VIDEO_LIST -> noFilesTextView?.text = getString(R.string.no_videos_found)
         }
     }
 

@@ -28,14 +28,15 @@ import com.safefleet.mobile.commons.helpers.doIfError
 import com.safefleet.mobile.commons.helpers.doIfSuccess
 import kotlinx.android.synthetic.main.fragment_file_list.*
 import java.io.File
+import kotlin.math.min
 
 class ThumbnailFileListFragment : FileListBaseFragment() {
 
     private val thumbnailListFragmentViewModel: ThumbnailListFragmentViewModel by activityViewModels()
-    private var errorNames: ArrayList<String> = arrayListOf()
+    private var imagesFailedToLoad: ArrayList<String> = arrayListOf()
     private var isLoading = false
     private var currentImageLoading: CameraConnectFile? = null
-    private var loadedImagesList = ArrayList<DomainInformationImage>()
+    var fileListBackup = mutableListOf<DomainInformationImage>()
 
     private lateinit var gridLayoutManager: GridLayoutManager
 
@@ -66,7 +67,7 @@ class ThumbnailFileListFragment : FileListBaseFragment() {
                     .filterIsInstance<DomainInformationImage>() as MutableList
             }
         }
-        setRecyclerView()
+        setAndFilterRecyclerView()
     }
 
     private fun configureLayoutItems() {
@@ -87,12 +88,16 @@ class ThumbnailFileListFragment : FileListBaseFragment() {
             ThumbnailFileListAdapter(::onImageClick, onImageCheck)
                 .apply { showCheckBoxes = checkableListInit }
 
+        fileListBackup = mutableListOf()
+
         listItems.forEach {
-            thumbnailFileListAdapter?.addItemToList(DomainInformationImage(it.cameraConnectFile))
+            val domainInformationImage = DomainInformationImage(it.cameraConnectFile)
+            thumbnailFileListAdapter?.addItemToList(domainInformationImage)
+            fileListBackup.add(domainInformationImage)
         }
 
         if (checkableListInit) setAssociatedRecyclerView()
-        else setRecyclerView()
+        else setAndFilterRecyclerView()
         startRetrievingImages()
     }
 
@@ -103,13 +108,11 @@ class ThumbnailFileListFragment : FileListBaseFragment() {
     }
 
     fun applyFiltersToList() {
+        thumbnailListFragmentViewModel.cancelGetImageBytes()
         thumbnailFileListAdapter?.fileList =
             filter?.filteredList?.filterIsInstance<DomainInformationImage>()
                     as MutableList<DomainInformationImage>
-        if (!filter?.filteredList.isNullOrEmpty()) {
-            thumbnailListFragmentViewModel.cancelGetImageBytes()
-            loadNewImage()
-        }
+        loadNewImage()
         manageFragmentContent()
     }
 
@@ -129,11 +132,15 @@ class ThumbnailFileListFragment : FileListBaseFragment() {
             showCheckBoxes = !showCheckBoxes
             if (!showCheckBoxes) uncheckAllItems()
         }
+        setAndFilterRecyclerView()
+    }
+
+    private fun setAndFilterRecyclerView() {
+        restoreFilters()
         setRecyclerView()
     }
 
     private fun setRecyclerView() {
-        restoreFilters()
         fileListRecycler?.apply {
             setHasFixedSize(true)
             gridLayoutManager = GridLayoutManager(requireContext(), 2)
@@ -160,7 +167,7 @@ class ThumbnailFileListFragment : FileListBaseFragment() {
         hideLoadingDialog()
         with(result) {
             doIfSuccess {
-                if (it.errors.isNotEmpty()) handleErrors(it.errors)
+                if (it.errors.isNotEmpty()) showErrorInSomeFiles(it.errors)
                 if (it.listItems.isNotEmpty()) setAdapter(it.listItems)
                 else showEmptyListMessage()
             }
@@ -176,7 +183,7 @@ class ThumbnailFileListFragment : FileListBaseFragment() {
         }
     }
 
-    private fun handleErrors(errors: ArrayList<String>) {
+    private fun showErrorInSomeFiles(errors: ArrayList<String>) {
         fileListLayout.showErrorSnackBar(
             getString(R.string.getting_files_error_description),
             Snackbar.LENGTH_LONG
@@ -189,43 +196,51 @@ class ThumbnailFileListFragment : FileListBaseFragment() {
     private fun handleImageBytes(result: Event<Result<DomainInformationImage>>) {
         result.getContentIfNotHandled()?.run {
             doIfSuccess { setImagesInAdapter(it) }
-            doIfError { manageErrorInGetBytes(it) }
+            doIfError { manageErrorLoadingImageBytes(it) }
         }
     }
 
-    private fun manageErrorInGetBytes(e: Exception) {
+    private fun manageErrorLoadingImageBytes(e: Exception) {
         e.printStackTrace()
         isLoading = false
-        fileListLayout.showErrorSnackBar(getString(R.string.thumbnail_bytes_error))
+
+        if (thumbnailListFragmentViewModel.isJobCancelled() == false) {
+            fileListLayout.showErrorSnackBar(getString(R.string.thumbnail_bytes_error))
+        }
 
         currentImageLoading?.let { cameraConnectFile ->
-            errorNames.add(cameraConnectFile.name)
+            imagesFailedToLoad.add(cameraConnectFile.name)
             ImageFilesPathManager.saveImageWithPath(
                 ImageWithPathSaved(cameraConnectFile.name, PATH_ERROR_IN_PHOTO)
             )
-            thumbnailFileListAdapter?.addItemToList(DomainInformationImage(cameraConnectFile))
+            val domainInformationImage =
+                DomainInformationImage(cameraConnectFile, null, false, PATH_ERROR_IN_PHOTO)
+            thumbnailFileListAdapter?.addItemToList(domainInformationImage)
             isLoading = false
             loadNewImage()
         }
     }
 
-    private fun setImagesInAdapter(it: DomainInformationImage) {
-        if (it.imageBytes != null) {
-            it.internalPath =
-                it.imageBytes!!.getPathFromTemporalFile(requireContext(), it.cameraConnectFile.name)
+    private fun setImagesInAdapter(image: DomainInformationImage) {
+        if (image.imageBytes != null) {
+            image.internalPath =
+                image.imageBytes!!.getPathFromTemporalFile(
+                    requireContext(),
+                    image.cameraConnectFile.name
+                )
 
             ImageFilesPathManager.saveImageWithPath(
-                ImageWithPathSaved(it.cameraConnectFile.name, it.internalPath!!)
+                ImageWithPathSaved(image.cameraConnectFile.name, image.internalPath!!)
             )
         } else {
             fileListLayout.showErrorSnackBar(getString(R.string.thumbnail_bytes_error))
         }
 
-        thumbnailFileListAdapter?.addItemToList(it)
-        loadedImagesList.add(it)
-        isLoading = false
-
-        loadNewImage()
+        if (thumbnailFileListAdapter?.fileList?.indexOfFirst { it.cameraConnectFile.name == image.cameraConnectFile.name } != -1) {
+            thumbnailFileListAdapter?.addItemToList(image)
+            isLoading = false
+            loadNewImage()
+        }
     }
 
     private fun scrollListenerForPagination() = object : RecyclerView.OnScrollListener() {
@@ -246,19 +261,13 @@ class ThumbnailFileListFragment : FileListBaseFragment() {
     }
 
     private fun getVisibleSubListToLoad(): List<DomainInformationImage> {
-        var lastPosition = gridLayoutManager.findLastVisibleItemPosition() + 1
         var subList: List<DomainInformationImage>? = null
-        var isPositionOutOfBounds = true
 
-        while (isPositionOutOfBounds) {
-            try {
-                subList = thumbnailFileListAdapter?.fileList?.subList(0, lastPosition)
-                    ?.filter { it.internalPath == null }
-                isPositionOutOfBounds = false
-            } catch (e: Exception) {
-                lastPosition--
-                isPositionOutOfBounds = true
-                if (lastPosition < 0) break
+        thumbnailFileListAdapter?.fileList?.let {
+            val lastPosition = gridLayoutManager.findLastVisibleItemPosition() + 1
+            val lastPositionToFilter = min(lastPosition, it.size)
+            subList = it.subList(0, lastPositionToFilter).filter { image ->
+                image.internalPath == null
             }
         }
 
@@ -269,27 +278,39 @@ class ThumbnailFileListFragment : FileListBaseFragment() {
         val subList = getVisibleSubListToLoad()
 
         if (!subList.isNullOrEmpty()) {
-            isLoading = true
-            val imageToLoad =
-                subList.firstOrNull { !errorNames.contains(it.cameraConnectFile.name) }?.cameraConnectFile
+            uploadImageInAdapter(subList)
+        }
+    }
 
-            imageToLoad?.let {
-                val file = ImageFilesPathManager.getImageIfExist(it.name)
+    private fun uploadImageInAdapter(subList: List<DomainInformationImage>) {
+        isLoading = true
+        val imageToLoad =
+            subList.firstOrNull { !imagesFailedToLoad.contains(it.cameraConnectFile.name) }?.cameraConnectFile
 
-                if (file != null) {
-                    val domainImage =
-                        DomainInformationImage(it, null, false, file.absolutePath)
+        imageToLoad?.let {
+            val file = ImageFilesPathManager.getImageIfExist(it.name)
 
-                    if (checkIfFileExist(file.absolutePath)) {
-                        thumbnailFileListAdapter?.addItemToList(domainImage)
-                        loadedImagesList.add(domainImage)
-                        isLoading = false
-                        loadNewImage()
-                    }
-                } else {
-                    currentImageLoading = it
-                    thumbnailListFragmentViewModel.getImageBytes(it)
+            if (file != null) {
+                val domainImage =
+                    DomainInformationImage(it, null, false, file.absolutePath)
+
+                if (checkIfFileExist(file.absolutePath)) {
+                    thumbnailFileListAdapter?.addItemToList(domainImage)
+                    isLoading = false
+                    loadNewImage()
                 }
+            } else {
+                currentImageLoading = it
+                thumbnailListFragmentViewModel.getImageBytes(it)
+            }
+        } ?: run {
+            val cameraConnectFile = subList.firstOrNull()
+            cameraConnectFile?.let {
+                val domainImage =
+                    DomainInformationImage(it.cameraConnectFile, null, false, PATH_ERROR_IN_PHOTO)
+                thumbnailFileListAdapter?.addItemToList(domainImage)
+                isLoading = false
+                loadNewImage()
             }
         }
     }

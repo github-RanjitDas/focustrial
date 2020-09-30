@@ -27,7 +27,6 @@ class ThumbnailFileListAdapter(
             field = value
             notifyDataSetChanged()
         }
-    var fileListBackup = mutableListOf<DomainInformationImage>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ThumbnailListViewHolder {
         return ThumbnailListViewHolder(
@@ -70,10 +69,8 @@ class ThumbnailFileListAdapter(
                 domainInformationImage.apply {
                     isSelected = fileList[indexOrFirst].isSelected
                 }
-            fileListBackup[indexOrFirst] = fileList[indexOrFirst]
         } else {
             fileList.add(domainInformationImage)
-            fileListBackup.add(domainInformationImage)
         }
 
         notifyDataSetChanged()

@@ -130,10 +130,11 @@ class CustomFilterDialog constructor(
         if (eventsSpinnerFilter.selectedItemId > 0) eventsSpinnerFilter.selectedItem.toString() else ""
 
     fun applyFiltersToLists() {
-        var dateTag = ""
         tagsGridLayout.removeAllViews()
 
-        var filteringList = mutableListOf<DomainInformationForList>().apply { addAll(listToFilter) }
+        var dateTag = ""
+        var filteringList = mutableListOf<DomainInformationForList>()
+            .apply { addAll(listToFilter) }
 
         tagsGridLayout.let {
             currentFilters[START_DATE_POSITION].ifIsNotEmptyLet { startDate ->
@@ -180,9 +181,10 @@ class CustomFilterDialog constructor(
 
         saveFiltersAsDefault()
         showClearButtons()
-        val isAnyFilter = currentFilters.any { it != "" }
-        onApplyClick.invoke(isAnyFilter)
+        onApplyClick.invoke(isAnyFilters())
     }
+
+    private fun isAnyFilters() = currentFilters.any { it != "" }
 
     private fun createTagInPosition(position: Int, text: String) {
         tagsGridLayout.addView(

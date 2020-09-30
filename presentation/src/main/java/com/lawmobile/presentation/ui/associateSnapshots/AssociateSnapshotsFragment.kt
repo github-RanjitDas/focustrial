@@ -90,11 +90,11 @@ class AssociateSnapshotsFragment : BaseFragment() {
         when (actualFragment) {
             SIMPLE_FILE_LIST -> {
                 listToFilter =
-                    simpleFileListFragment.simpleFileListAdapter?.fileList as List<DomainInformationForList>
+                    simpleFileListFragment.fileListBackup
             }
             THUMBNAIL_FILE_LIST -> {
                 listToFilter =
-                    thumbnailFileListFragment.thumbnailFileListAdapter?.fileList as List<DomainInformationForList>
+                    thumbnailFileListFragment.fileListBackup
             }
         }
 
