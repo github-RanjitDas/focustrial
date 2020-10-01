@@ -22,22 +22,24 @@
             android:id="@+id/textViewCameraStatus"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/camera_status_margin_horizontal"
-            android:layout_marginVertical="@dimen/camera_status_margin_vertical"
             android:text="@string/camera_status"
             android:textColor="@color/black"
+            app:layout_constraintVertical_bias="0.7"
+            android:layout_marginHorizontal="@dimen/camera_status_margin_horizontal"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/guidelineTopInfo"/>
 
         <ImageView
             android:id="@+id/imageViewBattery"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/battery_margin_top"
             android:background="@drawable/ic_battery"
             android:contentDescription="@string/battery_level"
+            app:layout_constraintVertical_bias="0.4"
             app:layout_constraintStart_toStartOf="@id/textViewCameraStatus"
-            app:layout_constraintTop_toBottomOf="@id/textViewCameraStatus" />
+            app:layout_constraintTop_toBottomOf="@id/guidelineTopInfo"
+            app:layout_constraintBottom_toTopOf="@id/guidelineTopStream"/>
 
         <TextView
             android:id="@+id/textViewBatteryPercent"
@@ -55,7 +57,7 @@
             android:layout_height="@dimen/battery_level_height"
             android:layout_marginHorizontal="@dimen/battery_level_margin_horizontal"
             app:layout_constraintBottom_toBottomOf="@id/imageViewBattery"
-            app:layout_constraintEnd_toStartOf="@id/guideline2"
+            app:layout_constraintEnd_toStartOf="@id/guidelineMidVertical"
             app:layout_constraintStart_toEndOf="@id/imageViewBattery" />
 
         <ImageView
@@ -66,7 +68,7 @@
             android:background="@drawable/ic_memory"
             android:contentDescription="@string/memory_level"
             app:layout_constraintBottom_toBottomOf="@id/imageViewBattery"
-            app:layout_constraintStart_toStartOf="@id/guideline2" />
+            app:layout_constraintStart_toStartOf="@id/guidelineMidVertical" />
 
         <TextView
             android:id="@+id/textViewStorageLevels"
@@ -92,22 +94,22 @@
         <SurfaceView
             android:id="@+id/liveStreamingView"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/live_view_surface_view_height_default"
-            android:layout_marginTop="@dimen/live_streaming_margin_top"
+            android:layout_height="@dimen/no_dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="@id/guidelineTopStream"
+            app:layout_constraintBottom_toTopOf="@id/guidelineMidHorizontal"/>
 
         <View
             android:id="@+id/viewLiveStreamingShadow"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/live_view_surface_view_height_default"
-            android:layout_marginTop="@dimen/live_streaming_margin_top"
+            android:layout_height="@dimen/no_dp"
             android:background="@color/whiteTransparentShadow"
             android:visibility="invisible"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="@id/guidelineTopStream"
+            app:layout_constraintBottom_toTopOf="@id/guidelineMidHorizontal"/>
 
         <com.airbnb.lottie.LottieAnimationView
             android:id="@+id/viewLoading"
@@ -155,9 +157,9 @@
             android:text="@string/live_view_label"
             android:textAlignment="center"
             android:textSize="@dimen/live_view_label_text_size"
-            app:layout_constraintBottom_toBottomOf="@id/buttonSwitchLiveView"
+            app:layout_constraintBottom_toBottomOf="@id/guidelineMidHorizontal2"
             app:layout_constraintStart_toStartOf="@id/buttonSnapshot"
-            app:layout_constraintTop_toTopOf="@id/buttonSwitchLiveView" />
+            app:layout_constraintTop_toTopOf="@id/guidelineMidHorizontal" />
 
         <com.safefleet.mobile.commons.widgets.SafeFleetSwitch
             android:id="@+id/buttonSwitchLiveView"
@@ -166,9 +168,9 @@
             android:layout_margin="@dimen/switch_margin"
             android:clickable="true"
             android:focusable="true"
-            app:layout_constraintBottom_toTopOf="@id/dividerSimpleListItem"
+            app:layout_constraintBottom_toTopOf="@id/guidelineMidHorizontal2"
             app:layout_constraintStart_toEndOf="@id/textLiveViewSwitch"
-            app:layout_constraintTop_toBottomOf="@id/liveStreamingView" />
+            app:layout_constraintTop_toBottomOf="@id/guidelineMidHorizontal" />
 
         <ImageView
             android:id="@+id/imageRecordingIndicator"
@@ -206,37 +208,39 @@
             android:textStyle="bold"
             android:contentDescription="@string/button_link_snapshots"
             android:background="@drawable/background_button_help"
-            app:layout_constraintBottom_toBottomOf="@id/textViewCameraStatus"
-            app:layout_constraintEnd_toEndOf="@id/progressStorageLevel"
-             />
+            app:layout_constraintTop_toTopOf="@id/textViewCameraStatus"
+            app:layout_constraintEnd_toEndOf="@id/progressStorageLevel" />
 
         <View
             android:id="@+id/dividerSimpleListItem"
             android:layout_width="match_parent"
             android:layout_height="@dimen/live_view_divider_height"
-            android:layout_marginTop="@dimen/live_view_divider_margin_top"
             android:background="@color/grey"
-            app:layout_constraintTop_toBottomOf="@id/buttonSwitchLiveView" />
+            app:layout_constraintTop_toBottomOf="@id/guidelineMidHorizontal2" />
 
         <com.lawmobile.presentation.widgets.CustomSnapshotButton
             android:id="@+id/buttonSnapshot"
-            android:layout_width="wrap_content"
-            android:layout_height="@dimen/button_snapshot_height"
-            android:layout_marginBottom="@dimen/button_snapshot_margin_bottom"
+            android:layout_width="@dimen/no_dp"
+            android:layout_height="@dimen/no_dp"
+            android:layout_marginVertical="@dimen/live_view_buttons_margin_vertical"
+            android:layout_marginHorizontal="@dimen/live_view_buttons_margin_horizontal"
             android:contentDescription="@string/button_snapshot"
-            app:layout_constraintBottom_toTopOf="@id/buttonSnapshotList"
-            app:layout_constraintEnd_toStartOf="@+id/guideline2"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintBottom_toTopOf="@id/guidelineBottom"
+            app:layout_constraintEnd_toStartOf="@+id/guidelineMidVertical"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/guidelineMidHorizontal2" />
 
         <com.lawmobile.presentation.widgets.CustomRecordButton
             android:id="@+id/buttonRecord"
-            android:layout_width="wrap_content"
+            android:layout_width="@dimen/no_dp"
             android:layout_height="@dimen/no_dp"
+            android:layout_marginVertical="@dimen/live_view_buttons_margin_vertical"
+            android:layout_marginHorizontal="@dimen/live_view_buttons_margin_horizontal"
             android:contentDescription="@string/button_streaming"
-            app:layout_constraintBottom_toBottomOf="@id/buttonSnapshot"
+            app:layout_constraintBottom_toBottomOf="@id/guidelineBottom"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/guideline2"
-            app:layout_constraintTop_toTopOf="@id/buttonSnapshot" />
+            app:layout_constraintStart_toStartOf="@+id/guidelineMidVertical"
+            app:layout_constraintTop_toTopOf="@id/guidelineMidHorizontal2" />
 
         <View
             android:id="@+id/viewDisableButtons"
@@ -246,13 +250,13 @@
             android:clickable="true"
             android:focusable="true"
             android:visibility="invisible"
-            app:layout_constraintBottom_toTopOf="@id/buttonSnapshotList"
-            app:layout_constraintTop_toBottomOf="@id/dividerSimpleListItem" />
+            app:layout_constraintBottom_toTopOf="@id/guidelineBottom"
+            app:layout_constraintTop_toBottomOf="@id/guidelineMidHorizontal2" />
 
         <Button
             android:id="@+id/buttonSnapshotList"
             android:layout_width="@dimen/no_dp"
-            android:layout_height="@dimen/live_view_secondary_button_height"
+            android:layout_height="@dimen/no_dp"
             android:background="@color/transparent"
             android:contentDescription="@string/snapshot_list"
             android:drawableStart="@drawable/ic_view_snapshots"
@@ -261,6 +265,7 @@
             android:textAllCaps="false"
             android:textColor="@color/darkBlue"
             android:textSize="@dimen/button_snapshot_list_text_size"
+            app:layout_constraintTop_toTopOf="@id/guidelineBottom"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/buttonVideoList"
             app:layout_constraintStart_toStartOf="parent"
@@ -269,7 +274,7 @@
         <Button
             android:id="@+id/buttonVideoList"
             android:layout_width="@dimen/no_dp"
-            android:layout_height="@dimen/live_view_secondary_button_height"
+            android:layout_height="@dimen/no_dp"
             android:background="@color/transparent"
             android:contentDescription="@string/record_list"
             android:drawableStart="@drawable/ic_view_videos"
@@ -279,18 +284,74 @@
             android:textAllCaps="false"
             android:textColor="@color/darkBlue"
             android:textSize="@dimen/button_video_list_text_size"
+            app:layout_constraintTop_toBottomOf="@id/guidelineBottom"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/guideline2" />
+            app:layout_constraintStart_toStartOf="@+id/guidelineMidVertical" />
 
         <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline2"
+            android:id="@+id/guidelineTopStream"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintGuide_percent="0.14"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="parent" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guidelineMidVertical"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintGuide_percent="0.50"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guidelineMidHorizontal2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintGuide_percent="0.58"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guidelineBottom"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintGuide_percent="0.90"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guidelineMidHorizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintGuide_percent="0.48"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guidelineTopInfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintGuide_percent="0.06"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
