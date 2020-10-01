@@ -87,8 +87,8 @@ class FileListActivity : BaseActivity() {
         actualFragment = SIMPLE_FILE_LIST
         buttonSimpleList.isActivated = true
         buttonThumbnailList.isActivated = false
+        textViewSelectedItems.isVisible = false
         resetButtonAssociate()
-        simpleFileListFragment.onFileCheck = ::enableAssociatePartnerButton
         simpleFileListFragment.arguments = Bundle().apply { putString(FILE_LIST_TYPE, listType) }
         supportFragmentManager.attachFragment(
             R.id.fragmentListHolder,
@@ -100,18 +100,20 @@ class FileListActivity : BaseActivity() {
     private fun setThumbnailListFragment() {
         actualFragment = THUMBNAIL_FILE_LIST
         buttonThumbnailList.isActivated = true
+        buttonSimpleList.isActivated = false
+        textViewSelectedItems.isVisible = false
         resetButtonAssociate()
-        thumbnailFileListFragment.onImageCheck = ::enableAssociatePartnerButton
         thumbnailFileListFragment.arguments = Bundle().apply { putString(FILE_LIST_TYPE, listType) }
         supportFragmentManager.attachFragment(
             R.id.fragmentListHolder,
             thumbnailFileListFragment,
             THUMBNAIL_FILE_LIST
         )
-        buttonSimpleList.isActivated = false
     }
 
     private fun setListeners() {
+        simpleFileListFragment.onFileCheck = ::enableAssociatePartnerButton
+        thumbnailFileListFragment.onImageCheck = ::enableAssociatePartnerButton
         buttonThumbnailList.setClickListenerCheckConnection { setThumbnailListFragment() }
         buttonSimpleList.setClickListenerCheckConnection { setSimpleFileListFragment() }
         backArrowFileListAppBar.setOnClickListenerCheckConnection { onBackPressed() }
@@ -233,7 +235,6 @@ class FileListActivity : BaseActivity() {
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
     }
 
-
     private fun resetButtonAssociate() {
         with(buttonSelectSnapshotsToAssociate) {
             isActivated = false
@@ -283,10 +284,15 @@ class FileListActivity : BaseActivity() {
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
     }
 
-    private fun enableAssociatePartnerButton(activate: Boolean) {
+    private fun enableAssociatePartnerButton(activate: Boolean, selectedItems: Int) {
         buttonAssociatePartnerIdList.run {
+            isVisible = activate
             isActivated = activate
-            buttonAssociatePartnerIdList.isVisible = activate
+        }
+
+        textViewSelectedItems.run {
+            isVisible = selectedItems > 0
+            text = getString(R.string.items_selected, selectedItems)
         }
     }
 

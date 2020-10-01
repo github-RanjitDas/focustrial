@@ -17,7 +17,7 @@ import kotlinx.android.synthetic.main.simple_list_recycler_item.view.*
 
 class SimpleFileListAdapter(
     private val onFileClick: (DomainInformationFile) -> Unit,
-    private val onFileCheck: ((Boolean) -> Unit)?
+    private val onFileCheck: ((Boolean, Int) -> Unit)?
 ) : RecyclerView.Adapter<SimpleFileListAdapter.SimpleListViewHolder>() {
 
     var showCheckBoxes = false
@@ -50,7 +50,7 @@ class SimpleFileListAdapter(
         tmpList.forEach {
             it.isSelected = false
         }
-        onFileCheck?.invoke(false)
+        onFileCheck?.invoke(false, 0)
         fileList = tmpList
     }
 
@@ -80,10 +80,11 @@ class SimpleFileListAdapter(
     inner class SimpleListViewHolder(
         private val fileView: View,
         private val onFileClick: (DomainInformationFile) -> Unit,
-        private val onFileCheck: ((Boolean) -> Unit)?
+        private val onFileCheck: ((Boolean, Int) -> Unit)?
     ) : RecyclerView.ViewHolder(fileView) {
+
         fun bind(remoteCameraFile: DomainInformationFile) {
-            onFileCheck?.invoke(isAnyFileChecked())
+            onFileCheck?.invoke(isAnyFileChecked(), selectedItemsSize())
             setDataToViews(remoteCameraFile)
             enableCheckBoxes(remoteCameraFile)
             setListener(remoteCameraFile)
@@ -151,8 +152,10 @@ class SimpleFileListAdapter(
             val index =
                 fileList.indexOfFirst { it.cameraConnectFile.name == remoteCameraFile.cameraConnectFile.name }
             fileList[index].isSelected = isChecked
-            onFileCheck?.invoke(isAnyFileChecked())
+            onFileCheck?.invoke(isAnyFileChecked(), selectedItemsSize())
         }
+
+        private fun selectedItemsSize() = fileList.filter { it.isSelected }.size
 
         private fun isAnyFileChecked() = fileList.any { it.isSelected }
     }
