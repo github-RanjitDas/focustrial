@@ -40,7 +40,7 @@ class ThumbnailFileListFragment : FileListBaseFragment() {
 
     private lateinit var gridLayoutManager: GridLayoutManager
 
-    var onImageCheck: ((Boolean) -> Unit)? = null
+    var onImageCheck: ((Boolean, Int) -> Unit)? = null
     var thumbnailFileListAdapter: ThumbnailFileListAdapter? = null
 
     override fun onCreateView(

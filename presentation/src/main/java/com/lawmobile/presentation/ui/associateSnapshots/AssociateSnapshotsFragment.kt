@@ -56,6 +56,12 @@ class AssociateSnapshotsFragment : BaseFragment() {
     }
 
     private fun setListeners() {
+        simpleFileListFragment.onFileCheck = { _, it ->
+            showSelectedItemsCount(it)
+        }
+        thumbnailFileListFragment.onImageCheck = { _, it ->
+            showSelectedItemsCount(it)
+        }
         buttonFilterAssociateImages.setOnClickListenerCheckConnection {
             showFilterDialog()
         }
@@ -143,7 +149,6 @@ class AssociateSnapshotsFragment : BaseFragment() {
 
     private fun setSimpleFileListFragment() {
         actualFragment = SIMPLE_FILE_LIST
-        simpleFileListFragment
         buttonSimpleListAssociate.isActivated = true
         buttonThumbnailListAssociate.isActivated = false
         childFragmentManager.attachFragment(
@@ -162,6 +167,13 @@ class AssociateSnapshotsFragment : BaseFragment() {
             thumbnailFileListFragment,
             THUMBNAIL_FILE_LIST
         )
+    }
+
+    private fun showSelectedItemsCount(selectedItems: Int) {
+        textViewAssociatedItems.run {
+            isVisible = selectedItems > 0
+            text = getString(R.string.items_selected, selectedItems)
+        }
     }
 
     override fun onDestroy() {

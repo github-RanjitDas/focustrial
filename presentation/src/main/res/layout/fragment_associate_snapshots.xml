@@ -18,6 +18,19 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <TextView
+        android:id="@+id/textViewAssociatedItems"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/margin_20dp"
+        android:text="@string/items_selected"
+        android:textSize="@dimen/text_size_16sp"
+        android:textStyle="bold"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="@id/buttonFilterAssociateImages"
+        app:layout_constraintStart_toEndOf="@id/buttonFilterAssociateImages"
+        app:layout_constraintTop_toTopOf="@id/buttonFilterAssociateImages" />
+
     <com.safefleet.mobile.commons.widgets.SafeFleetGridButton
         android:id="@+id/buttonThumbnailListAssociate"
         android:layout_width="wrap_content"

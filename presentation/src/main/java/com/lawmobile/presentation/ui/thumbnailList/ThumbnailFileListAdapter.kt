@@ -18,7 +18,7 @@ import java.io.File
 
 class ThumbnailFileListAdapter(
     private val onImageClick: ((DomainInformationImage) -> Unit),
-    private val onImageCheck: ((Boolean) -> Unit)?
+    private val onImageCheck: ((Boolean, Int) -> Unit)?
 ) : RecyclerView.Adapter<ThumbnailFileListAdapter.ThumbnailListViewHolder>() {
 
     var showCheckBoxes = false
@@ -49,7 +49,7 @@ class ThumbnailFileListAdapter(
         tmpList.forEach {
             it.isSelected = false
         }
-        onImageCheck?.invoke(false)
+        onImageCheck?.invoke(false, 0)
         fileList = tmpList
     }
 
@@ -79,11 +79,12 @@ class ThumbnailFileListAdapter(
     inner class ThumbnailListViewHolder(
         private val thumbnailView: View,
         private val onImageClick: ((DomainInformationImage) -> Unit),
-        private val onImageCheck: ((Boolean) -> Unit)?
+        private val onImageCheck: ((Boolean, Int) -> Unit)?
     ) :
         RecyclerView.ViewHolder(thumbnailView) {
 
         fun bind(imageFile: DomainInformationImage) {
+            onImageCheck?.invoke(isAnyFileChecked(), selectedItemsSize())
             setDataToViews(imageFile)
             enableCheckBoxes(imageFile)
             setListener(imageFile)
@@ -143,8 +144,6 @@ class ThumbnailFileListAdapter(
             }
         }
 
-        private fun isAnyFileChecked() = fileList.any { it.isSelected }
-
         private fun setListener(imageFile: DomainInformationImage) {
             with(thumbnailView) {
                 imageListLayout.setOnClickListenerCheckConnection {
@@ -164,7 +163,11 @@ class ThumbnailFileListAdapter(
                 fileList.indexOfFirst { it.cameraConnectFile.name == imageFile.cameraConnectFile.name }
             fileList[index].isSelected = isChecked
             SnapshotsAssociatedByUser.updateAssociatedSnapshots(imageFile.cameraConnectFile)
-            onImageCheck?.invoke(isAnyFileChecked())
+            onImageCheck?.invoke(isAnyFileChecked(), selectedItemsSize())
         }
+
+        private fun selectedItemsSize() = fileList.filter { it.isSelected }.size
+
+        private fun isAnyFileChecked() = fileList.any { it.isSelected }
     }
 }

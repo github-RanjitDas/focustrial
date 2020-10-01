@@ -30,7 +30,7 @@ class SimpleFileListFragment : FileListBaseFragment() {
 
     private val simpleListViewModel: SimpleListViewModel by activityViewModels()
     var simpleFileListAdapter: SimpleFileListAdapter? = null
-    var onFileCheck: ((Boolean) -> Unit)? = null
+    var onFileCheck: ((Boolean, Int) -> Unit)? = null
     var fileListBackup = mutableListOf<DomainInformationFile>()
 
     override fun onCreateView(
