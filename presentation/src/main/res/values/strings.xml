@@ -7,7 +7,7 @@
 
     <!--Alerts -->
     <string name="the_camera_was_disconnected">Camera disconnected</string>
-    <string name="the_camera_was_disconnected_description">BWC disconnected, please close the app and connect again</string>
+    <string name="the_camera_was_disconnected_description">Your X1 was disconnected from Focus Mobile App, please close the App and reconnect</string>
     <string name="loading_wait">Loading…</string>
     <string name="connection_finished">Connection Finished</string>
     <string name="connection_finished_description">After 5 minutes without interaction the BWC disconnects</string>
@@ -27,19 +27,19 @@
     <string name="connecting_to_camera">Connecting to Camera</string>
     <string name="welcome_officer">Please enter your password</string>
     <string name="enter_password">Password</string>
-    <string name="incorrect_password">Incorrect password, please try again</string>
+    <string name="incorrect_password">The password you have entered is incorrect, try again</string>
     <string name="wifi_is_off">The WiFi is off</string>
-    <string name="please_turn_wifi_on">Please turn the WiFi on and connect to the camera</string>
+    <string name="please_turn_wifi_on">The WIFI is set to off on your device, please set the WIFI to on and reconnect the X1 with FMA</string>
 
     <!-- Live view -->
     <string name="image_description_full_screen_size">Full Screen size</string>
     <string name="live_view_label">Live view</string>
     <string name="logout">Exit FMA</string>
-    <string name="logout_message">Are you sure want to exit from the app?</string>
+    <string name="logout_message">Are you sure you want to exit the Focus Mobile App?</string>
 
     <!-- Snapshots -->
-    <string name="live_view_take_photo_success">Snapshot Taken</string>
-    <string name="live_view_take_photo_failed">Failed snapshot</string>
+    <string name="live_view_take_photo_success">Snapshot captured successfully</string>
+    <string name="live_view_take_photo_failed">The system failed to capture a snapshot</string>
     <string name="button_snapshot">Button Snapshot</string>
     <string name="button_streaming">Button Streaming</string>
     <string name="take_snapshots">Take Snapshots</string>
@@ -82,14 +82,14 @@
     <string name="playback_license_plate">License Plate</string>
     <string name="select">Select</string>
     <string name="select_event">Select event</string>
-    <string name="event_mandatory">Event type field is mandatory</string>
+    <string name="event_mandatory">Please select Event Type</string>
     <string name="catalog_error">Unable to get events, please retry or checkout BWC again</string>
     <string name="catalog_error_video_playback">Unable to get events, please checkout BWC again</string>
     <string name="get_video_metadata_error">Could not get video metadata, please try again</string>
-    <string name="video_metadata_saved_success">Video metadata saved successfully</string>
-    <string name="video_metadata_save_error">Video metadata could not be saved</string>
+    <string name="video_metadata_saved_success">The changes you have made were saved successfully</string>
+    <string name="video_metadata_save_error">Unable to save your changes, please try again</string>
     <string name="unsaved_changes">Unsaved changes</string>
-    <string name="unsaved_changes_message">There are unsaved changes, do you want to continue?</string>
+    <string name="unsaved_changes_message">Are you sure you like to leave this page without saving any of your changes?</string>
 
     <!-- Snapshot detail -->
     <string name="snapshot_item_detail_title">Snapshot Detail</string>
@@ -111,15 +111,15 @@
 
     <!-- Partner Id -->
     <string name="associate_partner_id_content_description">Associate partner ID</string>
-    <string name="file_list_associate_partner_id_success">Partner ID associated successfully</string>
+    <string name="file_list_associate_partner_id_success">The partner ID associated successfully</string>
     <string name="file_list_associate_partner_id_error">Partner ID could not be associated</string>
     <string name="associate_partner_to_file_button">Associate partner to file button</string>
     <string name="thumbnail_bytes_error">Something went wrong loading an image</string>
     <string name="button_link_snapshots">buttonLinkSnapshots</string>
     <string name="valid_partner_id_message">You must enter a valid Partner ID</string>
     <string name="mobile_data_status_title">Mobile Data</string>
-    <string name="mobile_data_status_message">Please disable mobile data to continue</string>
-    <string name="verify_camera_wifi">Please verify the connection to the camera WiFi</string>
+    <string name="mobile_data_status_message">Please disable Mobile Data on your device in order to connect the X1 with Focus Mobile App</string>
+    <string name="verify_camera_wifi">Please verify the X1 WIFI connection between the X1 and Focus Mobile App</string>
     <string name="error_saving_video">Error checking video saved in camera, please wait and try again</string>
     <string name="go">GO</string>
     <string name="login">Login</string>
