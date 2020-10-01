@@ -459,7 +459,7 @@
                 android:layout_width="@dimen/no_dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/video_playback_metadata_spacing"
-                android:text="@string/playback_remarks"
+                android:text="@string/playback_notes"
                 android:textSize="@dimen/video_playback_metadata_text_size"
                 android:textStyle="bold"
                 app:layout_constraintLeft_toLeftOf="parent"

@@ -73,7 +73,7 @@
     <string name="playback_dispatch_1">Dispatch #1</string>
     <string name="playback_dispatch_2">Dispatch #2</string>
     <string name="playback_location">Location</string>
-    <string name="playback_remarks">Remarks</string>
+    <string name="playback_notes">Notes</string>
     <string name="playback_first_name">First Name</string>
     <string name="playback_last_name">Last Name</string>
     <string name="playback_gender">Gender</string>
