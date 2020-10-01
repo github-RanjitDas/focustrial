@@ -44,15 +44,12 @@
     <dimen name="storage_levels_padding_end">3dp</dimen>
     <dimen name="storage_level_height">10dp</dimen>
     <dimen name="storage_level_margin_horizontal">10dp</dimen>
-    <dimen name="live_streaming_margin_top">80dp</dimen>
     <dimen name="loading_margin_top">55dp</dimen>
     <dimen name="loading_margin_bottom">55dp</dimen>
     <dimen name="toggle_full_screen_padding">5dp</dimen>
     <dimen name="switch_margin">10dp</dimen>
     <dimen name="recording_padding_horizontal">10dp</dimen>
     <dimen name="live_view_divider_margin_top">10dp</dimen>
-    <dimen name="button_snapshot_height">128dp</dimen>
-    <dimen name="button_snapshot_margin_bottom">16dp</dimen>
     <dimen name="button_snapshot_list_padding_start">30dp</dimen>
     <dimen name="button_snapshot_list_text_size">15sp</dimen>
     <dimen name="button_video_list_padding_horizontal">30dp</dimen>
@@ -121,14 +118,6 @@
     <dimen name="text_size_20sp">20sp</dimen>
 
     <!--    custom buttons-->
-    <dimen name="button_custom_record_padding_horizontal">51.5dp</dimen>
-    <dimen name="button_custom_record_padding_top">39dp</dimen>
-    <dimen name="button_custom_record_padding_bottom">59dp</dimen>
-    <dimen name="button_custom_record_text_margin_bottom">20dp</dimen>
-    <dimen name="button_custom_snapshot_padding_horizontal">54dp</dimen>
-    <dimen name="button_custom_snapshot_padding_top">37dp</dimen>
-    <dimen name="button_custom_snapshot_padding_bottom">56dp</dimen>
-    <dimen name="button_custom_snapshot_text_margin_bottom">20dp</dimen>
     <dimen name="file_list_app_bar_margin_horizontal">17dp</dimen>
     <dimen name="file_list_title_size">22sp</dimen>
     <dimen name="margin_16dp">16dp</dimen>
@@ -159,4 +148,6 @@
     <dimen name="margin_13dp">13dp</dimen>
     <dimen name="margin_26dp">26dp</dimen>
     <dimen name="margin_25dp">25dp</dimen>
+    <dimen name="live_view_buttons_margin_vertical">25dp</dimen>
+    <dimen name="live_view_buttons_margin_horizontal">20dp</dimen>
 </resources>
