@@ -53,16 +53,19 @@ class FileListActivity : BaseActivity() {
 
         listType = intent.extras?.getString(FILE_LIST_SELECTOR)
 
+        setExtras()
         setObservers()
         setCustomAppBar()
+        setListTypeFragment()
+        setListeners()
+        configureBottomSheet()
+    }
 
+    private fun setListTypeFragment() {
         when (listType) {
             VIDEO_LIST -> setSimpleFileListFragment()
             SNAPSHOT_LIST -> setThumbnailListFragment()
         }
-
-        setListeners()
-        configureBottomSheet()
     }
 
     private fun setCustomAppBar() {
@@ -78,6 +81,13 @@ class FileListActivity : BaseActivity() {
         }
     }
 
+    private fun setExtras() {
+        simpleFileListFragment.arguments =
+            Bundle().apply { putString(FILE_LIST_TYPE, listType) }
+        thumbnailFileListFragment.arguments =
+            Bundle().apply { putString(FILE_LIST_TYPE, listType) }
+    }
+
     private fun setObservers() {
         fileListViewModel.snapshotPartnerIdLiveData.observe(this, Observer(::handlePartnerIdResult))
         fileListViewModel.videoPartnerIdLiveData.observe(this, Observer(::handlePartnerIdResult))
@@ -89,7 +99,6 @@ class FileListActivity : BaseActivity() {
         buttonThumbnailList.isActivated = false
         textViewSelectedItems.isVisible = false
         resetButtonAssociate()
-        simpleFileListFragment.arguments = Bundle().apply { putString(FILE_LIST_TYPE, listType) }
         supportFragmentManager.attachFragment(
             R.id.fragmentListHolder,
             simpleFileListFragment,
@@ -103,7 +112,6 @@ class FileListActivity : BaseActivity() {
         buttonSimpleList.isActivated = false
         textViewSelectedItems.isVisible = false
         resetButtonAssociate()
-        thumbnailFileListFragment.arguments = Bundle().apply { putString(FILE_LIST_TYPE, listType) }
         supportFragmentManager.attachFragment(
             R.id.fragmentListHolder,
             thumbnailFileListFragment,

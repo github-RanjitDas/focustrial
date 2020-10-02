@@ -44,10 +44,16 @@ class AssociateSnapshotsFragment : BaseFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         checkableListInit = true
-        simpleFileListFragment.arguments =
-            Bundle().apply { putString(FILE_LIST_TYPE, SNAPSHOT_LIST) }
+        setExtras()
         setListeners()
         setThumbnailListFragment()
+    }
+
+    private fun setExtras() {
+        simpleFileListFragment.arguments =
+            Bundle().apply { putString(FILE_LIST_TYPE, SNAPSHOT_LIST) }
+        thumbnailFileListFragment.arguments =
+            Bundle().apply { putString(FILE_LIST_TYPE, SNAPSHOT_LIST) }
     }
 
     fun replaceSnapshotsAssociatedFromMetadata(list: MutableList<PhotoAssociated>) {
@@ -91,22 +97,18 @@ class AssociateSnapshotsFragment : BaseFragment() {
     }
 
     private fun showFilterDialog() {
-        var listToFilter: List<DomainInformationForList> = emptyList()
+        var listToFilter = listOf<DomainInformationForList>()
 
         when (actualFragment) {
-            SIMPLE_FILE_LIST -> {
-                listToFilter =
-                    simpleFileListFragment.fileListBackup
-            }
-            THUMBNAIL_FILE_LIST -> {
-                listToFilter =
-                    thumbnailFileListFragment.fileListBackup
-            }
+            SIMPLE_FILE_LIST ->
+                listToFilter = simpleFileListFragment.fileListBackup
+            THUMBNAIL_FILE_LIST ->
+                listToFilter = thumbnailFileListFragment.fileListBackup
         }
 
         if (filterDialog == null) {
             filterDialog =
-                layoutAssociateFilterTags.createFilterDialog(::handleOnApplyFilter)
+                layoutAssociateFilterTags.createFilterDialog(::handleOnApplyFilterClick)
         }
 
         filterDialog?.apply {
@@ -118,7 +120,7 @@ class AssociateSnapshotsFragment : BaseFragment() {
         }
     }
 
-    private fun handleOnApplyFilter(it: Boolean) {
+    private fun handleOnApplyFilterClick(it: Boolean) {
         scrollFilterAssociateTags.isVisible = it
         updateButtonFilterState(it)
         when (actualFragment) {
