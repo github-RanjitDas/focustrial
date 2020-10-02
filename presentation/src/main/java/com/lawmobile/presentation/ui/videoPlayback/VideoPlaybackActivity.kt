@@ -138,7 +138,7 @@ class VideoPlaybackActivity : BaseActivity() {
         dispatch1Value.filters = getFiltersWithLength(30)
         dispatch2Value.filters = getFiltersWithLength(30)
         locationValue.filters = getFiltersWithLength(30)
-        remarksValue.filters = getFiltersWithLength(100)
+        notesValue.filters = getFiltersWithLength(100)
         firstNameValue.filters = getFiltersWithLength(30)
         lastNameValue.filters = getFiltersWithLength(30)
         driverLicenseValue.filters = getFiltersWithLength(30)
@@ -313,7 +313,7 @@ class VideoPlaybackActivity : BaseActivity() {
             dispatch1Value.setText(dispatchNumber)
             dispatch2Value.setText(dispatchNumber2)
             locationValue.setText(location)
-            remarksValue.setText(remarks)
+            notesValue.setText(notes)
             firstNameValue.setText(firstName)
             lastNameValue.setText(lastName)
             genderValue.setSelection(getSpinnerSelection(genderList, gender))
@@ -521,7 +521,7 @@ class VideoPlaybackActivity : BaseActivity() {
                             !dispatchNumber.isNullOrEmpty() ||
                             !dispatchNumber2.isNullOrEmpty() ||
                             !location.isNullOrEmpty() ||
-                            !remarks.isNullOrEmpty() ||
+                            !notes.isNullOrEmpty() ||
                             !firstName.isNullOrEmpty() ||
                             !lastName.isNullOrEmpty() ||
                             !driverLicense.isNullOrEmpty() ||
@@ -541,7 +541,7 @@ class VideoPlaybackActivity : BaseActivity() {
                             fromJson.dispatchNumber != fromForm.dispatchNumber ||
                             fromJson.dispatchNumber2 != fromForm.dispatchNumber2 ||
                             fromJson.location != fromForm.location ||
-                            fromJson.remarks != fromForm.remarks ||
+                            fromJson.notes != fromForm.notes ||
                             fromJson.firstName != fromForm.firstName ||
                             fromJson.lastName != fromForm.lastName ||
                             fromJson.driverLicense != fromForm.driverLicense ||
@@ -587,7 +587,7 @@ class VideoPlaybackActivity : BaseActivity() {
                 dispatchNumber = dispatch1Value.text.toString(),
                 dispatchNumber2 = dispatch2Value.text.toString(),
                 location = locationValue.text.toString(),
-                remarks = remarksValue.text.toString(),
+                notes = notesValue.text.toString(),
                 firstName = firstNameValue.text.toString(),
                 lastName = lastNameValue.text.toString(),
                 gender = gender,
@@ -609,7 +609,7 @@ class VideoPlaybackActivity : BaseActivity() {
             if (dispatchNumber.isNullOrEmpty()) dispatchNumber = ""
             if (dispatchNumber2.isNullOrEmpty()) dispatchNumber2 = ""
             if (location.isNullOrEmpty()) location = ""
-            if (remarks.isNullOrEmpty()) remarks = ""
+            if (notes.isNullOrEmpty()) notes = ""
             if (firstName.isNullOrEmpty()) firstName = ""
             if (lastName.isNullOrEmpty()) lastName = ""
             if (driverLicense.isNullOrEmpty()) driverLicense = ""

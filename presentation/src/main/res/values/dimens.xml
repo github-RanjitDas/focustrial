@@ -150,4 +150,5 @@
     <dimen name="margin_25dp">25dp</dimen>
     <dimen name="live_view_buttons_margin_vertical">25dp</dimen>
     <dimen name="live_view_buttons_margin_horizontal">20dp</dimen>
+    <dimen name="margin_80dp">80dp</dimen>
 </resources>
