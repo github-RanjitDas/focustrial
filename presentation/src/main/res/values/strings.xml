@@ -185,6 +185,8 @@
     <string name="no_new_photo_selected_message">Not selected any new photos</string>
     <string name="snapshots_added_success">Snapshots added successfully</string>
     <string name="items_selected" tools:ignore="PluralsCandidate">%1$d Selected</string>
+    <string name="no_snapshots_filter">No snapshots match to these criteria</string>
+    <string name="no_videos_filter">No videos match to these criteria</string>
 
     <string-array name="gender_spinner">
         <item>Select</item>

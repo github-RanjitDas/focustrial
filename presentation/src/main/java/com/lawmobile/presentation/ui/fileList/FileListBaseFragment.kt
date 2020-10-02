@@ -38,7 +38,16 @@ open class FileListBaseFragment: BaseFragment() {
 
     fun manageFragmentContent(){
         if (!filter?.filteredList.isNullOrEmpty()) showFileListRecycler()
-        else showEmptyListMessage()
+        else showNoFilterResults()
+    }
+
+    private fun showNoFilterResults() {
+        noFilesTextView?.isVisible = true
+        fileListRecycler?.isVisible = false
+        when (listType) {
+            SNAPSHOT_LIST -> noFilesTextView?.text = getString(R.string.no_snapshots_filter)
+            VIDEO_LIST -> noFilesTextView?.text = getString(R.string.no_videos_filter)
+        }
     }
 
     fun startFileListIntent(cameraConnectFile: CameraConnectFile) {
