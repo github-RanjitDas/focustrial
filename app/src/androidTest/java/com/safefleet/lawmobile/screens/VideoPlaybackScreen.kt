@@ -46,7 +46,7 @@ class VideoPlaybackScreen : BaseScreen() {
             dispatchNumber?.let { writeTo(R.id.dispatch1Value, it) }
             dispatchNumber2?.let { writeTo(R.id.dispatch2Value, it) }
             location?.let { writeTo(R.id.locationValue, it) }
-            remarks?.let { writeTo(R.id.remarksValue, it) }
+            notes?.let { writeTo(R.id.notesValue, it) }
             firstName?.let { writeTo(R.id.firstNameValue, it) }
             lastName?.let { writeTo(R.id.lastNameValue, it) }
             driverLicense?.let { writeTo(R.id.driverLicenseValue, it) }
@@ -65,7 +65,7 @@ class VideoPlaybackScreen : BaseScreen() {
         assertNotDisplayed(R.id.dispatch1Value, "")
         assertNotDisplayed(R.id.dispatch2Value, "")
         assertNotDisplayed(R.id.locationValue, "")
-        assertNotDisplayed(R.id.remarksValue, "")
+        assertNotDisplayed(R.id.notesValue, "")
         assertNotDisplayed(R.id.firstNameValue, "")
         assertNotDisplayed(R.id.lastNameValue, "")
         assertNotDisplayed(R.id.driverLicenseValue, "")

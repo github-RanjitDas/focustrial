@@ -467,7 +467,7 @@
                 app:layout_constraintTop_toBottomOf="@id/locationValue" />
 
             <EditText
-                android:id="@+id/remarksValue"
+                android:id="@+id/notesValue"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_5dp"
@@ -491,7 +491,7 @@
                 android:textStyle="bold"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toLeftOf="@id/guidelinePlayback"
-                app:layout_constraintTop_toBottomOf="@id/remarksValue" />
+                app:layout_constraintTop_toBottomOf="@id/notesValue" />
 
             <EditText
                 android:id="@+id/firstNameValue"
