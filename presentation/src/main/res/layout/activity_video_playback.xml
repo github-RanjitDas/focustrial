@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout
-    android:id="@+id/layoutVideoPlayback"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/layoutVideoPlayback"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -14,10 +14,10 @@
         <ScrollView xmlns:tools="http://schemas.android.com/tools"
             android:id="@+id/scrollLayoutMetadata"
             android:layout_width="match_parent"
-            app:layout_constraintTop_toTopOf="parent"
+            android:layout_height="match_parent"
             android:layout_marginBottom="@dimen/margin_80dp"
             app:layout_constraintBottom_toTopOf="@id/saveButtonVideoPlayback"
-            android:layout_height="match_parent">
+            app:layout_constraintTop_toTopOf="parent">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -630,6 +630,7 @@
                         android:text="@string/associate_image_to_video"
                         android:textSize="@dimen/video_playback_metadata_text_size"
                         android:textStyle="bold"
+                        android:visibility="gone"
                         app:layout_constraintTop_toBottomOf="@+id/licensePlateValue"
                         tools:ignore="Autofill,LabelFor" />
 
@@ -646,6 +647,7 @@
                         android:textAllCaps="false"
                         android:textColor="@color/lightBlue"
                         android:textSize="@dimen/text_size_16sp"
+                        android:visibility="gone"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/associateImageTitle" />
@@ -655,12 +657,12 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/video_playback_metadata_spacing"
-                        android:paddingVertical="@dimen/padding_5dp"
-                        android:paddingHorizontal="@dimen/padding_50dp"
                         android:background="@drawable/shape_unchecked_box"
-                        android:visibility="gone"
                         android:columnCount="1"
+                        android:paddingHorizontal="@dimen/padding_50dp"
+                        android:paddingVertical="@dimen/padding_5dp"
                         android:useDefaultMargins="true"
+                        android:visibility="gone"
                         app:layout_constraintTop_toBottomOf="@id/buttonAssociateSnapshots" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
@@ -669,22 +671,21 @@
 
         </ScrollView>
 
-
         <Button
             android:id="@+id/saveButtonVideoPlayback"
             android:layout_width="@dimen/no_dp"
             android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/margin_40dp"
             android:layout_marginVertical="@dimen/margin_20dp"
             android:background="@drawable/background_button_accept"
             android:padding="@dimen/padding_13dp"
             android:text="@string/save_metadata"
             android:textAllCaps="false"
-            android:layout_marginHorizontal="@dimen/margin_40dp"
             android:textColor="@color/white"
             android:textSize="@dimen/text_size_20sp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            app:layout_constraintStart_toStartOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
