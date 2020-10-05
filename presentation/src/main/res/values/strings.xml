@@ -96,7 +96,7 @@
     <string name="snapshot_item_detail_photo_name_title">Name</string>
     <string name="snapshot_item_detail_photo_name_value">Default</string>
     <string name="snapshot_item_detail_date_time_title">Date Time</string>
-    <string name="snapshot_item_detail_officer_assigned_title">Officer Assigned</string>
+    <string name="snapshot_item_detail_officer_assigned_title">Associated officer</string>
     <string name="snapshot_item_detail_video_assigned_title">Assigned to video</string>
     <string name="snapshot_item_detail_date_time_value">YYYY-MM-DD HH:MM:SS</string>
     <string name="snapshot_item_detail_photo_content_description">Photo from BWC</string>
@@ -168,8 +168,8 @@
     <string name="file_item_image">file item image</string>
     <string name="select_videos_to_associate">Select videos to associate</string>
     <string name="button_help">\?</string>
-    <string name="add_images">Add images</string>
-    <string name="associate_image_to_video">Associate image to video</string>
+    <string name="add_images">Add snapshots</string>
+    <string name="associate_image_to_video">Associate snapshots to video</string>
     <string name="video_detail">Video Detail</string>
     <string name="time_divider"> / </string>
     <string name="title">Title</string>
@@ -181,7 +181,7 @@
     <string name="error_get_information_metadata">Unable to get video information, please try again</string>
     <string name="error_getting_officer_information">Unable to open officer information, please retry or checkout BWC</string>
     <string name="associate_snapshots_to_video">Associate snapshots to video</string>
-    <string name="associate_images">Associate Images</string>
+    <string name="associate_images">Associate snapshots</string>
     <string name="no_new_photo_selected_message">Not selected any new photos</string>
     <string name="snapshots_added_success">Snapshots added successfully</string>
     <string name="items_selected" tools:ignore="PluralsCandidate">%1$d Selected</string>
