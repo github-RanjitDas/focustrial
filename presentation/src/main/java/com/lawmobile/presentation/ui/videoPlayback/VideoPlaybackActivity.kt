@@ -313,7 +313,7 @@ class VideoPlaybackActivity : BaseActivity() {
             dispatch1Value.setText(dispatchNumber)
             dispatch2Value.setText(dispatchNumber2)
             locationValue.setText(location)
-            notesValue.setText(notes)
+            notesValue.setText(remarks)
             firstNameValue.setText(firstName)
             lastNameValue.setText(lastName)
             genderValue.setSelection(getSpinnerSelection(genderList, gender))
@@ -521,7 +521,7 @@ class VideoPlaybackActivity : BaseActivity() {
                             !dispatchNumber.isNullOrEmpty() ||
                             !dispatchNumber2.isNullOrEmpty() ||
                             !location.isNullOrEmpty() ||
-                            !notes.isNullOrEmpty() ||
+                            !remarks.isNullOrEmpty() ||
                             !firstName.isNullOrEmpty() ||
                             !lastName.isNullOrEmpty() ||
                             !driverLicense.isNullOrEmpty() ||
@@ -541,7 +541,7 @@ class VideoPlaybackActivity : BaseActivity() {
                             fromJson.dispatchNumber != fromForm.dispatchNumber ||
                             fromJson.dispatchNumber2 != fromForm.dispatchNumber2 ||
                             fromJson.location != fromForm.location ||
-                            fromJson.notes != fromForm.notes ||
+                            fromJson.remarks != fromForm.remarks ||
                             fromJson.firstName != fromForm.firstName ||
                             fromJson.lastName != fromForm.lastName ||
                             fromJson.driverLicense != fromForm.driverLicense ||
@@ -587,7 +587,7 @@ class VideoPlaybackActivity : BaseActivity() {
                 dispatchNumber = dispatch1Value.text.toString(),
                 dispatchNumber2 = dispatch2Value.text.toString(),
                 location = locationValue.text.toString(),
-                notes = notesValue.text.toString(),
+                remarks = notesValue.text.toString(),
                 firstName = firstNameValue.text.toString(),
                 lastName = lastNameValue.text.toString(),
                 gender = gender,
@@ -609,7 +609,7 @@ class VideoPlaybackActivity : BaseActivity() {
             if (dispatchNumber.isNullOrEmpty()) dispatchNumber = ""
             if (dispatchNumber2.isNullOrEmpty()) dispatchNumber2 = ""
             if (location.isNullOrEmpty()) location = ""
-            if (notes.isNullOrEmpty()) notes = ""
+            if (remarks.isNullOrEmpty()) remarks = ""
             if (firstName.isNullOrEmpty()) firstName = ""
             if (lastName.isNullOrEmpty()) lastName = ""
             if (driverLicense.isNullOrEmpty()) driverLicense = ""

@@ -46,7 +46,7 @@ class VideoPlaybackScreen : BaseScreen() {
             dispatchNumber?.let { writeTo(R.id.dispatch1Value, it) }
             dispatchNumber2?.let { writeTo(R.id.dispatch2Value, it) }
             location?.let { writeTo(R.id.locationValue, it) }
-            notes?.let { writeTo(R.id.notesValue, it) }
+            remarks?.let { writeTo(R.id.notesValue, it) }
             firstName?.let { writeTo(R.id.firstNameValue, it) }
             lastName?.let { writeTo(R.id.lastNameValue, it) }
             driverLicense?.let { writeTo(R.id.driverLicenseValue, it) }

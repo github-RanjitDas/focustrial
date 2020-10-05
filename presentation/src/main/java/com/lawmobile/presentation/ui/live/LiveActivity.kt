@@ -214,16 +214,26 @@ class LiveActivity : BaseActivity() {
 
     private fun setBatteryLevel(result: Event<Result<Int>>) {
         result.getContentIfNotHandled()?.run {
-            doIfSuccess { batteryPercent ->
-                progressBatteryLevel.setProgress(batteryPercent, DESCENDANT)
-                setColorInBattery(batteryPercent)
-                setTextInProgressBattery(batteryPercent)
-            }
+            doIfSuccess (::manageBatteryLevel)
             doIfError {
-                liveViewAppBar.showErrorSnackBar(getString(R.string.battery_level_error))
+                showBatteryLevelNotAvailable()
             }
         }
         liveActivityViewModel.getStorageLevels()
+    }
+
+    private fun manageBatteryLevel(batteryPercent: Int) {
+        if (batteryPercent > 0) {
+            progressBatteryLevel.setProgress(batteryPercent, DESCENDANT)
+            setColorInBattery(batteryPercent)
+            setTextInProgressBattery(batteryPercent)
+        } else showBatteryLevelNotAvailable()
+    }
+
+    private fun showBatteryLevelNotAvailable() {
+        textViewBatteryPercent.text = getString(R.string.battery_level_not_available)
+        progressBatteryLevel.setProgress(0, ASCENDANT)
+        liveViewAppBar.showErrorSnackBar(getString(R.string.battery_level_error))
     }
 
     private fun setColorInBattery(batteryPercent: Int) {
@@ -239,7 +249,6 @@ class LiveActivity : BaseActivity() {
                     )
                     isBatteryAlertShowed = true
                 }
-
             }
             in MEDIUM_DESCENDANT_RANGE.value -> {
                 imageViewBattery.backgroundTintList =
