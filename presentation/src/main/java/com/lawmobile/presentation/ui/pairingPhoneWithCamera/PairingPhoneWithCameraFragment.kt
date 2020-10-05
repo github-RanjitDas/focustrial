@@ -92,7 +92,7 @@ class PairingPhoneWithCameraFragment : BaseFragment() {
 
     private fun isGpSActive(): Boolean {
         val locationManager =
-            context!!.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+            requireContext().getSystemService(Context.LOCATION_SERVICE) as LocationManager
         var gpsEnable = false
         try {
             gpsEnable = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
@@ -168,7 +168,7 @@ class PairingPhoneWithCameraFragment : BaseFragment() {
         when (result) {
             is Result.Success -> setProgressInViewOfProgress(result.data)
             is Result.Error -> {
-                activity?.showToast("Verify the connection to the camera WiFi", Toast.LENGTH_SHORT)
+                activity?.showToast(getString(R.string.verify_wifi_connection), Toast.LENGTH_SHORT)
                 startWithProgressPairing(false)
             }
         }
