@@ -6,7 +6,7 @@ ext {
     targetSdkVersion = 29
     buildVersion = 60
     major = 3
-    minor = 0
+    minor = 5
     patch = 0
     jvmTarget = "1.8"
 
