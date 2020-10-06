@@ -298,11 +298,12 @@ class ThumbnailFileListFragment : FileListBaseFragment() {
                     thumbnailFileListAdapter?.addItemToList(domainImage)
                     isLoading = false
                     loadNewImage()
+                    return
                 }
-            } else {
-                currentImageLoading = it
-                thumbnailListFragmentViewModel.getImageBytes(it)
             }
+
+            currentImageLoading = it
+            thumbnailListFragmentViewModel.getImageBytes(it)
         } ?: run {
             val cameraConnectFile = subList.firstOrNull()
             cameraConnectFile?.let {
