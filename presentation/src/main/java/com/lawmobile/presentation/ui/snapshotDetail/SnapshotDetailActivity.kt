@@ -44,6 +44,7 @@ class SnapshotDetailActivity : BaseActivity() {
         setContentView(R.layout.activity_snapshot_item_detail)
         setAppBar()
         getInformationFromIntent()
+        setInformationOfSnapshot()
         configureObserve()
         configureListeners()
         configureBottomSheet()
@@ -52,9 +53,22 @@ class SnapshotDetailActivity : BaseActivity() {
     override fun onResume() {
         super.onResume()
         restartVisibility()
-        showLoadingDialog()
-        snapshotDetailViewModel.getInformationImageMetadata(file)
+        getSnapshotBytes()
         hideKeyboard()
+    }
+
+    private fun getSnapshotBytes() {
+        showLoadingDialog()
+        val fileSaved = ImageFilesPathManager.getImageIfExist(file.name)
+        fileSaved?.let {
+            if (it.absolutePath != PATH_ERROR_IN_PHOTO && File(it.absolutePath).exists()) {
+                setImageWithPath(it.absolutePath)
+                snapshotDetailViewModel.getInformationImageMetadata(file)
+                return
+            }
+        }
+
+        snapshotDetailViewModel.getImageBytes(file)
     }
 
     private fun getInformationFromIntent() {
@@ -109,14 +123,17 @@ class SnapshotDetailActivity : BaseActivity() {
                         name = file.name
                     )
                     setImageWithPath(path)
-                    setInformationOfSnapshot()
                 }
                 doIfError {
                     imageReload.isVisible = true
                 }
             }
         }
-        hideLoadingDialog()
+
+        if (domainInformationImageMetadata == null)
+            snapshotDetailViewModel.getInformationImageMetadata(file)
+        else hideLoadingDialog()
+
     }
 
     private fun manageInformationImage(event: Event<Result<DomainInformationImageMetadata>>) {
@@ -124,28 +141,26 @@ class SnapshotDetailActivity : BaseActivity() {
             with(this) {
                 doIfSuccess {
                     domainInformationImageMetadata = it
+                    setSnapshotMetadata()
                 }
                 doIfError {
+                    showMetadataNotAvailable()
                     constraintLayoutDetail.showErrorSnackBar(
-                        getString(R.string.snapshot_item_detail_get_information_metadata_error),
+                        getString(R.string.snapshot_detail_metadata_error),
                         SNAPSHOT_DETAIL_ERROR_ANIMATION_DURATION
                     ) {
+                        showLoadingDialog()
                         snapshotDetailViewModel.getInformationImageMetadata(file)
                     }
                 }
             }
-
-            val fileSaved = ImageFilesPathManager.getImageIfExist(file.name)
-            fileSaved?.let {
-                if (it.absolutePath != PATH_ERROR_IN_PHOTO && File(it.absolutePath).exists()) {
-                    hideLoadingDialog()
-                    setImageWithPath(it.absolutePath)
-                    setInformationOfSnapshot()
-                    return
-                }
-            }
-            snapshotDetailViewModel.getImageBytes(file)
+            hideLoadingDialog()
         }
+    }
+
+    private fun showMetadataNotAvailable() {
+        officerValue.text = getString(R.string.not_available)
+        videosAssociatedValue.text = getString(R.string.not_available)
     }
 
     private fun manageSavePartnerId(result: Result<Unit>) {
@@ -230,13 +245,22 @@ class SnapshotDetailActivity : BaseActivity() {
     private fun setInformationOfSnapshot() {
         photoNameValue.text = file.name
         dateTimeValue.text = file.date
-        domainInformationImageMetadata?.cameraConnectPhotoMetadata?.metadata?.partnerID?.let {
-            officerValue.text = it
-        }
-        setInTextVideosAssociated()
     }
 
-    private fun setInTextVideosAssociated() {
+    private fun setSnapshotMetadata() {
+        setOfficerAssociatedInView()
+        setVideosAssociatedInView()
+    }
+
+    private fun setOfficerAssociatedInView() {
+        domainInformationImageMetadata?.cameraConnectPhotoMetadata?.metadata?.partnerID?.let {
+            officerValue.text = it
+        } ?: run {
+            officerValue.text = getString(R.string.none)
+        }
+    }
+
+    private fun setVideosAssociatedInView() {
         domainInformationImageMetadata?.videosAssociated?.let {
             if (it.isNotEmpty()) {
                 var textInVideos = ""
@@ -246,8 +270,11 @@ class SnapshotDetailActivity : BaseActivity() {
                 }
 
                 videosAssociatedValue.text = textInVideos
+                return
             }
         }
+
+        videosAssociatedValue.text = getString(R.string.none)
     }
 
     override fun onBackPressed() {

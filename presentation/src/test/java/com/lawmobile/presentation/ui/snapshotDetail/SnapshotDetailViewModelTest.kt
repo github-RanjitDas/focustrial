@@ -3,6 +3,7 @@ package com.lawmobile.presentation.ui.snapshotDetail
 import com.lawmobile.domain.usecase.snapshotDetail.SnapshotDetailUseCase
 import com.lawmobile.presentation.InstantExecutorExtension
 import com.safefleet.mobile.avml.cameras.entities.CameraConnectFile
+import com.safefleet.mobile.commons.helpers.Event
 import com.safefleet.mobile.commons.helpers.Result
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -119,6 +120,7 @@ class SnapshotDetailViewModelTest {
         } returns Result.Error(mockk())
         runBlocking {
             snapshotDetailViewModel.getInformationImageMetadata(mockk())
+            delay(5100)
             val valueLiveData = snapshotDetailViewModel.informationImageLiveData.value?.getContent()
             Assert.assertTrue(valueLiveData is Result.Error)
         }

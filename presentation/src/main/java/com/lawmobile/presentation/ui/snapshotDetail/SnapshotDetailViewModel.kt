@@ -6,8 +6,8 @@ import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.viewModelScope
 import com.lawmobile.domain.entities.DomainInformationImageMetadata
 import com.lawmobile.domain.usecase.snapshotDetail.SnapshotDetailUseCase
-import com.lawmobile.presentation.extensions.postValueWithTimeout
 import com.lawmobile.presentation.extensions.postEventValueWithTimeout
+import com.lawmobile.presentation.extensions.postValueWithTimeout
 import com.lawmobile.presentation.ui.base.BaseViewModel
 import com.safefleet.mobile.avml.cameras.entities.CameraConnectFile
 import com.safefleet.mobile.commons.helpers.Event
@@ -51,12 +51,16 @@ class SnapshotDetailViewModel @ViewModelInject constructor(
     fun getInformationImageMetadata(cameraConnectFile: CameraConnectFile) {
         viewModelScope.launch {
             informationVideoMediator.postEventValueWithTimeout(LOADING_TIMEOUT) {
-                Event(snapshotDetailUseCase.getInformationOfPhoto(cameraConnectFile))
+                Event(getResultWithAttempts(ATTEMPTS_TO_GET_INFORMATION, DELAY_BETWEEN_ATTEMPTS) {
+                    snapshotDetailUseCase.getInformationOfPhoto(cameraConnectFile)
+                })
             }
         }
     }
 
     companion object {
-        const val ATTEMPTS_TO_GET_BYTES = 3
+        private const val ATTEMPTS_TO_GET_INFORMATION = 5
+        private const val ATTEMPTS_TO_GET_BYTES = 3
+        private const val DELAY_BETWEEN_ATTEMPTS = 1000L
     }
 }

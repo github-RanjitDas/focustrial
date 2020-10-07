@@ -60,10 +60,10 @@ class LiveActivity : BaseActivity() {
     }
 
     private fun setOfficerName() {
-        try{
+        try {
             textViewOfficerName.text = CameraInfo.officerName.split(" ")[0]
             textViewOfficerLastName.text = CameraInfo.officerName.split(" ")[1]
-        }catch (e:Exception){
+        } catch (e: Exception) {
             e.printStackTrace()
         }
     }
@@ -214,7 +214,7 @@ class LiveActivity : BaseActivity() {
 
     private fun setBatteryLevel(result: Event<Result<Int>>) {
         result.getContentIfNotHandled()?.run {
-            doIfSuccess (::manageBatteryLevel)
+            doIfSuccess(::manageBatteryLevel)
             doIfError {
                 showBatteryLevelNotAvailable()
             }
@@ -231,7 +231,7 @@ class LiveActivity : BaseActivity() {
     }
 
     private fun showBatteryLevelNotAvailable() {
-        textViewBatteryPercent.text = getString(R.string.battery_level_not_available)
+        textViewBatteryPercent.text = getString(R.string.not_available)
         progressBatteryLevel.setProgress(0, ASCENDANT)
         liveViewAppBar.showErrorSnackBar(getString(R.string.battery_level_error))
     }
