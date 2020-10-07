@@ -51,12 +51,18 @@ class ThumbnailFileListFragment : FileListBaseFragment() {
         return inflater.inflate(R.layout.fragment_file_list, container, false)
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+    override fun onResume() {
+        super.onResume()
+        thumbnailListFragmentViewModel.cancelGetImageBytes()
+        cleanFileList()
+        setAdapter()
         listType = arguments?.getString(FILE_LIST_TYPE)
         configureLayoutItems()
-        isLoadedOnCreate = true
         getSnapshotList()
+    }
+
+    private fun cleanFileList() {
+        thumbnailFileListAdapter?.fileList = mutableListOf()
     }
 
     private fun setAssociatedRecyclerView() {
@@ -81,12 +87,14 @@ class ThumbnailFileListFragment : FileListBaseFragment() {
         thumbnailListFragmentViewModel.getSnapshotList()
     }
 
-    private fun setAdapter(listItems: ArrayList<DomainInformationFile>) {
-        showFileListRecycler()
-
+    private fun setAdapter() {
         thumbnailFileListAdapter =
             ThumbnailFileListAdapter(::onImageClick, onImageCheck)
                 .apply { showCheckBoxes = checkableListInit }
+    }
+
+    private fun fillAdapter(listItems: ArrayList<DomainInformationFile>) {
+        showFileListRecycler()
 
         fileListBackup = mutableListOf()
 
@@ -123,7 +131,6 @@ class ThumbnailFileListFragment : FileListBaseFragment() {
     }
 
     private fun onImageClick(file: DomainInformationImage) {
-        thumbnailListFragmentViewModel.cancelGetImageBytes()
         startFileListIntent(file.cameraConnectFile)
     }
 
@@ -168,7 +175,7 @@ class ThumbnailFileListFragment : FileListBaseFragment() {
         with(result) {
             doIfSuccess {
                 if (it.errors.isNotEmpty()) showErrorInSomeFiles(it.errors)
-                if (it.listItems.isNotEmpty()) setAdapter(it.listItems)
+                if (it.listItems.isNotEmpty()) fillAdapter(it.listItems)
                 else showEmptyListMessage()
             }
             doIfError {
@@ -204,10 +211,6 @@ class ThumbnailFileListFragment : FileListBaseFragment() {
         e.printStackTrace()
         isLoading = false
 
-        if (thumbnailListFragmentViewModel.isJobCancelled() == false) {
-            fileListLayout.showErrorSnackBar(getString(R.string.thumbnail_bytes_error))
-        }
-
         currentImageLoading?.let { cameraConnectFile ->
             imagesFailedToLoad.add(cameraConnectFile.name)
             ImageFilesPathManager.saveImageWithPath(
@@ -232,8 +235,6 @@ class ThumbnailFileListFragment : FileListBaseFragment() {
             ImageFilesPathManager.saveImageWithPath(
                 ImageWithPathSaved(image.cameraConnectFile.name, image.internalPath!!)
             )
-        } else {
-            fileListLayout.showErrorSnackBar(getString(R.string.thumbnail_bytes_error))
         }
 
         if (thumbnailFileListAdapter?.fileList?.indexOfFirst { it.cameraConnectFile.name == image.cameraConnectFile.name } != -1) {
@@ -316,15 +317,9 @@ class ThumbnailFileListFragment : FileListBaseFragment() {
         }
     }
 
-    override fun onDetach() {
-        super.onDetach()
-        thumbnailListFragmentViewModel.cancelGetImageBytes()
-        isLoadedOnCreate = false
-    }
-
-    override fun onResume() {
-        super.onResume()
-        if (!isLoadedOnCreate) startRetrievingImages()
+    override fun onPause() {
+        super.onPause()
+        cleanFileList()
     }
 
     private fun checkIfFileExist(path: String) = File(path).exists()
