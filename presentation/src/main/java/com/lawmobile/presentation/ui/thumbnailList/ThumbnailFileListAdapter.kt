@@ -100,8 +100,8 @@ class ThumbnailFileListAdapter(
 
         private fun manageImagePath(imageFile: DomainInformationImage) {
             with(thumbnailView) {
-                imageFile.internalPath?.let {
-                    if (!it.imageHasCorrectFormat()) {
+                imageFile.internalPath?.let { internalPath ->
+                    if (!internalPath.imageHasCorrectFormat()) {
                         imageErrorThumbnail.isVisible = true
                         photoImageLoading.isVisible = false
                         photoImageListItem.isVisible = false
@@ -110,9 +110,9 @@ class ThumbnailFileListAdapter(
 
                     try {
                         photoImageLoading.isVisible = false
-                        imageErrorThumbnail.isVisible = it == PATH_ERROR_IN_PHOTO
-                        if (it != PATH_ERROR_IN_PHOTO) {
-                            Glide.with(this).load(File(it)).into(photoImageListItem)
+                        imageErrorThumbnail.isVisible = internalPath == PATH_ERROR_IN_PHOTO
+                        if (internalPath != PATH_ERROR_IN_PHOTO) {
+                            Glide.with(this).load(File(internalPath)).into(photoImageListItem)
                             photoImageListItem.isVisible = true
                         }
                     } catch (e: Exception) {
