@@ -279,9 +279,8 @@ class LiveActivity : BaseActivity() {
                 setTextStorageLevel(it)
             }
             doIfError {
-                val default = listOf(60.0, 0.0, 60.0)
-                setColorInStorageLevel(default)
-                setTextStorageLevel(default)
+                textViewStorageLevels.text = getString(R.string.not_available)
+                progressBatteryLevel.setProgress(0, ASCENDANT)
                 liveViewAppBar.showErrorSnackBar(getString(R.string.storage_level_error))
             }
         }
