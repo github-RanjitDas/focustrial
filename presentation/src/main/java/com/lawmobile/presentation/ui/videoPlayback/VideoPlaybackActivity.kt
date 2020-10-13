@@ -146,14 +146,22 @@ class VideoPlaybackActivity : BaseActivity() {
     }
 
     private fun getFiltersWithLength(length: Int): Array<InputFilter> {
-        val blockCharacterSet = ","
-        val filterLength = InputFilter.LengthFilter(length)
-        val filterComma = InputFilter { source, _, _, _, _, _ ->
-            if (source != null && blockCharacterSet.contains("" + source)) {
+        val comma = ","
+        val ampersand = "&"
+        val quotes = "\""
+
+        val lengthFilter = InputFilter.LengthFilter(length)
+        val charactersFilter = InputFilter { source, _, _, _, _, _ ->
+            if (source != null
+                && (comma.contains("" + source)
+                        || ampersand.contains("" + source)
+                        || quotes.contains("" + source))
+            ) {
                 ""
             } else null
         }
-        return arrayOf(filterLength, filterComma)
+
+        return arrayOf(lengthFilter, charactersFilter)
     }
 
     private fun verifyEventEmpty() {
