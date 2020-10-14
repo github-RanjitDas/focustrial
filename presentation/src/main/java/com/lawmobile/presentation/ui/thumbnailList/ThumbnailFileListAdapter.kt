@@ -100,6 +100,7 @@ class ThumbnailFileListAdapter(
 
         private fun manageImagePath(imageFile: DomainInformationImage) {
             with(thumbnailView) {
+                photoImageListItem.setImageDrawable(null)
                 imageFile.internalPath?.let { internalPath ->
                     if (!internalPath.imageHasCorrectFormat()) {
                         imageErrorThumbnail.isVisible = true
