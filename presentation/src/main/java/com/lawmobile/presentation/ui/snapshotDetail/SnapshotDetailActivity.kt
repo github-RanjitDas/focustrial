@@ -133,7 +133,6 @@ class SnapshotDetailActivity : BaseActivity() {
         if (domainInformationImageMetadata == null)
             snapshotDetailViewModel.getInformationImageMetadata(file)
         else hideLoadingDialog()
-
     }
 
     private fun manageInformationImage(event: Event<Result<DomainInformationImageMetadata>>) {
@@ -188,7 +187,7 @@ class SnapshotDetailActivity : BaseActivity() {
             sheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
         }
         sheetBehavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
-            override fun onSlide(bottomSheet: View, slideOffset: Float) {}
+            override fun onSlide(bottomSheet: View, slideOffset: Float){}
 
             override fun onStateChanged(bottomSheet: View, newState: Int) {
                 when (newState) {
