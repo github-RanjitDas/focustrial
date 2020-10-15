@@ -26,8 +26,8 @@ fun TextView.showDateAndTimePickerDialog(
 fun TextView.showTimePickerDialog(hour: Int, minute: Int) {
     val pickerDialog = TimePickerDialog(
         context,
-        { _, _, _ ->
-            val time = text.toString() + " " + fixTime(hour, minute)
+        { _, hourSelected, minuteSelected ->
+            val time = text.toString() + " " + fixTime(hourSelected, minuteSelected)
             text = time
         },
         hour, minute, true
