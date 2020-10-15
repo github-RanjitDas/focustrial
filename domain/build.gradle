@@ -89,8 +89,8 @@ dependencies {
     kaptTest "com.google.dagger:hilt-android-compiler:$hilt_version"
     testImplementation "com.google.dagger:hilt-android-testing:$hilt_version"
 
-    api 'com.safefleet.mobile:avml:1.9.0-SNAPSHOT@aar'
-    api 'com.safefleet.mobile:commons:1.8.0-SNAPSHOT@aar'
+    api 'com.safefleet.mobile:avml:1.9.0@aar'
+    api 'com.safefleet.mobile:commons:1.8.0@aar'
 
 }
 
