@@ -53,7 +53,7 @@
     <string name="file_list_failed_load_files">Could not load files, please retry or checkout BWC again</string>
     <string name="file_list_date_default"><u>Date</u></string>
     <string name="file_list_event_default">Event</string>
-    <string name="no_images_found">No images found</string>
+    <string name="no_images_found">No snapshots found</string>
     <string name="no_videos_found">No videos found</string>
     <string name="getting_files_error">Getting files error</string>
     <string name="getting_files_error_description">The system failed to retrieve all the requested files, please try again</string>
