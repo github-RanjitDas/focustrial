@@ -2,6 +2,7 @@ package com.safefleet.lawmobile.screens
 
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.*
+import com.lawmobile.presentation.extensions.getCreationDate
 import com.safefleet.lawmobile.R
 import com.safefleet.mobile.avml.cameras.entities.CameraConnectFile
 import com.schibsted.spain.barista.assertion.BaristaListAssertions.assertCustomAssertionAtPosition
@@ -18,7 +19,7 @@ class FileListScreen : BaseScreen() {
     }
 
     fun areFilesSortedByDate(filesList: List<CameraConnectFile>) {
-        val sortedFilesList = filesList.sortedByDescending { it.date }
+        val sortedFilesList = filesList.sortedByDescending { it.getCreationDate() }
 
         for ((itemCount, file) in sortedFilesList.withIndex()) {
             this.isFileDisplayedAtPosition(file.date, itemCount)

@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.lawmobile.domain.entities.DomainInformationFile
 import com.lawmobile.presentation.R
-import com.lawmobile.presentation.extensions.getVideoStartTime
+import com.lawmobile.presentation.extensions.getCreationDate
 import com.lawmobile.presentation.extensions.setOnClickListenerCheckConnection
 import com.safefleet.mobile.commons.helpers.inflate
 import kotlinx.android.synthetic.main.file_list_recycler_item.view.*
@@ -60,7 +60,7 @@ class FileListAdapter(
             onFileCheck.invoke(isAnyFileChecked())
             fileView.run {
                 remoteCameraFile.run {
-                    dateFileListItem.text = cameraConnectFile.getVideoStartTime()
+                    dateFileListItem.text = cameraConnectFile.getCreationDate()
                     durationFileListItem.text = ""
                     eventFileListItem.text = cameraConnectVideoMetadata?.metadata?.event?.name ?: ""
                     itemFileList.setOnClickListenerCheckConnection {
