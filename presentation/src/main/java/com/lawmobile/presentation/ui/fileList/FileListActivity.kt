@@ -222,7 +222,7 @@ class FileListActivity : BaseActivity() {
                     fileListAdapter =
                         FileListAdapter(::fileItemClick, ::enableAssociatePartnerButton)
                     fileListAdapter.fileList =
-                        result.data.listItems.sortedByDescending { it.cameraConnectFile.date }
+                        result.data.listItems.sortedByDescending { it.cameraConnectFile.getCreationDate() }
                     when (buttonSnapshotListSwitch.isActivated) {
                         true -> snapshotListFragment.setFileListAdapter?.invoke(fileListAdapter)
                         false -> videoListFragment.setFileListAdapter?.invoke(fileListAdapter)
