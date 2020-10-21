@@ -11,6 +11,7 @@ import androidx.lifecycle.Observer
 import com.bumptech.glide.Glide
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.lawmobile.domain.entities.DomainInformationImageMetadata
+import com.lawmobile.domain.extensions.getCreationDate
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.entities.ImageFilesPathManager
 import com.lawmobile.presentation.entities.ImageWithPathSaved
@@ -264,7 +265,7 @@ class SnapshotDetailActivity : BaseActivity() {
             if (it.isNotEmpty()) {
                 var textInVideos = ""
                 for (position in it.indices) {
-                    textInVideos += it[position].fileName
+                    textInVideos += it[position].getCreationDate()
                     if (position != it.lastIndex) textInVideos += "\n"
                 }
 

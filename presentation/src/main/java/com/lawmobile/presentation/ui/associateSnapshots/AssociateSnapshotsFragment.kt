@@ -57,6 +57,8 @@ class AssociateSnapshotsFragment : BaseFragment() {
     }
 
     fun replaceSnapshotsAssociatedFromMetadata(list: MutableList<PhotoAssociated>) {
+        SnapshotsAssociatedByUser.value = mutableListOf()
+        SnapshotsAssociatedByUser.value.addAll(SnapshotsAssociatedByUser.temporalAssociateSnapshot)
         snapshotsAssociatedFromMetadata = mutableListOf()
         snapshotsAssociatedFromMetadata?.addAll(list)
     }
@@ -92,8 +94,8 @@ class AssociateSnapshotsFragment : BaseFragment() {
 
     private fun areSnapshotsSelected(): Boolean {
         return if (snapshotsAssociatedFromMetadata.isNullOrEmpty())
-            SnapshotsAssociatedByUser.value.isNotEmpty()
-        else snapshotsAssociatedFromMetadata != SnapshotsAssociatedByUser.value
+            SnapshotsAssociatedByUser.temporalAssociateSnapshot.isNotEmpty()
+        else snapshotsAssociatedFromMetadata != SnapshotsAssociatedByUser.temporalAssociateSnapshot
     }
 
     private fun showFilterDialog() {

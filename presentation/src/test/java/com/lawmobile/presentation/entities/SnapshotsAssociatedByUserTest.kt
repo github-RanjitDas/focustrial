@@ -24,9 +24,9 @@ internal class SnapshotsAssociatedByUserTest {
             every { nameFolder } returns "4567890123"
         }
         val photoList = mutableListOf(PhotoAssociated("123", "123"))
-        SnapshotsAssociatedByUser.value = photoList
+        SnapshotsAssociatedByUser.temporalAssociateSnapshot = photoList
         SnapshotsAssociatedByUser.updateAssociatedSnapshots(cameraConnectFile)
-        assert(SnapshotsAssociatedByUser.value.size == 2)
+        assert(SnapshotsAssociatedByUser.temporalAssociateSnapshot.size == 2)
     }
 
     @Test
@@ -36,9 +36,9 @@ internal class SnapshotsAssociatedByUserTest {
             every { date } returns "123"
         }
         val photoList = mutableListOf(PhotoAssociated("123", "123"))
-        SnapshotsAssociatedByUser.value = photoList
+        SnapshotsAssociatedByUser.temporalAssociateSnapshot = photoList
         SnapshotsAssociatedByUser.updateAssociatedSnapshots(cameraConnectFile)
-        assert(SnapshotsAssociatedByUser.value.size == 0)
+        assert(SnapshotsAssociatedByUser.temporalAssociateSnapshot.size == 0)
     }
 
     @Test
