@@ -104,6 +104,7 @@ class VideoPlaybackActivity : BaseActivity() {
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
 
         buttonCloseAssociateSnapshots.setOnClickListener {
+            SnapshotsAssociatedByUser.temporalAssociateSnapshot.addAll(SnapshotsAssociatedByUser.value)
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
         }
 
@@ -331,8 +332,8 @@ class VideoPlaybackActivity : BaseActivity() {
         }
 
         (videoMetadata.photos as MutableList<PhotoAssociated>?)?.let {
+            SnapshotsAssociatedByUser.temporalAssociateSnapshot = it
             associateSnapshotsFragment.replaceSnapshotsAssociatedFromMetadata(it)
-            SnapshotsAssociatedByUser.value = it
         }
 
         showSnapshotsAssociated()
@@ -353,7 +354,7 @@ class VideoPlaybackActivity : BaseActivity() {
 
     private fun handleAssociateSnapshots() {
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
-        associateSnapshotsFragment.replaceSnapshotsAssociatedFromMetadata(SnapshotsAssociatedByUser.value)
+        associateSnapshotsFragment.replaceSnapshotsAssociatedFromMetadata(SnapshotsAssociatedByUser.temporalAssociateSnapshot)
         showSnapshotsAssociated()
         layoutVideoPlayback.showSuccessSnackBar(getString(R.string.snapshots_added_success))
     }

@@ -630,7 +630,7 @@
                         android:text="@string/associate_image_to_video"
                         android:textSize="@dimen/video_playback_metadata_text_size"
                         android:textStyle="bold"
-                        android:visibility="gone"
+
                         app:layout_constraintTop_toBottomOf="@+id/licensePlateValue"
                         tools:ignore="Autofill,LabelFor" />
 
@@ -647,7 +647,7 @@
                         android:textAllCaps="false"
                         android:textColor="@color/lightBlue"
                         android:textSize="@dimen/text_size_16sp"
-                        android:visibility="gone"
+
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/associateSnapshotTitle" />
@@ -662,7 +662,7 @@
                         android:paddingHorizontal="@dimen/padding_50dp"
                         android:paddingVertical="@dimen/padding_5dp"
                         android:useDefaultMargins="true"
-                        android:visibility="gone"
+
                         app:layout_constraintTop_toBottomOf="@id/buttonAssociateSnapshots" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>

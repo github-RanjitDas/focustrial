@@ -7,15 +7,16 @@ import com.safefleet.mobile.avml.cameras.entities.PhotoAssociated
 
 object SnapshotsAssociatedByUser {
     var value = mutableListOf<PhotoAssociated>()
+    var temporalAssociateSnapshot = mutableListOf<PhotoAssociated>()
 
     fun updateAssociatedSnapshots(imageFile: CameraConnectFile) {
         with(imageFile) {
             val result =
-                value.find { it.name == name }
+                temporalAssociateSnapshot.find { it.name == name }
             if (result == null) {
-                value.add(PhotoAssociated(name, getCreationDate()))
+                temporalAssociateSnapshot.add(PhotoAssociated(name, getCreationDate()))
             } else {
-                value.remove(result)
+                temporalAssociateSnapshot.remove(result)
             }
         }
     }
@@ -34,5 +35,6 @@ object SnapshotsAssociatedByUser {
 
     fun cleanList() {
         value = mutableListOf()
+        temporalAssociateSnapshot = mutableListOf()
     }
 }
