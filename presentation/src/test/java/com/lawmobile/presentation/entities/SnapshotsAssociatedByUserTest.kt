@@ -56,7 +56,7 @@ internal class SnapshotsAssociatedByUserTest {
                     }
                 )
             )
-        SnapshotsAssociatedByUser.value = mutableListOf(PhotoAssociated("123", "123"))
+        SnapshotsAssociatedByUser.temporalAssociateSnapshot = mutableListOf(PhotoAssociated("123", "123"))
         val associatedList =
             SnapshotsAssociatedByUser
                 .getListOfImagesAssociatedToVideo(domainInformationImageList).find { it.isSelected }
@@ -78,7 +78,7 @@ internal class SnapshotsAssociatedByUserTest {
                     }
                 )
             )
-        SnapshotsAssociatedByUser.value = mutableListOf(PhotoAssociated("123", "123"))
+        SnapshotsAssociatedByUser.temporalAssociateSnapshot = mutableListOf(PhotoAssociated("123", "123"))
         val associatedList =
             SnapshotsAssociatedByUser
                 .getListOfImagesAssociatedToVideo(domainInformationImageList).find { it.isSelected }

@@ -98,6 +98,7 @@ class ThumbnailFileListFragment : FileListBaseFragment() {
 
         fileListBackup = mutableListOf()
 
+        thumbnailFileListAdapter?.fileList = mutableListOf()
         listItems.forEach {
             val domainInformationImage = DomainInformationImage(it.cameraConnectFile)
             thumbnailFileListAdapter?.addItemToList(domainInformationImage)
@@ -212,6 +213,9 @@ class ThumbnailFileListFragment : FileListBaseFragment() {
         isLoading = false
 
         currentImageLoading?.let { cameraConnectFile ->
+            if (checkLastItemStatusIsSavedWhenSwitchingLists(cameraConnectFile)) {
+                return
+            }
             imagesFailedToLoad.add(cameraConnectFile.name)
             ImageFilesPathManager.saveImageWithPath(
                 ImageWithPathSaved(cameraConnectFile.name, PATH_ERROR_IN_PHOTO)
@@ -237,11 +241,18 @@ class ThumbnailFileListFragment : FileListBaseFragment() {
             )
         }
 
-        if (thumbnailFileListAdapter?.fileList?.indexOfFirst { it.cameraConnectFile.name == image.cameraConnectFile.name } != -1) {
+        val isImageInAdapter = thumbnailFileListAdapter?.isImageInAdapter(image)
+        if (isImageInAdapter != null && isImageInAdapter) {
+            image.isSelected =
+                SnapshotsAssociatedByUser.isImageAssociated(image.cameraConnectFile.name)
             thumbnailFileListAdapter?.addItemToList(image)
             isLoading = false
             loadNewImage()
         }
+    }
+
+    private fun checkLastItemStatusIsSavedWhenSwitchingLists(cameraConnectFile: CameraConnectFile): Boolean {
+        return fileListBackup.last().cameraConnectFile.name == cameraConnectFile.name && fileListBackup.size != thumbnailFileListAdapter?.fileList?.size
     }
 
     private fun scrollListenerForPagination() = object : RecyclerView.OnScrollListener() {

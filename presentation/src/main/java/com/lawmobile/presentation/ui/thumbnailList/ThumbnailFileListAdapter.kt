@@ -11,6 +11,7 @@ import com.lawmobile.presentation.R
 import com.lawmobile.presentation.entities.SnapshotsAssociatedByUser
 import com.lawmobile.presentation.extensions.imageHasCorrectFormat
 import com.lawmobile.presentation.extensions.setOnClickListenerCheckConnection
+import com.lawmobile.presentation.ui.fileList.FileListBaseFragment
 import com.lawmobile.presentation.ui.thumbnailList.ThumbnailFileListFragment.Companion.PATH_ERROR_IN_PHOTO
 import com.safefleet.mobile.commons.helpers.inflate
 import kotlinx.android.synthetic.main.thumbnail_list_recycler_item.view.*
@@ -62,12 +63,12 @@ class ThumbnailFileListAdapter(
     }
 
     fun addItemToList(domainInformationImage: DomainInformationImage) {
-        val indexOrFirst =
+        val indexOfFirst =
             fileList.indexOfFirst { it.cameraConnectFile.name == domainInformationImage.cameraConnectFile.name }
-        if (indexOrFirst >= 0) {
-            fileList[indexOrFirst] =
+        if (indexOfFirst >= 0) {
+            fileList[indexOfFirst] =
                 domainInformationImage.apply {
-                    isSelected = fileList[indexOrFirst].isSelected
+                    isSelected = fileList[indexOfFirst].isSelected
                 }
         } else {
             fileList.add(domainInformationImage)
@@ -75,6 +76,9 @@ class ThumbnailFileListAdapter(
 
         notifyDataSetChanged()
     }
+
+    fun isImageInAdapter(image: DomainInformationImage) =
+        fileList.indexOfFirst { it.cameraConnectFile.name == image.cameraConnectFile.name } != -1
 
     inner class ThumbnailListViewHolder(
         private val thumbnailView: View,
@@ -159,11 +163,13 @@ class ThumbnailFileListAdapter(
             }
         }
 
-        private fun onCheckedImage(imageFile: DomainInformationImage, isChecked: Boolean) {
+        private fun onCheckedImage(thumbnailFile: DomainInformationImage, isChecked: Boolean) {
             val index =
-                fileList.indexOfFirst { it.cameraConnectFile.name == imageFile.cameraConnectFile.name }
+                fileList.indexOfFirst { it.cameraConnectFile.name == thumbnailFile.cameraConnectFile.name }
             fileList[index].isSelected = isChecked
-            SnapshotsAssociatedByUser.updateAssociatedSnapshots(imageFile.cameraConnectFile)
+            if (FileListBaseFragment.checkableListInit) {
+                SnapshotsAssociatedByUser.updateAssociatedSnapshots(thumbnailFile.cameraConnectFile)
+            }
             onImageCheck?.invoke(isAnyFileChecked(), selectedItemsSize())
         }
 
