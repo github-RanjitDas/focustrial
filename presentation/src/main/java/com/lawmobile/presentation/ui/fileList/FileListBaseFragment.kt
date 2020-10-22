@@ -16,7 +16,7 @@ import com.lawmobile.presentation.widgets.CustomFilterDialog
 import com.safefleet.mobile.avml.cameras.entities.CameraConnectFile
 import kotlinx.android.synthetic.main.fragment_file_list.*
 
-open class FileListBaseFragment: BaseFragment() {
+open class FileListBaseFragment : BaseFragment() {
 
     var listType: String? = null
     var isLoadedOnCreate = false
@@ -36,7 +36,7 @@ open class FileListBaseFragment: BaseFragment() {
         }
     }
 
-    fun manageFragmentContent(){
+    fun manageFragmentContent() {
         if (!filter?.filteredList.isNullOrEmpty()) showFileListRecycler()
         else showNoFilterResults()
     }
@@ -71,7 +71,7 @@ open class FileListBaseFragment: BaseFragment() {
         Log.d(getString(R.string.getting_files_error), errors.toString())
     }
 
-    fun getFilteredList(listToFilter: List<DomainInformationForList>): List<DomainInformationForList>{
+    fun getFilteredList(listToFilter: List<DomainInformationForList>): List<DomainInformationForList> {
         filter?.run {
             if (!currentFilters.isNullOrEmpty()) {
                 this.listToFilter = listToFilter

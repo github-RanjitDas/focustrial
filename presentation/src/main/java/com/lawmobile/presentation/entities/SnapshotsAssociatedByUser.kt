@@ -21,12 +21,16 @@ object SnapshotsAssociatedByUser {
         }
     }
 
+    fun isImageAssociated(name: String): Boolean {
+        return temporalAssociateSnapshot.find { it.name == name } != null
+    }
+
     fun getListOfImagesAssociatedToVideo(imageList: List<DomainInformationForList>): List<DomainInformationForList> =
         filterPhotoSnapshotsAssociatedSelected(imageList)
 
     private fun filterPhotoSnapshotsAssociatedSelected(imageList: List<DomainInformationForList>): List<DomainInformationForList> {
         val completeList: MutableList<DomainInformationForList> = imageList as MutableList
-        value.map { it.name }.forEach { image ->
+        temporalAssociateSnapshot.map { it.name }.forEach { image ->
             val index = completeList.indexOfFirst { it.cameraConnectFile.name == image }
             if (index >= 0) completeList[index].isSelected = true
         }

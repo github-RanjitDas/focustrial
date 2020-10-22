@@ -10,7 +10,9 @@ import com.lawmobile.domain.entities.DomainInformationFile
 import com.lawmobile.domain.extensions.getCreationDate
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.entities.SnapshotsAssociatedByUser
+import com.lawmobile.presentation.extensions.setCheckedListenerCheckConnection
 import com.lawmobile.presentation.extensions.setOnClickListenerCheckConnection
+import com.lawmobile.presentation.ui.fileList.FileListBaseFragment
 import com.safefleet.mobile.commons.helpers.convertDpToPixel
 import com.safefleet.mobile.commons.helpers.inflate
 import kotlinx.android.synthetic.main.simple_list_recycler_item.view.*
@@ -126,31 +128,34 @@ class SimpleFileListAdapter(
 
         private fun setListener(remoteCameraFile: DomainInformationFile) {
             with(fileView) {
-                checkboxSimpleListItem.setOnClickListenerCheckConnection {
+                checkboxSimpleListItem.setCheckedListenerCheckConnection {
                     selectItemFromTheList(remoteCameraFile)
                 }
                 simpleListLayout.setOnClickListenerCheckConnection {
-                    selectItemFromTheList(remoteCameraFile)
+                    with(fileView) {
+                        if (showCheckBoxes) {
+                            checkboxSimpleListItem.isActivated = !checkboxSimpleListItem.isActivated
+                            selectItemFromTheList(remoteCameraFile)
+                        } else {
+                            onFileClick.invoke(remoteCameraFile)
+                        }
+                    }
                 }
-
             }
         }
 
         private fun selectItemFromTheList(remoteCameraFile: DomainInformationFile) {
             with(fileView) {
-                if (showCheckBoxes) {
-                    checkboxSimpleListItem.isActivated = !checkboxSimpleListItem.isActivated
-                    onCheckedFile(remoteCameraFile, checkboxSimpleListItem.isActivated)
+                if (FileListBaseFragment.checkableListInit) {
                     SnapshotsAssociatedByUser.updateAssociatedSnapshots(remoteCameraFile.cameraConnectFile)
-                } else {
-                    onFileClick.invoke(remoteCameraFile)
                 }
+                onCheckedFile(remoteCameraFile, checkboxSimpleListItem.isActivated)
             }
         }
 
-        private fun onCheckedFile(remoteCameraFile: DomainInformationFile, isChecked: Boolean) {
+        private fun onCheckedFile(simpleFile: DomainInformationFile, isChecked: Boolean) {
             val index =
-                fileList.indexOfFirst { it.cameraConnectFile.name == remoteCameraFile.cameraConnectFile.name }
+                fileList.indexOfFirst { it.cameraConnectFile.name == simpleFile.cameraConnectFile.name }
             fileList[index].isSelected = isChecked
             onFileCheck?.invoke(isAnyFileChecked(), selectedItemsSize())
         }

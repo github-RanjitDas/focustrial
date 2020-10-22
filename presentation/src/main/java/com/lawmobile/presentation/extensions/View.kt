@@ -22,6 +22,12 @@ fun SafeFleetClickable.setClickListenerCheckConnection(callback: (View) -> Unit)
     }
 }
 
+fun SafeFleetClickable.setCheckedListenerCheckConnection(callback: (View) -> Unit) {
+    onChecked = { view, _ ->
+        context.checkSession(callback, view)
+    }
+}
+
 fun View.showErrorSnackBar(message: String, duration: Int = Snackbar.LENGTH_SHORT, onRetryClick: ((View) -> Unit)? = null) {
     SafeFleetSnackBar.make(
         SafeFleetSnackBarSettings(
