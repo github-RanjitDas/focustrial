@@ -15,11 +15,13 @@ import com.lawmobile.presentation.extensions.createAlertMobileDataActive
 import com.lawmobile.presentation.extensions.createAlertProgress
 import com.lawmobile.presentation.extensions.createAlertSessionExpired
 import com.lawmobile.presentation.ui.login.LoginActivity
+import com.lawmobile.presentation.utils.DeviceHelper
 import com.lawmobile.presentation.utils.EspressoIdlingResource
 import com.lawmobile.presentation.utils.MobileDataStatus
 import dagger.hilt.android.AndroidEntryPoint
 import java.sql.Timestamp
 import javax.inject.Inject
+
 
 @AndroidEntryPoint
 open class BaseActivity : AppCompatActivity() {
@@ -45,6 +47,11 @@ open class BaseActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         super.onCreate(savedInstanceState)
+
+        if (DeviceHelper.isDeviceRooted()) {
+            finish()
+            return
+        }
         createMobileDataDialog()
         mobileDataStatus.observe(this, Observer(::showMobileDataDialog))
         updateLastInteraction()
