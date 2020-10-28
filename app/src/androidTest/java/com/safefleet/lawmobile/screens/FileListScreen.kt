@@ -3,13 +3,17 @@ package com.safefleet.lawmobile.screens
 import androidx.annotation.IdRes
 import androidx.annotation.StringRes
 import androidx.test.espresso.assertion.ViewAssertions
+import com.lawmobile.domain.extensions.getCreationDate
 import com.safefleet.lawmobile.R
 import com.safefleet.lawmobile.helpers.CustomCheckboxAction
 import com.safefleet.lawmobile.helpers.isActivated
 import com.safefleet.lawmobile.helpers.isNotActivated
 import com.safefleet.mobile.avml.cameras.entities.CameraConnectFile
+import com.schibsted.spain.barista.assertion.BaristaImageViewAssertions.assertHasDrawable
 import com.schibsted.spain.barista.assertion.BaristaListAssertions
+import com.schibsted.spain.barista.assertion.BaristaRecyclerViewAssertions
 import com.schibsted.spain.barista.assertion.BaristaVisibilityAssertions.assertDisplayed
+import com.schibsted.spain.barista.assertion.BaristaVisibilityAssertions.assertNotDisplayed
 import com.schibsted.spain.barista.interaction.BaristaClickInteractions.clickOn
 import com.schibsted.spain.barista.interaction.BaristaEditTextInteractions.writeTo
 import com.schibsted.spain.barista.interaction.BaristaListInteractions
@@ -17,7 +21,7 @@ import com.schibsted.spain.barista.interaction.BaristaListInteractions
 class FileListScreen : BaseScreen() {
 
     @IdRes
-    var recyclerView: Int = 0
+    var recyclerView: Int = R.id.fileListRecycler
 
     @IdRes
     var targetView: Int = 0
@@ -45,10 +49,10 @@ class FileListScreen : BaseScreen() {
     }
 
     fun areFilesSortedByDate(filesList: List<CameraConnectFile>) {
-        val sortedFilesList = filesList.sortedByDescending { it.date }
+        val sortedFilesList = filesList.sortedByDescending { it.getCreationDate() }
 
         for ((itemCount, file) in sortedFilesList.withIndex()) {
-            isFileDisplayedAtPosition(file.date, itemCount)
+            isFileDisplayedAtPosition(file.getCreationDate(), itemCount)
         }
     }
 
@@ -100,4 +104,35 @@ class FileListScreen : BaseScreen() {
 
     fun typeOfficerIdToAssociate(officerId: String) =
         writeTo(R.id.editTextAssignToOfficer, officerId)
+
+    fun openFilterDialog() {
+        clickOn(R.id.buttonOpenFilters)
+        assertDisplayed(R.id.startDateTextView)
+        assertDisplayed(R.id.endDateTextView)
+        assertDisplayed(R.id.buttonApplyFilter)
+        assertDisplayed(R.id.buttonCancelFilter)
+    }
+
+    fun clickOnRemoveTag() {
+        clickOn(R.id.buttonClearTag)
+        assertNotDisplayed(R.id.scrollFilterTags)
+        assertHasDrawable(R.id.buttonOpenFilters, R.drawable.ic_filter)
+    }
+
+    fun matchItemsCount(count: Int) =
+        BaristaRecyclerViewAssertions.assertRecyclerViewItemCount(recyclerView, count)
+
+    fun isFilterButtonDisplayed() = assertDisplayed(R.id.buttonOpenFilters)
+
+    fun isFilterActive() {
+        assertDisplayed(R.id.scrollFilterTags)
+        assertHasDrawable(R.id.buttonOpenFilters, R.drawable.ic_filter_white)
+    }
+
+    fun isFilterNotActive() {
+        assertNotDisplayed(R.id.scrollFilterTags)
+        assertHasDrawable(R.id.buttonOpenFilters, R.drawable.ic_filter)
+    }
+
+    fun isNoFilesFoundDisplayed() = assertDisplayed(R.id.noFilesTextView)
 }

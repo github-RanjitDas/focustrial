@@ -135,7 +135,7 @@ class AssociateSnapshotsFragment : BaseFragment() {
 
     private fun updateButtonFilterState(it: Boolean) {
         with(buttonFilterAssociateImages) {
-            background = if (it) {
+            background = if (!it) {
                 setImageResource(R.drawable.ic_filter_white)
                 ContextCompat.getDrawable(
                     context,

@@ -5,7 +5,6 @@ import androidx.test.filters.LargeTest
 import androidx.test.rule.GrantPermissionRule
 import com.safefleet.lawmobile.di.mocksServiceCameras.CameraConnectServiceX1Mock
 import com.safefleet.lawmobile.helpers.MockUtils
-import com.safefleet.lawmobile.rules.EspressoIdlingResourceRule
 import org.junit.After
 import org.junit.Rule
 import org.junit.runner.RunWith
@@ -18,9 +17,6 @@ open class EspressoBaseTest {
     companion object {
         val mockUtils = MockUtils()
     }
-
-    @get:Rule
-    val espressoIdlingResourcesRule = EspressoIdlingResourceRule()
 
     @Rule
     @JvmField

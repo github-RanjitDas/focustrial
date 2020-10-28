@@ -13,11 +13,6 @@ import com.schibsted.spain.barista.interaction.BaristaClickInteractions.clickOn
 
 class LiveViewScreen : BaseScreen() {
 
-    fun logout() {
-        clickOn(R.id.buttonLogout)
-        clickOn(R.string.accept)
-    }
-
     fun isLiveViewNotDisplayed() {
         assertNotExist(R.id.buttonSwitchLiveView)
         assertNotExist(R.id.liveStreamingView)

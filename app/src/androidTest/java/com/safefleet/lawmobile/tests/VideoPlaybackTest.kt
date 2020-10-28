@@ -34,7 +34,6 @@ class VideoPlaybackTest : EspressoStartActivityBaseTest<LoginActivity>(LoginActi
 
     private fun setSimpleRecyclerView() {
         with(fileListScreen) {
-            recyclerView = R.id.fileListRecycler
             targetView = R.id.dateSimpleListItem
             targetCheckBox = R.id.checkboxSimpleListItem
         }

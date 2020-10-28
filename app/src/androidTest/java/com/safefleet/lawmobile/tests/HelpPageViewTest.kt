@@ -6,7 +6,6 @@ import com.lawmobile.presentation.ui.login.LoginActivity
 import com.safefleet.lawmobile.screens.HelpPageScreen
 import com.safefleet.lawmobile.screens.LiveViewScreen
 import com.safefleet.lawmobile.screens.LoginScreen
-import com.safefleet.lawmobile.screens.PairingScreen
 import org.junit.Test
 import org.junit.runner.RunWith
 
@@ -16,7 +15,6 @@ class HelpPageViewTest : EspressoStartActivityBaseTest<LoginActivity>(LoginActiv
 
     companion object {
         private val liveViewScreen = LiveViewScreen()
-        private val pairingScreen = PairingScreen()
         private val helpPageScreen = HelpPageScreen()
     }
 

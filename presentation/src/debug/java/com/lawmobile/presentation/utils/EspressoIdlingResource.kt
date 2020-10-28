@@ -11,16 +11,14 @@ object EspressoIdlingResource {
     var countingIdlingResource = CountingIdlingResource(RESOURCE)
 
     fun increment() {
-        Log.d("EspressoIdlingResource", "increment")
         countingIdlingResource.increment()
-        Log.d("EspressoIdlingResource", "empty: " + countingIdlingResource.isIdleNow.toString())
+        Log.d("EspressoIdlingResource", countingIdlingResource.isIdleNow.toString())
     }
 
     fun decrement() {
         if (!countingIdlingResource.isIdleNow) {
-            Log.d("EspressoIdlingResource", "decrement")
             countingIdlingResource.decrement()
-            Log.d("EspressoIdlingResource", "empty: " + countingIdlingResource.isIdleNow.toString())
         }
+        Log.d("EspressoIdlingResource", countingIdlingResource.isIdleNow.toString())
     }
 }

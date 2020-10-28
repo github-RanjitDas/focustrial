@@ -65,11 +65,11 @@ class AppModule {
 
         @Provides
         @Singleton
-        fun provideLibVLC(@ApplicationContext context: Context): LibVLC = LibVLC(context)
+        fun provideLibVLC(@ApplicationContext context: Context): LibVLC = mockk(relaxed = true)
 
         @Provides
         @Singleton
-        fun provideMediaPlayer(libVLC: LibVLC): MediaPlayer = MediaPlayer(libVLC)
+        fun provideMediaPlayer(libVLC: LibVLC): MediaPlayer = mockk(relaxed = true)
 
         @Provides
         @Singleton

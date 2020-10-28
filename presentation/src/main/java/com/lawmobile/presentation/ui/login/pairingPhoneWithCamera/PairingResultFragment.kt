@@ -9,7 +9,6 @@ import android.view.animation.AnimationUtils
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import com.lawmobile.domain.entities.CameraInfo
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.ui.base.BaseFragment
@@ -62,7 +61,7 @@ class PairingResultFragment : BaseFragment() {
         verifyConnectionWithTheCamera()
     }
 
-    private fun saveSerialNumberIfItIsCorrect(){
+    private fun saveSerialNumberIfItIsCorrect() {
         val serialNumberCamera = pairingViewModel.getNetworkName()
         if (pairingViewModel.isValidNumberCameraBWC(serialNumberCamera)) {
             CameraInfo.serialNumber = serialNumberCamera
@@ -89,15 +88,11 @@ class PairingResultFragment : BaseFragment() {
 
     private fun setObservers() {
         pairingViewModel.progressConnectionWithTheCamera.observe(
-            viewLifecycleOwner,
-            Observer(::manageResponseProgressInConnectionCamera)
+            viewLifecycleOwner, ::manageResponseProgressInConnectionCamera
         )
         pairingViewModel.isWaitFinishedLiveData.observe(
-            viewLifecycleOwner,
-            Observer {
-                if (it) connectionSuccess(true)
-            }
-        )
+            viewLifecycleOwner
+        ) { if (it) connectionSuccess(true) }
     }
 
     private fun manageResponseProgressInConnectionCamera(result: Result<Int>) {
