@@ -19,6 +19,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="Instantiatable">
+
         <activity
             android:name="com.lawmobile.presentation.ui.login.LoginActivity"
             android:screenOrientation="portrait"
@@ -29,6 +30,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name="com.lawmobile.presentation.ui.live.LiveActivity"
             android:screenOrientation="portrait"

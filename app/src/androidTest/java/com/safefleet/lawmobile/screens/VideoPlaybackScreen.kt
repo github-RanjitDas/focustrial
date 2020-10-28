@@ -4,15 +4,18 @@ import com.safefleet.lawmobile.R
 import com.safefleet.lawmobile.helpers.Alert
 import com.safefleet.lawmobile.helpers.ToastMessage
 import com.safefleet.mobile.avml.cameras.entities.CameraConnectVideoMetadata
+import com.schibsted.spain.barista.assertion.BaristaVisibilityAssertions.assertDisplayed
 import com.schibsted.spain.barista.assertion.BaristaVisibilityAssertions.assertNotDisplayed
 import com.schibsted.spain.barista.interaction.BaristaClickInteractions.clickOn
 import com.schibsted.spain.barista.interaction.BaristaEditTextInteractions.writeTo
+import com.schibsted.spain.barista.interaction.BaristaScrollInteractions
 
 class VideoPlaybackScreen : BaseScreen() {
 
     fun clickOnSave() = clickOn(R.id.saveButtonVideoPlayback)
     fun clickOnBack() = clickOn(R.id.backArrowFileListAppBar)
     fun clickOnAccept() = clickOn(R.string.accept)
+    fun clickOnAddSnapshots() = clickOn(R.id.buttonAssociateSnapshots)
 
     fun selectEvent(data: CameraConnectVideoMetadata) {
         clickOn(R.id.eventValue)
@@ -79,4 +82,19 @@ class VideoPlaybackScreen : BaseScreen() {
         ToastMessage.isToastDisplayed(R.string.event_mandatory)
 
     fun isMetadataChangesAlertDisplayed() = Alert.isMetadataChangesDisplayed()
+
+    fun isAddSnapshotsButtonDisplayed() {
+        BaristaScrollInteractions.safelyScrollTo(R.id.buttonAssociateSnapshots)
+        assertDisplayed(R.id.buttonAssociateSnapshots)
+    }
+
+    fun thereIsNoSnapshotAssociated() {
+        BaristaScrollInteractions.safelyScrollTo(R.id.layoutAssociatedSnapshots)
+        assertNotDisplayed(R.id.layoutAssociatedSnapshots)
+    }
+
+    fun thereAreSnapshotsAssociated() {
+        BaristaScrollInteractions.safelyScrollTo(R.id.layoutAssociatedSnapshots)
+        assertDisplayed(R.id.layoutAssociatedSnapshots)
+    }
 }

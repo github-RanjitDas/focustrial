@@ -21,7 +21,7 @@ class LiveStreamingRepositoryImplTest {
 
     @BeforeEach
     fun setUp() {
-        clearMocks()
+        clearAllMocks()
     }
 
     @Test

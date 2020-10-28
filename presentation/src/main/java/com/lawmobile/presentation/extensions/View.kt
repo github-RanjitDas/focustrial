@@ -5,10 +5,19 @@ import android.view.animation.Animation
 import com.google.android.material.snackbar.Snackbar
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.ui.base.BaseActivity
+import com.lawmobile.presentation.utils.EspressoIdlingResource
 import com.safefleet.mobile.commons.widgets.SafeFleetClickable
 import com.safefleet.mobile.commons.widgets.snackbar.SafeFleetSnackBar
 import com.safefleet.mobile.commons.widgets.snackbar.SafeFleetSnackBarSettings
 import java.sql.Timestamp
+
+private val snackBarListener = object : View.OnAttachStateChangeListener{
+    override fun onViewAttachedToWindow(v: View?) {}
+
+    override fun onViewDetachedFromWindow(v: View?) {
+        EspressoIdlingResource.decrement()
+    }
+}
 
 fun View.setOnClickListenerCheckConnection(callback: (View) -> Unit) {
     setOnClickListener {
@@ -37,7 +46,10 @@ fun View.showErrorSnackBar(message: String, duration: Int = Snackbar.LENGTH_SHOR
             R.drawable.ic_warning,
             this.context.getColor(R.color.red)
         ), onRetryClick
-    )?.show()
+    )?.apply {
+        view.addOnAttachStateChangeListener(snackBarListener)
+        show()
+    }
 }
 
 fun View.showSuccessSnackBar(message: String) {
@@ -49,7 +61,10 @@ fun View.showSuccessSnackBar(message: String) {
             R.drawable.ic_successful_white,
             context.getColor(R.color.greenSuccess)
         )
-    )?.show()
+    )?.apply {
+        view.addOnAttachStateChangeListener(snackBarListener)
+        show()
+    }
 }
 
 fun View.startAnimationIfEnabled(animation: Animation) {

@@ -43,6 +43,8 @@ class LoginScreen : BaseScreen() {
 
     fun clickOnGotIt() = clickOn(R.id.buttonDismissInstructions)
 
+    fun clickOnCloseInstructions() = clickOn(R.id.buttonCloseInstructions)
+
     fun isPairingSuccessDisplayed() {
         assertHasDrawable(R.id.imageViewResultPairing, R.drawable.ic_successful_green)
         assertContains(R.id.textViewResultPairing, R.string.success_connection_to_camera)

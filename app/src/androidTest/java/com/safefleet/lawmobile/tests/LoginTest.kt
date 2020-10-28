@@ -94,7 +94,7 @@ class LoginTest : EspressoStartActivityBaseTest<LoginActivity>(LoginActivity::cl
     }
 
     @Test
-    fun d_verifyInstructionsToConnectCamera_FMA_() {
+    fun d_verifyInstructionsToConnectCamera_FMA_1322() {
         with(loginScreen) {
             clickOnCameraInstructions()
 
@@ -103,7 +103,29 @@ class LoginTest : EspressoStartActivityBaseTest<LoginActivity>(LoginActivity::cl
             isInstructionsTextDisplayed()
             isInstructionsGotItButtonDisplayed()
 
+            clickOnCloseInstructions()
+
+            isLogoDisplayed()
+            isConnectToCameraTextDisplayed()
+            isInstructionsTextDisplayed()
+            isFooterLogoDisplayed()
+
+            clickOnCameraInstructions()
+
+            isInstructionsTitleDisplayed()
+            isInstructionsImageDisplayed()
+            isInstructionsTextDisplayed()
+            isInstructionsGotItButtonDisplayed()
+
             clickOnGotIt()
+
+            isLogoDisplayed()
+            isConnectToCameraTextDisplayed()
+            isInstructionsTextDisplayed()
+            isFooterLogoDisplayed()
         }
     }
+
+
+
 }

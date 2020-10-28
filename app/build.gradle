@@ -15,6 +15,7 @@ android {
         versionName "$rootProject.ext.major.$rootProject.ext.minor.$rootProject.ext.patch"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles 'consumer-rules.pro'
     }
 
     signingConfigs {

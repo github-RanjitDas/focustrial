@@ -4,10 +4,9 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
 import com.lawmobile.presentation.ui.login.LoginActivity
 import com.safefleet.lawmobile.R
-import com.safefleet.lawmobile.screens.FileListScreen
-import com.safefleet.lawmobile.screens.LiveViewScreen
-import com.safefleet.lawmobile.screens.LoginScreen
+import com.safefleet.lawmobile.screens.*
 import com.safefleet.lawmobile.testData.CameraFilesData
+import com.safefleet.lawmobile.testData.VideoPlaybackMetadata
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -21,8 +20,12 @@ class VideoListTest : EspressoStartActivityBaseTest<LoginActivity>(LoginActivity
 
         private val extraVideoList = CameraFilesData.EXTRA_VIDEO_LIST.value
 
+        private val defaultMetadata = VideoPlaybackMetadata.DEFAULT_VIDEO_METADATA.value
+
         private val fileListScreen = FileListScreen()
         private val liveViewScreen = LiveViewScreen()
+        private val videoPlaybackScreen = VideoPlaybackScreen()
+        private val filterDialogScreen = FilterDialogScreen()
     }
 
     @Before
@@ -30,7 +33,6 @@ class VideoListTest : EspressoStartActivityBaseTest<LoginActivity>(LoginActivity
 
     private fun setSimpleRecyclerView() {
         with(fileListScreen) {
-            recyclerView = R.id.fileListRecycler
             targetView = R.id.dateSimpleListItem
             targetCheckBox = R.id.checkboxSimpleListItem
         }
@@ -202,6 +204,42 @@ class VideoListTest : EspressoStartActivityBaseTest<LoginActivity>(LoginActivity
             clickOnAssociateWithAnOfficer()
             typeOfficerIdToAssociate("murbanob")
             clickOnButtonAssignToOfficer()
+        }
+    }
+
+    @Test
+    fun filterVideos_FMA_1283() {
+        liveViewScreen.openVideoList()
+
+        with(fileListScreen) {
+            matchItemsCount(15)
+            isFilterButtonDisplayed()
+            openFilterDialog()
+
+            with(filterDialogScreen) {
+                selectEvent("Default")
+                selectStartDate(2020, 5, 20)
+                clickOnOk()
+                applyFilter()
+
+                isFilterActive()
+                isNoFilesFoundDisplayed()
+
+                openFilterDialog()
+                clearStartDate()
+                selectEvent(R.string.no_event)
+                applyFilter()
+
+                isFilterActive()
+                matchItemsCount(15)
+
+                clickOnItemInPosition(1)
+                videoPlaybackScreen.selectEvent(defaultMetadata)
+                videoPlaybackScreen.clickOnSave()
+
+                isFilterActive()
+                matchItemsCount(14)
+            }
         }
     }
 }

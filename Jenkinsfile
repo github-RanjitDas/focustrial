@@ -46,7 +46,7 @@ node ('docker-builds-slave') {
 
             stage('Unit Tests') {
                 logger.stage()
-                timeout(5) {
+                timeout(7) {
                     sh "./gradlew testDebugUnitTestCoverage --stacktrace"
                 }
             }

@@ -402,21 +402,19 @@ class VideoPlaybackActivity : BaseActivity() {
     }
 
     private fun configureMediaEventListener() {
-        videoPlaybackViewModel.setMediaEventListener(
-            MediaPlayer.EventListener {
-                when (it.type) {
-                    MediaPlayer.Event.EncounteredError -> {
-                        domainInformationVideo?.let(::createVideoPlaybackInSurface)
-                    }
-                    MediaPlayer.Event.MediaChanged -> {
-                        playVideoPlayback()
-                    }
-                    MediaPlayer.Event.TimeChanged -> {
-                        manageCurrentTimeInVideo(videoPlaybackViewModel.getTimeInMillisMediaPlayer())
-                    }
+        videoPlaybackViewModel.setMediaEventListener {
+            when (it.type) {
+                MediaPlayer.Event.EncounteredError -> {
+                    domainInformationVideo?.let(::createVideoPlaybackInSurface)
+                }
+                MediaPlayer.Event.MediaChanged -> {
+                    playVideoPlayback()
+                }
+                MediaPlayer.Event.TimeChanged -> {
+                    manageCurrentTimeInVideo(videoPlaybackViewModel.getTimeInMillisMediaPlayer())
                 }
             }
-        )
+        }
     }
 
     private fun saveVideoMetadataInCamera() {
