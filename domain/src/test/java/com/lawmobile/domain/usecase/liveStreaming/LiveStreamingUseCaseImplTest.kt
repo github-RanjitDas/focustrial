@@ -176,4 +176,11 @@ class LiveStreamingUseCaseImplTest {
         }
         coVerify { liveStreamingRepository.getTotalStorage() }
     }
+
+    @Test
+    fun disconnectCamera() {
+        coEvery { liveStreamingRepository.disconnectCamera() } returns Result.Success(Unit)
+        runBlocking { liveStreamingUseCaseImpl.disconnectCamera() }
+        coVerify { liveStreamingRepository.disconnectCamera() }
+    }
 }

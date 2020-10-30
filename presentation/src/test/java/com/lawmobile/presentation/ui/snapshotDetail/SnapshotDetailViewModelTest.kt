@@ -1,8 +1,8 @@
 package com.lawmobile.presentation.ui.snapshotDetail
 
+import com.lawmobile.domain.entities.DomainCameraFile
 import com.lawmobile.domain.usecase.snapshotDetail.SnapshotDetailUseCase
 import com.lawmobile.presentation.InstantExecutorExtension
-import com.safefleet.mobile.avml.cameras.entities.CameraConnectFile
 import com.safefleet.mobile.commons.helpers.Result
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -36,44 +36,42 @@ class SnapshotDetailViewModelTest {
 
     @Test
     fun testGetImageBytesSuccess() {
-        val cameraConnectFile: CameraConnectFile = mockk()
+        val domainCameraFile: DomainCameraFile = mockk()
         val byte = ByteArray(1)
-        coEvery { snapshotDetailUseCase.getImageBytes(cameraConnectFile) } returns Result.Success(
-            byte
-        )
+
+        coEvery { snapshotDetailUseCase.getImageBytes(any()) } returns Result.Success(byte)
+
         runBlocking {
-            snapshotDetailViewModel.getImageBytes(cameraConnectFile)
+            snapshotDetailViewModel.getImageBytes(domainCameraFile)
             val response = snapshotDetailViewModel.imageBytesLiveData.value?.getContent()
             Assert.assertTrue(response is Result.Success)
         }
 
-        coVerify { snapshotDetailUseCase.getImageBytes(cameraConnectFile) }
+        coVerify { snapshotDetailUseCase.getImageBytes(any()) }
     }
 
     @Test
     fun testGetImageBytesError() {
-        val cameraConnectFile: CameraConnectFile = mockk()
-        coEvery { snapshotDetailUseCase.getImageBytes(cameraConnectFile) } returns Result.Error(
-            mockk()
-        )
+        val domainCameraFile: DomainCameraFile = mockk()
+
+        coEvery { snapshotDetailUseCase.getImageBytes(any()) } returns Result.Error(mockk())
+
         runBlocking {
-            snapshotDetailViewModel.getImageBytes(cameraConnectFile)
+            snapshotDetailViewModel.getImageBytes(domainCameraFile)
             delay(1000)
             val response = snapshotDetailViewModel.imageBytesLiveData.value?.getContent()
             Assert.assertTrue(response is Result.Error)
         }
 
-        coVerify { snapshotDetailUseCase.getImageBytes(cameraConnectFile) }
+        coVerify { snapshotDetailUseCase.getImageBytes(any()) }
     }
 
     @Test
     fun testSavePartnerIdSuccess() {
         coEvery {
-            snapshotDetailUseCase.savePartnerIdSnapshot(
-                any(),
-                any()
-            )
+            snapshotDetailUseCase.savePartnerIdSnapshot(any(), any())
         } returns Result.Success(Unit)
+
         runBlocking {
             snapshotDetailViewModel.savePartnerId(mockk(relaxed = true), "partnerId")
             val valueLiveData = snapshotDetailViewModel.savePartnerIdLiveData.value

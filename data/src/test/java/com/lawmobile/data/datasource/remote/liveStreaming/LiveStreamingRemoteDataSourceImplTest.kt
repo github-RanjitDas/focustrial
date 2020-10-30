@@ -156,4 +156,11 @@ class LiveStreamingRemoteDataSourceImplTest {
         }
         coVerify { cameraConnectService.getTotalStorage() }
     }
+
+    @Test
+    fun disconnectCameraFlow() {
+        coEvery { cameraConnectService.disconnectCamera() } returns Result.Success(Unit)
+        runBlocking { liveStreamingRemoteDataSourceImpl.disconnectCamera() }
+        coVerify { cameraConnectService.disconnectCamera() }
+    }
 }

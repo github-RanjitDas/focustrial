@@ -29,4 +29,7 @@ class LiveStreamingRemoteDataSourceImpl(private val cameraConnectService: Camera
 
     override suspend fun getTotalStorage(): Result<String> =
         cameraConnectService.getTotalStorage()
+
+    override suspend fun disconnectCamera(): Result<Unit> =
+        cameraConnectService.disconnectCamera()
 }

@@ -1,6 +1,5 @@
 package com.lawmobile.presentation.ui.base
 
-import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.view.WindowManager
@@ -37,12 +36,6 @@ open class BaseActivity : AppCompatActivity() {
     var isRecordingVideo: Boolean = false
     var isMobileDataAlertShowing = MutableLiveData<Boolean>()
     private var loadingDialog: AlertDialog? = null
-
-    fun logout() {
-        baseViewModel.deactivateCameraHotspot()
-        startActivity(Intent(this, LoginActivity::class.java))
-        finish()
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)

@@ -1,28 +1,27 @@
 package com.lawmobile.presentation.entities
 
+import com.lawmobile.domain.entities.DomainCameraFile
 import com.lawmobile.domain.entities.DomainInformationForList
+import com.lawmobile.domain.entities.DomainPhotoAssociated
 import com.lawmobile.domain.extensions.getCreationDate
-import com.safefleet.mobile.avml.cameras.entities.CameraConnectFile
-import com.safefleet.mobile.avml.cameras.entities.PhotoAssociated
 
 object SnapshotsAssociatedByUser {
-    var value = mutableListOf<PhotoAssociated>()
-    var temporalAssociateSnapshot = mutableListOf<PhotoAssociated>()
+    var value = mutableListOf<DomainPhotoAssociated>()
+    var temporal = mutableListOf<DomainPhotoAssociated>()
 
-    fun updateAssociatedSnapshots(imageFile: CameraConnectFile) {
+    fun updateAssociatedSnapshots(imageFile: DomainCameraFile) {
         with(imageFile) {
-            val result =
-                temporalAssociateSnapshot.find { it.name == name }
+            val result = temporal.find { it.name == name }
             if (result == null) {
-                temporalAssociateSnapshot.add(PhotoAssociated(name, getCreationDate()))
+                temporal.add(DomainPhotoAssociated(name = name, date = getCreationDate()))
             } else {
-                temporalAssociateSnapshot.remove(result)
+                temporal.remove(result)
             }
         }
     }
 
     fun isImageAssociated(name: String): Boolean {
-        return temporalAssociateSnapshot.find { it.name == name } != null
+        return temporal.find { it.name == name } != null
     }
 
     fun getListOfImagesAssociatedToVideo(imageList: List<DomainInformationForList>): List<DomainInformationForList> =
@@ -30,8 +29,8 @@ object SnapshotsAssociatedByUser {
 
     private fun filterPhotoSnapshotsAssociatedSelected(imageList: List<DomainInformationForList>): List<DomainInformationForList> {
         val completeList: MutableList<DomainInformationForList> = imageList as MutableList
-        temporalAssociateSnapshot.map { it.name }.forEach { image ->
-            val index = completeList.indexOfFirst { it.cameraConnectFile.name == image }
+        temporal.map { it.name }.forEach { imageName ->
+            val index = completeList.indexOfFirst { it.domainCameraFile.name == imageName }
             if (index >= 0) completeList[index].isSelected = true
         }
         return completeList
@@ -39,6 +38,6 @@ object SnapshotsAssociatedByUser {
 
     fun cleanList() {
         value = mutableListOf()
-        temporalAssociateSnapshot = mutableListOf()
+        temporal = mutableListOf()
     }
 }

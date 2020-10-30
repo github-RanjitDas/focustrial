@@ -1,6 +1,6 @@
 package com.lawmobile.domain.entities
 
-class DomainInformationFileResponse {
-    val listItems: ArrayList<DomainInformationFile> = arrayListOf()
-    val errors: ArrayList<String> = arrayListOf()
-}
+data class DomainInformationFileResponse(
+    var items: MutableList<DomainInformationFile>,
+    val errors: MutableList<String>
+)

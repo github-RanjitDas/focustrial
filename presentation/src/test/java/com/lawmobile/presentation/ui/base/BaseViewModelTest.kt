@@ -31,18 +31,6 @@ internal class BaseViewModelTest {
     }
 
     @Test
-    fun deactivateCameraHotspot() {
-        baseViewModel.cameraConnectService = mockk()
-        coEvery { baseViewModel.cameraConnectService.disconnectCamera() } returns Result.Success(
-            Unit
-        )
-        baseViewModel.deactivateCameraHotspot()
-        coVerify {
-            baseViewModel.cameraConnectService.disconnectCamera()
-        }
-    }
-
-    @Test
     fun waitToFinish() {
         baseViewModel.waitToFinish(100)
         runBlocking {

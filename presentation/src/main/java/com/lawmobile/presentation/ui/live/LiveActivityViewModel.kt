@@ -6,10 +6,10 @@ import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.viewModelScope
+import com.lawmobile.domain.entities.DomainCatalog
 import com.lawmobile.domain.usecase.liveStreaming.LiveStreamingUseCase
 import com.lawmobile.presentation.ui.base.BaseViewModel
 import com.lawmobile.presentation.utils.VLCMediaPlayer
-import com.safefleet.mobile.avml.cameras.entities.CameraConnectCatalog
 import com.safefleet.mobile.commons.helpers.*
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -36,8 +36,8 @@ class LiveActivityViewModel @ViewModelInject constructor(
     val storageLiveData: LiveData<Event<Result<List<Double>>>> get() = storageMediatorLiveData
 
     private val catalogInfoMediatorLiveData =
-        MediatorLiveData<Result<List<CameraConnectCatalog>>>()
-    val catalogInfoLiveData get() = catalogInfoMediatorLiveData
+        MediatorLiveData<Result<List<DomainCatalog>>>()
+    val catalogInfoLiveData: LiveData<Result<List<DomainCatalog>>> get() = catalogInfoMediatorLiveData
 
     fun getUrlLive(): String = liveStreamingUseCase.getUrlForLiveStream()
 
@@ -123,6 +123,12 @@ class LiveActivityViewModel @ViewModelInject constructor(
                     storageMediatorLiveData.postValue(Event(Result.Error(it)))
                 }
             }
+        }
+    }
+
+    fun disconnectCamera(){
+        viewModelScope.launch {
+            liveStreamingUseCase.disconnectCamera()
         }
     }
 

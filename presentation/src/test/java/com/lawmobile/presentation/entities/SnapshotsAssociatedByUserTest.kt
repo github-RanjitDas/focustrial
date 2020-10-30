@@ -1,9 +1,9 @@
 package com.lawmobile.presentation.entities
 
+import com.lawmobile.domain.entities.DomainCameraFile
 import com.lawmobile.domain.entities.DomainInformationFile
 import com.lawmobile.domain.entities.DomainInformationImage
-import com.safefleet.mobile.avml.cameras.entities.CameraConnectFile
-import com.safefleet.mobile.avml.cameras.entities.PhotoAssociated
+import com.lawmobile.domain.entities.DomainPhotoAssociated
 import io.mockk.every
 import io.mockk.mockk
 import org.junit.jupiter.api.Test
@@ -12,33 +12,33 @@ internal class SnapshotsAssociatedByUserTest {
 
     @Test
     fun setOrGetValue() {
-        val newList = mutableListOf<PhotoAssociated>()
+        val newList = mutableListOf<DomainPhotoAssociated>()
         SnapshotsAssociatedByUser.value = newList
         assert(newList == SnapshotsAssociatedByUser.value)
     }
 
     @Test
     fun updateAssociatedSnapshotsAdd() {
-        val cameraConnectFile = mockk<CameraConnectFile>(relaxed = true) {
+        val domainCameraFile = mockk<DomainCameraFile>(relaxed = true) {
             every { name } returns "4567890"
             every { nameFolder } returns "4567890123"
         }
-        val photoList = mutableListOf(PhotoAssociated("123", "123"))
-        SnapshotsAssociatedByUser.temporalAssociateSnapshot = photoList
-        SnapshotsAssociatedByUser.updateAssociatedSnapshots(cameraConnectFile)
-        assert(SnapshotsAssociatedByUser.temporalAssociateSnapshot.size == 2)
+        val photoList = mutableListOf(DomainPhotoAssociated("123", "123"))
+        SnapshotsAssociatedByUser.temporal = photoList
+        SnapshotsAssociatedByUser.updateAssociatedSnapshots(domainCameraFile)
+        assert(SnapshotsAssociatedByUser.temporal.size == 2)
     }
 
     @Test
     fun updateAssociatedSnapshotsRemove() {
-        val cameraConnectFile = mockk<CameraConnectFile>(relaxed = true) {
+        val domainCameraFile = mockk<DomainCameraFile>(relaxed = true) {
             every { name } returns "123"
             every { date } returns "123"
         }
-        val photoList = mutableListOf(PhotoAssociated("123", "123"))
-        SnapshotsAssociatedByUser.temporalAssociateSnapshot = photoList
-        SnapshotsAssociatedByUser.updateAssociatedSnapshots(cameraConnectFile)
-        assert(SnapshotsAssociatedByUser.temporalAssociateSnapshot.size == 0)
+        val photoList = mutableListOf(DomainPhotoAssociated("123", "123"))
+        SnapshotsAssociatedByUser.temporal = photoList
+        SnapshotsAssociatedByUser.updateAssociatedSnapshots(domainCameraFile)
+        assert(SnapshotsAssociatedByUser.temporal.size == 0)
     }
 
     @Test
@@ -46,17 +46,18 @@ internal class SnapshotsAssociatedByUserTest {
         val domainInformationImageList =
             mutableListOf(
                 DomainInformationImage(
-                    mockk{
+                    mockk {
                         every { name } returns "123"
                     }
                 ),
                 DomainInformationImage(
-                    mockk{
+                    mockk {
                         every { name } returns "456"
                     }
                 )
             )
-        SnapshotsAssociatedByUser.temporalAssociateSnapshot = mutableListOf(PhotoAssociated("123", "123"))
+        SnapshotsAssociatedByUser.temporal =
+            mutableListOf(DomainPhotoAssociated("123", "123"))
         val associatedList =
             SnapshotsAssociatedByUser
                 .getListOfImagesAssociatedToVideo(domainInformationImageList).find { it.isSelected }
@@ -68,17 +69,18 @@ internal class SnapshotsAssociatedByUserTest {
         val domainInformationImageList =
             mutableListOf(
                 DomainInformationFile(
-                    mockk{
+                    mockk {
                         every { name } returns "123"
                     }
                 ),
                 DomainInformationFile(
-                    mockk{
+                    mockk {
                         every { name } returns "456"
                     }
                 )
             )
-        SnapshotsAssociatedByUser.temporalAssociateSnapshot = mutableListOf(PhotoAssociated("123", "123"))
+        SnapshotsAssociatedByUser.temporal =
+            mutableListOf(DomainPhotoAssociated("123", "123"))
         val associatedList =
             SnapshotsAssociatedByUser
                 .getListOfImagesAssociatedToVideo(domainInformationImageList).find { it.isSelected }

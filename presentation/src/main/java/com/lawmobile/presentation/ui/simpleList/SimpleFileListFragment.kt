@@ -121,9 +121,9 @@ class SimpleFileListFragment : FileListBaseFragment() {
                 if (it.errors.isNotEmpty()) {
                     handleErrors(it.errors)
                 }
-                if (it.listItems.isNotEmpty()) {
+                if (it.items.isNotEmpty()) {
                     showFileListRecycler()
-                    setAdapter(it.listItems)
+                    setAdapter(it.items)
                 } else {
                     showEmptyListMessage()
                 }
@@ -140,7 +140,7 @@ class SimpleFileListFragment : FileListBaseFragment() {
         hideLoadingDialog()
     }
 
-    private fun handleErrors(errors: ArrayList<String>) {
+    private fun handleErrors(errors: MutableList<String>) {
         fileListLayout.showErrorSnackBar(
             getString(R.string.getting_files_error_description),
             Snackbar.LENGTH_LONG
@@ -153,7 +153,7 @@ class SimpleFileListFragment : FileListBaseFragment() {
         showFailedFoldersInLog(errors)
     }
 
-    private fun setAdapter(listItems: ArrayList<DomainInformationFile>) {
+    private fun setAdapter(listItems: MutableList<DomainInformationFile>) {
         simpleFileListAdapter =
             SimpleFileListAdapter(
                 ::onFileClick,
@@ -161,7 +161,7 @@ class SimpleFileListFragment : FileListBaseFragment() {
             ).apply {
                 showCheckBoxes = checkableListInit
                 fileList =
-                    listItems.sortedByDescending { it.cameraConnectFile.getCreationDate() } as MutableList
+                    listItems.sortedByDescending { it.domainCameraFile.getCreationDate() } as MutableList
                 fileListBackup = fileList
             }
         if (checkableListInit) setAssociatedRecyclerView()
@@ -169,7 +169,7 @@ class SimpleFileListFragment : FileListBaseFragment() {
     }
 
     private fun onFileClick(file: DomainInformationFile) {
-        startFileListIntent(file.cameraConnectFile)
+        startFileListIntent(file.domainCameraFile)
     }
 
     override fun onResume() {

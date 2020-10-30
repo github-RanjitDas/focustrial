@@ -1,8 +1,8 @@
 package com.lawmobile.data.entities
 
-import com.safefleet.mobile.avml.cameras.entities.CameraConnectVideoMetadata
+import com.lawmobile.domain.entities.DomainVideoMetadata
 
 data class RemoteVideoMetadata(
-    var videoMetadata: CameraConnectVideoMetadata,
+    var videoMetadata: DomainVideoMetadata,
     var isChanged: Boolean
 )

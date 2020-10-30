@@ -4,6 +4,7 @@ import android.content.Intent
 import android.util.Log
 import androidx.core.view.isVisible
 import com.lawmobile.domain.entities.CameraInfo
+import com.lawmobile.domain.entities.DomainCameraFile
 import com.lawmobile.domain.entities.DomainInformationForList
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.ui.base.BaseFragment
@@ -13,7 +14,6 @@ import com.lawmobile.presentation.utils.Constants
 import com.lawmobile.presentation.utils.Constants.SNAPSHOT_LIST
 import com.lawmobile.presentation.utils.Constants.VIDEO_LIST
 import com.lawmobile.presentation.widgets.CustomFilterDialog
-import com.safefleet.mobile.avml.cameras.entities.CameraConnectFile
 import kotlinx.android.synthetic.main.fragment_file_list.*
 
 open class FileListBaseFragment : BaseFragment() {
@@ -50,7 +50,7 @@ open class FileListBaseFragment : BaseFragment() {
         }
     }
 
-    fun startFileListIntent(cameraConnectFile: CameraConnectFile) {
+    fun startFileListIntent(domainCameraFile: DomainCameraFile) {
         showLoadingDialog()
         val fileListIntent = Intent()
         context?.let {
@@ -60,13 +60,13 @@ open class FileListBaseFragment : BaseFragment() {
                 else -> throw Exception("List type not supported")
             }
         }
-        fileListIntent.putExtra(Constants.CAMERA_CONNECT_FILE, cameraConnectFile)
+        fileListIntent.putExtra(Constants.DOMAIN_CAMERA_FILE, domainCameraFile)
         hideLoadingDialog()
         startActivity(fileListIntent)
         isLoadedOnCreate = false
     }
 
-    fun showFailedFoldersInLog(errors: ArrayList<String>) {
+    fun showFailedFoldersInLog(errors: MutableList<String>) {
         CameraInfo.areNewChanges = true
         Log.d(getString(R.string.getting_files_error), errors.toString())
     }

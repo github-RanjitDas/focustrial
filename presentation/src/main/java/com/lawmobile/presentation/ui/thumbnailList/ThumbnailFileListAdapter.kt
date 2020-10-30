@@ -64,7 +64,7 @@ class ThumbnailFileListAdapter(
 
     fun addItemToList(domainInformationImage: DomainInformationImage) {
         val indexOfFirst =
-            fileList.indexOfFirst { it.cameraConnectFile.name == domainInformationImage.cameraConnectFile.name }
+            fileList.indexOfFirst { it.domainCameraFile.name == domainInformationImage.domainCameraFile.name }
         if (indexOfFirst >= 0) {
             fileList[indexOfFirst] =
                 domainInformationImage.apply {
@@ -78,7 +78,7 @@ class ThumbnailFileListAdapter(
     }
 
     fun isImageInAdapter(image: DomainInformationImage) =
-        fileList.indexOfFirst { it.cameraConnectFile.name == image.cameraConnectFile.name } != -1
+        fileList.indexOfFirst { it.domainCameraFile.name == image.domainCameraFile.name } != -1
 
     inner class ThumbnailListViewHolder(
         private val thumbnailView: View,
@@ -96,7 +96,7 @@ class ThumbnailFileListAdapter(
 
         private fun setDataToViews(imageFile: DomainInformationImage) {
             with(thumbnailView) {
-                dateImageListItem.text = imageFile.cameraConnectFile.getCreationDate()
+                dateImageListItem.text = imageFile.domainCameraFile.getCreationDate()
                 manageImagePath(imageFile)
                 checkboxImageListItem.isActivated = imageFile.isSelected
             }
@@ -123,7 +123,7 @@ class ThumbnailFileListAdapter(
                     } catch (e: Exception) {
                         e.printStackTrace()
                         val domain =
-                            fileList.first { item -> item.cameraConnectFile.name == imageFile.cameraConnectFile.name }
+                            fileList.first { item -> item.domainCameraFile.name == imageFile.domainCameraFile.name }
                         domain.internalPath = null
                         addItemToList(domain)
                     }
@@ -165,10 +165,10 @@ class ThumbnailFileListAdapter(
 
         private fun onCheckedImage(thumbnailFile: DomainInformationImage, isChecked: Boolean) {
             val index =
-                fileList.indexOfFirst { it.cameraConnectFile.name == thumbnailFile.cameraConnectFile.name }
+                fileList.indexOfFirst { it.domainCameraFile.name == thumbnailFile.domainCameraFile.name }
             fileList[index].isSelected = isChecked
             if (FileListBaseFragment.checkableListInit) {
-                SnapshotsAssociatedByUser.updateAssociatedSnapshots(thumbnailFile.cameraConnectFile)
+                SnapshotsAssociatedByUser.updateAssociatedSnapshots(thumbnailFile.domainCameraFile)
             }
             onImageCheck?.invoke(isAnyFileChecked(), selectedItemsSize())
         }

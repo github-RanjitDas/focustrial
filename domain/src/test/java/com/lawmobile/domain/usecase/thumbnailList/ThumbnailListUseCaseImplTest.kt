@@ -1,15 +1,17 @@
 package com.lawmobile.domain.usecase.thumbnailList
 
+import com.lawmobile.domain.entities.DomainCameraFile
 import com.lawmobile.domain.entities.DomainInformationImage
 import com.lawmobile.domain.repository.thumbnailList.ThumbnailListRepository
-import com.safefleet.mobile.avml.cameras.entities.CameraConnectFile
 import com.safefleet.mobile.commons.helpers.Result
-import io.mockk.*
+import io.mockk.clearAllMocks
+import io.mockk.coEvery
+import io.mockk.coVerify
+import io.mockk.mockk
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert
-import org.junit.jupiter.api.Test
-
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 
 internal class ThumbnailListUseCaseImplTest {
 
@@ -25,46 +27,46 @@ internal class ThumbnailListUseCaseImplTest {
 
     @Test
     fun testGetImagesBytes() {
-        val cameraConnectFile =
-            CameraConnectFile("1010202000", "10-10-2020 12:00:00", "", "1010202000")
+        val domainCameraFile =
+            DomainCameraFile("1010202000", "10-10-2020 12:00:00", "", "1010202000")
         val imageBytes = mockk<DomainInformationImage>()
-        coEvery { thumbnailListRepository.getImageBytes(cameraConnectFile) } returns Result.Success(
+        coEvery { thumbnailListRepository.getImageBytes(domainCameraFile) } returns Result.Success(
             imageBytes
         )
 
         runBlocking {
-            when (val result = linkSnapshotsUseCase.getImageBytes(cameraConnectFile)) {
+            when (val result = linkSnapshotsUseCase.getImageBytes(domainCameraFile)) {
                 is Result.Success -> Assert.assertEquals(imageBytes, result.data)
             }
         }
 
-        coVerify { thumbnailListRepository.getImageBytes(cameraConnectFile) }
+        coVerify { thumbnailListRepository.getImageBytes(domainCameraFile) }
     }
 
     @Test
     fun testGetImagesByteListSuccess() {
-        val cameraConnectFile =
-            CameraConnectFile("1010202000", "10-10-2020 12:00:00", "", "1010202000")
-        coEvery { thumbnailListRepository.getImageBytes(cameraConnectFile) } returns Result.Success(
+        val domainCameraFile =
+            DomainCameraFile("1010202000", "10-10-2020 12:00:00", "", "1010202000")
+        coEvery { thumbnailListRepository.getImageBytes(domainCameraFile) } returns Result.Success(
             mockk()
         )
 
         runBlocking {
-            val result = linkSnapshotsUseCase.getImageBytes(cameraConnectFile)
+            val result = linkSnapshotsUseCase.getImageBytes(domainCameraFile)
             Assert.assertTrue(result is Result.Success)
         }
     }
 
     @Test
     fun testGetImagesByteListError() {
-        val cameraConnectFile =
-            CameraConnectFile("1010202000", "10-10-2020 12:00:00", "", "1010202000")
-        coEvery { thumbnailListRepository.getImageBytes(cameraConnectFile) } returns Result.Error(
+        val domainCameraFile =
+            DomainCameraFile("1010202000", "10-10-2020 12:00:00", "", "1010202000")
+        coEvery { thumbnailListRepository.getImageBytes(domainCameraFile) } returns Result.Error(
             mockk()
         )
 
         runBlocking {
-            val result = linkSnapshotsUseCase.getImageBytes(cameraConnectFile)
+            val result = linkSnapshotsUseCase.getImageBytes(domainCameraFile)
             Assert.assertTrue(result is Result.Error)
         }
     }
