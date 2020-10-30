@@ -44,12 +44,12 @@ class CameraConnectServiceX1Mock : CameraConnectService {
     }
 
     override suspend fun getListOfImages(): Result<CameraConnectFileResponseWithErrors> {
-        FileList.listOfImages = emptyList()
+        FileList.imageList = emptyList()
         return Result.Success(snapshotsList)
     }
 
     override suspend fun getListOfVideos(): Result<CameraConnectFileResponseWithErrors> {
-        FileList.listOfVideos = emptyList()
+        FileList.videoList = emptyList()
         return Result.Success(videoList)
     }
 

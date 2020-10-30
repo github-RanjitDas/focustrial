@@ -2,7 +2,7 @@ package com.lawmobile.data.entities
 
 import com.lawmobile.domain.entities.DomainInformationFile
 import com.lawmobile.domain.entities.DomainInformationImageMetadata
-import com.safefleet.mobile.avml.cameras.entities.CameraConnectPhotoMetadata
+import com.lawmobile.domain.entities.DomainPhotoMetadata
 import io.mockk.mockk
 import org.junit.Assert
 import org.junit.jupiter.api.Test
@@ -10,64 +10,64 @@ import org.junit.jupiter.api.Test
 class FileListTest {
 
     @Test
-    fun testChangeListOfImages(){
+    fun testChangeListOfImages() {
         val domainInformationFile: DomainInformationFile = mockk(relaxed = true)
         val list: List<DomainInformationFile> = listOf(domainInformationFile, domainInformationFile)
-        FileList.changeListOfImages(list)
-        Assert.assertEquals(list, FileList.listOfImages)
+        FileList.changeImageList(list)
+        Assert.assertEquals(list, FileList.imageList)
     }
 
     @Test
-    fun testChangeListOfVideos(){
+    fun testChangeListOfVideos() {
         val domainInformationFile: DomainInformationFile = mockk(relaxed = true)
         val list: List<DomainInformationFile> = listOf(domainInformationFile, domainInformationFile)
-        FileList.changeListOfVideos(list)
-        Assert.assertEquals(list,FileList.listOfVideos)
+        FileList.changeVideoList(list)
+        Assert.assertEquals(list, FileList.videoList)
     }
 
     @Test
     fun testUpdateItemInListImageMetadataNewValue() {
         val item = DomainInformationImageMetadata(
-            CameraConnectPhotoMetadata("filename.PNG")
+            DomainPhotoMetadata("filename.PNG")
         )
-        FileList.updateItemInListImageMetadata(item)
-        val itemFind = FileList.getItemInListImageOfMetadata("filename.PNG")
+        FileList.updateItemInImageMetadataList(item)
+        val itemFind = FileList.getMetadataOfImageInList("filename.PNG")
         Assert.assertEquals(itemFind, item)
     }
 
     @Test
     fun testUpdateItemInListImageMetadataValueChange() {
         val item = DomainInformationImageMetadata(
-            CameraConnectPhotoMetadata("filename.PNG")
+            DomainPhotoMetadata("filename.PNG")
         )
-        FileList.updateItemInListImageMetadata(item)
+        FileList.updateItemInImageMetadataList(item)
 
         val itemChange = DomainInformationImageMetadata(
-            CameraConnectPhotoMetadata("filename.PNG", "officer")
+            DomainPhotoMetadata(fileName = "filename.PNG", officerId = "officer")
         )
-        FileList.updateItemInListImageMetadata(itemChange)
-        val itemFind = FileList.getItemInListImageOfMetadata("filename.PNG")
+        FileList.updateItemInImageMetadataList(itemChange)
+        val itemFind = FileList.getMetadataOfImageInList("filename.PNG")
         Assert.assertEquals(itemFind, itemChange)
     }
 
     @Test
     fun testUpdateItemInListImageMetadataSaveTwoItems() {
         val item = DomainInformationImageMetadata(
-            CameraConnectPhotoMetadata("filename.PNG")
+            DomainPhotoMetadata("filename.PNG")
         )
-        FileList.updateItemInListImageMetadata(item)
+        FileList.updateItemInImageMetadataList(item)
 
         val itemTwo = DomainInformationImageMetadata(
-            CameraConnectPhotoMetadata("filename2.PNG", "officer2")
+            DomainPhotoMetadata(fileName = "filename2.PNG", officerId = "officer2")
         )
-        FileList.updateItemInListImageMetadata(itemTwo)
-        val itemFindOne = FileList.getItemInListImageOfMetadata("filename.PNG")
+        FileList.updateItemInImageMetadataList(itemTwo)
+        val itemFindOne = FileList.getMetadataOfImageInList("filename.PNG")
         Assert.assertEquals(itemFindOne, item)
 
-        val itemFindTwo = FileList.getItemInListImageOfMetadata("filename2.PNG")
+        val itemFindTwo = FileList.getMetadataOfImageInList("filename2.PNG")
         Assert.assertEquals(itemTwo, itemFindTwo)
 
-        val itemFindThree = FileList.getItemInListImageOfMetadata("filename3.PNG")
+        val itemFindThree = FileList.getMetadataOfImageInList("filename3.PNG")
         Assert.assertEquals(null, itemFindThree)
     }
 }

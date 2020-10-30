@@ -7,5 +7,5 @@ object Constants {
     const val FILE_LIST_TYPE = "fileListType"
     const val VIDEO_LIST = "videoList"
     const val SNAPSHOT_LIST = "snapshotList"
-    const val CAMERA_CONNECT_FILE = "CAMERA_CONNECT_FILE"
+    const val DOMAIN_CAMERA_FILE = "domainCameraFile"
 }

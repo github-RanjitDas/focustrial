@@ -1,10 +1,10 @@
 package com.lawmobile.presentation.ui.videoPlayback
 
 import android.view.SurfaceView
+import com.lawmobile.domain.entities.DomainCameraFile
 import com.lawmobile.domain.usecase.videoPlayback.VideoPlaybackUseCase
 import com.lawmobile.presentation.InstantExecutorExtension
 import com.lawmobile.presentation.utils.VLCMediaPlayer
-import com.safefleet.mobile.avml.cameras.entities.CameraConnectFile
 import com.safefleet.mobile.commons.helpers.Result
 import io.mockk.*
 import kotlinx.coroutines.Dispatchers
@@ -35,33 +35,32 @@ class VideoPlaybackViewModelTest {
         Dispatchers.setMain(Dispatchers.Unconfined)
     }
 
-
     @Test
     fun testGetInformationResourcesVideoSuccess() {
-        val cameraConnectFile: CameraConnectFile = mockk()
-        coEvery { videoPlaybackUseCase.getInformationResourcesVideo(cameraConnectFile) } returns Result.Success(
-            mockk()
-        )
+        val domainCameraFile: DomainCameraFile = mockk()
+
+        coEvery { videoPlaybackUseCase.getInformationResourcesVideo(any()) } returns
+                Result.Success(mockk())
+
         runBlocking {
-            videoPlaybackViewModel.getInformationOfVideo(cameraConnectFile)
+            videoPlaybackViewModel.getInformationOfVideo(domainCameraFile)
             Assert.assertTrue(videoPlaybackViewModel.domainInformationVideoLiveData.value is Result.Success)
         }
 
-        coVerify { videoPlaybackUseCase.getInformationResourcesVideo(cameraConnectFile) }
+        coVerify { videoPlaybackUseCase.getInformationResourcesVideo(any()) }
     }
 
     @Test
     fun testGetInformationResourcesVideoError() {
-        val cameraConnectFile: CameraConnectFile = mockk()
-        coEvery { videoPlaybackUseCase.getInformationResourcesVideo(cameraConnectFile) } returns Result.Error(
-            mockk()
-        )
+        val domainCameraFile: DomainCameraFile = mockk()
+        coEvery { videoPlaybackUseCase.getInformationResourcesVideo(any()) } returns
+                Result.Error(mockk())
         runBlocking {
-            videoPlaybackViewModel.getInformationOfVideo(cameraConnectFile)
+            videoPlaybackViewModel.getInformationOfVideo(domainCameraFile)
             Assert.assertTrue(videoPlaybackViewModel.domainInformationVideoLiveData.value is Result.Error)
         }
 
-        coVerify { videoPlaybackUseCase.getInformationResourcesVideo(cameraConnectFile) }
+        coVerify { videoPlaybackUseCase.getInformationResourcesVideo(any()) }
     }
 
     @Test

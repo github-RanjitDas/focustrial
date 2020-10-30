@@ -114,7 +114,6 @@ dependencies {
     kaptAndroidTest "androidx.hilt:hilt-compiler:$hilt_jetpack_version"
     androidTestImplementation "com.google.dagger:hilt-android-testing:$hilt_version"
 
-
     implementation project(path: ':presentation')
     implementation project(path: ':data')
     implementation project(path: ':domain')

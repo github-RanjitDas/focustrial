@@ -4,9 +4,9 @@ import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.viewModelScope
+import com.lawmobile.domain.entities.DomainCameraFile
 import com.lawmobile.domain.usecase.fileList.FileListUseCase
 import com.lawmobile.presentation.ui.base.BaseViewModel
-import com.safefleet.mobile.avml.cameras.entities.CameraConnectFile
 import com.safefleet.mobile.commons.helpers.Result
 import kotlinx.coroutines.launch
 
@@ -22,13 +22,13 @@ class FileListViewModel @ViewModelInject constructor(private val fileListUseCase
     val snapshotPartnerIdLiveData: LiveData<Result<Unit>> get() = snapshotPartnerIdMediator
 
     fun associatePartnerIdToVideoList(
-        cameraConnectFileList: List<CameraConnectFile>,
+        domainCameraFileList: List<DomainCameraFile>,
         partnerId: String
     ) {
         viewModelScope.launch {
             videoPartnerIdMediator.postValue(
                 fileListUseCase.savePartnerIdVideos(
-                    cameraConnectFileList,
+                    domainCameraFileList,
                     partnerId
                 )
             )
@@ -36,13 +36,13 @@ class FileListViewModel @ViewModelInject constructor(private val fileListUseCase
     }
 
     fun associatePartnerIdToSnapshotList(
-        cameraConnectFileList: List<CameraConnectFile>,
+        domainCameraFileList: List<DomainCameraFile>,
         partnerId: String
     ) {
         viewModelScope.launch {
             snapshotPartnerIdMediator.postValue(
                 fileListUseCase.savePartnerIdSnapshot(
-                    cameraConnectFileList,
+                    domainCameraFileList,
                     partnerId
                 )
             )

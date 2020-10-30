@@ -14,19 +14,14 @@ import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.snackbar.Snackbar
-import com.lawmobile.domain.entities.CameraInfo
-import com.lawmobile.domain.entities.DomainInformationVideo
+import com.lawmobile.domain.entities.*
 import com.lawmobile.domain.extensions.getCreationDate
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.entities.SnapshotsAssociatedByUser
 import com.lawmobile.presentation.extensions.*
 import com.lawmobile.presentation.ui.associateSnapshots.AssociateSnapshotsFragment
 import com.lawmobile.presentation.ui.base.BaseActivity
-import com.lawmobile.presentation.utils.Constants.CAMERA_CONNECT_FILE
-import com.safefleet.mobile.avml.cameras.entities.CameraConnectFile
-import com.safefleet.mobile.avml.cameras.entities.CameraConnectVideoMetadata
-import com.safefleet.mobile.avml.cameras.entities.PhotoAssociated
-import com.safefleet.mobile.avml.cameras.entities.VideoMetadata
+import com.lawmobile.presentation.utils.Constants.DOMAIN_CAMERA_FILE
 import com.safefleet.mobile.commons.helpers.Result
 import com.safefleet.mobile.commons.helpers.doIfError
 import com.safefleet.mobile.commons.helpers.doIfSuccess
@@ -47,7 +42,7 @@ class VideoPlaybackActivity : BaseActivity() {
     private var currentAttempts = 0
     private var areLinkedSnapshotsChangesSaved = true
     private var isVideoMetadataChangesSaved = false
-    private lateinit var currentMetadata: CameraConnectVideoMetadata
+    private lateinit var currentMetadata: DomainVideoMetadata
 
     private var associateSnapshotsFragment = AssociateSnapshotsFragment()
     private val bottomSheetBehavior: BottomSheetBehavior<CardView> by lazy {
@@ -104,7 +99,7 @@ class VideoPlaybackActivity : BaseActivity() {
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
 
         buttonCloseAssociateSnapshots.setOnClickListener {
-            SnapshotsAssociatedByUser.temporalAssociateSnapshot.addAll(SnapshotsAssociatedByUser.value)
+            SnapshotsAssociatedByUser.temporal.addAll(SnapshotsAssociatedByUser.value)
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
         }
 
@@ -270,7 +265,7 @@ class VideoPlaybackActivity : BaseActivity() {
         areLinkedSnapshotsChangesSaved = true
     }
 
-    private fun manageGetVideoMetadataResult(result: Result<CameraConnectVideoMetadata>) {
+    private fun manageGetVideoMetadataResult(result: Result<DomainVideoMetadata>) {
         with(result) {
             doIfSuccess {
                 currentMetadata = it
@@ -299,7 +294,7 @@ class VideoPlaybackActivity : BaseActivity() {
             doIfError {
                 if (isAllowedToAttemptToGetInformation()) {
                     currentAttempts += 1
-                    connectVideo?.let(videoPlaybackViewModel::getInformationOfVideo)
+                    currentVideo?.let(videoPlaybackViewModel::getInformationOfVideo)
                 } else {
                     baseContext.showToast(
                         getString(R.string.error_get_information_metadata),
@@ -311,7 +306,7 @@ class VideoPlaybackActivity : BaseActivity() {
         }
     }
 
-    private fun setVideoMetadata(videoMetadata: CameraConnectVideoMetadata) {
+    private fun setVideoMetadata(videoMetadata: DomainVideoMetadata) {
         videoMetadata.metadata?.run {
             eventValue.setSelection(getSpinnerSelection(eventList, event?.name))
             partnerIdValue.setText(partnerID)
@@ -331,8 +326,8 @@ class VideoPlaybackActivity : BaseActivity() {
             licensePlateValue.setText(licensePlate)
         }
 
-        (videoMetadata.photos as MutableList<PhotoAssociated>?)?.let {
-            SnapshotsAssociatedByUser.temporalAssociateSnapshot = it
+        (videoMetadata.associatedPhotos)?.let {
+            SnapshotsAssociatedByUser.temporal = it as MutableList
             associateSnapshotsFragment.replaceSnapshotsAssociatedFromMetadata(it)
         }
 
@@ -346,7 +341,7 @@ class VideoPlaybackActivity : BaseActivity() {
     }
 
     private fun verifyIfSelectedVideoWasChanged() {
-        val videoWasChanged = getCameraConnectFileFromIntent() != connectVideo
+        val videoWasChanged = getCameraConnectFileFromIntent() != currentVideo
         if (videoWasChanged) {
             restartObjectOfCompanion()
         }
@@ -354,7 +349,7 @@ class VideoPlaybackActivity : BaseActivity() {
 
     private fun handleAssociateSnapshots() {
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
-        associateSnapshotsFragment.replaceSnapshotsAssociatedFromMetadata(SnapshotsAssociatedByUser.temporalAssociateSnapshot)
+        associateSnapshotsFragment.replaceSnapshotsAssociatedFromMetadata(SnapshotsAssociatedByUser.temporal)
         showSnapshotsAssociated()
         layoutVideoPlayback.showSuccessSnackBar(getString(R.string.snapshots_added_success))
     }
@@ -385,9 +380,11 @@ class VideoPlaybackActivity : BaseActivity() {
         val index = SnapshotsAssociatedByUser.value.indexOfFirst {
             it.date == date
         }
-        if (index >= 0){
+        if (index >= 0) {
             SnapshotsAssociatedByUser.value.removeAt(index)
-            associateSnapshotsFragment.replaceSnapshotsAssociatedFromMetadata(SnapshotsAssociatedByUser.value)
+            associateSnapshotsFragment.replaceSnapshotsAssociatedFromMetadata(
+                SnapshotsAssociatedByUser.value
+            )
         }
     }
 
@@ -443,27 +440,27 @@ class VideoPlaybackActivity : BaseActivity() {
     }
 
     private fun getInformationOfVideo() {
-        connectVideo = getCameraConnectFileFromIntent()
-        connectVideo?.run {
+        currentVideo = getCameraConnectFileFromIntent()
+        currentVideo?.run {
             videoPlaybackViewModel.getInformationOfVideo(this)
         }
     }
 
     private fun getVideoMetadata() {
-        connectVideo?.run {
+        currentVideo?.run {
             videoPlaybackViewModel.getVideoMetadata(name, nameFolder)
         }
     }
 
     private fun getCameraConnectFileFromIntent() =
-        intent?.getSerializableExtra(CAMERA_CONNECT_FILE) as CameraConnectFile
+        intent?.getSerializableExtra(DOMAIN_CAMERA_FILE) as DomainCameraFile
 
 
     private fun isAllowedToAttemptToGetInformation() = currentAttempts <= ATTEMPTS_ALLOWED
 
     private fun setVideoInformation() {
-        videoNameValue.text = connectVideo?.name
-        startTimeValue.text = connectVideo?.getCreationDate()
+        videoNameValue.text = currentVideo?.name
+        startTimeValue.text = currentVideo?.getCreationDate()
         durationValue.text = totalDurationVideoInMilliSeconds.convertMilliSecondsToString()
     }
 
@@ -561,7 +558,7 @@ class VideoPlaybackActivity : BaseActivity() {
         return false
     }
 
-    private fun getNewMetadataFromForm(): CameraConnectVideoMetadata {
+    private fun getNewMetadataFromForm(): DomainVideoMetadata {
 
         var gender: String? = null
         var race: String? = null
@@ -578,13 +575,9 @@ class VideoPlaybackActivity : BaseActivity() {
             race = raceValue.selectedItem.toString()
         }
 
-        return CameraConnectVideoMetadata(
+        return DomainVideoMetadata(
             videoNameValue.text.toString(),
-            CameraInfo.officerId,
-            connectVideo?.path,
-            connectVideo?.nameFolder,
-            CameraInfo.serialNumber,
-            VideoMetadata(
+            DomainMetadata(
                 event = event,
                 partnerID = partnerIdValue.text.toString(),
                 ticketNumber = ticket1Value.text.toString(),
@@ -602,7 +595,11 @@ class VideoPlaybackActivity : BaseActivity() {
                 driverLicense = driverLicenseValue.text.toString(),
                 licensePlate = licensePlateValue.text.toString()
             ),
-            SnapshotsAssociatedByUser.value
+            currentVideo?.nameFolder,
+            CameraInfo.officerId,
+            currentVideo?.path,
+            SnapshotsAssociatedByUser.value,
+            CameraInfo.serialNumber
         )
     }
 
@@ -683,7 +680,7 @@ class VideoPlaybackActivity : BaseActivity() {
     }
 
     companion object {
-        private var connectVideo: CameraConnectFile? = null
+        private var currentVideo: DomainCameraFile? = null
         private var domainInformationVideo: DomainInformationVideo? = null
         private var totalDurationVideoInMilliSeconds: Long = 0
         private var currentTimeVideoInMilliSeconds: Long = 0

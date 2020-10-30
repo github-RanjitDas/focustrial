@@ -12,6 +12,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
 import com.lawmobile.domain.entities.CameraInfo
+import com.lawmobile.domain.entities.DomainCatalog
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.entities.AlertInformation
 import com.lawmobile.presentation.extensions.*
@@ -19,11 +20,11 @@ import com.lawmobile.presentation.ui.base.BaseActivity
 import com.lawmobile.presentation.ui.fileList.FileListActivity
 import com.lawmobile.presentation.ui.helpSection.HelpPageActivity
 import com.lawmobile.presentation.ui.live.LiveActivityViewModel.Companion.SCALE_BYTES
+import com.lawmobile.presentation.ui.login.LoginActivity
 import com.lawmobile.presentation.utils.Constants.FILE_LIST_SELECTOR
 import com.lawmobile.presentation.utils.Constants.SNAPSHOT_LIST
 import com.lawmobile.presentation.utils.Constants.VIDEO_LIST
 import com.lawmobile.presentation.utils.EspressoIdlingResource
-import com.safefleet.mobile.avml.cameras.entities.CameraConnectCatalog
 import com.safefleet.mobile.avml.cameras.entities.CatalogTypes
 import com.safefleet.mobile.commons.animations.Animations
 import com.safefleet.mobile.commons.helpers.Event
@@ -57,6 +58,12 @@ class LiveActivity : BaseActivity() {
             animateContainer()
             turnOnLiveView()
         }
+    }
+
+    private fun logout() {
+        liveActivityViewModel.disconnectCamera()
+        startActivity(Intent(this, LoginActivity::class.java))
+        finish()
     }
 
     private fun setOfficerName() {
@@ -141,7 +148,7 @@ class LiveActivity : BaseActivity() {
         }
 
         buttonLogout.setOnClickListenerCheckConnection {
-            this.createAlertConfirmAppExit()
+            this.createAlertConfirmAppExit(::logout)
         }
     }
 
@@ -193,8 +200,8 @@ class LiveActivity : BaseActivity() {
         this.isViewLoaded = isViewLoaded
     }
 
-    private fun setCatalogInfo(catalogInfoList: Result<List<CameraConnectCatalog>>) {
-        with(catalogInfoList) {
+    private fun setCatalogInfo(domainCatalogList: Result<List<DomainCatalog>>) {
+        with(domainCatalogList) {
             doIfSuccess { catalogInfoList ->
                 val eventNames =
                     catalogInfoList.filter { it.type == CatalogTypes.EVENT.value }

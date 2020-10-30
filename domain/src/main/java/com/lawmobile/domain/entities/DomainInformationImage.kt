@@ -1,20 +1,18 @@
 package com.lawmobile.domain.entities
 
-import com.safefleet.mobile.avml.cameras.entities.CameraConnectFile
-
 data class DomainInformationImage(
-    override val cameraConnectFile: CameraConnectFile,
+    override val domainCameraFile: DomainCameraFile,
     var imageBytes: ByteArray? = null,
     override var isSelected: Boolean = false,
     var internalPath: String? = null
-): DomainInformationForList {
+) : DomainInformationForList {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
 
         other as DomainInformationImage
 
-        other.imageBytes?.let {otherBytes ->
+        other.imageBytes?.let { otherBytes ->
             imageBytes?.let { currentBytes ->
                 if (currentBytes.contentEquals(otherBytes)) return true
             }
@@ -27,6 +25,6 @@ data class DomainInformationImage(
         imageBytes?.let {
             return it.contentHashCode()
         }
-        return  0
+        return 0
     }
 }

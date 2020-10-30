@@ -1,6 +1,6 @@
 package com.lawmobile.data.entities
 
-import com.safefleet.mobile.avml.cameras.entities.CameraConnectVideoMetadata
+import com.lawmobile.domain.entities.DomainVideoMetadata
 import io.mockk.clearAllMocks
 import org.junit.Assert
 import org.junit.jupiter.api.BeforeEach
@@ -16,7 +16,7 @@ internal class VideoListMetadataTest {
     @Test
     fun getVideoMetadataSuccess() {
         val remoteVideoMetadata = RemoteVideoMetadata(
-            CameraConnectVideoMetadata("1234.mp4"),
+            DomainVideoMetadata("1234.mp4"),
             false
         )
         VideoListMetadata.metadataList = mutableListOf(remoteVideoMetadata)
@@ -28,7 +28,7 @@ internal class VideoListMetadataTest {
     fun getVideoMetadataNull() {
         VideoListMetadata.metadataList = mutableListOf(
             RemoteVideoMetadata(
-                CameraConnectVideoMetadata("1234.mp4"),
+                DomainVideoMetadata("1234.mp4"),
                 false
             )
         )
@@ -40,12 +40,12 @@ internal class VideoListMetadataTest {
     fun saveOrUpdateVideoMetadataIsChangedTrue() {
         VideoListMetadata.metadataList = mutableListOf(
             RemoteVideoMetadata(
-                CameraConnectVideoMetadata("1234.mp4"),
+                DomainVideoMetadata("1234.mp4"),
                 false
             )
         )
         val remoteVideoMetadata = RemoteVideoMetadata(
-            CameraConnectVideoMetadata("1234.mp4"),
+            DomainVideoMetadata("1234.mp4"),
             true
         )
         VideoListMetadata.saveOrUpdateVideoMetadata(remoteVideoMetadata)
@@ -56,7 +56,7 @@ internal class VideoListMetadataTest {
     fun saveOrUpdateVideoMetadataIsChangedFalse() {
         VideoListMetadata.metadataList = mutableListOf()
         val remoteVideoMetadata = RemoteVideoMetadata(
-            CameraConnectVideoMetadata("1234.mp4"),
+            DomainVideoMetadata("1234.mp4"),
             false
         )
         VideoListMetadata.saveOrUpdateVideoMetadata(remoteVideoMetadata)

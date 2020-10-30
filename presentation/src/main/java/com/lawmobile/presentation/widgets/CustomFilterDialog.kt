@@ -140,7 +140,7 @@ class CustomFilterDialog constructor(
             currentFilters[START_DATE_POSITION].ifIsNotEmptyLet { startDate ->
                 val dateWithoutHour = startDate.split(" ")[0]
                 filteringList =
-                    filteringList.filter { it.cameraConnectFile.getCreationDate() >= startDate } as MutableList
+                    filteringList.filter { it.domainCameraFile.getCreationDate() >= startDate } as MutableList
 
                 if (currentFilters[END_DATE_POSITION].isEmpty())
                     createTagInPosition(
@@ -153,7 +153,7 @@ class CustomFilterDialog constructor(
             currentFilters[END_DATE_POSITION].ifIsNotEmptyLet { endDate ->
                 val dateWithoutHour = endDate.split(" ")[0]
                 filteringList =
-                    filteringList.filter { it.cameraConnectFile.getCreationDate() <= endDate } as MutableList
+                    filteringList.filter { it.domainCameraFile.getCreationDate() <= endDate } as MutableList
 
                 if (currentFilters[START_DATE_POSITION].isEmpty())
                     createTagInPosition(
@@ -169,7 +169,7 @@ class CustomFilterDialog constructor(
             currentFilters[EVENT_POSITION].ifIsNotEmptyLet { event ->
                 filteringList =
                     filteringList.filter {
-                        (it as DomainInformationFile).cameraConnectVideoMetadata?.metadata?.event?.name ==
+                        (it as DomainInformationFile).domainVideoMetadata?.metadata?.event?.name ==
                                 if (event == NO_EVENT_TAG) null else event
                     } as MutableList
                 createTagInPosition(it.childCount, EVENT_TAG + event)

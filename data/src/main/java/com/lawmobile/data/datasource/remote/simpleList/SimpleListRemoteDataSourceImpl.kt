@@ -2,6 +2,7 @@ package com.lawmobile.data.datasource.remote.simpleList
 
 import com.lawmobile.data.entities.RemoteVideoMetadata
 import com.lawmobile.data.entities.VideoListMetadata
+import com.lawmobile.data.mappers.VideoMetadataMapper
 import com.safefleet.mobile.avml.cameras.entities.CameraConnectFile
 import com.safefleet.mobile.avml.cameras.entities.CameraConnectFileResponseWithErrors
 import com.safefleet.mobile.avml.cameras.external.CameraConnectService
@@ -31,13 +32,13 @@ class SimpleListRemoteDataSourceImpl(private val cameraConnectService: CameraCon
             if (metadata == null) {
                 delay(100)
                 val videoMetadataResponse =
-                    getResultWithAttempts(GET_METADATA_ATTEMPTS){
+                    getResultWithAttempts(GET_METADATA_ATTEMPTS) {
                         cameraConnectService.getVideoMetadata(it.name, it.nameFolder)
                     }
                 if (videoMetadataResponse is Result.Success) {
                     VideoListMetadata.saveOrUpdateVideoMetadata(
                         RemoteVideoMetadata(
-                            videoMetadataResponse.data,
+                            VideoMetadataMapper.cameraToDomain(videoMetadataResponse.data),
                             false
                         )
                     )

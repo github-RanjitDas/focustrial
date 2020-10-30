@@ -71,8 +71,7 @@ fun Context.restartApp() {
     exitProcess(0)
 }
 
-fun Context.createAlertConfirmAppExit() {
-    val activity = this as BaseActivity
+fun Context.createAlertConfirmAppExit(callback: () -> Unit) {
     SafeFleetConfirmationDialog(
         this,
         true,
@@ -81,9 +80,8 @@ fun Context.createAlertConfirmAppExit() {
     ).apply {
         onResponseClicked = {
             if (it) {
-                startActivity(Intent(context, LoginActivity::class.java))
+                callback.invoke()
                 dismiss()
-                activity.logout()
             }
         }
         show()

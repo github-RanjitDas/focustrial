@@ -221,9 +221,9 @@ class FileListActivity : BaseActivity() {
 
         val listSelected = when (actualFragment) {
             SIMPLE_FILE_LIST -> simpleFileListFragment.simpleFileListAdapter?.fileList?.filter { it.isSelected }
-                ?.map { it.cameraConnectFile }
+                ?.map { it.domainCameraFile }
             THUMBNAIL_FILE_LIST -> thumbnailFileListFragment.thumbnailFileListAdapter?.fileList?.filter { it.isSelected }
-                ?.map { it.cameraConnectFile }
+                ?.map { it.domainCameraFile }
             else -> throw Exception("List type not supported")
         }
 

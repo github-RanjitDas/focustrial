@@ -58,11 +58,11 @@ class SimpleFileListAdapter(
 
     fun sortByDateAndTime() {
         if (isSortedAscendingByDateAndTime) {
-            fileList = fileList.sortedBy { it.cameraConnectFile.getCreationDate() } as MutableList
+            fileList = fileList.sortedBy { it.domainCameraFile.getCreationDate() } as MutableList
             isSortedAscendingByDateAndTime = false
         } else {
             fileList =
-                fileList.sortedByDescending { it.cameraConnectFile.getCreationDate() } as MutableList
+                fileList.sortedByDescending { it.domainCameraFile.getCreationDate() } as MutableList
             isSortedAscendingByDateAndTime = true
         }
     }
@@ -70,11 +70,11 @@ class SimpleFileListAdapter(
     fun sortByEvent() {
         if (isSortedAscendingByEvent) {
             fileList =
-                fileList.sortedByDescending { it.cameraConnectVideoMetadata?.metadata?.event?.name } as MutableList
+                fileList.sortedByDescending { it.domainVideoMetadata?.metadata?.event?.name } as MutableList
             isSortedAscendingByEvent = false
         } else {
             fileList =
-                fileList.sortedBy { it.cameraConnectVideoMetadata?.metadata?.event?.name } as MutableList
+                fileList.sortedBy { it.domainVideoMetadata?.metadata?.event?.name } as MutableList
             isSortedAscendingByEvent = true
         }
     }
@@ -97,10 +97,10 @@ class SimpleFileListAdapter(
                 with(remoteCameraFile) {
                     dateSimpleListItem.text =
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
-                            Html.fromHtml(cameraConnectFile.getCreationDate(), 0)
-                        else cameraConnectFile.getCreationDate()
+                            Html.fromHtml(domainCameraFile.getCreationDate(), 0)
+                        else domainCameraFile.getCreationDate()
                     eventSimpleListItem.text =
-                        cameraConnectVideoMetadata?.metadata?.event?.name ?: ""
+                        domainVideoMetadata?.metadata?.event?.name ?: ""
                 }
             }
         }
@@ -147,7 +147,7 @@ class SimpleFileListAdapter(
         private fun selectItemFromTheList(remoteCameraFile: DomainInformationFile) {
             with(fileView) {
                 if (FileListBaseFragment.checkableListInit) {
-                    SnapshotsAssociatedByUser.updateAssociatedSnapshots(remoteCameraFile.cameraConnectFile)
+                    SnapshotsAssociatedByUser.updateAssociatedSnapshots(remoteCameraFile.domainCameraFile)
                 }
                 onCheckedFile(remoteCameraFile, checkboxSimpleListItem.isActivated)
             }
@@ -155,7 +155,7 @@ class SimpleFileListAdapter(
 
         private fun onCheckedFile(simpleFile: DomainInformationFile, isChecked: Boolean) {
             val index =
-                fileList.indexOfFirst { it.cameraConnectFile.name == simpleFile.cameraConnectFile.name }
+                fileList.indexOfFirst { it.domainCameraFile.name == simpleFile.domainCameraFile.name }
             fileList[index].isSelected = isChecked
             onFileCheck?.invoke(isAnyFileChecked(), selectedItemsSize())
         }

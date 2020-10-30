@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import com.lawmobile.domain.entities.DomainInformationForList
+import com.lawmobile.domain.entities.DomainPhotoAssociated
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.entities.SnapshotsAssociatedByUser
 import com.lawmobile.presentation.extensions.*
@@ -19,7 +20,6 @@ import com.lawmobile.presentation.utils.Constants.SIMPLE_FILE_LIST
 import com.lawmobile.presentation.utils.Constants.SNAPSHOT_LIST
 import com.lawmobile.presentation.utils.Constants.THUMBNAIL_FILE_LIST
 import com.lawmobile.presentation.widgets.CustomFilterDialog
-import com.safefleet.mobile.avml.cameras.entities.PhotoAssociated
 import kotlinx.android.synthetic.main.file_list_filter_dialog.*
 import kotlinx.android.synthetic.main.fragment_associate_snapshots.*
 
@@ -28,7 +28,7 @@ class AssociateSnapshotsFragment : BaseFragment() {
     private var simpleFileListFragment = SimpleFileListFragment()
     private var thumbnailFileListFragment = ThumbnailFileListFragment()
     private lateinit var actualFragment: String
-    private var snapshotsAssociatedFromMetadata: MutableList<PhotoAssociated>? = null
+    private var snapshotsAssociatedFromMetadata: MutableList<DomainPhotoAssociated>? = null
     var onSnapshotsAssociated: (() -> Unit)? = null
     private var filterDialog: CustomFilterDialog? = null
 
@@ -42,7 +42,6 @@ class AssociateSnapshotsFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         checkableListInit = true
         setExtras()
         setListeners()
@@ -56,9 +55,9 @@ class AssociateSnapshotsFragment : BaseFragment() {
             Bundle().apply { putString(FILE_LIST_TYPE, SNAPSHOT_LIST) }
     }
 
-    fun replaceSnapshotsAssociatedFromMetadata(list: MutableList<PhotoAssociated>) {
+    fun replaceSnapshotsAssociatedFromMetadata(list: MutableList<DomainPhotoAssociated>) {
         SnapshotsAssociatedByUser.value = mutableListOf()
-        SnapshotsAssociatedByUser.value.addAll(SnapshotsAssociatedByUser.temporalAssociateSnapshot)
+        SnapshotsAssociatedByUser.value.addAll(SnapshotsAssociatedByUser.temporal)
         snapshotsAssociatedFromMetadata = mutableListOf()
         snapshotsAssociatedFromMetadata?.addAll(list)
     }
@@ -94,8 +93,8 @@ class AssociateSnapshotsFragment : BaseFragment() {
 
     private fun areSnapshotsSelected(): Boolean {
         return if (snapshotsAssociatedFromMetadata.isNullOrEmpty())
-            SnapshotsAssociatedByUser.temporalAssociateSnapshot.isNotEmpty()
-        else snapshotsAssociatedFromMetadata != SnapshotsAssociatedByUser.temporalAssociateSnapshot
+            SnapshotsAssociatedByUser.temporal.isNotEmpty()
+        else snapshotsAssociatedFromMetadata != SnapshotsAssociatedByUser.temporal
     }
 
     private fun showFilterDialog() {

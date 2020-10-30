@@ -2,10 +2,10 @@ package com.safefleet.lawmobile.di.cameraService
 
 import com.google.gson.Gson
 import com.lawmobile.domain.entities.CameraInfo
+import com.lawmobile.domain.entities.CameraType
 import com.lawmobile.presentation.utils.CameraHelper
 import com.lawmobile.presentation.utils.WifiHelper
 import com.safefleet.mobile.avml.cameras.external.CameraConnectService
-import com.safefleet.mobile.avml.cameras.external.CameraType
 import com.safefleet.mobile.avml.cameras.external.socket.SocketHelper
 import com.safefleet.mobile.avml.cameras.external.x1.CameraConnectServiceX1
 import com.safefleet.mobile.avml.cameras.external.x1.CameraHelperX1

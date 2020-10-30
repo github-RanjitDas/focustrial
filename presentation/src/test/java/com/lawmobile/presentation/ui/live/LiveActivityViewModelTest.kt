@@ -215,4 +215,11 @@ class LiveActivityViewModelTest {
             liveStreamingUseCase.getTotalStorage()
         }
     }
+
+    @Test
+    fun disconnectCameraFlow() {
+        coEvery { liveStreamingUseCase.disconnectCamera() } returns Result.Success(Unit)
+        runBlocking { liveActivityViewModel.disconnectCamera() }
+        coVerify { liveStreamingUseCase.disconnectCamera() }
+    }
 }

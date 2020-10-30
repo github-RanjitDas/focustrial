@@ -10,6 +10,7 @@ import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
 import com.bumptech.glide.Glide
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.lawmobile.domain.entities.DomainCameraFile
 import com.lawmobile.domain.entities.DomainInformationImageMetadata
 import com.lawmobile.domain.extensions.getCreationDate
 import com.lawmobile.presentation.R
@@ -19,18 +20,16 @@ import com.lawmobile.presentation.extensions.*
 import com.lawmobile.presentation.ui.base.BaseActivity
 import com.lawmobile.presentation.ui.thumbnailList.ThumbnailFileListFragment.Companion.PATH_ERROR_IN_PHOTO
 import com.lawmobile.presentation.utils.Constants
-import com.safefleet.mobile.avml.cameras.entities.CameraConnectFile
 import com.safefleet.mobile.commons.helpers.*
 import kotlinx.android.synthetic.main.activity_snapshot_item_detail.*
 import kotlinx.android.synthetic.main.bottom_sheet_assign_to_officer.*
 import kotlinx.android.synthetic.main.custom_app_bar.*
 import java.io.File
 
-
 class SnapshotDetailActivity : BaseActivity() {
 
     private val snapshotDetailViewModel: SnapshotDetailViewModel by viewModels()
-    private lateinit var file: CameraConnectFile
+    private lateinit var file: DomainCameraFile
     private var domainInformationImageMetadata: DomainInformationImageMetadata? = null
     private var temporalPartnerToShowIfItSaved: String = ""
 
@@ -74,7 +73,7 @@ class SnapshotDetailActivity : BaseActivity() {
 
     private fun getInformationFromIntent() {
         val fileIntent =
-            intent.getSerializableExtra(Constants.CAMERA_CONNECT_FILE) as? CameraConnectFile
+            intent.getSerializableExtra(Constants.DOMAIN_CAMERA_FILE) as? DomainCameraFile
         fileIntent?.let {
             file = it
         }
@@ -188,7 +187,7 @@ class SnapshotDetailActivity : BaseActivity() {
             sheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
         }
         sheetBehavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
-            override fun onSlide(bottomSheet: View, slideOffset: Float){}
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {}
 
             override fun onStateChanged(bottomSheet: View, newState: Int) {
                 when (newState) {

@@ -4,13 +4,13 @@ import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.viewModelScope
+import com.lawmobile.domain.entities.DomainCameraFile
 import com.lawmobile.domain.entities.DomainInformationFileResponse
 import com.lawmobile.domain.entities.DomainInformationImage
 import com.lawmobile.domain.usecase.thumbnailList.ThumbnailListUseCase
 import com.lawmobile.presentation.extensions.postEventValueWithTimeout
 import com.lawmobile.presentation.extensions.postValueWithTimeout
 import com.lawmobile.presentation.ui.base.BaseViewModel
-import com.safefleet.mobile.avml.cameras.entities.CameraConnectFile
 import com.safefleet.mobile.commons.helpers.Event
 import com.safefleet.mobile.commons.helpers.Result
 import com.safefleet.mobile.commons.helpers.getResultWithAttempts
@@ -30,14 +30,14 @@ class ThumbnailListFragmentViewModel @ViewModelInject constructor(private val th
 
     private var job: Job? = null
 
-    fun getImageBytes(cameraConnectFile: CameraConnectFile) {
+    fun getImageBytes(domainCameraFile: DomainCameraFile) {
         job = viewModelScope.launch {
             thumbnailBytesListMediatorLiveData.postEventValueWithTimeout(
                 LOADING_TIMEOUT_SNAPSHOT_BYTES
             ) {
                 Event(
                     getResultWithAttempts(ATTEMPTS_TO_GET_BYTES) {
-                        thumbnailListUseCase.getImageBytes(cameraConnectFile)
+                        thumbnailListUseCase.getImageBytes(domainCameraFile)
                     }
                 )
             }

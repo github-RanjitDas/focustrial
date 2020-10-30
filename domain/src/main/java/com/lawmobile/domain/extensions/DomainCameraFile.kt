@@ -1,8 +1,8 @@
 package com.lawmobile.domain.extensions
 
-import com.safefleet.mobile.avml.cameras.entities.CameraConnectFile
+import com.lawmobile.domain.entities.DomainCameraFile
 
-fun CameraConnectFile.getCreationDate(): String {
+fun DomainCameraFile.getCreationDate(): String {
     return try {
         val year = date.substring(0,2) + nameFolder.substring(0, 2)
         val month = nameFolder.substring(2, 4)

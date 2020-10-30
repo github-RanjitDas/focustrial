@@ -3,7 +3,7 @@ package com.safefleet.lawmobile.screens
 import androidx.annotation.IdRes
 import androidx.annotation.StringRes
 import androidx.test.espresso.assertion.ViewAssertions
-import com.lawmobile.domain.extensions.getCreationDate
+import com.lawmobile.data.extensions.getCreationDate
 import com.safefleet.lawmobile.R
 import com.safefleet.lawmobile.helpers.CustomCheckboxAction
 import com.safefleet.lawmobile.helpers.isActivated
