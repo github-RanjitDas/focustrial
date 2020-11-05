@@ -4,9 +4,9 @@ sonarqube {
     properties {
         property "sonar.projectName", "law-mobile-android"
         property "sonar.projectKey", "law-mobile-android"
-        property "sonar.host.url", "https://sonar.vmaxlive.net"
+        property "sonar.host.url", "https://sonarqube-development.safefleetcloud.us"
 //        property "sonar.host.url", "http://localhost:9000/" //Local
-        property "sonar.login", "97cd91516a2fe942fdd6c51bd9e97a077c077975"
+        property "sonar.login", "97809a7e3fadf571b11ae22a5a3de4dc39267b1a"
 //        property "sonar.login", "49cc98216d6a25cd4684ebf20235c53d2ef15f6d" //Local
         property "sonar.sources", "src/main/java"
         property "sonar.binaries", "build/intermediates/classes/debug"
