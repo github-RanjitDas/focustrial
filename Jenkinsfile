@@ -1,5 +1,5 @@
-node ('docker-builds-slave') {
-    def slackChannel = '#law-mobile-alerts'
+node('jenkins-builds-slave') {
+    def slackChannel = '#law-mobile-alerts'    
 
     try {
         library identifier: "${env.DEFAULT_SHARED_LIBS}",
@@ -7,12 +7,15 @@ node ('docker-builds-slave') {
 
         pipelineProps.defaultBuildMultibranchProperties()
         def secrets = [[
-                  path: "/secret-dev/safe_fleet_x1",
+                  path: "/secret-dev/safefleet1",
                   engineVersion: '2',
                   secretValues: [
-                    [vaultKey: 'credential_google_x1', envVar: 'credential_google_x1']
+                    [vaultKey: 'credential_google_x1', envVar: 'credential_google_x1'],
+                    [vaultKey: 'android_keystore', envVar: 'android_keystore']
                   ]]
          ]
+
+         def imageDocker = "245255707803.dkr.ecr.us-east-1.amazonaws.com/android-sdk-seon:sdk29-gradle5.6.4-fastlane"
 
         stage('Checkout') {
             logger.stage()
@@ -28,8 +31,8 @@ node ('docker-builds-slave') {
                  awsUtils.loginToAWS()
             }
         }
-        docker.image("245255707803.dkr.ecr.us-east-1.amazonaws.com/android-sdk-seon:sdk29-gradle5.6.4-fastlane").inside {
 
+        docker.image(imageDocker).inside('--user root') {
             stage('Clean builds'){
                 logger.stage()
                 timeout(5){
@@ -108,7 +111,7 @@ node ('docker-builds-slave') {
                 stage('Generate AAB'){
                     logger.stage()
                     timeout(10){
-                        withVault(vaultSecrets: [[path: "jenkins/lawmobile/android", secretValues: [[vaultKey: 'android-keystore', envVar: 'android_keystore']]]]) {
+                        withVault(vaultSecrets: secrets) {
                             sh """cat > $WORKSPACE/keystore.jks_64 <<  EOL\n$android_keystore\nEOL"""
                             sh "base64 -d keystore.jks_64 > app/keystore.jks"
                         }
