@@ -399,15 +399,10 @@ class LiveActivity : BaseActivity() {
 
     private fun manageResultInRecordingVideo(result: Result<Unit>) {
         hideShadowLoading()
-        with(result) {
-            doIfSuccess {
-                isRecordingVideo = !isRecordingVideo
-                showRecordingIndicator(isRecordingVideo)
-            }
-            doIfError {
-                liveViewAppBar.showErrorSnackBar(getString(R.string.error_saving_video))
-                showRecordingIndicator(false)
-            }
+        isRecordingVideo = !isRecordingVideo
+        showRecordingIndicator(isRecordingVideo)
+        result.doIfError {
+            liveViewAppBar.showErrorSnackBar(getString(R.string.error_saving_video))
         }
     }
 
