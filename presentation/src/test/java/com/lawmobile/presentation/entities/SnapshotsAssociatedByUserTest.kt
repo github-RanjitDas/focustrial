@@ -13,7 +13,7 @@ internal class SnapshotsAssociatedByUserTest {
     @Test
     fun setOrGetValue() {
         val newList = mutableListOf<DomainPhotoAssociated>()
-        SnapshotsAssociatedByUser.value = newList
+        SnapshotsAssociatedByUser.setFinalValue(newList)
         assert(newList == SnapshotsAssociatedByUser.value)
     }
 
@@ -24,7 +24,7 @@ internal class SnapshotsAssociatedByUserTest {
             every { nameFolder } returns "4567890123"
         }
         val photoList = mutableListOf(DomainPhotoAssociated("123", "123"))
-        SnapshotsAssociatedByUser.temporal = photoList
+        SnapshotsAssociatedByUser.setTemporalValue(photoList)
         SnapshotsAssociatedByUser.updateAssociatedSnapshots(domainCameraFile)
         assert(SnapshotsAssociatedByUser.temporal.size == 2)
     }
@@ -36,7 +36,7 @@ internal class SnapshotsAssociatedByUserTest {
             every { date } returns "123"
         }
         val photoList = mutableListOf(DomainPhotoAssociated("123", "123"))
-        SnapshotsAssociatedByUser.temporal = photoList
+        SnapshotsAssociatedByUser.setTemporalValue(photoList)
         SnapshotsAssociatedByUser.updateAssociatedSnapshots(domainCameraFile)
         assert(SnapshotsAssociatedByUser.temporal.size == 0)
     }
@@ -56,8 +56,9 @@ internal class SnapshotsAssociatedByUserTest {
                     }
                 )
             )
-        SnapshotsAssociatedByUser.temporal =
+        SnapshotsAssociatedByUser.setTemporalValue(
             mutableListOf(DomainPhotoAssociated("123", "123"))
+        )
         val associatedList =
             SnapshotsAssociatedByUser
                 .getListOfImagesAssociatedToVideo(domainInformationImageList).find { it.isSelected }
@@ -79,8 +80,9 @@ internal class SnapshotsAssociatedByUserTest {
                     }
                 )
             )
-        SnapshotsAssociatedByUser.temporal =
+        SnapshotsAssociatedByUser.setTemporalValue(
             mutableListOf(DomainPhotoAssociated("123", "123"))
+        )
         val associatedList =
             SnapshotsAssociatedByUser
                 .getListOfImagesAssociatedToVideo(domainInformationImageList).find { it.isSelected }
@@ -89,7 +91,7 @@ internal class SnapshotsAssociatedByUserTest {
 
     @Test
     fun cleanList() {
-        SnapshotsAssociatedByUser.value = mutableListOf(mockk(), mockk())
+        SnapshotsAssociatedByUser.setFinalValue(mutableListOf(mockk(), mockk()))
         SnapshotsAssociatedByUser.cleanList()
         assert(SnapshotsAssociatedByUser.value.size == 0)
     }

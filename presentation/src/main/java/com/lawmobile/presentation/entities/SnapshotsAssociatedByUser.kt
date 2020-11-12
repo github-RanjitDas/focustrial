@@ -6,8 +6,22 @@ import com.lawmobile.domain.entities.DomainPhotoAssociated
 import com.lawmobile.domain.extensions.getCreationDate
 
 object SnapshotsAssociatedByUser {
+
     var value = mutableListOf<DomainPhotoAssociated>()
+    private set
+
     var temporal = mutableListOf<DomainPhotoAssociated>()
+    private set
+
+    fun setFinalValue(mutableList: MutableList<DomainPhotoAssociated>){
+        value = mutableListOf()
+        value.addAll(mutableList)
+    }
+
+    fun setTemporalValue(mutableList: MutableList<DomainPhotoAssociated>){
+        temporal = mutableListOf()
+        temporal.addAll(mutableList)
+    }
 
     fun updateAssociatedSnapshots(imageFile: DomainCameraFile) {
         with(imageFile) {

@@ -88,7 +88,7 @@ fun Context.createAlertConfirmAppExit(callback: () -> Unit) {
     }
 }
 
-fun Context.createAlertDialogMetadataExit() {
+fun Context.createAlertDialogUnsavedChanges() {
     val activity = this as BaseActivity
     SafeFleetConfirmationDialog(
         this,
