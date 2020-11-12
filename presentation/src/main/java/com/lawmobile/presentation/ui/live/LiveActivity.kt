@@ -295,14 +295,14 @@ class LiveActivity : BaseActivity() {
     }
 
     private fun setColorInStorageLevel(information: List<Double>) {
-        val remainingPercent =
+        val actualPercent =
             TOTAL_PERCENTAGE - ((information[FREE_STORAGE_POSITION] * TOTAL_PERCENTAGE) / information[TOTAL_STORAGE_POSITION])
         progressStorageLevel.setProgress(
-            remainingPercent.toInt(),
+            actualPercent.toInt(),
             ASCENDANT
         )
 
-        if (remainingPercent.toInt() in HIGH_ASCENDANT_RANGE.value) {
+        if (actualPercent.toInt() in HIGH_ASCENDANT_RANGE.value) {
             imageViewStorage.backgroundTintList =
                 ContextCompat.getColorStateList(this@LiveActivity, R.color.red)
             imageViewStorage.startAnimationIfEnabled(blinkAnimation)
@@ -312,7 +312,7 @@ class LiveActivity : BaseActivity() {
             imageViewStorage.clearAnimation()
         }
 
-        if (remainingPercent.toInt() == PERCENT_TO_SHOW_ALERT_MEMORY_CAPACITY && !isStorageAlertShowed) {
+        if (actualPercent.toInt() >= PERCENT_TO_SHOW_ALERT_MEMORY_CAPACITY && !isStorageAlertShowed) {
             isStorageAlertShowed = true
             createAlertForInformationCamera(
                 R.string.storage_alert_title,
