@@ -40,7 +40,6 @@ class VideoPlaybackActivity : BaseActivity() {
     private val genderList = mutableListOf<String>()
 
     private var currentAttempts = 0
-    private var areLinkedSnapshotsChangesSaved = true
     private var isVideoMetadataChangesSaved = false
     private lateinit var currentMetadata: DomainVideoMetadata
 
@@ -221,7 +220,7 @@ class VideoPlaybackActivity : BaseActivity() {
         }
         configureListenerSeekBar()
         configureMediaEventListener()
-        associateSnapshotsFragment.onSnapshotsAssociated = ::handleAssociateSnapshots
+        associateSnapshotsFragment.onAssociateSnapshots = ::handleAssociateSnapshots
     }
 
     private fun manageCurrentTimeInVideo(time: Long) {
@@ -262,7 +261,6 @@ class VideoPlaybackActivity : BaseActivity() {
             )
         }
         hideLoadingDialog()
-        areLinkedSnapshotsChangesSaved = true
     }
 
     private fun manageGetVideoMetadataResult(result: Result<DomainVideoMetadata>) {
@@ -327,8 +325,9 @@ class VideoPlaybackActivity : BaseActivity() {
         }
 
         (videoMetadata.associatedPhotos)?.let {
-            SnapshotsAssociatedByUser.temporal = it as MutableList
-            associateSnapshotsFragment.replaceSnapshotsAssociatedFromMetadata(it)
+            SnapshotsAssociatedByUser.setTemporalValue(it as MutableList)
+            SnapshotsAssociatedByUser.setFinalValue(it)
+            associateSnapshotsFragment.setSnapshotsAssociatedFromMetadata(it)
         }
 
         showSnapshotsAssociated()
@@ -349,7 +348,8 @@ class VideoPlaybackActivity : BaseActivity() {
 
     private fun handleAssociateSnapshots() {
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
-        associateSnapshotsFragment.replaceSnapshotsAssociatedFromMetadata(SnapshotsAssociatedByUser.temporal)
+        associateSnapshotsFragment.setSnapshotsAssociatedFromMetadata(SnapshotsAssociatedByUser.temporal)
+        SnapshotsAssociatedByUser.setFinalValue(SnapshotsAssociatedByUser.temporal)
         showSnapshotsAssociated()
         layoutVideoPlayback.showSuccessSnackBar(getString(R.string.snapshots_added_success))
     }
@@ -382,9 +382,8 @@ class VideoPlaybackActivity : BaseActivity() {
         }
         if (index >= 0) {
             SnapshotsAssociatedByUser.value.removeAt(index)
-            associateSnapshotsFragment.replaceSnapshotsAssociatedFromMetadata(
-                SnapshotsAssociatedByUser.value
-            )
+            SnapshotsAssociatedByUser.setTemporalValue(SnapshotsAssociatedByUser.value)
+            associateSnapshotsFragment.setSnapshotsAssociatedFromMetadata(SnapshotsAssociatedByUser.value)
         }
     }
 
@@ -396,6 +395,7 @@ class VideoPlaybackActivity : BaseActivity() {
             AssociateSnapshotsFragment.TAG
         )
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+        SnapshotsAssociatedByUser.setTemporalValue(SnapshotsAssociatedByUser.value)
     }
 
     private fun configureMediaEventListener() {
@@ -499,8 +499,8 @@ class VideoPlaybackActivity : BaseActivity() {
         if (isInPortraitMode()) {
             if (bottomSheetBehavior.state == BottomSheetBehavior.STATE_HIDDEN) {
                 videoPlaybackViewModel.stopMediaPlayer()
-                if (!areLinkedSnapshotsChangesSaved || verifyVideoMetadataWasEdited())
-                    this.createAlertDialogMetadataExit()
+                if (verifyVideoMetadataWasEdited())
+                    this.createAlertDialogUnsavedChanges()
                 else super.onBackPressed()
             } else {
                 bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
@@ -551,7 +551,8 @@ class VideoPlaybackActivity : BaseActivity() {
                             fromJson.driverLicense != fromForm.driverLicense ||
                             fromJson.licensePlate != fromForm.licensePlate ||
                             fromJson.gender != fromForm.gender ||
-                            fromJson.race != fromForm.race
+                            fromJson.race != fromForm.race ||
+                            currentMetadata.associatedPhotos != SnapshotsAssociatedByUser.value
                 } ?: false
             }
         }

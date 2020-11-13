@@ -29,7 +29,7 @@ class AssociateSnapshotsFragment : BaseFragment() {
     private var thumbnailFileListFragment = ThumbnailFileListFragment()
     private lateinit var actualFragment: String
     private var snapshotsAssociatedFromMetadata: MutableList<DomainPhotoAssociated>? = null
-    var onSnapshotsAssociated: (() -> Unit)? = null
+    var onAssociateSnapshots: (() -> Unit)? = null
     private var filterDialog: CustomFilterDialog? = null
 
     override fun onCreateView(
@@ -55,9 +55,7 @@ class AssociateSnapshotsFragment : BaseFragment() {
             Bundle().apply { putString(FILE_LIST_TYPE, SNAPSHOT_LIST) }
     }
 
-    fun replaceSnapshotsAssociatedFromMetadata(list: MutableList<DomainPhotoAssociated>) {
-        SnapshotsAssociatedByUser.value = mutableListOf()
-        SnapshotsAssociatedByUser.value.addAll(SnapshotsAssociatedByUser.temporal)
+    fun setSnapshotsAssociatedFromMetadata(list: MutableList<DomainPhotoAssociated>) {
         snapshotsAssociatedFromMetadata = mutableListOf()
         snapshotsAssociatedFromMetadata?.addAll(list)
     }
@@ -85,7 +83,7 @@ class AssociateSnapshotsFragment : BaseFragment() {
 
     private fun addSnapshotsToVideo() {
         if (areSnapshotsSelected()) {
-            onSnapshotsAssociated?.invoke()
+            onAssociateSnapshots?.invoke()
         } else {
             layoutAssociateImagesToVideo.showErrorSnackBar(getString(R.string.no_new_photo_selected_message))
         }
