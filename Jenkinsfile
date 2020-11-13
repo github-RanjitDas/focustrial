@@ -100,8 +100,8 @@ node('jenkins-builds-slave') {
                     logger.stage()
                     timeout(10){
                         dir("app/build/outputs/apk") {
-                            sh "mv debug/app-debug.apk debug/app-debug-${BUILD_NUMBER}.apk"
-                            archiveArtifacts "debug/app-debug-${BUILD_NUMBER}.apk"
+                            //sh "mv debug/app-debug.apk debug/app-debug-${BUILD_NUMBER}.apk"
+                            archiveArtifacts "debug/app-debug.apk"
                         }
                     }
                 }
@@ -137,8 +137,8 @@ node('jenkins-builds-slave') {
                     logger.stage()
                     timeout(10){
                         dir("app/build/outputs/bundle") {
-                            sh "mv release/app-release.aab release/app-release-${BUILD_NUMBER}.aab"
-                            archiveArtifacts "release/app-release-${BUILD_NUMBER}.aab"
+                            //sh "mv release/app-release.aab release/app-release-${BUILD_NUMBER}.aab"
+                            archiveArtifacts "release/app-release.aab"
                         }
                     }
                 }
