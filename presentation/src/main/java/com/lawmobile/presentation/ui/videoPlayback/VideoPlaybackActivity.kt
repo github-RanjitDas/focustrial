@@ -1,6 +1,7 @@
 package com.lawmobile.presentation.ui.videoPlayback
 
 import android.content.pm.ActivityInfo
+import android.graphics.Rect
 import android.os.Bundle
 import android.text.InputFilter
 import android.util.Log
@@ -72,6 +73,7 @@ class VideoPlaybackActivity : BaseActivity() {
             getInformationOfVideo()
         }
 
+        stopVideoWhenScrolling()
         getVideoMetadata()
     }
 
@@ -82,6 +84,16 @@ class VideoPlaybackActivity : BaseActivity() {
             domainInformationVideo?.let {
                 createVideoPlaybackInSurface(it)
                 playVideoPlayback()
+            }
+        }
+    }
+
+    private fun stopVideoWhenScrolling() {
+        scrollLayoutMetadata.viewTreeObserver.addOnScrollChangedListener {
+            val scrollBounds = Rect()
+            scrollLayoutMetadata.getHitRect(scrollBounds)
+            if (!fakeSurfaceVideoPlayback.getLocalVisibleRect(scrollBounds) && videoPlaybackViewModel.isMediaPlayerPlaying()) {
+                pauseVideoPlayback()
             }
         }
     }

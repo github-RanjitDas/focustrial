@@ -9,6 +9,21 @@
     <include layout="@layout/bottom_sheet_associate_snapshots"
         android:visibility="gone" />
 
+    <View
+        android:id="@+id/fakeSurfaceVideoPlayback"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/fake_video_playback_surface_view_height"
+        android:layout_marginTop="@dimen/live_view_app_bar_height"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <ScrollView
+        android:layout_width="@dimen/no_dp"
+        android:layout_height="@dimen/no_dp"
+        android:visibility="gone"
+        android:id="@+id/scrollLayoutMetadata"/>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"

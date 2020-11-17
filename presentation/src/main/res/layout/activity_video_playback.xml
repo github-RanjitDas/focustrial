@@ -2,16 +2,18 @@
 <androidx.coordinatorlayout.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/layoutVideoPlayback"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/rootScrollViewMetadata"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/white">
 
-        <ScrollView xmlns:tools="http://schemas.android.com/tools"
+        <ScrollView
             android:id="@+id/scrollLayoutMetadata"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -22,12 +24,23 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:clickable="true"
+                android:focusable="true"
                 tools:context=".ui.videoPlayback.VideoPlaybackActivity">
 
                 <include
                     layout="@layout/custom_app_bar"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
+
+                <View
+                    android:id="@+id/fakeSurfaceVideoPlayback"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/fake_video_playback_surface_view_height"
+                    android:layout_marginTop="@dimen/live_view_app_bar_height"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"/>
 
                 <SurfaceView
                     android:id="@+id/surfaceVideoPlayback"
