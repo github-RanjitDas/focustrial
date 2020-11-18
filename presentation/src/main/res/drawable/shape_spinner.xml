@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:drawable="@drawable/ic_arrow_down"
+        android:gravity="center_vertical|end"
+        android:right="@dimen/padding_12dp" />
+    <item>
+        <shape android:shape="rectangle">
+            <stroke
+                android:width="@dimen/width_1dp"
+                android:color="@color/colorGrey" />
+            <corners android:radius="@dimen/radius_2dp" />
+            <solid android:color="@color/checkboxBackground" />
+            <size
+                android:width="@dimen/size_22dp"
+                android:height="@dimen/size_22dp" />
+        </shape>
+    </item>
+</layer-list>

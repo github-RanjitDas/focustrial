@@ -10,27 +10,26 @@ import com.lawmobile.domain.usecase.liveStreaming.LiveStreamingUseCaseImpl
 import com.safefleet.mobile.avml.cameras.external.CameraConnectService
 import dagger.Module
 import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.components.ActivityComponent
 
+@InstallIn(ActivityComponent::class)
 @Module
 class LiveStreamingModule {
 
-    @Module
     companion object {
-        @JvmStatic
+        
         @Provides
         fun provideLiveRemoteDataSource(cameraConnectService: CameraConnectService): LiveStreamingRemoteDataSource =
             LiveStreamingRemoteDataSourceImpl(cameraConnectService)
 
-        @JvmStatic
         @Provides
         fun provideLiveRepository(liveStreamingRemoteDataSource: LiveStreamingRemoteDataSource): LiveStreamingRepository =
             LiveStreamingRepositoryImpl(liveStreamingRemoteDataSource)
 
-        @JvmStatic
         @Provides
         fun provideMediaActionSound() = MediaActionSound()
 
-        @JvmStatic
         @Provides
         fun provideLiveUseCase(liveRepository: LiveStreamingRepository): LiveStreamingUseCase =
             LiveStreamingUseCaseImpl(liveRepository)

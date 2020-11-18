@@ -1,13 +1,152 @@
 package com.lawmobile.data.repository.snapshotDetail
 
 import com.lawmobile.data.datasource.remote.snapshotDetail.SnapshotDetailRemoteDataSource
+import com.lawmobile.data.entities.FileList
+import com.lawmobile.data.entities.RemoteVideoMetadata
+import com.lawmobile.data.entities.VideoListMetadata
+import com.lawmobile.data.mappers.FileMapper
+import com.lawmobile.data.mappers.PhotoMetadataMapper
+import com.lawmobile.data.mappers.VideoMetadataMapper
+import com.lawmobile.domain.entities.CameraInfo
+import com.lawmobile.domain.entities.DomainCameraFile
+import com.lawmobile.domain.entities.DomainInformationImageMetadata
 import com.lawmobile.domain.repository.snapshotDetail.SnapshotDetailRepository
-import com.safefleet.mobile.avml.cameras.entities.CameraConnectFile
+import com.safefleet.mobile.avml.cameras.entities.CameraConnectPhotoMetadata
+import com.safefleet.mobile.avml.cameras.entities.PhotoMetadata
 import com.safefleet.mobile.commons.helpers.Result
+import com.safefleet.mobile.commons.helpers.doIfError
+import com.safefleet.mobile.commons.helpers.doIfSuccess
+import com.safefleet.mobile.commons.helpers.getResultWithAttempts
+import kotlinx.coroutines.delay
 
 class SnapshotDetailRepositoryImpl(private val snapshotDetailRemoteDataSource: SnapshotDetailRemoteDataSource) :
     SnapshotDetailRepository {
-    override suspend fun getImageBytes(cameraConnectFile: CameraConnectFile): Result<ByteArray> {
+
+    override suspend fun getImageBytes(domainCameraFile: DomainCameraFile): Result<ByteArray> {
+        val cameraConnectFile = FileMapper.domainToCamera(domainCameraFile)
         return snapshotDetailRemoteDataSource.getImageBytes(cameraConnectFile)
+    }
+
+    override suspend fun saveSnapshotPartnerId(
+        domainCameraFile: DomainCameraFile,
+        partnerId: String
+    ): Result<Unit> {
+        val photoMetadataList = mutableListOf<CameraConnectPhotoMetadata>()
+        val errorsInFiles = mutableListOf<String>()
+
+        when (val resultGetMetadataOfPhotos =
+            snapshotDetailRemoteDataSource.getSavedPhotosMetadata()) {
+            is Result.Success -> photoMetadataList.addAll(resultGetMetadataOfPhotos.data)
+            is Result.Error -> return resultGetMetadataOfPhotos
+        }
+
+        val partnerMetadata = PhotoMetadata(partnerID = partnerId)
+        val cameraPhotoMetadata = CameraConnectPhotoMetadata(
+            fileName = domainCameraFile.name,
+            officerId = CameraInfo.officerId,
+            path = domainCameraFile.path,
+            x1sn = CameraInfo.serialNumber,
+            metadata = partnerMetadata,
+            nameFolder = domainCameraFile.nameFolder
+        )
+
+        delay(150)
+
+        photoMetadataList.removeAll { it.fileName == domainCameraFile.name }
+        photoMetadataList.add(cameraPhotoMetadata)
+
+        with(snapshotDetailRemoteDataSource.savePartnerIdSnapshot(cameraPhotoMetadata)) {
+            doIfSuccess {
+                val item = FileList.getMetadataOfImageInList(domainCameraFile.name)
+                val domainPhotoMetadata =
+                    PhotoMetadataMapper.cameraToDomain(cameraPhotoMetadata)
+                val newItemPhoto =
+                    DomainInformationImageMetadata(domainPhotoMetadata, item?.videosAssociated)
+                FileList.updateItemInImageMetadataList(newItemPhoto)
+            }
+            doIfError {
+                errorsInFiles.add(cameraPhotoMetadata.fileName)
+            }
+        }
+
+        delay(300)
+
+        with(snapshotDetailRemoteDataSource.savePartnerIdInAllSnapshots(photoMetadataList)) {
+            doIfSuccess {
+                return if (errorsInFiles.isEmpty()) Result.Success(Unit)
+                else Result.Error(Exception("Partner ID could not be associated to: $errorsInFiles"))
+            }
+        }
+
+        return Result.Error(Exception("Partner ID could not be associated"))
+    }
+
+    override suspend fun getInformationOfPhoto(domainCameraFile: DomainCameraFile): Result<DomainInformationImageMetadata> {
+        val item = FileList.getMetadataOfImageInList(domainCameraFile.name)
+        if (!thereIsErrorInMetadataVideo && item != null) return Result.Success(item)
+
+        val cameraConnectFile = FileMapper.domainToCamera(domainCameraFile)
+
+        with(snapshotDetailRemoteDataSource.getInformationOfPhoto(cameraConnectFile)) {
+            doIfSuccess {
+                delay(350)
+
+                val responseMetadataVideos = updateVideosMetadata()
+                thereIsErrorInMetadataVideo = responseMetadataVideos is Result.Error
+                responseMetadataVideos.doIfError { exceptionMetadata ->
+                    return Result.Error(exceptionMetadata)
+                }
+
+                val videosAssociated =
+                    VideoListMetadata.getVideosWithPhotosAssociated(domainCameraFile)
+                val domainPhotoMetadata = PhotoMetadataMapper.cameraToDomain(it)
+                val domainInformationImage =
+                    DomainInformationImageMetadata(domainPhotoMetadata, videosAssociated)
+
+                FileList.updateItemInImageMetadataList(domainInformationImage)
+                return Result.Success(domainInformationImage)
+            }
+        }
+
+        return Result.Error(Exception("Was not possible get information from the camera"))
+    }
+
+    private suspend fun updateVideosMetadata(): Result<Unit> {
+        with(snapshotDetailRemoteDataSource.getVideoList()) {
+            doIfSuccess { response ->
+                response.items.forEach { cameraConnectFile ->
+                    delay(350)
+                    val responseMetadata = getResultWithAttempts(ATTEMPTS_TO_GET_METADATA) {
+                        snapshotDetailRemoteDataSource.getMetadataOfVideo(cameraConnectFile)
+                    }
+
+                    with(responseMetadata) {
+                        doIfSuccess {
+                            val videoMetadata = VideoMetadataMapper.cameraToDomain(it)
+
+                            VideoListMetadata.saveOrUpdateVideoMetadata(
+                                RemoteVideoMetadata(
+                                    videoMetadata,
+                                    false
+                                )
+                            )
+                        }
+                        doIfError {
+                            return Result.Error(Exception("Error in get information of:${cameraConnectFile.name}"))
+                        }
+                    }
+                }
+            }
+            doIfError {
+                return Result.Error(Exception("Error in get videoList"))
+            }
+        }
+
+        return Result.Success(Unit)
+    }
+
+    companion object {
+        const val ATTEMPTS_TO_GET_METADATA = 5
+        private var thereIsErrorInMetadataVideo = false
     }
 }

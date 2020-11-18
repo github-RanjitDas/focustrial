@@ -21,7 +21,7 @@ class LiveStreamingRepositoryImplTest {
 
     @BeforeEach
     fun setUp() {
-        clearMocks()
+        clearAllMocks()
     }
 
     @Test
@@ -85,10 +85,10 @@ class LiveStreamingRepositoryImplTest {
     fun testStopRecordVideoSuccess() {
         val result = Result.Success(Unit)
         coEvery { liveStreamingRemoteDataSource.stopRecordVideo() } returns result
-        FileList.listOfVideos = listOf(mockk(relaxed = true))
+        FileList.videoList = listOf(mockk(relaxed = true))
         runBlocking {
             Assert.assertEquals(liveStreamingRepositoryImpl.stopRecordVideo(), result)
-            Assert.assertTrue(FileList.listOfVideos.isEmpty())
+            Assert.assertTrue(FileList.videoList.isEmpty())
         }
     }
 
@@ -115,10 +115,10 @@ class LiveStreamingRepositoryImplTest {
     fun testTakePhotoSuccess() {
         val result = Result.Success(Unit)
         coEvery { liveStreamingRemoteDataSource.takePhoto() } returns result
-        FileList.listOfImages = listOf(mockk(relaxed = true))
+        FileList.imageList = listOf(mockk(relaxed = true))
         runBlocking {
             Assert.assertEquals(liveStreamingRepositoryImpl.takePhoto(), result)
-            Assert.assertTrue(FileList.listOfImages.isEmpty())
+            Assert.assertTrue(FileList.imageList.isEmpty())
         }
     }
 
@@ -133,26 +133,68 @@ class LiveStreamingRepositoryImplTest {
 
     @Test
     fun testGetCatalogInfoSuccess() {
-        coEvery { liveStreamingRemoteDataSource.getCatalogInfo() } returns Result.Success(
-            mockk()
-        )
+        coEvery { liveStreamingRemoteDataSource.getCatalogInfo() } returns
+                Result.Success(listOf(mockk(relaxed = true)))
+
         runBlocking {
             val result = liveStreamingRepositoryImpl.getCatalogInfo()
             Assert.assertTrue(result is Result.Success)
         }
+
         coVerify { liveStreamingRemoteDataSource.getCatalogInfo() }
     }
 
     @Test
     fun testGetCatalogInfoError() {
-        coEvery { liveStreamingRemoteDataSource.getCatalogInfo() } returns Result.Error(
-            mockk()
-        )
+        coEvery { liveStreamingRemoteDataSource.getCatalogInfo() } returns
+                Result.Error(mockk())
+
         runBlocking {
             val result = liveStreamingRepositoryImpl.getCatalogInfo()
             Assert.assertTrue(result is Result.Error)
         }
+
         coVerify { liveStreamingRemoteDataSource.getCatalogInfo() }
+    }
+
+    @Test
+    fun testGetBatteryLevel() {
+        val result = Result.Success(10)
+        coEvery { liveStreamingRemoteDataSource.getBatteryLevel() } returns result
+        runBlocking {
+            val response = liveStreamingRepositoryImpl.getBatteryLevel()
+            Assert.assertEquals(response, result)
+        }
+        coVerify { liveStreamingRemoteDataSource.getBatteryLevel() }
+    }
+
+    @Test
+    fun testGetFreeStorage() {
+        val result = Result.Success("10000")
+        coEvery { liveStreamingRemoteDataSource.getFreeStorage() } returns result
+        runBlocking {
+            val response = liveStreamingRepositoryImpl.getFreeStorage()
+            Assert.assertEquals(response, result)
+        }
+        coVerify { liveStreamingRemoteDataSource.getFreeStorage() }
+    }
+
+    @Test
+    fun testGetTotalStorage() {
+        val result = Result.Success("10000")
+        coEvery { liveStreamingRemoteDataSource.getTotalStorage() } returns result
+        runBlocking {
+            val response = liveStreamingRepositoryImpl.getTotalStorage()
+            Assert.assertEquals(response, result)
+        }
+        coVerify { liveStreamingRemoteDataSource.getTotalStorage() }
+    }
+
+    @Test
+    fun disconnectCameraFlow() {
+        coEvery { liveStreamingRemoteDataSource.disconnectCamera() } returns Result.Success(Unit)
+        runBlocking { liveStreamingRepositoryImpl.disconnectCamera() }
+        coVerify { liveStreamingRemoteDataSource.disconnectCamera() }
     }
 
 }

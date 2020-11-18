@@ -1,89 +1,139 @@
 package com.lawmobile.presentation.ui.videoPlayback
 
-import android.app.Activity
-import android.content.DialogInterface
-import android.content.Intent
 import android.content.pm.ActivityInfo
+import android.graphics.Rect
 import android.os.Bundle
 import android.text.InputFilter
 import android.util.Log
+import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.SeekBar
 import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
+import androidx.activity.viewModels
+import androidx.cardview.widget.CardView
+import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
-import com.lawmobile.domain.entities.CameraInfo
-import com.lawmobile.domain.entities.DomainInformationVideo
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.snackbar.Snackbar
+import com.lawmobile.domain.entities.*
+import com.lawmobile.domain.extensions.getCreationDate
 import com.lawmobile.presentation.R
-import com.lawmobile.presentation.entities.AlertInformation
+import com.lawmobile.presentation.entities.SnapshotsAssociatedByUser
 import com.lawmobile.presentation.extensions.*
+import com.lawmobile.presentation.ui.associateSnapshots.AssociateSnapshotsFragment
 import com.lawmobile.presentation.ui.base.BaseActivity
-import com.lawmobile.presentation.ui.linkSnapshotsToVideo.LinkSnapshotsActivity
-import com.lawmobile.presentation.utils.Constants.CAMERA_CONNECT_FILE
-import com.lawmobile.presentation.utils.Constants.SNAPSHOTS_DATE_SELECTED
-import com.lawmobile.presentation.utils.Constants.SNAPSHOTS_LINKED
-import com.lawmobile.presentation.utils.Constants.SNAPSHOTS_SELECTED
-import com.safefleet.mobile.avml.cameras.entities.CameraConnectFile
-import com.safefleet.mobile.avml.cameras.entities.CameraConnectVideoMetadata
-import com.safefleet.mobile.avml.cameras.entities.PhotoAssociated
-import com.safefleet.mobile.avml.cameras.entities.VideoMetadata
+import com.lawmobile.presentation.utils.Constants.DOMAIN_CAMERA_FILE
 import com.safefleet.mobile.commons.helpers.Result
+import com.safefleet.mobile.commons.helpers.doIfError
+import com.safefleet.mobile.commons.helpers.doIfSuccess
 import com.safefleet.mobile.commons.helpers.hideKeyboard
+import com.safefleet.mobile.commons.widgets.SafeFleetFilterTag
 import kotlinx.android.synthetic.main.activity_video_playback.*
-import javax.inject.Inject
-
+import kotlinx.android.synthetic.main.bottom_sheet_associate_snapshots.*
+import kotlinx.android.synthetic.main.custom_app_bar.*
+import org.videolan.libvlc.MediaPlayer
 
 class VideoPlaybackActivity : BaseActivity() {
 
-    @Inject
-    lateinit var videoPlaybackViewModel: VideoPlaybackViewModel
-
+    private val videoPlaybackViewModel: VideoPlaybackViewModel by viewModels()
     private val eventList = mutableListOf<String>()
     private val raceList = mutableListOf<String>()
     private val genderList = mutableListOf<String>()
-    private var linkedPhotoList: ArrayList<PhotoAssociated>? = ArrayList()
-    private var linkedPhotoDateList: ArrayList<String>? = ArrayList()
 
-    private lateinit var dialog: AlertDialog
     private var currentAttempts = 0
-    private var areLinkedSnapshotsChangesSaved = true
     private var isVideoMetadataChangesSaved = false
-    private lateinit var currentMetadata: CameraConnectVideoMetadata
+    private lateinit var currentMetadata: DomainVideoMetadata
+
+    private var associateSnapshotsFragment = AssociateSnapshotsFragment()
+    private val bottomSheetBehavior: BottomSheetBehavior<CardView> by lazy {
+        BottomSheetBehavior.from(bottomSheetAssociate)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_video_playback)
-        createDialog()
+
+        setAppBar()
+        showLoadingDialog()
+        configureBottomSheet()
         setCatalogLists()
         addEditTextFilter()
         setObservers()
         configureListeners()
-    }
-
-    override fun onResume() {
-        super.onResume()
-
         hideKeyboard()
         verifyIfSelectedVideoWasChanged()
 
+        currentTimeVideoInMilliSeconds = 0
+        currentProgressInVideo = 0
+
         domainInformationVideo?.let {
-            createVideoPlaybackInSurface(it)
-            playVideoPlayback()
-            setProgressToVideo(currentProgressInVideo)
-            updateCurrentTimeInVideo()
-            configureObserveCurrentTimeVideo()
             setVideoInformation()
+            createVideoPlaybackInSurface(it)
         } ?: run {
             getInformationOfVideo()
         }
 
+        stopVideoWhenScrolling()
         getVideoMetadata()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        verifyEventEmpty()
+        if (!videoPlaybackViewModel.isMediaPlayerPlaying()) {
+            domainInformationVideo?.let {
+                createVideoPlaybackInSurface(it)
+                playVideoPlayback()
+            }
+        }
+    }
+
+    private fun stopVideoWhenScrolling() {
+        scrollLayoutMetadata.viewTreeObserver.addOnScrollChangedListener {
+            val scrollBounds = Rect()
+            scrollLayoutMetadata.getHitRect(scrollBounds)
+            if (!fakeSurfaceVideoPlayback.getLocalVisibleRect(scrollBounds) && videoPlaybackViewModel.isMediaPlayerPlaying()) {
+                pauseVideoPlayback()
+            }
+        }
     }
 
     override fun onPause() {
         super.onPause()
-        if (videoPlaybackViewModel.isMediaPlayerPlaying())
-            manageButtonPlayPause()
+        if (videoPlaybackViewModel.isMediaPlayerPlaying()) {
+            pauseVideoPlayback()
+        }
+    }
+
+    private fun configureBottomSheet() {
+        bottomSheetBehavior.isDraggable = false
+        bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+
+        buttonCloseAssociateSnapshots.setOnClickListener {
+            SnapshotsAssociatedByUser.temporal.addAll(SnapshotsAssociatedByUser.value)
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+        }
+
+        bottomSheetBehavior.addBottomSheetCallback(object :
+            BottomSheetBehavior.BottomSheetCallback() {
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {}
+
+            override fun onStateChanged(bottomSheet: View, newState: Int) {
+                when (newState) {
+                    BottomSheetBehavior.STATE_HIDDEN -> {
+                        shadowPlaybackView?.isVisible = false
+                        supportFragmentManager.detachFragment(fragmentAssociateHolder.id)
+                    }
+                    else -> shadowPlaybackView?.isVisible = true
+                }
+            }
+        })
+    }
+
+    private fun setAppBar() {
+        fileListAppBarTitle.text = getString(R.string.video_detail)
+        buttonSimpleList.isVisible = false
+        buttonThumbnailList.isVisible = false
     }
 
     private fun addEditTextFilter() {
@@ -95,7 +145,7 @@ class VideoPlaybackActivity : BaseActivity() {
         dispatch1Value.filters = getFiltersWithLength(30)
         dispatch2Value.filters = getFiltersWithLength(30)
         locationValue.filters = getFiltersWithLength(30)
-        remarksValue.filters = getFiltersWithLength(100)
+        notesValue.filters = getFiltersWithLength(100)
         firstNameValue.filters = getFiltersWithLength(30)
         lastNameValue.filters = getFiltersWithLength(30)
         driverLicenseValue.filters = getFiltersWithLength(30)
@@ -121,6 +171,12 @@ class VideoPlaybackActivity : BaseActivity() {
         return arrayOf(lengthFilter, charactersFilter)
     }
 
+    private fun verifyEventEmpty() {
+        if (CameraInfo.events.isEmpty()) {
+            showErrorInEvents()
+        }
+    }
+
     private fun setCatalogLists() {
         eventList.add(getString(R.string.select))
         eventList.addAll(CameraInfo.events.map { it.name })
@@ -132,20 +188,65 @@ class VideoPlaybackActivity : BaseActivity() {
         genderValue.adapter = ArrayAdapter(this, R.layout.spinner_item, genderList)
     }
 
+    private fun showErrorInEvents() {
+        layoutVideoPlayback.showErrorSnackBar(
+            getString(R.string.catalog_error_video_playback),
+            Snackbar.LENGTH_LONG
+        )
+    }
+
     private fun setObservers() {
-        isAlertShowing.observe(this, Observer(::managePlaybackOnAlert))
+        isMobileDataAlertShowing.observe(this, Observer(::managePlaybackOnAlert))
         videoPlaybackViewModel.domainInformationVideoLiveData.observe(
             this,
             Observer(::manageGetVideoInformationResult)
         )
         videoPlaybackViewModel.saveVideoMetadataLiveData.observe(
             this,
-            Observer(::manageSaveVideoResult)
+            Observer(::manageSaveVideoMetadataResult)
         )
         videoPlaybackViewModel.videoMetadataLiveData.observe(
             this,
             Observer(::manageGetVideoMetadataResult)
         )
+    }
+
+    private fun configureListeners() {
+        buttonPlay.setOnClickListenerCheckConnection {
+            manageButtonPlayPause()
+        }
+        buttonFullScreen.setOnClickListenerCheckConnection {
+            changeScreenOrientation()
+        }
+        buttonAspect.setOnClickListenerCheckConnection {
+            videoPlaybackViewModel.changeAspectRatio()
+        }
+        saveButtonVideoPlayback.setOnClickListenerCheckConnection {
+            saveVideoMetadataInCamera()
+        }
+        backArrowFileListAppBar.setOnClickListenerCheckConnection {
+            onBackPressed()
+        }
+        buttonAssociateSnapshots.setOnClickListenerCheckConnection {
+            showAssociateSnapshotsBottomSheet()
+        }
+        configureListenerSeekBar()
+        configureMediaEventListener()
+        associateSnapshotsFragment.onAssociateSnapshots = ::handleAssociateSnapshots
+    }
+
+    private fun manageCurrentTimeInVideo(time: Long) {
+        if (time > currentTimeVideoInMilliSeconds) {
+            currentTimeVideoInMilliSeconds = time
+            updateProgressVideoInView()
+        }
+
+        if (currentProgressInVideo == 100 && videoPlaybackViewModel.isMediaPlayerPlaying()) {
+            updateLastInteraction()
+            buttonPlay.setImageResource(R.drawable.ic_media_play)
+            updateLiveOrPlaybackActive(false)
+            buttonAspect.isClickable = false
+        }
     }
 
     private fun managePlaybackOnAlert(isShowing: Boolean) {
@@ -157,64 +258,66 @@ class VideoPlaybackActivity : BaseActivity() {
         }
     }
 
-    private fun manageSaveVideoResult(result: Result<Unit>) {
+    private fun manageSaveVideoMetadataResult(result: Result<Unit>) {
         when (result) {
             is Result.Success -> {
                 this.showToast(
                     getString(R.string.video_metadata_saved_success),
                     Toast.LENGTH_SHORT
                 )
-                finish()
+                onBackPressed()
             }
             is Result.Error -> this.showToast(
                 getString(R.string.video_metadata_save_error),
                 Toast.LENGTH_SHORT
             )
         }
-        dialog.dismiss()
-        areLinkedSnapshotsChangesSaved = true
+        hideLoadingDialog()
     }
 
-    private fun manageGetVideoMetadataResult(result: Result<CameraConnectVideoMetadata>) {
-        when (result) {
-            is Result.Success -> {
-                currentMetadata = result.data
-                setVideoMetadata(result.data)
+    private fun manageGetVideoMetadataResult(result: Result<DomainVideoMetadata>) {
+        with(result) {
+            doIfSuccess {
+                currentMetadata = it
+                setVideoMetadata(it)
+                CameraInfo.areNewChanges = true
             }
-            is Result.Error -> this.showToast(
-                getString(R.string.get_video_metadata_error),
-                Toast.LENGTH_SHORT
-            )
-        }
-    }
-
-    private fun manageGetVideoInformationResult(result: Result<DomainInformationVideo>) {
-        when (result) {
-            is Result.Success -> {
-                totalDurationVideoInMilliSeconds = result.data.duration.toLong() * 1000
-                domainInformationVideo = result.data
-                createVideoPlaybackInSurface(result.data)
-                playVideoPlayback()
-                updateCurrentTimeInVideo()
-                configureObserveCurrentTimeVideo()
-                setVideoInformation()
-            }
-            is Result.Error -> {
-                if (isAllowedToAttemptToGetInformation()) {
-                    currentAttempts += 1
-                    connectVideo?.let { videoPlaybackViewModel.getInformationResourcesVideo(it) }
-                    return
-                }
-
-                val messageToast = result.exception.message ?: ERROR_IN_GET_INFORMATION_OF_VIDEO
-                this.showToast(messageToast, Toast.LENGTH_SHORT)
+            doIfError {
+                this@VideoPlaybackActivity.showToast(
+                    getString(R.string.get_video_metadata_error),
+                    Toast.LENGTH_SHORT
+                )
                 finish()
             }
         }
     }
 
-    private fun setVideoMetadata(cameraConnectVideoMetadata: CameraConnectVideoMetadata) {
-        cameraConnectVideoMetadata.metadata?.run {
+    private fun manageGetVideoInformationResult(result: Result<DomainInformationVideo>) {
+        with(result) {
+            doIfSuccess {
+                totalDurationVideoInMilliSeconds = it.duration.toLong() * 1000
+                domainInformationVideo = it
+                createVideoPlaybackInSurface(it)
+                playVideoPlayback()
+                setVideoInformation()
+            }
+            doIfError {
+                if (isAllowedToAttemptToGetInformation()) {
+                    currentAttempts += 1
+                    currentVideo?.let(videoPlaybackViewModel::getInformationOfVideo)
+                } else {
+                    baseContext.showToast(
+                        getString(R.string.error_get_information_metadata),
+                        Toast.LENGTH_SHORT
+                    )
+                    finish()
+                }
+            }
+        }
+    }
+
+    private fun setVideoMetadata(videoMetadata: DomainVideoMetadata) {
+        videoMetadata.metadata?.run {
             eventValue.setSelection(getSpinnerSelection(eventList, event?.name))
             partnerIdValue.setText(partnerID)
             ticket1Value.setText(ticketNumber)
@@ -224,7 +327,7 @@ class VideoPlaybackActivity : BaseActivity() {
             dispatch1Value.setText(dispatchNumber)
             dispatch2Value.setText(dispatchNumber2)
             locationValue.setText(location)
-            remarksValue.setText(remarks)
+            notesValue.setText(remarks)
             firstNameValue.setText(firstName)
             lastNameValue.setText(lastName)
             genderValue.setSelection(getSpinnerSelection(genderList, gender))
@@ -232,23 +335,15 @@ class VideoPlaybackActivity : BaseActivity() {
             driverLicenseValue.setText(driverLicense)
             licensePlateValue.setText(licensePlate)
         }
-        if (linkedPhotoList.isNullOrEmpty()) {
-            linkedPhotoList =
-                cameraConnectVideoMetadata.photos as ArrayList<PhotoAssociated>?
-            linkedPhotoDateList =
-                cameraConnectVideoMetadata.photos?.map { it.date } as ArrayList<String>?
 
+        (videoMetadata.associatedPhotos)?.let {
+            SnapshotsAssociatedByUser.setTemporalValue(it as MutableList)
+            SnapshotsAssociatedByUser.setFinalValue(it)
+            associateSnapshotsFragment.setSnapshotsAssociatedFromMetadata(it)
         }
-        updateLinkedPhotosField()
-        dialog.dismiss()
-    }
 
-    private fun updateLinkedPhotosField() {
-        linkedPhotosValue.text = ""
-        linkedPhotoDateList?.forEach {
-            linkedPhotosValue.append(it)
-            linkedPhotosValue.append("\n")
-        }
+        showSnapshotsAssociated()
+        hideLoadingDialog()
     }
 
     private fun getSpinnerSelection(list: List<String>, value: String?): Int {
@@ -257,88 +352,127 @@ class VideoPlaybackActivity : BaseActivity() {
     }
 
     private fun verifyIfSelectedVideoWasChanged() {
-        val videoWasChanged = getCameraConnectFileFromIntent() != connectVideo
+        val videoWasChanged = getCameraConnectFileFromIntent() != currentVideo
         if (videoWasChanged) {
             restartObjectOfCompanion()
         }
     }
 
-    private fun createDialog() {
-        dialog = this.createAlertProgress()
+    private fun handleAssociateSnapshots() {
+        bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+        associateSnapshotsFragment.setSnapshotsAssociatedFromMetadata(SnapshotsAssociatedByUser.temporal)
+        SnapshotsAssociatedByUser.setFinalValue(SnapshotsAssociatedByUser.temporal)
+        showSnapshotsAssociated()
+        layoutVideoPlayback.showSuccessSnackBar(getString(R.string.snapshots_added_success))
     }
 
-    private fun configureListeners() {
-        buttonPlay.setOnClickListenerCheckConnection {
-            manageButtonPlayPause()
-        }
-        buttonFullScreen.setOnClickListenerCheckConnection {
-            changeOrientationScreen()
-        }
-        buttonAspect.setOnClickListenerCheckConnection {
-            videoPlaybackViewModel.changeAspectRatio()
-        }
-        saveButtonVideoPlayback.setOnClickListenerCheckConnection {
-            saveVideoMetadataInCamera()
-        }
-        cancelButtonVideoPlayback.setOnClickListenerCheckConnection {
-            onBackPressed()
-        }
-        buttonLinkSnapshots.setOnClickListenerCheckConnection {
-            val intent = Intent(this, LinkSnapshotsActivity::class.java)
-            linkedPhotoList?.run {
-                intent.putStringArrayListExtra(
-                    SNAPSHOTS_LINKED,
-                    map { it.name } as ArrayList<String>)
-                intent.putStringArrayListExtra(
-                    SNAPSHOTS_DATE_SELECTED,
-                    map { it.date } as ArrayList<String>)
+    private fun showSnapshotsAssociated() {
+        layoutAssociatedSnapshots?.removeAllViews()
+        layoutAssociatedSnapshots?.isVisible = !SnapshotsAssociatedByUser.value.isNullOrEmpty()
+        SnapshotsAssociatedByUser.value.forEach {
+            layoutAssociatedSnapshots?.childCount?.let { position ->
+                createTagInPosition(position, it.date)
             }
-            startActivityForResult(intent, 1)
         }
-        configureListenerSeekBar()
+    }
+
+    private fun createTagInPosition(position: Int, text: String) {
+        layoutAssociatedSnapshots?.addView(
+            SafeFleetFilterTag(this, null, 0).apply {
+                tagText = text
+                onClicked = {
+                    removeAssociatedSnapshot(text)
+                    showSnapshotsAssociated()
+                }
+            }, position
+        )
+    }
+
+    private fun removeAssociatedSnapshot(date: String) {
+        val index = SnapshotsAssociatedByUser.value.indexOfFirst {
+            it.date == date
+        }
+        if (index >= 0) {
+            SnapshotsAssociatedByUser.value.removeAt(index)
+            SnapshotsAssociatedByUser.setTemporalValue(SnapshotsAssociatedByUser.value)
+            associateSnapshotsFragment.setSnapshotsAssociatedFromMetadata(SnapshotsAssociatedByUser.value)
+        }
+    }
+
+    private fun showAssociateSnapshotsBottomSheet() {
+        pauseVideoPlayback()
+        supportFragmentManager.attachFragment(
+            R.id.fragmentAssociateHolder,
+            associateSnapshotsFragment,
+            AssociateSnapshotsFragment.TAG
+        )
+        bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+        SnapshotsAssociatedByUser.setTemporalValue(SnapshotsAssociatedByUser.value)
+    }
+
+    private fun configureMediaEventListener() {
+        videoPlaybackViewModel.setMediaEventListener {
+            when (it.type) {
+                MediaPlayer.Event.EncounteredError -> {
+                    domainInformationVideo?.let(::createVideoPlaybackInSurface)
+                }
+                MediaPlayer.Event.MediaChanged -> {
+                    playVideoPlayback()
+                }
+                MediaPlayer.Event.TimeChanged -> {
+                    manageCurrentTimeInVideo(videoPlaybackViewModel.getTimeInMillisMediaPlayer())
+                }
+            }
+        }
     }
 
     private fun saveVideoMetadataInCamera() {
+        hideKeyboard()
         if (eventValue.selectedItem == eventList[0]) {
-            this.showToast(getString(R.string.event_mandatory), Toast.LENGTH_SHORT)
+            layoutVideoPlayback.showErrorSnackBar(getString(R.string.event_mandatory))
             return
         }
-        dialog.show()
+        CameraInfo.areNewChanges = true
+        showLoadingDialog()
         videoPlaybackViewModel.saveVideoMetadata(getNewMetadataFromForm())
         isVideoMetadataChangesSaved = true
     }
 
     private fun manageButtonPlayPause() {
         if (videoPlaybackViewModel.isMediaPlayerPlaying()) {
-            pauseVideoPlayback()
+            if (currentProgressInVideo == 100) {
+                currentProgressInVideo = 0
+                playVideoPlayback()
+            } else {
+                pauseVideoPlayback()
+            }
         } else {
             playVideoPlayback()
         }
     }
 
     private fun getInformationOfVideo() {
-        dialog.show()
-        connectVideo = getCameraConnectFileFromIntent()
-        connectVideo?.run {
-            videoPlaybackViewModel.getInformationResourcesVideo(this)
+        currentVideo = getCameraConnectFileFromIntent()
+        currentVideo?.run {
+            videoPlaybackViewModel.getInformationOfVideo(this)
         }
     }
 
     private fun getVideoMetadata() {
-        connectVideo?.run {
+        currentVideo?.run {
             videoPlaybackViewModel.getVideoMetadata(name, nameFolder)
         }
     }
 
-    private fun getCameraConnectFileFromIntent(): CameraConnectFile {
-        return intent?.getSerializableExtra(CAMERA_CONNECT_FILE) as CameraConnectFile
-    }
+    private fun getCameraConnectFileFromIntent() =
+        intent?.getSerializableExtra(DOMAIN_CAMERA_FILE) as DomainCameraFile
+
 
     private fun isAllowedToAttemptToGetInformation() = currentAttempts <= ATTEMPTS_ALLOWED
 
     private fun setVideoInformation() {
-        videoNameValue.text = connectVideo?.name
-        startTimeValue.text = connectVideo?.getCreationDate()
+        videoNameValue.text = currentVideo?.name
+        startTimeValue.text = currentVideo?.getCreationDate()
         durationValue.text = totalDurationVideoInMilliSeconds.convertMilliSecondsToString()
     }
 
@@ -352,21 +486,21 @@ class VideoPlaybackActivity : BaseActivity() {
     private fun playVideoPlayback() {
         buttonPlay.setImageResource(R.drawable.ic_media_pause)
         updateLiveOrPlaybackActive(true)
-        videoPlaybackViewModel.playVLCMediaPlayer()
-        if (currentProgressInVideo in 1..99) {
-            setProgressToVideo(currentProgressInVideo)
-        }
+        videoPlaybackViewModel.playMediaPlayer()
+        setProgressToVideo(currentProgressInVideo)
+        buttonAspect.isClickable = true
     }
 
     private fun pauseVideoPlayback() {
         buttonPlay.setImageResource(R.drawable.ic_media_play)
         updateLiveOrPlaybackActive(false)
         videoPlaybackViewModel.pauseMediaPlayer()
+        buttonAspect.isClickable = false
     }
 
-    private fun changeOrientationScreen() {
+    private fun changeScreenOrientation() {
         requestedOrientation =
-            if (resources.configuration.orientation == ActivityInfo.SCREEN_ORIENTATION_PORTRAIT) {
+            if (isInPortraitMode()) {
                 ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
             } else {
                 ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
@@ -374,17 +508,17 @@ class VideoPlaybackActivity : BaseActivity() {
     }
 
     override fun onBackPressed() {
-        if (areLinkedSnapshotsChangesSaved && !verifyVideoMetadataWasEdited()) {
-            videoPlaybackViewModel.stopMediaPlayer()
-            super.onBackPressed()
+        if (isInPortraitMode()) {
+            if (bottomSheetBehavior.state == BottomSheetBehavior.STATE_HIDDEN) {
+                videoPlaybackViewModel.stopMediaPlayer()
+                if (verifyVideoMetadataWasEdited())
+                    this.createAlertDialogUnsavedChanges()
+                else super.onBackPressed()
+            } else {
+                bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+            }
         } else {
-            val alertInformation = AlertInformation(
-                R.string.metadata_confirmation,
-                R.string.metadata_confirmation_message,
-                ::closeWithoutSave,
-                {}, null
-            )
-            this.createAlertInformation(alertInformation)
+            changeScreenOrientation()
         }
     }
 
@@ -429,14 +563,15 @@ class VideoPlaybackActivity : BaseActivity() {
                             fromJson.driverLicense != fromForm.driverLicense ||
                             fromJson.licensePlate != fromForm.licensePlate ||
                             fromJson.gender != fromForm.gender ||
-                            fromJson.race != fromForm.race
+                            fromJson.race != fromForm.race ||
+                            currentMetadata.associatedPhotos != SnapshotsAssociatedByUser.value
                 } ?: false
             }
         }
         return false
     }
 
-    private fun getNewMetadataFromForm(): CameraConnectVideoMetadata {
+    private fun getNewMetadataFromForm(): DomainVideoMetadata {
 
         var gender: String? = null
         var race: String? = null
@@ -453,13 +588,9 @@ class VideoPlaybackActivity : BaseActivity() {
             race = raceValue.selectedItem.toString()
         }
 
-        return CameraConnectVideoMetadata(
+        return DomainVideoMetadata(
             videoNameValue.text.toString(),
-            CameraInfo.officerId,
-            connectVideo?.path,
-            connectVideo?.nameFolder,
-            CameraInfo.serialNumber,
-            VideoMetadata(
+            DomainMetadata(
                 event = event,
                 partnerID = partnerIdValue.text.toString(),
                 ticketNumber = ticket1Value.text.toString(),
@@ -469,7 +600,7 @@ class VideoPlaybackActivity : BaseActivity() {
                 dispatchNumber = dispatch1Value.text.toString(),
                 dispatchNumber2 = dispatch2Value.text.toString(),
                 location = locationValue.text.toString(),
-                remarks = remarksValue.text.toString(),
+                remarks = notesValue.text.toString(),
                 firstName = firstNameValue.text.toString(),
                 lastName = lastNameValue.text.toString(),
                 gender = gender,
@@ -477,7 +608,11 @@ class VideoPlaybackActivity : BaseActivity() {
                 driverLicense = driverLicenseValue.text.toString(),
                 licensePlate = licensePlateValue.text.toString()
             ),
-            linkedPhotoList
+            currentVideo?.nameFolder,
+            CameraInfo.officerId,
+            currentVideo?.path,
+            SnapshotsAssociatedByUser.value,
+            CameraInfo.serialNumber
         )
     }
 
@@ -497,57 +632,6 @@ class VideoPlaybackActivity : BaseActivity() {
             if (driverLicense.isNullOrEmpty()) driverLicense = ""
             if (licensePlate.isNullOrEmpty()) licensePlate = ""
         }
-    }
-
-    private fun closeWithoutSave(dialogInterface: DialogInterface) {
-        dialogInterface.dismiss()
-        finish()
-    }
-
-    private fun updateCurrentTimeInVideo() {
-        videoPlaybackViewModel.getTimeInMillisMediaPlayer()
-    }
-
-    private fun configureObserveCurrentTimeVideo() {
-        videoPlaybackViewModel.currentTimeVideo.observe(this, Observer {
-            updateCurrentTimeInVideo()
-            if (it != currentTimeVideoInMilliSeconds) {
-                currentTimeVideoInMilliSeconds = it
-                updateProgressVideoInView()
-            }
-
-            if (currentProgressInVideo == 100 && videoPlaybackViewModel.isMediaPlayerPlaying()) {
-                updateLastInteraction()
-                pauseVideoPlayback()
-            }
-        })
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == 1) {
-            if (resultCode == Activity.RESULT_OK) {
-                this.showToast(getString(R.string.image_linked_success), Toast.LENGTH_SHORT)
-                handleLinkedSnapshotsResult(data)
-            }
-        }
-    }
-
-    private fun handleLinkedSnapshotsResult(data: Intent?) {
-        val snapshotsNameList = data?.getStringArrayListExtra(SNAPSHOTS_SELECTED)
-        val tmpList: ArrayList<PhotoAssociated>? = ArrayList()
-        linkedPhotoDateList = data?.getStringArrayListExtra(SNAPSHOTS_DATE_SELECTED)
-        snapshotsNameList?.forEachIndexed { index, fileName ->
-            tmpList?.add(
-                PhotoAssociated(
-                    fileName,
-                    linkedPhotoDateList?.get(index) ?: ""
-                )
-            )
-        }
-        linkedPhotoList = tmpList
-        areLinkedSnapshotsChangesSaved = false
-        updateLinkedPhotosField()
     }
 
     private fun updateProgressVideoInView() {
@@ -590,10 +674,10 @@ class VideoPlaybackActivity : BaseActivity() {
     }
 
     private fun setProgressToVideo(progress: Int) {
-        Thread.sleep(500)
+        currentProgressInVideo = progress
         videoPlaybackViewModel.setProgressMediaPlayer(progress.toFloat())
         seekProgressVideo.progress = progress
-        updateCurrentTimeInVideo()
+        currentTimeVideoInMilliSeconds = totalDurationVideoInMilliSeconds * (progress / 100)
     }
 
     private fun restartObjectOfCompanion() {
@@ -603,13 +687,17 @@ class VideoPlaybackActivity : BaseActivity() {
         currentProgressInVideo = 0
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        SnapshotsAssociatedByUser.cleanList()
+    }
+
     companion object {
-        private var connectVideo: CameraConnectFile? = null
+        private var currentVideo: DomainCameraFile? = null
         private var domainInformationVideo: DomainInformationVideo? = null
         private var totalDurationVideoInMilliSeconds: Long = 0
         private var currentTimeVideoInMilliSeconds: Long = 0
         private var currentProgressInVideo = 0
-        const val ERROR_IN_GET_INFORMATION_OF_VIDEO = "Error in get information of video"
         const val ATTEMPTS_ALLOWED = 2
     }
 }

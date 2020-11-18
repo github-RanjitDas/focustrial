@@ -1,36 +1,50 @@
 package com.safefleet.lawmobile.screens
 
+import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.matcher.ViewMatchers.withId
 import com.safefleet.lawmobile.R
-import com.schibsted.spain.barista.assertion.BaristaBackgroundAssertions.assertHasBackground
+import com.safefleet.lawmobile.helpers.isActivated
+import com.safefleet.lawmobile.helpers.isNotActivated
 import com.schibsted.spain.barista.assertion.BaristaVisibilityAssertions.assertDisplayed
 import com.schibsted.spain.barista.assertion.BaristaVisibilityAssertions.assertNotDisplayed
 import com.schibsted.spain.barista.assertion.BaristaVisibilityAssertions.assertNotExist
 import com.schibsted.spain.barista.interaction.BaristaClickInteractions.clickOn
-import com.schibsted.spain.barista.interaction.BaristaSleepInteractions
 
 class LiveViewScreen : BaseScreen() {
 
     fun isLiveViewNotDisplayed() {
         assertNotExist(R.id.buttonSwitchLiveView)
         assertNotExist(R.id.liveStreamingView)
-        assertNotExist(R.id.buttonStreaming)
+        assertNotExist(R.id.buttonRecord)
         assertNotExist(R.id.buttonSnapshot)
+        assertNotExist(R.id.buttonOpenHelpPage)
     }
 
     fun isLiveViewDisplayed() {
         assertDisplayed(R.id.liveStreamingView)
         assertDisplayed(R.id.toggleFullScreenLiveView)
 
-        assertDisplayed(R.id.buttonSnapshot)
-        assertDisplayed(R.string.snap)
+        assertDisplayed(R.id.imageViewBattery)
+        assertDisplayed(R.id.textViewBatteryPercent)
+        assertDisplayed(R.id.progressBatteryLevel)
 
-        assertDisplayed(R.id.buttonStreaming)
-        assertDisplayed(R.string.record)
+        assertDisplayed(R.id.imageViewStorage)
+        assertDisplayed(R.id.textViewStorageLevels)
+        assertDisplayed(R.id.progressStorageLevel)
+
+        assertDisplayed(R.id.buttonSnapshot)
+        assertDisplayed(R.string.take_snapshots)
+
+        assertDisplayed(R.id.buttonRecord)
+        assertDisplayed(R.string.record_video)
+
+        assertDisplayed(R.id.buttonOpenHelpPage)
 
         assertDisplayed(R.id.textLiveViewSwitch, R.string.live_view_label)
 
         assertDisplayed(R.id.buttonSnapshotList)
-        assertDisplayed(R.string.snapshots)
+        assertDisplayed(R.string.view_snapshots)
 
         assertDisplayed(R.id.buttonVideoList)
         assertDisplayed(R.string.videos)
@@ -38,7 +52,7 @@ class LiveViewScreen : BaseScreen() {
 
     fun isVideoInFullScreen() {
         assertNotDisplayed(R.id.buttonSwitchLiveView)
-        assertNotDisplayed(R.id.buttonStreaming)
+        assertNotDisplayed(R.id.buttonRecord)
         assertNotDisplayed(R.id.buttonSnapshot)
 
         assertDisplayed(R.id.liveStreamingView)
@@ -46,49 +60,49 @@ class LiveViewScreen : BaseScreen() {
     }
 
     fun isLiveViewToggleDisabled() {
-        assertHasBackground(R.id.buttonSwitchLiveView, R.drawable.ic_switch_off)
+        onView(withId(R.id.buttonSwitchLiveView)).check(matches(isNotActivated()))
     }
 
     fun isLiveViewToggleEnabled() {
-        assertHasBackground(R.id.buttonSwitchLiveView, R.drawable.ic_switch_on)
+        onView(withId(R.id.buttonSwitchLiveView)).check(matches(isActivated()))
     }
 
     fun isRecordingNotInProgress() {
-        assertHasBackground(R.id.buttonStreaming, R.drawable.ic_record_selector)
-        assertNotDisplayed(R.id.imageRecordingIndicator)
+        onView(withId(R.id.buttonRecord)).check(matches(isNotActivated()))
+        assertNotDisplayed(R.id.textLiveViewRecording)
     }
 
     fun isRecordingInProgress() {
-        assertHasBackground(R.id.buttonStreaming, R.drawable.ic_record_active)
-        assertDisplayed(R.id.imageRecordingIndicator)
+        onView(withId(R.id.buttonRecord)).check(matches(isActivated()))
+        assertDisplayed(R.id.textLiveViewRecording)
+    }
+
+    fun isUserGuideDisplayed() {
+        assertDisplayed(R.id.pdfView)
     }
 
     fun switchLiveViewToggle() = clickOn(R.id.buttonSwitchLiveView)
 
-    fun switchFullScreenMode() {
-        clickOn(R.id.toggleFullScreenLiveView)
-        BaristaSleepInteractions.sleep(1000)
-    }
+    fun switchFullScreenMode() = clickOn(R.id.toggleFullScreenLiveView)
 
-    fun openSnapshotsList() = clickOn(R.id.buttonSnapshotList)
+    fun openSnapshotList() = clickOn(R.id.buttonSnapshotList)
 
-    fun openVideosList() = clickOn(R.id.buttonVideoList)
+    fun openVideoList() = clickOn(R.id.buttonVideoList)
+
+    fun openHelpPage() = clickOn(R.id.buttonOpenHelpPage)
 
     fun takeSnapshot() {
         clickOn(R.id.buttonSnapshot)
-        toastMessage.isToastDisplayed(R.string.live_view_take_photo_success)
-        toastMessage.waitUntilToastDisappears(R.string.live_view_take_photo_success)
+        assertDisplayed(R.string.live_view_take_photo_success)
     }
 
     fun startRecording() {
-        this.isRecordingNotInProgress()
-        clickOn(R.id.buttonStreaming)
-        this.isRecordingInProgress()
+        isRecordingNotInProgress()
+        clickOn(R.id.buttonRecord)
     }
 
     fun stopRecording() {
-        this.isRecordingInProgress()
-        clickOn(R.id.buttonStreaming)
-        this.isRecordingNotInProgress()
+        isRecordingInProgress()
+        clickOn(R.id.buttonRecord)
     }
 }

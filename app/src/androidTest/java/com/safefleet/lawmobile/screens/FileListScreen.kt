@@ -1,53 +1,33 @@
 package com.safefleet.lawmobile.screens
 
-import androidx.test.espresso.assertion.ViewAssertions.matches
-import androidx.test.espresso.matcher.ViewMatchers.*
-import com.lawmobile.presentation.extensions.getCreationDate
+import androidx.annotation.IdRes
+import androidx.annotation.StringRes
+import androidx.test.espresso.assertion.ViewAssertions
+import com.lawmobile.data.extensions.getCreationDate
 import com.safefleet.lawmobile.R
+import com.safefleet.lawmobile.helpers.CustomCheckboxAction
+import com.safefleet.lawmobile.helpers.isActivated
+import com.safefleet.lawmobile.helpers.isNotActivated
 import com.safefleet.mobile.avml.cameras.entities.CameraConnectFile
-import com.schibsted.spain.barista.assertion.BaristaListAssertions.assertCustomAssertionAtPosition
-import com.schibsted.spain.barista.assertion.BaristaListAssertions.assertDisplayedAtPosition
-import com.schibsted.spain.barista.assertion.BaristaVisibilityAssertions
+import com.schibsted.spain.barista.assertion.BaristaImageViewAssertions.assertHasDrawable
+import com.schibsted.spain.barista.assertion.BaristaListAssertions
+import com.schibsted.spain.barista.assertion.BaristaRecyclerViewAssertions
+import com.schibsted.spain.barista.assertion.BaristaVisibilityAssertions.assertDisplayed
+import com.schibsted.spain.barista.assertion.BaristaVisibilityAssertions.assertNotDisplayed
 import com.schibsted.spain.barista.interaction.BaristaClickInteractions.clickOn
-import com.schibsted.spain.barista.interaction.BaristaListInteractions.clickListItemChild
-import com.schibsted.spain.barista.interaction.BaristaListInteractions.scrollListToPosition
+import com.schibsted.spain.barista.interaction.BaristaEditTextInteractions.writeTo
+import com.schibsted.spain.barista.interaction.BaristaListInteractions
 
 class FileListScreen : BaseScreen() {
 
-    private fun isFileDisplayedAtPosition(fileDate: String, position: Int) {
-        assertDisplayedAtPosition(R.id.snapshotListRecycler, position, fileDate)
-    }
+    @IdRes
+    var recyclerView: Int = R.id.fileListRecycler
 
-    fun areFilesSortedByDate(filesList: List<CameraConnectFile>) {
-        val sortedFilesList = filesList.sortedByDescending { it.getCreationDate() }
+    @IdRes
+    var targetView: Int = 0
 
-        for ((itemCount, file) in sortedFilesList.withIndex()) {
-            this.isFileDisplayedAtPosition(file.date, itemCount)
-        }
-    }
-
-    fun selectCheckboxOnPosition(position: Int): FileListScreen {
-        clickListItemChild(R.id.snapshotListRecycler, position, R.id.checkboxFileListItem)
-        return this
-    }
-
-    fun isCheckboxSelected(position: Int): FileListScreen {
-        assertCustomAssertionAtPosition(
-            R.id.snapshotListRecycler,
-            position,
-            viewAssertion = matches(withChild(isChecked()))
-        )
-        return this
-    }
-
-    fun isCheckboxUnselected(position: Int): FileListScreen {
-        assertCustomAssertionAtPosition(
-            R.id.snapshotListRecycler,
-            position,
-            viewAssertion = matches(withChild(isNotChecked()))
-        )
-        return this
-    }
+    @IdRes
+    var targetCheckBox: Int = 0
 
     fun areCheckboxesUnselected(startPosition: Int, endPosition: Int) {
         for (position in (startPosition..endPosition)) {
@@ -56,15 +36,103 @@ class FileListScreen : BaseScreen() {
     }
 
     fun scrollListToPosition(position: Int) {
-        scrollListToPosition(R.id.snapshotListRecycler, position)
+        BaristaListInteractions.scrollListToPosition(recyclerView, position)
     }
 
-    fun switchToVideosList() = clickOn(R.id.buttonVideoListSwitch)
+    private fun isFileDisplayedAtPosition(fileDate: String, position: Int) {
+        BaristaListAssertions.assertDisplayedAtPosition(
+            recyclerView,
+            position,
+            targetView,
+            fileDate
+        )
+    }
 
-    fun switchToSnapshotsList() = clickOn(R.id.buttonSnapshotListSwitch)
+    fun areFilesSortedByDate(filesList: List<CameraConnectFile>) {
+        val sortedFilesList = filesList.sortedByDescending { it.getCreationDate() }
 
-    fun areNoSnapshotsFound() =
-        BaristaVisibilityAssertions.assertDisplayed(R.id.noFilesTextView, R.string.no_images_found)
+        for ((itemCount, file) in sortedFilesList.withIndex()) {
+            isFileDisplayedAtPosition(file.getCreationDate(), itemCount)
+        }
+    }
 
+    fun selectCheckboxOnPosition(position: Int) {
+        CustomCheckboxAction.selectCheckboxOnRecyclerPosition(
+            recyclerView,
+            targetCheckBox,
+            position
+        )
+    }
 
+    fun isCheckboxSelected(position: Int) {
+        BaristaListAssertions.assertCustomAssertionAtPosition(
+            recyclerView,
+            position,
+            targetCheckBox,
+            ViewAssertions.matches(isActivated())
+        )
+    }
+
+    fun isCheckboxUnselected(position: Int) {
+        BaristaListAssertions.assertCustomAssertionAtPosition(
+            recyclerView,
+            position,
+            targetCheckBox,
+            ViewAssertions.matches(isNotActivated())
+        )
+    }
+
+    fun checkFileEvent(event: String?) = event?.let { assertDisplayed(it) }
+
+    fun isFileListDisplayed() = assertDisplayed(R.id.fileListRecycler)
+
+    fun areNoFilesFound(@StringRes message: Int) =
+        assertDisplayed(R.id.noFilesTextView, message)
+
+    fun clickOnBack() = clickOn(R.id.backArrowFileListAppBar)
+
+    fun clickOnItemInPosition(position: Int) =
+        BaristaListInteractions.clickListItem(recyclerView, position)
+
+    fun clickOnSelectFilesToAssociate() = clickOn(R.id.buttonSelectSnapshotsToAssociate)
+
+    fun clickOnAssociateWithAnOfficer() = clickOn(R.string.associate_with_an_officer)
+
+    fun clickOnButtonAssignToOfficer() = clickOn(R.id.buttonAssignToOfficer)
+
+    fun clickOnSimpleListButton() = clickOn(R.id.buttonSimpleList)
+
+    fun typeOfficerIdToAssociate(officerId: String) =
+        writeTo(R.id.editTextAssignToOfficer, officerId)
+
+    fun openFilterDialog() {
+        clickOn(R.id.buttonOpenFilters)
+        assertDisplayed(R.id.startDateTextView)
+        assertDisplayed(R.id.endDateTextView)
+        assertDisplayed(R.id.buttonApplyFilter)
+        assertDisplayed(R.id.buttonCancelFilter)
+    }
+
+    fun clickOnRemoveTag() {
+        clickOn(R.id.buttonClearTag)
+        assertNotDisplayed(R.id.scrollFilterTags)
+        assertHasDrawable(R.id.buttonOpenFilters, R.drawable.ic_filter)
+    }
+
+    fun matchItemsCount(count: Int) =
+        BaristaRecyclerViewAssertions.assertRecyclerViewItemCount(recyclerView, count)
+
+    fun isFilterButtonDisplayed() = assertDisplayed(R.id.buttonOpenFilters)
+
+    fun isFilterActive() {
+        assertDisplayed(R.id.scrollFilterTags)
+        assertHasDrawable(R.id.buttonOpenFilters, R.drawable.ic_filter_white)
+    }
+
+    fun isFilterNotActive() {
+        assertNotDisplayed(R.id.scrollFilterTags)
+        assertHasDrawable(R.id.buttonOpenFilters, R.drawable.ic_filter)
+    }
+
+    fun isNoFilesFoundDisplayed() = assertDisplayed(R.id.noFilesTextView)
 }

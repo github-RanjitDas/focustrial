@@ -1,10 +1,7 @@
 package com.safefleet.lawmobile.helpers
 
-import androidx.test.espresso.Espresso
 import androidx.test.platform.app.InstrumentationRegistry
-import androidx.test.rule.ActivityTestRule
 import androidx.test.uiautomator.UiDevice
-import com.lawmobile.presentation.ui.login.LoginActivity
 
 class DeviceUtils {
 
@@ -14,8 +11,4 @@ class DeviceUtils {
 
     fun switchToPortrait() = device.setOrientationNatural()
 
-    fun restartApp() {
-        Espresso.pressBackUnconditionally()
-        ActivityTestRule(LoginActivity::class.java).launchActivity(null)
-    }
 }

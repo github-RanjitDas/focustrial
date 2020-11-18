@@ -1,6 +1,6 @@
 <?xml version= "1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="background">background</string>
+
     <string name="focus_logo_background">Focus logo background</string>
     <string name="OK">OK</string>
     <string name="cancel">Cancel</string>
@@ -9,133 +9,184 @@
     <string name="the_camera_was_disconnected">Camera disconnected</string>
     <string name="the_camera_was_disconnected_description">Your X1 was disconnected from Focus Mobile App, please close the App and reconnect</string>
     <string name="loading_wait">Loading…</string>
-    <string name="taking_snapshot">Taking snapshot…</string>
     <string name="connection_finished">Connection Finished</string>
     <string name="connection_finished_description">After 5 minutes without interaction the BWC disconnects</string>
-    <string name="the_application_did_not_find_camera">The application could not find the camera</string>
-    <string name="confirm_app_exit_description">Are you sure you want to exit the Focus Mobile App?</string>
-    <string name="confirm_app_exit_title">Exit FMA</string>
     <string name="gps_necessary_title">Location is required</string>
     <string name="gps_necessary_description">Please turn ON location/GPS in order to use the app</string>
+    <string name="battery_alert_title">Low battery</string>
+    <string name="battery_alert_description">Low battery in your body-worn camera, please charge your body-worn camera</string>
+    <string name="storage_alert_title">Low memory capacity</string>
+    <string name="storage_alert_description">Your body-worn camera reached 95% of its memory capacity</string>
 
     <!-- Login -->
     <string name="please_enable_permission">Please enable permission from settings</string>
     <string name="please_enable_permission_location">Required location permission for pairing the camera</string>
-    <string name="waiting_for_camera" tools:ignore="ExtraTranslation">WAITING FOR \n CAMERA</string>
+    <string name="waiting_for_camera" tools:ignore="ExtraTranslation">Click here to connect\nwith the camera</string>
     <string name="go_to_validate_ssid">Go to validate ssid</string>
-    <string name="instructions_to_link_camera">INSTRUCTIONS TO LINK CAMERA</string>
-    <string name="connecting_to_camera">CONNECTING \n TO CAMERA</string>
-    <string name="circle_progress_connection_camera">Circle progress connection camera</string>
-    <string name="welcome_officer">WELCOME OFFICER</string>
-    <string name="exit">EXIT</string>
-    <string name="enter_password">ENTER PASSWORD</string>
-    <string name="incorrect_password">The password you have entered is incorrect</string>
+    <string name="instructions_to_link_camera">Instructions to link camera</string>
+    <string name="connecting_to_camera">Connecting to Camera</string>
+    <string name="welcome_officer">Please enter your password</string>
+    <string name="enter_password">Password</string>
+    <string name="incorrect_password">The password you have entered is incorrect, try again</string>
     <string name="wifi_is_off">The WiFi is off</string>
     <string name="please_turn_wifi_on">The WIFI is set to off on your device, please set the WIFI to on and reconnect the X1 with FMA</string>
 
     <!-- Live view -->
     <string name="image_description_full_screen_size">Full Screen size</string>
-    <string name="image_description_bottom_image">Bottom Image</string>
-    <string name="image_description_back_to_normal_size_screen">Back to normal size screen</string>
-    <string name="live_view_label">LIVE VIEW</string>
+    <string name="live_view_label">Live view</string>
+    <string name="logout">Exit FMA</string>
+    <string name="logout_message">Are you sure you want to exit the Focus Mobile App?</string>
 
     <!-- Snapshots -->
     <string name="live_view_take_photo_success">Snapshot captured successfully</string>
     <string name="live_view_take_photo_failed">The system failed to capture a snapshot</string>
     <string name="button_snapshot">Button Snapshot</string>
     <string name="button_streaming">Button Streaming</string>
-    <string name="snap">SNAP</string>
-    <string name="record">RECORD</string>
+    <string name="take_snapshots">Take Snapshots</string>
+    <string name="record_video">Record Video</string>
     <string name="snapshot_list">Snapshot List</string>
-    <string name="snapshots">SNAPSHOTS</string>
+    <string name="view_snapshots">View Snapshots</string>
     <string name="record_list">Record List</string>
-    <string name="videos">VIDEOS</string>
+    <string name="videos">View Videos</string>
 
     <!-- List of Snapshots and videos from camera -->
-    <string name="file_list_failed_load_files">Failed to Load Files</string>
-    <string name="file_list_date_default">DATE</string>
-    <string name="file_list_duration_default">DURATION</string>
-    <string name="file_list_event_default">EVENT</string>
-    <string name="button_snapshot_list_switch">buttonSnapshotListSwitch</string>
-    <string name="button_video_list_switch">buttonVideoListSwitch</string>
-    <string name="white_background">White Background</string>
-    <string name="no_images_found">No images found</string>
+    <string name="file_list_failed_load_files">Could not load files, please retry or checkout BWC again</string>
+    <string name="file_list_date_default"><u>Date</u></string>
+    <string name="file_list_event_default">Event</string>
+    <string name="no_images_found">No snapshots found</string>
     <string name="no_videos_found">No videos found</string>
-    <string name="back">BACK</string>
     <string name="getting_files_error">Getting files error</string>
-    <string name="getting_files_error_description">Access to a specific folder failed, folder name :</string>
+    <string name="getting_files_error_description">The system failed to retrieve all the requested files, please try again</string>
 
     <!-- Video playback -->
     <string name="play_pause_button_video_playback">Play/Pause button video playback</string>
     <string name="aspect_video_playback">Aspect video playback</string>
     <string name="video_default_time">00:00</string>
-    <string name="playback_start_time">START TIME</string>
-    <string name="playback_duration">DURATION</string>
-    <string name="playback_event">EVENT</string>
-    <string name="playback_partner_id">PARTNER ID</string>
-    <string name="playback_ticket_1">TICKET #1</string>
-    <string name="playback_ticket_2">TICKET #2</string>
-    <string name="playback_case_1">CASE #1</string>
-    <string name="playback_case_2">CASE #2</string>
-    <string name="playback_dispatch_1">DISPATCH #1</string>
-    <string name="playback_dispatch_2">DISPATCH #2</string>
-    <string name="playback_location">LOCATION</string>
-    <string name="playback_remarks">REMARKS</string>
-    <string name="playback_first_name">FIRST NAME</string>
-    <string name="playback_last_name">LAST NAME</string>
-    <string name="playback_gender">GENDER</string>
-    <string name="playback_race">RACE</string>
-    <string name="playback_driver_license">DRIVER LICENSE</string>
-    <string name="playback_license_plate">LICENSE PLATE</string>
+    <string name="playback_start_time">Start Time</string>
+    <string name="playback_duration">Duration</string>
+    <string name="playback_event">Event</string>
+    <string name="playback_partner_id">Partner ID</string>
+    <string name="playback_ticket_1">Ticket #1</string>
+    <string name="playback_ticket_2">Ticket #2</string>
+    <string name="playback_case_1">Case #1</string>
+    <string name="playback_case_2">Case #2</string>
+    <string name="playback_dispatch_1">Dispatch #1</string>
+    <string name="playback_dispatch_2">Dispatch #2</string>
+    <string name="playback_location">Location</string>
+    <string name="playback_notes">Notes</string>
+    <string name="playback_first_name">First Name</string>
+    <string name="playback_last_name">Last Name</string>
+    <string name="playback_gender">Gender</string>
+    <string name="playback_race">Race</string>
+    <string name="playback_driver_license">Driver License</string>
+    <string name="playback_license_plate">License Plate</string>
     <string name="select">Select</string>
+    <string name="select_event">Select event</string>
     <string name="event_mandatory">Please select Event Type</string>
-    <string name="catalog_error">Could not get the catalog lists</string>
-    <string name="get_video_metadata_error">Could not get video metadata</string>
+    <string name="catalog_error">Unable to get events, please retry or checkout BWC again</string>
+    <string name="catalog_error_video_playback">Unable to get events, please checkout BWC again</string>
+    <string name="get_video_metadata_error">Could not get video metadata, please try again</string>
     <string name="video_metadata_saved_success">The changes you have made were saved successfully</string>
-    <string name="video_metadata_save_error">Video metadata could not be saved</string>
+    <string name="video_metadata_save_error">Unable to save your changes, please try again</string>
+    <string name="unsaved_changes">Unsaved changes</string>
+    <string name="unsaved_changes_message">Are you sure you like to leave this page without saving any of your changes?</string>
 
     <!-- Snapshot detail -->
-    <string name="snapshot_item_detail_photo_name_title">PHOTO NAME: </string>
+    <string name="snapshot_item_detail_title">Snapshot Detail</string>
+    <string name="snapshot_item_detail_photo_name_title">Name</string>
     <string name="snapshot_item_detail_photo_name_value">Default</string>
-    <string name="snapshot_item_detail_date_time_title">DATE TIME: </string>
+    <string name="snapshot_item_detail_date_time_title">Date Time</string>
+    <string name="snapshot_item_detail_officer_assigned_title">Associated officer</string>
+    <string name="snapshot_item_detail_video_assigned_title">Assigned to video</string>
     <string name="snapshot_item_detail_date_time_value">YYYY-MM-DD HH:MM:SS</string>
-    <string name="snapshot_item_detail_size_title">SIZE(bytes): </string>
-    <string name="snapshot_item_detail_size_value">0</string>
     <string name="snapshot_item_detail_photo_content_description">Photo from BWC</string>
-    <string name="snapshot_detail_load_failed">Error loading snapshot</string>
+    <string name="snapshot_detail_load_failed">Unable to open snapshot, please go back or try again.</string>
     <string name="image_video_recording">Image video recording</string>
-    <string name="cancel_metadata" tools:ignore="ButtonCase">CANCEL</string>
-    <string name="save_metadata">SAVE</string>
-    <string name="playback_video_name">VIDEO NAME</string>
+    <string name="save_metadata">Save</string>
+    <string name="none">None</string>
+    <string name="playback_video_name">Name</string>
     <string name="default_text">DEFAULT TEXT</string>
-
+    <string name="snapshot_detail_metadata_error">Unable to get snapshot information, please try again.</string>
     <!-- link_snapshots -->
-    <string name="link_snapshot_message_loading">Loading snapshots</string>
 
     <!-- Partner Id -->
-    <string name="partner_id_title">ASSOCIATE PARTNER ID</string>
-    <string name="partner_id_edit_text_hint">ENTER PARTNER ID</string>
     <string name="associate_partner_id_content_description">Associate partner ID</string>
     <string name="file_list_associate_partner_id_success">The partner ID associated successfully</string>
     <string name="file_list_associate_partner_id_error">Partner ID could not be associated</string>
-    <string name="partner_id_button_disabled_message">Please select one or more files to associate</string>
     <string name="associate_partner_to_file_button">Associate partner to file button</string>
-    <string name="add_snapshot">ADD</string>
-    <string name="filename">FILENAME</string>
-    <string name="link_images_error">Something went wrong getting the images, please try again</string>
-    <string name="image_linked_success">Images added successfully</string>
     <string name="button_link_snapshots">buttonLinkSnapshots</string>
-    <string name="photo_for_associate_to_video">photo for associate to video</string>
-    <string name="metadata_confirmation">Unsaved changes</string>
-    <string name="metadata_confirmation_message">Are you sure you like to leave this page without saving any of your changes?</string>
     <string name="valid_partner_id_message">You must enter a valid Partner ID</string>
-    <string name="no_new_photo_selected_message">You have not selected any new photo</string>
     <string name="mobile_data_status_title">Mobile Data</string>
     <string name="mobile_data_status_message">Please disable Mobile Data on your device in order to connect the X1 with Focus Mobile App</string>
-    <string name="linked_photos_metadata_title">LINKED PHOTOS</string>
-    <string name="no_linked_photos">No linked photos</string>
-    <string name="loading_files_error">Could not retrieve the files, please try again</string>
-    <string name="verify_wifi_connection">Please verify the X1 WIFI connection between the X1 and Focus Mobile App</string>
+    <string name="verify_camera_wifi">Please verify the X1 WIFI connection between the X1 and Focus Mobile App</string>
+    <string name="error_saving_video">Error checking video saved in camera, please wait and try again</string>
+    <string name="go">GO</string>
+    <string name="login">Login</string>
+    <string name="success_connection_to_camera">You have successfully connected to the camera</string>
+    <string name="try_again_button_pairing">Try Again</string>
+    <string name="error_connection_to_camera">There was a problem connecting to your camera</string>
+    <string name="focus_mobile_app_logo">focus mobile app logo</string>
+    <string name="camera_status">Camera status</string>
+    <string name="memory_level">memory level</string>
+    <string name="battery_level">battery level</string>
+    <string name="recording">Recording</string>
+    <string name="stop">Stop</string>
+    <string name="taking_snapshot">Taking snapshot</string>
+    <string name="starting_recording">Starting recording</string>
+    <string name="stopping_recording">Stopping recording</string>
+    <string name="battery_percent"><![CDATA[<b>%1$d %%</b> - %2$s hour left]]></string>
+    <string name="storage_level"><![CDATA[Used  &nbsp;&nbsp; -  &nbsp;&nbsp; Free <br/><b>%1$s </b> - <b>%2$s </b>]]></string>
+    <string name="battery_level_error">Error retrieving battery level</string>
+    <string name="storage_level_error">Error retrieving storage level</string>
+    <string name="battery_percent_placeholder">100% - 10 hour left</string>
+    <string name="storage_level_placeholder">Used \  - \  Free\n 272 MB - 57.7GB</string>
+    <string name="app_bar_name_default">James</string>
+    <string name="app_bar_last_name_default">Mendez</string>
+    <string name="_1">1.</string>
+    <string name="instruction_1">Ensure that your Body-worn Camera (BWC) is charged. If you are using the ClipCam, connect it to your BWC.</string>
+    <string name="_2">2.</string>
+    <string name="instruction_2">Power on your BWC.</string>
+    <string name="_3">3.</string>
+    <string name="instruction_3">Long-press the pairing button until you see the Wi-Fi icon in the display area.</string>
+    <string name="_4">4.</string>
+    <string name="instruction_4">On your phone, enable Wi-Fi under Settings.</string>
+    <string name="_5">5.</string>
+    <string name="instruction_5">Tap on your BWC\'s SSID in the list of available networks. The SSID is an alphanumeric string that starts with an X.</string>
+    <string name="_6">6.</string>
+    <string name="instruction_6">When prompted, provide the SSID password to connect to the BWC.</string>
+    <string name="got_it">Got it!</string>
+    <string name="close_instructions">close instructions</string>
+    <string name="snapshots_title">Snapshots</string>
+    <string name="videos_title">Videos</string>
+    <string name="associate_with_an_officer">Associate with an officer</string>
+    <string name="select_snapshots_to_associate">Select snapshots to associate</string>
+    <string name="date_and_time">Date and time</string>
+    <string name="event">Event</string>
+    <string name="officer_id_hint">Officer ID</string>
+    <string name="assign_to_officer_subtitle">Enter officer ID</string>
+    <string name="file_item_image">file item image</string>
+    <string name="select_videos_to_associate">Select videos to associate</string>
+    <string name="button_help">\?</string>
+    <string name="add_images">Add snapshots</string>
+    <string name="associate_image_to_video">Associate snapshots to video</string>
+    <string name="video_detail">Video Detail</string>
+    <string name="time_divider"> / </string>
+    <string name="title">Title</string>
+    <string name="filter_title">Filter</string>
+    <string name="apply">Apply</string>
+    <string name="start_date_filter">Start date</string>
+    <string name="end_date_filter">End date</string>
+    <string name="no_event">No event</string>
+    <string name="error_get_information_metadata">Unable to get video information, please try again</string>
+    <string name="error_getting_officer_information">Unable to open officer information, please retry or checkout BWC</string>
+    <string name="associate_snapshots_to_video">Associate snapshots to video</string>
+    <string name="associate_images">Associate snapshots</string>
+    <string name="no_new_photo_selected_message">Not selected any new photos</string>
+    <string name="snapshots_added_success">Snapshots added successfully</string>
+    <string name="items_selected" tools:ignore="PluralsCandidate">%1$d Selected</string>
+    <string name="no_snapshots_filter">No snapshots match to these criteria</string>
+    <string name="no_videos_filter">No videos match to these criteria</string>
+    <string name="not_available">Not available</string>
 
     <string-array name="gender_spinner">
         <item>Select</item>

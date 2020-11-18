@@ -7,18 +7,19 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
 
     <application
         android:name=".BaseApplication"
         android:allowBackup="true"
         android:fullBackupContent="true"
-        android:icon="@mipmap/ic_logo_x1"
+        android:icon="@mipmap/ic_launcher"
+        android:roundIcon="@mipmap/ic_launcher_rounded"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_logo_x1"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        tools:ignore="Instantiatable">
+
         <activity
             android:name="com.lawmobile.presentation.ui.login.LoginActivity"
             android:screenOrientation="portrait"
@@ -29,6 +30,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name="com.lawmobile.presentation.ui.live.LiveActivity"
             android:screenOrientation="portrait"
@@ -43,21 +45,19 @@
 
         <activity
             android:name="com.lawmobile.presentation.ui.fileList.FileListActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
             tools:ignore="LockedOrientationActivity" />
 
         <activity
             android:name="com.lawmobile.presentation.ui.snapshotDetail.SnapshotDetailActivity"
-            android:theme="@style/AppTheme.NoActionBar"
-            tools:ignore="LockedOrientationActivity" />
-
-        <activity
-            android:name="com.lawmobile.presentation.ui.linkSnapshotsToVideo.LinkSnapshotsActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
             tools:ignore="LockedOrientationActivity" />
 
         <activity
             android:name="com.lawmobile.presentation.ui.helpSection.HelpPageActivity"
+            android:screenOrientation="portrait"
             android:label="User Guide"
             android:parentActivityName="com.lawmobile.presentation.ui.login.LoginActivity" />
 

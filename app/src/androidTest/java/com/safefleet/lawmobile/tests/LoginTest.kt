@@ -3,103 +3,129 @@ package com.safefleet.lawmobile.tests
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
 import com.lawmobile.presentation.ui.login.LoginActivity
-import com.safefleet.lawmobile.helpers.DeviceUtils
 import com.safefleet.lawmobile.screens.LiveViewScreen
 import com.safefleet.lawmobile.screens.LoginScreen
 import com.safefleet.lawmobile.testData.TestLoginData
+import org.junit.FixMethodOrder
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.junit.runners.MethodSorters
 
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @LargeTest
 @RunWith(AndroidJUnit4::class)
-class LoginTest : EspressoBaseTest<LoginActivity>(LoginActivity::class.java) {
+class LoginTest : EspressoStartActivityBaseTest<LoginActivity>(LoginActivity::class.java) {
     // This class tests FMA-248 User story
     companion object {
-        val OFFICER_NAME = TestLoginData.OFFICER_NAME.value
         val OFFICER_PASSWORD = TestLoginData.OFFICER_PASSWORD.value
 
         const val INVALID_OFFICER_PASSWORD = "950887928"
 
         val loginScreen = LoginScreen()
         val liveViewScreen = LiveViewScreen()
-        val deviceUtils = DeviceUtils()
     }
 
     @Test
-    fun verifyAppLogin_FMA_261_289() {
-        loginScreen
-            .isLogoDisplayed()
-            .isWaitingForCameraTextDisplayed()
-            .isInstructionsTextDisplayed()
-            .isExitDisplayed()
+    fun a_verifyAppLogin_FMA_1036_1037() {
+        with(loginScreen) {
+            isLogoDisplayed()
+            isConnectToCameraTextDisplayed()
+            isInstructionsTextDisplayed()
+            isFooterLogoDisplayed()
 
-        loginScreen.go()
+            clickOnGo()
 
-        loginScreen
-            .isWelcomeTextDisplayed()
-            .isOfficerNameDisplayed(OFFICER_NAME)
+            isPairingSuccessDisplayed()
 
-        loginScreen.typePassword(OFFICER_PASSWORD).go()
-        liveViewScreen.isLiveViewDisplayed()
+            isLogoDisplayed()
+            isPasswordTextDisplayed()
+            isFooterLogoDisplayed()
+
+            typePassword(OFFICER_PASSWORD)
+            clickOnLogin()
+
+            liveViewScreen.isLiveViewDisplayed()
+        }
     }
 
     @Test
-    fun verifyInvalidPasswordLogin_FMA_288() {
-        loginScreen.go()
+    fun b_verifyIncorrectLogin_FMA_1038() {
+        with(loginScreen) {
+            clickOnGo()
 
-        loginScreen.isWelcomeTextDisplayed()
+            isPairingSuccessDisplayed()
 
-        loginScreen.typePassword(INVALID_OFFICER_PASSWORD).go()
+            isPasswordTextDisplayed()
+            clickOnLogin()
 
-        loginScreen.isIncorrectPasswordToastDisplayed()
-        liveViewScreen.isLiveViewNotDisplayed()
+            isIncorrectPasswordToastDisplayed()
+            liveViewScreen.isLiveViewNotDisplayed()
+
+            typePassword(INVALID_OFFICER_PASSWORD)
+            clickOnLogin()
+
+            isIncorrectPasswordToastDisplayed()
+            liveViewScreen.isLiveViewNotDisplayed()
+        }
     }
 
     @Test
-    fun verifyEmptyPasswordLogin_FMA_288() {
-        loginScreen.go()
+    fun c_verifyPairingDisconnectionScenario_FMA_1039_1041() {
+        with(loginScreen) {
+            mockUtils.disconnectCamera()
 
-        loginScreen.isWelcomeTextDisplayed().go()
+            clickOnGo()
+            isPairingErrorDisplayed()
 
-        loginScreen.isIncorrectPasswordToastDisplayed()
-        liveViewScreen.isLiveViewNotDisplayed()
+            mockUtils.restoreCameraConnection()
+
+            retryPairing()
+            isPairingSuccessDisplayed()
+
+            isPasswordTextDisplayed()
+
+            mockUtils.disconnectCamera()
+
+            typePassword(OFFICER_PASSWORD)
+            clickOnLogin()
+
+            isDisconnectionAlertDisplayed()
+        }
     }
 
     @Test
-    fun verifyIncorrectSerialNumber_FMA_287() {
-        loginScreen.go()
+    fun d_verifyInstructionsToConnectCamera_FMA_1322() {
+        with(loginScreen) {
+            clickOnCameraInstructions()
 
-        loginScreen.isConnectingToCameraTextDisplayed()
-        loginScreen.isIncorrectSerialNumberToastDisplayed()
-        loginScreen.isWaitingForCameraTextDisplayed()
+            isInstructionsTitleDisplayed()
+            isInstructionsImageDisplayed()
+            isInstructionsTextDisplayed()
+            isInstructionsGotItButtonDisplayed()
+
+            clickOnCloseInstructions()
+
+            isLogoDisplayed()
+            isConnectToCameraTextDisplayed()
+            isInstructionsTextDisplayed()
+            isFooterLogoDisplayed()
+
+            clickOnCameraInstructions()
+
+            isInstructionsTitleDisplayed()
+            isInstructionsImageDisplayed()
+            isInstructionsTextDisplayed()
+            isInstructionsGotItButtonDisplayed()
+
+            clickOnGotIt()
+
+            isLogoDisplayed()
+            isConnectToCameraTextDisplayed()
+            isInstructionsTextDisplayed()
+            isFooterLogoDisplayed()
+        }
     }
 
-    @Test
-    fun verifyPairingForTheSecondTime_FMA_286() {
-        loginScreen.go()
-        loginScreen.typePassword(OFFICER_PASSWORD).go()
-        liveViewScreen.isLiveViewDisplayed()
 
-        deviceUtils.restartApp()
 
-        loginScreen
-            .isWelcomeTextDisplayed()
-            .isOfficerNameDisplayed(OFFICER_NAME)
-
-        loginScreen.typePassword(OFFICER_PASSWORD).go()
-        liveViewScreen.isLiveViewDisplayed()
-    }
-
-    @Test
-    fun verifyLoginDisconnectionScenario_FMA_292() {
-        mockUtils.disconnectCamera()
-
-        loginScreen.isWaitingForCameraTextDisplayed()
-        loginScreen.go()
-        loginScreen.typePassword(OFFICER_PASSWORD).go()
-
-        loginScreen.isDisconnectionAlertDisplayed()
-
-        mockUtils.restoreCameraConnection()
-    }
 }

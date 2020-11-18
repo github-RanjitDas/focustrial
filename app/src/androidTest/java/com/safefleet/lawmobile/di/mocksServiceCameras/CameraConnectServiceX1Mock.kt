@@ -2,6 +2,7 @@ package com.safefleet.lawmobile.di.mocksServiceCameras
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
+import com.lawmobile.data.entities.FileList
 import com.safefleet.lawmobile.testData.CameraFilesData
 import com.safefleet.lawmobile.testData.TestLoginData
 import com.safefleet.mobile.avml.cameras.entities.*
@@ -14,18 +15,28 @@ class CameraConnectServiceX1Mock : CameraConnectService {
     override val progressPairingCamera: LiveData<Result<Int>>
         get() = progressPairingCameraMediator
 
+    override suspend fun deleteFile(fileName: String): Result<Unit> {
+        return Result.Success(Unit)
+    }
+
     companion object {
-        var snapshotsList = CameraFilesData.DEFAULT_SNAPSHOTS_LIST.value.toMutableList()
+        var snapshotsList = CameraFilesData.DEFAULT_SNAPSHOT_LIST.value
+        var videoList = CameraFilesData.DEFAULT_VIDEO_LIST.value
         var takenPhotos = 0
+        var takenVideos = 0
+        var result: Result<Int> = Result.Success(100)
     }
 
     override suspend fun disconnectCamera(): Result<Unit> {
         return Result.Success(Unit)
     }
 
+    override suspend fun getBatteryLevel(): Result<Int> {
+        return Result.Success(90)
+    }
+
     override suspend fun getImageBytes(cameraConnectFile: CameraConnectFile): Result<ByteArray> {
-        val bytes = ByteArray(2)
-        return Result.Success(bytes)
+        return Result.Error(mockk())
     }
 
     override suspend fun getInformationResourcesVideo(cameraConnectFile: CameraConnectFile): Result<CameraConnectVideoInfo> {
@@ -33,15 +44,29 @@ class CameraConnectServiceX1Mock : CameraConnectService {
     }
 
     override suspend fun getListOfImages(): Result<CameraConnectFileResponseWithErrors> {
-        val cameraConnectFileResponseWithErrors = CameraConnectFileResponseWithErrors()
-        cameraConnectFileResponseWithErrors.items.addAll(snapshotsList)
-        return Result.Success(cameraConnectFileResponseWithErrors)
+        FileList.imageList = emptyList()
+        return Result.Success(snapshotsList)
     }
 
     override suspend fun getListOfVideos(): Result<CameraConnectFileResponseWithErrors> {
-        val cameraConnectFileResponseWithErrors = CameraConnectFileResponseWithErrors()
-        cameraConnectFileResponseWithErrors.items.addAll(arrayListOf())
-        return Result.Success(cameraConnectFileResponseWithErrors)
+        FileList.videoList = emptyList()
+        return Result.Success(videoList)
+    }
+
+    override suspend fun getMetadataOfPhotos(): Result<List<CameraConnectPhotoMetadata>> {
+        return Result.Success(emptyList())
+    }
+
+    override suspend fun getNumberOfSnapshots(): Result<String> {
+        return Result.Success("10")
+    }
+
+    override suspend fun getNumberOfVideos(): Result<String> {
+        return Result.Success("10")
+    }
+
+    override suspend fun getPhotoMetadata(cameraConnectFile: CameraConnectFile): Result<CameraConnectPhotoMetadata> {
+        return Result.Success(CameraConnectPhotoMetadata("", ""))
     }
 
     override fun getUrlForLiveStream(): String = ""
@@ -60,13 +85,48 @@ class CameraConnectServiceX1Mock : CameraConnectService {
         fileName: String,
         folderName: String
     ): Result<CameraConnectVideoMetadata> {
-        return Result.Success(mockk())
+        return Result.Success(
+            CameraConnectVideoMetadata(
+                fileName,
+                "kmenesesp",
+                "/DCIM/",
+                folderName,
+                "X57",
+                VideoMetadata(
+                    "1234",
+                    "1234",
+                    "1234",
+                    "1234",
+                    "1234",
+                    "1234",
+                    null,
+                    "1234",
+                    null,
+                    "1234",
+                    "1234",
+                    "1234",
+                    null,
+                    "1234",
+                    "1234",
+                    "1234"
+                ),
+                null
+            )
+        )
     }
 
     override fun isCameraConnected(gatewayConnection: String): Boolean = true
 
+    override suspend fun isPossibleTheConnection(hostnameToConnect: String): Result<Unit> {
+        return Result.Success(Unit)
+    }
+
     override suspend fun loadPairingCamera(hostnameToConnect: String, ipAddressClient: String) {
-        progressPairingCameraMediator.postValue(Result.Success(100))
+        progressPairingCameraMediator.postValue(result)
+    }
+
+    override suspend fun saveAllPhotoMetadata(list: List<CameraConnectPhotoMetadata>): Result<Unit> {
+        return Result.Success(Unit)
     }
 
     override suspend fun savePhotoMetadata(cameraConnectPhotoMetadata: CameraConnectPhotoMetadata): Result<Unit> {
@@ -78,6 +138,11 @@ class CameraConnectServiceX1Mock : CameraConnectService {
     }
 
     override suspend fun startRecordVideo(): Result<Unit> {
+        videoList.items.add(CameraFilesData.EXTRA_VIDEO_LIST.value.items[takenVideos])
+        if (takenVideos < CameraFilesData.EXTRA_VIDEO_LIST.value.items.size)
+            takenVideos++
+        else
+            takenVideos = 0
         return Result.Success(Unit)
     }
 
@@ -86,12 +151,33 @@ class CameraConnectServiceX1Mock : CameraConnectService {
     }
 
     override suspend fun takePhoto(): Result<Unit> {
-        snapshotsList.add(CameraFilesData.EXTRA_SNAPSHOTS_LIST.value[takenPhotos])
-        takenPhotos++
+        snapshotsList.items.add(CameraFilesData.EXTRA_SNAPSHOT_LIST.value.items[takenPhotos])
+        if (takenPhotos < CameraFilesData.EXTRA_SNAPSHOT_LIST.value.items.size)
+            takenPhotos++
+        else
+            takenPhotos = 0
         return Result.Success(Unit)
     }
 
     override suspend fun getCatalogInfo(): Result<List<CameraConnectCatalog>> {
-        return Result.Success(emptyList())
+        return Result.Success(
+            listOf(
+                CameraConnectCatalog("1", "Default", "Event"),
+                CameraConnectCatalog("2", "Disk Clean", "Event"),
+                CameraConnectCatalog("3", "Jenn Main", "Event"),
+                CameraConnectCatalog("1", "Male", "Gender"),
+                CameraConnectCatalog("2", "Female", "Gender"),
+                CameraConnectCatalog("1", "White", "Race"),
+                CameraConnectCatalog("2", "Black", "Race")
+            )
+        )
+    }
+
+    override suspend fun getFreeStorage(): Result<String> {
+        return Result.Success("50000000")
+    }
+
+    override suspend fun getTotalStorage(): Result<String> {
+        return Result.Success("60000000")
     }
 }

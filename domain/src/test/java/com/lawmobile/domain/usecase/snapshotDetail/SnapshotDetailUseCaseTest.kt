@@ -1,7 +1,7 @@
 package com.lawmobile.domain.usecase.snapshotDetail
 
+import com.lawmobile.domain.entities.DomainCameraFile
 import com.lawmobile.domain.repository.snapshotDetail.SnapshotDetailRepository
-import com.safefleet.mobile.avml.cameras.entities.CameraConnectFile
 import com.safefleet.mobile.commons.helpers.Result
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -19,32 +19,64 @@ class SnapshotDetailUseCaseTest {
 
     @Test
     fun testGetInformationResourcesVideoSuccess() {
-        val cameraConnectFile: CameraConnectFile = mockk()
+        val domainCameraFile: DomainCameraFile = mockk()
         val byte = ByteArray(1)
-        coEvery { snapshotDetailRepository.getImageBytes(cameraConnectFile) } returns Result.Success(
+        coEvery { snapshotDetailRepository.getImageBytes(domainCameraFile) } returns Result.Success(
             byte
         )
         runBlocking {
             val result =
-                snapshotDetailUseCaseImpl.getImageBytes(cameraConnectFile)
+                snapshotDetailUseCaseImpl.getImageBytes(domainCameraFile)
             Assert.assertTrue(result is Result.Success)
         }
 
-        coVerify { snapshotDetailRepository.getImageBytes(cameraConnectFile) }
+        coVerify { snapshotDetailRepository.getImageBytes(domainCameraFile) }
     }
 
     @Test
     fun testGetInformationResourcesVideoError() {
-        val cameraConnectFile: CameraConnectFile = mockk()
-        coEvery { snapshotDetailRepository.getImageBytes(cameraConnectFile) } returns Result.Error(
+        val domainCameraFile: DomainCameraFile = mockk()
+        coEvery { snapshotDetailRepository.getImageBytes(domainCameraFile) } returns Result.Error(
             mockk()
         )
         runBlocking {
             val result =
-                snapshotDetailUseCaseImpl.getImageBytes(cameraConnectFile)
+                snapshotDetailUseCaseImpl.getImageBytes(domainCameraFile)
             Assert.assertTrue(result is Result.Error)
         }
 
-        coVerify { snapshotDetailRepository.getImageBytes(cameraConnectFile) }
+        coVerify { snapshotDetailRepository.getImageBytes(domainCameraFile) }
+    }
+
+    @Test
+    fun testSavePartnerIdSnapshotFlow() {
+        coEvery {
+            snapshotDetailRepository.saveSnapshotPartnerId(
+                any(),
+                "partnerId"
+            )
+        } returns Result.Success(Unit)
+        runBlocking {
+            val result = snapshotDetailUseCaseImpl.savePartnerIdSnapshot(mockk(), "partnerId")
+            Assert.assertTrue(result is Result.Success)
+        }
+        coVerify {
+            snapshotDetailRepository.saveSnapshotPartnerId(any(), "partnerId")
+        }
+    }
+
+    @Test
+    fun testGetInformationOfPhoto() {
+        coEvery { snapshotDetailRepository.getInformationOfPhoto(any()) } returns Result.Success(
+            mockk()
+        )
+        runBlocking {
+            val result = snapshotDetailUseCaseImpl.getInformationOfPhoto(mockk())
+            Assert.assertTrue(result is Result.Success)
+        }
+
+        coVerify {
+            snapshotDetailRepository.getInformationOfPhoto(any())
+        }
     }
 }

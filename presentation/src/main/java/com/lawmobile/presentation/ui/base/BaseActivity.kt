@@ -1,24 +1,29 @@
 package com.lawmobile.presentation.ui.base
 
-import android.content.Intent
+import android.content.pm.ActivityInfo
 import android.os.Bundle
-import android.os.Process
 import android.view.WindowManager
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.entities.NeutralAlertInformation
+import com.lawmobile.presentation.extensions.checkIfSessionIsExpired
 import com.lawmobile.presentation.extensions.createAlertMobileDataActive
+import com.lawmobile.presentation.extensions.createAlertProgress
 import com.lawmobile.presentation.extensions.createAlertSessionExpired
 import com.lawmobile.presentation.ui.login.LoginActivity
+import com.lawmobile.presentation.utils.DeviceHelper
+import com.lawmobile.presentation.utils.EspressoIdlingResource
 import com.lawmobile.presentation.utils.MobileDataStatus
-import dagger.android.support.DaggerAppCompatActivity
+import dagger.hilt.android.AndroidEntryPoint
 import java.sql.Timestamp
 import javax.inject.Inject
-import kotlin.system.exitProcess
 
-open class BaseActivity : DaggerAppCompatActivity() {
+
+@AndroidEntryPoint
+open class BaseActivity : AppCompatActivity() {
 
     @Inject
     lateinit var baseViewModel: BaseViewModel
@@ -29,26 +34,17 @@ open class BaseActivity : DaggerAppCompatActivity() {
     private var isLiveVideoOrPlaybackActive: Boolean = false
     private lateinit var mobileDataDialog: AlertDialog
     var isRecordingVideo: Boolean = false
-    var isAlertShowing = MutableLiveData<Boolean>()
-
-    fun killApp() {
-        baseViewModel.deactivateCameraHotspot()
-        finishAffinity()
-        exitProcess(0)
-    }
-
-    fun restartApp() {
-        val intent: Intent? = this.baseContext.packageManager
-            .getLaunchIntentForPackage(this.baseContext.packageName)
-        intent?.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        startActivity(intent)
-        Process.killProcess(Process.myPid())
-        exitProcess(0)
-    }
+    var isMobileDataAlertShowing = MutableLiveData<Boolean>()
+    private var loadingDialog: AlertDialog? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         super.onCreate(savedInstanceState)
+
+        if (DeviceHelper.isDeviceRooted()) {
+            finish()
+            return
+        }
         createMobileDataDialog()
         mobileDataStatus.observe(this, Observer(::showMobileDataDialog))
         updateLastInteraction()
@@ -63,7 +59,7 @@ open class BaseActivity : DaggerAppCompatActivity() {
     }
 
     private fun showMobileDataDialog(active: Boolean) {
-        isAlertShowing.postValue(active)
+        isMobileDataAlertShowing.postValue(active)
         if (active) mobileDataDialog.show()
         else mobileDataDialog.dismiss()
     }
@@ -98,15 +94,24 @@ open class BaseActivity : DaggerAppCompatActivity() {
         lastInteraction = Timestamp(System.currentTimeMillis())
     }
 
-    fun checkIfSessionIsExpired(): Boolean {
-        val timeNow = Timestamp(System.currentTimeMillis())
-        return (timeNow.time - lastInteraction.time) > MAX_TIME_SESSION
+    fun showLoadingDialog() {
+        EspressoIdlingResource.increment()
+        loadingDialog = this.createAlertProgress()
+        loadingDialog?.show()
     }
+
+    fun hideLoadingDialog() {
+        loadingDialog?.dismiss()
+        loadingDialog = null
+        EspressoIdlingResource.decrement()
+    }
+
+    fun isInPortraitMode() =
+        resources.configuration.orientation == ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
 
     companion object {
         const val PERMISSION_FOR_LOCATION = 100
         const val MAX_TIME_SESSION = 300000
-        private lateinit var lastInteraction: Timestamp
+        lateinit var lastInteraction: Timestamp
     }
-
 }

@@ -1,6 +1,5 @@
 package com.lawmobile.presentation.ui.fileList
 
-import com.lawmobile.domain.entities.DomainInformationFileResponse
 import com.lawmobile.domain.usecase.fileList.FileListUseCase
 import com.lawmobile.presentation.InstantExecutorExtension
 import com.safefleet.mobile.commons.helpers.Result
@@ -9,8 +8,6 @@ import io.mockk.coVerify
 import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.setMain
 import org.junit.Assert
 import org.junit.jupiter.api.BeforeEach
@@ -31,44 +28,6 @@ class FileListViewModelTest {
     @BeforeEach
     fun setUp() {
         Dispatchers.setMain(Dispatchers.Unconfined)
-    }
-
-    @Test
-    fun testGetSnapshotListSuccess() {
-        val domainInformationFileResponse:DomainInformationFileResponse = mockk()
-        val result = Result.Success(domainInformationFileResponse)
-        coEvery { fileListUseCase.getSnapshotList() } returns result
-        fileListViewModel.getSnapshotList()
-        Assert.assertEquals(fileListViewModel.snapshotListLiveData.value, result)
-        coVerify { fileListUseCase.getSnapshotList() }
-    }
-
-    @Test
-    fun testGetVideoListSuccess() {
-        val domainInformationFileResponse:DomainInformationFileResponse = mockk()
-        val result = Result.Success(domainInformationFileResponse)
-        coEvery { fileListUseCase.getVideoList() } returns result
-        fileListViewModel.getVideoList()
-        Assert.assertEquals(fileListViewModel.videoListLiveData.value, result)
-        coVerify { fileListUseCase.getVideoList() }
-    }
-
-    @Test
-    fun testGetSnapshotListError() {
-        val result = Result.Error(mockk())
-        coEvery { fileListUseCase.getSnapshotList() } returns result
-        fileListViewModel.getSnapshotList()
-        Assert.assertEquals(fileListViewModel.snapshotListLiveData.value, result)
-        coVerify { fileListUseCase.getSnapshotList() }
-    }
-
-    @Test
-    fun testGetVideoListError() {
-        val result = Result.Error(mockk())
-        coEvery { fileListUseCase.getVideoList() } returns result
-        fileListViewModel.getVideoList()
-        Assert.assertEquals(fileListViewModel.videoListLiveData.value, result)
-        coVerify { fileListUseCase.getVideoList() }
     }
 
     @Test
@@ -105,12 +64,5 @@ class FileListViewModelTest {
         fileListViewModel.associatePartnerIdToSnapshotList(listOf(mockk()), "")
         Assert.assertEquals(fileListViewModel.snapshotPartnerIdLiveData.value, result)
         coVerify { fileListUseCase.savePartnerIdSnapshot(any(), any()) }
-    }
-
-    @Test
-    fun testLoadingTimeout() {
-        fileListViewModel.loadingTimeout()
-        runBlocking { delay(15000) }
-        Assert.assertEquals(true, fileListViewModel.timeoutLiveData.value)
     }
 }

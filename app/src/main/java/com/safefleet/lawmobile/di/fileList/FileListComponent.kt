@@ -1,7 +1,13 @@
 package com.safefleet.lawmobile.di.fileList
 
-import dagger.Component
-import dagger.android.AndroidInjectionModule
+import dagger.Subcomponent
+import dagger.hilt.android.scopes.ActivityScoped
 
-@Component(modules = [FileListModule::class, AndroidInjectionModule::class])
-interface FileListComponent
+@ActivityScoped
+@Subcomponent(modules = [FileListModule::class])
+interface FileListComponent {
+    @Subcomponent.Factory
+    interface Factory {
+        fun create(): FileListComponent
+    }
+}

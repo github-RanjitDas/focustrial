@@ -2,6 +2,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
+apply plugin: 'dagger.hilt.android.plugin'
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
@@ -14,6 +15,7 @@ android {
         versionName "$rootProject.ext.major.$rootProject.ext.minor.$rootProject.ext.patch"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles 'consumer-rules.pro'
     }
 
     signingConfigs {
@@ -42,9 +44,8 @@ android {
     }
 
     testOptions {
-
-        animationsDisabled true
-
+        execution 'ANDROIDX_TEST_ORCHESTRATOR'
+        animationsDisabled = true
         unitTests {
             includeAndroidResources = true
         }
@@ -52,6 +53,10 @@ android {
 
     kotlinOptions {
         jvmTarget = rootProject.ext.jvmTarget
+    }
+
+    configurations.all {
+        resolutionStrategy.force "com.google.code.findbugs:jsr305:$find_bugs_version"
     }
 
 }
@@ -77,6 +82,10 @@ dependencies {
     androidTestImplementation "androidx.test.espresso:espresso-intents:$espresso_version"
     androidTestImplementation "androidx.test.uiautomator:uiautomator:$ui_automator_version"
 
+    //Espresso Idling Resource
+    androidTestImplementation "androidx.test.espresso:espresso-idling-resource:$espresso_version"
+    implementation "androidx.test.espresso:espresso-idling-resource:$espresso_version"
+
     //Barista (Library for espresso testing)
     androidTestImplementation("com.schibsted.spain:barista:$barista_version") {
         exclude group: 'org.jetbrains.kotlin'
@@ -86,23 +95,24 @@ dependencies {
     androidTestImplementation "androidx.test:runner:$androidx_test_version"
     androidTestImplementation "androidx.test:rules:$androidx_test_version"
     androidTestImplementation "androidx.test.ext:junit:$junit_ext_version"
-
-    // Dagger2 core
-    implementation "com.google.dagger:dagger:$dagger_version"
-    kapt "com.google.dagger:dagger-compiler:$dagger_version"
-    kaptAndroidTest "com.google.dagger:dagger-compiler:$dagger_version"
-
-    // Dagger Android
-    implementation "com.google.dagger:dagger-android:$dagger_version"
-    implementation "com.google.dagger:dagger-android-support:$dagger_version"
-    kapt "com.google.dagger:dagger-android-processor:$dagger_version"
-    kaptAndroidTest "com.google.dagger:dagger-android-processor:$dagger_version"
+    androidTestUtil "androidx.test:orchestrator:1.3.0"
 
     //VLC player
     implementation "com.github.masterwok:libvlc-android-sdk:$libvlc_android_sdk_version"
 
     //GSON
     implementation "com.google.code.gson:gson:$gson_version"
+
+    //Hilt
+    implementation "com.google.dagger:hilt-android:$hilt_version"
+    kapt "com.google.dagger:hilt-android-compiler:$hilt_version"
+    kaptAndroidTest "com.google.dagger:hilt-android-compiler:$hilt_version"
+    testImplementation "com.google.dagger:hilt-android-testing:$hilt_version"
+    kaptTest "com.google.dagger:hilt-android-compiler:$hilt_version"
+    implementation "androidx.hilt:hilt-lifecycle-viewmodel:$hilt_jetpack_version"
+    kapt "androidx.hilt:hilt-compiler:$hilt_jetpack_version"
+    kaptAndroidTest "androidx.hilt:hilt-compiler:$hilt_jetpack_version"
+    androidTestImplementation "com.google.dagger:hilt-android-testing:$hilt_version"
 
     implementation project(path: ':presentation')
     implementation project(path: ':data')

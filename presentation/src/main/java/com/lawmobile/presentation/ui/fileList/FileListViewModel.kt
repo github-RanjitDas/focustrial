@@ -1,27 +1,17 @@
 package com.lawmobile.presentation.ui.fileList
 
+import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.viewModelScope
-import com.lawmobile.domain.entities.DomainInformationFileResponse
+import com.lawmobile.domain.entities.DomainCameraFile
 import com.lawmobile.domain.usecase.fileList.FileListUseCase
 import com.lawmobile.presentation.ui.base.BaseViewModel
-import com.safefleet.mobile.avml.cameras.entities.CameraConnectFile
 import com.safefleet.mobile.commons.helpers.Result
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-class FileListViewModel @Inject constructor(private val fileListUseCase: FileListUseCase) :
+class FileListViewModel @ViewModelInject constructor(private val fileListUseCase: FileListUseCase) :
     BaseViewModel() {
-
-    private val snapshotListMediator: MediatorLiveData<Result<DomainInformationFileResponse>> =
-        MediatorLiveData()
-    val snapshotListLiveData: LiveData<Result<DomainInformationFileResponse>> get() = snapshotListMediator
-
-    private val videoListMediator: MediatorLiveData<Result<DomainInformationFileResponse>> =
-        MediatorLiveData()
-    val videoListLiveData: LiveData<Result<DomainInformationFileResponse>> get() = videoListMediator
 
     private val videoPartnerIdMediator: MediatorLiveData<Result<Unit>> =
         MediatorLiveData()
@@ -31,30 +21,14 @@ class FileListViewModel @Inject constructor(private val fileListUseCase: FileLis
         MediatorLiveData()
     val snapshotPartnerIdLiveData: LiveData<Result<Unit>> get() = snapshotPartnerIdMediator
 
-    private val timeoutMediator: MediatorLiveData<Boolean> =
-        MediatorLiveData()
-    val timeoutLiveData: LiveData<Boolean> get() = timeoutMediator
-
-    fun getSnapshotList() {
-        viewModelScope.launch {
-            snapshotListMediator.postValue(fileListUseCase.getSnapshotList())
-        }
-    }
-
-    fun getVideoList() {
-        viewModelScope.launch {
-            videoListMediator.postValue(fileListUseCase.getVideoList())
-        }
-    }
-
     fun associatePartnerIdToVideoList(
-        cameraConnectFileList: List<CameraConnectFile>,
+        domainCameraFileList: List<DomainCameraFile>,
         partnerId: String
     ) {
         viewModelScope.launch {
             videoPartnerIdMediator.postValue(
                 fileListUseCase.savePartnerIdVideos(
-                    cameraConnectFileList,
+                    domainCameraFileList,
                     partnerId
                 )
             )
@@ -62,23 +36,16 @@ class FileListViewModel @Inject constructor(private val fileListUseCase: FileLis
     }
 
     fun associatePartnerIdToSnapshotList(
-        cameraConnectFileList: List<CameraConnectFile>,
+        domainCameraFileList: List<DomainCameraFile>,
         partnerId: String
     ) {
         viewModelScope.launch {
             snapshotPartnerIdMediator.postValue(
                 fileListUseCase.savePartnerIdSnapshot(
-                    cameraConnectFileList,
+                    domainCameraFileList,
                     partnerId
                 )
             )
-        }
-    }
-
-    fun loadingTimeout() {
-        viewModelScope.launch {
-            delay(15000)
-            timeoutMediator.value = true
         }
     }
 }

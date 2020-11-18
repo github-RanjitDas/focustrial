@@ -9,20 +9,35 @@ import org.videolan.libvlc.MediaPlayer
 
 class VLCMediaPlayer(private val libVLC: LibVLC, private val mediaPlayer: MediaPlayer) {
 
+    private var currentMedia: Media? = null
+
     fun createMediaPlayer(url: String, view: SurfaceView) {
-        val media = Media(libVLC, Uri.parse(url))
-        media.setHWDecoderEnabled(true, true)
-        media.addOption(":clock-jitter=0")
-        media.addOption(":clock-synchro=0")
-        media.addOption(":network-caching=1000")
-        media.addOption(":file-caching=1000")
-        mediaPlayer.media = media
-        media.release()
+        releaseMedia()
+        setMediaToPlayer(url)
+        detachAllViews()
+        attachViewToPlayer(view)
+    }
+
+    private fun attachViewToPlayer(view: SurfaceView) {
         if (mediaPlayer.vlcVout.areViewsAttached()) mediaPlayer.vlcVout.detachViews()
         mediaPlayer.vlcVout.setVideoView(view)
         mediaPlayer.vlcVout.attachViews { _, _, _, _, _, _, _ ->
             setSizeInMediaPlayer(view)
         }
+    }
+
+    private fun setMediaToPlayer(url: String) {
+        currentMedia = Media(libVLC, Uri.parse(url))
+        currentMedia?.setHWDecoderEnabled(true, true)
+        currentMedia?.addOption(CLOCK_JITTER)
+        currentMedia?.addOption(CLOCK_SYNC)
+        currentMedia?.addOption(NETWORK_CACHING)
+        currentMedia?.addOption(FILE_CACHING)
+        mediaPlayer.media = currentMedia
+    }
+
+    fun setMediaEventListener(listener: MediaPlayer.EventListener) {
+        mediaPlayer.setEventListener(listener)
     }
 
     fun setSizeInMediaPlayer(view: SurfaceView) {
@@ -38,10 +53,9 @@ class VLCMediaPlayer(private val libVLC: LibVLC, private val mediaPlayer: MediaP
     }
 
     fun stopMediaPlayer() {
-        if (mediaPlayer.isPlaying) {
-            mediaPlayer.stop()
-        }
-        mediaPlayer.vlcVout.detachViews()
+        mediaPlayer.stop()
+        detachAllViews()
+        releaseMedia()
     }
 
     fun pauseMediaPlayer() {
@@ -75,6 +89,20 @@ class VLCMediaPlayer(private val libVLC: LibVLC, private val mediaPlayer: MediaP
 
     }
 
+    private fun detachAllViews() {
+        while (mediaPlayer.vlcVout.areViewsAttached()) {
+            mediaPlayer.vlcVout.detachViews()
+        }
+    }
+
+    private fun releaseMedia() {
+        currentMedia?.run {
+            while (!isReleased) {
+                currentMedia?.release()
+            }
+        }
+    }
+
     private fun getAspectRatio() = mediaPlayer.aspectRatio
 
     private fun setAspectRatio(aspectRadio: String? = null) {
@@ -82,6 +110,10 @@ class VLCMediaPlayer(private val libVLC: LibVLC, private val mediaPlayer: MediaP
     }
 
     companion object {
+        const val CLOCK_JITTER = ":clock-jitter=0"
+        const val CLOCK_SYNC = ":clock-synchro=0"
+        const val NETWORK_CACHING = ":network-caching=1000"
+        const val FILE_CACHING = ":file-caching=1000"
         const val ASPECT_RATIO_4_3 = "4:3"
         const val ASPECT_RATIO_16_9 = "16:9"
         const val ASPECT_RATIO_21_9 = "21:9"

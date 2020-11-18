@@ -9,6 +9,7 @@ import com.safefleet.mobile.commons.helpers.Result
 import io.mockk.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.setMain
 import org.junit.Assert
@@ -75,7 +76,7 @@ class LiveActivityViewModelTest {
         val result = Result.Success(Unit)
         coEvery { liveStreamingUseCase.startRecordVideo() } returns result
         liveActivityViewModel.startRecordVideo()
-        Assert.assertEquals(liveActivityViewModel.startRecordVideo.value, result)
+        Assert.assertEquals(liveActivityViewModel.resultRecordVideoLiveData.value, result)
         coVerify { liveStreamingUseCase.startRecordVideo() }
     }
 
@@ -84,7 +85,7 @@ class LiveActivityViewModelTest {
         val result = Result.Success(Unit)
         coEvery { liveStreamingUseCase.stopRecordVideo() } returns result
         liveActivityViewModel.stopRecordVideo()
-        Assert.assertEquals(liveActivityViewModel.stopRecordVideo.value, result)
+        Assert.assertEquals(liveActivityViewModel.resultStopVideoLiveData.value, result)
         coVerify { liveStreamingUseCase.stopRecordVideo() }
     }
 
@@ -94,9 +95,11 @@ class LiveActivityViewModelTest {
         val result = Result.Success(Unit)
         coEvery { liveStreamingUseCase.takePhoto() } returns result
         liveActivityViewModel.takePhoto()
-        Assert.assertEquals(liveActivityViewModel.resultTakePhotoLiveData.value, result)
+        Assert.assertEquals(
+            liveActivityViewModel.resultTakePhotoLiveData.value?.getContent(),
+            result
+        )
         coVerify { liveStreamingUseCase.takePhoto() }
-
     }
 
     @Test
@@ -120,14 +123,103 @@ class LiveActivityViewModelTest {
 
     @Test
     fun testGetCatalogInfoError() {
-        coEvery { liveStreamingUseCase.getCatalogInfo() } returns Result.Error(
-            mockk()
-        )
+        coEvery { liveStreamingUseCase.getCatalogInfo() } returns Result.Error(mockk())
         runBlocking {
             liveActivityViewModel.getCatalogInfo()
+            delay(1500)
             Assert.assertTrue(liveActivityViewModel.catalogInfoLiveData.value is Result.Error)
         }
         coVerify { liveStreamingUseCase.getCatalogInfo() }
     }
 
+    @Test
+    fun getBatteryLevelSuccess() {
+        val result = Result.Success(23)
+        coEvery { liveStreamingUseCase.getBatteryLevel() } returns result
+        runBlocking {
+            liveActivityViewModel.getBatteryLevel()
+            Assert.assertEquals(
+                liveActivityViewModel.batteryLevelLiveData.value?.getContent(),
+                result
+            )
+        }
+        coVerify { liveStreamingUseCase.getBatteryLevel() }
+    }
+
+    @Test
+    fun getBatteryLevelError() {
+        val result = Result.Error(mockk())
+        coEvery { liveStreamingUseCase.getBatteryLevel() } returns result
+        runBlocking {
+            liveActivityViewModel.getBatteryLevel()
+            delay(1500)
+            Assert.assertEquals(
+                liveActivityViewModel.batteryLevelLiveData.value?.getContent(),
+                result
+            )
+        }
+        coVerify { liveStreamingUseCase.getBatteryLevel() }
+    }
+
+    @Test
+    fun getStorageLevelsSuccess() {
+        val freeStorage = 63456789
+        val totalStorage = 67456789
+        val scaleByte = 1024
+        val usedStorage = (totalStorage.toDouble() / scaleByte) - (freeStorage.toDouble() / scaleByte)
+
+        coEvery { liveStreamingUseCase.getFreeStorage() } returns Result.Success(freeStorage.toString())
+        coEvery { liveStreamingUseCase.getTotalStorage() } returns Result.Success(totalStorage.toString())
+
+        runBlocking {
+            liveActivityViewModel.getStorageLevels()
+            delay(500)
+            val storage =
+                (liveActivityViewModel.storageLiveData.value?.getContent() as Result.Success<List<Double>>).data
+            Assert.assertEquals(storage[0].toInt(), freeStorage / scaleByte)
+            Assert.assertEquals(storage[1].toInt(), usedStorage.toInt())
+            Assert.assertEquals(storage[2].toInt(), totalStorage / scaleByte)
+        }
+        coVerify {
+            liveStreamingUseCase.getFreeStorage()
+            liveStreamingUseCase.getTotalStorage()
+        }
+    }
+
+    @Test
+    fun getStorageLevelsFreeStorageError() {
+        val result = Result.Error(mockk())
+        coEvery { liveStreamingUseCase.getFreeStorage() } returns result
+        runBlocking {
+            liveActivityViewModel.getStorageLevels()
+            delay(2000)
+            Assert.assertEquals(liveActivityViewModel.storageLiveData.value?.getContent(), result)
+        }
+        coVerify {
+            liveStreamingUseCase.getFreeStorage()
+        }
+    }
+
+    @Test
+    fun getStorageLevelsTotalStorageError() {
+        val result = Result.Error(mockk())
+        coEvery { liveStreamingUseCase.getFreeStorage() } returns Result.Success("63456789")
+        coEvery { liveStreamingUseCase.getTotalStorage() } returns result
+        runBlocking {
+            liveActivityViewModel.getStorageLevels()
+            delay(2000)
+            Assert.assertEquals(liveActivityViewModel.storageLiveData.value?.getContent(), result)
+        }
+        coVerify {
+            liveStreamingUseCase.getFreeStorage()
+            liveStreamingUseCase.getTotalStorage()
+        }
+    }
+
+    @Test
+    fun disconnectCameraFlow() {
+        coEvery { liveStreamingUseCase.disconnectCamera() } returns Result.Success(Unit)
+        runBlocking { liveActivityViewModel.disconnectCamera() }
+        coVerify { liveStreamingUseCase.disconnectCamera() }
+    }
 }

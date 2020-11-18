@@ -1,5 +1,5 @@
-node ('docker-builds-slave') {
-    def slackChannel = '#law-mobile-alerts'
+node('jenkins-builds-slave') {
+    def slackChannel = '#law-mobile-alerts'    
 
     try {
         library identifier: "${env.DEFAULT_SHARED_LIBS}",
@@ -7,12 +7,15 @@ node ('docker-builds-slave') {
 
         pipelineProps.defaultBuildMultibranchProperties()
         def secrets = [[
-                  path: "/secret-dev/safe_fleet_x1",
+                  path: "/secret-dev/safefleet1",
                   engineVersion: '2',
                   secretValues: [
-                    [vaultKey: 'credential_google_x1', envVar: 'credential_google_x1']
+                    [vaultKey: 'credential_google_x1', envVar: 'credential_google_x1'],
+                    [vaultKey: 'android_keystore', envVar: 'android_keystore']
                   ]]
          ]
+
+         def imageDocker = "245255707803.dkr.ecr.us-east-1.amazonaws.com/android-sdk-seon:sdk29-gradle5.6.4-fastlane"
 
         stage('Checkout') {
             logger.stage()
@@ -28,26 +31,26 @@ node ('docker-builds-slave') {
                  awsUtils.loginToAWS()
             }
         }
-        docker.image("245255707803.dkr.ecr.us-east-1.amazonaws.com/android-sdk-seon:sdk29-gradle5.6.4-fastlane").inside {
 
+        docker.image(imageDocker).inside('--user root') {
             stage('Clean builds'){
                 logger.stage()
                 timeout(5){
-                    sh "gradle clean"
+                    sh "./gradlew clean"
                 }
             }
 
             stage('Build project'){
                 logger.stage()
                 timeout(15) {
-                    sh "gradle buildDebug --stacktrace"
+                    sh "./gradlew buildDebug --stacktrace"
                 }
             }
 
             stage('Unit Tests') {
                 logger.stage()
-                timeout(5) {
-                    sh "gradle testDebugUnitTestCoverage --stacktrace"
+                timeout(7) {
+                    sh "./gradlew testDebugUnitTestCoverage --stacktrace"
                 }
             }
 
@@ -67,7 +70,7 @@ node ('docker-builds-slave') {
             stage('Mutation Tests') {
                 logger.stage()
                 timeout(20) {
-                    sh "gradle pitestDebug --stacktrace"
+                    sh "./gradlew pitestDebug --stacktrace"
                     archiveArtifacts "presentation/build/pitHistory.txt"
                     archiveArtifacts "domain/build/pitHistory.txt"
                     archiveArtifacts "data/build/pitHistory.txt"
@@ -79,7 +82,7 @@ node ('docker-builds-slave') {
                 logger.stage()
                 timeout(15) {
                     withSonarQubeEnv('Seon SonarQube') {
-                        sh "gradle sonarqube"
+                        sh "./gradlew sonarqube"
                     }
                     waitForQualityGate abortPipeline: true
                 }
@@ -89,7 +92,7 @@ node ('docker-builds-slave') {
                 stage('Generate APK'){
                     logger.stage()
                     timeout(10){
-                        sh "gradle assembleDebug --stacktrace"
+                        sh "./gradlew assembleDebug --stacktrace"
                     }
                 }
 
@@ -97,8 +100,8 @@ node ('docker-builds-slave') {
                     logger.stage()
                     timeout(10){
                         dir("app/build/outputs/apk") {
-                            sh "mv debug/app-debug.apk debug/app-debug-${BUILD_NUMBER}.apk"
-                            archiveArtifacts "debug/app-debug-${BUILD_NUMBER}.apk"
+                            //sh "mv debug/app-debug.apk debug/app-debug-${BUILD_NUMBER}.apk"
+                            archiveArtifacts "debug/app-debug.apk"
                         }
                     }
                 }
@@ -108,11 +111,11 @@ node ('docker-builds-slave') {
                 stage('Generate AAB'){
                     logger.stage()
                     timeout(10){
-                        withVault(vaultSecrets: [[path: "jenkins/lawmobile/android", secretValues: [[vaultKey: 'android-keystore', envVar: 'android_keystore']]]]) {
+                        withVault(vaultSecrets: secrets) {
                             sh """cat > $WORKSPACE/keystore.jks_64 <<  EOL\n$android_keystore\nEOL"""
                             sh "base64 -d keystore.jks_64 > app/keystore.jks"
                         }
-                        sh "gradle bundleRelease --stacktrace"
+                        sh "./gradlew bundleRelease --stacktrace"
                     }
                 }
 
@@ -134,8 +137,8 @@ node ('docker-builds-slave') {
                     logger.stage()
                     timeout(10){
                         dir("app/build/outputs/bundle") {
-                            sh "mv release/app-release.aab release/app-release-${BUILD_NUMBER}.aab"
-                            archiveArtifacts "release/app-release-${BUILD_NUMBER}.aab"
+                            //sh "mv release/app-release.aab release/app-release-${BUILD_NUMBER}.aab"
+                            archiveArtifacts "release/app-release.aab"
                         }
                     }
                 }

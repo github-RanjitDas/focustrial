@@ -143,4 +143,44 @@ class LiveStreamingUseCaseImplTest {
         }
         coVerify { liveStreamingRepository.getCatalogInfo() }
     }
+
+    @Test
+    fun testGetBatteryLevel(){
+        val result = Result.Success(10)
+        coEvery { liveStreamingRepository.getBatteryLevel() } returns result
+        runBlocking {
+            val response = liveStreamingUseCaseImpl.getBatteryLevel()
+            Assert.assertEquals(response, result)
+        }
+        coVerify { liveStreamingRepository.getBatteryLevel() }
+    }
+
+    @Test
+    fun testGetFreeStorage(){
+        val result = Result.Success("10000")
+        coEvery { liveStreamingRepository.getFreeStorage() } returns result
+        runBlocking {
+            val response = liveStreamingUseCaseImpl.getFreeStorage()
+            Assert.assertEquals(response,result)
+        }
+        coVerify { liveStreamingRepository.getFreeStorage() }
+    }
+
+    @Test
+    fun testGetTotalStorage(){
+        val result = Result.Success("10000")
+        coEvery { liveStreamingRepository.getTotalStorage() } returns result
+        runBlocking {
+            val response = liveStreamingUseCaseImpl.getTotalStorage()
+            Assert.assertEquals(response,result)
+        }
+        coVerify { liveStreamingRepository.getTotalStorage() }
+    }
+
+    @Test
+    fun disconnectCamera() {
+        coEvery { liveStreamingRepository.disconnectCamera() } returns Result.Success(Unit)
+        runBlocking { liveStreamingUseCaseImpl.disconnectCamera() }
+        coVerify { liveStreamingRepository.disconnectCamera() }
+    }
 }

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout android:id="@+id/fileListLayout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".ui.fileList.FileListActivity">
+
+    <TextView
+        android:id="@+id/textViewDateAndTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_18dp"
+        android:drawableEnd="@drawable/ic_order"
+        android:drawablePadding="@dimen/padding_10dp"
+        android:text="@string/date_and_time"
+        android:textColor="@color/black"
+        android:textSize="@dimen/text_size_16sp"
+        android:textStyle="bold"
+        android:paddingBottom="@dimen/margin_16dp"
+        app:layout_constraintStart_toStartOf="@+id/dividerViewList"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="UseCompatTextViewDrawableXml" />
+
+    <TextView
+        android:id="@+id/textViewEvent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:drawableEnd="@drawable/ic_order"
+        android:drawablePadding="@dimen/padding_10dp"
+        android:text="@string/event"
+        android:textColor="@color/black"
+        android:textSize="@dimen/text_size_16sp"
+        android:textStyle="bold"
+        android:paddingBottom="@dimen/margin_16dp"
+        app:layout_constraintBottom_toBottomOf="@+id/textViewDateAndTime"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.55"
+        app:layout_constraintStart_toStartOf="@+id/guidelineFileList3"
+        app:layout_constraintTop_toTopOf="@+id/textViewDateAndTime"
+        tools:ignore="UseCompatTextViewDrawableXml" />
+
+    <View
+        android:id="@+id/dividerViewList"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/live_view_divider_height"
+        android:background="@color/FMABlue"
+        android:layout_marginHorizontal="@dimen/margin_20dp"
+        app:layout_constraintTop_toBottomOf="@id/textViewDateAndTime" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/fileListRecycler"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/no_dp"
+        android:layout_marginHorizontal="@dimen/margin_10dp"
+        app:layout_constraintTop_toBottomOf="@id/dividerViewList"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+    <TextView
+        android:id="@+id/noFilesTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineFileList3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.5" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

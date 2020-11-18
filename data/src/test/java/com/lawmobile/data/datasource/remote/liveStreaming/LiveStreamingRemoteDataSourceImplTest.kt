@@ -125,9 +125,42 @@ class LiveStreamingRemoteDataSourceImplTest {
     }
 
     @Test
-    fun testGetCatalogInfoError() {
-        coEvery { cameraConnectService.getCatalogInfo() } returns Result.Error(mockk())
-        runBlocking { liveStreamingRemoteDataSourceImpl.getCatalogInfo() }
-        coVerify { cameraConnectService.getCatalogInfo() }
+    fun testGetBatteryLevel(){
+        val result = Result.Success(10)
+        coEvery { cameraConnectService.getBatteryLevel() } returns result
+        runBlocking {
+            val response = liveStreamingRemoteDataSourceImpl.getBatteryLevel()
+            Assert.assertEquals(response, result)
+        }
+        coVerify { cameraConnectService.getBatteryLevel() }
+    }
+
+    @Test
+    fun testGetFreeStorage(){
+        val result = Result.Success("10000")
+        coEvery { cameraConnectService.getFreeStorage() } returns result
+        runBlocking {
+            val response = liveStreamingRemoteDataSourceImpl.getFreeStorage()
+            Assert.assertEquals(response,result)
+        }
+        coVerify { cameraConnectService.getFreeStorage() }
+    }
+
+    @Test
+    fun testGetTotalStorage(){
+        val result = Result.Success("10000")
+        coEvery { cameraConnectService.getTotalStorage() } returns result
+        runBlocking {
+            val response = liveStreamingRemoteDataSourceImpl.getTotalStorage()
+            Assert.assertEquals(response,result)
+        }
+        coVerify { cameraConnectService.getTotalStorage() }
+    }
+
+    @Test
+    fun disconnectCameraFlow() {
+        coEvery { cameraConnectService.disconnectCamera() } returns Result.Success(Unit)
+        runBlocking { liveStreamingRemoteDataSourceImpl.disconnectCamera() }
+        coVerify { cameraConnectService.disconnectCamera() }
     }
 }

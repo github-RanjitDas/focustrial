@@ -9,4 +9,8 @@ interface LiveStreamingRemoteDataSource {
     suspend fun stopRecordVideo(): Result<Unit>
     suspend fun takePhoto(): Result<Unit>
     suspend fun getCatalogInfo(): Result<List<CameraConnectCatalog>>
+    suspend fun getBatteryLevel(): Result<Int>
+    suspend fun getFreeStorage(): Result<String>
+    suspend fun getTotalStorage(): Result<String>
+    suspend fun disconnectCamera(): Result<Unit>
 }

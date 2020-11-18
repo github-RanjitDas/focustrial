@@ -1,8 +1,11 @@
 package com.safefleet.lawmobile.helpers
 
 import com.lawmobile.presentation.utils.CameraHelper
+import com.safefleet.lawmobile.di.AppModule
 import com.safefleet.lawmobile.di.mocksServiceCameras.CameraConnectServiceX1Mock
 import com.safefleet.lawmobile.testData.CameraFilesData
+import com.safefleet.mobile.avml.cameras.entities.CameraConnectFileResponseWithErrors
+import com.safefleet.mobile.commons.helpers.Result
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkObject
@@ -18,19 +21,41 @@ class MockUtils {
         //Assign CameraHelper Mock to CameraHelper object in runtime
         mockkObject(CameraHelper)
         every { CameraHelper.getInstance() } returns cameraHelperMock
+
+        CameraConnectServiceX1Mock.result = Result.Error(Exception())
     }
 
     fun restoreCameraConnection() {
         unmockkObject(CameraHelper)
+        CameraConnectServiceX1Mock.result = Result.Success(100)
     }
 
     fun clearSnapshotsOnX1() {
-        CameraConnectServiceX1Mock.snapshotsList = mutableListOf()
+        CameraConnectServiceX1Mock.snapshotsList = CameraConnectFileResponseWithErrors()
+        CameraConnectServiceX1Mock.takenPhotos = 0
     }
 
     fun restoreSnapshotsOnX1() {
         CameraConnectServiceX1Mock.snapshotsList =
-            CameraFilesData.DEFAULT_SNAPSHOTS_LIST.value.toMutableList()
+            CameraFilesData.DEFAULT_SNAPSHOT_LIST.value
     }
 
+    fun clearVideosOnX1() {
+        CameraConnectServiceX1Mock.videoList = CameraConnectFileResponseWithErrors()
+        CameraConnectServiceX1Mock.takenVideos = 0
+    }
+
+    fun restoreVideosOnX1() {
+        CameraConnectServiceX1Mock.videoList =
+            CameraFilesData.DEFAULT_VIDEO_LIST.value
+    }
+
+    fun turnWifiOff() {
+//      This function only works when used before launching an app Activity
+        AppModule.wifiEnabled = false
+    }
+
+    fun turnWifiOn() {
+        AppModule.wifiEnabled = true
+    }
 }

@@ -1,6 +1,8 @@
 package com.lawmobile.presentation.extensions
 
 import android.annotation.SuppressLint
+import java.text.SimpleDateFormat
+import java.util.*
 import java.util.concurrent.TimeUnit
 
 @SuppressLint("DefaultLocale")
@@ -15,4 +17,13 @@ fun Long.convertMilliSecondsToString(): String {
             TimeUnit.MILLISECONDS.toMinutes(this)
         )
     )
+}
+
+@SuppressLint("SimpleDateFormat")
+fun Long.convertMilliSecondsToDate(): String {
+    val dateFormat = "yyyy-MM-dd"
+    val formatter = SimpleDateFormat(dateFormat)
+    val calendar: Calendar = Calendar.getInstance()
+    calendar.timeInMillis = this
+    return formatter.format(calendar.time)
 }

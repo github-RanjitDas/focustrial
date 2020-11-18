@@ -1,7 +1,13 @@
 package com.safefleet.lawmobile.di.videoPlayback
 
-import dagger.Component
-import dagger.android.AndroidInjectionModule
+import dagger.Subcomponent
+import dagger.hilt.android.scopes.ActivityScoped
 
-@Component(modules = [VideoPlaybackModule::class, AndroidInjectionModule::class])
-interface VideoPlaybackComponent
+@ActivityScoped
+@Subcomponent(modules = [VideoPlaybackModule::class])
+interface VideoPlaybackComponent {
+    @Subcomponent.Factory
+    interface Factory {
+        fun create(): VideoPlaybackComponent
+    }
+}
