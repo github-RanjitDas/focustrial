@@ -63,6 +63,8 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <include layout="@layout/bottom_sheet_instructions_connect_camera" />
+    <include
+        android:id="@+id/bottomSheetInstructions"
+        layout="@layout/bottom_sheet_instructions_connect_camera" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
