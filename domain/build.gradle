@@ -1,0 +1,95 @@
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
+apply plugin: 'jacoco'
+apply from: '../jacoco.gradle'
+apply from: '../pitest-exceptions.gradle'
+
+android {
+    compileSdkVersion rootProject.ext.compileSdkVersion
+
+    defaultConfig {
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
+        versionCode rootProject.ext.buildVersion
+        versionName "$rootProject.ext.major.$rootProject.ext.minor.$rootProject.ext.patch"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles 'consumer-rules.pro'
+    }
+
+    buildTypes {
+        debug {
+            testCoverageEnabled true
+            debuggable true
+        }
+
+        release {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    testOptions {
+        animationsDisabled true
+        unitTests.all {
+            useJUnitPlatform()
+            jacoco {
+                destinationFile = file("$buildDir/jacoco/testDebugUnitTest.exec")
+                includeNoLocationClasses = true
+                excludes = ['jdk.internal.*']
+            }
+        }
+    }
+
+    kotlinOptions {
+        jvmTarget = rootProject.ext.jvmTarget
+    }
+
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation "androidx.appcompat:appcompat:$app_compat_version"
+    implementation "androidx.core:core-ktx:$ktx_version"
+    testImplementation "junit:junit:$junit_version"
+
+    //Material
+    implementation "com.google.android.material:material:$android_material_version"
+
+    //Kotlin Coroutines
+    api "org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlin_coroutine_android_version"
+    api "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlin_coroutine_core_version"
+
+    // Junit5
+    testImplementation "org.junit.jupiter:junit-jupiter-api:$junit5_version"
+    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$junit5_version"
+    testRuntimeOnly "org.junit.vintage:junit-vintage-engine:$junit5_version"
+    testImplementation "org.junit.jupiter:junit-jupiter-params:$junit5_version"
+
+    //AndroidX test
+    androidTestImplementation "androidx.test:runner:$androidx_test_version"
+    androidTestImplementation "androidx.test:rules:$androidx_test_version"
+    androidTestImplementation "androidx.test.ext:junit:$junit_ext_version"
+
+    // Mock
+    testImplementation "io.mockk:mockk:$mockk_version"
+
+    //Coroutines-test
+    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutines_test_version"
+
+    api 'com.safefleet.mobile:avml:1.5.1.4-SNAPSHOT@aar'
+    api 'com.safefleet.mobile:commons:1.5.1.2-SNAPSHOT@aar'
+}
+
+pitest {
+    //Add Inspection exclusions since IntelliJ is sending invalid warnings for pitest plugin
+    //noinspection GrFinalVariableAccess,GroovyAccessibility
+    targetClasses = ["com.lawmobile.domain.*"]
+    //noinspection GrFinalVariableAccess,GroovyAccessibility
+    targetTests = ["com.lawmobile.domain.*"]
+    //noinspection GrFinalVariableAccess,GroovyAccessibility
+    excludedClasses = pitestExclusions
+}

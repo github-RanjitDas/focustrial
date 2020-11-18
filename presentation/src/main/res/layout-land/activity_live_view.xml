@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <SurfaceView
+        android:id="@+id/liveStreamingView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageButton
+        android:id="@+id/toggleFullScreenLiveView"
+        android:layout_width="@dimen/live_view_toggle_full_screen_width"
+        android:layout_height="@dimen/live_view_toggle_full_screen_height"
+        android:background="@null"
+        android:contentDescription="@string/image_description_back_to_normal_size_screen"
+        android:scaleType="centerCrop"
+        android:src="@drawable/ic_media_fullscreen_shrink"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/liveStreamingView" />
+
+    <Button
+        android:id="@+id/buttonSnapshot"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/live_view_main_button_margin_shorter"
+        android:background="@drawable/ic_snap_selector"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/liveStreamingView" />
+
+    <Button
+        android:id="@+id/buttonStreaming"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/live_view_main_button_margin_shorter"
+        android:background="@drawable/ic_record"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toggleFullScreenLiveView" />
+
+    <Switch
+        android:id="@+id/buttonSwitchLiveView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="24dp"
+        android:width="@dimen/live_view_switch_button_width"
+        android:height="@dimen/live_view_switch_button_height"
+        android:background="@drawable/ic_switch_on"
+        android:checked="true"
+        android:textOff=""
+        android:textOn=""
+        android:thumb="@android:color/transparent"
+        android:track="@android:color/transparent"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/buttonStreaming"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <ImageView
+        android:id="@+id/imageRecordingIndicator"
+        android:layout_width="@dimen/live_view_image_recording_size"
+        android:layout_height="@dimen/live_view_image_recording_size"
+        android:clickable="false"
+        android:contentDescription="@string/image_video_recording"
+        android:src="@drawable/ic_rec_video"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@+id/buttonStreaming"
+        app:layout_constraintEnd_toEndOf="@+id/buttonStreaming"
+        app:layout_constraintStart_toStartOf="@+id/buttonStreaming"
+        app:layout_constraintTop_toBottomOf="@+id/liveStreamingView" />
+
+    <ImageButton
+        android:id="@+id/buttonSnapshotList"
+        android:layout_width="@dimen/live_view_secondary_button_width"
+        android:layout_height="@dimen/live_view_secondary_button_height"
+        android:background="@drawable/ic_snapshot_list"
+        android:contentDescription="@string/snapshot_list"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/buttonVideoList" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/snapshots"
+        android:textAlignment="center"
+        android:textColor="@color/colorGrey"
+        android:textSize="@dimen/live_view_text_size"
+        android:textStyle="bold"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageButton
+        android:id="@+id/buttonVideoList"
+        android:layout_width="@dimen/live_view_secondary_button_width"
+        android:layout_height="@dimen/live_view_secondary_button_height"
+        android:background="@drawable/ic_video_list"
+        android:contentDescription="@string/record_list"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:ignore="MissingConstraints" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/videos"
+        android:textAlignment="center"
+        android:textColor="@color/colorGrey"
+        android:textSize="@dimen/live_view_text_size"
+        android:textStyle="bold"
+        android:visibility="gone"
+        tools:ignore="MissingConstraints" />
+
+    <ImageView
+        android:id="@+id/buttonOpenHelpPage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/margin_info_button_live_view"
+        android:layout_marginBottom="@dimen/margin_info_button_live_view"
+        android:contentDescription="@string/button_link_snapshots"
+        android:src="@drawable/ic_info"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:ignore="MissingConstraints" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

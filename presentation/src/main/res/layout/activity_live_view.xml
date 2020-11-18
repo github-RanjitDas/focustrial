@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/imageViewBackground"
+        android:layout_width="@dimen/no_dp"
+        android:layout_height="@dimen/no_dp"
+        android:contentDescription="@string/background"
+        android:scaleType="centerCrop"
+        android:src="@drawable/background"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <SurfaceView
+        android:id="@+id/liveStreamingView"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/live_view_surface_view_height_default"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageButton
+        android:id="@+id/toggleFullScreenLiveView"
+        android:layout_width="@dimen/live_view_toggle_full_screen_width"
+        android:layout_height="@dimen/live_view_toggle_full_screen_height"
+        android:background="@null"
+        android:contentDescription="@string/image_description_full_screen_size"
+        android:scaleType="centerCrop"
+        android:src="@drawable/ic_full_size"
+        app:layout_constraintBottom_toBottomOf="@+id/liveStreamingView"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <ImageButton
+        android:id="@+id/buttonSnapshot"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/live_view_main_button_margin_shorter"
+        android:layout_marginTop="@dimen/live_view_main_button_margin_top"
+        android:layout_marginEnd="@dimen/live_view_main_button_margin_shorter"
+        android:background="@drawable/ic_snap_selector"
+        android:contentDescription="@string/button_snapshot"
+        app:layout_constraintEnd_toStartOf="@+id/guideline2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/liveStreamingView" />
+
+    <ImageView
+        android:id="@+id/imageRecordingIndicator"
+        android:layout_width="@dimen/live_view_image_recording_size"
+        android:layout_height="@dimen/live_view_image_recording_size"
+        android:clickable="false"
+        android:contentDescription="@string/image_video_recording"
+        android:src="@drawable/ic_rec_video"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toTopOf="@+id/buttonStreaming"
+        app:layout_constraintEnd_toEndOf="@+id/buttonStreaming"
+        app:layout_constraintStart_toStartOf="@+id/buttonStreaming"
+        app:layout_constraintTop_toBottomOf="@+id/liveStreamingView" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/snap"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@id/buttonSnapshot"
+        app:layout_constraintStart_toStartOf="@id/buttonSnapshot"
+        app:layout_constraintTop_toBottomOf="@id/buttonSnapshot" />
+
+    <ImageButton
+        android:id="@+id/buttonStreaming"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/live_view_main_button_margin_shorter"
+        android:layout_marginTop="@dimen/live_view_main_button_margin_top"
+        android:layout_marginEnd="@dimen/live_view_main_button_margin_shorter"
+        android:background="@drawable/ic_record_selector"
+        android:contentDescription="@string/button_streaming"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/guideline2"
+        app:layout_constraintTop_toBottomOf="@+id/toggleFullScreenLiveView" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/record"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@id/buttonStreaming"
+        app:layout_constraintStart_toStartOf="@id/buttonStreaming"
+        app:layout_constraintTop_toBottomOf="@id/buttonStreaming" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintGuide_percent="0.65"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Switch
+        android:id="@+id/buttonSwitchLiveView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/ic_switch_on"
+        android:checked="true"
+        android:thumb="@android:color/transparent"
+        android:track="@android:color/transparent"
+        app:layout_constraintBottom_toTopOf="@+id/saveActionButtons"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guideline"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <TextView
+        android:id="@+id/textLiveViewSwitch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/live_view_label_padding"
+        android:text="@string/live_view_label"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textSize="@dimen/live_view_label_text_size"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/buttonSwitchLiveView" />
+
+    <ImageView
+        android:id="@+id/buttonOpenHelpPage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/margin_info_button_live_view"
+        android:layout_marginBottom="@dimen/margin_info_button_live_view"
+        android:contentDescription="@string/button_link_snapshots"
+        android:src="@drawable/ic_info"
+        app:layout_constraintBottom_toTopOf="@+id/saveActionButtons"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <ImageView
+        android:id="@+id/saveActionButtons"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/live_view_bottom_white_image_height"
+        android:background="@drawable/ic_nav_bg"
+        android:contentDescription="@string/image_description_bottom_image"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <ImageButton
+        android:id="@+id/buttonSnapshotList"
+        android:layout_width="@dimen/live_view_secondary_button_width"
+        android:layout_height="@dimen/live_view_secondary_button_height"
+        android:background="@drawable/ic_snapshot_list"
+        android:contentDescription="@string/snapshot_list"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/buttonVideoList" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingEnd="@dimen/live_view_text_label_padding_right"
+        android:text="@string/snapshots"
+        android:textAlignment="center"
+        android:textColor="@color/colorGrey"
+        android:textSize="@dimen/live_view_text_size"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@id/buttonSnapshotList"
+        app:layout_constraintStart_toStartOf="@id/buttonSnapshotList"
+        app:layout_constraintTop_toBottomOf="@id/guideline3"
+        tools:ignore="RtlSymmetry" />
+
+    <ImageButton
+        android:id="@+id/buttonVideoList"
+        android:layout_width="@dimen/live_view_secondary_button_width"
+        android:layout_height="@dimen/live_view_secondary_button_height"
+        android:background="@drawable/ic_video_list"
+        android:contentDescription="@string/record_list"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/guideline2" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingStart="@dimen/live_view_text_label_padding_left"
+        android:text="@string/videos"
+        android:textAlignment="center"
+        android:textColor="@color/colorGrey"
+        android:textSize="@dimen/live_view_text_size"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@id/buttonVideoList"
+        app:layout_constraintStart_toStartOf="@id/buttonVideoList"
+        app:layout_constraintTop_toBottomOf="@id/guideline3"
+        tools:ignore="RtlSymmetry" />
+
+    <ProgressBar
+        android:id="@+id/progress_view"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@+id/saveActionButtons"
+        app:layout_constraintEnd_toEndOf="@+id/imageViewBackground"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/imageViewBackground" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/progress_view"
+        android:gravity="center"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+        android:textColor="@android:color/white"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/progress_view" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintGuide_percent="0.95"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintGuide_percent="0.50"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

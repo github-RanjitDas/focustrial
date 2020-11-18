@@ -1,0 +1,39 @@
+ext.fileFilter = [
+        '**/R.class',
+        '**/R$*.class',
+        "**/BuildConfig.*",
+        "**/Manifest*.*",
+        '**/*Test*.*',
+        'android/**/*.*',
+
+        //Dagger 2
+        '**/*Dagger*Component*.*',
+        '**/*Module.*',
+        '**/*Modules.*',
+        '**/*Module$*.*',
+        '**/*MembersInjector*.*',
+        '**/*_Factory*.*',
+        '**/*Provide*Factory*.*',
+
+
+        //Classes I intentionally don't want to test
+        "**/*Activity.*",
+        '**/*Constants.*',
+        '**/App.class',
+        '**/*Adapter.*',
+        '**/*ViewHolder*.*',
+        "**/app/*.*",
+
+        "**/*Fragment.**",
+        "**/*Manifest.**",
+        "**/*Module.**",
+        "**/*Application.**",
+        "**/res/**",
+        "**/entities/**",
+        "**/models/**",
+        "**/app/**",
+        "**/adapters/**",
+        '**/extensions/*.*',
+        "**/*VLCMediaPlayer.*",
+        "com.lawmobile.domain.CameraInfo*"
+]

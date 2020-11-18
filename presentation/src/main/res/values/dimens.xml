@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- General -->
+    <dimen name="no_dp">0dp</dimen>
+
+    <!-- Text Size -->
+    <dimen name="text_h1">24sp</dimen>
+    <dimen name="text_h3">22sp</dimen>
+    <dimen name="text_h5">20sp</dimen>
+    <dimen name="text_p2">16sp</dimen>
+    <dimen name="text_p7">11sp</dimen>
+
+    <!-- Login -->
+    <dimen name="login_constrain_parent_padding">40dp</dimen>
+
+    <!--  Pairing Phone with Camera -->
+    <dimen name="pairing_phone_camera_text_version_margin_top">10dp</dimen>
+    <dimen name="pairing_phone_camera_text_version_margin_sides">20dp</dimen>
+    <dimen name="pairing_phone_camera_image_focus_margin_top">5dp</dimen>
+    <dimen name="pairing_phone_camera_image_focus_margin_sides">0dp</dimen>
+    <dimen name="pairing_phone_camera_text_title_margin_top">20dp</dimen>
+    <dimen name="pairing_phone_camera_input_height">40dp</dimen>
+    <dimen name="pairing_phone_camera_input_margin_top">30dp</dimen>
+    <dimen name="pairing_phone_camera_input_edit_padding_sides">5dp</dimen>
+    <dimen name="pairing_phone_camera_button_go_size">140dp</dimen>
+    <dimen name="pairing_phone_camera_button_go_margin_top">50dp</dimen>
+    <dimen name="pairing_phone_camera_text_instruction_margin_top">20dp</dimen>
+    <dimen name="pairing_phone_camera_view_instructions_margin_sides">20dp</dimen>
+    <dimen name="pairing_phone_camera_view_instructions_margin_top">3dp</dimen>
+    <dimen name="pairing_phone_camera_view_instructions_height">0.7dp</dimen>
+    <dimen name="pairing_phone_camera_image_circle_size">180dp</dimen>
+    <dimen name="pairing_phone_camera_progress_bar_size">300dp</dimen>
+
+    <!-- Validate password officer-->
+    <dimen name="validate_password_officer_text_officer_name_margin_top">10dp</dimen>
+
+    <!-- Live view -->
+    <dimen name="live_view_switch_button_width">60dp</dimen>
+    <dimen name="live_view_switch_button_height">22dp</dimen>
+    <dimen name="live_view_main_button_margin_top">50dp</dimen>
+    <dimen name="live_view_main_button_margin_shorter">24dp</dimen>
+    <dimen name="live_view_toggle_full_screen_width">24dp</dimen>
+    <dimen name="live_view_toggle_full_screen_height">24dp</dimen>
+    <dimen name="live_view_image_recording_size">50dp</dimen>
+    <dimen name="live_view_surface_view_height_default">220dp</dimen>
+    <dimen name="live_view_bottom_white_image_height">120dp</dimen>
+    <dimen name="live_view_secondary_button_width">123dp</dimen>
+    <dimen name="live_view_secondary_button_height">113dp</dimen>
+    <dimen name="live_view_label_padding">5dp</dimen>
+    <dimen name="live_view_label_text_size">15sp</dimen>
+    <dimen name="live_view_text_size">11sp</dimen>
+    <dimen name="live_view_text_label_padding_right">10dp</dimen>
+    <dimen name="live_view_text_label_padding_left">5dp</dimen>
+    <dimen name="dialog_height_parent">120dp</dimen>
+    <dimen name="dialog_margin_sides_progress">12dp</dimen>
+    <dimen name="file_list_text_size">17sp</dimen>
+    <dimen name="file_list_nav_buttons_margin">10dp</dimen>
+    <dimen name="file_list_title_top">5dp</dimen>
+    <dimen name="file_list_title_bottom">15dp</dimen>
+    <dimen name="file_list_checkbox_margin_start">10dp</dimen>
+    <dimen name="check_box_item_file_start">10dp</dimen>
+    <dimen name="item_file_bottom_margin">1dp</dimen>
+
+    <!-- Video playback -->
+    <dimen name="video_playback_surface_view_height">220dp</dimen>
+    <dimen name="video_playback_size_buttons">24dp</dimen>
+    <dimen name="video_playback_button_play_margin_sides">8dp</dimen>
+    <dimen name="video_playback_text_view_player_time_margin_sides">10dp</dimen>
+    <dimen name="video_playback_button_full_screen_margin_sides">8dp</dimen>
+    <dimen name="video_playback_button_aspect_margin_sides">10dp</dimen>
+    <dimen name="video_playback_text_view_player_length_margin_sides">10dp</dimen>
+    <dimen name="video_playback_padding_bottom_buttons">20dp</dimen>
+    <dimen name="video_playback_padding_top_buttons">5dp</dimen>
+    <dimen name="snapshot_item_detail_32dp">32dp</dimen>
+    <dimen name="snapshot_item_detail_16dp">16dp</dimen>
+    <dimen name="file_list_item_margin_vertical">10dp</dimen>
+    <dimen name="video_playback_metadata_text_size">16sp</dimen>
+    <dimen name="video_playback_metadata_spacing">20dp</dimen>
+    <dimen name="video_playback_edit_metadata_padding">5dp</dimen>
+    <dimen name="metadata_form_spacing">20dp</dimen>
+    <dimen name="associate_partner_id_top_margin">10dp</dimen>
+    <dimen name="associate_partner_id_title_padding">20dp</dimen>
+    <dimen name="associate_partner_id_edit_text_margin">20dp</dimen>
+    <dimen name="associate_partner_id_edit_text_size">20sp</dimen>
+    <dimen name="associate_partner_id_edit_text_padding">10dp</dimen>
+    <dimen name="snapshot_link_recycler_padding_horizontal">10dp</dimen>
+    <dimen name="snapshot_link_recycler_padding_vertical">30dp</dimen>
+    <dimen name="snapshot_link_item_height">100dp</dimen>
+    <dimen name="margin_info_button_live_view">8dp</dimen>
+    <dimen name="padding_horizontal_metadata_fields">8dp</dimen>
+
+    <!-- link_snapshots -->
+    <dimen name="link_snapshot_margin_sides_loading_message">10dp</dimen>
+</resources>

@@ -1,0 +1,33 @@
+ext.pitestExclusions = [
+        //Dagger 2
+        '**.*Dagger*Component*',
+        '**.*Module*',
+        '**.*Modules*',
+        '**.*MembersInjector*',
+        '**.*_Factory*',
+        '**.*Provide*Factory*',
+
+        //Classes I intentionally don't want to test
+        "**.*Activity*",
+        '**.*Constants*',
+        '**.App.class',
+        '**.*Adapter*',
+        '**.*ViewHolder*',
+
+        "**.*Fragment*",
+        "**.*Manifest*",
+        "**.*Module*",
+        "**.*Application*",
+        "**.res.**",
+        "**.entities.**",
+        "**.models.**",
+        "**.adapters.**",
+        '**.extensions.**',
+        "**.*Fragment*",
+        "com.lawmobile.data.repository.videoPlayback.VideoPlaybackRepositoryImpl*",
+        "com.lawmobile.domain.CameraInfo*",
+        "com.lawmobile.data.entities.VideoListMetadata*",
+        "com.lawmobile.presentation.ui.base.BaseViewModel*",
+        "com.lawmobile.presentation.utils.WifiConnection*",
+        "com.lawmobile.data.repository.linkSnapshotsToVideo.LinkSnapshotsRepositoryImpl*"
+]

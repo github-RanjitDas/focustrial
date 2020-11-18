@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constrainValidateSSID"
+        android:layout_width="@dimen/no_dp"
+        android:layout_height="@dimen/no_dp"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/textWaitingForCamera"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/jura_regular"
+            android:gravity="center"
+            android:text="@string/waiting_for_camera"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_h3"
+            android:layout_marginBottom="@dimen/pairing_phone_camera_button_go_margin_top"
+            app:layout_constraintBottom_toTopOf="@+id/imageButtonGo"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <ImageView
+            android:id="@+id/imageButtonGo"
+            android:layout_width="@dimen/pairing_phone_camera_button_go_size"
+            android:layout_height="@dimen/pairing_phone_camera_button_go_size"
+            android:contentDescription="@string/go_to_validate_ssid"
+            android:src="@drawable/button_go"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+        <TextView
+            android:id="@+id/textInstructionsToLinkCamera"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/pairing_phone_camera_text_instruction_margin_top"
+            android:fontFamily="@font/jura_medium"
+            android:text="@string/instructions_to_link_camera"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_p7"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imageButtonGo" />
+
+        <View
+            android:layout_width="@dimen/no_dp"
+            android:layout_height="@dimen/pairing_phone_camera_view_instructions_height"
+            android:layout_marginStart="@dimen/pairing_phone_camera_view_instructions_margin_sides"
+            android:layout_marginTop="@dimen/pairing_phone_camera_view_instructions_margin_top"
+            android:layout_marginEnd="@dimen/pairing_phone_camera_view_instructions_margin_sides"
+            android:background="@color/yellowAccent"
+            app:layout_constraintEnd_toEndOf="@+id/textInstructionsToLinkCamera"
+            app:layout_constraintStart_toStartOf="@+id/textInstructionsToLinkCamera"
+            app:layout_constraintTop_toBottomOf="@+id/textInstructionsToLinkCamera" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constrainProgressValidateSSID"
+        android:layout_width="@dimen/no_dp"
+        android:layout_height="@dimen/no_dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/textConnectingToCamera"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/pairing_phone_camera_text_title_margin_top"
+            android:gravity="center"
+            android:text="@string/connecting_to_camera"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_h3"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:layout_width="@dimen/pairing_phone_camera_image_circle_size"
+            android:layout_height="@dimen/pairing_phone_camera_image_circle_size"
+            android:contentDescription="@string/circle_progress_connection_camera"
+            android:src="@drawable/white_circle"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ProgressBar
+            android:id="@+id/circularProgressbar"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="@dimen/pairing_phone_camera_progress_bar_size"
+            android:layout_height="@dimen/pairing_phone_camera_progress_bar_size"
+            android:indeterminate="false"
+            android:max="100"
+            android:progress="0"
+            android:progressDrawable="@drawable/progress_circular"
+            android:secondaryProgress="100"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/textViewProgressConnection"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/jura_semi_bold"
+            android:textColor="@color/yellowAccent"
+            android:textSize="@dimen/text_h5"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="0%" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
