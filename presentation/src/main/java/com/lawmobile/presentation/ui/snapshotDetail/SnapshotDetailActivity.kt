@@ -14,6 +14,7 @@ import com.lawmobile.domain.entities.DomainCameraFile
 import com.lawmobile.domain.entities.DomainInformationImageMetadata
 import com.lawmobile.domain.extensions.getCreationDate
 import com.lawmobile.presentation.R
+import com.lawmobile.presentation.databinding.ActivitySnapshotItemDetailBinding
 import com.lawmobile.presentation.entities.ImageFilesPathManager
 import com.lawmobile.presentation.entities.ImageWithPathSaved
 import com.lawmobile.presentation.extensions.*
@@ -21,12 +22,11 @@ import com.lawmobile.presentation.ui.base.BaseActivity
 import com.lawmobile.presentation.ui.thumbnailList.ThumbnailFileListFragment.Companion.PATH_ERROR_IN_PHOTO
 import com.lawmobile.presentation.utils.Constants
 import com.safefleet.mobile.commons.helpers.*
-import kotlinx.android.synthetic.main.activity_snapshot_item_detail.*
-import kotlinx.android.synthetic.main.bottom_sheet_assign_to_officer.*
-import kotlinx.android.synthetic.main.custom_app_bar.*
 import java.io.File
 
 class SnapshotDetailActivity : BaseActivity() {
+
+    private lateinit var activitySnapshotItemDetailBinding: ActivitySnapshotItemDetailBinding
 
     private val snapshotDetailViewModel: SnapshotDetailViewModel by viewModels()
     private lateinit var file: DomainCameraFile
@@ -35,13 +35,15 @@ class SnapshotDetailActivity : BaseActivity() {
 
     private val sheetBehavior: BottomSheetBehavior<CardView> by lazy {
         BottomSheetBehavior.from(
-            bottomSheetPartnerId
+            activitySnapshotItemDetailBinding.bottomSheetPartnerId!!.bottomSheetPartnerId
         )
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_snapshot_item_detail)
+        activitySnapshotItemDetailBinding =
+            ActivitySnapshotItemDetailBinding.inflate(layoutInflater)
+        setContentView(activitySnapshotItemDetailBinding.root)
         setAppBar()
         getInformationFromIntent()
         setInformationOfSnapshot()
@@ -80,18 +82,20 @@ class SnapshotDetailActivity : BaseActivity() {
     }
 
     private fun setAppBar() {
-        fileListAppBarTitle.text = getString(R.string.snapshot_item_detail_title)
-        buttonSimpleList.isVisible = false
-        buttonThumbnailList.isVisible = false
+        activitySnapshotItemDetailBinding.layoutFileListAppBar?.fileListAppBarTitle?.text =
+            getString(R.string.snapshot_item_detail_title)
+        activitySnapshotItemDetailBinding.layoutFileListAppBar?.buttonSimpleList?.isVisible = false
+        activitySnapshotItemDetailBinding.layoutFileListAppBar?.buttonThumbnailList?.isVisible =
+            false
     }
 
     private fun configureListeners() {
-        buttonAssociatePartnerIdList.setOnClickListenerCheckConnection {
+        activitySnapshotItemDetailBinding.buttonAssociatePartnerIdList.setOnClickListenerCheckConnection {
             showAssignToOfficerBottomSheet()
         }
-        backArrowFileListAppBar.setOnClickListenerCheckConnection { onBackPressed() }
-        buttonFullScreen.setOnClickListenerCheckConnection { changeOrientationInView() }
-        imageReload.setOnClickListenerCheckConnection {
+        activitySnapshotItemDetailBinding.layoutFileListAppBar?.backArrowFileListAppBar?.setOnClickListenerCheckConnection { onBackPressed() }
+        activitySnapshotItemDetailBinding.buttonFullScreen.setOnClickListenerCheckConnection { changeOrientationInView() }
+        activitySnapshotItemDetailBinding.imageReload.setOnClickListenerCheckConnection {
             showLoadingDialog()
             snapshotDetailViewModel.getImageBytes(file)
         }
@@ -125,7 +129,7 @@ class SnapshotDetailActivity : BaseActivity() {
                     setImageWithPath(path)
                 }
                 doIfError {
-                    imageReload.isVisible = true
+                    activitySnapshotItemDetailBinding.imageReload.isVisible = true
                 }
             }
         }
@@ -144,7 +148,7 @@ class SnapshotDetailActivity : BaseActivity() {
                 }
                 doIfError {
                     showMetadataNotAvailable()
-                    constraintLayoutDetail.showErrorSnackBar(
+                    activitySnapshotItemDetailBinding.constraintLayoutDetail.showErrorSnackBar(
                         getString(R.string.snapshot_detail_metadata_error),
                         SNAPSHOT_DETAIL_ERROR_ANIMATION_DURATION
                     ) {
@@ -158,31 +162,38 @@ class SnapshotDetailActivity : BaseActivity() {
     }
 
     private fun showMetadataNotAvailable() {
-        officerValue.text = getString(R.string.not_available)
-        videosAssociatedValue.text = getString(R.string.not_available)
+        activitySnapshotItemDetailBinding.officerValue.text = getString(R.string.not_available)
+        activitySnapshotItemDetailBinding.videosAssociatedValue.text =
+            getString(R.string.not_available)
     }
 
     private fun manageSavePartnerId(result: Result<Unit>) {
         hideLoadingDialog()
         with(result) {
             doIfSuccess {
-                constraintLayoutDetail.showSuccessSnackBar(getString(R.string.file_list_associate_partner_id_success))
+                activitySnapshotItemDetailBinding.constraintLayoutDetail.showSuccessSnackBar(
+                    getString(R.string.file_list_associate_partner_id_success)
+                )
                 sheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
-                officerValue.text = temporalPartnerToShowIfItSaved
+                activitySnapshotItemDetailBinding.officerValue.text = temporalPartnerToShowIfItSaved
             }
             doIfError {
-                constraintLayoutDetail.showErrorSnackBar(getString(R.string.file_list_associate_partner_id_error))
+                activitySnapshotItemDetailBinding.constraintLayoutDetail.showErrorSnackBar(
+                    getString(
+                        R.string.file_list_associate_partner_id_error
+                    )
+                )
             }
         }
     }
 
     private fun configureBottomSheet() {
         sheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
-        buttonAssignToOfficer.setOnClickListenerCheckConnection {
-            associatePartnerId(editTextAssignToOfficer.text.toString())
+        activitySnapshotItemDetailBinding.bottomSheetPartnerId?.buttonAssignToOfficer?.setOnClickListenerCheckConnection {
+            associatePartnerId(activitySnapshotItemDetailBinding.bottomSheetPartnerId?.editTextAssignToOfficer?.text.toString())
             hideKeyboard()
         }
-        buttonCloseAssignToOfficer.setOnClickListenerCheckConnection {
+        activitySnapshotItemDetailBinding.bottomSheetPartnerId?.buttonCloseAssignToOfficer?.setOnClickListenerCheckConnection {
             hideKeyboard()
             sheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
         }
@@ -193,9 +204,9 @@ class SnapshotDetailActivity : BaseActivity() {
                 when (newState) {
                     BottomSheetBehavior.STATE_HIDDEN -> {
                         hideKeyboard()
-                        shadowDetailView.isVisible = false
+                        activitySnapshotItemDetailBinding.shadowDetailView.isVisible = false
                     }
-                    else -> shadowDetailView.isVisible = true
+                    else -> activitySnapshotItemDetailBinding.shadowDetailView.isVisible = true
                 }
             }
         })
@@ -208,7 +219,7 @@ class SnapshotDetailActivity : BaseActivity() {
     private fun associatePartnerId(partnerId: String) {
 
         if (partnerId.isEmpty()) {
-            constraintLayoutDetail.showErrorSnackBar(getString(R.string.valid_partner_id_message))
+            activitySnapshotItemDetailBinding.constraintLayoutDetail.showErrorSnackBar(getString(R.string.valid_partner_id_message))
             return
         }
         showLoadingDialog()
@@ -220,20 +231,21 @@ class SnapshotDetailActivity : BaseActivity() {
         if (path.imageHasCorrectFormat()) {
             try {
                 ImageFilesPathManager.saveImageWithPath(ImageWithPathSaved(file.name, path))
-                Glide.with(this).load(File(path)).into(photoItemDetailHolder)
-                imageReload.isVisible = false
+                Glide.with(this).load(File(path))
+                    .into(activitySnapshotItemDetailBinding.photoItemDetailHolder)
+                activitySnapshotItemDetailBinding.imageReload.isVisible = false
             } catch (e: Exception) {
-                imageFailed.isVisible = true
+                activitySnapshotItemDetailBinding.imageFailed.isVisible = true
                 showFailedLoadImageError()
             }
         } else {
-            imageFailed.isVisible = true
+            activitySnapshotItemDetailBinding.imageFailed.isVisible = true
             showFailedLoadImageError()
         }
     }
 
     private fun showFailedLoadImageError() {
-        constraintLayoutDetail.showErrorSnackBar(
+        activitySnapshotItemDetailBinding.constraintLayoutDetail.showErrorSnackBar(
             getString(R.string.snapshot_detail_load_failed),
             SNAPSHOT_DETAIL_ERROR_ANIMATION_DURATION
         ) {
@@ -242,8 +254,8 @@ class SnapshotDetailActivity : BaseActivity() {
     }
 
     private fun setInformationOfSnapshot() {
-        photoNameValue.text = file.name
-        dateTimeValue.text = file.date
+        activitySnapshotItemDetailBinding.photoNameValue.text = file.name
+        activitySnapshotItemDetailBinding.dateTimeValue.text = file.date
     }
 
     private fun setSnapshotMetadata() {
@@ -253,9 +265,9 @@ class SnapshotDetailActivity : BaseActivity() {
 
     private fun setOfficerAssociatedInView() {
         domainInformationImageMetadata?.cameraConnectPhotoMetadata?.metadata?.partnerID?.let {
-            officerValue.text = it
+            activitySnapshotItemDetailBinding.officerValue.text = it
         } ?: run {
-            officerValue.text = getString(R.string.none)
+            activitySnapshotItemDetailBinding.officerValue.text = getString(R.string.none)
         }
     }
 
@@ -268,12 +280,12 @@ class SnapshotDetailActivity : BaseActivity() {
                     if (position != it.lastIndex) textInVideos += "\n"
                 }
 
-                videosAssociatedValue.text = textInVideos
+                activitySnapshotItemDetailBinding.videosAssociatedValue.text = textInVideos
                 return
             }
         }
 
-        videosAssociatedValue.text = getString(R.string.none)
+        activitySnapshotItemDetailBinding.videosAssociatedValue.text = getString(R.string.none)
     }
 
     override fun onBackPressed() {
@@ -285,9 +297,9 @@ class SnapshotDetailActivity : BaseActivity() {
     }
 
     private fun restartVisibility() {
-        photoItemDetailHolder.isVisible = true
-        imageReload.isVisible = false
-        imageFailed.isVisible = false
+        activitySnapshotItemDetailBinding.photoItemDetailHolder.isVisible = true
+        activitySnapshotItemDetailBinding.imageReload.isVisible = false
+        activitySnapshotItemDetailBinding.imageFailed.isVisible = false
     }
 
     companion object {

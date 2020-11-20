@@ -15,6 +15,7 @@ import com.lawmobile.domain.entities.DomainInformationFile
 import com.lawmobile.domain.entities.DomainInformationFileResponse
 import com.lawmobile.domain.entities.DomainInformationImage
 import com.lawmobile.presentation.R
+import com.lawmobile.presentation.databinding.FragmentFileListBinding
 import com.lawmobile.presentation.entities.ImageFilesPathManager
 import com.lawmobile.presentation.entities.ImageWithPathSaved
 import com.lawmobile.presentation.entities.SnapshotsAssociatedByUser
@@ -26,11 +27,13 @@ import com.safefleet.mobile.commons.helpers.Event
 import com.safefleet.mobile.commons.helpers.Result
 import com.safefleet.mobile.commons.helpers.doIfError
 import com.safefleet.mobile.commons.helpers.doIfSuccess
-import kotlinx.android.synthetic.main.fragment_file_list.*
 import java.io.File
 import kotlin.math.min
 
 class ThumbnailFileListFragment : FileListBaseFragment() {
+
+    private var _fragmentFileListBinding: FragmentFileListBinding? = null
+    private val fragmentFileListBinding get() = _fragmentFileListBinding!!
 
     private val thumbnailListFragmentViewModel: ThumbnailListFragmentViewModel by activityViewModels()
     private var imagesFailedToLoad: ArrayList<String> = arrayListOf()
@@ -48,7 +51,9 @@ class ThumbnailFileListFragment : FileListBaseFragment() {
         savedInstanceState: Bundle?
     ): View? {
         setObservers()
-        return inflater.inflate(R.layout.fragment_file_list, container, false)
+        _fragmentFileListBinding =
+            FragmentFileListBinding.inflate(inflater, container, false)
+        return fragmentFileListBinding.root
     }
 
     override fun onResume() {
@@ -77,9 +82,9 @@ class ThumbnailFileListFragment : FileListBaseFragment() {
     }
 
     private fun configureLayoutItems() {
-        textViewEvent.isVisible = false
-        textViewDateAndTime.isVisible = false
-        dividerViewList.isVisible = false
+        fragmentFileListBinding.textViewEvent.isVisible = false
+        fragmentFileListBinding.textViewDateAndTime.isVisible = false
+        fragmentFileListBinding.dividerViewList.isVisible = false
     }
 
     private fun getSnapshotList() {
@@ -94,7 +99,10 @@ class ThumbnailFileListFragment : FileListBaseFragment() {
     }
 
     private fun fillAdapter(listItems: MutableList<DomainInformationFile>) {
-        showFileListRecycler()
+        showFileListRecycler(
+            fragmentFileListBinding.fileListRecycler,
+            fragmentFileListBinding.noFilesTextView
+        )
 
         fileListBackup = mutableListOf()
 
@@ -122,7 +130,10 @@ class ThumbnailFileListFragment : FileListBaseFragment() {
             filter?.filteredList?.filterIsInstance<DomainInformationImage>()
                     as MutableList<DomainInformationImage>
         loadNewImage()
-        manageFragmentContent()
+        manageFragmentContent(
+            fragmentFileListBinding.fileListRecycler,
+            fragmentFileListBinding.noFilesTextView
+        )
     }
 
     private fun restoreFilters() {
@@ -149,7 +160,7 @@ class ThumbnailFileListFragment : FileListBaseFragment() {
     }
 
     private fun setRecyclerView() {
-        fileListRecycler?.apply {
+        fragmentFileListBinding.fileListRecycler.apply {
             setHasFixedSize(true)
             gridLayoutManager = GridLayoutManager(requireContext(), 2)
             layoutManager = gridLayoutManager
@@ -177,10 +188,13 @@ class ThumbnailFileListFragment : FileListBaseFragment() {
             doIfSuccess {
                 if (it.errors.isNotEmpty()) showErrorInSomeFiles(it.errors)
                 if (it.items.isNotEmpty()) fillAdapter(it.items)
-                else showEmptyListMessage()
+                else showEmptyListMessage(
+                    fragmentFileListBinding.fileListRecycler,
+                    fragmentFileListBinding.noFilesTextView
+                )
             }
             doIfError {
-                fileListLayout.showErrorSnackBar(
+                fragmentFileListBinding.fileListLayout.showErrorSnackBar(
                     getString(R.string.file_list_failed_load_files),
                     Snackbar.LENGTH_INDEFINITE
                 ) {
@@ -192,7 +206,7 @@ class ThumbnailFileListFragment : FileListBaseFragment() {
     }
 
     private fun showErrorInSomeFiles(errors: MutableList<String>) {
-        fileListLayout.showErrorSnackBar(
+        fragmentFileListBinding.fileListLayout.showErrorSnackBar(
             getString(R.string.getting_files_error_description),
             Snackbar.LENGTH_LONG
         ) {

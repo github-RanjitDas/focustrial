@@ -3,11 +3,11 @@ package com.lawmobile.presentation.widgets
 import android.content.Context
 import android.util.AttributeSet
 import android.view.View
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import com.lawmobile.presentation.R
 import com.safefleet.mobile.commons.widgets.SafeFleetClickable
-import kotlinx.android.synthetic.main.button_custom_record.view.*
 
 class CustomRecordButton @JvmOverloads constructor(
     context: Context,
@@ -17,15 +17,18 @@ class CustomRecordButton @JvmOverloads constructor(
 
     private var buttonText: TextView
     private var buttonIcon: ImageView
+    private var buttonCustomRecord: ImageButton
 
     init {
         View.inflate(context, R.layout.button_custom_record, this)
         buttonText = findViewById(R.id.textViewButtonRecord)
         buttonIcon = findViewById(R.id.imageViewCustomRecord)
+        buttonCustomRecord = findViewById(R.id.buttonCustomRecord)
+
         setOnClickListener(this)
         buttonCustomRecord.setOnClickListener(this)
-        textViewButtonRecord.setOnClickListener(this)
-        imageViewCustomRecord.setOnClickListener(this)
+        buttonText.setOnClickListener(this)
+        buttonIcon.setOnClickListener(this)
     }
 
     override fun isActivated(): Boolean {

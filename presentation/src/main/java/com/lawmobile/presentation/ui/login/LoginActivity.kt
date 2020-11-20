@@ -21,7 +21,6 @@ import com.lawmobile.presentation.ui.login.pairingPhoneWithCamera.PairingResultF
 import com.lawmobile.presentation.ui.login.pairingPhoneWithCamera.StartPairingFragment
 import com.lawmobile.presentation.ui.login.validateOfficerPassword.ValidateOfficerPasswordFragment
 import com.lawmobile.presentation.utils.EspressoIdlingResource
-import kotlinx.android.synthetic.main.bottom_sheet_instructions_connect_camera.*
 
 class LoginActivity : BaseActivity() {
 
@@ -30,7 +29,7 @@ class LoginActivity : BaseActivity() {
     private val loginActivityViewModel: LoginActivityViewModel by viewModels()
     val sheetBehavior: BottomSheetBehavior<CardView> by lazy {
         BottomSheetBehavior.from(
-            bottomSheetInstructions
+            activityLoginBinding.bottomSheetInstructions.bottomSheetInstructions
         )
     }
 

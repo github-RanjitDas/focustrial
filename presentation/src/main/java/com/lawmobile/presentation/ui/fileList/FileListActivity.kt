@@ -10,6 +10,7 @@ import androidx.lifecycle.Observer
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.lawmobile.domain.entities.DomainInformationForList
 import com.lawmobile.presentation.R
+import com.lawmobile.presentation.databinding.ActivityFileListBinding
 import com.lawmobile.presentation.extensions.*
 import com.lawmobile.presentation.ui.base.BaseActivity
 import com.lawmobile.presentation.ui.fileList.FileListBaseFragment.Companion.checkableListInit
@@ -26,12 +27,10 @@ import com.safefleet.mobile.commons.helpers.Result
 import com.safefleet.mobile.commons.helpers.doIfError
 import com.safefleet.mobile.commons.helpers.doIfSuccess
 import com.safefleet.mobile.commons.helpers.hideKeyboard
-import kotlinx.android.synthetic.main.activity_file_list.*
-import kotlinx.android.synthetic.main.bottom_sheet_assign_to_officer.*
-import kotlinx.android.synthetic.main.custom_app_bar.*
-import kotlinx.android.synthetic.main.file_list_filter_dialog.*
 
 class FileListActivity : BaseActivity() {
+
+    private lateinit var activityFileListBinding: ActivityFileListBinding
 
     private val fileListViewModel: FileListViewModel by viewModels()
 
@@ -44,12 +43,13 @@ class FileListActivity : BaseActivity() {
     private var filterDialog: CustomFilterDialog? = null
 
     private val bottomSheetBehavior: BottomSheetBehavior<CardView> by lazy {
-        BottomSheetBehavior.from(bottomSheetPartnerId)
+        BottomSheetBehavior.from(activityFileListBinding.bottomSheetPartnerId.bottomSheetPartnerId)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_file_list)
+        activityFileListBinding = ActivityFileListBinding.inflate(layoutInflater)
+        setContentView(activityFileListBinding.root)
 
         listType = intent.extras?.getString(FILE_LIST_SELECTOR)
 
@@ -71,12 +71,14 @@ class FileListActivity : BaseActivity() {
     private fun setCustomAppBar() {
         when (listType) {
             SNAPSHOT_LIST -> {
-                fileListAppBarTitle.text = getString(R.string.snapshots_title)
+                activityFileListBinding.layoutFileListAppBar.fileListAppBarTitle.text =
+                    getString(R.string.snapshots_title)
             }
             VIDEO_LIST -> {
-                fileListAppBarTitle.text = getString(R.string.videos_title)
-                buttonThumbnailList.isVisible = false
-                buttonSimpleList.isVisible = false
+                activityFileListBinding.layoutFileListAppBar.fileListAppBarTitle.text =
+                    getString(R.string.videos_title)
+                activityFileListBinding.layoutFileListAppBar.buttonThumbnailList.isVisible = false
+                activityFileListBinding.layoutFileListAppBar.buttonSimpleList.isVisible = false
             }
         }
     }
@@ -95,9 +97,9 @@ class FileListActivity : BaseActivity() {
 
     private fun setSimpleFileListFragment() {
         actualFragment = SIMPLE_FILE_LIST
-        buttonSimpleList.isActivated = true
-        buttonThumbnailList.isActivated = false
-        textViewSelectedItems.isVisible = false
+        activityFileListBinding.layoutFileListAppBar.buttonSimpleList.isActivated = true
+        activityFileListBinding.layoutFileListAppBar.buttonThumbnailList.isActivated = false
+        activityFileListBinding.textViewSelectedItems.isVisible = false
         resetButtonAssociate()
         supportFragmentManager.attachFragment(
             R.id.fragmentListHolder,
@@ -108,9 +110,9 @@ class FileListActivity : BaseActivity() {
 
     private fun setThumbnailListFragment() {
         actualFragment = THUMBNAIL_FILE_LIST
-        buttonThumbnailList.isActivated = true
-        buttonSimpleList.isActivated = false
-        textViewSelectedItems.isVisible = false
+        activityFileListBinding.layoutFileListAppBar.buttonThumbnailList.isActivated = true
+        activityFileListBinding.layoutFileListAppBar.buttonSimpleList.isActivated = false
+        activityFileListBinding.textViewSelectedItems.isVisible = false
         resetButtonAssociate()
         supportFragmentManager.attachFragment(
             R.id.fragmentListHolder,
@@ -122,12 +124,12 @@ class FileListActivity : BaseActivity() {
     private fun setListeners() {
         simpleFileListFragment.onFileCheck = ::enableAssociatePartnerButton
         thumbnailFileListFragment.onImageCheck = ::enableAssociatePartnerButton
-        buttonThumbnailList.setClickListenerCheckConnection { setThumbnailListFragment() }
-        buttonSimpleList.setClickListenerCheckConnection { setSimpleFileListFragment() }
-        backArrowFileListAppBar.setOnClickListenerCheckConnection { onBackPressed() }
-        buttonSelectSnapshotsToAssociate.setOnClickListenerCheckConnection { showCheckBoxes() }
-        buttonAssociatePartnerIdList.setOnClickListenerCheckConnection { showAssignToOfficerBottomSheet() }
-        buttonOpenFilters?.setOnClickListenerCheckConnection { showFilterDialog() }
+        activityFileListBinding.layoutFileListAppBar.buttonThumbnailList.setClickListenerCheckConnection { setThumbnailListFragment() }
+        activityFileListBinding.layoutFileListAppBar.buttonSimpleList.setClickListenerCheckConnection { setSimpleFileListFragment() }
+        activityFileListBinding.layoutFileListAppBar.backArrowFileListAppBar.setOnClickListenerCheckConnection { onBackPressed() }
+        activityFileListBinding.buttonSelectSnapshotsToAssociate.setOnClickListenerCheckConnection { showCheckBoxes() }
+        activityFileListBinding.buttonAssociatePartnerIdList.setOnClickListenerCheckConnection { showAssignToOfficerBottomSheet() }
+        activityFileListBinding.buttonOpenFilters.setOnClickListenerCheckConnection { showFilterDialog() }
     }
 
     private fun showFilterDialog() {
@@ -142,15 +144,15 @@ class FileListActivity : BaseActivity() {
 
         if (filterDialog == null) {
             filterDialog =
-                layoutFilterTags.createFilterDialog(::handleOnApplyFilterClick)
+                activityFileListBinding.layoutFilterTags.createFilterDialog(::handleOnApplyFilterClick)
         }
 
         filterDialog?.apply {
             this.listToFilter = listToFilter
             show()
             when (listType) {
-                VIDEO_LIST -> eventsSpinnerFilter.isVisible = true
-                SNAPSHOT_LIST -> eventsSpinnerFilter.isVisible = false
+                VIDEO_LIST -> filterDialog?.isEventSpinnerFilterVisible(true)
+                SNAPSHOT_LIST -> filterDialog?.isEventSpinnerFilterVisible(false)
             }
             simpleFileListFragment.filter = this
             thumbnailFileListFragment.filter = this
@@ -159,7 +161,7 @@ class FileListActivity : BaseActivity() {
     }
 
     private fun handleOnApplyFilterClick(it: Boolean) {
-        scrollFilterTags.isVisible = it
+        activityFileListBinding.scrollFilterTags.isVisible = it
         updateFilterButtonState(it)
         when (actualFragment) {
             SIMPLE_FILE_LIST ->
@@ -171,7 +173,7 @@ class FileListActivity : BaseActivity() {
     }
 
     private fun updateFilterButtonState(it: Boolean) {
-        with(buttonOpenFilters) {
+        with(activityFileListBinding.buttonOpenFilters) {
             background = if (it) {
                 setImageResource(R.drawable.ic_filter_white)
                 ContextCompat.getDrawable(
@@ -190,11 +192,11 @@ class FileListActivity : BaseActivity() {
 
     private fun configureBottomSheet() {
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
-        buttonAssignToOfficer.setOnClickListenerCheckConnection {
-            associatePartnerId(editTextAssignToOfficer.text.toString())
+        activityFileListBinding.bottomSheetPartnerId.buttonAssignToOfficer.setOnClickListenerCheckConnection {
+            associatePartnerId(activityFileListBinding.bottomSheetPartnerId.editTextAssignToOfficer.text.toString())
             hideKeyboard()
         }
-        buttonCloseAssignToOfficer.setOnClickListener {
+        activityFileListBinding.bottomSheetPartnerId.buttonCloseAssignToOfficer.setOnClickListener {
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
         }
         bottomSheetBehavior.addBottomSheetCallback(object :
@@ -203,8 +205,9 @@ class FileListActivity : BaseActivity() {
 
             override fun onStateChanged(bottomSheet: View, newState: Int) {
                 when (newState) {
-                    BottomSheetBehavior.STATE_HIDDEN -> shadowFileListView.isVisible = false
-                    else -> shadowFileListView.isVisible = true
+                    BottomSheetBehavior.STATE_HIDDEN -> activityFileListBinding.shadowFileListView.isVisible =
+                        false
+                    else -> activityFileListBinding.shadowFileListView.isVisible = true
                 }
             }
         })
@@ -213,7 +216,7 @@ class FileListActivity : BaseActivity() {
     private fun associatePartnerId(partnerId: String) {
 
         if (partnerId.isEmpty()) {
-            constraintLayoutFileList.showErrorSnackBar(getString(R.string.valid_partner_id_message))
+            activityFileListBinding.constraintLayoutFileList.showErrorSnackBar(getString(R.string.valid_partner_id_message))
             return
         }
 
@@ -244,7 +247,7 @@ class FileListActivity : BaseActivity() {
     }
 
     private fun resetButtonAssociate() {
-        with(buttonSelectSnapshotsToAssociate) {
+        with(activityFileListBinding.buttonSelectSnapshotsToAssociate) {
             isActivated = false
             text = when (listType) {
                 VIDEO_LIST -> getString(R.string.select_videos_to_associate)
@@ -263,11 +266,11 @@ class FileListActivity : BaseActivity() {
             }
         }
 
-        buttonAssociatePartnerIdList.isVisible = false
+        activityFileListBinding.buttonAssociatePartnerIdList.isVisible = false
     }
 
     private fun activateButtonAssociate() {
-        with(buttonSelectSnapshotsToAssociate) {
+        with(activityFileListBinding.buttonSelectSnapshotsToAssociate) {
             isActivated = true
             text = getString(R.string.cancel)
         }
@@ -284,7 +287,7 @@ class FileListActivity : BaseActivity() {
     }
 
     private fun showCheckBoxes() {
-        if (buttonSelectSnapshotsToAssociate.isActivated) resetButtonAssociate()
+        if (activityFileListBinding.buttonSelectSnapshotsToAssociate.isActivated) resetButtonAssociate()
         else activateButtonAssociate()
     }
 
@@ -293,12 +296,12 @@ class FileListActivity : BaseActivity() {
     }
 
     private fun enableAssociatePartnerButton(activate: Boolean, selectedItems: Int) {
-        buttonAssociatePartnerIdList.run {
+        activityFileListBinding.buttonAssociatePartnerIdList.run {
             isVisible = activate
             isActivated = activate
         }
 
-        textViewSelectedItems.run {
+        activityFileListBinding.textViewSelectedItems.run {
             isVisible = selectedItems > 0
             text = getString(R.string.items_selected, selectedItems)
         }
@@ -307,11 +310,11 @@ class FileListActivity : BaseActivity() {
     private fun handlePartnerIdResult(result: Result<Unit>) {
         with(result) {
             doIfSuccess {
-                constraintLayoutFileList.showSuccessSnackBar(getString(R.string.file_list_associate_partner_id_success))
+                activityFileListBinding.constraintLayoutFileList.showSuccessSnackBar(getString(R.string.file_list_associate_partner_id_success))
                 resetButtonAssociate()
             }
             doIfError {
-                constraintLayoutFileList.showErrorSnackBar(
+                activityFileListBinding.constraintLayoutFileList.showErrorSnackBar(
                     it.message ?: getString(R.string.file_list_associate_partner_id_error)
                 )
             }
