@@ -1,10 +1,6 @@
 package com.lawmobile.presentation.ui.base
 
 import com.lawmobile.presentation.InstantExecutorExtension
-import com.safefleet.mobile.commons.helpers.Result
-import io.mockk.coEvery
-import io.mockk.coVerify
-import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay

@@ -29,6 +29,7 @@
                 tools:context=".ui.videoPlayback.VideoPlaybackActivity">
 
                 <include
+                    android:id="@+id/layoutFileListAppBar"
                     layout="@layout/custom_app_bar"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
@@ -711,6 +712,8 @@
         android:focusable="true"
         android:visibility="gone" />
 
-    <include layout="@layout/bottom_sheet_associate_snapshots" />
+    <include
+        android:id="@+id/bottomSheetAssociate"
+        layout="@layout/bottom_sheet_associate_snapshots" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

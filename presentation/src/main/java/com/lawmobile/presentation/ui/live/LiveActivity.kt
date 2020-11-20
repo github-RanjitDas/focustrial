@@ -6,6 +6,7 @@ import android.content.pm.ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
 import android.os.Build
 import android.os.Bundle
 import android.text.Html
+import android.view.View
 import android.view.animation.AnimationUtils
 import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
@@ -14,6 +15,7 @@ import androidx.lifecycle.Observer
 import com.lawmobile.domain.entities.CameraInfo
 import com.lawmobile.domain.entities.DomainCatalog
 import com.lawmobile.presentation.R
+import com.lawmobile.presentation.databinding.ActivityLiveViewBinding
 import com.lawmobile.presentation.entities.AlertInformation
 import com.lawmobile.presentation.extensions.*
 import com.lawmobile.presentation.ui.base.BaseActivity
@@ -34,10 +36,12 @@ import com.safefleet.mobile.commons.helpers.doIfSuccess
 import com.safefleet.mobile.commons.widgets.linearProgressBar.SafeFleetLinearProgressBarBehavior.ASCENDANT
 import com.safefleet.mobile.commons.widgets.linearProgressBar.SafeFleetLinearProgressBarBehavior.DESCENDANT
 import com.safefleet.mobile.commons.widgets.linearProgressBar.SafeFleetLinearProgressBarRanges.*
-import kotlinx.android.synthetic.main.activity_live_view.*
-import kotlinx.android.synthetic.main.live_view_app_bar.*
 
 class LiveActivity : BaseActivity() {
+
+    private lateinit var activityLiveViewBinding: ActivityLiveViewBinding
+    private lateinit var liveViewAppBar: View
+    private lateinit var liveViewContainerLayout: View
 
     private val liveActivityViewModel: LiveActivityViewModel by viewModels()
     private val blinkAnimation = Animations.createBlinkAnimation(BLINK_ANIMATION_DURATION)
@@ -47,8 +51,12 @@ class LiveActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_live_view)
+        activityLiveViewBinding = ActivityLiveViewBinding.inflate(layoutInflater)
+        setContentView(activityLiveViewBinding.root)
         overridePendingTransition(0, 0)
+
+        liveViewAppBar = findViewById(R.id.liveViewAppBar)
+        liveViewContainerLayout = findViewById(R.id.liveViewContainerLayout)
 
         if (isInPortraitMode()) {
             setOfficerName()
@@ -68,8 +76,10 @@ class LiveActivity : BaseActivity() {
 
     private fun setOfficerName() {
         try {
-            textViewOfficerName.text = CameraInfo.officerName.split(" ")[0]
-            textViewOfficerLastName.text = CameraInfo.officerName.split(" ")[1]
+            activityLiveViewBinding.liveViewAppBar.textViewOfficerName.text =
+                CameraInfo.officerName.split(" ")[0]
+            activityLiveViewBinding.liveViewAppBar.textViewOfficerLastName.text =
+                CameraInfo.officerName.split(" ")[1]
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -77,7 +87,7 @@ class LiveActivity : BaseActivity() {
 
     override fun onResume() {
         super.onResume()
-        updateLiveOrPlaybackActive(buttonSwitchLiveView.isActivated)
+        updateLiveOrPlaybackActive(activityLiveViewBinding.buttonSwitchLiveView.isActivated)
         setUrlLive()
         startLiveVideoView()
         configureListeners()
@@ -104,50 +114,50 @@ class LiveActivity : BaseActivity() {
     }
 
     private fun turnOnLiveView() {
-        buttonSwitchLiveView.isActivated = true
+        activityLiveViewBinding.buttonSwitchLiveView.isActivated = true
     }
 
     private fun configureListeners() {
-        toggleFullScreenLiveView.setOnClickListenerCheckConnection {
+        activityLiveViewBinding.toggleFullScreenLiveView.setOnClickListenerCheckConnection {
             changeOrientationLive()
         }
 
-        buttonSnapshot.setClickListenerCheckConnection {
+        activityLiveViewBinding.buttonSnapshot.setClickListenerCheckConnection {
             showShadowLoading(getString(R.string.taking_snapshot))
             activateSwitch(true)
             liveActivityViewModel.takePhoto()
         }
 
-        buttonRecord.setClickListenerCheckConnection {
+        activityLiveViewBinding.buttonRecord.setClickListenerCheckConnection {
             if (!isRecordingVideo) {
                 showShadowLoading(getString(R.string.starting_recording))
             } else {
                 showShadowLoading(getString(R.string.stopping_recording))
             }
-            buttonSwitchLiveView.isActivated = true
+            activityLiveViewBinding.buttonSwitchLiveView.isActivated = true
             activateSwitch(true)
             manageRecordingVideo()
         }
 
-        buttonSwitchLiveView.setClickListenerCheckConnection {
-            activateSwitch(buttonSwitchLiveView.isActivated)
+        activityLiveViewBinding.buttonSwitchLiveView.setClickListenerCheckConnection {
+            activateSwitch(activityLiveViewBinding.buttonSwitchLiveView.isActivated)
         }
 
-        buttonSnapshotList.setOnClickListenerCheckConnection {
+        activityLiveViewBinding.buttonSnapshotList.setOnClickListenerCheckConnection {
             startFileListIntent(SNAPSHOT_LIST)
         }
 
-        buttonVideoList.setOnClickListenerCheckConnection {
+        activityLiveViewBinding.buttonVideoList.setOnClickListenerCheckConnection {
             startFileListIntent(VIDEO_LIST)
         }
 
-        buttonOpenHelpPage.setOnClickListenerCheckConnection {
+        activityLiveViewBinding.buttonOpenHelpPage.setOnClickListenerCheckConnection {
             val intent = Intent(this, HelpPageActivity::class.java)
             intent.putExtra("LiveActivity", true)
             startActivity(intent)
         }
 
-        buttonLogout.setOnClickListenerCheckConnection {
+        activityLiveViewBinding.liveViewAppBar.buttonLogout.setOnClickListenerCheckConnection {
             this.createAlertConfirmAppExit(::logout)
         }
     }
@@ -170,12 +180,12 @@ class LiveActivity : BaseActivity() {
     private fun activateSwitch(isActive: Boolean) {
         updateLiveOrPlaybackActive(isActive)
         changeVisibilityView(isActive)
-        toggleFullScreenLiveView.isClickable = isActive
+        activityLiveViewBinding.toggleFullScreenLiveView.isClickable = isActive
     }
 
     private fun changeVisibilityView(isVisible: Boolean) {
-        if (isVisible) liveStreamingView.setBackgroundResource(R.color.transparent)
-        else liveStreamingView.setBackgroundResource(R.color.black)
+        if (isVisible) activityLiveViewBinding.liveStreamingView.setBackgroundResource(R.color.transparent)
+        else activityLiveViewBinding.liveStreamingView.setBackgroundResource(R.color.black)
     }
 
     private fun configureObservers() {
@@ -231,24 +241,24 @@ class LiveActivity : BaseActivity() {
 
     private fun manageBatteryLevel(batteryPercent: Int) {
         if (batteryPercent > 0) {
-            progressBatteryLevel.setProgress(batteryPercent, DESCENDANT)
+            activityLiveViewBinding.progressBatteryLevel.setProgress(batteryPercent, DESCENDANT)
             setColorInBattery(batteryPercent)
             setTextInProgressBattery(batteryPercent)
         } else showBatteryLevelNotAvailable()
     }
 
     private fun showBatteryLevelNotAvailable() {
-        textViewBatteryPercent.text = getString(R.string.not_available)
-        progressBatteryLevel.setProgress(0, ASCENDANT)
+        activityLiveViewBinding.textViewBatteryPercent.text = getString(R.string.not_available)
+        activityLiveViewBinding.progressBatteryLevel.setProgress(0, ASCENDANT)
         liveViewAppBar.showErrorSnackBar(getString(R.string.battery_level_error))
     }
 
     private fun setColorInBattery(batteryPercent: Int) {
         when (batteryPercent) {
             in LOW_DESCENDANT_RANGE.value -> {
-                imageViewBattery.backgroundTintList =
+                activityLiveViewBinding.imageViewBattery.backgroundTintList =
                     ContextCompat.getColorStateList(this@LiveActivity, R.color.red)
-                imageViewBattery.startAnimationIfEnabled(blinkAnimation)
+                activityLiveViewBinding.imageViewBattery.startAnimationIfEnabled(blinkAnimation)
                 if (!isBatteryAlertShowed) {
                     createAlertForInformationCamera(
                         R.string.battery_alert_title,
@@ -258,14 +268,14 @@ class LiveActivity : BaseActivity() {
                 }
             }
             in MEDIUM_DESCENDANT_RANGE.value -> {
-                imageViewBattery.backgroundTintList =
+                activityLiveViewBinding.imageViewBattery.backgroundTintList =
                     ContextCompat.getColorStateList(this@LiveActivity, R.color.red)
-                imageViewBattery.clearAnimation()
+                activityLiveViewBinding.imageViewBattery.clearAnimation()
             }
             else -> {
-                imageViewBattery.backgroundTintList =
+                activityLiveViewBinding.imageViewBattery.backgroundTintList =
                     ContextCompat.getColorStateList(this@LiveActivity, R.color.darkBlue)
-                imageViewBattery.clearAnimation()
+                activityLiveViewBinding.imageViewBattery.clearAnimation()
             }
         }
     }
@@ -276,7 +286,7 @@ class LiveActivity : BaseActivity() {
         val textBatteryPercent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
             Html.fromHtml(getString(R.string.battery_percent, batteryPercent, hoursLeft), 0)
         else getString(R.string.battery_percent, batteryPercent, hoursLeft)
-        textViewBatteryPercent.text = textBatteryPercent
+        activityLiveViewBinding.textViewBatteryPercent.text = textBatteryPercent
     }
 
     private fun setStorageLevels(result: Event<Result<List<Double>>>) {
@@ -286,8 +296,9 @@ class LiveActivity : BaseActivity() {
                 setTextStorageLevel(it)
             }
             doIfError {
-                textViewStorageLevels.text = getString(R.string.not_available)
-                progressBatteryLevel.setProgress(0, ASCENDANT)
+                activityLiveViewBinding.textViewStorageLevels.text =
+                    getString(R.string.not_available)
+                activityLiveViewBinding.progressBatteryLevel.setProgress(0, ASCENDANT)
                 liveViewAppBar.showErrorSnackBar(getString(R.string.storage_level_error))
             }
         }
@@ -297,19 +308,19 @@ class LiveActivity : BaseActivity() {
     private fun setColorInStorageLevel(information: List<Double>) {
         val actualPercent =
             TOTAL_PERCENTAGE - ((information[FREE_STORAGE_POSITION] * TOTAL_PERCENTAGE) / information[TOTAL_STORAGE_POSITION])
-        progressStorageLevel.setProgress(
+        activityLiveViewBinding.progressStorageLevel.setProgress(
             actualPercent.toInt(),
             ASCENDANT
         )
 
         if (actualPercent.toInt() in HIGH_ASCENDANT_RANGE.value) {
-            imageViewStorage.backgroundTintList =
+            activityLiveViewBinding.imageViewStorage.backgroundTintList =
                 ContextCompat.getColorStateList(this@LiveActivity, R.color.red)
-            imageViewStorage.startAnimationIfEnabled(blinkAnimation)
+            activityLiveViewBinding.imageViewStorage.startAnimationIfEnabled(blinkAnimation)
         } else {
-            imageViewStorage.backgroundTintList =
+            activityLiveViewBinding.imageViewStorage.backgroundTintList =
                 ContextCompat.getColorStateList(this@LiveActivity, R.color.darkBlue)
-            imageViewStorage.clearAnimation()
+            activityLiveViewBinding.imageViewStorage.clearAnimation()
         }
 
         if (actualPercent.toInt() >= PERCENT_TO_SHOW_ALERT_MEMORY_CAPACITY && !isStorageAlertShowed) {
@@ -328,7 +339,7 @@ class LiveActivity : BaseActivity() {
             getStringStorageLevel(information)
         }
 
-        textViewStorageLevels.text = textToStorage
+        activityLiveViewBinding.textViewStorageLevels.text = textToStorage
     }
 
     private fun getStringStorageLevel(information: List<Double>): String {
@@ -372,20 +383,20 @@ class LiveActivity : BaseActivity() {
 
     private fun hideShadowLoading() {
         EspressoIdlingResource.decrement()
-        viewLiveStreamingShadow.isVisible = false
-        viewDisableButtons.isVisible = false
-        viewLoading.isVisible = false
-        textViewLoading.isVisible = false
+        activityLiveViewBinding.viewLiveStreamingShadow.isVisible = false
+        activityLiveViewBinding.viewDisableButtons.isVisible = false
+        activityLiveViewBinding.viewLoading.isVisible = false
+        activityLiveViewBinding.textViewLoading.isVisible = false
     }
 
     private fun showShadowLoading(message: String) {
         EspressoIdlingResource.increment()
-        buttonSwitchLiveView.isActivated = true
-        viewLiveStreamingShadow.isVisible = true
-        viewDisableButtons.isVisible = true
-        viewLoading.isVisible = true
-        textViewLoading.isVisible = true
-        textViewLoading.text = message
+        activityLiveViewBinding.buttonSwitchLiveView.isActivated = true
+        activityLiveViewBinding.viewLiveStreamingShadow.isVisible = true
+        activityLiveViewBinding.viewDisableButtons.isVisible = true
+        activityLiveViewBinding.viewLoading.isVisible = true
+        activityLiveViewBinding.textViewLoading.isVisible = true
+        activityLiveViewBinding.textViewLoading.text = message
     }
 
     private fun manageRecordingVideo() {
@@ -407,14 +418,14 @@ class LiveActivity : BaseActivity() {
     }
 
     private fun showRecordingIndicator(show: Boolean) {
-        imageRecordingIndicator.isVisible = show
-        textLiveViewRecording.isVisible = show
-        buttonRecord.isActivated = show
+        activityLiveViewBinding.imageRecordingIndicator.isVisible = show
+        activityLiveViewBinding.textLiveViewRecording.isVisible = show
+        activityLiveViewBinding.buttonRecord.isActivated = show
         if (show) {
             val animation = Animations.createBlinkAnimation(BLINK_ANIMATION_DURATION)
-            imageRecordingIndicator.startAnimationIfEnabled(animation)
+            activityLiveViewBinding.imageRecordingIndicator.startAnimationIfEnabled(animation)
         } else {
-            imageRecordingIndicator.clearAnimation()
+            activityLiveViewBinding.imageRecordingIndicator.clearAnimation()
         }
     }
 
@@ -435,7 +446,7 @@ class LiveActivity : BaseActivity() {
 
     private fun setUrlLive() {
         val url = liveActivityViewModel.getUrlLive()
-        liveActivityViewModel.createVLCMediaPlayer(url, liveStreamingView)
+        liveActivityViewModel.createVLCMediaPlayer(url, activityLiveViewBinding.liveStreamingView)
     }
 
     private fun startLiveVideoView() {

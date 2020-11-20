@@ -13,6 +13,7 @@
         tools:context=".ui.snapshotDetail.SnapshotDetailActivity">
 
         <include
+            android:id="@+id/layoutFileListAppBar"
             layout="@layout/custom_app_bar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
@@ -211,6 +212,8 @@
         app:layout_anchor="@+id/constraintLayoutDetail"
         app:layout_anchorGravity="center" />
 
-    <include layout="@layout/bottom_sheet_assign_to_officer" />
+    <include
+        android:id="@+id/bottomSheetPartnerId"
+        layout="@layout/bottom_sheet_assign_to_officer" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
