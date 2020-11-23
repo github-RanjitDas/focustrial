@@ -4,7 +4,7 @@ ext {
     compileSdkVersion = 29
     minSdkVersion = 23
     targetSdkVersion = 29
-    buildVersion = 62
+    buildVersion = 63
     major = 3
     minor = 5
     patch = 0
