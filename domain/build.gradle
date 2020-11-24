@@ -93,7 +93,7 @@ dependencies {
     api 'com.safefleet.mobile:commons:1.8.0@aar'
 
     //Avml
-    api 'com.safefleet.mobile:avml:1.9.0@aar'
+    api 'com.safefleet.mobile:avml:1.9.1@aar'
 
 }
 
