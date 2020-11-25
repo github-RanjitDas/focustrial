@@ -126,6 +126,13 @@ class VideoPlaybackViewModelTest {
     }
 
     @Test
+    fun testSetMediaEventListener() {
+        every { vlcMediaPlayer.setMediaEventListener(any()) } just Runs
+        videoPlaybackViewModel.setMediaEventListener(mockk(relaxed = true))
+        verify { vlcMediaPlayer.setMediaEventListener(any()) }
+    }
+
+    @Test
     fun testGetVideoMetadataLiveDataSuccess() {
         coEvery {
             videoPlaybackUseCase.getVideoMetadata(
