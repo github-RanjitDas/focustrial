@@ -5,7 +5,7 @@ import androidx.test.espresso.matcher.BoundedMatcher
 import org.hamcrest.Description
 import org.hamcrest.Matcher
 
-fun isActivated(): Matcher<View?>? {
+fun isActivated(): Matcher<View?> {
     return object : BoundedMatcher<View?, View>(View::class.java) {
         override fun matchesSafely(view: View): Boolean {
             return view.isActivated
@@ -17,7 +17,7 @@ fun isActivated(): Matcher<View?>? {
     }
 }
 
-fun isNotActivated(): Matcher<View?>? {
+fun isNotActivated(): Matcher<View?> {
     return object : BoundedMatcher<View?, View>(View::class.java) {
         override fun matchesSafely(view: View): Boolean {
             return !view.isActivated

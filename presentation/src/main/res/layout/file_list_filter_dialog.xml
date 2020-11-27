@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <androidx.cardview.widget.CardView
+        android:id="@+id/layoutFileListFilterDialog"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:cardElevation="@dimen/no_dp">
@@ -34,7 +35,7 @@
                 android:layout_marginHorizontal="@dimen/margin_10dp"
                 android:layout_marginTop="@dimen/margin_30dp"
                 android:layout_weight="0.5"
-                android:background="@drawable/background_button_cancel"
+                android:background="@drawable/border_rounded_blue"
                 android:paddingHorizontal="@dimen/padding_25dp"
                 android:text="@string/cancel"
                 android:textAllCaps="false"

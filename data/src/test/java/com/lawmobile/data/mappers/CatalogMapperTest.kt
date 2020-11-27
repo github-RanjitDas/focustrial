@@ -21,6 +21,15 @@ internal class CatalogMapperTest {
                 assertTrue(it.type == get(index).type)
             }
         }
+
+        assertFalse(domainCatalogList.isEmpty())
+    }
+
+    @Test
+    fun cameraToDomainListEmpty() {
+        val cameraCatalogList = emptyList<CameraConnectCatalog>()
+        val domainCatalogList = CatalogMapper.cameraToDomainList(cameraCatalogList)
+        assertTrue(domainCatalogList.isEmpty())
     }
 
     @Test

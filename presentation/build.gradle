@@ -1,6 +1,5 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'jacoco'
 apply from: '../jacoco.gradle'
@@ -43,6 +42,10 @@ android {
                 excludes = ['jdk.internal.*']
             }
         }
+    }
+
+    buildFeatures {
+        viewBinding true
     }
 
     kotlinOptions {

@@ -18,6 +18,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.lawmobile.domain.entities.*
 import com.lawmobile.domain.extensions.getCreationDate
 import com.lawmobile.presentation.R
+import com.lawmobile.presentation.databinding.ActivityVideoPlaybackBinding
 import com.lawmobile.presentation.entities.SnapshotsAssociatedByUser
 import com.lawmobile.presentation.extensions.*
 import com.lawmobile.presentation.ui.associateSnapshots.AssociateSnapshotsFragment
@@ -28,12 +29,11 @@ import com.safefleet.mobile.commons.helpers.doIfError
 import com.safefleet.mobile.commons.helpers.doIfSuccess
 import com.safefleet.mobile.commons.helpers.hideKeyboard
 import com.safefleet.mobile.commons.widgets.SafeFleetFilterTag
-import kotlinx.android.synthetic.main.activity_video_playback.*
-import kotlinx.android.synthetic.main.bottom_sheet_associate_snapshots.*
-import kotlinx.android.synthetic.main.custom_app_bar.*
 import org.videolan.libvlc.MediaPlayer
 
 class VideoPlaybackActivity : BaseActivity() {
+
+    private lateinit var activityVideoPlaybackBinding: ActivityVideoPlaybackBinding
 
     private val videoPlaybackViewModel: VideoPlaybackViewModel by viewModels()
     private val eventList = mutableListOf<String>()
@@ -46,12 +46,13 @@ class VideoPlaybackActivity : BaseActivity() {
 
     private var associateSnapshotsFragment = AssociateSnapshotsFragment()
     private val bottomSheetBehavior: BottomSheetBehavior<CardView> by lazy {
-        BottomSheetBehavior.from(bottomSheetAssociate)
+        BottomSheetBehavior.from(activityVideoPlaybackBinding.bottomSheetAssociate!!.bottomSheetAssociate)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_video_playback)
+        activityVideoPlaybackBinding = ActivityVideoPlaybackBinding.inflate(layoutInflater)
+        setContentView(activityVideoPlaybackBinding.root)
 
         setAppBar()
         showLoadingDialog()
@@ -89,10 +90,13 @@ class VideoPlaybackActivity : BaseActivity() {
     }
 
     private fun stopVideoWhenScrolling() {
-        scrollLayoutMetadata.viewTreeObserver.addOnScrollChangedListener {
+        activityVideoPlaybackBinding.scrollLayoutMetadata.viewTreeObserver.addOnScrollChangedListener {
             val scrollBounds = Rect()
-            scrollLayoutMetadata.getHitRect(scrollBounds)
-            if (!fakeSurfaceVideoPlayback.getLocalVisibleRect(scrollBounds) && videoPlaybackViewModel.isMediaPlayerPlaying()) {
+            activityVideoPlaybackBinding.scrollLayoutMetadata.getHitRect(scrollBounds)
+            if (!activityVideoPlaybackBinding.fakeSurfaceVideoPlayback.getLocalVisibleRect(
+                    scrollBounds
+                ) && videoPlaybackViewModel.isMediaPlayerPlaying()
+            ) {
                 pauseVideoPlayback()
             }
         }
@@ -109,7 +113,7 @@ class VideoPlaybackActivity : BaseActivity() {
         bottomSheetBehavior.isDraggable = false
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
 
-        buttonCloseAssociateSnapshots.setOnClickListener {
+        activityVideoPlaybackBinding.bottomSheetAssociate?.buttonCloseAssociateSnapshots?.setOnClickListener {
             SnapshotsAssociatedByUser.temporal.addAll(SnapshotsAssociatedByUser.value)
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
         }
@@ -121,35 +125,40 @@ class VideoPlaybackActivity : BaseActivity() {
             override fun onStateChanged(bottomSheet: View, newState: Int) {
                 when (newState) {
                     BottomSheetBehavior.STATE_HIDDEN -> {
-                        shadowPlaybackView?.isVisible = false
-                        supportFragmentManager.detachFragment(fragmentAssociateHolder.id)
+                        activityVideoPlaybackBinding.shadowPlaybackView.isVisible = false
+                        activityVideoPlaybackBinding.bottomSheetAssociate?.fragmentAssociateHolder?.id?.let {
+                            supportFragmentManager.detachFragment(
+                                it
+                            )
+                        }
                     }
-                    else -> shadowPlaybackView?.isVisible = true
+                    else -> activityVideoPlaybackBinding.shadowPlaybackView.isVisible = true
                 }
             }
         })
     }
 
     private fun setAppBar() {
-        fileListAppBarTitle.text = getString(R.string.video_detail)
-        buttonSimpleList.isVisible = false
-        buttonThumbnailList.isVisible = false
+        activityVideoPlaybackBinding.layoutFileListAppBar?.fileListAppBarTitle?.text =
+            getString(R.string.video_detail)
+        activityVideoPlaybackBinding.layoutFileListAppBar?.buttonSimpleList?.isVisible = false
+        activityVideoPlaybackBinding.layoutFileListAppBar?.buttonThumbnailList?.isVisible = false
     }
 
     private fun addEditTextFilter() {
-        partnerIdValue.filters = getFiltersWithLength(20)
-        ticket1Value.filters = getFiltersWithLength(20)
-        ticket2Value.filters = getFiltersWithLength(20)
-        case1Value.filters = getFiltersWithLength(50)
-        case2Value.filters = getFiltersWithLength(50)
-        dispatch1Value.filters = getFiltersWithLength(30)
-        dispatch2Value.filters = getFiltersWithLength(30)
-        locationValue.filters = getFiltersWithLength(30)
-        notesValue.filters = getFiltersWithLength(100)
-        firstNameValue.filters = getFiltersWithLength(30)
-        lastNameValue.filters = getFiltersWithLength(30)
-        driverLicenseValue.filters = getFiltersWithLength(30)
-        licensePlateValue.filters = getFiltersWithLength(30)
+        activityVideoPlaybackBinding.partnerIdValue.filters = getFiltersWithLength(20)
+        activityVideoPlaybackBinding.ticket1Value.filters = getFiltersWithLength(20)
+        activityVideoPlaybackBinding.ticket2Value.filters = getFiltersWithLength(20)
+        activityVideoPlaybackBinding.case1Value.filters = getFiltersWithLength(50)
+        activityVideoPlaybackBinding.case2Value.filters = getFiltersWithLength(50)
+        activityVideoPlaybackBinding.dispatch1Value.filters = getFiltersWithLength(30)
+        activityVideoPlaybackBinding.dispatch2Value.filters = getFiltersWithLength(30)
+        activityVideoPlaybackBinding.locationValue.filters = getFiltersWithLength(30)
+        activityVideoPlaybackBinding.notesValue.filters = getFiltersWithLength(100)
+        activityVideoPlaybackBinding.firstNameValue.filters = getFiltersWithLength(30)
+        activityVideoPlaybackBinding.lastNameValue.filters = getFiltersWithLength(30)
+        activityVideoPlaybackBinding.driverLicenseValue.filters = getFiltersWithLength(30)
+        activityVideoPlaybackBinding.licensePlateValue.filters = getFiltersWithLength(30)
     }
 
     private fun getFiltersWithLength(length: Int): Array<InputFilter> {
@@ -183,13 +192,16 @@ class VideoPlaybackActivity : BaseActivity() {
         raceList.addAll(resources.getStringArray(R.array.race_spinner))
         genderList.addAll(resources.getStringArray(R.array.gender_spinner))
 
-        eventValue.adapter = ArrayAdapter(this, R.layout.spinner_item, eventList)
-        raceValue.adapter = ArrayAdapter(this, R.layout.spinner_item, raceList)
-        genderValue.adapter = ArrayAdapter(this, R.layout.spinner_item, genderList)
+        activityVideoPlaybackBinding.eventValue.adapter =
+            ArrayAdapter(this, R.layout.spinner_item, eventList)
+        activityVideoPlaybackBinding.raceValue.adapter =
+            ArrayAdapter(this, R.layout.spinner_item, raceList)
+        activityVideoPlaybackBinding.genderValue.adapter =
+            ArrayAdapter(this, R.layout.spinner_item, genderList)
     }
 
     private fun showErrorInEvents() {
-        layoutVideoPlayback.showErrorSnackBar(
+        activityVideoPlaybackBinding.layoutVideoPlayback.showErrorSnackBar(
             getString(R.string.catalog_error_video_playback),
             Snackbar.LENGTH_LONG
         )
@@ -212,22 +224,22 @@ class VideoPlaybackActivity : BaseActivity() {
     }
 
     private fun configureListeners() {
-        buttonPlay.setOnClickListenerCheckConnection {
+        activityVideoPlaybackBinding.buttonPlay.setOnClickListenerCheckConnection {
             manageButtonPlayPause()
         }
-        buttonFullScreen.setOnClickListenerCheckConnection {
+        activityVideoPlaybackBinding.buttonFullScreen.setOnClickListenerCheckConnection {
             changeScreenOrientation()
         }
-        buttonAspect.setOnClickListenerCheckConnection {
+        activityVideoPlaybackBinding.buttonAspect.setOnClickListenerCheckConnection {
             videoPlaybackViewModel.changeAspectRatio()
         }
-        saveButtonVideoPlayback.setOnClickListenerCheckConnection {
+        activityVideoPlaybackBinding.saveButtonVideoPlayback.setOnClickListenerCheckConnection {
             saveVideoMetadataInCamera()
         }
-        backArrowFileListAppBar.setOnClickListenerCheckConnection {
+        activityVideoPlaybackBinding.layoutFileListAppBar?.backArrowFileListAppBar?.setOnClickListenerCheckConnection {
             onBackPressed()
         }
-        buttonAssociateSnapshots.setOnClickListenerCheckConnection {
+        activityVideoPlaybackBinding.buttonAssociateSnapshots.setOnClickListenerCheckConnection {
             showAssociateSnapshotsBottomSheet()
         }
         configureListenerSeekBar()
@@ -243,9 +255,9 @@ class VideoPlaybackActivity : BaseActivity() {
 
         if (currentProgressInVideo == 100 && videoPlaybackViewModel.isMediaPlayerPlaying()) {
             updateLastInteraction()
-            buttonPlay.setImageResource(R.drawable.ic_media_play)
+            activityVideoPlaybackBinding.buttonPlay.setImageResource(R.drawable.ic_media_play)
             updateLiveOrPlaybackActive(false)
-            buttonAspect.isClickable = false
+            activityVideoPlaybackBinding.buttonAspect.isClickable = false
         }
     }
 
@@ -254,7 +266,7 @@ class VideoPlaybackActivity : BaseActivity() {
             pauseVideoPlayback()
         } else {
             setProgressToVideo(0)
-            buttonPlay.setImageResource(R.drawable.ic_media_pause)
+            activityVideoPlaybackBinding.buttonPlay.setImageResource(R.drawable.ic_media_pause)
         }
     }
 
@@ -318,22 +330,32 @@ class VideoPlaybackActivity : BaseActivity() {
 
     private fun setVideoMetadata(videoMetadata: DomainVideoMetadata) {
         videoMetadata.metadata?.run {
-            eventValue.setSelection(getSpinnerSelection(eventList, event?.name))
-            partnerIdValue.setText(partnerID)
-            ticket1Value.setText(ticketNumber)
-            ticket2Value.setText(ticketNumber2)
-            case1Value.setText(caseNumber)
-            case2Value.setText(caseNumber2)
-            dispatch1Value.setText(dispatchNumber)
-            dispatch2Value.setText(dispatchNumber2)
-            locationValue.setText(location)
-            notesValue.setText(remarks)
-            firstNameValue.setText(firstName)
-            lastNameValue.setText(lastName)
-            genderValue.setSelection(getSpinnerSelection(genderList, gender))
-            raceValue.setSelection(getSpinnerSelection(raceList, race))
-            driverLicenseValue.setText(driverLicense)
-            licensePlateValue.setText(licensePlate)
+            activityVideoPlaybackBinding.eventValue.setSelection(
+                getSpinnerSelection(
+                    eventList,
+                    event?.name
+                )
+            )
+            activityVideoPlaybackBinding.partnerIdValue.setText(partnerID)
+            activityVideoPlaybackBinding.ticket1Value.setText(ticketNumber)
+            activityVideoPlaybackBinding.ticket2Value.setText(ticketNumber2)
+            activityVideoPlaybackBinding.case1Value.setText(caseNumber)
+            activityVideoPlaybackBinding.case2Value.setText(caseNumber2)
+            activityVideoPlaybackBinding.dispatch1Value.setText(dispatchNumber)
+            activityVideoPlaybackBinding.dispatch2Value.setText(dispatchNumber2)
+            activityVideoPlaybackBinding.locationValue.setText(location)
+            activityVideoPlaybackBinding.notesValue.setText(remarks)
+            activityVideoPlaybackBinding.firstNameValue.setText(firstName)
+            activityVideoPlaybackBinding.lastNameValue.setText(lastName)
+            activityVideoPlaybackBinding.genderValue.setSelection(
+                getSpinnerSelection(
+                    genderList,
+                    gender
+                )
+            )
+            activityVideoPlaybackBinding.raceValue.setSelection(getSpinnerSelection(raceList, race))
+            activityVideoPlaybackBinding.driverLicenseValue.setText(driverLicense)
+            activityVideoPlaybackBinding.licensePlateValue.setText(licensePlate)
         }
 
         (videoMetadata.associatedPhotos)?.let {
@@ -363,21 +385,22 @@ class VideoPlaybackActivity : BaseActivity() {
         associateSnapshotsFragment.setSnapshotsAssociatedFromMetadata(SnapshotsAssociatedByUser.temporal)
         SnapshotsAssociatedByUser.setFinalValue(SnapshotsAssociatedByUser.temporal)
         showSnapshotsAssociated()
-        layoutVideoPlayback.showSuccessSnackBar(getString(R.string.snapshots_added_success))
+        activityVideoPlaybackBinding.layoutVideoPlayback.showSuccessSnackBar(getString(R.string.snapshots_added_success))
     }
 
     private fun showSnapshotsAssociated() {
-        layoutAssociatedSnapshots?.removeAllViews()
-        layoutAssociatedSnapshots?.isVisible = !SnapshotsAssociatedByUser.value.isNullOrEmpty()
+        activityVideoPlaybackBinding.layoutAssociatedSnapshots.removeAllViews()
+        activityVideoPlaybackBinding.layoutAssociatedSnapshots.isVisible =
+            !SnapshotsAssociatedByUser.value.isNullOrEmpty()
         SnapshotsAssociatedByUser.value.forEach {
-            layoutAssociatedSnapshots?.childCount?.let { position ->
+            activityVideoPlaybackBinding.layoutAssociatedSnapshots.childCount.let { position ->
                 createTagInPosition(position, it.date)
             }
         }
     }
 
     private fun createTagInPosition(position: Int, text: String) {
-        layoutAssociatedSnapshots?.addView(
+        activityVideoPlaybackBinding.layoutAssociatedSnapshots.addView(
             SafeFleetFilterTag(this, null, 0).apply {
                 tagText = text
                 onClicked = {
@@ -428,8 +451,8 @@ class VideoPlaybackActivity : BaseActivity() {
 
     private fun saveVideoMetadataInCamera() {
         hideKeyboard()
-        if (eventValue.selectedItem == eventList[0]) {
-            layoutVideoPlayback.showErrorSnackBar(getString(R.string.event_mandatory))
+        if (activityVideoPlaybackBinding.eventValue.selectedItem == eventList[0]) {
+            activityVideoPlaybackBinding.layoutVideoPlayback.showErrorSnackBar(getString(R.string.event_mandatory))
             return
         }
         CameraInfo.areNewChanges = true
@@ -471,31 +494,32 @@ class VideoPlaybackActivity : BaseActivity() {
     private fun isAllowedToAttemptToGetInformation() = currentAttempts <= ATTEMPTS_ALLOWED
 
     private fun setVideoInformation() {
-        videoNameValue.text = currentVideo?.name
-        startTimeValue.text = currentVideo?.getCreationDate()
-        durationValue.text = totalDurationVideoInMilliSeconds.convertMilliSecondsToString()
+        activityVideoPlaybackBinding.videoNameValue.text = currentVideo?.name
+        activityVideoPlaybackBinding.startTimeValue.text = currentVideo?.getCreationDate()
+        activityVideoPlaybackBinding.durationValue.text =
+            totalDurationVideoInMilliSeconds.convertMilliSecondsToString()
     }
 
     private fun createVideoPlaybackInSurface(domainInformationVideo: DomainInformationVideo) {
         videoPlaybackViewModel.createVLCMediaPlayer(
             domainInformationVideo.urlVideo,
-            surfaceVideoPlayback
+            activityVideoPlaybackBinding.surfaceVideoPlayback
         )
     }
 
     private fun playVideoPlayback() {
-        buttonPlay.setImageResource(R.drawable.ic_media_pause)
+        activityVideoPlaybackBinding.buttonPlay.setImageResource(R.drawable.ic_media_pause)
         updateLiveOrPlaybackActive(true)
         videoPlaybackViewModel.playMediaPlayer()
         setProgressToVideo(currentProgressInVideo)
-        buttonAspect.isClickable = true
+        activityVideoPlaybackBinding.buttonAspect.isClickable = true
     }
 
     private fun pauseVideoPlayback() {
-        buttonPlay.setImageResource(R.drawable.ic_media_play)
+        activityVideoPlaybackBinding.buttonPlay.setImageResource(R.drawable.ic_media_play)
         updateLiveOrPlaybackActive(false)
         videoPlaybackViewModel.pauseMediaPlayer()
-        buttonAspect.isClickable = false
+        activityVideoPlaybackBinding.buttonAspect.isClickable = false
     }
 
     private fun changeScreenOrientation() {
@@ -576,37 +600,37 @@ class VideoPlaybackActivity : BaseActivity() {
         var gender: String? = null
         var race: String? = null
         val event =
-            if (eventValue.selectedItemPosition != 0)
-                CameraInfo.events[eventValue.selectedItemPosition - 1]
+            if (activityVideoPlaybackBinding.eventValue.selectedItemPosition != 0)
+                CameraInfo.events[activityVideoPlaybackBinding.eventValue.selectedItemPosition - 1]
             else null
 
-        if (genderValue.selectedItem != genderList[0]) {
-            gender = genderValue.selectedItem.toString()
+        if (activityVideoPlaybackBinding.genderValue.selectedItem != genderList[0]) {
+            gender = activityVideoPlaybackBinding.genderValue.selectedItem.toString()
         }
 
-        if (raceValue.selectedItem != raceList[0]) {
-            race = raceValue.selectedItem.toString()
+        if (activityVideoPlaybackBinding.raceValue.selectedItem != raceList[0]) {
+            race = activityVideoPlaybackBinding.raceValue.selectedItem.toString()
         }
 
         return DomainVideoMetadata(
-            videoNameValue.text.toString(),
+            activityVideoPlaybackBinding.videoNameValue.text.toString(),
             DomainMetadata(
                 event = event,
-                partnerID = partnerIdValue.text.toString(),
-                ticketNumber = ticket1Value.text.toString(),
-                ticketNumber2 = ticket2Value.text.toString(),
-                caseNumber = case1Value.text.toString(),
-                caseNumber2 = case2Value.text.toString(),
-                dispatchNumber = dispatch1Value.text.toString(),
-                dispatchNumber2 = dispatch2Value.text.toString(),
-                location = locationValue.text.toString(),
-                remarks = notesValue.text.toString(),
-                firstName = firstNameValue.text.toString(),
-                lastName = lastNameValue.text.toString(),
+                partnerID = activityVideoPlaybackBinding.partnerIdValue.text.toString(),
+                ticketNumber = activityVideoPlaybackBinding.ticket1Value.text.toString(),
+                ticketNumber2 = activityVideoPlaybackBinding.ticket2Value.text.toString(),
+                caseNumber = activityVideoPlaybackBinding.case1Value.text.toString(),
+                caseNumber2 = activityVideoPlaybackBinding.case2Value.text.toString(),
+                dispatchNumber = activityVideoPlaybackBinding.dispatch1Value.text.toString(),
+                dispatchNumber2 = activityVideoPlaybackBinding.dispatch2Value.text.toString(),
+                location = activityVideoPlaybackBinding.locationValue.text.toString(),
+                remarks = activityVideoPlaybackBinding.notesValue.text.toString(),
+                firstName = activityVideoPlaybackBinding.firstNameValue.text.toString(),
+                lastName = activityVideoPlaybackBinding.lastNameValue.text.toString(),
                 gender = gender,
                 race = race,
-                driverLicense = driverLicenseValue.text.toString(),
-                licensePlate = licensePlateValue.text.toString()
+                driverLicense = activityVideoPlaybackBinding.driverLicenseValue.text.toString(),
+                licensePlate = activityVideoPlaybackBinding.licensePlateValue.text.toString()
             ),
             currentVideo?.nameFolder,
             CameraInfo.officerId,
@@ -637,22 +661,23 @@ class VideoPlaybackActivity : BaseActivity() {
     private fun updateProgressVideoInView() {
         val progressVideo =
             ((currentTimeVideoInMilliSeconds.toDouble() / totalDurationVideoInMilliSeconds.toDouble()) * 100).toInt()
-        seekProgressVideo.progress = progressVideo
+        activityVideoPlaybackBinding.seekProgressVideo.progress = progressVideo
         val elapsedTime = currentTimeVideoInMilliSeconds.convertMilliSecondsToString()
         updateTextElapsedTimeAndLeftTime(elapsedTime)
     }
 
     private fun updateTextElapsedTimeAndLeftTime(elapsedTime: String) {
         runOnUiThread {
-            textViewPlayerTime.text = elapsedTime
-            textViewPlayerDuration.text =
+            activityVideoPlaybackBinding.textViewPlayerTime.text = elapsedTime
+            activityVideoPlaybackBinding.textViewPlayerDuration.text =
                 totalDurationVideoInMilliSeconds.convertMilliSecondsToString()
         }
     }
 
     private fun configureListenerSeekBar() {
         var isFromUser = false
-        seekProgressVideo.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+        activityVideoPlaybackBinding.seekProgressVideo.setOnSeekBarChangeListener(object :
+            SeekBar.OnSeekBarChangeListener {
 
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 isFromUser = fromUser
@@ -676,7 +701,7 @@ class VideoPlaybackActivity : BaseActivity() {
     private fun setProgressToVideo(progress: Int) {
         currentProgressInVideo = progress
         videoPlaybackViewModel.setProgressMediaPlayer(progress.toFloat())
-        seekProgressVideo.progress = progress
+        activityVideoPlaybackBinding.seekProgressVideo.progress = progress
         currentTimeVideoInMilliSeconds = totalDurationVideoInMilliSeconds * (progress / 100)
     }
 

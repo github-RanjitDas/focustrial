@@ -11,11 +11,14 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import com.lawmobile.domain.entities.CameraInfo
 import com.lawmobile.presentation.R
+import com.lawmobile.presentation.databinding.FragmentPairingResultBinding
 import com.lawmobile.presentation.ui.base.BaseFragment
 import com.safefleet.mobile.commons.helpers.Result
-import kotlinx.android.synthetic.main.fragment_pairing_result.*
 
 class PairingResultFragment : BaseFragment() {
+
+    private var _fragmentPairingResultBinding: FragmentPairingResultBinding? = null
+    private val fragmentPairingResultBinding get() = _fragmentPairingResultBinding!!
 
     private val pairingViewModel: PairingViewModel by viewModels()
     lateinit var connectionSuccess: (isSuccess: Boolean) -> Unit
@@ -24,8 +27,10 @@ class PairingResultFragment : BaseFragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_pairing_result, container, false)
+    ): View {
+        _fragmentPairingResultBinding =
+            FragmentPairingResultBinding.inflate(inflater, container, false)
+        return fragmentPairingResultBinding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -44,15 +49,15 @@ class PairingResultFragment : BaseFragment() {
     }
 
     private fun setListeners() {
-        buttonRetry.setOnClickListener {
+        fragmentPairingResultBinding.buttonRetry.setOnClickListener {
             startConnectionToHotspotCamera()
         }
     }
 
     private fun showLoadingProgress() {
-        pairingProgressLayout.isVisible = true
-        pairingResultLayout.isVisible = false
-        buttonRetry.isVisible = false
+        fragmentPairingResultBinding.pairingProgressLayout.isVisible = true
+        fragmentPairingResultBinding.pairingResultLayout.isVisible = false
+        fragmentPairingResultBinding.buttonRetry.isVisible = false
     }
 
     private fun startConnectionToHotspotCamera() {
@@ -80,16 +85,14 @@ class PairingResultFragment : BaseFragment() {
 
     private fun setProgressInViewOfProgress(progress: Int) {
         val percent = "$progress%"
-        textViewProgressConnection.text = percent
+        fragmentPairingResultBinding.textViewProgressConnection.text = percent
         if (progress == PERCENT_TOTAL_CONNECTION_CAMERA) {
             showSuccessResult()
         }
     }
 
     private fun setObservers() {
-        pairingViewModel.progressConnectionWithTheCamera.observe(
-            viewLifecycleOwner, ::manageResponseProgressInConnectionCamera
-        )
+        pairingViewModel.cameraPairingProgress = ::manageResponseProgressInConnectionCamera
         pairingViewModel.isWaitFinishedLiveData.observe(
             viewLifecycleOwner
         ) { if (it) connectionSuccess(true) }
@@ -103,34 +106,34 @@ class PairingResultFragment : BaseFragment() {
     }
 
     private fun showSuccessResult() {
-        pairingProgressLayout.isVisible = false
-        pairingResultLayout.isVisible = true
-        buttonRetry.isVisible = false
-        imageViewResultPairing.setImageDrawable(
+        fragmentPairingResultBinding.pairingProgressLayout.isVisible = false
+        fragmentPairingResultBinding.pairingResultLayout.isVisible = true
+        fragmentPairingResultBinding.buttonRetry.isVisible = false
+        fragmentPairingResultBinding.imageViewResultPairing.setImageDrawable(
             ResourcesCompat.getDrawable(
                 resources,
                 R.drawable.ic_successful_green,
                 null
             )
         )
-        textViewResultPairing.setText(R.string.success_connection_to_camera)
-        pairingResultLayout.startAnimation(animation)
+        fragmentPairingResultBinding.textViewResultPairing.setText(R.string.success_connection_to_camera)
+        fragmentPairingResultBinding.pairingResultLayout.startAnimation(animation)
         pairingViewModel.waitToFinish(ANIMATION_DURATION)
     }
 
     private fun showErrorResult() {
-        pairingProgressLayout.isVisible = false
-        pairingResultLayout.isVisible = true
-        buttonRetry.isVisible = true
-        imageViewResultPairing.setImageDrawable(
+        fragmentPairingResultBinding.pairingProgressLayout.isVisible = false
+        fragmentPairingResultBinding.pairingResultLayout.isVisible = true
+        fragmentPairingResultBinding.buttonRetry.isVisible = true
+        fragmentPairingResultBinding.imageViewResultPairing.setImageDrawable(
             ResourcesCompat.getDrawable(
                 resources,
                 R.drawable.ic_error_big,
                 null
             )
         )
-        textViewResultPairing.setText(R.string.error_connection_to_camera)
-        pairingResultLayout.startAnimation(animation)
+        fragmentPairingResultBinding.textViewResultPairing.setText(R.string.error_connection_to_camera)
+        fragmentPairingResultBinding.pairingResultLayout.startAnimation(animation)
     }
 
     companion object {

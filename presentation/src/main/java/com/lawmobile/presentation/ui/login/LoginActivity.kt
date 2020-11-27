@@ -10,6 +10,7 @@ import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.lawmobile.presentation.R
+import com.lawmobile.presentation.databinding.ActivityLoginBinding
 import com.lawmobile.presentation.extensions.attachFragmentWithAnimation
 import com.lawmobile.presentation.extensions.isAnimationsEnabled
 import com.lawmobile.presentation.extensions.showErrorSnackBar
@@ -20,15 +21,15 @@ import com.lawmobile.presentation.ui.login.pairingPhoneWithCamera.PairingResultF
 import com.lawmobile.presentation.ui.login.pairingPhoneWithCamera.StartPairingFragment
 import com.lawmobile.presentation.ui.login.validateOfficerPassword.ValidateOfficerPasswordFragment
 import com.lawmobile.presentation.utils.EspressoIdlingResource
-import kotlinx.android.synthetic.main.activity_login.*
-import kotlinx.android.synthetic.main.bottom_sheet_instructions_connect_camera.*
 
 class LoginActivity : BaseActivity() {
+
+    private lateinit var activityLoginBinding: ActivityLoginBinding
 
     private val loginActivityViewModel: LoginActivityViewModel by viewModels()
     val sheetBehavior: BottomSheetBehavior<CardView> by lazy {
         BottomSheetBehavior.from(
-            bottomSheetInstructions
+            activityLoginBinding.bottomSheetInstructions.bottomSheetInstructions
         )
     }
 
@@ -39,7 +40,7 @@ class LoginActivity : BaseActivity() {
     private val validateSuccessPasswordOfficer: (isSuccess: Boolean) -> Unit = {
         if (it) startLiveViewActivity()
         else {
-            fragmentContainer.showErrorSnackBar(getString(R.string.incorrect_password))
+            activityLoginBinding.fragmentContainer.showErrorSnackBar(getString(R.string.incorrect_password))
             EspressoIdlingResource.decrement()
         }
     }
@@ -49,7 +50,8 @@ class LoginActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_login)
+        activityLoginBinding = ActivityLoginBinding.inflate(layoutInflater)
+        setContentView(activityLoginBinding.root)
         overridePendingTransition(0, R.anim.fade_out)
         configureBottomSheet()
         startAnimation()
@@ -58,33 +60,33 @@ class LoginActivity : BaseActivity() {
     private fun configureBottomSheet() {
         sheetBehavior.isDraggable = false
         sheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
-        buttonDismissInstructions.setOnClickListener {
+        activityLoginBinding.bottomSheetInstructions.buttonDismissInstructions.setOnClickListener {
             sheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
         }
-        buttonCloseInstructions.setOnClickListener {
+        activityLoginBinding.bottomSheetInstructions.buttonCloseInstructions.setOnClickListener {
             sheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
         }
     }
 
     private fun startAnimation() {
         if (isAnimationsEnabled()) {
-            imageViewFMALogoNoAnimation.isVisible = false
-            (imageViewFMALogo.drawable as AnimatedVectorDrawable).start()
+            activityLoginBinding.imageViewFMALogoNoAnimation.isVisible = false
+            (activityLoginBinding.imageViewFMALogo.drawable as AnimatedVectorDrawable).start()
             loginActivityViewModel.waitToFinish(ANIMATION_DURATION)
             loginActivityViewModel.isWaitFinishedLiveData.observe(
                 this,
                 Observer(::showLoginViews)
             )
         } else {
-            imageViewFMALogoNoAnimation.isVisible = true
-            imageViewFMALogo.isVisible = false
+            activityLoginBinding.imageViewFMALogoNoAnimation.isVisible = true
+            activityLoginBinding.imageViewFMALogo.isVisible = false
             showLoginViews(true)
         }
     }
 
     private fun showLoginViews(isFinished: Boolean) {
         if (isFinished) {
-            imageViewSafeFleetFooterLogo.isVisible = true
+            activityLoginBinding.imageViewSafeFleetFooterLogo.isVisible = true
             showFragmentPairingCamera()
             verifyLocationPermission()
         }
@@ -135,9 +137,9 @@ class LoginActivity : BaseActivity() {
 
     override fun onStop() {
         super.onStop()
-        imageViewFMALogo.isVisible = false
-        imageViewFMALogoNoAnimation.isVisible = true
-        imageViewSafeFleetFooterLogo.isVisible = true
+        activityLoginBinding.imageViewFMALogo.isVisible = false
+        activityLoginBinding.imageViewFMALogoNoAnimation.isVisible = true
+        activityLoginBinding.imageViewSafeFleetFooterLogo.isVisible = true
     }
 
     override fun onBackPressed() {}

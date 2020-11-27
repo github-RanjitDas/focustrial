@@ -10,6 +10,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.lawmobile.domain.entities.CameraInfo
 import com.lawmobile.domain.entities.DomainUser
 import com.lawmobile.presentation.R
+import com.lawmobile.presentation.databinding.FragmentValidateOfficerPasswordBinding
 import com.lawmobile.presentation.extensions.setOnClickListenerCheckConnection
 import com.lawmobile.presentation.extensions.showErrorSnackBar
 import com.lawmobile.presentation.extensions.text
@@ -19,9 +20,12 @@ import com.lawmobile.presentation.utils.EncodePassword
 import com.lawmobile.presentation.utils.EspressoIdlingResource
 import com.safefleet.mobile.commons.helpers.Result
 import com.safefleet.mobile.commons.helpers.hideKeyboard
-import kotlinx.android.synthetic.main.fragment_validate_officer_password.*
 
 class ValidateOfficerPasswordFragment : BaseFragment() {
+
+    private var _fragmentValidateOfficerPasswordBinding: FragmentValidateOfficerPasswordBinding? =
+        null
+    private val fragmentValidateOfficerPasswordBinding get() = _fragmentValidateOfficerPasswordBinding!!
 
     private val validateOfficerPasswordViewModel: ValidateOfficerPasswordViewModel by viewModels()
     private var domainUser: DomainUser? = null
@@ -31,7 +35,11 @@ class ValidateOfficerPasswordFragment : BaseFragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? = inflater.inflate(R.layout.fragment_validate_officer_password, container, false)
+    ): View {
+        _fragmentValidateOfficerPasswordBinding =
+            FragmentValidateOfficerPasswordBinding.inflate(inflater, container, false)
+        return fragmentValidateOfficerPasswordBinding.root
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -64,7 +72,7 @@ class ValidateOfficerPasswordFragment : BaseFragment() {
     }
 
     private fun configureListeners() {
-        buttonLogin.setOnClickListenerCheckConnection {
+        fragmentValidateOfficerPasswordBinding.buttonLogin.setOnClickListenerCheckConnection {
             (activity as BaseActivity).hideKeyboard()
             EspressoIdlingResource.increment()
             verifyPasswordOfficer()
@@ -77,7 +85,7 @@ class ValidateOfficerPasswordFragment : BaseFragment() {
             return
         }
         val sha256Password =
-            EncodePassword.encodePasswordOfficer(textInputOfficerPassword.text())
+            EncodePassword.encodePasswordOfficer(fragmentValidateOfficerPasswordBinding.textInputOfficerPassword.text())
         if (sha256Password.isNotEmpty() && sha256Password == domainUser?.password) {
             validateSuccessPasswordOfficer(true)
         } else {
@@ -88,7 +96,7 @@ class ValidateOfficerPasswordFragment : BaseFragment() {
 
     private fun showErrorInGetInformationOfUser() {
         (activity as BaseActivity).hideKeyboard()
-        rootLayoutValidateOfficer.showErrorSnackBar(
+        fragmentValidateOfficerPasswordBinding.rootLayoutValidateOfficer.showErrorSnackBar(
             getString(R.string.error_getting_officer_information),
             Snackbar.LENGTH_INDEFINITE
         ) {

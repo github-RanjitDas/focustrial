@@ -14,6 +14,7 @@ import com.lawmobile.domain.entities.DomainInformationFile
 import com.lawmobile.domain.entities.DomainInformationFileResponse
 import com.lawmobile.domain.extensions.getCreationDate
 import com.lawmobile.presentation.R
+import com.lawmobile.presentation.databinding.FragmentFileListBinding
 import com.lawmobile.presentation.entities.SnapshotsAssociatedByUser
 import com.lawmobile.presentation.extensions.setOnClickListenerCheckConnection
 import com.lawmobile.presentation.extensions.showErrorSnackBar
@@ -24,21 +25,26 @@ import com.lawmobile.presentation.utils.Constants.VIDEO_LIST
 import com.safefleet.mobile.commons.helpers.Result
 import com.safefleet.mobile.commons.helpers.doIfError
 import com.safefleet.mobile.commons.helpers.doIfSuccess
-import kotlinx.android.synthetic.main.fragment_file_list.*
 
 class SimpleFileListFragment : FileListBaseFragment() {
+
+    private var _fragmentFileListBinding: FragmentFileListBinding? = null
+    private val fragmentFileListBinding get() = _fragmentFileListBinding!!
 
     private val simpleListViewModel: SimpleListViewModel by activityViewModels()
     var simpleFileListAdapter: SimpleFileListAdapter? = null
     var onFileCheck: ((Boolean, Int) -> Unit)? = null
     var fileListBackup = mutableListOf<DomainInformationFile>()
 
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         setObservers()
-        return inflater.inflate(R.layout.fragment_file_list, container, false)
+        _fragmentFileListBinding =
+            FragmentFileListBinding.inflate(inflater, container, false)
+        return fragmentFileListBinding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -56,7 +62,7 @@ class SimpleFileListFragment : FileListBaseFragment() {
                 simpleListViewModel.getVideoList()
             }
             SNAPSHOT_LIST -> {
-                textViewEvent.isVisible = false
+                fragmentFileListBinding.textViewEvent.isVisible = false
                 simpleListViewModel.getSnapshotList()
             }
         }
@@ -77,7 +83,10 @@ class SimpleFileListFragment : FileListBaseFragment() {
         simpleFileListAdapter?.fileList =
             filter?.filteredList?.filterIsInstance<DomainInformationFile>()
                     as MutableList<DomainInformationFile>
-        manageFragmentContent()
+        manageFragmentContent(
+            fragmentFileListBinding.fileListRecycler,
+            fragmentFileListBinding.noFilesTextView
+        )
     }
 
     private fun restoreFilters() {
@@ -87,8 +96,8 @@ class SimpleFileListFragment : FileListBaseFragment() {
     }
 
     private fun setListeners() {
-        textViewDateAndTime.setOnClickListenerCheckConnection { simpleFileListAdapter?.sortByDateAndTime() }
-        textViewEvent.setOnClickListenerCheckConnection { simpleFileListAdapter?.sortByEvent() }
+        fragmentFileListBinding.textViewDateAndTime.setOnClickListenerCheckConnection { simpleFileListAdapter?.sortByDateAndTime() }
+        fragmentFileListBinding.textViewEvent.setOnClickListenerCheckConnection { simpleFileListAdapter?.sortByEvent() }
     }
 
     fun showCheckBoxes() {
@@ -101,7 +110,7 @@ class SimpleFileListFragment : FileListBaseFragment() {
 
     private fun setRecyclerView() {
         restoreFilters()
-        fileListRecycler?.apply {
+        fragmentFileListBinding.fileListRecycler.apply {
             setHasFixedSize(true)
             layoutManager = LinearLayoutManager(requireContext())
             adapter = simpleFileListAdapter
@@ -122,14 +131,20 @@ class SimpleFileListFragment : FileListBaseFragment() {
                     handleErrors(it.errors)
                 }
                 if (it.items.isNotEmpty()) {
-                    showFileListRecycler()
+                    showFileListRecycler(
+                        fragmentFileListBinding.fileListRecycler,
+                        fragmentFileListBinding.noFilesTextView
+                    )
                     setAdapter(it.items)
                 } else {
-                    showEmptyListMessage()
+                    showEmptyListMessage(
+                        fragmentFileListBinding.fileListRecycler,
+                        fragmentFileListBinding.noFilesTextView
+                    )
                 }
             }
             doIfError {
-                fileListLayout.showErrorSnackBar(
+                fragmentFileListBinding.fileListLayout.showErrorSnackBar(
                     getString(R.string.file_list_failed_load_files),
                     Snackbar.LENGTH_INDEFINITE
                 ) {
@@ -141,7 +156,7 @@ class SimpleFileListFragment : FileListBaseFragment() {
     }
 
     private fun handleErrors(errors: MutableList<String>) {
-        fileListLayout.showErrorSnackBar(
+        fragmentFileListBinding.fileListLayout.showErrorSnackBar(
             getString(R.string.getting_files_error_description),
             Snackbar.LENGTH_LONG
         ) {

@@ -11,7 +11,6 @@ import com.lawmobile.presentation.R
 import com.lawmobile.presentation.entities.AlertInformation
 import com.lawmobile.presentation.entities.NeutralAlertInformation
 import com.lawmobile.presentation.ui.base.BaseActivity
-import com.lawmobile.presentation.ui.login.LoginActivity
 import com.lawmobile.presentation.utils.CameraHelper
 import com.safefleet.mobile.commons.widgets.SafeFleetConfirmationDialog
 import kotlin.system.exitProcess
