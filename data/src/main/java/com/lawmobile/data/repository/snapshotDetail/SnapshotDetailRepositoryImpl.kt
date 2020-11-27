@@ -89,19 +89,9 @@ class SnapshotDetailRepositoryImpl(private val snapshotDetailRemoteDataSource: S
 
         with(snapshotDetailRemoteDataSource.getInformationOfPhoto(cameraConnectFile)) {
             doIfSuccess {
-                delay(350)
-
-                val responseMetadataVideos = updateVideosMetadata()
-                thereIsErrorInMetadataVideo = responseMetadataVideos is Result.Error
-                responseMetadataVideos.doIfError { exceptionMetadata ->
-                    return Result.Error(exceptionMetadata)
-                }
-
-                val videosAssociated =
-                    VideoListMetadata.getVideosWithPhotosAssociated(domainCameraFile)
                 val domainPhotoMetadata = PhotoMetadataMapper.cameraToDomain(it)
                 val domainInformationImage =
-                    DomainInformationImageMetadata(domainPhotoMetadata, videosAssociated)
+                    DomainInformationImageMetadata(domainPhotoMetadata, emptyList())
 
                 FileList.updateItemInImageMetadataList(domainInformationImage)
                 return Result.Success(domainInformationImage)
@@ -111,42 +101,7 @@ class SnapshotDetailRepositoryImpl(private val snapshotDetailRemoteDataSource: S
         return Result.Error(Exception("Was not possible get information from the camera"))
     }
 
-    private suspend fun updateVideosMetadata(): Result<Unit> {
-        with(snapshotDetailRemoteDataSource.getVideoList()) {
-            doIfSuccess { response ->
-                response.items.forEach { cameraConnectFile ->
-                    delay(350)
-                    val responseMetadata = getResultWithAttempts(ATTEMPTS_TO_GET_METADATA) {
-                        snapshotDetailRemoteDataSource.getMetadataOfVideo(cameraConnectFile)
-                    }
-
-                    with(responseMetadata) {
-                        doIfSuccess {
-                            val videoMetadata = VideoMetadataMapper.cameraToDomain(it)
-
-                            VideoListMetadata.saveOrUpdateVideoMetadata(
-                                RemoteVideoMetadata(
-                                    videoMetadata,
-                                    false
-                                )
-                            )
-                        }
-                        doIfError {
-                            return Result.Error(Exception("Error in get information of:${cameraConnectFile.name}"))
-                        }
-                    }
-                }
-            }
-            doIfError {
-                return Result.Error(Exception("Error in get videoList"))
-            }
-        }
-
-        return Result.Success(Unit)
-    }
-
     companion object {
-        const val ATTEMPTS_TO_GET_METADATA = 5
         private var thereIsErrorInMetadataVideo = false
     }
 }
