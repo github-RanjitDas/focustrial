@@ -10,6 +10,7 @@ import org.videolan.libvlc.MediaPlayer
 class VLCMediaPlayer(private val libVLC: LibVLC, private val mediaPlayer: MediaPlayer) {
 
     private var currentMedia: Media? = null
+    private var currentTime: Long = 0
 
     fun createMediaPlayer(url: String, view: SurfaceView) {
         releaseMedia()
@@ -48,6 +49,9 @@ class VLCMediaPlayer(private val libVLC: LibVLC, private val mediaPlayer: MediaP
 
     fun playMediaPlayer() {
         if (!mediaPlayer.isPlaying) {
+            if (currentTime != 0L) {
+                mediaPlayer.time = currentTime
+            }
             mediaPlayer.play()
         }
     }
@@ -60,7 +64,8 @@ class VLCMediaPlayer(private val libVLC: LibVLC, private val mediaPlayer: MediaP
 
     fun pauseMediaPlayer() {
         if (mediaPlayer.isPlaying) {
-            mediaPlayer.pause()
+            currentTime = getTimeInMillisMediaPlayer()
+            mediaPlayer.stop()
         }
     }
 
@@ -85,7 +90,7 @@ class VLCMediaPlayer(private val libVLC: LibVLC, private val mediaPlayer: MediaP
         }
 
         mediaPlayer.time =
-            ((progress.toDouble() * mediaPlayer.media.duration.toDouble()) / 100).toLong()
+                ((progress.toDouble() * mediaPlayer.media.duration.toDouble()) / 100).toLong()
 
     }
 

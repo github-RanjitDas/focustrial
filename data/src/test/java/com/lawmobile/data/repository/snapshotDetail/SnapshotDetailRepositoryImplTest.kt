@@ -128,7 +128,7 @@ class SnapshotDetailRepositoryImplTest {
 
     @Test
     fun testGetInformationOfPhotoError() {
-        FileList.imageMetadataList = ArrayList()
+        //FileList.imageMetadataList = ArrayList()
         coEvery { snapshotDetailRemoteDataSource.getInformationOfPhoto(any()) } returns Result.Error(
             mockk()
         )
@@ -143,6 +143,21 @@ class SnapshotDetailRepositoryImplTest {
     }
 
     @Test
+    fun testGetInformationOfPhotoSuccess() {
+        //FileList.listOfMetadataImages = ArrayList()
+        val cameraConnectPhotoMetadata = CameraConnectPhotoMetadata(fileName = "name")
+        coEvery { snapshotDetailRemoteDataSource.getInformationOfPhoto(any()) } returns Result.Success(
+            cameraConnectPhotoMetadata
+        )
+        val cameraSend = CameraConnectFile("name", "date", "path", "nameFol")
+
+        runBlocking {
+            val response = snapshotDetailRepositoryImpl.getInformationOfPhoto(FileMapper.cameraToDomain(cameraSend))
+            Assert.assertTrue(response is Result.Success)
+        }
+    }
+
+    /*@Test
     fun testGetInformationOfPhotoErrorInVideoList() {
         val cameraConnectFile = CameraConnectFile("name", "date", "path", "nameFol")
         FileList.imageMetadataList = ArrayList()
@@ -196,5 +211,5 @@ class SnapshotDetailRepositoryImplTest {
         runBlocking { snapshotDetailRepositoryImpl.getInformationOfPhoto(domainCameraFile) }
 
         coVerify { snapshotDetailRemoteDataSource.getInformationOfPhoto(any()) }
-    }
+    }*/
 }
