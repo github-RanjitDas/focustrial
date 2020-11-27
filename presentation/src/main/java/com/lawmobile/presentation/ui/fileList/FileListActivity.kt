@@ -184,7 +184,7 @@ class FileListActivity : BaseActivity() {
                 setImageResource(R.drawable.ic_filter)
                 ContextCompat.getDrawable(
                     context,
-                    R.drawable.background_button_cancel
+                    R.drawable.border_rounded_blue
                 )
             }
         }

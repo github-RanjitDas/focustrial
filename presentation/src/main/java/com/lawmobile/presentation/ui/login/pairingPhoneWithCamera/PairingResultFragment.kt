@@ -27,7 +27,7 @@ class PairingResultFragment : BaseFragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _fragmentPairingResultBinding =
             FragmentPairingResultBinding.inflate(inflater, container, false)
         return fragmentPairingResultBinding.root
@@ -92,9 +92,7 @@ class PairingResultFragment : BaseFragment() {
     }
 
     private fun setObservers() {
-        pairingViewModel.progressConnectionWithTheCamera.observe(
-            viewLifecycleOwner, ::manageResponseProgressInConnectionCamera
-        )
+        pairingViewModel.cameraPairingProgress = ::manageResponseProgressInConnectionCamera
         pairingViewModel.isWaitFinishedLiveData.observe(
             viewLifecycleOwner
         ) { if (it) connectionSuccess(true) }

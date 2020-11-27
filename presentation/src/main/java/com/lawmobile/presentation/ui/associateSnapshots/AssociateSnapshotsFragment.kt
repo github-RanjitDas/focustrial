@@ -38,7 +38,7 @@ class AssociateSnapshotsFragment : BaseFragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _fragmentAssociateSnapshotsBinding =
             FragmentAssociateSnapshotsBinding.inflate(inflater, container, false)
         return fragmentAssociateSnapshotsBinding.root
@@ -148,7 +148,7 @@ class AssociateSnapshotsFragment : BaseFragment() {
                 setImageResource(R.drawable.ic_filter)
                 ContextCompat.getDrawable(
                     context,
-                    R.drawable.background_button_cancel
+                    R.drawable.border_rounded_blue
                 )
             }
         }

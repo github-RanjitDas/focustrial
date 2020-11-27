@@ -38,7 +38,7 @@ class StartPairingFragment : BaseFragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _fragmentStartPairingBinding =
             FragmentStartPairingBinding.inflate(inflater, container, false)
         return fragmentStartPairingBinding.root
