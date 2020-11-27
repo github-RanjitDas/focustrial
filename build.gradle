@@ -19,7 +19,7 @@ buildscript {
     }
     configurations.maybeCreate('pitest')
     dependencies {
-        classpath 'com.android.tools.build:gradle:4.0.1'
+        classpath 'com.android.tools.build:gradle:4.0.2'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:$sonar_version"
         classpath "org.jacoco:org.jacoco.core:$jacoco_version"

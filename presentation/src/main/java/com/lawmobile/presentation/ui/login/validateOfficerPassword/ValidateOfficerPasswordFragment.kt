@@ -35,7 +35,7 @@ class ValidateOfficerPasswordFragment : BaseFragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _fragmentValidateOfficerPasswordBinding =
             FragmentValidateOfficerPasswordBinding.inflate(inflater, container, false)
         return fragmentValidateOfficerPasswordBinding.root

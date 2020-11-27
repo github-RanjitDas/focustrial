@@ -49,7 +49,7 @@ class ThumbnailFileListFragment : FileListBaseFragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         setObservers()
         _fragmentFileListBinding =
             FragmentFileListBinding.inflate(inflater, container, false)

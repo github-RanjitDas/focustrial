@@ -1,6 +1,5 @@
 package com.lawmobile.data.datasource.remote.pairingPhoneWithCamera
 
-import androidx.lifecycle.LiveData
 import com.lawmobile.data.InstantExecutorExtension
 import com.safefleet.mobile.avml.cameras.external.CameraConnectService
 import com.safefleet.mobile.commons.helpers.Result
@@ -15,27 +14,26 @@ import org.junit.jupiter.api.extension.ExtendWith
 @ExtendWith(InstantExecutorExtension::class)
 class PairingPhoneWithCameraRemoteDataSourceImplTest {
 
-    private val progressCamera: LiveData<Result<Int>> = mockk()
-    private val cameraConnectService: CameraConnectService = mockk {
-        every { progressPairingCamera } returns progressCamera
-    }
+    private val cameraConnectService: CameraConnectService = mockk(relaxed = true)
 
     private val pairingPhoneWithCameraRemoteDataSourceImpl by lazy {
         PairingPhoneWithCameraRemoteDataSourceImpl(cameraConnectService)
     }
 
+
     @Test
     fun testLoadPairingCamera() {
+        val progressPairingCamera: ((Result<Int>) -> Unit) = { }
         coEvery { cameraConnectService.loadPairingCamera(any(), any()) } just Runs
+
         runBlocking {
-            pairingPhoneWithCameraRemoteDataSourceImpl.loadPairingCamera("", "")
+            pairingPhoneWithCameraRemoteDataSourceImpl.loadPairingCamera(
+                "",
+                "",
+                progressPairingCamera
+            )
         }
-
-        Assert.assertEquals(
-            pairingPhoneWithCameraRemoteDataSourceImpl.progressPairingCamera,
-            progressCamera
-        )
-
+        Assert.assertTrue(cameraConnectService.progressPairingCamera != null)
         coVerify { cameraConnectService.loadPairingCamera("", "") }
     }
 

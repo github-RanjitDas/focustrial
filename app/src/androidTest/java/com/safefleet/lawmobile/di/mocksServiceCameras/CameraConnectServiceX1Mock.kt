@@ -1,7 +1,5 @@
 package com.safefleet.lawmobile.di.mocksServiceCameras
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MediatorLiveData
 import com.lawmobile.data.entities.FileList
 import com.safefleet.lawmobile.testData.CameraFilesData
 import com.safefleet.lawmobile.testData.TestLoginData
@@ -11,9 +9,7 @@ import com.safefleet.mobile.commons.helpers.Result
 import io.mockk.mockk
 
 class CameraConnectServiceX1Mock : CameraConnectService {
-    private val progressPairingCameraMediator: MediatorLiveData<Result<Int>> = MediatorLiveData()
-    override val progressPairingCamera: LiveData<Result<Int>>
-        get() = progressPairingCameraMediator
+    override var progressPairingCamera: ((Result<Int>) -> Unit)? = null
 
     override suspend fun deleteFile(fileName: String): Result<Unit> {
         return Result.Success(Unit)
@@ -122,7 +118,7 @@ class CameraConnectServiceX1Mock : CameraConnectService {
     }
 
     override suspend fun loadPairingCamera(hostnameToConnect: String, ipAddressClient: String) {
-        progressPairingCameraMediator.postValue(result)
+        progressPairingCamera?.invoke(result)
     }
 
     override suspend fun saveAllPhotoMetadata(list: List<CameraConnectPhotoMetadata>): Result<Unit> {
