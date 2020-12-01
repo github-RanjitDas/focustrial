@@ -37,5 +37,7 @@ ext.fileFilter = [
         "**/widgets/**",
         '**/extensions/*.*',
         "**/*VLCMediaPlayer.*",
-        "com.lawmobile.domain.CameraInfo*"
+        "**/*DataStatus.**",
+        //Temporal empty file that is decreasing the coverage
+        "**/LoginActivityViewModel.**"
 ]

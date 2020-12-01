@@ -32,7 +32,7 @@ class SnapshotDetailViewModel @ViewModelInject constructor(
 
     fun getImageBytes(domainCameraFile: DomainCameraFile) {
         viewModelScope.launch {
-            imageBytesMediator.postEventValueWithTimeout(LOADING_TIMEOUT) {
+            imageBytesMediator.postEventValueWithTimeout(getLoadingTimeOut()) {
                 Event(getResultWithAttempts(ATTEMPTS_TO_GET_BYTES) {
                     snapshotDetailUseCase.getImageBytes(domainCameraFile)
                 })
@@ -42,7 +42,7 @@ class SnapshotDetailViewModel @ViewModelInject constructor(
 
     fun savePartnerId(domainCameraFile: DomainCameraFile, partnerId: String) {
         viewModelScope.launch {
-            savePartnerIdMediator.postValueWithTimeout(LOADING_TIMEOUT) {
+            savePartnerIdMediator.postValueWithTimeout(getLoadingTimeOut()) {
                 snapshotDetailUseCase.savePartnerIdSnapshot(domainCameraFile, partnerId)
             }
         }
@@ -50,7 +50,7 @@ class SnapshotDetailViewModel @ViewModelInject constructor(
 
     fun getInformationImageMetadata(domainCameraFile: DomainCameraFile) {
         viewModelScope.launch {
-            informationVideoMediator.postEventValueWithTimeout(LOADING_TIMEOUT) {
+            informationVideoMediator.postEventValueWithTimeout(getLoadingTimeOut()) {
                 Event(getResultWithAttempts(ATTEMPTS_TO_GET_INFORMATION, DELAY_BETWEEN_ATTEMPTS) {
                     snapshotDetailUseCase.getInformationOfPhoto(domainCameraFile)
                 })
