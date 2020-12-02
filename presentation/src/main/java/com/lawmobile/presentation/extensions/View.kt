@@ -12,7 +12,9 @@ import com.safefleet.mobile.commons.widgets.snackbar.SafeFleetSnackBarSettings
 import java.sql.Timestamp
 
 private val snackBarListener = object : View.OnAttachStateChangeListener{
-    override fun onViewAttachedToWindow(v: View?) {}
+    override fun onViewAttachedToWindow(v: View?) {
+        // The interface requires to implement this method but not needed
+    }
 
     override fun onViewDetachedFromWindow(v: View?) {
         EspressoIdlingResource.decrement()

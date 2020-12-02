@@ -120,7 +120,9 @@ class VideoPlaybackActivity : BaseActivity() {
 
         bottomSheetBehavior.addBottomSheetCallback(object :
             BottomSheetBehavior.BottomSheetCallback() {
-            override fun onSlide(bottomSheet: View, slideOffset: Float) {}
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {
+                // The interface requires to implement this method but not needed
+            }
 
             override fun onStateChanged(bottomSheet: View, newState: Int) {
                 when (newState) {
@@ -548,7 +550,7 @@ class VideoPlaybackActivity : BaseActivity() {
 
     private fun verifyVideoMetadataWasEdited(): Boolean {
         if (!isVideoMetadataChangesSaved) {
-            verifyVideoMetadataIsNullOrEmpty()
+            verifyVideoMetadataParameters()
 
             val newMetadata = getNewMetadataFromForm().metadata
             val oldMetadata = currentMetadata.metadata
@@ -640,23 +642,25 @@ class VideoPlaybackActivity : BaseActivity() {
         )
     }
 
-    private fun verifyVideoMetadataIsNullOrEmpty() {
+    private fun verifyVideoMetadataParameters() {
         currentMetadata.metadata?.apply {
-            if (partnerID.isNullOrEmpty()) partnerID = ""
-            if (ticketNumber.isNullOrEmpty()) ticketNumber = ""
-            if (ticketNumber2.isNullOrEmpty()) ticketNumber2 = ""
-            if (caseNumber.isNullOrEmpty()) caseNumber = ""
-            if (caseNumber2.isNullOrEmpty()) caseNumber2 = ""
-            if (dispatchNumber.isNullOrEmpty()) dispatchNumber = ""
-            if (dispatchNumber2.isNullOrEmpty()) dispatchNumber2 = ""
-            if (location.isNullOrEmpty()) location = ""
-            if (remarks.isNullOrEmpty()) remarks = ""
-            if (firstName.isNullOrEmpty()) firstName = ""
-            if (lastName.isNullOrEmpty()) lastName = ""
-            if (driverLicense.isNullOrEmpty()) driverLicense = ""
-            if (licensePlate.isNullOrEmpty()) licensePlate = ""
+            partnerID = handleNullParameter(partnerID)
+            ticketNumber = handleNullParameter(ticketNumber)
+            ticketNumber2 = handleNullParameter(ticketNumber2)
+            caseNumber = handleNullParameter(caseNumber)
+            caseNumber2 = handleNullParameter(caseNumber2)
+            dispatchNumber = handleNullParameter(dispatchNumber)
+            dispatchNumber2 = handleNullParameter(dispatchNumber2)
+            location = handleNullParameter(location)
+            remarks = handleNullParameter(remarks)
+            firstName = handleNullParameter(firstName)
+            lastName = handleNullParameter(lastName)
+            driverLicense = handleNullParameter(driverLicense)
+            licensePlate = handleNullParameter(licensePlate)
         }
     }
+
+    private fun handleNullParameter(string: String?) = string ?: ""
 
     private fun updateProgressVideoInView() {
         val progressVideo =

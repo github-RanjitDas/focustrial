@@ -142,7 +142,9 @@ class LoginActivity : BaseActivity() {
         activityLoginBinding.imageViewSafeFleetFooterLogo.isVisible = true
     }
 
-    override fun onBackPressed() {}
+    override fun onBackPressed() {
+        // This method is implemented to invalidate the behaviour of back button on the phones
+    }
 
     companion object {
         private const val ANIMATION_DURATION = 2000L

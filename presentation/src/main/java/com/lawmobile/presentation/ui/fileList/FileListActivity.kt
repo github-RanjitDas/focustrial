@@ -201,7 +201,9 @@ class FileListActivity : BaseActivity() {
         }
         bottomSheetBehavior.addBottomSheetCallback(object :
             BottomSheetBehavior.BottomSheetCallback() {
-            override fun onSlide(bottomSheet: View, slideOffset: Float) {}
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {
+                // The interface requires to implement this method but not needed
+            }
 
             override fun onStateChanged(bottomSheet: View, newState: Int) {
                 when (newState) {
