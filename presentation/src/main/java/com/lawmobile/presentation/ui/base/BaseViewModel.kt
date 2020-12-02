@@ -9,10 +9,8 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 open class BaseViewModel @Inject constructor() : ViewModel() {
-
     val isWaitFinishedLiveData: LiveData<Boolean> get() = isWaitFinishedMediator
     private val isWaitFinishedMediator = MediatorLiveData<Boolean>()
-
     fun waitToFinish(time: Long) {
         viewModelScope.launch {
             isWaitFinishedMediator.postValue(false)
@@ -22,6 +20,7 @@ open class BaseViewModel @Inject constructor() : ViewModel() {
     }
 
     companion object {
-        const val LOADING_TIMEOUT = 20000L
+        private const val LOADING_TIMEOUT = 20000L
+        fun getLoadingTimeOut() = LOADING_TIMEOUT
     }
 }

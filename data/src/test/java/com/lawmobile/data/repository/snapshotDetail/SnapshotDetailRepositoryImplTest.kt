@@ -3,9 +3,7 @@ package com.lawmobile.data.repository.snapshotDetail
 import com.lawmobile.data.datasource.remote.snapshotDetail.SnapshotDetailRemoteDataSource
 import com.lawmobile.data.entities.FileList
 import com.lawmobile.data.mappers.FileMapper
-import com.lawmobile.domain.entities.DomainCameraFile
 import com.safefleet.mobile.avml.cameras.entities.CameraConnectFile
-import com.safefleet.mobile.avml.cameras.entities.CameraConnectFileResponseWithErrors
 import com.safefleet.mobile.avml.cameras.entities.CameraConnectPhotoMetadata
 import com.safefleet.mobile.commons.helpers.Result
 import io.mockk.coEvery

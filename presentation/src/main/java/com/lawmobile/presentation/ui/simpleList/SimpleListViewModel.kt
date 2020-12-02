@@ -20,7 +20,7 @@ class SimpleListViewModel @ViewModelInject constructor(private val simpleListUse
 
     fun getSnapshotList() {
         viewModelScope.launch {
-            fileListMediator.postValueWithTimeout(LOADING_TIMEOUT) {
+            fileListMediator.postValueWithTimeout(getLoadingTimeOut()) {
                 simpleListUseCase.getSnapshotList()
             }
         }
@@ -28,7 +28,7 @@ class SimpleListViewModel @ViewModelInject constructor(private val simpleListUse
 
     fun getVideoList() {
         viewModelScope.launch {
-            fileListMediator.postValueWithTimeout(LOADING_TIMEOUT) {
+            fileListMediator.postValueWithTimeout(getLoadingTimeOut()) {
                 simpleListUseCase.getVideoList()
             }
         }
