@@ -453,7 +453,9 @@ class LiveActivity : BaseActivity() {
         liveActivityViewModel.startVLCMediaPlayer()
     }
 
-    override fun onBackPressed() {}
+    override fun onBackPressed() {
+        // This method is implemented to invalidate the behaviour of back button on the phones
+    }
 
     companion object {
         private var cameFromLandscape = false
