@@ -60,6 +60,7 @@ class VideoPlaybackTest : EspressoStartActivityBaseTest<LoginActivity>(LoginActi
             clickOnSave()
             isEventMandatoryDisplayed()
             selectEvent(defaultMetadata)
+            BaristaSleepInteractions.sleep(1000)
             clickOnSave()
             isSavedSuccessDisplayed()
             fileListScreen.isFileListDisplayed()
@@ -147,5 +148,4 @@ class VideoPlaybackTest : EspressoStartActivityBaseTest<LoginActivity>(LoginActi
             fileListScreen.checkFileEvent(extraMetadata.metadata?.event?.name)
         }
     }
-
 }
