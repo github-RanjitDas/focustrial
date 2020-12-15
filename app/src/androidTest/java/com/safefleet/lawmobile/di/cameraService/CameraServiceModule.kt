@@ -1,8 +1,10 @@
 package com.safefleet.lawmobile.di.cameraService
 
 import com.google.gson.Gson
+import com.lawmobile.data.utils.ConnectionHelperImpl
 import com.lawmobile.domain.entities.CameraInfo
 import com.lawmobile.domain.entities.CameraType
+import com.lawmobile.domain.utils.ConnectionHelper
 import com.lawmobile.presentation.utils.CameraHelper
 import com.lawmobile.presentation.utils.WifiHelper
 import com.safefleet.lawmobile.di.mocksServiceCameras.CameraConnectServiceX1Mock
@@ -41,9 +43,14 @@ class CameraServiceModule {
 
         @Provides
         @Singleton
+        fun provideConnectionHelper(cameraService: CameraService): ConnectionHelper =
+            ConnectionHelperImpl(cameraService)
+
+        @Provides
+        @Singleton
         fun provideCameraHelper(
-            cameraService: CameraService,
+            connectionHelper: ConnectionHelper,
             wifiHelper: WifiHelper
-        ): CameraHelper = CameraHelper(cameraService, wifiHelper)
+        ): CameraHelper = CameraHelper(connectionHelper, wifiHelper)
     }
 }

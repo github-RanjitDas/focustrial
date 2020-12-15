@@ -17,6 +17,7 @@ import com.lawmobile.domain.entities.DomainCatalog
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.databinding.ActivityLiveViewBinding
 import com.lawmobile.presentation.entities.AlertInformation
+import com.lawmobile.presentation.enums.CatalogTypes
 import com.lawmobile.presentation.extensions.*
 import com.lawmobile.presentation.ui.base.BaseActivity
 import com.lawmobile.presentation.ui.fileList.FileListActivity
@@ -31,7 +32,6 @@ import com.safefleet.mobile.commons.animations.Animations
 import com.safefleet.mobile.commons.widgets.linearProgressBar.SafeFleetLinearProgressBarBehavior.ASCENDANT
 import com.safefleet.mobile.commons.widgets.linearProgressBar.SafeFleetLinearProgressBarBehavior.DESCENDANT
 import com.safefleet.mobile.commons.widgets.linearProgressBar.SafeFleetLinearProgressBarRanges.*
-import com.safefleet.mobile.external_hardware.cameras.x1.entities.X1CatalogTypes
 import com.safefleet.mobile.kotlin_commons.extensions.doIfError
 import com.safefleet.mobile.kotlin_commons.extensions.doIfSuccess
 import com.safefleet.mobile.kotlin_commons.helpers.Event
@@ -214,7 +214,7 @@ class LiveActivity : BaseActivity() {
         with(domainCatalogList) {
             doIfSuccess { catalogInfoList ->
                 val eventNames =
-                    catalogInfoList.filter { it.type == X1CatalogTypes.EVENT.value }
+                    catalogInfoList.filter { it.type == CatalogTypes.EVENT.value }
                 CameraInfo.events.addAll(eventNames)
             }
             doIfError {
