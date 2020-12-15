@@ -14,7 +14,7 @@ import com.lawmobile.presentation.extensions.createAlertMobileDataActive
 import com.lawmobile.presentation.extensions.createAlertProgress
 import com.lawmobile.presentation.extensions.createAlertSessionExpired
 import com.lawmobile.presentation.ui.login.LoginActivity
-import com.lawmobile.presentation.utils.DeviceHelper
+import com.lawmobile.presentation.security.RootedHelper
 import com.lawmobile.presentation.utils.EspressoIdlingResource
 import com.lawmobile.presentation.utils.MobileDataStatus
 import dagger.hilt.android.AndroidEntryPoint
@@ -41,7 +41,7 @@ open class BaseActivity : AppCompatActivity() {
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         super.onCreate(savedInstanceState)
 
-        if (DeviceHelper.isDeviceRooted()) {
+        if (RootedHelper.isDeviceRooted(this)) {
             finish()
             return
         }

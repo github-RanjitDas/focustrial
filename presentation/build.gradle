@@ -17,6 +17,11 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles 'consumer-rules.pro'
+        externalNativeBuild {
+            cmake {
+                cppFlags ""
+            }
+        }
     }
 
     buildTypes {
@@ -44,6 +49,12 @@ android {
         }
     }
 
+    externalNativeBuild {
+        cmake {
+            path "CMakeLists.txt"
+        }
+    }
+
     buildFeatures {
         viewBinding true
     }
@@ -52,6 +63,7 @@ android {
         jvmTarget = rootProject.ext.jvmTarget
     }
 
+    ndkVersion "21.0.6113669"
 }
 
 dependencies {

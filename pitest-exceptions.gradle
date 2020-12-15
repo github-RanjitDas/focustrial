@@ -20,12 +20,13 @@ ext.pitestExclusions = [
         "**.*Application*",
         "**.res.**",
         "**.entities.**",
+        "**.security.**",
         "**.models.**",
         "**.adapters.**",
         "**.widgets.**",
         '**.extensions.**',
         "**.*Fragment*",
-        "**.*DeviceHelper.*",
+        "**.*RootedHelper.*",
 
         //Class to error #line is not valid line for pointer
         "com.lawmobile.data.repository.videoPlayback.VideoPlaybackRepositoryImpl*",
