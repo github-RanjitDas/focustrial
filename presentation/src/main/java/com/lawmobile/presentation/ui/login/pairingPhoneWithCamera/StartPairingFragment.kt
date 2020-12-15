@@ -1,15 +1,19 @@
 package com.lawmobile.presentation.ui.login.pairingPhoneWithCamera
 
 import android.Manifest
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.content.ServiceConnection
 import android.location.LocationManager
 import android.net.Uri
 import android.os.Bundle
+import android.os.IBinder
 import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -19,6 +23,8 @@ import com.lawmobile.presentation.entities.AlertInformation
 import com.lawmobile.presentation.extensions.createAlertInformation
 import com.lawmobile.presentation.extensions.isPermissionGranted
 import com.lawmobile.presentation.extensions.showErrorSnackBar
+import com.lawmobile.presentation.security.IIsolatedService
+import com.lawmobile.presentation.security.IsolatedService
 import com.lawmobile.presentation.ui.base.BaseActivity
 import com.lawmobile.presentation.ui.base.BaseFragment
 import com.lawmobile.presentation.ui.login.LoginActivity
@@ -33,6 +39,9 @@ class StartPairingFragment : BaseFragment() {
 
     private val pairingViewModel: PairingViewModel by viewModels()
     lateinit var validateRequirements: (isSuccess: Boolean) -> Unit
+
+    private lateinit var serviceBinder: IIsolatedService
+    private var isServiceBounded = false
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -50,10 +59,23 @@ class StartPairingFragment : BaseFragment() {
         setListeners()
     }
 
+    override fun onStart() {
+        super.onStart()
+        val intent = Intent(activity, IsolatedService::class.java)
+        context?.bindService(
+            intent,
+            mIsolatedServiceConnection,
+            AppCompatActivity.BIND_AUTO_CREATE
+        )
+    }
+
     private fun setListeners() {
         fragmentStartPairingBinding.buttonGo.setOnClickListener {
-            verifyPermissionsToStartPairing()
+            if (!verifyMagiskInPhone()) {
+                verifyPermissionsToStartPairing()
+            }
         }
+
         fragmentStartPairingBinding.buttonInstructionsToLinkCamera.setOnClickListener {
             showBottomSheet()
         }
@@ -151,6 +173,30 @@ class StartPairingFragment : BaseFragment() {
             })
 
         activity?.createAlertInformation(alertInformation)
+    }
+
+    private fun verifyMagiskInPhone(): Boolean {
+        return if (isServiceBounded) {
+            return try {
+                serviceBinder.isMagiskPresent
+            } catch (e: Exception) {
+                e.printStackTrace()
+                false
+            }
+        } else {
+            false
+        }
+    }
+
+    private val mIsolatedServiceConnection: ServiceConnection = object : ServiceConnection {
+        override fun onServiceConnected(componentName: ComponentName, iBinder: IBinder) {
+            serviceBinder = IIsolatedService.Stub.asInterface(iBinder)
+            isServiceBounded = true
+        }
+
+        override fun onServiceDisconnected(componentName: ComponentName) {
+            isServiceBounded = false
+        }
     }
 
     companion object {

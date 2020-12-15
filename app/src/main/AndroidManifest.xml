@@ -61,6 +61,13 @@
             android:label="User Guide"
             android:parentActivityName="com.lawmobile.presentation.ui.login.LoginActivity" />
 
+        <service
+            android:name="com.lawmobile.presentation.security.IsolatedService"
+            android:enabled="true"
+            android:isolatedProcess="true"
+            android:process=":tmpService"
+            />
+
     </application>
 
 </manifest>
