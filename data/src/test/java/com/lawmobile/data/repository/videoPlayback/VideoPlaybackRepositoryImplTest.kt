@@ -7,9 +7,9 @@ import com.lawmobile.data.repository.videoPlayback.VideoPlaybackRepositoryImpl.C
 import com.lawmobile.domain.entities.DomainCameraFile
 import com.lawmobile.domain.entities.DomainInformationVideo
 import com.lawmobile.domain.entities.DomainVideoMetadata
-import com.safefleet.mobile.avml.cameras.entities.CameraConnectVideoInfo
-import com.safefleet.mobile.avml.cameras.entities.CameraConnectVideoMetadata
-import com.safefleet.mobile.commons.helpers.Result
+import com.safefleet.mobile.kotlin_commons.helpers.Result
+import com.safefleet.mobile.external_hardware.cameras.entities.VideoFileInfo
+import com.safefleet.mobile.external_hardware.cameras.entities.VideoInformation
 import io.mockk.*
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert
@@ -34,7 +34,7 @@ class VideoPlaybackRepositoryImplTest {
     fun testGetInformationResourcesVideoSuccess() {
         val domainCameraFile: DomainCameraFile = mockk(relaxed = true)
         val domainInformationVideo = DomainInformationVideo(1, "", 1, "")
-        val cameraConnectVideoInformationVideo = CameraConnectVideoInfo(1, 1, 1, "", "", 1, "", "")
+        val cameraConnectVideoInformationVideo = VideoFileInfo(1, 1, 1, "", "", 1, "", "")
 
         coEvery { videoPlayBackRemoteDataSource.getInformationResourcesVideo(any()) } returns
                 Result.Success(cameraConnectVideoInformationVideo)
@@ -54,7 +54,7 @@ class VideoPlaybackRepositoryImplTest {
         every { VideoInformationMapper.cameraToDomain(any()) } throws Exception()
 
         val domainCameraFile: DomainCameraFile = mockk(relaxed = true)
-        val cameraConnectVideoInformationVideo = CameraConnectVideoInfo(1, 1, 1, "", "", 1, "", "")
+        val cameraConnectVideoInformationVideo = VideoFileInfo(1, 1, 1, "", "", 1, "", "")
 
         coEvery { videoPlayBackRemoteDataSource.getInformationResourcesVideo(any()) } returns
                 Result.Success(cameraConnectVideoInformationVideo)
@@ -120,7 +120,7 @@ class VideoPlaybackRepositoryImplTest {
 
     @Test
     fun testGetVideoMetadataSuccessSave() {
-        val cameraConnectVideoMetadata: CameraConnectVideoMetadata = mockk(relaxed = true)
+        val cameraConnectVideoMetadata: VideoInformation = mockk(relaxed = true)
 
         mockkObject(VideoListMetadata)
         every { VideoListMetadata.getVideoMetadata(any()) } returns null
@@ -156,7 +156,7 @@ class VideoPlaybackRepositoryImplTest {
 
     @Test
     fun testGetVideoMetadataSaved() {
-        val cameraConnectVideoMetadata: CameraConnectVideoMetadata = mockk(relaxed = true)
+        val cameraConnectVideoMetadata: VideoInformation = mockk(relaxed = true)
 
         coEvery {
             videoPlayBackRemoteDataSource.getVideoMetadata(any(), any())

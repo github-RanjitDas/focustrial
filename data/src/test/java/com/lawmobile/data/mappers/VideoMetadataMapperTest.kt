@@ -2,8 +2,8 @@ package com.lawmobile.data.mappers
 
 import com.lawmobile.domain.entities.DomainPhotoAssociated
 import com.lawmobile.domain.entities.DomainVideoMetadata
-import com.safefleet.mobile.avml.cameras.entities.CameraConnectVideoMetadata
-import com.safefleet.mobile.avml.cameras.entities.PhotoAssociated
+import com.safefleet.mobile.external_hardware.cameras.entities.PhotoAssociated
+import com.safefleet.mobile.external_hardware.cameras.entities.VideoInformation
 import io.mockk.every
 import io.mockk.mockk
 import org.junit.jupiter.api.Test
@@ -14,15 +14,15 @@ internal class VideoMetadataMapperTest {
 
     @Test
     fun cameraToDomain() {
-        val cameraConnectVideoMetadata: CameraConnectVideoMetadata = mockk(relaxed = true){
+        val videoInformation: VideoInformation = mockk(relaxed = true){
             every { photos } returns listOf(
                 PhotoAssociated("3", ""),
                 PhotoAssociated("1", ""),
                 PhotoAssociated("5", ""),
             )
         }
-        val domainVideoMetadata = VideoMetadataMapper.cameraToDomain(cameraConnectVideoMetadata)
-        with(cameraConnectVideoMetadata){
+        val domainVideoMetadata = VideoMetadataMapper.cameraToDomain(videoInformation)
+        with(videoInformation){
             domainVideoMetadata.let {
                 assertTrue(it.fileName == fileName)
                 assertTrue(it.metadata?.partnerID == metadata?.partnerID)

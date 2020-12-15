@@ -1,7 +1,7 @@
 package com.lawmobile.data.repository.pairingPhoneWithCamera
 
 import com.lawmobile.data.datasource.remote.pairingPhoneWithCamera.PairingPhoneWithCameraRemoteDataSource
-import com.safefleet.mobile.commons.helpers.Result
+import com.safefleet.mobile.kotlin_commons.helpers.Result
 import io.mockk.*
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Test

@@ -2,7 +2,7 @@ package com.lawmobile.presentation.ui.fileList
 
 import com.lawmobile.domain.usecase.fileList.FileListUseCase
 import com.lawmobile.presentation.InstantExecutorExtension
-import com.safefleet.mobile.commons.helpers.Result
+import com.safefleet.mobile.kotlin_commons.helpers.Result
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk

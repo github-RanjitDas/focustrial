@@ -10,9 +10,9 @@ import com.lawmobile.domain.usecase.snapshotDetail.SnapshotDetailUseCase
 import com.lawmobile.presentation.extensions.postEventValueWithTimeout
 import com.lawmobile.presentation.extensions.postValueWithTimeout
 import com.lawmobile.presentation.ui.base.BaseViewModel
-import com.safefleet.mobile.commons.helpers.Event
-import com.safefleet.mobile.commons.helpers.Result
-import com.safefleet.mobile.commons.helpers.getResultWithAttempts
+import com.safefleet.mobile.kotlin_commons.helpers.Event
+import com.safefleet.mobile.kotlin_commons.helpers.Result
+import com.safefleet.mobile.kotlin_commons.helpers.getResultWithAttempts
 import kotlinx.coroutines.launch
 
 class SnapshotDetailViewModel @ViewModelInject constructor(

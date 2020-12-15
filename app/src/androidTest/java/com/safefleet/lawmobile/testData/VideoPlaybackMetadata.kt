@@ -1,12 +1,12 @@
 package com.safefleet.lawmobile.testData
 
-import com.safefleet.mobile.avml.cameras.entities.CameraConnectCatalog
-import com.safefleet.mobile.avml.cameras.entities.CameraConnectVideoMetadata
-import com.safefleet.mobile.avml.cameras.entities.VideoMetadata
+import com.safefleet.mobile.external_hardware.cameras.entities.CameraCatalog
+import com.safefleet.mobile.external_hardware.cameras.entities.VideoInformation
+import com.safefleet.mobile.external_hardware.cameras.entities.VideoMetadata
 
-enum class VideoPlaybackMetadata(val value: CameraConnectVideoMetadata) {
+enum class VideoPlaybackMetadata(val value: VideoInformation) {
     DEFAULT_VIDEO_METADATA(
-        CameraConnectVideoMetadata(
+        VideoInformation(
             "",
             "murbanob",
             "",
@@ -19,7 +19,7 @@ enum class VideoPlaybackMetadata(val value: CameraConnectVideoMetadata) {
                 "4321",
                 "1234",
                 "4321",
-                CameraConnectCatalog("1", "Default", "Event"),
+                CameraCatalog("1", "Default", "Event"),
                 "Pepe",
                 "Male",
                 "Pepeto",
@@ -33,7 +33,7 @@ enum class VideoPlaybackMetadata(val value: CameraConnectVideoMetadata) {
         )
     ),
     EXTRA_VIDEO_METADATA(
-        CameraConnectVideoMetadata(
+        VideoInformation(
             "",
             "scardonau",
             "",
@@ -46,7 +46,7 @@ enum class VideoPlaybackMetadata(val value: CameraConnectVideoMetadata) {
                 "4351",
                 "1235",
                 "4351",
-                CameraConnectCatalog("2", "Disk Clean", "Event"),
+                CameraCatalog("2", "Disk Clean", "Event"),
                 "Marta",
                 "Female",
                 "Maria",

@@ -6,7 +6,7 @@ import com.lawmobile.data.repository.fileList.FileListRepositoryImpl
 import com.lawmobile.domain.repository.fileList.FileListRepository
 import com.lawmobile.domain.usecase.fileList.FileListUseCase
 import com.lawmobile.domain.usecase.fileList.FileListUseCaseImpl
-import com.safefleet.mobile.avml.cameras.external.CameraConnectService
+import com.safefleet.mobile.external_hardware.cameras.CameraService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -18,8 +18,8 @@ class FileListModule {
 
     companion object {
         @Provides
-        fun provideFileListRemoteDataSource(cameraConnectService: CameraConnectService): FileListRemoteDataSource =
-            FileListRemoteDataSourceImpl(cameraConnectService)
+        fun provideFileListRemoteDataSource(cameraService: CameraService): FileListRemoteDataSource =
+            FileListRemoteDataSourceImpl(cameraService)
 
         @Provides
         fun provideFileListRepository(fileListRemoteDataSource: FileListRemoteDataSource): FileListRepository =

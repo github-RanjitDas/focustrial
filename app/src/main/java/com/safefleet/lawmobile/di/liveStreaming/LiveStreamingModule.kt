@@ -7,7 +7,7 @@ import com.lawmobile.data.repository.liveStreaming.LiveStreamingRepositoryImpl
 import com.lawmobile.domain.repository.liveStreaming.LiveStreamingRepository
 import com.lawmobile.domain.usecase.liveStreaming.LiveStreamingUseCase
 import com.lawmobile.domain.usecase.liveStreaming.LiveStreamingUseCaseImpl
-import com.safefleet.mobile.avml.cameras.external.CameraConnectService
+import com.safefleet.mobile.external_hardware.cameras.CameraService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -20,8 +20,8 @@ class LiveStreamingModule {
     companion object {
         
         @Provides
-        fun provideLiveRemoteDataSource(cameraConnectService: CameraConnectService): LiveStreamingRemoteDataSource =
-            LiveStreamingRemoteDataSourceImpl(cameraConnectService)
+        fun provideLiveRemoteDataSource(cameraService: CameraService): LiveStreamingRemoteDataSource =
+            LiveStreamingRemoteDataSourceImpl(cameraService)
 
         @Provides
         fun provideLiveRepository(liveStreamingRemoteDataSource: LiveStreamingRemoteDataSource): LiveStreamingRepository =

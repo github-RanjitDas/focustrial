@@ -4,7 +4,7 @@ import com.lawmobile.domain.entities.DomainCameraFile
 import com.lawmobile.domain.entities.DomainInformationVideo
 import com.lawmobile.domain.entities.DomainVideoMetadata
 import com.lawmobile.domain.repository.videoPlayback.VideoPlaybackRepository
-import com.safefleet.mobile.commons.helpers.Result
+import com.safefleet.mobile.kotlin_commons.helpers.Result
 
 class VideoPlaybackUseCaseImpl(private val videoPlaybackRepository: VideoPlaybackRepository) :
     VideoPlaybackUseCase {

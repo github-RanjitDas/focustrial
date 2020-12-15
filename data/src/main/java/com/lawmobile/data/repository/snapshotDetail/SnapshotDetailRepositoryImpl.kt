@@ -8,11 +8,11 @@ import com.lawmobile.domain.entities.CameraInfo
 import com.lawmobile.domain.entities.DomainCameraFile
 import com.lawmobile.domain.entities.DomainInformationImageMetadata
 import com.lawmobile.domain.repository.snapshotDetail.SnapshotDetailRepository
-import com.safefleet.mobile.avml.cameras.entities.CameraConnectPhotoMetadata
-import com.safefleet.mobile.avml.cameras.entities.PhotoMetadata
-import com.safefleet.mobile.commons.helpers.Result
-import com.safefleet.mobile.commons.helpers.doIfError
-import com.safefleet.mobile.commons.helpers.doIfSuccess
+import com.safefleet.mobile.external_hardware.cameras.entities.PhotoInformation
+import com.safefleet.mobile.external_hardware.cameras.entities.PhotoMetadata
+import com.safefleet.mobile.kotlin_commons.helpers.Result
+import com.safefleet.mobile.kotlin_commons.extensions.doIfError
+import com.safefleet.mobile.kotlin_commons.extensions.doIfSuccess
 import kotlinx.coroutines.delay
 
 class SnapshotDetailRepositoryImpl(private val snapshotDetailRemoteDataSource: SnapshotDetailRemoteDataSource) :
@@ -27,7 +27,7 @@ class SnapshotDetailRepositoryImpl(private val snapshotDetailRemoteDataSource: S
         domainCameraFile: DomainCameraFile,
         partnerId: String
     ): Result<Unit> {
-        val photoMetadataList = mutableListOf<CameraConnectPhotoMetadata>()
+        val photoMetadataList = mutableListOf<PhotoInformation>()
         val errorsInFiles = mutableListOf<String>()
 
         when (val resultGetMetadataOfPhotos =
@@ -37,7 +37,7 @@ class SnapshotDetailRepositoryImpl(private val snapshotDetailRemoteDataSource: S
         }
 
         val partnerMetadata = PhotoMetadata(partnerID = partnerId)
-        val cameraPhotoMetadata = CameraConnectPhotoMetadata(
+        val cameraPhotoMetadata = PhotoInformation(
             fileName = domainCameraFile.name,
             officerId = CameraInfo.officerId,
             path = domainCameraFile.path,

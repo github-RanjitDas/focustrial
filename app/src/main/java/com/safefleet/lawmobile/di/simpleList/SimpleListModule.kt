@@ -6,7 +6,7 @@ import com.lawmobile.data.repository.simpleList.SimpleListRepositoryImpl
 import com.lawmobile.domain.repository.simpleList.SimpleListRepository
 import com.lawmobile.domain.usecase.simpleList.SimpleListUseCase
 import com.lawmobile.domain.usecase.simpleList.SimpleListUseCaseImpl
-import com.safefleet.mobile.avml.cameras.external.CameraConnectService
+import com.safefleet.mobile.external_hardware.cameras.CameraService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -18,8 +18,8 @@ class SimpleListModule {
     companion object {
 
         @Provides
-        fun provideSimpleListRemoteDataSource(cameraConnectService: CameraConnectService): SimpleListRemoteDataSource =
-            SimpleListRemoteDataSourceImpl(cameraConnectService)
+        fun provideSimpleListRemoteDataSource(cameraService: CameraService): SimpleListRemoteDataSource =
+            SimpleListRemoteDataSourceImpl(cameraService)
 
         @Provides
         fun provideSimpleListRepository(simpleListRemoteDataSource: SimpleListRemoteDataSource): SimpleListRepository =

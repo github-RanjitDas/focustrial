@@ -1,8 +1,8 @@
 package com.lawmobile.presentation.extensions
 
 import androidx.lifecycle.MediatorLiveData
-import com.safefleet.mobile.commons.helpers.Event
-import com.safefleet.mobile.commons.helpers.Result
+import com.safefleet.mobile.kotlin_commons.helpers.Event
+import com.safefleet.mobile.kotlin_commons.helpers.Result
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.withTimeout
 

@@ -3,12 +3,12 @@ package com.safefleet.lawmobile.di.mocksServiceCameras
 import com.lawmobile.data.entities.FileList
 import com.safefleet.lawmobile.testData.CameraFilesData
 import com.safefleet.lawmobile.testData.TestLoginData
-import com.safefleet.mobile.avml.cameras.entities.*
-import com.safefleet.mobile.avml.cameras.external.CameraConnectService
-import com.safefleet.mobile.commons.helpers.Result
+import com.safefleet.mobile.kotlin_commons.helpers.Result
+import com.safefleet.mobile.external_hardware.cameras.CameraService
+import com.safefleet.mobile.external_hardware.cameras.entities.*
 import io.mockk.mockk
 
-class CameraConnectServiceX1Mock : CameraConnectService {
+class CameraConnectServiceX1Mock : CameraService {
     override var progressPairingCamera: ((Result<Int>) -> Unit)? = null
 
     override suspend fun deleteFile(fileName: String): Result<Unit> {
@@ -31,25 +31,25 @@ class CameraConnectServiceX1Mock : CameraConnectService {
         return Result.Success(90)
     }
 
-    override suspend fun getImageBytes(cameraConnectFile: CameraConnectFile): Result<ByteArray> {
+    override suspend fun getImageBytes(cameraFile: CameraFile): Result<ByteArray> {
         return Result.Error(mockk())
     }
 
-    override suspend fun getInformationResourcesVideo(cameraConnectFile: CameraConnectFile): Result<CameraConnectVideoInfo> {
-        return Result.Success(CameraConnectVideoInfo(0, 1000, 100, "", "10", 10, "", ""))
+    override suspend fun getInformationResourcesVideo(cameraFile: CameraFile): Result<VideoFileInfo> {
+        return Result.Success(VideoFileInfo(0, 1000, 100, "", "10", 10, "", ""))
     }
 
-    override suspend fun getListOfImages(): Result<CameraConnectFileResponseWithErrors> {
+    override suspend fun getListOfImages(): Result<FileResponseWithErrors> {
         FileList.imageList = emptyList()
         return Result.Success(snapshotsList)
     }
 
-    override suspend fun getListOfVideos(): Result<CameraConnectFileResponseWithErrors> {
+    override suspend fun getListOfVideos(): Result<FileResponseWithErrors> {
         FileList.videoList = emptyList()
         return Result.Success(videoList)
     }
 
-    override suspend fun getMetadataOfPhotos(): Result<List<CameraConnectPhotoMetadata>> {
+    override suspend fun getMetadataOfPhotos(): Result<List<PhotoInformation>> {
         return Result.Success(emptyList())
     }
 
@@ -61,15 +61,15 @@ class CameraConnectServiceX1Mock : CameraConnectService {
         return Result.Success("10")
     }
 
-    override suspend fun getPhotoMetadata(cameraConnectFile: CameraConnectFile): Result<CameraConnectPhotoMetadata> {
-        return Result.Success(CameraConnectPhotoMetadata("", ""))
+    override suspend fun getPhotoMetadata(cameraFile: CameraFile): Result<PhotoInformation> {
+        return Result.Success(PhotoInformation("", ""))
     }
 
     override fun getUrlForLiveStream(): String = ""
 
-    override suspend fun getUserResponse(): Result<CameraConnectUserResponse> {
+    override suspend fun getUserResponse(): Result<CameraUser> {
         return Result.Success(
-            CameraConnectUserResponse(
+            CameraUser(
                 TestLoginData.OFFICER_PASSWORD.value,
                 TestLoginData.OFFICER_NAME.value,
                 "dZnvtiaAwPk/xx/OrSx0p7TLhGs48Uc0g7seZR7ej/4=" //Hashed value for 'san 6279!' password
@@ -80,9 +80,9 @@ class CameraConnectServiceX1Mock : CameraConnectService {
     override suspend fun getVideoMetadata(
         fileName: String,
         folderName: String
-    ): Result<CameraConnectVideoMetadata> {
+    ): Result<VideoInformation> {
         return Result.Success(
-            CameraConnectVideoMetadata(
+            VideoInformation(
                 fileName,
                 "kmenesesp",
                 "/DCIM/",
@@ -121,15 +121,15 @@ class CameraConnectServiceX1Mock : CameraConnectService {
         progressPairingCamera?.invoke(result)
     }
 
-    override suspend fun saveAllPhotoMetadata(list: List<CameraConnectPhotoMetadata>): Result<Unit> {
+    override suspend fun saveAllPhotoMetadata(list: List<PhotoInformation>): Result<Unit> {
         return Result.Success(Unit)
     }
 
-    override suspend fun savePhotoMetadata(cameraConnectPhotoMetadata: CameraConnectPhotoMetadata): Result<Unit> {
+    override suspend fun savePhotoMetadata(photoInformation: PhotoInformation): Result<Unit> {
         return Result.Success(Unit)
     }
 
-    override suspend fun saveVideoMetadata(cameraConnectVideoMetadata: CameraConnectVideoMetadata): Result<Unit> {
+    override suspend fun saveVideoMetadata(videoInformation: VideoInformation): Result<Unit> {
         return Result.Success(Unit)
     }
 
@@ -155,16 +155,16 @@ class CameraConnectServiceX1Mock : CameraConnectService {
         return Result.Success(Unit)
     }
 
-    override suspend fun getCatalogInfo(): Result<List<CameraConnectCatalog>> {
+    override suspend fun getCatalogInfo(): Result<List<CameraCatalog>> {
         return Result.Success(
             listOf(
-                CameraConnectCatalog("1", "Default", "Event"),
-                CameraConnectCatalog("2", "Disk Clean", "Event"),
-                CameraConnectCatalog("3", "Jenn Main", "Event"),
-                CameraConnectCatalog("1", "Male", "Gender"),
-                CameraConnectCatalog("2", "Female", "Gender"),
-                CameraConnectCatalog("1", "White", "Race"),
-                CameraConnectCatalog("2", "Black", "Race")
+                CameraCatalog("1", "Default", "Event"),
+                CameraCatalog("2", "Disk Clean", "Event"),
+                CameraCatalog("3", "Jenn Main", "Event"),
+                CameraCatalog("1", "Male", "Gender"),
+                CameraCatalog("2", "Female", "Gender"),
+                CameraCatalog("1", "White", "Race"),
+                CameraCatalog("2", "Black", "Race")
             )
         )
     }

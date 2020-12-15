@@ -5,7 +5,7 @@ import com.lawmobile.domain.entities.DomainCameraFile
 import com.lawmobile.domain.usecase.videoPlayback.VideoPlaybackUseCase
 import com.lawmobile.presentation.InstantExecutorExtension
 import com.lawmobile.presentation.utils.VLCMediaPlayer
-import com.safefleet.mobile.commons.helpers.Result
+import com.safefleet.mobile.kotlin_commons.helpers.Result
 import io.mockk.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -16,7 +16,6 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.api.extension.ExtendWith
-
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @ExtendWith(InstantExecutorExtension::class)

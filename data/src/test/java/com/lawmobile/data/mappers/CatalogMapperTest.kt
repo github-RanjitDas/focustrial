@@ -1,7 +1,7 @@
 package com.lawmobile.data.mappers
 
 import com.lawmobile.domain.entities.DomainCatalog
-import com.safefleet.mobile.avml.cameras.entities.CameraConnectCatalog
+import com.safefleet.mobile.external_hardware.cameras.entities.CameraCatalog
 import io.mockk.mockk
 import org.junit.jupiter.api.Test
 
@@ -12,7 +12,7 @@ internal class CatalogMapperTest {
     @Test
     fun cameraToDomainList() {
         val cameraCatalogList =
-            listOf<CameraConnectCatalog>(mockk(relaxed = true), mockk(relaxed = true))
+            listOf<CameraCatalog>(mockk(relaxed = true), mockk(relaxed = true))
         val domainCatalogList = CatalogMapper.cameraToDomainList(cameraCatalogList)
         with(cameraCatalogList){
             domainCatalogList.forEachIndexed { index, it ->
@@ -27,14 +27,14 @@ internal class CatalogMapperTest {
 
     @Test
     fun cameraToDomainListEmpty() {
-        val cameraCatalogList = emptyList<CameraConnectCatalog>()
+        val cameraCatalogList = emptyList<CameraCatalog>()
         val domainCatalogList = CatalogMapper.cameraToDomainList(cameraCatalogList)
         assertTrue(domainCatalogList.isEmpty())
     }
 
     @Test
     fun cameraToDomain() {
-        val cameraConnectCatalog: CameraConnectCatalog = mockk(relaxed = true)
+        val cameraConnectCatalog: CameraCatalog = mockk(relaxed = true)
         val domainCatalog = CatalogMapper.cameraToDomain(cameraConnectCatalog)
         with(cameraConnectCatalog){
             domainCatalog.let {

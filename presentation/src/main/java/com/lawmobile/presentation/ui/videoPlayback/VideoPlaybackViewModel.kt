@@ -11,7 +11,7 @@ import com.lawmobile.domain.entities.DomainVideoMetadata
 import com.lawmobile.domain.usecase.videoPlayback.VideoPlaybackUseCase
 import com.lawmobile.presentation.ui.base.BaseViewModel
 import com.lawmobile.presentation.utils.VLCMediaPlayer
-import com.safefleet.mobile.commons.helpers.Result
+import com.safefleet.mobile.kotlin_commons.helpers.Result
 import kotlinx.coroutines.launch
 import org.videolan.libvlc.MediaPlayer
 

@@ -1,7 +1,7 @@
 package com.lawmobile.domain.usecase.pairingPhoneWithCamera
 
 import com.lawmobile.domain.repository.pairingPhoneWithCamera.PairingPhoneWithCameraRepository
-import com.safefleet.mobile.commons.helpers.Result
+import com.safefleet.mobile.kotlin_commons.helpers.Result
 
 class PairingPhoneWithCameraUseCaseImpl(private val pairingPhoneWithCameraRepository: PairingPhoneWithCameraRepository) :
     PairingPhoneWithCameraUseCase {

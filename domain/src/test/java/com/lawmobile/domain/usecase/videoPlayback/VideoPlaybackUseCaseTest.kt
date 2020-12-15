@@ -2,7 +2,7 @@ package com.lawmobile.domain.usecase.videoPlayback
 
 import com.lawmobile.domain.entities.DomainCameraFile
 import com.lawmobile.domain.repository.videoPlayback.VideoPlaybackRepository
-import com.safefleet.mobile.commons.helpers.Result
+import com.safefleet.mobile.kotlin_commons.helpers.Result
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk

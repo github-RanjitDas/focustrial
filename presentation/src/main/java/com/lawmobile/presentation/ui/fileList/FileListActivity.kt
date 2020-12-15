@@ -23,9 +23,9 @@ import com.lawmobile.presentation.utils.Constants.SNAPSHOT_LIST
 import com.lawmobile.presentation.utils.Constants.THUMBNAIL_FILE_LIST
 import com.lawmobile.presentation.utils.Constants.VIDEO_LIST
 import com.lawmobile.presentation.widgets.CustomFilterDialog
-import com.safefleet.mobile.commons.helpers.Result
-import com.safefleet.mobile.commons.helpers.doIfError
-import com.safefleet.mobile.commons.helpers.doIfSuccess
+import com.safefleet.mobile.kotlin_commons.helpers.Result
+import com.safefleet.mobile.kotlin_commons.extensions.doIfError
+import com.safefleet.mobile.kotlin_commons.extensions.doIfSuccess
 import com.safefleet.mobile.commons.helpers.hideKeyboard
 
 class FileListActivity : BaseActivity() {

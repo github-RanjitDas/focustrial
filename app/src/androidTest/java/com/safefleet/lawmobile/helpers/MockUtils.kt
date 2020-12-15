@@ -4,8 +4,8 @@ import com.lawmobile.presentation.utils.CameraHelper
 import com.safefleet.lawmobile.di.AppModule
 import com.safefleet.lawmobile.di.mocksServiceCameras.CameraConnectServiceX1Mock
 import com.safefleet.lawmobile.testData.CameraFilesData
-import com.safefleet.mobile.avml.cameras.entities.CameraConnectFileResponseWithErrors
-import com.safefleet.mobile.commons.helpers.Result
+import com.safefleet.mobile.external_hardware.cameras.entities.FileResponseWithErrors
+import com.safefleet.mobile.kotlin_commons.helpers.Result
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkObject
@@ -31,7 +31,7 @@ class MockUtils {
     }
 
     fun clearSnapshotsOnX1() {
-        CameraConnectServiceX1Mock.snapshotsList = CameraConnectFileResponseWithErrors()
+        CameraConnectServiceX1Mock.snapshotsList = FileResponseWithErrors()
         CameraConnectServiceX1Mock.takenPhotos = 0
     }
 
@@ -41,7 +41,7 @@ class MockUtils {
     }
 
     fun clearVideosOnX1() {
-        CameraConnectServiceX1Mock.videoList = CameraConnectFileResponseWithErrors()
+        CameraConnectServiceX1Mock.videoList = FileResponseWithErrors()
         CameraConnectServiceX1Mock.takenVideos = 0
     }
 

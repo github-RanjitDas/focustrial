@@ -5,7 +5,7 @@ import android.view.SurfaceView
 import com.lawmobile.domain.usecase.liveStreaming.LiveStreamingUseCase
 import com.lawmobile.presentation.InstantExecutorExtension
 import com.lawmobile.presentation.utils.VLCMediaPlayer
-import com.safefleet.mobile.commons.helpers.Result
+import com.safefleet.mobile.kotlin_commons.helpers.Result
 import io.mockk.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi

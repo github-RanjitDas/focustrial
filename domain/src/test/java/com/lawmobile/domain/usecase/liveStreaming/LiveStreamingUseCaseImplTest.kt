@@ -1,7 +1,7 @@
 package com.lawmobile.domain.usecase.liveStreaming
 
 import com.lawmobile.domain.repository.liveStreaming.LiveStreamingRepository
-import com.safefleet.mobile.commons.helpers.Result
+import com.safefleet.mobile.kotlin_commons.helpers.Result
 import io.mockk.*
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert

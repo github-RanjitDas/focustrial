@@ -4,9 +4,9 @@ import com.lawmobile.data.datasource.remote.thumbnailList.ThumbnailListRemoteDat
 import com.lawmobile.data.entities.FileList
 import com.lawmobile.data.mappers.FileMapper
 import com.lawmobile.domain.entities.DomainInformationFile
-import com.safefleet.mobile.avml.cameras.entities.CameraConnectFile
-import com.safefleet.mobile.avml.cameras.entities.CameraConnectFileResponseWithErrors
-import com.safefleet.mobile.commons.helpers.Result
+import com.safefleet.mobile.external_hardware.cameras.entities.CameraFile
+import com.safefleet.mobile.external_hardware.cameras.entities.FileResponseWithErrors
+import com.safefleet.mobile.kotlin_commons.helpers.Result
 import io.mockk.*
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert
@@ -28,14 +28,14 @@ internal class ThumbnailListRepositoryImplTest {
 
     @Test
     fun testGetImageByteListFlow() {
-        val cameraConnectFile =
-            CameraConnectFile("1010202000", "10-10-2020 12:00:00", "", "1010202000")
+        val cameraFile =
+            CameraFile("1010202000", "10-10-2020 12:00:00", "", "1010202000")
         FileList.imageList = listOf(mockk(relaxed = true), mockk(relaxed = true))
 
         coEvery { thumbnailListRemoteDataSource.getImageBytes(any()) } returns Result.Success("Hola".toByteArray())
 
         runBlocking {
-            linkSnapshotsRepositoryImpl.getImageBytes(FileMapper.cameraToDomain(cameraConnectFile))
+            linkSnapshotsRepositoryImpl.getImageBytes(FileMapper.cameraToDomain(cameraFile))
         }
 
         coVerify {
@@ -45,10 +45,10 @@ internal class ThumbnailListRepositoryImplTest {
 
     @Test
     fun testGetImageByteListError() {
-        val cameraConnectFile =
-            CameraConnectFile("1010202000", "10-10-2020 12:00:00", "", "1010202000")
+        val cameraFile =
+            CameraFile("1010202000", "10-10-2020 12:00:00", "", "1010202000")
         val domainInformationFile =
-            DomainInformationFile(FileMapper.cameraToDomain(cameraConnectFile))
+            DomainInformationFile(FileMapper.cameraToDomain(cameraFile))
         FileList.imageList = listOf(domainInformationFile, domainInformationFile)
 
         coEvery { thumbnailListRemoteDataSource.getImageBytes(any()) } returns
@@ -56,7 +56,7 @@ internal class ThumbnailListRepositoryImplTest {
 
         runBlocking {
             val result = linkSnapshotsRepositoryImpl
-                .getImageBytes(FileMapper.cameraToDomain(cameraConnectFile))
+                .getImageBytes(FileMapper.cameraToDomain(cameraFile))
             Assert.assertTrue(result is Result.Error)
         }
     }
@@ -64,12 +64,12 @@ internal class ThumbnailListRepositoryImplTest {
     @Test
     fun testGetImageByteListSuccess() {
         FileList.imageList = emptyList()
-        val cameraConnectFile: CameraConnectFile = mockk(relaxed = true) {
+        val cameraFile: CameraFile = mockk(relaxed = true) {
             every { nameFolder } returns "200710009"
             every { name } returns "12345678"
         }
-        val cameraResponse: CameraConnectFileResponseWithErrors = mockk {
-            every { items } returns arrayListOf(cameraConnectFile, cameraConnectFile)
+        val cameraResponse: FileResponseWithErrors = mockk {
+            every { items } returns arrayListOf(cameraFile, cameraFile)
         }
 
         coEvery { thumbnailListRemoteDataSource.getSnapshotList() } returns
@@ -79,7 +79,7 @@ internal class ThumbnailListRepositoryImplTest {
 
         runBlocking {
             val result = linkSnapshotsRepositoryImpl.getImageBytes(
-                FileMapper.cameraToDomain(cameraConnectFile)
+                FileMapper.cameraToDomain(cameraFile)
             )
             Assert.assertTrue(result is Result.Success)
         }
@@ -89,7 +89,7 @@ internal class ThumbnailListRepositoryImplTest {
     @Test
     fun testGetImageListFlow() {
         FileList.imageList = listOf(mockk(), mockk())
-        val cameraConnectFileResponseWithErrors = CameraConnectFileResponseWithErrors().apply {
+        val cameraConnectFileResponseWithErrors = FileResponseWithErrors().apply {
             items.addAll(listOf(mockk(relaxed = true), mockk(relaxed = true)))
         }
 
@@ -103,13 +103,13 @@ internal class ThumbnailListRepositoryImplTest {
 
     @Test
     fun testGetImageListSuccessMoreItems() {
-        val cameraConnectFile =
-            CameraConnectFile("1010202000", "10-10-2020 12:00:00", "", "1010202000")
+        val cameraFile =
+            CameraFile("1010202000", "10-10-2020 12:00:00", "", "1010202000")
         val domainInformationFile =
-            DomainInformationFile(FileMapper.cameraToDomain(cameraConnectFile))
+            DomainInformationFile(FileMapper.cameraToDomain(cameraFile))
         FileList.imageList = listOf(domainInformationFile, domainInformationFile)
-        val cameraConnectFileResponseWithErrors = CameraConnectFileResponseWithErrors().apply {
-            items.addAll(listOf(cameraConnectFile, cameraConnectFile, cameraConnectFile))
+        val cameraConnectFileResponseWithErrors = FileResponseWithErrors().apply {
+            items.addAll(listOf(cameraFile, cameraFile, cameraFile))
         }
 
         coEvery { thumbnailListRemoteDataSource.getSnapshotList() } returns
@@ -123,10 +123,10 @@ internal class ThumbnailListRepositoryImplTest {
 
     @Test
     fun testGetImageListSuccessWithLessItemsFromCamera() {
-        val cameraConnectFile =
-            CameraConnectFile("1010202000", "10-10-2020 12:00:00", "", "1010202000")
+        val cameraFile =
+            CameraFile("1010202000", "10-10-2020 12:00:00", "", "1010202000")
         val domainInformationFile =
-            DomainInformationFile(FileMapper.cameraToDomain(cameraConnectFile))
+            DomainInformationFile(FileMapper.cameraToDomain(cameraFile))
 
         FileList.imageList = listOf(
             domainInformationFile,
@@ -135,8 +135,8 @@ internal class ThumbnailListRepositoryImplTest {
             domainInformationFile
         )
 
-        val cameraConnectFileResponseWithErrors = CameraConnectFileResponseWithErrors().apply {
-            items.addAll(listOf(cameraConnectFile, cameraConnectFile))
+        val cameraConnectFileResponseWithErrors = FileResponseWithErrors().apply {
+            items.addAll(listOf(cameraFile, cameraFile))
         }
 
         coEvery { thumbnailListRemoteDataSource.getSnapshotList() } returns
