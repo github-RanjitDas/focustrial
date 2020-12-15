@@ -4,7 +4,7 @@ import com.lawmobile.domain.entities.DomainCameraFile
 import com.lawmobile.domain.entities.DomainInformationImage
 import com.lawmobile.domain.usecase.thumbnailList.ThumbnailListUseCase
 import com.lawmobile.presentation.InstantExecutorExtension
-import com.safefleet.mobile.commons.helpers.Result
+import com.safefleet.mobile.kotlin_commons.helpers.Result
 import io.mockk.clearAllMocks
 import io.mockk.coEvery
 import io.mockk.coVerify

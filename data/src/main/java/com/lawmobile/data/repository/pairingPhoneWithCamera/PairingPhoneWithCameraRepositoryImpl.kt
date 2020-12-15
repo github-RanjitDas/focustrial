@@ -2,7 +2,7 @@ package com.lawmobile.data.repository.pairingPhoneWithCamera
 
 import com.lawmobile.data.datasource.remote.pairingPhoneWithCamera.PairingPhoneWithCameraRemoteDataSource
 import com.lawmobile.domain.repository.pairingPhoneWithCamera.PairingPhoneWithCameraRepository
-import com.safefleet.mobile.commons.helpers.Result
+import com.safefleet.mobile.kotlin_commons.helpers.Result
 
 class PairingPhoneWithCameraRepositoryImpl(private val pairingPhoneWithCameraRemoteDataSource: PairingPhoneWithCameraRemoteDataSource) :
     PairingPhoneWithCameraRepository {

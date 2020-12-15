@@ -1,8 +1,8 @@
 package com.lawmobile.data.mappers
 
 import com.lawmobile.data.extensions.getCreationDate
-import com.safefleet.mobile.avml.cameras.entities.CameraConnectFile
-import com.safefleet.mobile.avml.cameras.entities.CameraConnectFileResponseWithErrors
+import com.safefleet.mobile.external_hardware.cameras.entities.CameraFile
+import com.safefleet.mobile.external_hardware.cameras.entities.FileResponseWithErrors
 import io.mockk.every
 import io.mockk.mockk
 import org.junit.jupiter.api.Assertions.assertTrue
@@ -12,11 +12,11 @@ internal class FileResponseMapperTest {
 
     @Test
     fun cameraToDomain() {
-        val cameraConnectResponse: CameraConnectFileResponseWithErrors = mockk(relaxed = true) {
+        val cameraConnectResponse: FileResponseWithErrors = mockk(relaxed = true) {
             every { items } returns arrayListOf(
-                CameraConnectFile("", "3", "", ""),
-                CameraConnectFile("", "1", "", ""),
-                CameraConnectFile("", "6", "", ""),
+                CameraFile("", "3", "", ""),
+                CameraFile("", "1", "", ""),
+                CameraFile("", "6", "", ""),
             )
         }
         val domainResponse = FileResponseMapper.cameraToDomain(cameraConnectResponse)

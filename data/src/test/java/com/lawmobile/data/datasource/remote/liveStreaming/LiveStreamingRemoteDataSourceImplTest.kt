@@ -1,8 +1,8 @@
 package com.lawmobile.data.datasource.remote.liveStreaming
 
 import com.lawmobile.data.InstantExecutorExtension
-import com.safefleet.mobile.avml.cameras.external.CameraConnectService
-import com.safefleet.mobile.commons.helpers.Result
+import com.safefleet.mobile.external_hardware.cameras.CameraService
+import com.safefleet.mobile.kotlin_commons.helpers.Result
 import io.mockk.*
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert
@@ -14,39 +14,39 @@ import org.junit.jupiter.api.extension.ExtendWith
 @ExtendWith(InstantExecutorExtension::class)
 class LiveStreamingRemoteDataSourceImplTest {
 
-    private val cameraConnectService: CameraConnectService = mockk()
+    private val cameraService: CameraService = mockk()
 
     private val liveStreamingRemoteDataSourceImpl by lazy {
-        LiveStreamingRemoteDataSourceImpl(cameraConnectService)
+        LiveStreamingRemoteDataSourceImpl(cameraService)
     }
 
     @Test
     fun testGetUrlForLiveStreamVerifyFlow() {
-        every { cameraConnectService.getUrlForLiveStream() } returns "xyz"
+        every { cameraService.getUrlForLiveStream() } returns "xyz"
         liveStreamingRemoteDataSourceImpl.getUrlForLiveStream()
-        verify { cameraConnectService.getUrlForLiveStream() }
+        verify { cameraService.getUrlForLiveStream() }
     }
 
     @Test
     fun testGetUrlForLiveStreamVerifyValue() {
-        every { cameraConnectService.getUrlForLiveStream() } returns "xyz"
+        every { cameraService.getUrlForLiveStream() } returns "xyz"
         val url = liveStreamingRemoteDataSourceImpl.getUrlForLiveStream()
         Assert.assertEquals("xyz", url)
     }
 
     @Test
     fun testStartRecordVideoFlow() {
-        coEvery { cameraConnectService.startRecordVideo() } returns Result.Success(Unit)
+        coEvery { cameraService.startRecordVideo() } returns Result.Success(Unit)
         runBlocking {
             liveStreamingRemoteDataSourceImpl.startRecordVideo()
         }
-        coVerify { cameraConnectService.startRecordVideo() }
+        coVerify { cameraService.startRecordVideo() }
     }
 
     @Test
     fun testStartRecordVideoSuccess() {
         val result = Result.Success(Unit)
-        coEvery { cameraConnectService.startRecordVideo() } returns result
+        coEvery { cameraService.startRecordVideo() } returns result
         runBlocking {
             Assert.assertEquals(liveStreamingRemoteDataSourceImpl.startRecordVideo(), result)
         }
@@ -55,7 +55,7 @@ class LiveStreamingRemoteDataSourceImplTest {
     @Test
     fun testStartRecordVideoFailed() {
         val result = Result.Error(Exception("Message"))
-        coEvery { cameraConnectService.startRecordVideo() } returns result
+        coEvery { cameraService.startRecordVideo() } returns result
         runBlocking {
             Assert.assertEquals(liveStreamingRemoteDataSourceImpl.startRecordVideo(), result)
         }
@@ -64,17 +64,17 @@ class LiveStreamingRemoteDataSourceImplTest {
 
     @Test
     fun testStopRecordVideoFlow() {
-        coEvery { cameraConnectService.stopRecordVideo() } returns Result.Success(Unit)
+        coEvery { cameraService.stopRecordVideo() } returns Result.Success(Unit)
         runBlocking {
             liveStreamingRemoteDataSourceImpl.stopRecordVideo()
         }
-        coVerify { cameraConnectService.stopRecordVideo() }
+        coVerify { cameraService.stopRecordVideo() }
     }
 
     @Test
     fun testStopRecordVideoSuccess() {
         val result = Result.Success(Unit)
-        coEvery { cameraConnectService.stopRecordVideo() } returns result
+        coEvery { cameraService.stopRecordVideo() } returns result
         runBlocking {
             Assert.assertEquals(liveStreamingRemoteDataSourceImpl.stopRecordVideo(), result)
         }
@@ -83,7 +83,7 @@ class LiveStreamingRemoteDataSourceImplTest {
     @Test
     fun testStopRecordVideoFailed() {
         val result = Result.Error(Exception("Message"))
-        coEvery { cameraConnectService.stopRecordVideo() } returns result
+        coEvery { cameraService.stopRecordVideo() } returns result
         runBlocking {
             Assert.assertEquals(liveStreamingRemoteDataSourceImpl.stopRecordVideo(), result)
         }
@@ -91,18 +91,18 @@ class LiveStreamingRemoteDataSourceImplTest {
 
     @Test
     fun testTakePhotoFlow() {
-        coEvery { cameraConnectService.takePhoto() } returns Result.Success(Unit)
+        coEvery { cameraService.takePhoto() } returns Result.Success(Unit)
         runBlocking {
             liveStreamingRemoteDataSourceImpl.takePhoto()
         }
 
-        coEvery { cameraConnectService.takePhoto() }
+        coEvery { cameraService.takePhoto() }
     }
 
     @Test
     fun testTakePhotoSuccess() {
         val result = Result.Success(Unit)
-        coEvery { cameraConnectService.takePhoto() } returns result
+        coEvery { cameraService.takePhoto() } returns result
         runBlocking {
             Assert.assertEquals(liveStreamingRemoteDataSourceImpl.takePhoto(), result)
         }
@@ -111,7 +111,7 @@ class LiveStreamingRemoteDataSourceImplTest {
     @Test
     fun testTakePhotoFailed() {
         val result = Result.Error(Exception(""))
-        coEvery { cameraConnectService.takePhoto() } returns result
+        coEvery { cameraService.takePhoto() } returns result
         runBlocking {
             Assert.assertEquals(liveStreamingRemoteDataSourceImpl.takePhoto(), result)
         }
@@ -119,48 +119,48 @@ class LiveStreamingRemoteDataSourceImplTest {
 
     @Test
     fun testGetCatalogInfoSuccess() {
-        coEvery { cameraConnectService.getCatalogInfo() } returns Result.Success(mockk())
+        coEvery { cameraService.getCatalogInfo() } returns Result.Success(mockk())
         runBlocking { liveStreamingRemoteDataSourceImpl.getCatalogInfo() }
-        coVerify { cameraConnectService.getCatalogInfo() }
+        coVerify { cameraService.getCatalogInfo() }
     }
 
     @Test
     fun testGetBatteryLevel(){
         val result = Result.Success(10)
-        coEvery { cameraConnectService.getBatteryLevel() } returns result
+        coEvery { cameraService.getBatteryLevel() } returns result
         runBlocking {
             val response = liveStreamingRemoteDataSourceImpl.getBatteryLevel()
             Assert.assertEquals(response, result)
         }
-        coVerify { cameraConnectService.getBatteryLevel() }
+        coVerify { cameraService.getBatteryLevel() }
     }
 
     @Test
     fun testGetFreeStorage(){
         val result = Result.Success("10000")
-        coEvery { cameraConnectService.getFreeStorage() } returns result
+        coEvery { cameraService.getFreeStorage() } returns result
         runBlocking {
             val response = liveStreamingRemoteDataSourceImpl.getFreeStorage()
             Assert.assertEquals(response,result)
         }
-        coVerify { cameraConnectService.getFreeStorage() }
+        coVerify { cameraService.getFreeStorage() }
     }
 
     @Test
     fun testGetTotalStorage(){
         val result = Result.Success("10000")
-        coEvery { cameraConnectService.getTotalStorage() } returns result
+        coEvery { cameraService.getTotalStorage() } returns result
         runBlocking {
             val response = liveStreamingRemoteDataSourceImpl.getTotalStorage()
             Assert.assertEquals(response,result)
         }
-        coVerify { cameraConnectService.getTotalStorage() }
+        coVerify { cameraService.getTotalStorage() }
     }
 
     @Test
     fun disconnectCameraFlow() {
-        coEvery { cameraConnectService.disconnectCamera() } returns Result.Success(Unit)
+        coEvery { cameraService.disconnectCamera() } returns Result.Success(Unit)
         runBlocking { liveStreamingRemoteDataSourceImpl.disconnectCamera() }
-        coVerify { cameraConnectService.disconnectCamera() }
+        coVerify { cameraService.disconnectCamera() }
     }
 }

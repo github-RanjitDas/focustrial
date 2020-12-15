@@ -6,9 +6,9 @@ import com.lawmobile.data.entities.VideoListMetadata
 import com.lawmobile.domain.entities.DomainCameraFile
 import com.lawmobile.domain.entities.DomainMetadata
 import com.lawmobile.domain.entities.DomainVideoMetadata
-import com.safefleet.mobile.avml.cameras.entities.CameraConnectVideoMetadata
-import com.safefleet.mobile.avml.cameras.entities.VideoMetadata
-import com.safefleet.mobile.commons.helpers.Result
+import com.safefleet.mobile.external_hardware.cameras.entities.VideoInformation
+import com.safefleet.mobile.external_hardware.cameras.entities.VideoMetadata
+import com.safefleet.mobile.kotlin_commons.helpers.Result
 import io.mockk.*
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
@@ -95,7 +95,7 @@ internal class FileListRepositoryImplTest {
             Assert.assertEquals(1, VideoListMetadata.metadataList.size)
         }
 
-        val resultMetadata = CameraConnectVideoMetadata(
+        val resultMetadata = VideoInformation(
             "",
             "",
             "",

@@ -8,7 +8,7 @@ import com.lawmobile.domain.entities.DomainInformationFileResponse
 import com.lawmobile.domain.usecase.simpleList.SimpleListUseCase
 import com.lawmobile.presentation.extensions.postValueWithTimeout
 import com.lawmobile.presentation.ui.base.BaseViewModel
-import com.safefleet.mobile.commons.helpers.Result
+import com.safefleet.mobile.kotlin_commons.helpers.Result
 import kotlinx.coroutines.launch
 
 class SimpleListViewModel @ViewModelInject constructor(private val simpleListUseCase: SimpleListUseCase) :

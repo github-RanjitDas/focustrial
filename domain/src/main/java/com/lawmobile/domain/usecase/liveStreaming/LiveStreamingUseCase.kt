@@ -2,7 +2,7 @@ package com.lawmobile.domain.usecase.liveStreaming
 
 import com.lawmobile.domain.entities.DomainCatalog
 import com.lawmobile.domain.usecase.BaseUseCase
-import com.safefleet.mobile.commons.helpers.Result
+import com.safefleet.mobile.kotlin_commons.helpers.Result
 
 interface LiveStreamingUseCase : BaseUseCase {
     fun getUrlForLiveStream(): String

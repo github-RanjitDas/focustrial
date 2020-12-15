@@ -92,6 +92,9 @@ dependencies {
     kaptTest "com.google.dagger:hilt-android-compiler:$hilt_version"
     testImplementation "com.google.dagger:hilt-android-testing:$hilt_version"
 
+    //external_hardware
+    implementation 'com.safefleet.mobile:external-hardware:1.0.0-SNAPSHOT@jar'
+
     implementation project(path: ':domain')
 }
 

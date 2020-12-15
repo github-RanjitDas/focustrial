@@ -23,10 +23,10 @@ import com.lawmobile.presentation.extensions.getPathFromTemporalFile
 import com.lawmobile.presentation.extensions.showErrorSnackBar
 import com.lawmobile.presentation.ui.fileList.FileListBaseFragment
 import com.lawmobile.presentation.utils.Constants.FILE_LIST_TYPE
-import com.safefleet.mobile.commons.helpers.Event
-import com.safefleet.mobile.commons.helpers.Result
-import com.safefleet.mobile.commons.helpers.doIfError
-import com.safefleet.mobile.commons.helpers.doIfSuccess
+import com.safefleet.mobile.kotlin_commons.helpers.Event
+import com.safefleet.mobile.kotlin_commons.helpers.Result
+import com.safefleet.mobile.kotlin_commons.extensions.doIfError
+import com.safefleet.mobile.kotlin_commons.extensions.doIfSuccess
 import java.io.File
 import kotlin.math.min
 

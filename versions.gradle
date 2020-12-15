@@ -4,9 +4,9 @@ ext {
     compileSdkVersion = 29
     minSdkVersion = 23
     targetSdkVersion = 29
-    buildVersion = 66
-    major = 3
-    minor = 5
+    buildVersion = 67
+    major = 4
+    minor = 0
     patch = 0
     jvmTarget = "1.8"
 

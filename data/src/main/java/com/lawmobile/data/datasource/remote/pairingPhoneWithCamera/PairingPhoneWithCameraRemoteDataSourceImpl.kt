@@ -1,10 +1,10 @@
 package com.lawmobile.data.datasource.remote.pairingPhoneWithCamera
 
-import com.safefleet.mobile.avml.cameras.external.CameraConnectService
-import com.safefleet.mobile.commons.helpers.Result
+import com.safefleet.mobile.kotlin_commons.helpers.Result
+import com.safefleet.mobile.external_hardware.cameras.CameraService
 
 open class PairingPhoneWithCameraRemoteDataSourceImpl(
-    private val cameraConnectService: CameraConnectService
+    private val cameraService: CameraService
 ) : PairingPhoneWithCameraRemoteDataSource {
 
     override suspend fun loadPairingCamera(
@@ -12,11 +12,11 @@ open class PairingPhoneWithCameraRemoteDataSourceImpl(
         ipAddressClient: String,
         progressPairingCamera: ((Result<Int>) -> Unit)
     ) {
-        cameraConnectService.progressPairingCamera = progressPairingCamera
-        cameraConnectService.loadPairingCamera(hostnameToConnect, ipAddressClient)
+        cameraService.progressPairingCamera = progressPairingCamera
+        cameraService.loadPairingCamera(hostnameToConnect, ipAddressClient)
     }
 
     override suspend fun isPossibleTheConnection(hostnameToConnect: String): Result<Unit> {
-        return cameraConnectService.isPossibleTheConnection(hostnameToConnect)
+        return cameraService.isPossibleTheConnection(hostnameToConnect)
     }
 }

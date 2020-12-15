@@ -5,10 +5,10 @@ import com.lawmobile.domain.entities.CameraInfo
 import com.lawmobile.domain.entities.CameraType
 import com.lawmobile.presentation.utils.CameraHelper
 import com.lawmobile.presentation.utils.WifiHelper
-import com.safefleet.mobile.avml.cameras.external.CameraConnectService
-import com.safefleet.mobile.avml.cameras.external.socket.SocketHelper
-import com.safefleet.mobile.avml.cameras.external.x1.CameraConnectServiceX1
-import com.safefleet.mobile.avml.cameras.external.x1.CameraHelperX1
+import com.safefleet.mobile.external_hardware.cameras.CameraService
+import com.safefleet.mobile.external_hardware.cameras.x1.X1CameraHelper
+import com.safefleet.mobile.external_hardware.cameras.x1.X1CameraService
+import com.safefleet.mobile.kotlin_commons.socket.SocketHelper
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -27,22 +27,22 @@ class CameraServiceModule {
 
         @Provides
         @Singleton
-        fun provideCameraHelperX1(cmdHelper: SocketHelper, dataHelper: SocketHelper): CameraHelperX1 =
-            CameraHelperX1(Gson(), cmdHelper, dataHelper)
+        fun provideCameraHelperX1(cmdHelper: SocketHelper, dataHelper: SocketHelper): X1CameraHelper =
+            X1CameraHelper(Gson(), cmdHelper, dataHelper)
 
         @Provides
         @Singleton
-        fun provideCameraService(cameraHelperX1: CameraHelperX1): CameraConnectService {
+        fun provideCameraService(x1CameraHelper: X1CameraHelper): CameraService {
             return when (CameraInfo.cameraType) {
-                CameraType.X1 -> CameraConnectServiceX1(cameraHelperX1)
+                CameraType.X1 -> X1CameraService(x1CameraHelper)
             }
         }
 
         @Provides
         @Singleton
         fun provideCameraHelper(
-            cameraConnectService: CameraConnectService,
+            cameraService: CameraService,
             wifiHelper: WifiHelper
-        ): CameraHelper = CameraHelper(cameraConnectService, wifiHelper)
+        ): CameraHelper = CameraHelper(cameraService, wifiHelper)
     }
 }

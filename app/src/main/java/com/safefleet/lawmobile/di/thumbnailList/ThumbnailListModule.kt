@@ -6,7 +6,7 @@ import com.lawmobile.data.repository.thumbnailList.ThumbnailListRepositoryImpl
 import com.lawmobile.domain.repository.thumbnailList.ThumbnailListRepository
 import com.lawmobile.domain.usecase.thumbnailList.ThumbnailListUseCase
 import com.lawmobile.domain.usecase.thumbnailList.ThumbnailListUseCaseImpl
-import com.safefleet.mobile.avml.cameras.external.CameraConnectService
+import com.safefleet.mobile.external_hardware.cameras.CameraService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -18,8 +18,8 @@ class ThumbnailListModule {
 
     companion object {
         @Provides
-        fun provideThumbnailListRemoteDataSource(cameraConnectService: CameraConnectService): ThumbnailListRemoteDataSource =
-            ThumbnailListRemoteDataSourceImpl(cameraConnectService)
+        fun provideThumbnailListRemoteDataSource(cameraService: CameraService): ThumbnailListRemoteDataSource =
+            ThumbnailListRemoteDataSourceImpl(cameraService)
 
         @Provides
         fun provideThumbnailListRepository(thumbnailListRemoteDataSource: ThumbnailListRemoteDataSource): ThumbnailListRepository =

@@ -7,7 +7,7 @@ import com.lawmobile.data.mappers.FileResponseMapper
 import com.lawmobile.domain.entities.DomainInformationFile
 import com.lawmobile.domain.entities.DomainInformationFileResponse
 import com.lawmobile.domain.repository.simpleList.SimpleListRepository
-import com.safefleet.mobile.commons.helpers.Result
+import com.safefleet.mobile.kotlin_commons.helpers.Result
 
 class SimpleListRepositoryImpl(private val simpleListRemoteDataSource: SimpleListRemoteDataSource) :
     SimpleListRepository {

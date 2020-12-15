@@ -7,7 +7,6 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import java.security.MessageDigest
 
-
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class EncodePasswordTest {
 

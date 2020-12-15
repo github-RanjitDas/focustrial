@@ -3,7 +3,7 @@ package com.lawmobile.domain.usecase.snapshotDetail
 import com.lawmobile.domain.entities.DomainCameraFile
 import com.lawmobile.domain.entities.DomainInformationImageMetadata
 import com.lawmobile.domain.usecase.BaseUseCase
-import com.safefleet.mobile.commons.helpers.Result
+import com.safefleet.mobile.kotlin_commons.helpers.Result
 
 interface SnapshotDetailUseCase : BaseUseCase {
     suspend fun getImageBytes(domainCameraFile: DomainCameraFile): Result<ByteArray>

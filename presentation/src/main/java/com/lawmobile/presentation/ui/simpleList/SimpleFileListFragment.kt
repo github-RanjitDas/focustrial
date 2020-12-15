@@ -22,9 +22,9 @@ import com.lawmobile.presentation.ui.fileList.FileListBaseFragment
 import com.lawmobile.presentation.utils.Constants.FILE_LIST_TYPE
 import com.lawmobile.presentation.utils.Constants.SNAPSHOT_LIST
 import com.lawmobile.presentation.utils.Constants.VIDEO_LIST
-import com.safefleet.mobile.commons.helpers.Result
-import com.safefleet.mobile.commons.helpers.doIfError
-import com.safefleet.mobile.commons.helpers.doIfSuccess
+import com.safefleet.mobile.kotlin_commons.helpers.Result
+import com.safefleet.mobile.kotlin_commons.extensions.doIfError
+import com.safefleet.mobile.kotlin_commons.extensions.doIfSuccess
 
 class SimpleFileListFragment : FileListBaseFragment() {
 

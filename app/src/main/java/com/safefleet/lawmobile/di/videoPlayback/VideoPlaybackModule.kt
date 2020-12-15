@@ -6,7 +6,7 @@ import com.lawmobile.data.repository.videoPlayback.VideoPlaybackRepositoryImpl
 import com.lawmobile.domain.repository.videoPlayback.VideoPlaybackRepository
 import com.lawmobile.domain.usecase.videoPlayback.VideoPlaybackUseCase
 import com.lawmobile.domain.usecase.videoPlayback.VideoPlaybackUseCaseImpl
-import com.safefleet.mobile.avml.cameras.external.CameraConnectService
+import com.safefleet.mobile.external_hardware.cameras.CameraService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -19,8 +19,8 @@ abstract class VideoPlaybackModule {
     companion object {
         
         @Provides
-        fun provideVideoPlaybackRemoteDataSource(cameraConnectService: CameraConnectService): VideoPlaybackRemoteDataSource =
-            VideoPlaybackRemoteDataSourceImpl(cameraConnectService)
+        fun provideVideoPlaybackRemoteDataSource(cameraService: CameraService): VideoPlaybackRemoteDataSource =
+            VideoPlaybackRemoteDataSourceImpl(cameraService)
 
         @Provides
         fun provideVideoPlaybackRepository(videoPlaybackRemoteDataSource: VideoPlaybackRemoteDataSource): VideoPlaybackRepository =

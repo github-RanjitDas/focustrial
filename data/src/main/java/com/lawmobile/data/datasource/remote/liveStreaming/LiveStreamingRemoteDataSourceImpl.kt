@@ -1,35 +1,35 @@
 package com.lawmobile.data.datasource.remote.liveStreaming
 
-import com.safefleet.mobile.avml.cameras.entities.CameraConnectCatalog
-import com.safefleet.mobile.avml.cameras.external.CameraConnectService
-import com.safefleet.mobile.commons.helpers.Result
+import com.safefleet.mobile.kotlin_commons.helpers.Result
+import com.safefleet.mobile.external_hardware.cameras.CameraService
+import com.safefleet.mobile.external_hardware.cameras.entities.CameraCatalog
 
-class LiveStreamingRemoteDataSourceImpl(private val cameraConnectService: CameraConnectService) :
+class LiveStreamingRemoteDataSourceImpl(private val cameraService: CameraService) :
     LiveStreamingRemoteDataSource {
     override fun getUrlForLiveStream(): String =
-        cameraConnectService.getUrlForLiveStream()
+        cameraService.getUrlForLiveStream()
 
     override suspend fun takePhoto(): Result<Unit> =
-        cameraConnectService.takePhoto()
+        cameraService.takePhoto()
 
     override suspend fun startRecordVideo(): Result<Unit> =
-        cameraConnectService.startRecordVideo()
+        cameraService.startRecordVideo()
 
     override suspend fun stopRecordVideo(): Result<Unit> =
-        cameraConnectService.stopRecordVideo()
+        cameraService.stopRecordVideo()
 
-    override suspend fun getCatalogInfo(): Result<List<CameraConnectCatalog>> =
-        cameraConnectService.getCatalogInfo()
+    override suspend fun getCatalogInfo(): Result<List<CameraCatalog>> =
+        cameraService.getCatalogInfo()
 
     override suspend fun getBatteryLevel(): Result<Int> =
-        cameraConnectService.getBatteryLevel()
+        cameraService.getBatteryLevel()
 
     override suspend fun getFreeStorage(): Result<String> =
-        cameraConnectService.getFreeStorage()
+        cameraService.getFreeStorage()
 
     override suspend fun getTotalStorage(): Result<String> =
-        cameraConnectService.getTotalStorage()
+        cameraService.getTotalStorage()
 
     override suspend fun disconnectCamera(): Result<Unit> =
-        cameraConnectService.disconnectCamera()
+        cameraService.disconnectCamera()
 }

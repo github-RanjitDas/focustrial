@@ -6,7 +6,7 @@ import com.lawmobile.data.repository.pairingPhoneWithCamera.PairingPhoneWithCame
 import com.lawmobile.domain.repository.pairingPhoneWithCamera.PairingPhoneWithCameraRepository
 import com.lawmobile.domain.usecase.pairingPhoneWithCamera.PairingPhoneWithCameraUseCase
 import com.lawmobile.domain.usecase.pairingPhoneWithCamera.PairingPhoneWithCameraUseCaseImpl
-import com.safefleet.mobile.avml.cameras.external.CameraConnectService
+import com.safefleet.mobile.external_hardware.cameras.CameraService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -20,9 +20,9 @@ class PairingPhoneWithCameraModule {
 
         @Provides
         fun providePairingPhoneWithCameraDataSource(
-            cameraConnectService: CameraConnectService
+            cameraService: CameraService
         ): PairingPhoneWithCameraRemoteDataSource =
-            PairingPhoneWithCameraRemoteDataSourceImpl(cameraConnectService)
+            PairingPhoneWithCameraRemoteDataSourceImpl(cameraService)
 
         @Provides
         fun providePairingPhoneWithCameraRepository(pairingPhoneWithCameraRemoteDataSource: PairingPhoneWithCameraRemoteDataSource): PairingPhoneWithCameraRepository =

@@ -2,7 +2,7 @@ package com.lawmobile.data.repository.liveStreaming
 
 import com.lawmobile.data.datasource.remote.liveStreaming.LiveStreamingRemoteDataSource
 import com.lawmobile.data.entities.FileList
-import com.safefleet.mobile.commons.helpers.Result
+import com.safefleet.mobile.kotlin_commons.helpers.Result
 import io.mockk.*
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert

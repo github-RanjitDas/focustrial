@@ -4,7 +4,7 @@ import com.lawmobile.domain.entities.DomainUser
 import com.lawmobile.domain.usecase.validatePasswordOfficer.ValidatePasswordOfficerUseCase
 import com.lawmobile.presentation.InstantExecutorExtension
 import com.lawmobile.presentation.utils.CameraHelper
-import com.safefleet.mobile.commons.helpers.Result
+import com.safefleet.mobile.kotlin_commons.helpers.Result
 import io.mockk.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi

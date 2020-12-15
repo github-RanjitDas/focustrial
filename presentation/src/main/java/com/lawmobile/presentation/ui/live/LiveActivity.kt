@@ -27,15 +27,15 @@ import com.lawmobile.presentation.utils.Constants.FILE_LIST_SELECTOR
 import com.lawmobile.presentation.utils.Constants.SNAPSHOT_LIST
 import com.lawmobile.presentation.utils.Constants.VIDEO_LIST
 import com.lawmobile.presentation.utils.EspressoIdlingResource
-import com.safefleet.mobile.avml.cameras.entities.CatalogTypes
 import com.safefleet.mobile.commons.animations.Animations
-import com.safefleet.mobile.commons.helpers.Event
-import com.safefleet.mobile.commons.helpers.Result
-import com.safefleet.mobile.commons.helpers.doIfError
-import com.safefleet.mobile.commons.helpers.doIfSuccess
 import com.safefleet.mobile.commons.widgets.linearProgressBar.SafeFleetLinearProgressBarBehavior.ASCENDANT
 import com.safefleet.mobile.commons.widgets.linearProgressBar.SafeFleetLinearProgressBarBehavior.DESCENDANT
 import com.safefleet.mobile.commons.widgets.linearProgressBar.SafeFleetLinearProgressBarRanges.*
+import com.safefleet.mobile.external_hardware.cameras.x1.entities.X1CatalogTypes
+import com.safefleet.mobile.kotlin_commons.extensions.doIfError
+import com.safefleet.mobile.kotlin_commons.extensions.doIfSuccess
+import com.safefleet.mobile.kotlin_commons.helpers.Event
+import com.safefleet.mobile.kotlin_commons.helpers.Result
 
 class LiveActivity : BaseActivity() {
 
@@ -214,7 +214,7 @@ class LiveActivity : BaseActivity() {
         with(domainCatalogList) {
             doIfSuccess { catalogInfoList ->
                 val eventNames =
-                    catalogInfoList.filter { it.type == CatalogTypes.EVENT.value }
+                    catalogInfoList.filter { it.type == X1CatalogTypes.EVENT.value }
                 CameraInfo.events.addAll(eventNames)
             }
             doIfError {

@@ -1,6 +1,6 @@
 package com.lawmobile.data.datasource.remote.pairingPhoneWithCamera
 
-import com.safefleet.mobile.commons.helpers.Result
+import com.safefleet.mobile.kotlin_commons.helpers.Result
 
 interface PairingPhoneWithCameraRemoteDataSource {
     suspend fun loadPairingCamera(

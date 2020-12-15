@@ -1,7 +1,7 @@
 package com.lawmobile.domain.repository.liveStreaming
 
 import com.lawmobile.domain.entities.DomainCatalog
-import com.safefleet.mobile.commons.helpers.Result
+import com.safefleet.mobile.kotlin_commons.helpers.Result
 
 interface LiveStreamingRepository {
     fun getUrlForLiveStream(): String

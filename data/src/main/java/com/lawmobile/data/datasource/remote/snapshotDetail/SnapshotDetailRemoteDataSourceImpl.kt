@@ -1,37 +1,37 @@
 package com.lawmobile.data.datasource.remote.snapshotDetail
 
-import com.safefleet.mobile.avml.cameras.entities.CameraConnectFile
-import com.safefleet.mobile.avml.cameras.entities.CameraConnectFileResponseWithErrors
-import com.safefleet.mobile.avml.cameras.entities.CameraConnectPhotoMetadata
-import com.safefleet.mobile.avml.cameras.entities.CameraConnectVideoMetadata
-import com.safefleet.mobile.avml.cameras.external.CameraConnectService
-import com.safefleet.mobile.commons.helpers.Result
+import com.safefleet.mobile.kotlin_commons.helpers.Result
+import com.safefleet.mobile.external_hardware.cameras.CameraService
+import com.safefleet.mobile.external_hardware.cameras.entities.CameraFile
+import com.safefleet.mobile.external_hardware.cameras.entities.FileResponseWithErrors
+import com.safefleet.mobile.external_hardware.cameras.entities.PhotoInformation
+import com.safefleet.mobile.external_hardware.cameras.entities.VideoInformation
 
-class SnapshotDetailRemoteDataSourceImpl(private val cameraConnectService: CameraConnectService) :
+class SnapshotDetailRemoteDataSourceImpl(private val cameraService: CameraService) :
     SnapshotDetailRemoteDataSource {
-    override suspend fun getImageBytes(cameraConnectFile: CameraConnectFile): Result<ByteArray> {
-        return cameraConnectService.getImageBytes(cameraConnectFile)
+    override suspend fun getImageBytes(cameraFile: CameraFile): Result<ByteArray> {
+        return cameraService.getImageBytes(cameraFile)
     }
 
-    override suspend fun savePartnerIdSnapshot(cameraConnectPhotoMetadata: CameraConnectPhotoMetadata): Result<Unit> {
-        return cameraConnectService.savePhotoMetadata(cameraConnectPhotoMetadata)
+    override suspend fun savePartnerIdSnapshot(photoInformation: PhotoInformation): Result<Unit> {
+        return cameraService.savePhotoMetadata(photoInformation)
     }
 
-    override suspend fun getInformationOfPhoto(cameraFile: CameraConnectFile): Result<CameraConnectPhotoMetadata> {
-        return cameraConnectService.getPhotoMetadata(cameraFile)
+    override suspend fun getInformationOfPhoto(cameraFile: CameraFile): Result<PhotoInformation> {
+        return cameraService.getPhotoMetadata(cameraFile)
     }
 
-    override suspend fun getVideoList(): Result<CameraConnectFileResponseWithErrors> {
-        return  cameraConnectService.getListOfVideos()
+    override suspend fun getVideoList(): Result<FileResponseWithErrors> {
+        return  cameraService.getListOfVideos()
     }
 
-    override suspend fun getMetadataOfVideo(cameraConnectFile: CameraConnectFile): Result<CameraConnectVideoMetadata> {
-        return cameraConnectService.getVideoMetadata(cameraConnectFile.name, cameraConnectFile.nameFolder)
+    override suspend fun getMetadataOfVideo(cameraFile: CameraFile): Result<VideoInformation> {
+        return cameraService.getVideoMetadata(cameraFile.name, cameraFile.nameFolder)
     }
 
-    override suspend fun savePartnerIdInAllSnapshots(list: List<CameraConnectPhotoMetadata>): Result<Unit> =
-        cameraConnectService.saveAllPhotoMetadata(list)
+    override suspend fun savePartnerIdInAllSnapshots(list: List<PhotoInformation>): Result<Unit> =
+        cameraService.saveAllPhotoMetadata(list)
 
-    override suspend fun getSavedPhotosMetadata(): Result<List<CameraConnectPhotoMetadata>>  =
-        cameraConnectService.getMetadataOfPhotos()
+    override suspend fun getSavedPhotosMetadata(): Result<List<PhotoInformation>>  =
+        cameraService.getMetadataOfPhotos()
 }

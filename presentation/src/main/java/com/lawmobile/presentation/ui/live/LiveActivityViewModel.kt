@@ -10,7 +10,11 @@ import com.lawmobile.domain.entities.DomainCatalog
 import com.lawmobile.domain.usecase.liveStreaming.LiveStreamingUseCase
 import com.lawmobile.presentation.ui.base.BaseViewModel
 import com.lawmobile.presentation.utils.VLCMediaPlayer
-import com.safefleet.mobile.commons.helpers.*
+import com.safefleet.mobile.kotlin_commons.extensions.doIfError
+import com.safefleet.mobile.kotlin_commons.extensions.doIfSuccess
+import com.safefleet.mobile.kotlin_commons.helpers.Event
+import com.safefleet.mobile.kotlin_commons.helpers.Result
+import com.safefleet.mobile.kotlin_commons.helpers.getResultWithAttempts
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -126,7 +130,7 @@ class LiveActivityViewModel @ViewModelInject constructor(
         }
     }
 
-    fun disconnectCamera(){
+    fun disconnectCamera() {
         viewModelScope.launch {
             liveStreamingUseCase.disconnectCamera()
         }

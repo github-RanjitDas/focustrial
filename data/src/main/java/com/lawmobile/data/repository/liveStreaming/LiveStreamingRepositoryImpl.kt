@@ -5,7 +5,7 @@ import com.lawmobile.data.entities.FileList
 import com.lawmobile.data.mappers.CatalogMapper
 import com.lawmobile.domain.entities.DomainCatalog
 import com.lawmobile.domain.repository.liveStreaming.LiveStreamingRepository
-import com.safefleet.mobile.commons.helpers.Result
+import com.safefleet.mobile.kotlin_commons.helpers.Result
 import kotlinx.coroutines.delay
 
 class LiveStreamingRepositoryImpl(private val liveRemoteDataSource: LiveStreamingRemoteDataSource) :

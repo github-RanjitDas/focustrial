@@ -2,7 +2,7 @@ package com.lawmobile.domain.usecase.simpleList
 
 import com.lawmobile.domain.entities.DomainInformationFileResponse
 import com.lawmobile.domain.repository.simpleList.SimpleListRepository
-import com.safefleet.mobile.commons.helpers.Result
+import com.safefleet.mobile.kotlin_commons.helpers.Result
 import javax.inject.Inject
 
 class SimpleListUseCaseImpl @Inject constructor(private val simpleListRepository: SimpleListRepository) :

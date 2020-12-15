@@ -6,7 +6,6 @@ import org.videolan.libvlc.LibVLC
 import org.videolan.libvlc.Media
 import org.videolan.libvlc.MediaPlayer
 
-
 class VLCMediaPlayer(private val libVLC: LibVLC, private val mediaPlayer: MediaPlayer) {
 
     private var currentMedia: Media? = null

@@ -1,15 +1,15 @@
 package com.lawmobile.data.datasource.remote.thumbnailList
 
-import com.safefleet.mobile.avml.cameras.entities.CameraConnectFile
-import com.safefleet.mobile.avml.cameras.entities.CameraConnectFileResponseWithErrors
-import com.safefleet.mobile.avml.cameras.external.CameraConnectService
-import com.safefleet.mobile.commons.helpers.Result
+import com.safefleet.mobile.kotlin_commons.helpers.Result
+import com.safefleet.mobile.external_hardware.cameras.CameraService
+import com.safefleet.mobile.external_hardware.cameras.entities.CameraFile
+import com.safefleet.mobile.external_hardware.cameras.entities.FileResponseWithErrors
 
-class ThumbnailListRemoteDataSourceImpl(private val cameraConnectService: CameraConnectService) :
+class ThumbnailListRemoteDataSourceImpl(private val cameraService: CameraService) :
     ThumbnailListRemoteDataSource {
-    override suspend fun getImageBytes(snapshot: CameraConnectFile): Result<ByteArray> =
-        cameraConnectService.getImageBytes(snapshot)
+    override suspend fun getImageBytes(cameraFile: CameraFile): Result<ByteArray> =
+        cameraService.getImageBytes(cameraFile)
 
-    override suspend fun getSnapshotList(): Result<CameraConnectFileResponseWithErrors> =
-        cameraConnectService.getListOfImages()
+    override suspend fun getSnapshotList(): Result<FileResponseWithErrors> =
+        cameraService.getListOfImages()
 }

@@ -1,7 +1,7 @@
 package com.lawmobile.data.mappers
 
 import com.lawmobile.domain.entities.DomainCameraFile
-import com.safefleet.mobile.avml.cameras.entities.CameraConnectFile
+import com.safefleet.mobile.external_hardware.cameras.entities.CameraFile
 import io.mockk.mockk
 import org.junit.jupiter.api.Test
 
@@ -25,7 +25,7 @@ internal class FileMapperTest {
 
     @Test
     fun cameraToDomain() {
-        val cameraConnectFile: CameraConnectFile = mockk(relaxed = true)
+        val cameraConnectFile: CameraFile = mockk(relaxed = true)
         val domainCameraFile = FileMapper.cameraToDomain(cameraConnectFile)
         with(cameraConnectFile){
             domainCameraFile.let {

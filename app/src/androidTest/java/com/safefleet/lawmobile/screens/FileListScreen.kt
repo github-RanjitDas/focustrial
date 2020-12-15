@@ -8,7 +8,7 @@ import com.safefleet.lawmobile.R
 import com.safefleet.lawmobile.helpers.CustomCheckboxAction
 import com.safefleet.lawmobile.helpers.isActivated
 import com.safefleet.lawmobile.helpers.isNotActivated
-import com.safefleet.mobile.avml.cameras.entities.CameraConnectFile
+import com.safefleet.mobile.external_hardware.cameras.entities.CameraFile
 import com.schibsted.spain.barista.assertion.BaristaImageViewAssertions.assertHasDrawable
 import com.schibsted.spain.barista.assertion.BaristaListAssertions
 import com.schibsted.spain.barista.assertion.BaristaRecyclerViewAssertions
@@ -48,7 +48,7 @@ class FileListScreen : BaseScreen() {
         )
     }
 
-    fun areFilesSortedByDate(filesList: List<CameraConnectFile>) {
+    fun areFilesSortedByDate(filesList: List<CameraFile>) {
         val sortedFilesList = filesList.sortedByDescending { it.getCreationDate() }
 
         for ((itemCount, file) in sortedFilesList.withIndex()) {

@@ -3,13 +3,13 @@ package com.lawmobile.data.mappers
 import com.lawmobile.domain.entities.DomainMetadata
 import com.lawmobile.domain.entities.DomainPhotoAssociated
 import com.lawmobile.domain.entities.DomainVideoMetadata
-import com.safefleet.mobile.avml.cameras.entities.CameraConnectVideoMetadata
-import com.safefleet.mobile.avml.cameras.entities.PhotoAssociated
-import com.safefleet.mobile.avml.cameras.entities.VideoMetadata
+import com.safefleet.mobile.external_hardware.cameras.entities.PhotoAssociated
+import com.safefleet.mobile.external_hardware.cameras.entities.VideoInformation
+import com.safefleet.mobile.external_hardware.cameras.entities.VideoMetadata
 
 object VideoMetadataMapper {
-    fun cameraToDomain(cameraConnectVideoMetadata: CameraConnectVideoMetadata) =
-        cameraConnectVideoMetadata.run {
+    fun cameraToDomain(videoInformation: VideoInformation) =
+        videoInformation.run {
             DomainVideoMetadata(
                 fileName,
                 cameraVideoMetadataToDomain(metadata),
@@ -23,7 +23,7 @@ object VideoMetadataMapper {
 
     fun domainToCamera(domainVideoMetadata: DomainVideoMetadata) =
         domainVideoMetadata.run {
-            CameraConnectVideoMetadata(
+            VideoInformation(
                 fileName,
                 officerId,
                 path,

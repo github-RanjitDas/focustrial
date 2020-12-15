@@ -13,7 +13,7 @@ import com.lawmobile.domain.entities.CameraInfo
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.databinding.FragmentPairingResultBinding
 import com.lawmobile.presentation.ui.base.BaseFragment
-import com.safefleet.mobile.commons.helpers.Result
+import com.safefleet.mobile.kotlin_commons.helpers.Result
 
 class PairingResultFragment : BaseFragment() {
 

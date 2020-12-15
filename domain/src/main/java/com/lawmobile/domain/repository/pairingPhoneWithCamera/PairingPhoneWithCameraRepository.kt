@@ -1,7 +1,7 @@
 package com.lawmobile.domain.repository.pairingPhoneWithCamera
 
 import com.lawmobile.domain.repository.BaseRepository
-import com.safefleet.mobile.commons.helpers.Result
+import com.safefleet.mobile.kotlin_commons.helpers.Result
 
 interface PairingPhoneWithCameraRepository : BaseRepository {
     suspend fun loadPairingCamera(
