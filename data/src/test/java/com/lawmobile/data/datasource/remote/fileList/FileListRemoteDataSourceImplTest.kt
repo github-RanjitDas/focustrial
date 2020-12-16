@@ -1,6 +1,7 @@
 package com.lawmobile.data.datasource.remote.fileList
 
 import com.safefleet.mobile.external_hardware.cameras.CameraService
+import com.safefleet.mobile.external_hardware.cameras.entities.PhotoInformation
 import com.safefleet.mobile.kotlin_commons.helpers.Result
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -51,6 +52,34 @@ internal class FileListRemoteDataSourceImplTest {
             fileListRemoteDataSourceImpl.savePartnerIdSnapshot(mockk())
         }
         coVerify { cameraService.savePhotoMetadata(any()) }
+    }
+
+    @Test
+    fun testGetSavedPhotosMetadataFlow() {
+        coEvery { cameraService.getMetadataOfPhotos() } returns Result.Success(mockk(relaxed = true))
+        runBlocking {
+            fileListRemoteDataSourceImpl.getSavedPhotosMetadata()
+        }
+        coVerify { cameraService.getMetadataOfPhotos() }
+    }
+
+    @Test
+    fun testGetSavedPhotosMetadataSuccess() {
+        val photoInformation: PhotoInformation = mockk(relaxed = true)
+        val result = Result.Success(listOf(photoInformation))
+        coEvery {  cameraService.getMetadataOfPhotos() } returns result
+        runBlocking {
+            Assert.assertEquals(fileListRemoteDataSourceImpl.getSavedPhotosMetadata(), result)
+        }
+    }
+
+    @Test
+    fun testGetSavedPhotosMetadataFailed() {
+        val result = Result.Error(mockk())
+        coEvery { cameraService.getMetadataOfPhotos() } returns result
+        runBlocking {
+            Assert.assertEquals(fileListRemoteDataSourceImpl.getSavedPhotosMetadata(), result)
+        }
     }
 
     @Test
