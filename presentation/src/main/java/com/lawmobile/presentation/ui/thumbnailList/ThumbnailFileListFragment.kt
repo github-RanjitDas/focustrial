@@ -21,12 +21,13 @@ import com.lawmobile.presentation.entities.ImageWithPathSaved
 import com.lawmobile.presentation.entities.SnapshotsAssociatedByUser
 import com.lawmobile.presentation.extensions.getPathFromTemporalFile
 import com.lawmobile.presentation.extensions.showErrorSnackBar
+import com.lawmobile.presentation.extensions.verifySessionBeforeAction
 import com.lawmobile.presentation.ui.fileList.FileListBaseFragment
 import com.lawmobile.presentation.utils.Constants.FILE_LIST_TYPE
-import com.safefleet.mobile.kotlin_commons.helpers.Event
-import com.safefleet.mobile.kotlin_commons.helpers.Result
 import com.safefleet.mobile.kotlin_commons.extensions.doIfError
 import com.safefleet.mobile.kotlin_commons.extensions.doIfSuccess
+import com.safefleet.mobile.kotlin_commons.helpers.Event
+import com.safefleet.mobile.kotlin_commons.helpers.Result
 import java.io.File
 import kotlin.math.min
 
@@ -198,8 +199,10 @@ class ThumbnailFileListFragment : FileListBaseFragment() {
                     getString(R.string.file_list_failed_load_files),
                     Snackbar.LENGTH_INDEFINITE
                 ) {
-                    showLoadingDialog()
-                    thumbnailListFragmentViewModel.getSnapshotList()
+                    context?.verifySessionBeforeAction {
+                        showLoadingDialog()
+                        thumbnailListFragmentViewModel.getSnapshotList()
+                    }
                 }
             }
         }
@@ -210,7 +213,10 @@ class ThumbnailFileListFragment : FileListBaseFragment() {
             getString(R.string.getting_files_error_description),
             Snackbar.LENGTH_LONG
         ) {
-            thumbnailListFragmentViewModel.getSnapshotList()
+            context?.verifySessionBeforeAction {
+                showLoadingDialog()
+                thumbnailListFragmentViewModel.getSnapshotList()
+            }
         }
         showFailedFoldersInLog(errors)
     }

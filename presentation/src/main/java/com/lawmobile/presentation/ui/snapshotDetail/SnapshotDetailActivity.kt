@@ -155,8 +155,10 @@ class SnapshotDetailActivity : BaseActivity() {
                         getString(R.string.snapshot_detail_metadata_error),
                         SNAPSHOT_DETAIL_ERROR_ANIMATION_DURATION
                     ) {
-                        showLoadingDialog()
-                        snapshotDetailViewModel.getInformationImageMetadata(file)
+                        this@SnapshotDetailActivity.verifySessionBeforeAction {
+                            showLoadingDialog()
+                            snapshotDetailViewModel.getInformationImageMetadata(file)
+                        }
                     }
                 }
             }
@@ -254,7 +256,7 @@ class SnapshotDetailActivity : BaseActivity() {
             getString(R.string.snapshot_detail_load_failed),
             SNAPSHOT_DETAIL_ERROR_ANIMATION_DURATION
         ) {
-            snapshotDetailViewModel.getImageBytes(file)
+            this.verifySessionBeforeAction { snapshotDetailViewModel.getImageBytes(file) }
         }
     }
 

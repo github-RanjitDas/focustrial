@@ -18,13 +18,14 @@ import com.lawmobile.presentation.databinding.FragmentFileListBinding
 import com.lawmobile.presentation.entities.SnapshotsAssociatedByUser
 import com.lawmobile.presentation.extensions.setOnClickListenerCheckConnection
 import com.lawmobile.presentation.extensions.showErrorSnackBar
+import com.lawmobile.presentation.extensions.verifySessionBeforeAction
 import com.lawmobile.presentation.ui.fileList.FileListBaseFragment
 import com.lawmobile.presentation.utils.Constants.FILE_LIST_TYPE
 import com.lawmobile.presentation.utils.Constants.SNAPSHOT_LIST
 import com.lawmobile.presentation.utils.Constants.VIDEO_LIST
-import com.safefleet.mobile.kotlin_commons.helpers.Result
 import com.safefleet.mobile.kotlin_commons.extensions.doIfError
 import com.safefleet.mobile.kotlin_commons.extensions.doIfSuccess
+import com.safefleet.mobile.kotlin_commons.helpers.Result
 
 class SimpleFileListFragment : FileListBaseFragment() {
 
@@ -148,7 +149,7 @@ class SimpleFileListFragment : FileListBaseFragment() {
                     getString(R.string.file_list_failed_load_files),
                     Snackbar.LENGTH_INDEFINITE
                 ) {
-                    getFileList()
+                    context?.verifySessionBeforeAction { getFileList() }
                 }
             }
         }
@@ -160,9 +161,11 @@ class SimpleFileListFragment : FileListBaseFragment() {
             getString(R.string.getting_files_error_description),
             Snackbar.LENGTH_LONG
         ) {
-            when (listType) {
-                SNAPSHOT_LIST -> simpleListViewModel.getSnapshotList()
-                VIDEO_LIST -> simpleListViewModel.getVideoList()
+            context?.verifySessionBeforeAction {
+                when (listType) {
+                    SNAPSHOT_LIST -> simpleListViewModel.getSnapshotList()
+                    VIDEO_LIST -> simpleListViewModel.getVideoList()
+                }
             }
         }
         showFailedFoldersInLog(errors)
