@@ -222,7 +222,9 @@ class LiveActivity : BaseActivity() {
                     getString(R.string.catalog_error),
                     CATALOG_ERROR_ANIMATION_DURATION
                 ) {
-                    liveActivityViewModel.getCatalogInfo()
+                    this@LiveActivity.verifySessionBeforeAction {
+                        liveActivityViewModel.getCatalogInfo()
+                    }
                 }
             }
         }

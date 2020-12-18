@@ -14,12 +14,13 @@ import com.lawmobile.presentation.databinding.FragmentValidateOfficerPasswordBin
 import com.lawmobile.presentation.extensions.setOnClickListenerCheckConnection
 import com.lawmobile.presentation.extensions.showErrorSnackBar
 import com.lawmobile.presentation.extensions.text
+import com.lawmobile.presentation.extensions.verifySessionBeforeAction
 import com.lawmobile.presentation.ui.base.BaseActivity
 import com.lawmobile.presentation.ui.base.BaseFragment
 import com.lawmobile.presentation.utils.EncodePassword
 import com.lawmobile.presentation.utils.EspressoIdlingResource
-import com.safefleet.mobile.kotlin_commons.helpers.Result
 import com.safefleet.mobile.commons.helpers.hideKeyboard
+import com.safefleet.mobile.kotlin_commons.helpers.Result
 
 class ValidateOfficerPasswordFragment : BaseFragment() {
 
@@ -100,7 +101,7 @@ class ValidateOfficerPasswordFragment : BaseFragment() {
             getString(R.string.error_getting_officer_information),
             Snackbar.LENGTH_INDEFINITE
         ) {
-            validateOfficerPasswordViewModel.getUserInformation()
+            context?.verifySessionBeforeAction { validateOfficerPasswordViewModel.getUserInformation() }
         }
     }
 
