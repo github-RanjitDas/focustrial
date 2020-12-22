@@ -39,7 +39,7 @@ class VideoListTest : EspressoStartActivityBaseTest<LoginActivity>(LoginActivity
     }
 
     @Test
-    fun verifyNoVideosTaken_FMA_559() {
+    fun verifyNoVideosTaken_FMA_575() {
         setSimpleRecyclerView()
         mockUtils.clearVideosOnX1()
 
@@ -65,7 +65,7 @@ class VideoListTest : EspressoStartActivityBaseTest<LoginActivity>(LoginActivity
     }
 
     @Test
-    fun verifyCheckboxWhenSnapshotsDontFit_FMA_560() {
+    fun verifyCheckboxWhenSnapshotsDontFit_FMA_1179() {
         setSimpleRecyclerView()
         liveViewScreen.openVideoList()
 
@@ -135,7 +135,7 @@ class VideoListTest : EspressoStartActivityBaseTest<LoginActivity>(LoginActivity
     }
 
     @Test
-    fun verifyScrollWhenVideosDontFit_FMA_562() {
+    fun verifyScrollWhenVideosDontFit_FMA_579() {
         setSimpleRecyclerView()
         liveViewScreen.openVideoList()
 
@@ -149,7 +149,7 @@ class VideoListTest : EspressoStartActivityBaseTest<LoginActivity>(LoginActivity
     }
 
     @Test
-    fun verifyUpdatingVideosList_FMA_563() {
+    fun verifyUpdatingVideosList_FMA_578() {
         mockUtils.clearVideosOnX1()
         setSimpleRecyclerView()
         val takenVideos = extraVideoList.items.subList(0, 3)
@@ -175,7 +175,7 @@ class VideoListTest : EspressoStartActivityBaseTest<LoginActivity>(LoginActivity
     }
 
     @Test
-    fun verifyDisconnectionOpeningVideoList_FMA_566() {
+    fun verifyDisconnectionOpeningVideoList_FMA_580() {
         mockUtils.disconnectCamera()
 
         liveViewScreen.openVideoList()
@@ -183,7 +183,7 @@ class VideoListTest : EspressoStartActivityBaseTest<LoginActivity>(LoginActivity
     }
 
     @Test
-    fun verifyDisconnectionGoingBackToLive_FMA_567() {
+    fun verifyDisconnectionGoingBackToLive_FMA_580() {
         liveViewScreen.openVideoList()
 
         mockUtils.disconnectCamera()
