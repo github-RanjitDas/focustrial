@@ -28,19 +28,9 @@ class AppNavigationTest : EspressoStartActivityBaseTest<LoginActivity>(LoginActi
     }
 
     @Test
-    fun b_verifySwitchBetweenSnapshotsAndVideosList_FMA_564() {
-        with(fileListScreen) {
-            liveViewScreen.openSnapshotList()
-            clickOnSimpleListButton()
-            isFileListDisplayed()
-            clickOnBack()
-            liveViewScreen.openVideoList()
-            isFileListDisplayed()
-        }
-    }
 
-    @Test
-    fun c_verifyLiveViewToggleBehaviorAfterNavigation_FMA_214() {
+
+    fun b_verifyLiveViewToggleBehaviorAfterNavigation_FMA_214() {
         with(liveViewScreen) {
             isLiveViewDisplayed()
             isLiveViewToggleEnabled()

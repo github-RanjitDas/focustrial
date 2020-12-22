@@ -2,6 +2,7 @@ package com.safefleet.lawmobile.tests
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
+import androidx.test.filters.Suppress
 import androidx.test.rule.GrantPermissionRule
 import com.safefleet.lawmobile.di.mocksServiceCameras.CameraConnectServiceX1Mock
 import com.safefleet.lawmobile.helpers.MockUtils
@@ -11,6 +12,7 @@ import org.junit.runner.RunWith
 
 
 @LargeTest
+@Suppress
 @RunWith(AndroidJUnit4::class)
 open class EspressoBaseTest {
 

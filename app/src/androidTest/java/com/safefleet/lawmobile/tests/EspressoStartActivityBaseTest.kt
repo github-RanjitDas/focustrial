@@ -4,11 +4,13 @@ import android.app.Activity
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
+import androidx.test.filters.Suppress
 import com.safefleet.lawmobile.rules.EspressoIdlingResourceRule
 import org.junit.Rule
 import org.junit.runner.RunWith
 
 @LargeTest
+@Suppress
 @RunWith(AndroidJUnit4::class)
 open class EspressoStartActivityBaseTest<T : Activity>(testActivityClass: Class<T>) :
     EspressoBaseTest() {

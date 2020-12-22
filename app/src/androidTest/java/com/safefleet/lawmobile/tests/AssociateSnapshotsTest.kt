@@ -2,14 +2,17 @@ package com.safefleet.lawmobile.tests
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
+import androidx.test.filters.Suppress
 import com.lawmobile.presentation.ui.login.LoginActivity
 import com.safefleet.lawmobile.R
 import com.safefleet.lawmobile.screens.*
 import com.safefleet.lawmobile.testData.VideoPlaybackMetadata
 import org.junit.Before
+import org.junit.Test
 import org.junit.runner.RunWith
 
 @LargeTest
+@Suppress
 @RunWith(AndroidJUnit4::class)
 class AssociateSnapshotsTest :
     EspressoStartActivityBaseTest<LoginActivity>(LoginActivity::class.java) {
@@ -41,6 +44,7 @@ class AssociateSnapshotsTest :
         }
     }
 
+    @Test
     fun linkThumbnailSnapshotsToVideo_FMA_1389() {
         setThumbnailListViews()
         liveViewScreen.openVideoList()
@@ -68,6 +72,7 @@ class AssociateSnapshotsTest :
         }
     }
 
+    @Test
     fun linkSimpleSnapshotsToVideo_FMA_1389() {
         setSimpleListViews()
         liveViewScreen.openVideoList()
@@ -96,6 +101,7 @@ class AssociateSnapshotsTest :
         }
     }
 
+    @Test
     fun linkSnapshotsToVideoCancel_FMA_1396() {
         setThumbnailListViews()
         liveViewScreen.openVideoList()
@@ -124,6 +130,7 @@ class AssociateSnapshotsTest :
         }
     }
 
+    @Test
     fun linkSimpleToVideoCancel_FMA_1396() {
         setSimpleListViews()
         liveViewScreen.openVideoList()
@@ -153,6 +160,7 @@ class AssociateSnapshotsTest :
         }
     }
 
+    @Test
     fun linkThumbnailSnapshotsToVideoNoSnapshots_FMA_1398() {
         mockUtils.clearSnapshotsOnX1()
         liveViewScreen.openVideoList()
@@ -174,6 +182,7 @@ class AssociateSnapshotsTest :
         }
     }
 
+    @Test
     fun linkSimpleSnapshotsToVideoNoSnapshots_FMA_1398() {
         mockUtils.clearSnapshotsOnX1()
         liveViewScreen.openVideoList()
@@ -197,6 +206,7 @@ class AssociateSnapshotsTest :
         }
     }
 
+    @Test
     fun linkThumbnailSnapshotsToVideoFilter_FMA_1400() {
         setThumbnailListViews()
         liveViewScreen.openVideoList()
@@ -237,6 +247,7 @@ class AssociateSnapshotsTest :
         }
     }
 
+    @Test
     fun linkSimpleSnapshotsToVideoFilter_FMA_1400() {
         setSimpleListViews()
         liveViewScreen.openVideoList()
