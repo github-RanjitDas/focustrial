@@ -1,6 +1,8 @@
 package com.lawmobile.presentation.ui.helpSection
 
 import android.os.Bundle
+import androidx.core.view.isVisible
+import com.lawmobile.presentation.R
 import com.lawmobile.presentation.databinding.ActivityHelpPageBinding
 import com.lawmobile.presentation.extensions.verifySessionBeforeAction
 import com.lawmobile.presentation.ui.base.BaseActivity
