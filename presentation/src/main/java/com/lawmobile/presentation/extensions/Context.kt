@@ -137,7 +137,7 @@ fun Context.checkSession(callback: (View) -> Unit, view: View) {
     }
 }
 
-fun Context.verifySessionBeforeAction(callback : () -> Unit) {
+fun Context.verifySessionBeforeAction(callback: () -> Unit) {
     val isSessionExpired = checkIfSessionIsExpired()
     if (isSessionExpired) {
         this.createAlertSessionExpired()
