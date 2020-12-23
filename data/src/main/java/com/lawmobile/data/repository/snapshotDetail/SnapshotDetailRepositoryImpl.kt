@@ -2,11 +2,8 @@ package com.lawmobile.data.repository.snapshotDetail
 
 import com.lawmobile.data.datasource.remote.snapshotDetail.SnapshotDetailRemoteDataSource
 import com.lawmobile.data.entities.FileList
-import com.lawmobile.data.entities.RemoteVideoMetadata
-import com.lawmobile.data.entities.VideoListMetadata
 import com.lawmobile.data.mappers.FileMapper
 import com.lawmobile.data.mappers.PhotoMetadataMapper
-import com.lawmobile.data.mappers.VideoMetadataMapper
 import com.lawmobile.domain.entities.CameraInfo
 import com.lawmobile.domain.entities.DomainCameraFile
 import com.lawmobile.domain.entities.DomainInformationImageMetadata
@@ -16,7 +13,6 @@ import com.safefleet.mobile.avml.cameras.entities.PhotoMetadata
 import com.safefleet.mobile.commons.helpers.Result
 import com.safefleet.mobile.commons.helpers.doIfError
 import com.safefleet.mobile.commons.helpers.doIfSuccess
-import com.safefleet.mobile.commons.helpers.getResultWithAttempts
 import kotlinx.coroutines.delay
 
 class SnapshotDetailRepositoryImpl(private val snapshotDetailRemoteDataSource: SnapshotDetailRemoteDataSource) :

@@ -187,6 +187,7 @@
     <string name="no_snapshots_filter">No snapshots match to these criteria</string>
     <string name="no_videos_filter">No videos match to these criteria</string>
     <string name="not_available">Not available</string>
+    <string name="user_guide">User Guide</string>
 
     <string-array name="gender_spinner">
         <item>Select</item>

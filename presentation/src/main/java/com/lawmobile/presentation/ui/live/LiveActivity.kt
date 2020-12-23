@@ -10,7 +10,6 @@ import android.view.animation.AnimationUtils
 import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
-import androidx.lifecycle.Observer
 import com.lawmobile.domain.entities.CameraInfo
 import com.lawmobile.domain.entities.DomainCatalog
 import com.lawmobile.presentation.R
@@ -179,20 +178,15 @@ class LiveActivity : BaseActivity() {
     }
 
     private fun configureObservers() {
-        liveActivityViewModel.isWaitFinishedLiveData
-            .observe(this, Observer(::startRetrievingInformation))
-        liveActivityViewModel.catalogInfoLiveData
-            .observe(this, Observer(::setCatalogInfo))
-        liveActivityViewModel.batteryLevelLiveData
-            .observe(this, Observer(::setBatteryLevel))
-        liveActivityViewModel.storageLiveData
-            .observe(this, Observer(::setStorageLevels))
-        liveActivityViewModel.resultRecordVideoLiveData
-            .observe(this, Observer(::manageResultInRecordingVideo))
-        liveActivityViewModel.resultStopVideoLiveData
-            .observe(this, Observer(::manageResultInRecordingVideo))
-        liveActivityViewModel.resultTakePhotoLiveData
-            .observe(this, Observer(::manageResultTakePhoto))
+        with(liveActivityViewModel) {
+            isWaitFinishedLiveData.observe(this@LiveActivity, ::startRetrievingInformation)
+            catalogInfoLiveData.observe(this@LiveActivity, ::setCatalogInfo)
+            batteryLevelLiveData.observe(this@LiveActivity, ::setBatteryLevel)
+            storageLiveData.observe(this@LiveActivity, ::setStorageLevels)
+            resultRecordVideoLiveData.observe(this@LiveActivity, ::manageResultInRecordingVideo)
+            resultStopVideoLiveData.observe(this@LiveActivity, ::manageResultInRecordingVideo)
+            resultTakePhotoLiveData.observe(this@LiveActivity, ::manageResultTakePhoto)
+        }
     }
 
     private fun startRetrievingInformation(isViewLoaded: Boolean) {

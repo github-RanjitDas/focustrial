@@ -58,8 +58,8 @@
         <activity
             android:name="com.lawmobile.presentation.ui.helpSection.HelpPageActivity"
             android:screenOrientation="portrait"
-            android:label="User Guide"
-            android:parentActivityName="com.lawmobile.presentation.ui.login.LoginActivity" />
+            android:theme="@style/AppTheme.NoActionBar"
+            tools:ignore="LockedOrientationActivity" />
 
     </application>
 
