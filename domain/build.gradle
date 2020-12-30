@@ -88,6 +88,14 @@ dependencies {
     kaptTest "com.google.dagger:hilt-android-compiler:$hilt_version"
     testImplementation "com.google.dagger:hilt-android-testing:$hilt_version"
 
+    // Import the Firebase BoM
+    debugApi platform("com.google.firebase:firebase-bom:$firebase_bom_version")
+
+    // Firebase analytics and crashlytics
+    debugApi 'com.google.firebase:firebase-analytics-ktx'
+    debugApi "com.google.firebase:firebase-core:$firebase_core_version"
+    debugApi 'com.google.firebase:firebase-crashlytics'
+
     //kotlin_commons
     api 'com.safefleet.mobile:kotlin-commons:1.0.0-SNAPSHOT@jar'
 }

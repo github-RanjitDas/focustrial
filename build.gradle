@@ -26,6 +26,8 @@ buildscript {
         classpath "pl.droidsonroids.gradle:gradle-pitest-plugin:$pitest_plugin_version"
         pitest "org.pitest:pitest-junit5-plugin:$pitest_junit5_plugin_version"
         classpath "com.google.dagger:hilt-android-gradle-plugin:$hilt_version"
+        classpath "com.google.gms:google-services:$google_services_version"
+        classpath "com.google.firebase:firebase-crashlytics-gradle:$firebase_crashlytics_version"
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
