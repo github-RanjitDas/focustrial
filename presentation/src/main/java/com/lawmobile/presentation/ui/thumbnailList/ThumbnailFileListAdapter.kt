@@ -17,8 +17,8 @@ import com.lawmobile.presentation.extensions.imageHasCorrectFormat
 import com.lawmobile.presentation.extensions.setOnClickListenerCheckConnection
 import com.lawmobile.presentation.ui.fileList.FileListBaseFragment
 import com.lawmobile.presentation.ui.thumbnailList.ThumbnailFileListFragment.Companion.PATH_ERROR_IN_PHOTO
-import com.safefleet.mobile.commons.helpers.inflate
-import com.safefleet.mobile.commons.widgets.SafeFleetCheckBox2
+import com.safefleet.mobile.android_commons.extensions.inflate
+import com.safefleet.mobile.safefleet_ui.widgets.SafeFleetCheckBox2
 import java.io.File
 
 class ThumbnailFileListAdapter(

@@ -6,9 +6,9 @@ import com.google.android.material.snackbar.Snackbar
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.ui.base.BaseActivity
 import com.lawmobile.presentation.utils.EspressoIdlingResource
-import com.safefleet.mobile.commons.widgets.SafeFleetClickable
-import com.safefleet.mobile.commons.widgets.snackbar.SafeFleetSnackBar
-import com.safefleet.mobile.commons.widgets.snackbar.SafeFleetSnackBarSettings
+import com.safefleet.mobile.safefleet_ui.widgets.SafeFleetClickable
+import com.safefleet.mobile.safefleet_ui.widgets.snackbar.SafeFleetSnackBar
+import com.safefleet.mobile.safefleet_ui.widgets.snackbar.SafeFleetSnackBarSettings
 import java.sql.Timestamp
 
 private val snackBarListener = object : View.OnAttachStateChangeListener{

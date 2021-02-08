@@ -35,7 +35,7 @@
             app:layout_constraintStart_toEndOf="@+id/backArrowFileListAppBar"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <com.safefleet.mobile.commons.widgets.SafeFleetGridButton
+        <com.safefleet.mobile.safefleet_ui.widgets.SafeFleetGridButton
             android:id="@+id/buttonThumbnailList"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -45,7 +45,7 @@
             app:layout_constraintEnd_toStartOf="@+id/buttonSimpleList"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <com.safefleet.mobile.commons.widgets.SafeFleetListButton
+        <com.safefleet.mobile.safefleet_ui.widgets.SafeFleetListButton
             android:id="@+id/buttonSimpleList"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

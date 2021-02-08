@@ -7,7 +7,7 @@ import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import com.lawmobile.presentation.R
-import com.safefleet.mobile.commons.widgets.SafeFleetClickable
+import com.safefleet.mobile.safefleet_ui.widgets.SafeFleetClickable
 
 class CustomSnapshotButton @JvmOverloads constructor(
     context: Context,

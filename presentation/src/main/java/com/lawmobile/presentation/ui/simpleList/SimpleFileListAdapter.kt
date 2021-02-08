@@ -15,9 +15,9 @@ import com.lawmobile.presentation.entities.SnapshotsAssociatedByUser
 import com.lawmobile.presentation.extensions.setCheckedListenerCheckConnection
 import com.lawmobile.presentation.extensions.setOnClickListenerCheckConnection
 import com.lawmobile.presentation.ui.fileList.FileListBaseFragment
-import com.safefleet.mobile.commons.helpers.convertDpToPixel
-import com.safefleet.mobile.commons.helpers.inflate
-import com.safefleet.mobile.commons.widgets.SafeFleetCheckBox2
+import com.safefleet.mobile.android_commons.extensions.convertDpToPixel
+import com.safefleet.mobile.android_commons.extensions.inflate
+import com.safefleet.mobile.safefleet_ui.widgets.SafeFleetCheckBox2
 
 class SimpleFileListAdapter(
     private val onFileClick: (DomainInformationFile) -> Unit,

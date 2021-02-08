@@ -15,7 +15,7 @@ import com.lawmobile.presentation.R
 import com.lawmobile.presentation.databinding.FileListFilterDialogBinding
 import com.lawmobile.presentation.extensions.ifIsNotEmptyLet
 import com.lawmobile.presentation.extensions.showDateAndTimePickerDialog
-import com.safefleet.mobile.commons.widgets.SafeFleetFilterTag
+import com.safefleet.mobile.safefleet_ui.widgets.SafeFleetFilterTag
 
 class CustomFilterDialog constructor(
     private val tagsGridLayout: GridLayout,

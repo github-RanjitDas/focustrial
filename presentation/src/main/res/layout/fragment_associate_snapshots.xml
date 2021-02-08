@@ -31,7 +31,7 @@
         app:layout_constraintStart_toEndOf="@id/buttonFilterAssociateImages"
         app:layout_constraintTop_toTopOf="@id/buttonFilterAssociateImages" />
 
-    <com.safefleet.mobile.commons.widgets.SafeFleetGridButton
+    <com.safefleet.mobile.safefleet_ui.widgets.SafeFleetGridButton
         android:id="@+id/buttonThumbnailListAssociate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -40,7 +40,7 @@
         app:layout_constraintEnd_toStartOf="@+id/buttonSimpleListAssociate"
         app:layout_constraintTop_toTopOf="@id/buttonFilterAssociateImages" />
 
-    <com.safefleet.mobile.commons.widgets.SafeFleetListButton
+    <com.safefleet.mobile.safefleet_ui.widgets.SafeFleetListButton
         android:id="@+id/buttonSimpleListAssociate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
