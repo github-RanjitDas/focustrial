@@ -19,7 +19,7 @@ import com.lawmobile.presentation.ui.base.BaseActivity
 import com.lawmobile.presentation.ui.base.BaseFragment
 import com.lawmobile.presentation.utils.EncodePassword
 import com.lawmobile.presentation.utils.EspressoIdlingResource
-import com.safefleet.mobile.commons.helpers.hideKeyboard
+import com.safefleet.mobile.android_commons.extensions.hideKeyboard
 import com.safefleet.mobile.kotlin_commons.helpers.Result
 
 class ValidateOfficerPasswordFragment : BaseFragment() {

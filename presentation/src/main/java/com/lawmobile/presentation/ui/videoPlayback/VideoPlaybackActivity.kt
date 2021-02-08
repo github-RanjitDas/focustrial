@@ -27,8 +27,8 @@ import com.lawmobile.presentation.utils.Constants.DOMAIN_CAMERA_FILE
 import com.safefleet.mobile.kotlin_commons.helpers.Result
 import com.safefleet.mobile.kotlin_commons.extensions.doIfError
 import com.safefleet.mobile.kotlin_commons.extensions.doIfSuccess
-import com.safefleet.mobile.commons.helpers.hideKeyboard
-import com.safefleet.mobile.commons.widgets.SafeFleetFilterTag
+import com.safefleet.mobile.android_commons.extensions.hideKeyboard
+import com.safefleet.mobile.safefleet_ui.widgets.SafeFleetFilterTag
 import org.videolan.libvlc.MediaPlayer
 
 class VideoPlaybackActivity : BaseActivity() {

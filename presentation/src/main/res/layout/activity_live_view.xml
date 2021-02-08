@@ -51,7 +51,7 @@
             app:layout_constraintTop_toTopOf="@id/imageViewBattery"
             tools:ignore="SmallSp" />
 
-        <com.safefleet.mobile.commons.widgets.linearProgressBar.SafeFleetLinearProgressBar
+        <com.safefleet.mobile.safefleet_ui.widgets.linearProgressBar.SafeFleetLinearProgressBar
             android:id="@+id/progressBatteryLevel"
             android:layout_width="@dimen/no_dp"
             android:layout_height="@dimen/battery_level_height"
@@ -82,7 +82,7 @@
             app:layout_constraintStart_toStartOf="@id/progressStorageLevel"
             tools:ignore="RtlSymmetry,SmallSp" />
 
-        <com.safefleet.mobile.commons.widgets.linearProgressBar.SafeFleetLinearProgressBar
+        <com.safefleet.mobile.safefleet_ui.widgets.linearProgressBar.SafeFleetLinearProgressBar
             android:id="@+id/progressStorageLevel"
             android:layout_width="@dimen/no_dp"
             android:layout_height="@dimen/storage_level_height"
@@ -161,7 +161,7 @@
             app:layout_constraintStart_toStartOf="@id/buttonSnapshot"
             app:layout_constraintTop_toTopOf="@id/guidelineMidHorizontal" />
 
-        <com.safefleet.mobile.commons.widgets.SafeFleetSwitch
+        <com.safefleet.mobile.safefleet_ui.widgets.SafeFleetSwitch
             android:id="@+id/buttonSwitchLiveView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

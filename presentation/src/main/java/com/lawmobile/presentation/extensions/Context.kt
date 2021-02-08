@@ -12,7 +12,7 @@ import com.lawmobile.presentation.entities.AlertInformation
 import com.lawmobile.presentation.entities.NeutralAlertInformation
 import com.lawmobile.presentation.ui.base.BaseActivity
 import com.lawmobile.presentation.utils.CameraHelper
-import com.safefleet.mobile.commons.widgets.SafeFleetConfirmationDialog
+import com.safefleet.mobile.safefleet_ui.widgets.SafeFleetConfirmationDialog
 import kotlin.system.exitProcess
 
 fun Context.createAlertInformation(alertInformation: AlertInformation) {
