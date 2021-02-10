@@ -1,19 +1,23 @@
-apply plugin: 'com.android.application'
-apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-kapt'
-apply plugin: 'dagger.hilt.android.plugin'
-apply plugin: 'com.google.gms.google-services'
-apply plugin: 'com.google.firebase.crashlytics'
+import dependencies.*
+
+plugins {
+    id 'com.android.application'
+    id 'kotlin-android'
+    id 'kotlin-kapt'
+    id 'dagger.hilt.android.plugin'
+    id 'com.google.gms.google-services'
+    id 'com.google.firebase.crashlytics'
+}
 
 android {
-    compileSdkVersion rootProject.ext.compileSdkVersion
+    compileSdkVersion AppConfig.compileSdkVersion
 
     defaultConfig {
-        applicationId rootProject.ext.applicationId
-        minSdkVersion rootProject.ext.minSdkVersion
-        targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode rootProject.ext.buildVersion
-        versionName "$rootProject.ext.major.$rootProject.ext.minor.$rootProject.ext.patch"
+        applicationId AppConfig.applicationId
+        minSdkVersion AppConfig.minSdkVersion
+        targetSdkVersion AppConfig.targetSdkVersion
+        versionCode AppConfig.buildVersion
+        versionName AppConfig.versionName
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles 'consumer-rules.pro'
@@ -53,7 +57,7 @@ android {
     }
 
     kotlinOptions {
-        jvmTarget = rootProject.ext.jvmTarget
+        jvmTarget = AppConfig.jvmTarget
     }
 
     configurations.all {
@@ -71,12 +75,6 @@ dependencies {
 
     // Mockk
     androidTestImplementation "io.mockk:mockk-android:$mockk_version"
-
-    // Junit5
-    testImplementation "org.junit.jupiter:junit-jupiter-api:$junit5_version"
-    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$junit5_version"
-    testRuntimeOnly "org.junit.vintage:junit-vintage-engine:$junit5_version"
-    testImplementation "org.junit.jupiter:junit-jupiter-params:$junit5_version"
 
     //Espresso
     androidTestImplementation "androidx.test.espresso:espresso-core:$espresso_version"
@@ -108,21 +106,17 @@ dependencies {
     implementation "com.google.dagger:hilt-android:$hilt_version"
     kapt "com.google.dagger:hilt-android-compiler:$hilt_version"
     kaptAndroidTest "com.google.dagger:hilt-android-compiler:$hilt_version"
-    testImplementation "com.google.dagger:hilt-android-testing:$hilt_version"
     kaptTest "com.google.dagger:hilt-android-compiler:$hilt_version"
     implementation "androidx.hilt:hilt-lifecycle-viewmodel:$hilt_jetpack_version"
     kapt "androidx.hilt:hilt-compiler:$hilt_jetpack_version"
     kaptAndroidTest "androidx.hilt:hilt-compiler:$hilt_jetpack_version"
-    androidTestImplementation "com.google.dagger:hilt-android-testing:$hilt_version"
 
-    //external_hardware
+    //Base repository
     implementation 'com.safefleet.mobile:external-hardware:1.0.0-SNAPSHOT@jar'
-
-    //Commons
     implementation 'com.safefleet.mobile:android-commons:1.0.0-SNAPSHOT@aar'
     implementation 'com.safefleet.mobile:safefleet-ui:1.0.0-SNAPSHOT@aar'
 
-    implementation project(path: ':presentation')
-    implementation project(path: ':data')
-    implementation project(path: ':domain')
+    implementation project(path: Modules.presentation)
+    implementation project(path: Modules.data)
+    implementation project(path: Modules.domain)
 }
