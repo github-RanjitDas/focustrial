@@ -22,28 +22,28 @@ class CustomFilterDialog constructor(
     private var onApplyClick: (Boolean) -> Unit
 ) : Dialog(tagsGridLayout.context, true, null), View.OnClickListener {
 
-    private lateinit var fileListFilterDialogBinding: FileListFilterDialogBinding
+    private lateinit var binding: FileListFilterDialogBinding
+
     var listToFilter: List<DomainInformationForList> = emptyList()
     var currentFilters = mutableListOf<String>()
     var filteredList: List<DomainInformationForList> = emptyList()
 
     private var startDate = context.getString(R.string.start_date_filter)
-    private var endDate = "End date"
+    private var endDate = context.getString(R.string.end_date_filter)
     private var event = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val view = findViewById<View>(android.R.id.content) as ViewGroup
-        fileListFilterDialogBinding =
-            FileListFilterDialogBinding.inflate(layoutInflater, view)
+        binding = FileListFilterDialogBinding.inflate(layoutInflater, view)
 
-        fileListFilterDialogBinding.buttonApplyFilter.setOnClickListener(this)
-        fileListFilterDialogBinding.buttonCancelFilter.setOnClickListener(this)
-        fileListFilterDialogBinding.closeFilterView.setOnClickListener(this)
-        fileListFilterDialogBinding.startDateTextView.setOnClickListener(this)
-        fileListFilterDialogBinding.endDateTextView.setOnClickListener(this)
-        fileListFilterDialogBinding.buttonClearStartDate.setOnClickListener(this)
-        fileListFilterDialogBinding.buttonClearEndDate.setOnClickListener(this)
+        binding.buttonApplyFilter.setOnClickListener(this)
+        binding.buttonCancelFilter.setOnClickListener(this)
+        binding.closeFilterView.setOnClickListener(this)
+        binding.startDateTextView.setOnClickListener(this)
+        binding.endDateTextView.setOnClickListener(this)
+        binding.buttonClearStartDate.setOnClickListener(this)
+        binding.buttonClearEndDate.setOnClickListener(this)
 
         setEventsSpinner()
         setDefaultFilters()
@@ -55,7 +55,7 @@ class CustomFilterDialog constructor(
     }
 
     fun isEventSpinnerFilterVisible(isVisible: Boolean) {
-        fileListFilterDialogBinding.eventsSpinnerFilter.isVisible = isVisible
+        binding.eventsSpinnerFilter.isVisible = isVisible
     }
 
     private fun setEventsSpinner() {
@@ -65,23 +65,22 @@ class CustomFilterDialog constructor(
                 context.getString(R.string.no_event)
             )
         events.addAll(CameraInfo.events.map { it.name })
-        fileListFilterDialogBinding.eventsSpinnerFilter.adapter =
-            ArrayAdapter(context, R.layout.spinner_item, events)
+        binding.eventsSpinnerFilter.adapter = ArrayAdapter(context, R.layout.spinner_item, events)
     }
 
     private fun setDefaultFilters() {
-        fileListFilterDialogBinding.startDateTextView.text = startDate
-        fileListFilterDialogBinding.endDateTextView.text = endDate
-        fileListFilterDialogBinding.eventsSpinnerFilter.setSelection(event)
+        binding.startDateTextView.text = startDate
+        binding.endDateTextView.text = endDate
+        binding.eventsSpinnerFilter.setSelection(event)
     }
 
     private fun showClearButtons() {
-        fileListFilterDialogBinding.buttonClearStartDate.isVisible = try {
+        binding.buttonClearStartDate.isVisible = try {
             currentFilters[START_DATE_POSITION].isNotEmpty()
         } catch (e: Exception) {
             false
         }
-        fileListFilterDialogBinding.buttonClearEndDate.isVisible = try {
+        binding.buttonClearEndDate.isVisible = try {
             currentFilters[END_DATE_POSITION].isNotEmpty()
         } catch (e: Exception) {
             false
@@ -90,41 +89,69 @@ class CustomFilterDialog constructor(
 
     override fun onClick(v: View?) {
         when (v) {
-            fileListFilterDialogBinding.buttonApplyFilter -> {
+            binding.buttonApplyFilter -> {
                 setListOfFilters()
                 applyFiltersToLists()
                 dismiss()
             }
-            fileListFilterDialogBinding.buttonCancelFilter, fileListFilterDialogBinding.closeFilterView -> dismiss()
-            fileListFilterDialogBinding.startDateTextView ->
-                fileListFilterDialogBinding.startDateTextView.showDateAndTimePickerDialog(0, 0) {
-                    fileListFilterDialogBinding.buttonClearStartDate.isVisible = true
+            binding.buttonCancelFilter, binding.closeFilterView -> cancelChangesAndRestore()
+            binding.startDateTextView ->
+                binding.startDateTextView.showDateAndTimePickerDialog(0, 0) {
+                    binding.buttonClearStartDate.isVisible = true
                 }
-            fileListFilterDialogBinding.endDateTextView ->
-                fileListFilterDialogBinding.endDateTextView.showDateAndTimePickerDialog(23, 59) {
-                    fileListFilterDialogBinding.buttonClearEndDate.isVisible = true
+            binding.endDateTextView ->
+                binding.endDateTextView.showDateAndTimePickerDialog(23, 59) {
+                    binding.buttonClearEndDate.isVisible = true
                 }
-            fileListFilterDialogBinding.buttonClearStartDate -> clearStartDateFilter()
-            fileListFilterDialogBinding.buttonClearEndDate -> clearEndDateFilter()
+            binding.buttonClearStartDate -> clearStartDateFilter()
+            binding.buttonClearEndDate -> clearEndDateFilter()
         }
     }
 
+    private fun cancelChangesAndRestore() {
+        when (currentFilters.getOrNull(EVENT_POSITION)) {
+            "", null, context.getString(R.string.select_event) ->
+                binding.eventsSpinnerFilter.setSelection(0)
+            context.getString(R.string.no_event) ->
+                binding.eventsSpinnerFilter.setSelection(1)
+            else -> {
+                val eventIndex = CameraInfo.events.indexOfFirst {
+                    it.name == currentFilters[EVENT_POSITION]
+                } + 2
+                binding.eventsSpinnerFilter.setSelection(eventIndex)
+            }
+        }
+
+        if (!currentFilters.getOrNull(START_DATE_POSITION).isNullOrEmpty()) {
+            binding.startDateTextView.text = currentFilters[START_DATE_POSITION]
+        } else {
+            binding.startDateTextView.text = context.getString(R.string.start_date_filter)
+        }
+
+        if (!currentFilters.getOrNull(END_DATE_POSITION).isNullOrEmpty()) {
+            binding.endDateTextView.text = currentFilters[END_DATE_POSITION]
+        } else {
+            binding.endDateTextView.text = context.getString(R.string.end_date_filter)
+        }
+
+        saveFiltersAsDefault()
+        dismiss()
+    }
+
     private fun clearStartDateFilter() {
-        fileListFilterDialogBinding.startDateTextView.text =
-            context.getString(R.string.start_date_filter)
-        fileListFilterDialogBinding.buttonClearStartDate.isVisible = false
+        binding.startDateTextView.text = context.getString(R.string.start_date_filter)
+        binding.buttonClearStartDate.isVisible = false
     }
 
     private fun clearEndDateFilter() {
-        fileListFilterDialogBinding.endDateTextView.text =
-            context.getString(R.string.end_date_filter)
-        fileListFilterDialogBinding.buttonClearEndDate.isVisible = false
+        binding.endDateTextView.text = context.getString(R.string.end_date_filter)
+        binding.buttonClearEndDate.isVisible = false
     }
 
     private fun saveFiltersAsDefault() {
-        startDate = fileListFilterDialogBinding.startDateTextView.text.toString()
-        endDate = fileListFilterDialogBinding.endDateTextView.text.toString()
-        event = fileListFilterDialogBinding.eventsSpinnerFilter.selectedItemId.toInt()
+        startDate = binding.startDateTextView.text.toString()
+        endDate = binding.endDateTextView.text.toString()
+        event = binding.eventsSpinnerFilter.selectedItemId.toInt()
     }
 
     private fun setListOfFilters() {
@@ -132,13 +159,13 @@ class CustomFilterDialog constructor(
     }
 
     private fun getStartDate() =
-        if (fileListFilterDialogBinding.startDateTextView.text != context.getString(R.string.start_date_filter)) fileListFilterDialogBinding.startDateTextView.text.toString() else ""
+        if (binding.startDateTextView.text != context.getString(R.string.start_date_filter)) binding.startDateTextView.text.toString() else ""
 
     private fun getEndDate() =
-        if (fileListFilterDialogBinding.endDateTextView.text != context.getString(R.string.end_date_filter)) fileListFilterDialogBinding.endDateTextView.text.toString() else ""
+        if (binding.endDateTextView.text != context.getString(R.string.end_date_filter)) binding.endDateTextView.text.toString() else ""
 
     private fun getEvent() =
-        if (fileListFilterDialogBinding.eventsSpinnerFilter.selectedItemId > 0) fileListFilterDialogBinding.eventsSpinnerFilter.selectedItem.toString() else ""
+        if (binding.eventsSpinnerFilter.selectedItemId > 0) binding.eventsSpinnerFilter.selectedItem.toString() else ""
 
     fun applyFiltersToLists() {
         tagsGridLayout.removeAllViews()
