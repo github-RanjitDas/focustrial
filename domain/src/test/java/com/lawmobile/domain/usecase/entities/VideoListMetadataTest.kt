@@ -1,6 +1,8 @@
-package com.lawmobile.data.entities
+package com.lawmobile.domain.usecase.entities
 
 import com.lawmobile.domain.entities.DomainVideoMetadata
+import com.lawmobile.domain.entities.RemoteVideoMetadata
+import com.lawmobile.domain.entities.VideoListMetadata
 import io.mockk.clearAllMocks
 import org.junit.Assert
 import org.junit.jupiter.api.BeforeEach

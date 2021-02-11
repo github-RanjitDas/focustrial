@@ -1,15 +1,19 @@
 package com.safefleet.lawmobile.di.mocksServiceCameras
 
-import com.lawmobile.data.entities.FileList
+import com.lawmobile.domain.entities.FileList
 import com.safefleet.lawmobile.testData.CameraFilesData
 import com.safefleet.lawmobile.testData.TestLoginData
-import com.safefleet.mobile.kotlin_commons.helpers.Result
 import com.safefleet.mobile.external_hardware.cameras.CameraService
 import com.safefleet.mobile.external_hardware.cameras.entities.*
+import com.safefleet.mobile.kotlin_commons.helpers.Result
 import io.mockk.mockk
 
 class CameraConnectServiceX1Mock : CameraService {
     override var progressPairingCamera: ((Result<Int>) -> Unit)? = null
+
+    override fun cleanCacheFiles() {
+        //It is not required to return anything
+    }
 
     override suspend fun deleteFile(fileName: String): Result<Unit> {
         return Result.Success(Unit)

@@ -1,6 +1,4 @@
-package com.lawmobile.data.entities
-
-import com.lawmobile.domain.entities.DomainCameraFile
+package com.lawmobile.domain.entities
 
 object VideoListMetadata {
 
@@ -31,5 +29,9 @@ object VideoListMetadata {
                 photo.name == domainCameraFile.name
             } != null
         }
+
+    fun cleanVideoMetadataList() {
+        metadataList.clear()
+    }
 
 }

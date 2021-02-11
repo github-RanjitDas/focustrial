@@ -1,8 +1,8 @@
 package com.lawmobile.data.repository.simpleList
 
 import com.lawmobile.data.datasource.remote.simpleList.SimpleListRemoteDataSource
-import com.lawmobile.data.entities.FileList
-import com.lawmobile.data.entities.VideoListMetadata
+import com.lawmobile.domain.entities.FileList
+import com.lawmobile.domain.entities.VideoListMetadata
 import com.lawmobile.data.mappers.FileResponseMapper
 import com.lawmobile.domain.entities.DomainInformationFile
 import com.lawmobile.domain.entities.DomainInformationFileResponse

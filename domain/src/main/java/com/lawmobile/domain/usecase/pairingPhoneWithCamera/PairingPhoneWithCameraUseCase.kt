@@ -11,4 +11,6 @@ interface PairingPhoneWithCameraUseCase : BaseUseCase {
     )
 
     suspend fun isPossibleTheConnection(hostnameToConnect: String): Result<Unit>
+
+    fun cleanCacheFiles()
 }

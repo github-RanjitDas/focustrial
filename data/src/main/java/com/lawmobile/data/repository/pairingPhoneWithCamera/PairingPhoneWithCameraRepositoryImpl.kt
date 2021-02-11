@@ -22,4 +22,8 @@ class PairingPhoneWithCameraRepositoryImpl(private val pairingPhoneWithCameraRem
     override suspend fun isPossibleTheConnection(hostnameToConnect: String): Result<Unit> {
         return pairingPhoneWithCameraRemoteDataSource.isPossibleTheConnection(hostnameToConnect)
     }
+
+    override fun cleanCacheFiles() {
+        pairingPhoneWithCameraRemoteDataSource.cleanCacheFiles()
+    }
 }

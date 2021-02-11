@@ -1,8 +1,8 @@
 package com.lawmobile.data.repository.fileList
 
 import com.lawmobile.data.datasource.remote.fileList.FileListRemoteDataSource
-import com.lawmobile.data.entities.RemoteVideoMetadata
-import com.lawmobile.data.entities.VideoListMetadata
+import com.lawmobile.domain.entities.RemoteVideoMetadata
+import com.lawmobile.domain.entities.VideoListMetadata
 import com.lawmobile.domain.entities.DomainCameraFile
 import com.lawmobile.domain.entities.DomainMetadata
 import com.lawmobile.domain.entities.DomainVideoMetadata

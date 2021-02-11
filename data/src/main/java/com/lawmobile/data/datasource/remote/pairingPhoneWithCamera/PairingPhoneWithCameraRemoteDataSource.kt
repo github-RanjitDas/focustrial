@@ -10,4 +10,6 @@ interface PairingPhoneWithCameraRemoteDataSource {
     )
 
     suspend fun isPossibleTheConnection(hostnameToConnect: String): Result<Unit>
+
+    fun cleanCacheFiles()
 }

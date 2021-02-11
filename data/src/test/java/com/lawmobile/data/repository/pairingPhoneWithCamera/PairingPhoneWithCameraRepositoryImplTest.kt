@@ -37,4 +37,15 @@ class PairingPhoneWithCameraRepositoryImplTest {
         runBlocking { pairingPhoneWithCameraRepositoryImpl.isPossibleTheConnection("10.10.10.4") }
         coVerify { pairingPhoneWithCameraRemoteDataSource.isPossibleTheConnection("10.10.10.4") }
     }
+
+    @Test
+    fun testCleanCacheFiles(){
+        coEvery { pairingPhoneWithCameraRemoteDataSource.cleanCacheFiles() } just Runs
+
+        runBlocking {
+            pairingPhoneWithCameraRepositoryImpl.cleanCacheFiles()
+        }
+        coVerify { pairingPhoneWithCameraRemoteDataSource.cleanCacheFiles() }
+
+    }
 }

@@ -11,4 +11,6 @@ interface PairingPhoneWithCameraRepository : BaseRepository {
     )
 
     suspend fun isPossibleTheConnection(hostnameToConnect: String): Result<Unit>
+
+    fun cleanCacheFiles()
 }

@@ -20,7 +20,6 @@ class PairingPhoneWithCameraRemoteDataSourceImplTest {
         PairingPhoneWithCameraRemoteDataSourceImpl(cameraService)
     }
 
-
     @Test
     fun testLoadPairingCamera() {
         val progressPairingCamera: ((Result<Int>) -> Unit) = { }
@@ -43,4 +42,16 @@ class PairingPhoneWithCameraRemoteDataSourceImplTest {
         runBlocking { pairingPhoneWithCameraRemoteDataSourceImpl.isPossibleTheConnection("10.10.10.4") }
         coVerify { cameraService.isPossibleTheConnection("10.10.10.4") }
     }
+
+    @Test
+    fun testCleanCacheFiles(){
+        coEvery { cameraService.cleanCacheFiles() } just Runs
+
+        runBlocking {
+            pairingPhoneWithCameraRemoteDataSourceImpl.cleanCacheFiles()
+        }
+        coVerify { cameraService.cleanCacheFiles() }
+
+    }
+
 }

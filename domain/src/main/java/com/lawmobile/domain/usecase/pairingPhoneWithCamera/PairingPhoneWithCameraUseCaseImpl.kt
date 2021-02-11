@@ -22,4 +22,7 @@ class PairingPhoneWithCameraUseCaseImpl(private val pairingPhoneWithCameraReposi
         return pairingPhoneWithCameraRepository.isPossibleTheConnection(hostnameToConnect)
     }
 
+    override fun cleanCacheFiles() {
+        pairingPhoneWithCameraRepository.cleanCacheFiles()
+    }
 }

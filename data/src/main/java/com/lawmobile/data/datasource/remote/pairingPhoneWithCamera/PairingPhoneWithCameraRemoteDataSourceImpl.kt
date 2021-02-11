@@ -1,5 +1,6 @@
 package com.lawmobile.data.datasource.remote.pairingPhoneWithCamera
 
+import com.lawmobile.domain.entities.CacheManager
 import com.safefleet.mobile.kotlin_commons.helpers.Result
 import com.safefleet.mobile.external_hardware.cameras.CameraService
 
@@ -18,5 +19,10 @@ open class PairingPhoneWithCameraRemoteDataSourceImpl(
 
     override suspend fun isPossibleTheConnection(hostnameToConnect: String): Result<Unit> {
         return cameraService.isPossibleTheConnection(hostnameToConnect)
+    }
+
+    override fun cleanCacheFiles() {
+        CacheManager.cleanFileLists()
+        cameraService.cleanCacheFiles()
     }
 }
