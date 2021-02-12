@@ -136,4 +136,10 @@ class PairingViewModelTest {
         viewModel.resetProgress()
         Assert.assertTrue(cameraPairingProgress == Result.Success(0))
     }
+
+    @Test
+    fun testCleanCacheFiles(){
+        every { viewModel.cleanCacheFiles() } just runs
+       viewModel.cleanCacheFiles()
+    }
 }

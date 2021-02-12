@@ -1,7 +1,7 @@
 package com.lawmobile.data.repository.thumbnailList
 
 import com.lawmobile.data.datasource.remote.thumbnailList.ThumbnailListRemoteDataSource
-import com.lawmobile.data.entities.FileList
+import com.lawmobile.domain.entities.FileList
 import com.lawmobile.data.mappers.FileMapper
 import com.lawmobile.domain.entities.DomainInformationFile
 import com.safefleet.mobile.external_hardware.cameras.entities.CameraFile

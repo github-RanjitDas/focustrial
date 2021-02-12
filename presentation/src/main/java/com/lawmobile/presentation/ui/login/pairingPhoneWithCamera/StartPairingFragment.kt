@@ -57,6 +57,7 @@ class StartPairingFragment : BaseFragment() {
         super.onViewCreated(view, savedInstanceState)
         setObservers()
         setListeners()
+        pairingViewModel.cleanCacheFiles()
     }
 
     override fun onStart() {

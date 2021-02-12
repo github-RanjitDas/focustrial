@@ -7,4 +7,12 @@ object CameraInfo {
     var serialNumber = ""
     var officerName = ""
     var areNewChanges = false
+
+    fun cleanInfo() {
+        events = mutableListOf()
+        officerId = ""
+        serialNumber = ""
+        officerName = ""
+        areNewChanges = false
+    }
 }

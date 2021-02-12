@@ -1,7 +1,7 @@
 package com.lawmobile.data.repository.snapshotDetail
 
 import com.lawmobile.data.datasource.remote.snapshotDetail.SnapshotDetailRemoteDataSource
-import com.lawmobile.data.entities.FileList
+import com.lawmobile.domain.entities.FileList
 import com.lawmobile.data.mappers.FileMapper
 import com.safefleet.mobile.kotlin_commons.helpers.Result
 import com.safefleet.mobile.external_hardware.cameras.entities.CameraFile

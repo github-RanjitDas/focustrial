@@ -1,6 +1,6 @@
 package com.lawmobile.data.datasource.remote.simpleList
 
-import com.lawmobile.data.entities.VideoListMetadata
+import com.lawmobile.domain.entities.VideoListMetadata
 import com.safefleet.mobile.kotlin_commons.helpers.Result
 import com.safefleet.mobile.external_hardware.cameras.CameraService
 import com.safefleet.mobile.external_hardware.cameras.entities.CameraFile

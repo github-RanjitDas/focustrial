@@ -1,7 +1,4 @@
-package com.lawmobile.data.entities
-
-import com.lawmobile.domain.entities.DomainInformationFile
-import com.lawmobile.domain.entities.DomainInformationImageMetadata
+package com.lawmobile.domain.entities
 
 object FileList {
     var videoList = emptyList<DomainInformationFile>()
@@ -9,11 +6,11 @@ object FileList {
     var imageMetadataList = ArrayList<DomainInformationImageMetadata>()
 
     fun changeImageList(newListOfImages: List<DomainInformationFile>) {
-        this.imageList = newListOfImages
+        imageList = newListOfImages
     }
 
     fun changeVideoList(newListOfVideos: List<DomainInformationFile>) {
-        this.videoList = newListOfVideos
+        videoList = newListOfVideos
     }
 
     fun updateItemInImageMetadataList(item: DomainInformationImageMetadata) {
@@ -27,4 +24,10 @@ object FileList {
 
     fun getMetadataOfImageInList(name: String) =
         imageMetadataList.find { it.cameraConnectPhotoMetadata.fileName == name }
+
+    fun cleanFileList() {
+        videoList = emptyList()
+        imageList = emptyList()
+        imageMetadataList = ArrayList()
+    }
 }

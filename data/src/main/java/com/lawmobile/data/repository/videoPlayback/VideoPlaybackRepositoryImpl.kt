@@ -1,8 +1,8 @@
 package com.lawmobile.data.repository.videoPlayback
 
 import com.lawmobile.data.datasource.remote.videoPlayback.VideoPlaybackRemoteDataSource
-import com.lawmobile.data.entities.RemoteVideoMetadata
-import com.lawmobile.data.entities.VideoListMetadata
+import com.lawmobile.domain.entities.RemoteVideoMetadata
+import com.lawmobile.domain.entities.VideoListMetadata
 import com.lawmobile.data.mappers.FileMapper
 import com.lawmobile.data.mappers.VideoInformationMapper
 import com.lawmobile.data.mappers.VideoMetadataMapper

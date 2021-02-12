@@ -1,7 +1,7 @@
 package com.lawmobile.data.datasource.remote.simpleList
 
-import com.lawmobile.data.entities.RemoteVideoMetadata
-import com.lawmobile.data.entities.VideoListMetadata
+import com.lawmobile.domain.entities.RemoteVideoMetadata
+import com.lawmobile.domain.entities.VideoListMetadata
 import com.lawmobile.data.mappers.VideoMetadataMapper
 import com.safefleet.mobile.external_hardware.cameras.CameraService
 import com.safefleet.mobile.external_hardware.cameras.entities.CameraFile

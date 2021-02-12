@@ -1,6 +1,4 @@
-package com.lawmobile.data.entities
-
-import com.lawmobile.domain.entities.DomainVideoMetadata
+package com.lawmobile.domain.entities
 
 data class RemoteVideoMetadata(
     var videoMetadata: DomainVideoMetadata,

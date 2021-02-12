@@ -1,8 +1,9 @@
-package com.lawmobile.data.entities
+package com.lawmobile.domain.usecase.entities
 
 import com.lawmobile.domain.entities.DomainInformationFile
 import com.lawmobile.domain.entities.DomainInformationImageMetadata
 import com.lawmobile.domain.entities.DomainPhotoMetadata
+import com.lawmobile.domain.entities.FileList
 import io.mockk.mockk
 import org.junit.Assert
 import org.junit.jupiter.api.Test
