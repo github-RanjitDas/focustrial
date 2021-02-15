@@ -1,6 +1,6 @@
 package com.lawmobile.domain.entities
 
-data class DomainMetadata (
+data class DomainMetadata(
     var caseNumber: String? = null,
     var caseNumber2: String? = null,
     var dispatchNumber: String? = null,

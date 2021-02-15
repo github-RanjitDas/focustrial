@@ -152,7 +152,6 @@ class ThumbnailFileListAdapter(
                     photoImageLoading.isVisible = true
                 }
             }
-
         }
 
         private fun enableCheckBoxes(imageFile: DomainInformationImage) {

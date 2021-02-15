@@ -1,13 +1,17 @@
 package com.lawmobile.data.repository.thumbnailList
 
 import com.lawmobile.data.datasource.remote.thumbnailList.ThumbnailListRemoteDataSource
-import com.lawmobile.domain.entities.FileList
 import com.lawmobile.data.mappers.FileMapper
 import com.lawmobile.domain.entities.DomainInformationFile
+import com.lawmobile.domain.entities.FileList
 import com.safefleet.mobile.external_hardware.cameras.entities.CameraFile
 import com.safefleet.mobile.external_hardware.cameras.entities.FileResponseWithErrors
 import com.safefleet.mobile.kotlin_commons.helpers.Result
-import io.mockk.*
+import io.mockk.clearAllMocks
+import io.mockk.coEvery
+import io.mockk.coVerify
+import io.mockk.every
+import io.mockk.mockk
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert
 import org.junit.jupiter.api.BeforeEach
@@ -52,7 +56,7 @@ internal class ThumbnailListRepositoryImplTest {
         FileList.imageList = listOf(domainInformationFile, domainInformationFile)
 
         coEvery { thumbnailListRemoteDataSource.getImageBytes(any()) } returns
-                Result.Error(mockk())
+            Result.Error(mockk())
 
         runBlocking {
             val result = linkSnapshotsRepositoryImpl
@@ -73,9 +77,9 @@ internal class ThumbnailListRepositoryImplTest {
         }
 
         coEvery { thumbnailListRemoteDataSource.getSnapshotList() } returns
-                Result.Success(cameraResponse)
+            Result.Success(cameraResponse)
         coEvery { thumbnailListRemoteDataSource.getImageBytes(any()) } returns
-                Result.Success("Hola".toByteArray())
+            Result.Success("Hola".toByteArray())
 
         runBlocking {
             val result = linkSnapshotsRepositoryImpl.getImageBytes(
@@ -83,7 +87,6 @@ internal class ThumbnailListRepositoryImplTest {
             )
             Assert.assertTrue(result is Result.Success)
         }
-
     }
 
     @Test
@@ -94,7 +97,7 @@ internal class ThumbnailListRepositoryImplTest {
         }
 
         coEvery { thumbnailListRemoteDataSource.getSnapshotList() } returns
-                Result.Success(cameraConnectFileResponseWithErrors)
+            Result.Success(cameraConnectFileResponseWithErrors)
 
         runBlocking { linkSnapshotsRepositoryImpl.getSnapshotList() }
 
@@ -113,7 +116,7 @@ internal class ThumbnailListRepositoryImplTest {
         }
 
         coEvery { thumbnailListRemoteDataSource.getSnapshotList() } returns
-                Result.Success(cameraConnectFileResponseWithErrors)
+            Result.Success(cameraConnectFileResponseWithErrors)
 
         runBlocking {
             val result = linkSnapshotsRepositoryImpl.getSnapshotList()
@@ -140,7 +143,7 @@ internal class ThumbnailListRepositoryImplTest {
         }
 
         coEvery { thumbnailListRemoteDataSource.getSnapshotList() } returns
-                Result.Success(cameraConnectFileResponseWithErrors)
+            Result.Success(cameraConnectFileResponseWithErrors)
 
         runBlocking {
             val result = linkSnapshotsRepositoryImpl.getSnapshotList()

@@ -125,7 +125,4 @@ class LoginTest : EspressoStartActivityBaseTest<LoginActivity>(LoginActivity::cl
             isFooterLogoDisplayed()
         }
     }
-
-
-
 }

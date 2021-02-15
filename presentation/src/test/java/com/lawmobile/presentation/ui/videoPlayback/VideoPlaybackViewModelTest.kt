@@ -6,7 +6,13 @@ import com.lawmobile.domain.usecase.videoPlayback.VideoPlaybackUseCase
 import com.lawmobile.presentation.InstantExecutorExtension
 import com.lawmobile.presentation.utils.VLCMediaPlayer
 import com.safefleet.mobile.kotlin_commons.helpers.Result
-import io.mockk.*
+import io.mockk.Runs
+import io.mockk.coEvery
+import io.mockk.coVerify
+import io.mockk.every
+import io.mockk.just
+import io.mockk.mockk
+import io.mockk.verify
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
@@ -39,7 +45,7 @@ class VideoPlaybackViewModelTest {
         val domainCameraFile: DomainCameraFile = mockk()
 
         coEvery { videoPlaybackUseCase.getInformationResourcesVideo(any()) } returns
-                Result.Success(mockk())
+            Result.Success(mockk())
 
         runBlocking {
             videoPlaybackViewModel.getInformationOfVideo(domainCameraFile)
@@ -53,7 +59,7 @@ class VideoPlaybackViewModelTest {
     fun testGetInformationResourcesVideoError() {
         val domainCameraFile: DomainCameraFile = mockk()
         coEvery { videoPlaybackUseCase.getInformationResourcesVideo(any()) } returns
-                Result.Error(mockk())
+            Result.Error(mockk())
         runBlocking {
             videoPlaybackViewModel.getInformationOfVideo(domainCameraFile)
             Assert.assertTrue(videoPlaybackViewModel.domainInformationVideoLiveData.value is Result.Error)
@@ -180,5 +186,4 @@ class VideoPlaybackViewModelTest {
         }
         coVerify { videoPlaybackUseCase.saveVideoMetadata(any()) }
     }
-
 }

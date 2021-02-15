@@ -153,13 +153,13 @@ fun Context.isAnimationsEnabled() =
         contentResolver,
         Settings.Global.TRANSITION_ANIMATION_SCALE,
         0F
-    ) != 0F
-            && Settings.System.getFloat(
+    ) != 0F &&
+        Settings.System.getFloat(
         contentResolver,
         Settings.Global.WINDOW_ANIMATION_SCALE,
         0F
-    ) != 0F
-            && Settings.System.getFloat(
+    ) != 0F &&
+        Settings.System.getFloat(
         contentResolver,
         Settings.Global.ANIMATOR_DURATION_SCALE,
         0F

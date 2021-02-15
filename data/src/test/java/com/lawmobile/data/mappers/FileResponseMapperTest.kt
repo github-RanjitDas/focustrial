@@ -24,7 +24,7 @@ internal class FileResponseMapperTest {
             domainResponse.let { response ->
                 assertTrue(
                     response.items.map { it.domainCameraFile.date }
-                            == items.sortedByDescending { it.getCreationDate() }.map { it.date }
+                        == items.sortedByDescending { it.getCreationDate() }.map { it.date }
                 )
                 assertTrue(response.errors == errors)
             }

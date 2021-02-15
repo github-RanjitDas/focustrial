@@ -65,7 +65,7 @@ class PairingViewModel @ViewModelInject constructor(
 
     fun isWifiEnable(): Boolean = wifiHelper.isWifiEnable()
 
-    fun cleanCacheFiles(){
+    fun cleanCacheFiles() {
         pairingPhoneWithCameraUseCase.cleanCacheFiles()
     }
 
@@ -74,5 +74,4 @@ class PairingViewModel @ViewModelInject constructor(
             "Exception in get params to configure connection"
         const val CAMERA_SSID_IDENTIFIER = "X57"
     }
-
 }

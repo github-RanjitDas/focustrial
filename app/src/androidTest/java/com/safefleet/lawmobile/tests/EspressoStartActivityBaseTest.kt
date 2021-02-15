@@ -19,18 +19,17 @@ open class EspressoStartActivityBaseTest<T : Activity>(testActivityClass: Class<
     @JvmField
     val espressoIdlingResourcesRule = EspressoIdlingResourceRule()
 
-    //@Rule
-    //@JvmField
-    //var baristaRule = BaristaRule.create(testActivityClass)
+    // @Rule
+    // @JvmField
+    // var baristaRule = BaristaRule.create(testActivityClass)
 
     @Rule
     @JvmField
     val activityRule = ActivityScenarioRule(testActivityClass)
 
-    //Comment this @Before statement if you want to disable barista defaults
+    // Comment this @Before statement if you want to disable barista defaults
     /*@Before
     fun startActivity() {
         baristaRule.launchActivity()
     }*/
-
 }

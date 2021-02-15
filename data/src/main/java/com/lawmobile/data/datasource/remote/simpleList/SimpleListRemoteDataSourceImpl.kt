@@ -1,13 +1,13 @@
 package com.lawmobile.data.datasource.remote.simpleList
 
+import com.lawmobile.data.mappers.VideoMetadataMapper
 import com.lawmobile.domain.entities.RemoteVideoMetadata
 import com.lawmobile.domain.entities.VideoListMetadata
-import com.lawmobile.data.mappers.VideoMetadataMapper
 import com.safefleet.mobile.external_hardware.cameras.CameraService
 import com.safefleet.mobile.external_hardware.cameras.entities.CameraFile
+import com.safefleet.mobile.external_hardware.cameras.entities.FileResponseWithErrors
 import com.safefleet.mobile.kotlin_commons.helpers.Result
 import com.safefleet.mobile.kotlin_commons.helpers.getResultWithAttempts
-import com.safefleet.mobile.external_hardware.cameras.entities.FileResponseWithErrors
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext

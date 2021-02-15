@@ -11,7 +11,7 @@ import com.safefleet.mobile.safefleet_ui.widgets.snackbar.SafeFleetSnackBar
 import com.safefleet.mobile.safefleet_ui.widgets.snackbar.SafeFleetSnackBarSettings
 import java.sql.Timestamp
 
-private val snackBarListener = object : View.OnAttachStateChangeListener{
+private val snackBarListener = object : View.OnAttachStateChangeListener {
     override fun onViewAttachedToWindow(v: View?) {
         // The interface requires to implement this method but not needed
     }
@@ -47,7 +47,8 @@ fun View.showErrorSnackBar(message: String, duration: Int = Snackbar.LENGTH_SHOR
             duration,
             R.drawable.ic_warning,
             this.context.getColor(R.color.red)
-        ), onRetryClick
+        ),
+        onRetryClick
     )?.apply {
         view.addOnAttachStateChangeListener(snackBarListener)
         show()

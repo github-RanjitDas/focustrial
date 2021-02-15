@@ -1,18 +1,18 @@
 package com.lawmobile.data.repository.snapshotDetail
 
 import com.lawmobile.data.datasource.remote.snapshotDetail.SnapshotDetailRemoteDataSource
-import com.lawmobile.domain.entities.FileList
 import com.lawmobile.data.mappers.FileMapper
 import com.lawmobile.data.mappers.PhotoMetadataMapper
 import com.lawmobile.domain.entities.CameraInfo
 import com.lawmobile.domain.entities.DomainCameraFile
 import com.lawmobile.domain.entities.DomainInformationImageMetadata
+import com.lawmobile.domain.entities.FileList
 import com.lawmobile.domain.repository.snapshotDetail.SnapshotDetailRepository
 import com.safefleet.mobile.external_hardware.cameras.entities.PhotoInformation
 import com.safefleet.mobile.external_hardware.cameras.entities.PhotoMetadata
-import com.safefleet.mobile.kotlin_commons.helpers.Result
 import com.safefleet.mobile.kotlin_commons.extensions.doIfError
 import com.safefleet.mobile.kotlin_commons.extensions.doIfSuccess
+import com.safefleet.mobile.kotlin_commons.helpers.Result
 import kotlinx.coroutines.delay
 
 class SnapshotDetailRepositoryImpl(private val snapshotDetailRemoteDataSource: SnapshotDetailRemoteDataSource) :
@@ -30,8 +30,10 @@ class SnapshotDetailRepositoryImpl(private val snapshotDetailRemoteDataSource: S
         val photoMetadataList = mutableListOf<PhotoInformation>()
         val errorsInFiles = mutableListOf<String>()
 
-        when (val resultGetMetadataOfPhotos =
-            snapshotDetailRemoteDataSource.getSavedPhotosMetadata()) {
+        when (
+            val resultGetMetadataOfPhotos =
+                snapshotDetailRemoteDataSource.getSavedPhotosMetadata()
+        ) {
             is Result.Success -> photoMetadataList.addAll(resultGetMetadataOfPhotos.data)
             is Result.Error -> return resultGetMetadataOfPhotos
         }

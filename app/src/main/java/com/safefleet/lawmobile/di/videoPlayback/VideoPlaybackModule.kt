@@ -15,9 +15,9 @@ import dagger.hilt.android.components.ActivityComponent
 @InstallIn(ActivityComponent::class)
 @Module
 abstract class VideoPlaybackModule {
-    
+
     companion object {
-        
+
         @Provides
         fun provideVideoPlaybackRemoteDataSource(cameraService: CameraService): VideoPlaybackRemoteDataSource =
             VideoPlaybackRemoteDataSourceImpl(cameraService)
@@ -29,6 +29,5 @@ abstract class VideoPlaybackModule {
         @Provides
         fun provideVideoPlaybackUseCase(videoPlaybackRepository: VideoPlaybackRepository): VideoPlaybackUseCase =
             VideoPlaybackUseCaseImpl(videoPlaybackRepository)
-
     }
 }

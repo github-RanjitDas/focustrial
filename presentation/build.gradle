@@ -10,6 +10,9 @@ plugins {
 
 apply from: '../jacoco.gradle'
 apply from: '../pitest-exceptions.gradle'
+apply from: '../ktlint.gradle'
+
+check.dependsOn ktlint
 
 android {
     compileSdkVersion AppConfig.compileSdkVersion

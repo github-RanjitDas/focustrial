@@ -6,15 +6,14 @@ import com.safefleet.mobile.external_hardware.cameras.entities.PhotoAssociated
 import com.safefleet.mobile.external_hardware.cameras.entities.VideoInformation
 import io.mockk.every
 import io.mockk.mockk
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
-
-import org.junit.jupiter.api.Assertions.*
 
 internal class VideoMetadataMapperTest {
 
     @Test
     fun cameraToDomain() {
-        val videoInformation: VideoInformation = mockk(relaxed = true){
+        val videoInformation: VideoInformation = mockk(relaxed = true) {
             every { photos } returns listOf(
                 PhotoAssociated("3", ""),
                 PhotoAssociated("1", ""),
@@ -22,7 +21,7 @@ internal class VideoMetadataMapperTest {
             )
         }
         val domainVideoMetadata = VideoMetadataMapper.cameraToDomain(videoInformation)
-        with(videoInformation){
+        with(videoInformation) {
             domainVideoMetadata.let {
                 assertTrue(it.fileName == fileName)
                 assertTrue(it.metadata?.partnerID == metadata?.partnerID)
@@ -40,7 +39,7 @@ internal class VideoMetadataMapperTest {
 
     @Test
     fun domainToCamera() {
-        val domainVideoMetadata: DomainVideoMetadata = mockk(relaxed = true){
+        val domainVideoMetadata: DomainVideoMetadata = mockk(relaxed = true) {
             every { associatedPhotos } returns listOf(
                 DomainPhotoAssociated("", "3"),
                 DomainPhotoAssociated("", "1"),
@@ -48,7 +47,7 @@ internal class VideoMetadataMapperTest {
             )
         }
         val cameraConnectVideoMetadata = VideoMetadataMapper.domainToCamera(domainVideoMetadata)
-        with(cameraConnectVideoMetadata){
+        with(cameraConnectVideoMetadata) {
             domainVideoMetadata.let {
                 assertTrue(it.fileName == fileName)
                 assertTrue(it.metadata?.partnerID == metadata?.partnerID)

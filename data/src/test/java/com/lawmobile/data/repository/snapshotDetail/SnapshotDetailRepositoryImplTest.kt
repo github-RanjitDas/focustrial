@@ -1,11 +1,11 @@
 package com.lawmobile.data.repository.snapshotDetail
 
 import com.lawmobile.data.datasource.remote.snapshotDetail.SnapshotDetailRemoteDataSource
-import com.lawmobile.domain.entities.FileList
 import com.lawmobile.data.mappers.FileMapper
-import com.safefleet.mobile.kotlin_commons.helpers.Result
+import com.lawmobile.domain.entities.FileList
 import com.safefleet.mobile.external_hardware.cameras.entities.CameraFile
 import com.safefleet.mobile.external_hardware.cameras.entities.PhotoInformation
+import com.safefleet.mobile.kotlin_commons.helpers.Result
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
@@ -26,7 +26,7 @@ class SnapshotDetailRepositoryImplTest {
         val byte = ByteArray(1)
 
         coEvery { snapshotDetailRemoteDataSource.getImageBytes(cameraConnectFile) } returns
-                Result.Success(byte)
+            Result.Success(byte)
 
         runBlocking {
             val result = snapshotDetailRepositoryImpl.getImageBytes(
@@ -43,7 +43,7 @@ class SnapshotDetailRepositoryImplTest {
         val cameraConnectFile = CameraFile("fileName.PNG", "date", "path", "nameFolder/")
 
         coEvery { snapshotDetailRemoteDataSource.getImageBytes(cameraConnectFile) } returns
-                Result.Error(Exception(""))
+            Result.Error(Exception(""))
 
         runBlocking {
             val result = snapshotDetailRepositoryImpl.getImageBytes(
@@ -60,11 +60,11 @@ class SnapshotDetailRepositoryImplTest {
         val cameraConnectFile = CameraFile("fileName.PNG", "date", "path", "nameFolder/")
 
         coEvery { snapshotDetailRemoteDataSource.savePartnerIdSnapshot(any()) } returns
-                Result.Success(Unit)
+            Result.Success(Unit)
         coEvery { snapshotDetailRemoteDataSource.getSavedPhotosMetadata() } returns
-                Result.Success(emptyList())
+            Result.Success(emptyList())
         coEvery { snapshotDetailRemoteDataSource.savePartnerIdInAllSnapshots(any()) } returns
-                Result.Success(Unit)
+            Result.Success(Unit)
 
         FileList.imageMetadataList = ArrayList()
 
@@ -87,11 +87,11 @@ class SnapshotDetailRepositoryImplTest {
         val cameraConnectFile = CameraFile("fileName.PNG", "date", "path", "nameFolder/")
 
         coEvery { snapshotDetailRemoteDataSource.savePartnerIdSnapshot(any()) } returns
-                Result.Success(Unit)
+            Result.Success(Unit)
         coEvery { snapshotDetailRemoteDataSource.getSavedPhotosMetadata() } returns
-                Result.Success(emptyList())
+            Result.Success(emptyList())
         coEvery { snapshotDetailRemoteDataSource.savePartnerIdInAllSnapshots(any()) } returns
-                Result.Success(Unit)
+            Result.Success(Unit)
 
         runBlocking {
             val response = snapshotDetailRepositoryImpl.saveSnapshotPartnerId(
@@ -109,11 +109,11 @@ class SnapshotDetailRepositoryImplTest {
         val cameraConnectFile = CameraFile("fileName.PNG", "date", "path", "nameFolder/")
 
         coEvery { snapshotDetailRemoteDataSource.savePartnerIdSnapshot(any()) } returns
-                Result.Error(Exception(""))
+            Result.Error(Exception(""))
         coEvery { snapshotDetailRemoteDataSource.getSavedPhotosMetadata() } returns
-                Result.Success(emptyList())
+            Result.Success(emptyList())
         coEvery { snapshotDetailRemoteDataSource.savePartnerIdInAllSnapshots(any()) } returns
-                Result.Success(Unit)
+            Result.Success(Unit)
 
         runBlocking {
             val response = snapshotDetailRepositoryImpl.saveSnapshotPartnerId(
@@ -126,7 +126,7 @@ class SnapshotDetailRepositoryImplTest {
 
     @Test
     fun testGetInformationOfPhotoError() {
-        //FileList.imageMetadataList = ArrayList()
+        // FileList.imageMetadataList = ArrayList()
         coEvery { snapshotDetailRemoteDataSource.getInformationOfPhoto(any()) } returns Result.Error(
             mockk()
         )
@@ -142,7 +142,7 @@ class SnapshotDetailRepositoryImplTest {
 
     @Test
     fun testGetInformationOfPhotoSuccess() {
-        //FileList.listOfMetadataImages = ArrayList()
+        // FileList.listOfMetadataImages = ArrayList()
         val cameraConnectPhotoMetadata = PhotoInformation(fileName = "name")
         coEvery { snapshotDetailRemoteDataSource.getInformationOfPhoto(any()) } returns Result.Success(
             cameraConnectPhotoMetadata

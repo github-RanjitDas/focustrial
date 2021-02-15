@@ -2,7 +2,7 @@ package com.lawmobile.presentation.extensions
 
 import android.annotation.SuppressLint
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Calendar
 import java.util.concurrent.TimeUnit
 
 @SuppressLint("DefaultLocale")

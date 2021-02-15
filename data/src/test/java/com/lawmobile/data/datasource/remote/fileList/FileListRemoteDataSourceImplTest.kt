@@ -67,7 +67,7 @@ internal class FileListRemoteDataSourceImplTest {
     fun testGetSavedPhotosMetadataSuccess() {
         val photoInformation: PhotoInformation = mockk(relaxed = true)
         val result = Result.Success(listOf(photoInformation))
-        coEvery {  cameraService.getMetadataOfPhotos() } returns result
+        coEvery { cameraService.getMetadataOfPhotos() } returns result
         runBlocking {
             Assert.assertEquals(fileListRemoteDataSourceImpl.getSavedPhotosMetadata(), result)
         }

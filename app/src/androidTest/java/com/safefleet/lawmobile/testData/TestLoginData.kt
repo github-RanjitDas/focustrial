@@ -8,5 +8,3 @@ enum class TestLoginData(val value: String) {
     SSID("X" + SERIAL_NUMBER.value),
     INVALID_SSID("X" + INVALID_SERIAL_NUMBER.value)
 }
-
-

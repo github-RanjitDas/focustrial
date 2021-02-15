@@ -2,10 +2,11 @@ package com.lawmobile.data.datasource.remote.validatePasswordOfficer
 
 import com.lawmobile.data.InstantExecutorExtension
 import com.lawmobile.data.datasource.remote.validatePasswordOfficer.ValidatePasswordOfficerRemoteDataSourceImpl.Companion.ERROR_IN_INFORMATION_USER
-import com.safefleet.mobile.kotlin_commons.helpers.Result
 import com.safefleet.mobile.external_hardware.cameras.CameraService
 import com.safefleet.mobile.external_hardware.cameras.entities.CameraUser
-import io.mockk.*
+import com.safefleet.mobile.kotlin_commons.helpers.Result
+import io.mockk.coEvery
+import io.mockk.mockk
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert
 import org.junit.jupiter.api.Test

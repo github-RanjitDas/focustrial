@@ -33,5 +33,4 @@ object VideoListMetadata {
     fun cleanVideoMetadataList() {
         metadataList.clear()
     }
-
 }

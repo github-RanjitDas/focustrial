@@ -4,7 +4,11 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
 import com.lawmobile.presentation.ui.login.LoginActivity
 import com.safefleet.lawmobile.R
-import com.safefleet.lawmobile.screens.*
+import com.safefleet.lawmobile.screens.FileListScreen
+import com.safefleet.lawmobile.screens.FilterDialogScreen
+import com.safefleet.lawmobile.screens.LiveViewScreen
+import com.safefleet.lawmobile.screens.LoginScreen
+import com.safefleet.lawmobile.screens.VideoPlaybackScreen
 import com.safefleet.lawmobile.testData.CameraFilesData
 import com.safefleet.lawmobile.testData.VideoPlaybackMetadata
 import org.junit.Before

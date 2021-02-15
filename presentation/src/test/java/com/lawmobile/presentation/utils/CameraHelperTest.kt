@@ -15,9 +15,9 @@ class CameraHelperTest {
     private val wifiHelper: WifiHelper = mockk()
     private val connectionHelper: ConnectionHelper = mockk()
     private val cameraHelper = CameraHelper(connectionHelper, wifiHelper)
-    
+
     @BeforeEach
-    fun setUp(){
+    fun setUp() {
         clearAllMocks()
     }
 

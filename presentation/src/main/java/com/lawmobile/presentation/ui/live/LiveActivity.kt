@@ -17,7 +17,14 @@ import com.lawmobile.presentation.R
 import com.lawmobile.presentation.databinding.ActivityLiveViewBinding
 import com.lawmobile.presentation.entities.AlertInformation
 import com.lawmobile.presentation.enums.CatalogTypes
-import com.lawmobile.presentation.extensions.*
+import com.lawmobile.presentation.extensions.createAlertConfirmAppExit
+import com.lawmobile.presentation.extensions.createAlertInformation
+import com.lawmobile.presentation.extensions.setClickListenerCheckConnection
+import com.lawmobile.presentation.extensions.setOnClickListenerCheckConnection
+import com.lawmobile.presentation.extensions.showErrorSnackBar
+import com.lawmobile.presentation.extensions.showSuccessSnackBar
+import com.lawmobile.presentation.extensions.startAnimationIfEnabled
+import com.lawmobile.presentation.extensions.verifySessionBeforeAction
 import com.lawmobile.presentation.ui.base.BaseActivity
 import com.lawmobile.presentation.ui.fileList.FileListActivity
 import com.lawmobile.presentation.ui.helpSection.HelpPageActivity
@@ -27,14 +34,16 @@ import com.lawmobile.presentation.utils.Constants.FILE_LIST_SELECTOR
 import com.lawmobile.presentation.utils.Constants.SNAPSHOT_LIST
 import com.lawmobile.presentation.utils.Constants.VIDEO_LIST
 import com.lawmobile.presentation.utils.EspressoIdlingResource
-import com.safefleet.mobile.safefleet_ui.animations.Animations
-import com.safefleet.mobile.safefleet_ui.widgets.linearProgressBar.SafeFleetLinearProgressBarBehavior.ASCENDANT
-import com.safefleet.mobile.safefleet_ui.widgets.linearProgressBar.SafeFleetLinearProgressBarBehavior.DESCENDANT
-import com.safefleet.mobile.safefleet_ui.widgets.linearProgressBar.SafeFleetLinearProgressBarRanges.*
 import com.safefleet.mobile.kotlin_commons.extensions.doIfError
 import com.safefleet.mobile.kotlin_commons.extensions.doIfSuccess
 import com.safefleet.mobile.kotlin_commons.helpers.Event
 import com.safefleet.mobile.kotlin_commons.helpers.Result
+import com.safefleet.mobile.safefleet_ui.animations.Animations
+import com.safefleet.mobile.safefleet_ui.widgets.linearProgressBar.SafeFleetLinearProgressBarBehavior.ASCENDANT
+import com.safefleet.mobile.safefleet_ui.widgets.linearProgressBar.SafeFleetLinearProgressBarBehavior.DESCENDANT
+import com.safefleet.mobile.safefleet_ui.widgets.linearProgressBar.SafeFleetLinearProgressBarRanges.HIGH_ASCENDANT_RANGE
+import com.safefleet.mobile.safefleet_ui.widgets.linearProgressBar.SafeFleetLinearProgressBarRanges.LOW_DESCENDANT_RANGE
+import com.safefleet.mobile.safefleet_ui.widgets.linearProgressBar.SafeFleetLinearProgressBarRanges.MEDIUM_DESCENDANT_RANGE
 
 class LiveActivity : BaseActivity() {
 
@@ -360,7 +369,8 @@ class LiveActivity : BaseActivity() {
             message = message,
             onClickPositiveButton = { dialogInterface ->
                 dialogInterface.dismiss()
-            })
+            }
+        )
         this.createAlertInformation(alertInformation)
     }
 

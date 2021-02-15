@@ -60,7 +60,7 @@ internal class ThumbnailFileListFragmentViewModelTest {
             DomainCameraFile("1010202000", "10-10-2020 12:00:00", "", "1010202000")
 
         coEvery { thumbnailListUseCase.getImageBytes(any()) } returns
-                Result.Success(mockk())
+            Result.Success(mockk())
 
         runBlocking {
             thumbnailListFragmentViewModel.getImageBytes(domainCameraFile)

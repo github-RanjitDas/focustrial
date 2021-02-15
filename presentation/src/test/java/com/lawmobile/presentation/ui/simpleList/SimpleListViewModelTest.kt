@@ -5,7 +5,11 @@ import com.lawmobile.domain.usecase.simpleList.SimpleListUseCase
 import com.lawmobile.presentation.InstantExecutorExtension
 import com.lawmobile.presentation.ui.base.BaseViewModel
 import com.safefleet.mobile.kotlin_commons.helpers.Result
-import io.mockk.*
+import io.mockk.coEvery
+import io.mockk.coVerify
+import io.mockk.every
+import io.mockk.mockk
+import io.mockk.mockkObject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking

@@ -11,7 +11,11 @@ import com.lawmobile.domain.entities.DomainPhotoAssociated
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.databinding.FragmentAssociateSnapshotsBinding
 import com.lawmobile.presentation.entities.SnapshotsAssociatedByUser
-import com.lawmobile.presentation.extensions.*
+import com.lawmobile.presentation.extensions.attachFragment
+import com.lawmobile.presentation.extensions.createFilterDialog
+import com.lawmobile.presentation.extensions.setClickListenerCheckConnection
+import com.lawmobile.presentation.extensions.setOnClickListenerCheckConnection
+import com.lawmobile.presentation.extensions.showErrorSnackBar
 import com.lawmobile.presentation.ui.base.BaseFragment
 import com.lawmobile.presentation.ui.fileList.FileListBaseFragment.Companion.checkableListInit
 import com.lawmobile.presentation.ui.simpleList.SimpleFileListFragment

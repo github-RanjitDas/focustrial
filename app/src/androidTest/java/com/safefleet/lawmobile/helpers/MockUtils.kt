@@ -18,7 +18,7 @@ class MockUtils {
             every { checkWithAlertIfTheCameraIsConnected() } returns false
         }
 
-        //Assign CameraHelper Mock to CameraHelper object in runtime
+        // Assign CameraHelper Mock to CameraHelper object in runtime
         mockkObject(CameraHelper)
         every { CameraHelper.getInstance() } returns cameraHelperMock
 

@@ -38,4 +38,3 @@ fun FragmentManager.attachFragmentWithAnimation(
     if (isInStack) transaction.addToBackStack(tag)
     transaction.commit()
 }
-

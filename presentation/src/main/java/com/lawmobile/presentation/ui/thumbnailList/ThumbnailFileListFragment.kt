@@ -48,7 +48,8 @@ class ThumbnailFileListFragment : FileListBaseFragment() {
     var thumbnailFileListAdapter: ThumbnailFileListAdapter? = null
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         setObservers()
@@ -129,7 +130,7 @@ class ThumbnailFileListFragment : FileListBaseFragment() {
         thumbnailListFragmentViewModel.cancelGetImageBytes()
         thumbnailFileListAdapter?.fileList =
             filter?.filteredList?.filterIsInstance<DomainInformationImage>()
-                    as MutableList<DomainInformationImage>
+            as MutableList<DomainInformationImage>
         loadNewImage()
         manageFragmentContent(
             fragmentFileListBinding.fileListRecycler,
@@ -140,7 +141,7 @@ class ThumbnailFileListFragment : FileListBaseFragment() {
     private fun restoreFilters() {
         thumbnailFileListAdapter?.fileList =
             thumbnailFileListAdapter?.fileList?.let { getFilteredList(it) }
-                ?.filterIsInstance<DomainInformationImage>() as MutableList
+            ?.filterIsInstance<DomainInformationImage>() as MutableList
     }
 
     private fun onImageClick(file: DomainInformationImage) {

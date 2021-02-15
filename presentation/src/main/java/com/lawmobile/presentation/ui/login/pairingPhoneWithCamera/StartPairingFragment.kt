@@ -28,9 +28,9 @@ import com.lawmobile.presentation.security.IsolatedService
 import com.lawmobile.presentation.ui.base.BaseActivity
 import com.lawmobile.presentation.ui.base.BaseFragment
 import com.lawmobile.presentation.ui.login.LoginActivity
-import com.safefleet.mobile.kotlin_commons.helpers.Result
 import com.safefleet.mobile.kotlin_commons.extensions.doIfError
 import com.safefleet.mobile.kotlin_commons.extensions.doIfSuccess
+import com.safefleet.mobile.kotlin_commons.helpers.Result
 
 class StartPairingFragment : BaseFragment() {
 
@@ -131,10 +131,12 @@ class StartPairingFragment : BaseFragment() {
     }
 
     private fun showAlertToNavigateToPermissions() {
-        val alertInformation = AlertInformation(R.string.please_enable_permission,
+        val alertInformation = AlertInformation(
+            R.string.please_enable_permission,
             R.string.please_enable_permission_location,
             { startIntentToGivePermission() },
-            { dialogInterface -> dialogInterface.cancel() })
+            { dialogInterface -> dialogInterface.cancel() }
+        )
         activity?.createAlertInformation(alertInformation)
     }
 
@@ -167,11 +169,15 @@ class StartPairingFragment : BaseFragment() {
 
     private fun createAlertToNavigateWifiSettings() {
         val alertInformation =
-            AlertInformation(R.string.wifi_is_off, R.string.please_turn_wifi_on, {
-                startActivity(Intent(Settings.ACTION_WIFI_SETTINGS))
-            }, {
-                it.dismiss()
-            })
+            AlertInformation(
+                R.string.wifi_is_off, R.string.please_turn_wifi_on,
+                {
+                    startActivity(Intent(Settings.ACTION_WIFI_SETTINGS))
+                },
+                {
+                    it.dismiss()
+                }
+            )
 
         activity?.createAlertInformation(alertInformation)
     }

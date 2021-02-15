@@ -19,5 +19,4 @@ class VideoPlaybackUseCaseImpl(private val videoPlaybackRepository: VideoPlaybac
         fileName: String,
         folderName: String
     ) = videoPlaybackRepository.getVideoMetadata(fileName, folderName)
-
 }

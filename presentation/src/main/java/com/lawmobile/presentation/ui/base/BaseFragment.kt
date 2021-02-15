@@ -22,5 +22,4 @@ open class BaseFragment : Fragment() {
         loadingDialog = null
         EspressoIdlingResource.decrement()
     }
-
 }

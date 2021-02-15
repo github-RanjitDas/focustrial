@@ -15,19 +15,30 @@ import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.snackbar.Snackbar
-import com.lawmobile.domain.entities.*
+import com.lawmobile.domain.entities.CameraInfo
+import com.lawmobile.domain.entities.DomainCameraFile
+import com.lawmobile.domain.entities.DomainInformationVideo
+import com.lawmobile.domain.entities.DomainMetadata
+import com.lawmobile.domain.entities.DomainVideoMetadata
 import com.lawmobile.domain.extensions.getCreationDate
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.databinding.ActivityVideoPlaybackBinding
 import com.lawmobile.presentation.entities.SnapshotsAssociatedByUser
-import com.lawmobile.presentation.extensions.*
+import com.lawmobile.presentation.extensions.attachFragment
+import com.lawmobile.presentation.extensions.convertMilliSecondsToString
+import com.lawmobile.presentation.extensions.createAlertDialogUnsavedChanges
+import com.lawmobile.presentation.extensions.detachFragment
+import com.lawmobile.presentation.extensions.setOnClickListenerCheckConnection
+import com.lawmobile.presentation.extensions.showErrorSnackBar
+import com.lawmobile.presentation.extensions.showSuccessSnackBar
+import com.lawmobile.presentation.extensions.showToast
 import com.lawmobile.presentation.ui.associateSnapshots.AssociateSnapshotsFragment
 import com.lawmobile.presentation.ui.base.BaseActivity
 import com.lawmobile.presentation.utils.Constants.DOMAIN_CAMERA_FILE
-import com.safefleet.mobile.kotlin_commons.helpers.Result
+import com.safefleet.mobile.android_commons.extensions.hideKeyboard
 import com.safefleet.mobile.kotlin_commons.extensions.doIfError
 import com.safefleet.mobile.kotlin_commons.extensions.doIfSuccess
-import com.safefleet.mobile.android_commons.extensions.hideKeyboard
+import com.safefleet.mobile.kotlin_commons.helpers.Result
 import com.safefleet.mobile.safefleet_ui.widgets.SafeFleetFilterTag
 import org.videolan.libvlc.MediaPlayer
 
@@ -119,25 +130,25 @@ class VideoPlaybackActivity : BaseActivity() {
         }
 
         bottomSheetBehavior.addBottomSheetCallback(object :
-            BottomSheetBehavior.BottomSheetCallback() {
-            override fun onSlide(bottomSheet: View, slideOffset: Float) {
-                // The interface requires to implement this method but not needed
-            }
-
-            override fun onStateChanged(bottomSheet: View, newState: Int) {
-                when (newState) {
-                    BottomSheetBehavior.STATE_HIDDEN -> {
-                        activityVideoPlaybackBinding.shadowPlaybackView.isVisible = false
-                        activityVideoPlaybackBinding.bottomSheetAssociate?.fragmentAssociateHolder?.id?.let {
-                            supportFragmentManager.detachFragment(
-                                it
-                            )
-                        }
-                    }
-                    else -> activityVideoPlaybackBinding.shadowPlaybackView.isVisible = true
+                BottomSheetBehavior.BottomSheetCallback() {
+                override fun onSlide(bottomSheet: View, slideOffset: Float) {
+                    // The interface requires to implement this method but not needed
                 }
-            }
-        })
+
+                override fun onStateChanged(bottomSheet: View, newState: Int) {
+                    when (newState) {
+                        BottomSheetBehavior.STATE_HIDDEN -> {
+                            activityVideoPlaybackBinding.shadowPlaybackView.isVisible = false
+                            activityVideoPlaybackBinding.bottomSheetAssociate?.fragmentAssociateHolder?.id?.let {
+                                supportFragmentManager.detachFragment(
+                                    it
+                                )
+                            }
+                        }
+                        else -> activityVideoPlaybackBinding.shadowPlaybackView.isVisible = true
+                    }
+                }
+            })
     }
 
     private fun setAppBar() {
@@ -170,10 +181,12 @@ class VideoPlaybackActivity : BaseActivity() {
 
         val lengthFilter = InputFilter.LengthFilter(length)
         val charactersFilter = InputFilter { source, _, _, _, _, _ ->
-            if (source != null
-                && (comma.contains("" + source)
-                        || ampersand.contains("" + source)
-                        || quotes.contains("" + source))
+            if (source != null &&
+                (
+                    comma.contains("" + source) ||
+                        ampersand.contains("" + source) ||
+                        quotes.contains("" + source)
+                    )
             ) {
                 ""
             } else null
@@ -409,7 +422,8 @@ class VideoPlaybackActivity : BaseActivity() {
                     removeAssociatedSnapshot(text)
                     showSnapshotsAssociated()
                 }
-            }, position
+            },
+            position
         )
     }
 
@@ -492,7 +506,6 @@ class VideoPlaybackActivity : BaseActivity() {
     private fun getCameraConnectFileFromIntent() =
         intent?.getSerializableExtra(DOMAIN_CAMERA_FILE) as DomainCameraFile
 
-
     private fun isAllowedToAttemptToGetInformation() = currentAttempts <= ATTEMPTS_ALLOWED
 
     private fun setVideoInformation() {
@@ -556,41 +569,41 @@ class VideoPlaybackActivity : BaseActivity() {
             val oldMetadata = currentMetadata.metadata
                 ?: return newMetadata?.run {
                     event != null ||
-                            !partnerID.isNullOrEmpty() ||
-                            !ticketNumber.isNullOrEmpty() ||
-                            !ticketNumber2.isNullOrEmpty() ||
-                            !caseNumber.isNullOrEmpty() ||
-                            !dispatchNumber.isNullOrEmpty() ||
-                            !dispatchNumber2.isNullOrEmpty() ||
-                            !location.isNullOrEmpty() ||
-                            !remarks.isNullOrEmpty() ||
-                            !firstName.isNullOrEmpty() ||
-                            !lastName.isNullOrEmpty() ||
-                            !driverLicense.isNullOrEmpty() ||
-                            !licensePlate.isNullOrEmpty() ||
-                            !gender.isNullOrEmpty() ||
-                            !race.isNullOrEmpty()
+                        !partnerID.isNullOrEmpty() ||
+                        !ticketNumber.isNullOrEmpty() ||
+                        !ticketNumber2.isNullOrEmpty() ||
+                        !caseNumber.isNullOrEmpty() ||
+                        !dispatchNumber.isNullOrEmpty() ||
+                        !dispatchNumber2.isNullOrEmpty() ||
+                        !location.isNullOrEmpty() ||
+                        !remarks.isNullOrEmpty() ||
+                        !firstName.isNullOrEmpty() ||
+                        !lastName.isNullOrEmpty() ||
+                        !driverLicense.isNullOrEmpty() ||
+                        !licensePlate.isNullOrEmpty() ||
+                        !gender.isNullOrEmpty() ||
+                        !race.isNullOrEmpty()
                 } ?: false
 
             return oldMetadata.let { fromJson ->
                 newMetadata?.let { fromForm ->
                     fromJson.event?.name != fromForm.event?.name ||
-                            fromJson.partnerID != fromForm.partnerID ||
-                            fromJson.ticketNumber != fromForm.ticketNumber ||
-                            fromJson.ticketNumber2 != fromForm.ticketNumber2 ||
-                            fromJson.caseNumber != fromForm.caseNumber ||
-                            fromJson.caseNumber2 != fromForm.caseNumber2 ||
-                            fromJson.dispatchNumber != fromForm.dispatchNumber ||
-                            fromJson.dispatchNumber2 != fromForm.dispatchNumber2 ||
-                            fromJson.location != fromForm.location ||
-                            fromJson.remarks != fromForm.remarks ||
-                            fromJson.firstName != fromForm.firstName ||
-                            fromJson.lastName != fromForm.lastName ||
-                            fromJson.driverLicense != fromForm.driverLicense ||
-                            fromJson.licensePlate != fromForm.licensePlate ||
-                            fromJson.gender != fromForm.gender ||
-                            fromJson.race != fromForm.race ||
-                            currentMetadata.associatedPhotos != SnapshotsAssociatedByUser.value
+                        fromJson.partnerID != fromForm.partnerID ||
+                        fromJson.ticketNumber != fromForm.ticketNumber ||
+                        fromJson.ticketNumber2 != fromForm.ticketNumber2 ||
+                        fromJson.caseNumber != fromForm.caseNumber ||
+                        fromJson.caseNumber2 != fromForm.caseNumber2 ||
+                        fromJson.dispatchNumber != fromForm.dispatchNumber ||
+                        fromJson.dispatchNumber2 != fromForm.dispatchNumber2 ||
+                        fromJson.location != fromForm.location ||
+                        fromJson.remarks != fromForm.remarks ||
+                        fromJson.firstName != fromForm.firstName ||
+                        fromJson.lastName != fromForm.lastName ||
+                        fromJson.driverLicense != fromForm.driverLicense ||
+                        fromJson.licensePlate != fromForm.licensePlate ||
+                        fromJson.gender != fromForm.gender ||
+                        fromJson.race != fromForm.race ||
+                        currentMetadata.associatedPhotos != SnapshotsAssociatedByUser.value
                 } ?: false
             }
         }
@@ -681,25 +694,25 @@ class VideoPlaybackActivity : BaseActivity() {
     private fun configureListenerSeekBar() {
         var isFromUser = false
         activityVideoPlaybackBinding.seekProgressVideo.setOnSeekBarChangeListener(object :
-            SeekBar.OnSeekBarChangeListener {
+                SeekBar.OnSeekBarChangeListener {
 
-            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                isFromUser = fromUser
-                currentProgressInVideo = progress
-            }
+                override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                    isFromUser = fromUser
+                    currentProgressInVideo = progress
+                }
 
-            override fun onStartTrackingTouch(seekBar: SeekBar?) {
-                Log.d("onStartTrackingTouch", seekBar.toString())
-            }
+                override fun onStartTrackingTouch(seekBar: SeekBar?) {
+                    Log.d("onStartTrackingTouch", seekBar.toString())
+                }
 
-            override fun onStopTrackingTouch(seekBar: SeekBar?) {
-                if (isFromUser) {
-                    seekBar?.let {
-                        setProgressToVideo(it.progress)
+                override fun onStopTrackingTouch(seekBar: SeekBar?) {
+                    if (isFromUser) {
+                        seekBar?.let {
+                            setProgressToVideo(it.progress)
+                        }
                     }
                 }
-            }
-        })
+            })
     }
 
     private fun setProgressToVideo(progress: Int) {

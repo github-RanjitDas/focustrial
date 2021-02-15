@@ -1,11 +1,11 @@
 package com.lawmobile.data.repository.simpleList
 
 import com.lawmobile.data.datasource.remote.simpleList.SimpleListRemoteDataSource
-import com.lawmobile.domain.entities.FileList
-import com.lawmobile.domain.entities.VideoListMetadata
 import com.lawmobile.data.mappers.FileResponseMapper
 import com.lawmobile.domain.entities.DomainInformationFile
 import com.lawmobile.domain.entities.DomainInformationFileResponse
+import com.lawmobile.domain.entities.FileList
+import com.lawmobile.domain.entities.VideoListMetadata
 import com.lawmobile.domain.repository.simpleList.SimpleListRepository
 import com.safefleet.mobile.kotlin_commons.helpers.Result
 
@@ -43,10 +43,10 @@ class SimpleListRepositoryImpl(private val simpleListRemoteDataSource: SimpleLis
                 if (domainInformationFileResponse.items.size < FileList.videoList.size) {
                     domainInformationFileResponse.items =
                         FileList.videoList.map {
-                            val currentMetadata =
-                                VideoListMetadata.getVideoMetadata(it.domainCameraFile.name)?.videoMetadata
-                            DomainInformationFile(it.domainCameraFile, currentMetadata)
-                        } as MutableList
+                        val currentMetadata =
+                            VideoListMetadata.getVideoMetadata(it.domainCameraFile.name)?.videoMetadata
+                        DomainInformationFile(it.domainCameraFile, currentMetadata)
+                    } as MutableList
 
                     return Result.Success(domainInformationFileResponse)
                 }

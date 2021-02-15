@@ -12,10 +12,10 @@ object RootedHelper {
 
     fun isDeviceRooted(context: Context): Boolean {
         return checkRootMethodTestKeys() ||
-                checkRootMethodPathsWithSu() ||
-                checkRootMethod3() ||
-                checkRootMethod4() ||
-                checkMethodPackages(context)
+            checkRootMethodPathsWithSu() ||
+            checkRootMethod3() ||
+            checkRootMethod4() ||
+            checkMethodPackages(context)
     }
 
     private fun checkRootMethodTestKeys(): Boolean {
@@ -78,7 +78,7 @@ object RootedHelper {
         )
 
         for (path in paths) {
-            if (isPackageExisted(path,context)) return true
+            if (isPackageExisted(path, context)) return true
         }
         return false
     }

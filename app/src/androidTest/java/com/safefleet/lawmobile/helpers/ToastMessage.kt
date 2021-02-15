@@ -12,7 +12,6 @@ import androidx.test.espresso.matcher.ViewMatchers.withText
 import org.hamcrest.Description
 import org.hamcrest.TypeSafeMatcher
 
-
 /**
  * Author: http://www.qaautomated.com/2016/01/how-to-test-toast-message-using-espresso.html
  */
@@ -44,7 +43,6 @@ class ToastMatcher(private val maxFailures: Int = DEFAULT_MAX_FAILURES) : TypeSa
         /** Default for maximum number of retries to wait for the toast to pop up */
         private const val DEFAULT_MAX_FAILURES = 5
     }
-
 }
 
 object ToastMessage {

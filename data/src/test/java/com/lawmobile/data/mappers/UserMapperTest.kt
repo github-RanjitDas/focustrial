@@ -13,7 +13,7 @@ class UserMapperTest {
     fun cameraToDomain() {
         val cameraConnectUserResponse = mockk<CameraUser>(relaxed = true)
         val domainUserResponse = UserMapper.cameraToDomain(cameraConnectUserResponse)
-        with(cameraConnectUserResponse){
+        with(cameraConnectUserResponse) {
             domainUserResponse.let {
                 assertTrue(it.id == officerId)
                 assertTrue(it.name == name)

@@ -1,11 +1,11 @@
 package com.lawmobile.data.datasource.remote.snapshotDetail
 
-import com.safefleet.mobile.kotlin_commons.helpers.Result
 import com.safefleet.mobile.external_hardware.cameras.CameraService
 import com.safefleet.mobile.external_hardware.cameras.entities.CameraFile
 import com.safefleet.mobile.external_hardware.cameras.entities.FileResponseWithErrors
 import com.safefleet.mobile.external_hardware.cameras.entities.PhotoInformation
 import com.safefleet.mobile.external_hardware.cameras.entities.VideoInformation
+import com.safefleet.mobile.kotlin_commons.helpers.Result
 
 class SnapshotDetailRemoteDataSourceImpl(private val cameraService: CameraService) :
     SnapshotDetailRemoteDataSource {
@@ -22,7 +22,7 @@ class SnapshotDetailRemoteDataSourceImpl(private val cameraService: CameraServic
     }
 
     override suspend fun getVideoList(): Result<FileResponseWithErrors> {
-        return  cameraService.getListOfVideos()
+        return cameraService.getListOfVideos()
     }
 
     override suspend fun getMetadataOfVideo(cameraFile: CameraFile): Result<VideoInformation> {
@@ -32,6 +32,6 @@ class SnapshotDetailRemoteDataSourceImpl(private val cameraService: CameraServic
     override suspend fun savePartnerIdInAllSnapshots(list: List<PhotoInformation>): Result<Unit> =
         cameraService.saveAllPhotoMetadata(list)
 
-    override suspend fun getSavedPhotosMetadata(): Result<List<PhotoInformation>>  =
+    override suspend fun getSavedPhotosMetadata(): Result<List<PhotoInformation>> =
         cameraService.getMetadataOfPhotos()
 }

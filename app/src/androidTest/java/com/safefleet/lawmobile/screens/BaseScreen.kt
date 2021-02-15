@@ -4,7 +4,6 @@ import com.safefleet.lawmobile.R
 import com.safefleet.lawmobile.helpers.Alert
 import com.schibsted.spain.barista.interaction.BaristaClickInteractions
 
-
 open class BaseScreen {
 
     fun isDisconnectionAlertDisplayed() {

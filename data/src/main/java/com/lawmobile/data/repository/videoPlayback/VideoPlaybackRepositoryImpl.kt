@@ -1,14 +1,14 @@
 package com.lawmobile.data.repository.videoPlayback
 
 import com.lawmobile.data.datasource.remote.videoPlayback.VideoPlaybackRemoteDataSource
-import com.lawmobile.domain.entities.RemoteVideoMetadata
-import com.lawmobile.domain.entities.VideoListMetadata
 import com.lawmobile.data.mappers.FileMapper
 import com.lawmobile.data.mappers.VideoInformationMapper
 import com.lawmobile.data.mappers.VideoMetadataMapper
 import com.lawmobile.domain.entities.DomainCameraFile
 import com.lawmobile.domain.entities.DomainInformationVideo
 import com.lawmobile.domain.entities.DomainVideoMetadata
+import com.lawmobile.domain.entities.RemoteVideoMetadata
+import com.lawmobile.domain.entities.VideoListMetadata
 import com.lawmobile.domain.repository.videoPlayback.VideoPlaybackRepository
 import com.safefleet.mobile.kotlin_commons.helpers.Result
 
@@ -17,8 +17,10 @@ class VideoPlaybackRepositoryImpl(private val videoPlaybackRemoteDataSource: Vid
 
     override suspend fun getInformationResourcesVideo(domainCameraFile: DomainCameraFile): Result<DomainInformationVideo> {
         val cameraConnectFile = FileMapper.domainToCamera(domainCameraFile)
-        return when (val response =
-            videoPlaybackRemoteDataSource.getInformationResourcesVideo(cameraConnectFile)) {
+        return when (
+            val response =
+                videoPlaybackRemoteDataSource.getInformationResourcesVideo(cameraConnectFile)
+        ) {
             is Result.Success -> {
                 return try {
                     Result.Success(VideoInformationMapper.cameraToDomain(response.data))
@@ -48,8 +50,10 @@ class VideoPlaybackRepositoryImpl(private val videoPlaybackRemoteDataSource: Vid
         return if (cameraConnectVideoMetadata != null && !cameraConnectVideoMetadata.isChanged) {
             Result.Success(cameraConnectVideoMetadata.videoMetadata)
         } else {
-            return when (val result =
-                videoPlaybackRemoteDataSource.getVideoMetadata(fileName, folderName)) {
+            return when (
+                val result =
+                    videoPlaybackRemoteDataSource.getVideoMetadata(fileName, folderName)
+            ) {
                 is Result.Success -> {
                     val domainVideoMetadata = VideoMetadataMapper.cameraToDomain(result.data)
                     val metadata = RemoteVideoMetadata(domainVideoMetadata, false)

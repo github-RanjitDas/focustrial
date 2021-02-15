@@ -18,7 +18,7 @@ import dagger.hilt.android.components.ActivityComponent
 class LiveStreamingModule {
 
     companion object {
-        
+
         @Provides
         fun provideLiveRemoteDataSource(cameraService: CameraService): LiveStreamingRemoteDataSource =
             LiveStreamingRemoteDataSourceImpl(cameraService)

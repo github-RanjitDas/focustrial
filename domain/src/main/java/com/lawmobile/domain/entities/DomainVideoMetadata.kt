@@ -1,6 +1,6 @@
 package com.lawmobile.domain.entities
 
-data class DomainVideoMetadata (
+data class DomainVideoMetadata(
     val fileName: String,
     val metadata: DomainMetadata? = null,
     var nameFolder: String? = null,

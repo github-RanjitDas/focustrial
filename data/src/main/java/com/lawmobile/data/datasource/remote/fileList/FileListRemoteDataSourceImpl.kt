@@ -1,9 +1,9 @@
 package com.lawmobile.data.datasource.remote.fileList
 
-import com.safefleet.mobile.kotlin_commons.helpers.Result
 import com.safefleet.mobile.external_hardware.cameras.CameraService
 import com.safefleet.mobile.external_hardware.cameras.entities.PhotoInformation
 import com.safefleet.mobile.external_hardware.cameras.entities.VideoInformation
+import com.safefleet.mobile.kotlin_commons.helpers.Result
 
 class FileListRemoteDataSourceImpl(private val cameraConnectService: CameraService) :
     FileListRemoteDataSource {

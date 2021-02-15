@@ -1,10 +1,10 @@
 package com.lawmobile.data.datasource.remote.snapshotDetail
 
-import com.safefleet.mobile.kotlin_commons.helpers.Result
 import com.safefleet.mobile.external_hardware.cameras.entities.CameraFile
 import com.safefleet.mobile.external_hardware.cameras.entities.FileResponseWithErrors
 import com.safefleet.mobile.external_hardware.cameras.entities.PhotoInformation
 import com.safefleet.mobile.external_hardware.cameras.entities.VideoInformation
+import com.safefleet.mobile.kotlin_commons.helpers.Result
 
 interface SnapshotDetailRemoteDataSource {
     suspend fun getImageBytes(cameraFile: CameraFile): Result<ByteArray>

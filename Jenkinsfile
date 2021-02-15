@@ -47,6 +47,13 @@ node('jenkins-builds-slave') {
                 }
             }
 
+            stage('Kotlin format check') {
+                logger.stage()
+                timeout(5) {
+                    sh "./gradlew ktlint"
+                }
+            }
+
             stage('Unit Tests') {
                 logger.stage()
                 timeout(7) {
