@@ -2,7 +2,11 @@ package com.lawmobile.data.repository.pairingPhoneWithCamera
 
 import com.lawmobile.data.datasource.remote.pairingPhoneWithCamera.PairingPhoneWithCameraRemoteDataSource
 import com.safefleet.mobile.kotlin_commons.helpers.Result
-import io.mockk.*
+import io.mockk.Runs
+import io.mockk.coEvery
+import io.mockk.coVerify
+import io.mockk.just
+import io.mockk.mockk
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
@@ -39,13 +43,12 @@ class PairingPhoneWithCameraRepositoryImplTest {
     }
 
     @Test
-    fun testCleanCacheFiles(){
+    fun testCleanCacheFiles() {
         coEvery { pairingPhoneWithCameraRemoteDataSource.cleanCacheFiles() } just Runs
 
         runBlocking {
             pairingPhoneWithCameraRepositoryImpl.cleanCacheFiles()
         }
         coVerify { pairingPhoneWithCameraRemoteDataSource.cleanCacheFiles() }
-
     }
 }

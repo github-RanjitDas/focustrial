@@ -10,7 +10,6 @@ import org.junit.After
 import org.junit.Rule
 import org.junit.runner.RunWith
 
-
 @LargeTest
 @Suppress
 @RunWith(AndroidJUnit4::class)

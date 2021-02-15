@@ -34,5 +34,4 @@ internal class BaseViewModelTest {
             Assert.assertTrue(baseViewModel.isWaitFinishedLiveData.value!!)
         }
     }
-
 }

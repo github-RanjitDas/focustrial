@@ -100,5 +100,4 @@ class VideoPlaybackUseCaseTest {
         }
         coVerify { videoPlaybackRepository.saveVideoMetadata(any()) }
     }
-
 }

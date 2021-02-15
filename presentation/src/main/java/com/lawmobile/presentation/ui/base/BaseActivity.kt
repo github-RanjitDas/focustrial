@@ -13,14 +13,13 @@ import com.lawmobile.presentation.extensions.checkIfSessionIsExpired
 import com.lawmobile.presentation.extensions.createAlertMobileDataActive
 import com.lawmobile.presentation.extensions.createAlertProgress
 import com.lawmobile.presentation.extensions.createAlertSessionExpired
-import com.lawmobile.presentation.ui.login.LoginActivity
 import com.lawmobile.presentation.security.RootedHelper
+import com.lawmobile.presentation.ui.login.LoginActivity
 import com.lawmobile.presentation.utils.EspressoIdlingResource
 import com.lawmobile.presentation.utils.MobileDataStatus
 import dagger.hilt.android.AndroidEntryPoint
 import java.sql.Timestamp
 import javax.inject.Inject
-
 
 @AndroidEntryPoint
 open class BaseActivity : AppCompatActivity() {

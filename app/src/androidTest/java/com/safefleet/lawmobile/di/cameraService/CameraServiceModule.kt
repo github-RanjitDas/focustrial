@@ -24,7 +24,6 @@ class CameraServiceModule {
 
     companion object {
 
-
         @Provides
         fun provideSocketHelper(): SocketHelper = SocketHelper(Socket())
 

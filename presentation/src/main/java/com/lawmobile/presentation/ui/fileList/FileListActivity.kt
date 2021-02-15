@@ -11,7 +11,12 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.lawmobile.domain.entities.DomainInformationForList
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.databinding.ActivityFileListBinding
-import com.lawmobile.presentation.extensions.*
+import com.lawmobile.presentation.extensions.attachFragment
+import com.lawmobile.presentation.extensions.createFilterDialog
+import com.lawmobile.presentation.extensions.setClickListenerCheckConnection
+import com.lawmobile.presentation.extensions.setOnClickListenerCheckConnection
+import com.lawmobile.presentation.extensions.showErrorSnackBar
+import com.lawmobile.presentation.extensions.showSuccessSnackBar
 import com.lawmobile.presentation.ui.base.BaseActivity
 import com.lawmobile.presentation.ui.fileList.FileListBaseFragment.Companion.checkableListInit
 import com.lawmobile.presentation.ui.simpleList.SimpleFileListFragment
@@ -23,10 +28,10 @@ import com.lawmobile.presentation.utils.Constants.SNAPSHOT_LIST
 import com.lawmobile.presentation.utils.Constants.THUMBNAIL_FILE_LIST
 import com.lawmobile.presentation.utils.Constants.VIDEO_LIST
 import com.lawmobile.presentation.widgets.CustomFilterDialog
-import com.safefleet.mobile.kotlin_commons.helpers.Result
+import com.safefleet.mobile.android_commons.extensions.hideKeyboard
 import com.safefleet.mobile.kotlin_commons.extensions.doIfError
 import com.safefleet.mobile.kotlin_commons.extensions.doIfSuccess
-import com.safefleet.mobile.android_commons.extensions.hideKeyboard
+import com.safefleet.mobile.kotlin_commons.helpers.Result
 
 class FileListActivity : BaseActivity() {
 
@@ -157,7 +162,6 @@ class FileListActivity : BaseActivity() {
             simpleFileListFragment.filter = this
             thumbnailFileListFragment.filter = this
         }
-
     }
 
     private fun handleOnApplyFilterClick(it: Boolean) {
@@ -169,7 +173,6 @@ class FileListActivity : BaseActivity() {
             THUMBNAIL_FILE_LIST ->
                 thumbnailFileListFragment.applyFiltersToList()
         }
-
     }
 
     private fun updateFilterButtonState(it: Boolean) {
@@ -200,19 +203,20 @@ class FileListActivity : BaseActivity() {
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
         }
         bottomSheetBehavior.addBottomSheetCallback(object :
-            BottomSheetBehavior.BottomSheetCallback() {
-            override fun onSlide(bottomSheet: View, slideOffset: Float) {
-                // The interface requires to implement this method but not needed
-            }
-
-            override fun onStateChanged(bottomSheet: View, newState: Int) {
-                when (newState) {
-                    BottomSheetBehavior.STATE_HIDDEN -> activityFileListBinding.shadowFileListView.isVisible =
-                        false
-                    else -> activityFileListBinding.shadowFileListView.isVisible = true
+                BottomSheetBehavior.BottomSheetCallback() {
+                override fun onSlide(bottomSheet: View, slideOffset: Float) {
+                    // The interface requires to implement this method but not needed
                 }
-            }
-        })
+
+                override fun onStateChanged(bottomSheet: View, newState: Int) {
+                    when (newState) {
+                        BottomSheetBehavior.STATE_HIDDEN ->
+                            activityFileListBinding.shadowFileListView.isVisible =
+                                false
+                        else -> activityFileListBinding.shadowFileListView.isVisible = true
+                    }
+                }
+            })
     }
 
     private fun associatePartnerId(partnerId: String) {
@@ -225,10 +229,12 @@ class FileListActivity : BaseActivity() {
         showLoadingDialog()
 
         val listSelected = when (actualFragment) {
-            SIMPLE_FILE_LIST -> simpleFileListFragment.simpleFileListAdapter?.fileList?.filter { it.isSelected }
-                ?.map { it.domainCameraFile }
-            THUMBNAIL_FILE_LIST -> thumbnailFileListFragment.thumbnailFileListAdapter?.fileList?.filter { it.isSelected }
-                ?.map { it.domainCameraFile }
+            SIMPLE_FILE_LIST ->
+                simpleFileListFragment.simpleFileListAdapter?.fileList?.filter { it.isSelected }
+                    ?.map { it.domainCameraFile }
+            THUMBNAIL_FILE_LIST ->
+                thumbnailFileListFragment.thumbnailFileListAdapter?.fileList?.filter { it.isSelected }
+                    ?.map { it.domainCameraFile }
             else -> throw Exception("List type not supported")
         }
 

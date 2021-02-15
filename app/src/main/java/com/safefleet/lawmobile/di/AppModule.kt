@@ -64,6 +64,5 @@ class AppModule {
         @Singleton
         fun provideMobileDataStatus(connectivityManager: ConnectivityManager) =
             MobileDataStatus(connectivityManager)
-
     }
 }

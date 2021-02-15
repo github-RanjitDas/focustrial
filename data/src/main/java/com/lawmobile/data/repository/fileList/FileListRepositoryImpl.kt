@@ -1,22 +1,22 @@
 package com.lawmobile.data.repository.fileList
 
 import com.lawmobile.data.datasource.remote.fileList.FileListRemoteDataSource
-import com.lawmobile.domain.entities.FileList
-import com.lawmobile.domain.entities.RemoteVideoMetadata
-import com.lawmobile.domain.entities.VideoListMetadata
 import com.lawmobile.data.mappers.FileMapper
 import com.lawmobile.data.mappers.PhotoMetadataMapper
 import com.lawmobile.data.mappers.VideoMetadataMapper
 import com.lawmobile.domain.entities.CameraInfo
 import com.lawmobile.domain.entities.DomainCameraFile
 import com.lawmobile.domain.entities.DomainInformationImageMetadata
+import com.lawmobile.domain.entities.FileList
+import com.lawmobile.domain.entities.RemoteVideoMetadata
+import com.lawmobile.domain.entities.VideoListMetadata
 import com.lawmobile.domain.repository.fileList.FileListRepository
 import com.safefleet.mobile.external_hardware.cameras.entities.PhotoInformation
-import com.safefleet.mobile.kotlin_commons.helpers.Result
-import com.safefleet.mobile.kotlin_commons.extensions.doIfSuccess
 import com.safefleet.mobile.external_hardware.cameras.entities.PhotoMetadata
 import com.safefleet.mobile.external_hardware.cameras.entities.VideoInformation
 import com.safefleet.mobile.external_hardware.cameras.entities.VideoMetadata
+import com.safefleet.mobile.kotlin_commons.extensions.doIfSuccess
+import com.safefleet.mobile.kotlin_commons.helpers.Result
 import kotlinx.coroutines.delay
 
 class FileListRepositoryImpl(private val fileListRemoteDataSource: FileListRemoteDataSource) :

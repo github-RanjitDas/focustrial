@@ -7,5 +7,5 @@ class AlertInformation(
     val message: Int? = null,
     val onClickPositiveButton: ((DialogInterface) -> Unit)? = null,
     val onClickNegativeButton: ((DialogInterface) -> Unit)? = null,
-    val customMessage:String? = null
+    val customMessage: String? = null
 )

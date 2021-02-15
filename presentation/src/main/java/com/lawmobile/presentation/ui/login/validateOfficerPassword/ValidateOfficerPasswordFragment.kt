@@ -92,7 +92,6 @@ class ValidateOfficerPasswordFragment : BaseFragment() {
         } else {
             validateSuccessPasswordOfficer(false)
         }
-
     }
 
     private fun showErrorInGetInformationOfUser() {
@@ -113,5 +112,4 @@ class ValidateOfficerPasswordFragment : BaseFragment() {
 
         val TAG = ValidateOfficerPasswordFragment::class.java.simpleName
     }
-
 }

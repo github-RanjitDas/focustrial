@@ -1,9 +1,9 @@
 package com.lawmobile.data.repository.liveStreaming
 
 import com.lawmobile.data.datasource.remote.liveStreaming.LiveStreamingRemoteDataSource
-import com.lawmobile.domain.entities.FileList
 import com.lawmobile.data.mappers.CatalogMapper
 import com.lawmobile.domain.entities.DomainCatalog
+import com.lawmobile.domain.entities.FileList
 import com.lawmobile.domain.repository.liveStreaming.LiveStreamingRepository
 import com.safefleet.mobile.kotlin_commons.helpers.Result
 import kotlinx.coroutines.delay

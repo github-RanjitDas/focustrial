@@ -83,6 +83,4 @@ object VideoMetadataMapper {
                 ticketNumber2
             )
         }
-
-
 }

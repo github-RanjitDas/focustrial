@@ -1,10 +1,14 @@
 package com.lawmobile.data.datasource.remote.thumbnailList
 
-import com.safefleet.mobile.kotlin_commons.helpers.Result
 import com.safefleet.mobile.external_hardware.cameras.CameraService
 import com.safefleet.mobile.external_hardware.cameras.entities.CameraFile
 import com.safefleet.mobile.external_hardware.cameras.entities.FileResponseWithErrors
-import io.mockk.*
+import com.safefleet.mobile.kotlin_commons.helpers.Result
+import io.mockk.clearAllMocks
+import io.mockk.coEvery
+import io.mockk.coVerify
+import io.mockk.every
+import io.mockk.mockk
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert
 import org.junit.jupiter.api.BeforeEach

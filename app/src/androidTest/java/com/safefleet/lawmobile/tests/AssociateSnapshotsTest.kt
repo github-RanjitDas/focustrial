@@ -5,7 +5,12 @@ import androidx.test.filters.LargeTest
 import androidx.test.filters.Suppress
 import com.lawmobile.presentation.ui.login.LoginActivity
 import com.safefleet.lawmobile.R
-import com.safefleet.lawmobile.screens.*
+import com.safefleet.lawmobile.screens.AssociateSnapshotsScreen
+import com.safefleet.lawmobile.screens.FileListScreen
+import com.safefleet.lawmobile.screens.FilterDialogScreen
+import com.safefleet.lawmobile.screens.LiveViewScreen
+import com.safefleet.lawmobile.screens.LoginScreen
+import com.safefleet.lawmobile.screens.VideoPlaybackScreen
 import com.safefleet.lawmobile.testData.VideoPlaybackMetadata
 import org.junit.Before
 import org.junit.Test
@@ -67,7 +72,7 @@ class AssociateSnapshotsTest :
 
                 selectEvent(defaultMetadata)
                 clickOnSave()
-                //To be completed because an error when retrieving the mocked data
+                // To be completed because an error when retrieving the mocked data
             }
         }
     }
@@ -96,7 +101,7 @@ class AssociateSnapshotsTest :
 
                 selectEvent(defaultMetadata)
                 clickOnSave()
-                //To be completed because an error when retrieving the mocked data
+                // To be completed because an error when retrieving the mocked data
             }
         }
     }
@@ -242,7 +247,7 @@ class AssociateSnapshotsTest :
 
                 selectEvent(defaultMetadata)
                 clickOnSave()
-                //not completed
+                // not completed
             }
         }
     }
@@ -285,7 +290,7 @@ class AssociateSnapshotsTest :
 
                 selectEvent(defaultMetadata)
                 clickOnSave()
-                //not completed
+                // not completed
             }
         }
     }

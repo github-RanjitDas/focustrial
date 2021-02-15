@@ -3,9 +3,9 @@ package com.lawmobile.data.mappers
 import com.lawmobile.domain.entities.DomainCatalog
 import com.safefleet.mobile.external_hardware.cameras.entities.CameraCatalog
 import io.mockk.mockk
+import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
-
-import org.junit.jupiter.api.Assertions.*
 
 internal class CatalogMapperTest {
 
@@ -14,7 +14,7 @@ internal class CatalogMapperTest {
         val cameraCatalogList =
             listOf<CameraCatalog>(mockk(relaxed = true), mockk(relaxed = true))
         val domainCatalogList = CatalogMapper.cameraToDomainList(cameraCatalogList)
-        with(cameraCatalogList){
+        with(cameraCatalogList) {
             domainCatalogList.forEachIndexed { index, it ->
                 assertTrue(it.id == get(index).id)
                 assertTrue(it.name == get(index).name)
@@ -36,7 +36,7 @@ internal class CatalogMapperTest {
     fun cameraToDomain() {
         val cameraConnectCatalog: CameraCatalog = mockk(relaxed = true)
         val domainCatalog = CatalogMapper.cameraToDomain(cameraConnectCatalog)
-        with(cameraConnectCatalog){
+        with(cameraConnectCatalog) {
             domainCatalog.let {
                 assertTrue(it?.id == id)
                 assertTrue(it?.name == name)
@@ -49,7 +49,7 @@ internal class CatalogMapperTest {
     fun domainToCamera() {
         val domainCatalog: DomainCatalog = mockk(relaxed = true)
         val cameraConnectCatalog = CatalogMapper.domainToCamera(domainCatalog)
-        with(domainCatalog){
+        with(domainCatalog) {
             cameraConnectCatalog.let {
                 assertTrue(it?.id == id)
                 assertTrue(it?.name == name)

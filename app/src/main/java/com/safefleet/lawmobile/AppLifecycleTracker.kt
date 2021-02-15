@@ -16,7 +16,7 @@ class AppLifecycleTracker : Application.ActivityLifecycleCallbacks {
     override fun onActivityStopped(activity: Activity) {
         numStarted--
         if (numStarted == 0) {
-            val  folderDirCache = activity.cacheDir
+            val folderDirCache = activity.cacheDir
             folderDirCache.listFiles()?.forEach {
                 it.delete()
             }
@@ -41,5 +41,4 @@ class AppLifecycleTracker : Application.ActivityLifecycleCallbacks {
     override fun onActivityResumed(activity: Activity) {
         // The interface required to implement this method but not necessary to override
     }
-
 }

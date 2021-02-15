@@ -3,9 +3,8 @@ package com.lawmobile.data.mappers
 import com.lawmobile.domain.entities.DomainCameraFile
 import com.safefleet.mobile.external_hardware.cameras.entities.CameraFile
 import io.mockk.mockk
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
-
-import org.junit.jupiter.api.Assertions.*
 
 internal class FileMapperTest {
 
@@ -27,7 +26,7 @@ internal class FileMapperTest {
     fun cameraToDomain() {
         val cameraConnectFile: CameraFile = mockk(relaxed = true)
         val domainCameraFile = FileMapper.cameraToDomain(cameraConnectFile)
-        with(cameraConnectFile){
+        with(cameraConnectFile) {
             domainCameraFile.let {
                 assertTrue(it.name == name)
                 assertTrue(it.date == date)
@@ -41,7 +40,7 @@ internal class FileMapperTest {
     fun domainToCamera() {
         val domainCameraFile: DomainCameraFile = mockk(relaxed = true)
         val cameraConnectFile = FileMapper.domainToCamera(domainCameraFile)
-        with(domainCameraFile){
+        with(domainCameraFile) {
             cameraConnectFile.let {
                 assertTrue(it.name == name)
                 assertTrue(it.date == date)

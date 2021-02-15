@@ -207,12 +207,11 @@ class CustomFilterDialog constructor(
             currentFilters[EVENT_POSITION].ifIsNotEmptyLet { event ->
                 filteringList =
                     filteringList.filter {
-                        (it as DomainInformationFile).domainVideoMetadata?.metadata?.event?.name ==
-                                if (event == NO_EVENT_TAG) null else event
-                    } as MutableList
+                    (it as DomainInformationFile).domainVideoMetadata?.metadata?.event?.name ==
+                        if (event == NO_EVENT_TAG) null else event
+                } as MutableList
                 createTagInPosition(it.childCount, EVENT_TAG + event)
             }
-
         }
 
         filteredList = filteringList
@@ -232,7 +231,8 @@ class CustomFilterDialog constructor(
                     clearTagFilter(text)
                     applyFiltersToLists()
                 }
-            }, position
+            },
+            position
         )
     }
 

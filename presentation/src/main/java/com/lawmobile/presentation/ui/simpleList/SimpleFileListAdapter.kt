@@ -144,11 +144,11 @@ class SimpleFileListAdapter(
             }
             simpleListLayout.setOnClickListenerCheckConnection {
                 if (showCheckBoxes) {
-                        checkboxSimpleListItem.isActivated = !checkboxSimpleListItem.isActivated
-                        selectItemFromTheList(remoteCameraFile)
-                    } else {
-                        onFileClick.invoke(remoteCameraFile)
-                    }
+                    checkboxSimpleListItem.isActivated = !checkboxSimpleListItem.isActivated
+                    selectItemFromTheList(remoteCameraFile)
+                } else {
+                    onFileClick.invoke(remoteCameraFile)
+                }
             }
         }
 
@@ -171,4 +171,3 @@ class SimpleFileListAdapter(
         private fun isAnyFileChecked() = fileList.any { it.isSelected }
     }
 }
-

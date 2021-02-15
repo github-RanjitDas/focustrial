@@ -2,7 +2,11 @@ package com.lawmobile.domain.usecase.liveStreaming
 
 import com.lawmobile.domain.repository.liveStreaming.LiveStreamingRepository
 import com.safefleet.mobile.kotlin_commons.helpers.Result
-import io.mockk.*
+import io.mockk.coEvery
+import io.mockk.coVerify
+import io.mockk.every
+import io.mockk.mockk
+import io.mockk.verify
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert
 import org.junit.jupiter.api.Test
@@ -65,7 +69,6 @@ class LiveStreamingUseCaseImplTest {
             Assert.assertEquals(liveStreamingUseCaseImpl.startRecordVideo(), result)
         }
     }
-
 
     @Test
     fun testStopRecordVideoFlow() {
@@ -145,7 +148,7 @@ class LiveStreamingUseCaseImplTest {
     }
 
     @Test
-    fun testGetBatteryLevel(){
+    fun testGetBatteryLevel() {
         val result = Result.Success(10)
         coEvery { liveStreamingRepository.getBatteryLevel() } returns result
         runBlocking {
@@ -156,23 +159,23 @@ class LiveStreamingUseCaseImplTest {
     }
 
     @Test
-    fun testGetFreeStorage(){
+    fun testGetFreeStorage() {
         val result = Result.Success("10000")
         coEvery { liveStreamingRepository.getFreeStorage() } returns result
         runBlocking {
             val response = liveStreamingUseCaseImpl.getFreeStorage()
-            Assert.assertEquals(response,result)
+            Assert.assertEquals(response, result)
         }
         coVerify { liveStreamingRepository.getFreeStorage() }
     }
 
     @Test
-    fun testGetTotalStorage(){
+    fun testGetTotalStorage() {
         val result = Result.Success("10000")
         coEvery { liveStreamingRepository.getTotalStorage() } returns result
         runBlocking {
             val response = liveStreamingUseCaseImpl.getTotalStorage()
-            Assert.assertEquals(response,result)
+            Assert.assertEquals(response, result)
         }
         coVerify { liveStreamingRepository.getTotalStorage() }
     }

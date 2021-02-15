@@ -3,7 +3,11 @@ package com.lawmobile.data.datasource.remote.liveStreaming
 import com.lawmobile.data.InstantExecutorExtension
 import com.safefleet.mobile.external_hardware.cameras.CameraService
 import com.safefleet.mobile.kotlin_commons.helpers.Result
-import io.mockk.*
+import io.mockk.coEvery
+import io.mockk.coVerify
+import io.mockk.every
+import io.mockk.mockk
+import io.mockk.verify
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert
 import org.junit.jupiter.api.Test
@@ -60,7 +64,6 @@ class LiveStreamingRemoteDataSourceImplTest {
             Assert.assertEquals(liveStreamingRemoteDataSourceImpl.startRecordVideo(), result)
         }
     }
-
 
     @Test
     fun testStopRecordVideoFlow() {
@@ -125,7 +128,7 @@ class LiveStreamingRemoteDataSourceImplTest {
     }
 
     @Test
-    fun testGetBatteryLevel(){
+    fun testGetBatteryLevel() {
         val result = Result.Success(10)
         coEvery { cameraService.getBatteryLevel() } returns result
         runBlocking {
@@ -136,23 +139,23 @@ class LiveStreamingRemoteDataSourceImplTest {
     }
 
     @Test
-    fun testGetFreeStorage(){
+    fun testGetFreeStorage() {
         val result = Result.Success("10000")
         coEvery { cameraService.getFreeStorage() } returns result
         runBlocking {
             val response = liveStreamingRemoteDataSourceImpl.getFreeStorage()
-            Assert.assertEquals(response,result)
+            Assert.assertEquals(response, result)
         }
         coVerify { cameraService.getFreeStorage() }
     }
 
     @Test
-    fun testGetTotalStorage(){
+    fun testGetTotalStorage() {
         val result = Result.Success("10000")
         coEvery { cameraService.getTotalStorage() } returns result
         runBlocking {
             val response = liveStreamingRemoteDataSourceImpl.getTotalStorage()
-            Assert.assertEquals(response,result)
+            Assert.assertEquals(response, result)
         }
         coVerify { cameraService.getTotalStorage() }
     }

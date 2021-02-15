@@ -29,13 +29,14 @@ class SnapshotDetailViewModel @ViewModelInject constructor(
         MediatorLiveData()
     val informationImageLiveData: LiveData<Event<Result<DomainInformationImageMetadata>>> get() = informationVideoMediator
 
-
     fun getImageBytes(domainCameraFile: DomainCameraFile) {
         viewModelScope.launch {
             imageBytesMediator.postEventValueWithTimeout(getLoadingTimeOut()) {
-                Event(getResultWithAttempts(ATTEMPTS_TO_GET_BYTES) {
-                    snapshotDetailUseCase.getImageBytes(domainCameraFile)
-                })
+                Event(
+                    getResultWithAttempts(ATTEMPTS_TO_GET_BYTES) {
+                        snapshotDetailUseCase.getImageBytes(domainCameraFile)
+                    }
+                )
             }
         }
     }
@@ -51,9 +52,11 @@ class SnapshotDetailViewModel @ViewModelInject constructor(
     fun getInformationImageMetadata(domainCameraFile: DomainCameraFile) {
         viewModelScope.launch {
             informationVideoMediator.postEventValueWithTimeout(getLoadingTimeOut()) {
-                Event(getResultWithAttempts(ATTEMPTS_TO_GET_INFORMATION, DELAY_BETWEEN_ATTEMPTS) {
-                    snapshotDetailUseCase.getInformationOfPhoto(domainCameraFile)
-                })
+                Event(
+                    getResultWithAttempts(ATTEMPTS_TO_GET_INFORMATION, DELAY_BETWEEN_ATTEMPTS) {
+                        snapshotDetailUseCase.getInformationOfPhoto(domainCameraFile)
+                    }
+                )
             }
         }
     }

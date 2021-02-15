@@ -2,9 +2,11 @@ package com.lawmobile.data.repository.validatePasswordOfficer
 
 import com.lawmobile.data.datasource.remote.validatePasswordOfficer.ValidatePasswordOfficerRemoteDataSource
 import com.lawmobile.domain.entities.DomainUser
-import com.safefleet.mobile.kotlin_commons.helpers.Result
 import com.safefleet.mobile.external_hardware.cameras.entities.CameraUser
-import io.mockk.*
+import com.safefleet.mobile.kotlin_commons.helpers.Result
+import io.mockk.coEvery
+import io.mockk.coVerify
+import io.mockk.mockk
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert
 import org.junit.jupiter.api.Test
@@ -15,7 +17,6 @@ class ValidatePasswordOfficerRepositoryImplTest {
 
     private val validatePasswordOfficerRemoteDataSource: ValidatePasswordOfficerRemoteDataSource =
         mockk {
-
         }
 
     private val validatePasswordOfficerRepositoryImpl by lazy {
@@ -57,5 +58,4 @@ class ValidatePasswordOfficerRepositoryImplTest {
         runBlocking { validatePasswordOfficerRepositoryImpl.getUserInformation() }
         coVerify { validatePasswordOfficerRemoteDataSource.getUserInformation() }
     }
-
 }

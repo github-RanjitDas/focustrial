@@ -4,7 +4,14 @@ import com.lawmobile.domain.entities.FileList
 import com.safefleet.lawmobile.testData.CameraFilesData
 import com.safefleet.lawmobile.testData.TestLoginData
 import com.safefleet.mobile.external_hardware.cameras.CameraService
-import com.safefleet.mobile.external_hardware.cameras.entities.*
+import com.safefleet.mobile.external_hardware.cameras.entities.CameraCatalog
+import com.safefleet.mobile.external_hardware.cameras.entities.CameraFile
+import com.safefleet.mobile.external_hardware.cameras.entities.CameraUser
+import com.safefleet.mobile.external_hardware.cameras.entities.FileResponseWithErrors
+import com.safefleet.mobile.external_hardware.cameras.entities.PhotoInformation
+import com.safefleet.mobile.external_hardware.cameras.entities.VideoFileInfo
+import com.safefleet.mobile.external_hardware.cameras.entities.VideoInformation
+import com.safefleet.mobile.external_hardware.cameras.entities.VideoMetadata
 import com.safefleet.mobile.kotlin_commons.helpers.Result
 import io.mockk.mockk
 
@@ -12,7 +19,7 @@ class CameraConnectServiceX1Mock : CameraService {
     override var progressPairingCamera: ((Result<Int>) -> Unit)? = null
 
     override fun cleanCacheFiles() {
-        //It is not required to return anything
+        // It is not required to return anything
     }
 
     override suspend fun deleteFile(fileName: String): Result<Unit> {
@@ -76,7 +83,7 @@ class CameraConnectServiceX1Mock : CameraService {
             CameraUser(
                 TestLoginData.OFFICER_PASSWORD.value,
                 TestLoginData.OFFICER_NAME.value,
-                "dZnvtiaAwPk/xx/OrSx0p7TLhGs48Uc0g7seZR7ej/4=" //Hashed value for 'san 6279!' password
+                "dZnvtiaAwPk/xx/OrSx0p7TLhGs48Uc0g7seZR7ej/4=" // Hashed value for 'san 6279!' password
             )
         )
     }

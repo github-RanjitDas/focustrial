@@ -1,15 +1,22 @@
 package com.lawmobile.data.repository.simpleList
 
 import com.lawmobile.data.datasource.remote.simpleList.SimpleListRemoteDataSource
-import com.lawmobile.domain.entities.FileList
-import com.lawmobile.domain.entities.VideoListMetadata
 import com.lawmobile.data.mappers.FileMapper
 import com.lawmobile.domain.entities.DomainInformationFile
 import com.lawmobile.domain.entities.DomainInformationFileResponse
-import com.safefleet.mobile.kotlin_commons.helpers.Result
+import com.lawmobile.domain.entities.FileList
+import com.lawmobile.domain.entities.VideoListMetadata
 import com.safefleet.mobile.external_hardware.cameras.entities.CameraFile
 import com.safefleet.mobile.external_hardware.cameras.entities.FileResponseWithErrors
-import io.mockk.*
+import com.safefleet.mobile.kotlin_commons.helpers.Result
+import io.mockk.Runs
+import io.mockk.clearAllMocks
+import io.mockk.coEvery
+import io.mockk.coVerify
+import io.mockk.every
+import io.mockk.just
+import io.mockk.mockk
+import io.mockk.mockkObject
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert
 import org.junit.jupiter.api.BeforeEach
@@ -56,7 +63,7 @@ internal class SimpleListRepositoryImplTest {
             DomainInformationFileResponse(listDomain, mutableListOf())
 
         coEvery { simpleListRemoteDataSource.getSnapshotList() } returns
-                Result.Success(cameraResponse)
+            Result.Success(cameraResponse)
         FileList.imageList = emptyList()
 
         runBlocking {

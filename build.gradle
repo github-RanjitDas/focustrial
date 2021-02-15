@@ -48,6 +48,14 @@ allprojects {
     }
 }
 
+task installGitHook(type: Copy) {
+    from new File(rootProject.rootDir, 'pre-commit')
+    into { new File(rootProject.rootDir, '.git/hooks') }
+    fileMode 0777
+}
+
+tasks.getByPath(':app:preBuild').dependsOn installGitHook
+
 subprojects {
     if (name.matches("data|presentation|domain")) {
         apply plugin: 'pl.droidsonroids.pitest'

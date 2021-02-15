@@ -149,5 +149,4 @@ class LoginActivity : BaseActivity() {
     companion object {
         private const val ANIMATION_DURATION = 2000L
     }
-
 }

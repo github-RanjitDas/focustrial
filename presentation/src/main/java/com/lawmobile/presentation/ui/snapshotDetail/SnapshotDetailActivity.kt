@@ -17,14 +17,20 @@ import com.lawmobile.presentation.R
 import com.lawmobile.presentation.databinding.ActivitySnapshotItemDetailBinding
 import com.lawmobile.presentation.entities.ImageFilesPathManager
 import com.lawmobile.presentation.entities.ImageWithPathSaved
-import com.lawmobile.presentation.extensions.*
+import com.lawmobile.presentation.extensions.getPathFromTemporalFile
+import com.lawmobile.presentation.extensions.imageHasCorrectFormat
+import com.lawmobile.presentation.extensions.setOnClickListenerCheckConnection
+import com.lawmobile.presentation.extensions.showErrorSnackBar
+import com.lawmobile.presentation.extensions.showSuccessSnackBar
+import com.lawmobile.presentation.extensions.verifySessionBeforeAction
 import com.lawmobile.presentation.ui.base.BaseActivity
 import com.lawmobile.presentation.ui.thumbnailList.ThumbnailFileListFragment.Companion.PATH_ERROR_IN_PHOTO
 import com.lawmobile.presentation.utils.Constants
 import com.safefleet.mobile.android_commons.extensions.hideKeyboard
 import com.safefleet.mobile.kotlin_commons.extensions.doIfError
 import com.safefleet.mobile.kotlin_commons.extensions.doIfSuccess
-import com.safefleet.mobile.kotlin_commons.helpers.*
+import com.safefleet.mobile.kotlin_commons.helpers.Event
+import com.safefleet.mobile.kotlin_commons.helpers.Result
 import java.io.File
 
 class SnapshotDetailActivity : BaseActivity() {
@@ -312,5 +318,4 @@ class SnapshotDetailActivity : BaseActivity() {
     companion object {
         private const val SNAPSHOT_DETAIL_ERROR_ANIMATION_DURATION = 7000
     }
-
 }

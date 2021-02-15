@@ -5,7 +5,13 @@ import com.lawmobile.presentation.InstantExecutorExtension
 import com.lawmobile.presentation.ui.login.pairingPhoneWithCamera.PairingViewModel.Companion.EXCEPTION_GET_PARAMS_TO_CONNECT
 import com.lawmobile.presentation.utils.WifiHelper
 import com.safefleet.mobile.kotlin_commons.helpers.Result
-import io.mockk.*
+import io.mockk.Runs
+import io.mockk.coEvery
+import io.mockk.coVerify
+import io.mockk.every
+import io.mockk.just
+import io.mockk.mockk
+import io.mockk.runs
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
@@ -72,7 +78,7 @@ class PairingViewModelTest {
         Assert.assertEquals((cameraPairingProgress as Result.Error).exception.message, EXCEPTION_GET_PARAMS_TO_CONNECT)
     }
 
-   @Test
+    @Test
     fun testGetProgressConnectionWithTheCameraErrorInGatewayAddress() {
         every { wifiHelper.getGatewayAddress() } returns ""
         every { wifiHelper.getIpAddress() } returns DEFAULT_GATEWAY_ADDRESS
@@ -83,7 +89,7 @@ class PairingViewModelTest {
             pairingPhoneWithCameraUseCase.loadPairingCamera(any(), any(), any())
         } just Runs
 
-       viewModel.getProgressConnectionWithTheCamera()
+        viewModel.getProgressConnectionWithTheCamera()
 
         Assert.assertEquals((cameraPairingProgress as Result.Error).exception.message, EXCEPTION_GET_PARAMS_TO_CONNECT)
     }
@@ -138,8 +144,8 @@ class PairingViewModelTest {
     }
 
     @Test
-    fun testCleanCacheFiles(){
+    fun testCleanCacheFiles() {
         every { viewModel.cleanCacheFiles() } just runs
-       viewModel.cleanCacheFiles()
+        viewModel.cleanCacheFiles()
     }
 }

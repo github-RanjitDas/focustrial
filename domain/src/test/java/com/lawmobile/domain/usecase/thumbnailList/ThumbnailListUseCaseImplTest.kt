@@ -77,6 +77,4 @@ internal class ThumbnailListUseCaseImplTest {
         runBlocking { linkSnapshotsUseCase.getSnapshotList() }
         coVerify { thumbnailListRepository.getSnapshotList() }
     }
-
-
 }

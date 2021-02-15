@@ -10,8 +10,9 @@ class ValidatePasswordOfficerRepositoryImpl(
     private val validatePasswordOfficerRemoteDataSource: ValidatePasswordOfficerRemoteDataSource
 ) : ValidatePasswordOfficerRepository {
     override suspend fun getUserInformation(): Result<DomainUser> {
-        return when (val cameraUser = validatePasswordOfficerRemoteDataSource.getUserInformation()
-            ) {
+        return when (
+            val cameraUser = validatePasswordOfficerRemoteDataSource.getUserInformation()
+        ) {
             is Result.Success -> {
                 val user = UserMapper.cameraToDomain(cameraUser.data)
                 Result.Success(user)

@@ -37,9 +37,9 @@ class SimpleFileListFragment : FileListBaseFragment() {
     var onFileCheck: ((Boolean, Int) -> Unit)? = null
     var fileListBackup = mutableListOf<DomainInformationFile>()
 
-
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         setObservers()
@@ -83,7 +83,7 @@ class SimpleFileListFragment : FileListBaseFragment() {
     fun applyFiltersToList() {
         simpleFileListAdapter?.fileList =
             filter?.filteredList?.filterIsInstance<DomainInformationFile>()
-                    as MutableList<DomainInformationFile>
+            as MutableList<DomainInformationFile>
         manageFragmentContent(
             fragmentFileListBinding.fileListRecycler,
             fragmentFileListBinding.noFilesTextView
@@ -93,7 +93,7 @@ class SimpleFileListFragment : FileListBaseFragment() {
     private fun restoreFilters() {
         simpleFileListAdapter?.fileList =
             simpleFileListAdapter?.fileList?.let { getFilteredList(it) }
-                ?.filterIsInstance<DomainInformationFile>() as MutableList
+            ?.filterIsInstance<DomainInformationFile>() as MutableList
     }
 
     private fun setListeners() {

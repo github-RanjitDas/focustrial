@@ -28,6 +28,5 @@ class SnapshotDetailModule {
         @Provides
         fun provideSnapshotDetailUseCase(snapshotDetailRepository: SnapshotDetailRepository): SnapshotDetailUseCase =
             SnapshotDetailUseCaseImpl(snapshotDetailRepository)
-
     }
 }

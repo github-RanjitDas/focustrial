@@ -1,16 +1,21 @@
 package com.lawmobile.data.repository.videoPlayback
 
 import com.lawmobile.data.datasource.remote.videoPlayback.VideoPlaybackRemoteDataSource
-import com.lawmobile.domain.entities.VideoListMetadata
 import com.lawmobile.data.mappers.VideoInformationMapper
 import com.lawmobile.data.repository.videoPlayback.VideoPlaybackRepositoryImpl.Companion.ERROR_TO_GET_VIDEO
 import com.lawmobile.domain.entities.DomainCameraFile
 import com.lawmobile.domain.entities.DomainInformationVideo
 import com.lawmobile.domain.entities.DomainVideoMetadata
-import com.safefleet.mobile.kotlin_commons.helpers.Result
+import com.lawmobile.domain.entities.VideoListMetadata
 import com.safefleet.mobile.external_hardware.cameras.entities.VideoFileInfo
 import com.safefleet.mobile.external_hardware.cameras.entities.VideoInformation
-import io.mockk.*
+import com.safefleet.mobile.kotlin_commons.helpers.Result
+import io.mockk.clearAllMocks
+import io.mockk.coEvery
+import io.mockk.coVerify
+import io.mockk.every
+import io.mockk.mockk
+import io.mockk.mockkObject
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert
 import org.junit.jupiter.api.BeforeEach
@@ -37,7 +42,7 @@ class VideoPlaybackRepositoryImplTest {
         val cameraConnectVideoInformationVideo = VideoFileInfo(1, 1, 1, "", "", 1, "", "")
 
         coEvery { videoPlayBackRemoteDataSource.getInformationResourcesVideo(any()) } returns
-                Result.Success(cameraConnectVideoInformationVideo)
+            Result.Success(cameraConnectVideoInformationVideo)
 
         runBlocking {
             val result =
@@ -57,7 +62,7 @@ class VideoPlaybackRepositoryImplTest {
         val cameraConnectVideoInformationVideo = VideoFileInfo(1, 1, 1, "", "", 1, "", "")
 
         coEvery { videoPlayBackRemoteDataSource.getInformationResourcesVideo(any()) } returns
-                Result.Success(cameraConnectVideoInformationVideo)
+            Result.Success(cameraConnectVideoInformationVideo)
 
         runBlocking {
             val result =

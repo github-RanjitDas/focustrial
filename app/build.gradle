@@ -9,6 +9,10 @@ plugins {
     id 'com.google.firebase.crashlytics'
 }
 
+apply from: '../ktlint.gradle'
+
+check.dependsOn ktlint
+
 android {
     compileSdkVersion AppConfig.compileSdkVersion
 

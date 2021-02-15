@@ -6,7 +6,13 @@ import com.lawmobile.domain.usecase.liveStreaming.LiveStreamingUseCase
 import com.lawmobile.presentation.InstantExecutorExtension
 import com.lawmobile.presentation.utils.VLCMediaPlayer
 import com.safefleet.mobile.kotlin_commons.helpers.Result
-import io.mockk.*
+import io.mockk.Runs
+import io.mockk.coEvery
+import io.mockk.coVerify
+import io.mockk.every
+import io.mockk.just
+import io.mockk.mockk
+import io.mockk.verify
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
@@ -17,7 +23,6 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.api.extension.ExtendWith
-
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @ExtendWith(InstantExecutorExtension::class)
@@ -88,7 +93,6 @@ class LiveActivityViewModelTest {
         Assert.assertEquals(liveActivityViewModel.resultStopVideoLiveData.value, result)
         coVerify { liveStreamingUseCase.stopRecordVideo() }
     }
-
 
     @Test
     fun testTakePhotoFlow() {

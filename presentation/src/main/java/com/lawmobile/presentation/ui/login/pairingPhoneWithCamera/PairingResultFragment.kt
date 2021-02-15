@@ -25,7 +25,8 @@ class PairingResultFragment : BaseFragment() {
     private lateinit var animation: Animation
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         _fragmentPairingResultBinding =
@@ -144,6 +145,4 @@ class PairingResultFragment : BaseFragment() {
         fun createInstance(connectionSuccess: (isSuccess: Boolean) -> Unit): PairingResultFragment =
             PairingResultFragment().apply { this.connectionSuccess = connectionSuccess }
     }
-
-
 }

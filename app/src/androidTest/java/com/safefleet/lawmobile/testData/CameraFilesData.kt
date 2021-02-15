@@ -1,7 +1,7 @@
 package com.safefleet.lawmobile.testData
 
-import com.safefleet.mobile.external_hardware.cameras.entities.FileResponseWithErrors
 import com.safefleet.mobile.external_hardware.cameras.entities.CameraFile
+import com.safefleet.mobile.external_hardware.cameras.entities.FileResponseWithErrors
 
 enum class CameraFilesData(val value: FileResponseWithErrors) {
     DEFAULT_SNAPSHOT_LIST(

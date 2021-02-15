@@ -10,5 +10,4 @@ class DeviceUtils {
     fun switchToLandscape() = device.setOrientationLeft()
 
     fun switchToPortrait() = device.setOrientationNatural()
-
 }

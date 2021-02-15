@@ -3,7 +3,12 @@ package com.lawmobile.data.repository.liveStreaming
 import com.lawmobile.data.datasource.remote.liveStreaming.LiveStreamingRemoteDataSource
 import com.lawmobile.domain.entities.FileList
 import com.safefleet.mobile.kotlin_commons.helpers.Result
-import io.mockk.*
+import io.mockk.clearAllMocks
+import io.mockk.coEvery
+import io.mockk.coVerify
+import io.mockk.every
+import io.mockk.mockk
+import io.mockk.verify
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert
 import org.junit.jupiter.api.BeforeEach
@@ -134,7 +139,7 @@ class LiveStreamingRepositoryImplTest {
     @Test
     fun testGetCatalogInfoSuccess() {
         coEvery { liveStreamingRemoteDataSource.getCatalogInfo() } returns
-                Result.Success(listOf(mockk(relaxed = true)))
+            Result.Success(listOf(mockk(relaxed = true)))
 
         runBlocking {
             val result = liveStreamingRepositoryImpl.getCatalogInfo()
@@ -147,7 +152,7 @@ class LiveStreamingRepositoryImplTest {
     @Test
     fun testGetCatalogInfoError() {
         coEvery { liveStreamingRemoteDataSource.getCatalogInfo() } returns
-                Result.Error(mockk())
+            Result.Error(mockk())
 
         runBlocking {
             val result = liveStreamingRepositoryImpl.getCatalogInfo()
@@ -196,5 +201,4 @@ class LiveStreamingRepositoryImplTest {
         runBlocking { liveStreamingRepositoryImpl.disconnectCamera() }
         coVerify { liveStreamingRemoteDataSource.disconnectCamera() }
     }
-
 }

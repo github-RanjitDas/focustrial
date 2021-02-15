@@ -29,7 +29,6 @@ class AppNavigationTest : EspressoStartActivityBaseTest<LoginActivity>(LoginActi
 
     @Test
 
-
     fun b_verifyLiveViewToggleBehaviorAfterNavigation_FMA_214() {
         with(liveViewScreen) {
             isLiveViewDisplayed()
