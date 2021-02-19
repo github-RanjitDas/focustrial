@@ -47,7 +47,7 @@ class LiveViewScreen : BaseScreen() {
         assertDisplayed(R.string.view_snapshots)
 
         assertDisplayed(R.id.buttonVideoList)
-        assertDisplayed(R.string.videos)
+        assertDisplayed(R.string.view_videos)
     }
 
     fun isVideoInFullScreen() {

@@ -21,7 +21,7 @@
             android:id="@+id/photoImageBackground"
             android:layout_width="match_parent"
             android:layout_height="@dimen/snapshot_link_item_height"
-            android:contentDescription="@string/file_item_image"
+            android:contentDescription="@string/file_item_image_description"
             android:src="@color/white"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -29,7 +29,7 @@
 
         <ImageView
             android:id="@+id/imageErrorThumbnail"
-            android:contentDescription="@string/snapshot_item_detail_title"
+            android:contentDescription="@string/image_error_thumbnail"
             android:layout_width="@dimen/file_list_item_height"
             android:layout_height="@dimen/file_list_item_height"
             android:scaleType="fitXY"
@@ -47,13 +47,13 @@
             android:visibility="invisible"
             android:layout_height="@dimen/snapshot_link_item_height"
             app:layout_constraintTop_toTopOf="parent"
-            android:contentDescription="@string/file_item_image" />
+            android:contentDescription="@string/file_item_image_description" />
 
         <com.airbnb.lottie.LottieAnimationView
             android:id="@+id/photoImageLoading"
             android:layout_width="match_parent"
             android:layout_height="@dimen/snapshot_link_item_height"
-            android:contentDescription="@string/file_item_image"
+            android:contentDescription="@string/file_item_image_description"
             android:backgroundTint="@color/white"
             android:background="@color/white"
             android:visibility="invisible"

@@ -33,7 +33,6 @@
             android:layout_width="@dimen/pairing_phone_camera_button_go_size"
             android:layout_height="@dimen/pairing_phone_camera_button_go_size"
             android:background="@drawable/background_button_go"
-            android:contentDescription="@string/go_to_validate_ssid"
             android:text="@string/go"
             android:textColor="@color/white"
             android:textSize="@dimen/button_go_text_size"

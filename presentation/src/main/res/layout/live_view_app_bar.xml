@@ -14,7 +14,7 @@
             android:layout_height="@dimen/app_bar_logo_height"
             android:layout_marginHorizontal="@dimen/app_bar_logo_margin_horizontal"
             android:background="@drawable/ic_logo_focus"
-            android:contentDescription="@string/focus_mobile_app_logo"
+            android:contentDescription="@string/focus_mobile_app_logo_description"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -54,7 +54,7 @@
             android:id="@+id/buttonLogout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:contentDescription="@string/focus_mobile_app_logo"
+            android:contentDescription="@string/focus_mobile_app_logo_description"
             android:padding="@dimen/app_bar_logout_padding"
             android:src="@drawable/ic_logout"
             app:layout_constraintBottom_toBottomOf="parent"
