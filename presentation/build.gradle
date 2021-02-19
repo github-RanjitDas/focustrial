@@ -100,13 +100,7 @@ dependencies {
     // Junit5
     testImplementation "org.junit.jupiter:junit-jupiter-api:$junit5_version"
     testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$junit5_version"
-    testRuntimeOnly "org.junit.vintage:junit-vintage-engine:$junit5_version"
     testImplementation "org.junit.jupiter:junit-jupiter-params:$junit5_version"
-
-    //AndroidX test
-    androidTestImplementation "androidx.test:runner:$androidx_test_version"
-    androidTestImplementation "androidx.test:rules:$androidx_test_version"
-    androidTestImplementation "androidx.test.ext:junit:$junit_ext_version"
 
     //VLC player
     implementation "com.github.masterwok:libvlc-android-sdk:$libvlc_android_sdk_version"

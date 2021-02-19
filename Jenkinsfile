@@ -79,7 +79,6 @@ node('jenkins-builds-slave') {
                 timeout(20) {
                     sh "./gradlew pitestDebug --stacktrace"
                     archiveArtifacts "presentation/build/pitHistory.txt"
-                    archiveArtifacts "domain/build/pitHistory.txt"
                     archiveArtifacts "data/build/pitHistory.txt"
                     sh "./merge_mutation_reports.sh"
                 }

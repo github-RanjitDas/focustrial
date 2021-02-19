@@ -115,6 +115,14 @@ dependencies {
     kapt "androidx.hilt:hilt-compiler:$hilt_jetpack_version"
     kaptAndroidTest "androidx.hilt:hilt-compiler:$hilt_jetpack_version"
 
+    // Import the Firebase BoM
+    debugApi platform("com.google.firebase:firebase-bom:$firebase_bom_version")
+
+    // Firebase analytics and crashlytics
+    debugApi 'com.google.firebase:firebase-analytics-ktx'
+    debugApi "com.google.firebase:firebase-core:$firebase_core_version"
+    debugApi 'com.google.firebase:firebase-crashlytics'
+
     //Base repository
     implementation 'com.safefleet.mobile:external-hardware:1.0.1-SNAPSHOT@jar'
     implementation 'com.safefleet.mobile:android-commons:1.0.0-SNAPSHOT@aar'

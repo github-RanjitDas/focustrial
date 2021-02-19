@@ -10,9 +10,7 @@ import io.mockk.verify
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.TestInstance
 
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class LiveStreamingUseCaseImplTest {
 
     private val liveStreamingRepository: LiveStreamingRepository = mockk {

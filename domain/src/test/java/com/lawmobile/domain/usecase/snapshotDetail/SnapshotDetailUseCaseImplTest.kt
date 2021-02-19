@@ -10,7 +10,7 @@ import kotlinx.coroutines.runBlocking
 import org.junit.Assert
 import org.junit.jupiter.api.Test
 
-class SnapshotDetailUseCaseTest {
+class SnapshotDetailUseCaseImplTest {
 
     private val snapshotDetailRepository: SnapshotDetailRepository = mockk()
     private val snapshotDetailUseCaseImpl by lazy {

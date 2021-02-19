@@ -1,6 +1,5 @@
 package com.lawmobile.data.datasource.remote.pairingPhoneWithCamera
 
-import com.lawmobile.data.InstantExecutorExtension
 import com.safefleet.mobile.external_hardware.cameras.CameraService
 import com.safefleet.mobile.kotlin_commons.helpers.Result
 import io.mockk.Runs
@@ -12,10 +11,8 @@ import kotlinx.coroutines.runBlocking
 import org.junit.Assert
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
-import org.junit.jupiter.api.extension.ExtendWith
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@ExtendWith(InstantExecutorExtension::class)
 class PairingPhoneWithCameraRemoteDataSourceImplTest {
 
     private val cameraService: CameraService = mockk(relaxed = true)
