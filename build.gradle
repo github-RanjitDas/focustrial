@@ -57,7 +57,7 @@ task installGitHook(type: Copy) {
 tasks.getByPath(':app:preBuild').dependsOn installGitHook
 
 subprojects {
-    if (name.matches("data|presentation|domain")) {
+    if (name.matches("data|presentation")) {
         apply plugin: 'pl.droidsonroids.pitest'
         pitest {
             testPlugin = 'junit5'

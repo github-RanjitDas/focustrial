@@ -5,7 +5,6 @@ plugins {
     id 'kotlin-android'
     id 'kotlin-kapt'
     id 'jacoco'
-    id 'dagger.hilt.android.plugin'
 }
 
 apply from: '../jacoco.gradle'
@@ -60,12 +59,7 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation "androidx.appcompat:appcompat:$app_compat_version"
-    implementation "androidx.core:core-ktx:$ktx_version"
     testImplementation "junit:junit:$junit_version"
-
-    //Material
-    implementation "com.google.android.material:material:$android_material_version"
 
     //GSON
     implementation "com.google.code.gson:gson:$gson_version"
@@ -73,13 +67,7 @@ dependencies {
     // Junit5
     testImplementation "org.junit.jupiter:junit-jupiter-api:$junit5_version"
     testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$junit5_version"
-    testRuntimeOnly "org.junit.vintage:junit-vintage-engine:$junit5_version"
     testImplementation "org.junit.jupiter:junit-jupiter-params:$junit5_version"
-
-    //AndroidX test
-    androidTestImplementation "androidx.test:runner:$androidx_test_version"
-    androidTestImplementation "androidx.test:rules:$androidx_test_version"
-    androidTestImplementation "androidx.test.ext:junit:$junit_ext_version"
 
     // Mockk
     testImplementation "io.mockk:mockk:$mockk_version"
@@ -90,13 +78,6 @@ dependencies {
 
     //Coroutines-test
     testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutines_test_version"
-
-    //Hilt
-    implementation "com.google.dagger:hilt-android:$hilt_version"
-    kapt "com.google.dagger:hilt-android-compiler:$hilt_version"
-    kapt "androidx.hilt:hilt-compiler:$hilt_jetpack_version"
-    implementation "androidx.hilt:hilt-lifecycle-viewmodel:$hilt_jetpack_version"
-    kaptTest "com.google.dagger:hilt-android-compiler:$hilt_version"
 
     //external_hardware
     implementation 'com.safefleet.mobile:external-hardware:1.0.1-SNAPSHOT@jar'

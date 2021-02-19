@@ -1,6 +1,5 @@
 package com.lawmobile.data.datasource.remote.validatePasswordOfficer
 
-import com.lawmobile.data.InstantExecutorExtension
 import com.lawmobile.data.datasource.remote.validatePasswordOfficer.ValidatePasswordOfficerRemoteDataSourceImpl.Companion.ERROR_IN_INFORMATION_USER
 import com.safefleet.mobile.external_hardware.cameras.CameraService
 import com.safefleet.mobile.external_hardware.cameras.entities.CameraUser
@@ -11,11 +10,9 @@ import kotlinx.coroutines.runBlocking
 import org.junit.Assert
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
-import org.junit.jupiter.api.extension.ExtendWith
 import java.lang.Exception
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@ExtendWith(InstantExecutorExtension::class)
 class ValidatePasswordOfficerRemoteDataSourceImplTest {
 
     private val connectCameraUserResult = Result.Success(CameraUser("", "", ""))
