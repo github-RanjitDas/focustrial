@@ -10,6 +10,7 @@ plugins {
 
 apply from: '../jacoco.gradle'
 apply from: '../pitest-exceptions.gradle'
+apply plugin: 'pl.droidsonroids.pitest'
 apply from: '../ktlint.gradle'
 
 check.dependsOn ktlint
@@ -147,4 +148,10 @@ pitest {
     targetTests = ["com.lawmobile.presentation.*"]
     //noinspection GrFinalVariableAccess,GroovyAccessibility
     excludedClasses = pitestExclusions
+    testPlugin = 'junit5'
+    threads = Runtime.getRuntime().availableProcessors()
+    outputFormats = ["HTML", "XML"]
+    avoidCallsTo = ["kotlin.jvm.internal", "kotlin/ResultKt"] //Stabilizes mutation run for Android
+    enableDefaultIncrementalAnalysis =  true
+    timestampedReports = false //Overwrite past mutation report
 }

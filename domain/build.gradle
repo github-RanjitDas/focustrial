@@ -7,12 +7,18 @@ plugins {
 
 apply from: '../jacoco.gradle'
 apply from: '../ktlint.gradle'
-
+apply from: '../pitest-exceptions.gradle'
+apply plugin: 'info.solidsoft.pitest'
 check.dependsOn ktlint
 
 java {
     sourceCompatibility = JavaVersion.VERSION_1_8
     targetCompatibility = JavaVersion.VERSION_1_8
+}
+
+task pitestDebug {
+    group = 'Verification'
+    dependsOn "pitest"
 }
 
 test {
@@ -51,4 +57,19 @@ dependencies {
 task testDebugUnitTest {
     group = 'Verification'
     dependsOn test
+}
+
+pitest {
+    //Add Inspection exclusions since IntelliJ is sending invalid warnings for pitest plugin
+    //noinspection GrFinalVariableAccess,GroovyAccessibility
+    targetClasses = ["com.lawmobile.domain.*"]
+    //noinspection GrFinalVariableAccess,GroovyAccessibility
+    targetTests = ["com.lawmobile.domain.*"]
+    //noinspection GrFinalVariableAccess,GroovyAccessibility
+    excludedClasses = pitestExclusions
+    testPlugin = 'junit5'
+    threads = Runtime.getRuntime().availableProcessors()
+    outputFormats = ['XML', 'HTML']
+    enableDefaultIncrementalAnalysis =  true
+    timestampedReports = false
 }

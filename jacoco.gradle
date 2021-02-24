@@ -13,7 +13,7 @@ task testDebugUnitTestCoverage(type: JacocoReport) {
             fileTree(dir: "$buildDir/tmp/kotlin-classes/debug", exclude: fileFilter),
             fileTree(dir: "$project.rootDir/presentation/build/intermediates/javac/debug", exclude: fileFilter),
             fileTree(dir: "$project.rootDir/domain/build/classes", exclude: fileFilter),
-            fileTree(dir: "$project.rootDir/data/build/intermediates/javac/debug", exclude: fileFilter)
+            fileTree(dir: "$project.rootDir/data/build/classes", exclude: fileFilter)
     ])
 
     def coverageSourceDirs = [

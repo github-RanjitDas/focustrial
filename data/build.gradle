@@ -1,59 +1,41 @@
-import dependencies.*
+import dependencies.Modules
 
 plugins {
-    id 'com.android.library'
-    id 'kotlin-android'
-    id 'kotlin-kapt'
     id 'jacoco'
+    id 'java-library'
+    id 'kotlin'
+    id 'kotlin-kapt'
 }
 
 apply from: '../jacoco.gradle'
 apply from: '../pitest-exceptions.gradle'
 apply from: '../ktlint.gradle'
+apply plugin: 'info.solidsoft.pitest'
 
 check.dependsOn ktlint
 
-android {
-    compileSdkVersion AppConfig.compileSdkVersion
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
 
-    defaultConfig {
-        minSdkVersion AppConfig.minSdkVersion
-        targetSdkVersion AppConfig.targetSdkVersion
-        versionCode AppConfig.buildVersion
-        versionName AppConfig.versionName
+task testDebugUnitTest {
+    group = 'Verification'
+    dependsOn test
+}
 
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        consumerProguardFiles 'consumer-rules.pro'
+task pitestDebug {
+    group = 'Verification'
+    dependsOn "pitest"
+}
+
+test {
+    useJUnitPlatform()
+    jacoco {
+        destinationFile = file("$buildDir/jacoco/testDebugUnitTest.exec")
+        includeNoLocationClasses = true
+        excludes = ['jdk.internal.*']
     }
-
-    buildTypes {
-        debug {
-            testCoverageEnabled true
-            debuggable true
-        }
-
-        release {
-            minifyEnabled true
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-        }
-    }
-
-    testOptions {
-        animationsDisabled = true
-        unitTests.all {
-            useJUnitPlatform()
-            jacoco {
-                destinationFile = file("$buildDir/jacoco/testDebugUnitTest.exec")
-                includeNoLocationClasses = true
-                excludes = ['jdk.internal.*']
-            }
-        }
-    }
-
-    kotlinOptions {
-        jvmTarget = AppConfig.jvmTarget
-    }
-
 }
 
 dependencies {
@@ -93,4 +75,9 @@ pitest {
     targetTests = ["com.lawmobile.data.*"]
     //noinspection GrFinalVariableAccess,GroovyAccessibility
     excludedClasses = pitestExclusions
+    testPlugin = 'junit5'
+    threads = Runtime.getRuntime().availableProcessors()
+    outputFormats = ['XML', 'HTML']
+    enableDefaultIncrementalAnalysis =  true
+    timestampedReports = false
 }
