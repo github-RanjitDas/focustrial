@@ -8,8 +8,8 @@
     android:layout_marginHorizontal="@dimen/margin_10dp"
     android:layout_marginBottom="@dimen/margin_10dp"
     android:elevation="@dimen/no_dp"
-    app:cardCornerRadius="@dimen/margin_5dp"
-    app:cardBackgroundColor="@color/backgroundCardView">
+    app:cardBackgroundColor="@color/backgroundCardView"
+    app:cardCornerRadius="@dimen/margin_5dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -29,35 +29,35 @@
 
         <ImageView
             android:id="@+id/imageErrorThumbnail"
-            android:contentDescription="@string/image_error_thumbnail"
             android:layout_width="@dimen/file_list_item_height"
             android:layout_height="@dimen/file_list_item_height"
+            android:background="@color/transparent"
+            android:contentDescription="@string/image_error_thumbnail"
             android:scaleType="fitXY"
             android:src="@drawable/ic_failed_image"
-            android:background="@color/transparent"
             app:layout_constraintBottom_toBottomOf="@+id/photoImageBackground"
             app:layout_constraintEnd_toEndOf="@+id/photoImageBackground"
             app:layout_constraintStart_toStartOf="@+id/photoImageBackground"
-            app:layout_constraintTop_toTopOf="@+id/photoImageBackground"
-            app:tint="@color/black" />
+            app:layout_constraintTop_toTopOf="@+id/photoImageBackground" />
 
         <ImageView
             android:id="@+id/photoImageListItem"
             android:layout_width="match_parent"
-            android:visibility="invisible"
             android:layout_height="@dimen/snapshot_link_item_height"
-            app:layout_constraintTop_toTopOf="parent"
-            android:contentDescription="@string/file_item_image_description" />
+            android:contentDescription="@string/file_item_image_description"
+            android:visibility="invisible"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <com.airbnb.lottie.LottieAnimationView
             android:id="@+id/photoImageLoading"
             android:layout_width="match_parent"
             android:layout_height="@dimen/snapshot_link_item_height"
-            android:contentDescription="@string/file_item_image_description"
-            android:backgroundTint="@color/white"
             android:background="@color/white"
+            android:backgroundTint="@color/white"
+            android:contentDescription="@string/file_item_image_description"
             android:visibility="invisible"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:lottie_autoPlay="true"
