@@ -1,5 +1,5 @@
 node('jenkins-builds-slave') {
-    def slackChannel = '#law-mobile-alerts'    
+    def slackChannel = '#law-mobile-alerts'
 
     try {
         library identifier: "${env.DEFAULT_SHARED_LIBS}",
@@ -15,7 +15,7 @@ node('jenkins-builds-slave') {
                   ]]
          ]
 
-         def imageDocker = "245255707803.dkr.ecr.us-east-1.amazonaws.com/android-sdk-seon:sdk29-gradle5.6.4-fastlane"
+        def imageDocker = "245255707803.dkr.ecr.us-east-1.amazonaws.com/android-sdk-seon:sdk29-gradle5.6.4-fastlane"
 
         stage('Checkout') {
             logger.stage()
@@ -80,6 +80,7 @@ node('jenkins-builds-slave') {
                     sh "./gradlew pitestDebug --stacktrace"
                     archiveArtifacts "presentation/build/pitHistory.txt"
                     archiveArtifacts "data/build/pitHistory.txt"
+                    archiveArtifacts "domain/build/pitHistory.txt"
                     sh "./merge_mutation_reports.sh"
                 }
             }

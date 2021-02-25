@@ -32,7 +32,8 @@ ext {
     lottieVersion = "3.4.0"
     mockk_version = '1.9'
     pdf_viewer_version = '3.2.0-beta.1'
-    pitest_plugin_version = '0.2.5'
+    pitest_android_plugin_version = '0.2.5'
+    pitest_plugin_version = '1.4.7'
     pitest_junit5_plugin_version = "0.9" //pitest run fails for versions higher than 0.9
     recycker_version = '1.1.0'
     sonar_version = '2.7.1'
