@@ -1,5 +1,6 @@
 package com.lawmobile.presentation.ui.login.pairingPhoneWithCamera
 
+import com.lawmobile.domain.entities.CameraType
 import com.lawmobile.domain.usecase.pairingPhoneWithCamera.PairingPhoneWithCameraUseCase
 import com.lawmobile.presentation.InstantExecutorExtension
 import com.lawmobile.presentation.ui.login.pairingPhoneWithCamera.PairingViewModel.Companion.EXCEPTION_GET_PARAMS_TO_CONNECT
@@ -96,8 +97,8 @@ class PairingViewModelTest {
 
     @Test
     fun testIsValidNumberCameraBWC() {
-        Assert.assertTrue(viewModel.isValidNumberCameraBWC(DEFAULT_SSID))
-        Assert.assertFalse(viewModel.isValidNumberCameraBWC(""))
+        Assert.assertTrue(CameraType.isValidNumberCameraBWC(DEFAULT_SSID))
+        Assert.assertFalse(CameraType.isValidNumberCameraBWC(""))
     }
 
     @Test

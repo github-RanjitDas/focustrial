@@ -37,6 +37,7 @@ class CameraServiceModule {
         fun provideCameraService(x1CameraHelper: X1CameraHelper): CameraService {
             return when (CameraInfo.cameraType) {
                 CameraType.X1 -> CameraConnectServiceX1Mock()
+                CameraType.X2 -> CameraConnectServiceX1Mock()
             }
         }
 

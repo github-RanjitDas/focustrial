@@ -17,6 +17,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.lawmobile.domain.entities.CameraType
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.databinding.FragmentStartPairingBinding
 import com.lawmobile.presentation.entities.AlertInformation
@@ -123,7 +124,7 @@ class StartPairingFragment : BaseFragment() {
             return
         }
         val serialNumberCamera = pairingViewModel.getNetworkName()
-        if (!pairingViewModel.isValidNumberCameraBWC(serialNumberCamera)) {
+        if (!CameraType.isValidNumberCameraBWC(serialNumberCamera)) {
             pairingViewModel.isPossibleConnection()
             return
         }

@@ -58,9 +58,6 @@ class PairingViewModel @ViewModelInject constructor(
         cameraPairingProgress?.invoke(Result.Success(0))
     }
 
-    fun isValidNumberCameraBWC(codeCamera: String): Boolean =
-        codeCamera.contains(CAMERA_SSID_IDENTIFIER)
-
     fun getNetworkName() = wifiHelper.getSSIDWiFi()
 
     fun isWifiEnable(): Boolean = wifiHelper.isWifiEnable()
@@ -72,6 +69,5 @@ class PairingViewModel @ViewModelInject constructor(
     companion object {
         const val EXCEPTION_GET_PARAMS_TO_CONNECT =
             "Exception in get params to configure connection"
-        const val CAMERA_SSID_IDENTIFIER = "X57"
     }
 }
