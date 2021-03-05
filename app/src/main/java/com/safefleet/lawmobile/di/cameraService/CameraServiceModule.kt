@@ -37,6 +37,7 @@ class CameraServiceModule {
         fun provideCameraService(x1CameraHelper: X1CameraHelper): CameraService {
             return when (CameraInfo.cameraType) {
                 CameraType.X1 -> X1CameraService(x1CameraHelper)
+                CameraType.X2 -> X1CameraService(x1CameraHelper)
             }
         }
 

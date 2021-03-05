@@ -15,4 +15,8 @@ object CameraInfo {
         officerName = ""
         areNewChanges = false
     }
+
+    fun setCameraType(serialNumber: String) {
+        cameraType = CameraType.getTypeOfCamera(serialNumber)
+    }
 }
