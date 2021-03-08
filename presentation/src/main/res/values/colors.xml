@@ -16,6 +16,8 @@
     <color name="lightBlue">#4E8AC9</color>
     <color name="darkBlue">#0068AF</color>
     <color name="whiteTransparentLive">#34FFFFFF</color>
+    <color name="whiteTransparentMenuHeader">#0DFFFFFF</color>
+    <color name="whiteTransparentMenuDivider">#1AFFFFFF</color>
     <color name="greenSuccess">#5fbb66</color>
     <color name="backgroundCardView">#D7DEEA</color>
 
