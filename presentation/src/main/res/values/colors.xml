@@ -18,6 +18,7 @@
     <color name="whiteTransparentLive">#34FFFFFF</color>
     <color name="whiteTransparentMenuHeader">#0DFFFFFF</color>
     <color name="whiteTransparentMenuDivider">#1AFFFFFF</color>
+    <color name="blackTransparentMenuOpen">#99000000</color>
     <color name="greenSuccess">#5fbb66</color>
     <color name="backgroundCardView">#D7DEEA</color>
 
