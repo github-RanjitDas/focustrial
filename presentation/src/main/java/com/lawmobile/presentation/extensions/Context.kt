@@ -1,20 +1,27 @@
 package com.lawmobile.presentation.extensions
 
 import android.content.Context
+import android.content.Intent
+import android.os.Process
+import android.provider.Settings
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.entities.AlertInformation
 import com.lawmobile.presentation.entities.NeutralAlertInformation
 import com.lawmobile.presentation.ui.base.BaseActivity
+import com.lawmobile.presentation.utils.CameraHelper
+import com.safefleet.mobile.commons.widgets.SafeFleetConfirmationDialog
+import kotlin.system.exitProcess
 
 fun Context.createAlertInformation(alertInformation: AlertInformation) {
     val builder = AlertDialog.Builder(this)
     var message = ""
-    if (alertInformation.message != null){
+    if (alertInformation.message != null) {
         message = getString(alertInformation.message)
-    }else {
-        if (alertInformation.customMessage != null){
+    } else {
+        if (alertInformation.customMessage != null) {
             message = alertInformation.customMessage
         }
     }
@@ -46,22 +53,56 @@ fun Context.createAlertErrorConnection() {
 }
 
 fun Context.createAlertSessionExpired() {
-    val activity = this as BaseActivity
     val alertInformation =
         AlertInformation(
             R.string.connection_finished, R.string.connection_finished_description,
-            { activity.restartApp() }, null
+            { restartApp() }, null
         )
-    this.createAlertInformation(alertInformation)
+    createAlertInformation(alertInformation)
 }
 
-fun Context.createAlertConfirmAppExit() {
+fun Context.restartApp() {
+    val intent: Intent? = this.packageManager
+        .getLaunchIntentForPackage(this.packageName)
+    intent?.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+    startActivity(intent)
+    Process.killProcess(Process.myPid())
+    exitProcess(0)
+}
+
+fun Context.createAlertConfirmAppExit(callback: () -> Unit) {
+    SafeFleetConfirmationDialog(
+        this,
+        true,
+        getString(R.string.logout),
+        getString(R.string.logout_message)
+    ).apply {
+        onResponseClicked = {
+            if (it) {
+                callback.invoke()
+                dismiss()
+            }
+        }
+        show()
+    }
+}
+
+fun Context.createAlertDialogUnsavedChanges() {
     val activity = this as BaseActivity
-    val alertInformation =
-        AlertInformation(
-            R.string.confirm_app_exit_title, R.string.confirm_app_exit_description,
-            { activity.killApp() }, {})
-    this.createAlertInformation(alertInformation)
+    SafeFleetConfirmationDialog(
+        this,
+        true,
+        getString(R.string.unsaved_changes),
+        getString(R.string.unsaved_changes_message)
+    ).apply {
+        onResponseClicked = {
+            if (it) {
+                dismiss()
+                activity.finish()
+            }
+        }
+        show()
+    }
 }
 
 fun Context.createAlertMobileDataActive(neutralAlertInformation: NeutralAlertInformation): AlertDialog {
@@ -84,3 +125,42 @@ fun Context.createAlertMobileDataActive(neutralAlertInformation: NeutralAlertInf
 fun Context.showToast(message: String, duration: Int) {
     Toast.makeText(this, message, duration).show()
 }
+
+fun Context.checkSession(callback: (View) -> Unit, view: View) {
+    val isSessionExpired = checkIfSessionIsExpired()
+    if (isSessionExpired) {
+        this.createAlertSessionExpired()
+    } else if (!CameraHelper.getInstance().checkWithAlertIfTheCameraIsConnected()) {
+        this.createAlertErrorConnection()
+    } else {
+        callback.invoke(view)
+    }
+}
+
+fun Context.verifySessionBeforeAction(callback: () -> Unit) {
+    val isSessionExpired = checkIfSessionIsExpired()
+    if (isSessionExpired) {
+        this.createAlertSessionExpired()
+    } else if (!CameraHelper.getInstance().checkWithAlertIfTheCameraIsConnected()) {
+        this.createAlertErrorConnection()
+    } else {
+        callback.invoke()
+    }
+}
+
+fun Context.isAnimationsEnabled() =
+    Settings.System.getFloat(
+        contentResolver,
+        Settings.Global.TRANSITION_ANIMATION_SCALE,
+        0F
+    ) != 0F
+            && Settings.System.getFloat(
+        contentResolver,
+        Settings.Global.WINDOW_ANIMATION_SCALE,
+        0F
+    ) != 0F
+            && Settings.System.getFloat(
+        contentResolver,
+        Settings.Global.ANIMATOR_DURATION_SCALE,
+        0F
+    ) != 0F

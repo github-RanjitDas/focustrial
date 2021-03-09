@@ -1,8 +1,13 @@
 package com.lawmobile.presentation.extensions
 
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
+import android.content.Context
+import java.io.File
 
-fun ByteArray.convertBitmap(): Bitmap {
-    return BitmapFactory.decodeByteArray(this, 0, this.size)
+fun ByteArray.getPathFromTemporalFile(context: Context, name: String): String {
+    val temporalDir = context.cacheDir
+    val file = File(name)
+    val outputFile = File.createTempFile(file.nameWithoutExtension, "."+file.extension, temporalDir)
+    file.delete()
+    outputFile.writeBytes(this)
+    return outputFile.absolutePath
 }

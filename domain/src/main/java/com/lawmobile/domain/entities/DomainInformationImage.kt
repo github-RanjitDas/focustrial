@@ -1,24 +1,30 @@
 package com.lawmobile.domain.entities
 
-import com.safefleet.mobile.avml.cameras.entities.CameraConnectFile
-
 data class DomainInformationImage(
-    val cameraConnectFile: CameraConnectFile,
-    val imageBytes: ByteArray,
-    var isAssociatedToVideo: Boolean = false
-) {
+    override val domainCameraFile: DomainCameraFile,
+    var imageBytes: ByteArray? = null,
+    override var isSelected: Boolean = false,
+    var internalPath: String? = null
+) : DomainInformationForList {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
 
         other as DomainInformationImage
 
-        if (!imageBytes.contentEquals(other.imageBytes)) return false
+        other.imageBytes?.let { otherBytes ->
+            imageBytes?.let { currentBytes ->
+                if (currentBytes.contentEquals(otherBytes)) return true
+            }
+        }
 
         return true
     }
 
     override fun hashCode(): Int {
-        return imageBytes.contentHashCode()
+        imageBytes?.let {
+            return it.contentHashCode()
+        }
+        return 0
     }
 }

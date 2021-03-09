@@ -13,15 +13,19 @@ buildscript {
             }
             url "https://nexus.vmaxlive.net/repository/maven-public/"
         }
+        maven {
+            url "https://oss.sonatype.org/content/repositories/snapshots"
+        }
     }
     configurations.maybeCreate('pitest')
     dependencies {
-        classpath "com.android.tools.build:gradle:3.6.3"
+        classpath 'com.android.tools.build:gradle:4.0.1'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:$sonar_version"
         classpath "org.jacoco:org.jacoco.core:$jacoco_version"
         classpath "pl.droidsonroids.gradle:gradle-pitest-plugin:$pitest_plugin_version"
         pitest "org.pitest:pitest-junit5-plugin:$pitest_junit5_plugin_version"
+        classpath "com.google.dagger:hilt-android-gradle-plugin:$hilt_version"
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
@@ -59,7 +63,6 @@ subprojects {
             avoidCallsTo = ["kotlin.jvm.internal", "kotlin/ResultKt"] //Stabilizes mutation run for Android
             enableDefaultIncrementalAnalysis =  true
             timestampedReports = false //Overwrite past mutation report
-            mutators = ["NEW_DEFAULTS"]
         }
     }
 }

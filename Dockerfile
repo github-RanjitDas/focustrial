@@ -15,7 +15,7 @@ RUN dpkg --add-architecture i386 \
     && apt-get update
 
 # Install Fastlane
-RUN apt-get install build-essential
+RUN apt-get install build-essential -y
 RUN apt-get install -y ruby ruby-dev
 RUN gem install fastlane
 RUN gem install google-api-client -v 0.29.1

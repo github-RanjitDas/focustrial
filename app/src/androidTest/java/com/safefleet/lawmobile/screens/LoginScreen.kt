@@ -1,69 +1,83 @@
 package com.safefleet.lawmobile.screens
 
 import com.safefleet.lawmobile.R
+import com.safefleet.lawmobile.helpers.Alert
 import com.safefleet.lawmobile.testData.TestLoginData
+import com.schibsted.spain.barista.assertion.BaristaImageViewAssertions.assertHasDrawable
 import com.schibsted.spain.barista.assertion.BaristaVisibilityAssertions.assertContains
 import com.schibsted.spain.barista.assertion.BaristaVisibilityAssertions.assertDisplayed
 import com.schibsted.spain.barista.interaction.BaristaClickInteractions.clickOn
 import com.schibsted.spain.barista.interaction.BaristaEditTextInteractions.writeTo
+import com.schibsted.spain.barista.interaction.BaristaSleepInteractions
 
 class LoginScreen : BaseScreen() {
 
-    fun isLogoDisplayed(): LoginScreen {
-        assertDisplayed(R.id.imageViewLogo)
-        return this
+    fun isLogoDisplayed() = assertDisplayed(R.id.imageViewFMALogoNoAnimation)
+
+    fun isConnectToCameraTextDisplayed() =
+        assertDisplayed(R.id.textViewConnectToCamera, R.string.waiting_for_camera)
+
+    fun isPasswordTextDisplayed() =
+        assertContains(R.id.textViewPassword, R.string.welcome_officer)
+
+    fun typePassword(officerPassword: String = TestLoginData.OFFICER_PASSWORD.value) =
+        writeTo(R.id.editTextOfficerPassword, officerPassword)
+
+    fun clickOnGo() = clickOn(R.id.buttonGo)
+
+    fun clickOnLogin() = clickOn(R.id.buttonLogin)
+
+    fun clickOnCameraInstructions() = clickOn(R.id.buttonInstructionsToLinkCamera)
+
+    fun isInstructionsTitleDisplayed() =
+        assertContains(R.id.textViewInstructionsTitle, R.string.instructions_to_link_camera)
+
+    fun isInstructionsTextDisplayed() =
+        assertDisplayed(R.id.buttonInstructionsToLinkCamera, R.string.instructions_to_link_camera)
+
+    fun isInstructionsImageDisplayed() =
+        assertHasDrawable(R.id.imageViewWifiInstructions, R.drawable.ic_wifi_camera)
+
+    fun isInstructionsGotItButtonDisplayed() =
+        assertContains(R.id.buttonDismissInstructions, R.string.got_it)
+
+    fun clickOnGotIt() = clickOn(R.id.buttonDismissInstructions)
+
+    fun clickOnCloseInstructions() = clickOn(R.id.buttonCloseInstructions)
+
+    fun isPairingSuccessDisplayed() {
+        assertHasDrawable(R.id.imageViewResultPairing, R.drawable.ic_successful_green)
+        assertContains(R.id.textViewResultPairing, R.string.success_connection_to_camera)
+        BaristaSleepInteractions.sleep(1000)
     }
-
-    fun isInstructionsTextDisplayed(): LoginScreen {
-        assertDisplayed(R.id.textInstructionsToLinkCamera, R.string.instructions_to_link_camera)
-        return this
-    }
-
-    fun isWaitingForCameraTextDisplayed(): LoginScreen {
-        assertDisplayed(R.id.textWaitingForCamera, R.string.waiting_for_camera)
-        return this
-    }
-
-    fun isExitDisplayed(): LoginScreen {
-        assertDisplayed(R.id.textViewLoginExit, R.string.exit)
-        return this
-    }
-
-    fun isConnectingToCameraTextDisplayed() =
-        assertDisplayed(R.id.textConnectingToCamera, R.string.connecting_to_camera)
-
-    fun isWelcomeTextDisplayed(): LoginScreen {
-        assertContains(R.id.textViewTitleOfficer, R.string.welcome_officer)
-        return this
-    }
-
-    fun isOfficerNameDisplayed(officerName: String) =
-        assertContains(R.id.textViewOfficerName, officerName)
-
-    fun typePassword(officerPassword: String = TestLoginData.OFFICER_PASSWORD.value): LoginScreen {
-        writeTo(R.id.textInputEditTextValidatePasswordOfficer, officerPassword)
-        return this
-    }
-
-    fun go() = clickOn(R.id.imageButtonGo)
 
     fun isIncorrectPasswordToastDisplayed() {
-        toastMessage.isToastDisplayed(R.string.incorrect_password)
-        toastMessage.waitUntilToastDisappears(R.string.incorrect_password)
+        assertDisplayed(R.string.incorrect_password)
     }
 
-    fun isIncorrectSerialNumberToastDisplayed() {
-        toastMessage.isToastDisplayed(R.string.the_application_did_not_find_camera)
-        toastMessage.waitUntilToastDisappears(R.string.the_application_did_not_find_camera)
+    fun isFooterLogoDisplayed() {
+        assertHasDrawable(R.id.imageViewSafeFleetFooterLogo, R.drawable.ic_logo_safefleet)
+    }
+
+    fun isPairingErrorDisplayed() {
+        assertHasDrawable(R.id.imageViewResultPairing, R.drawable.ic_error_big)
+        assertDisplayed(R.id.textViewResultPairing, R.string.error_connection_to_camera)
+    }
+
+    fun retryPairing() {
+        clickOn(R.id.buttonRetry)
     }
 
     fun login() {
         try {
-            this.go()
+            clickOnGo()
         } catch (e: Exception) {
-
+            e.printStackTrace()
         }
-        this.typePassword().go()
+        BaristaSleepInteractions.sleep(1000)
+        typePassword()
+        clickOnLogin()
     }
 
+    fun isWifiOffAlertDisplayed() = Alert.isWifiOffAlertDisplayed()
 }

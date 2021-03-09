@@ -1,70 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ui.login.LoginActivity">
+    android:layout_height="match_parent">
 
-    <ImageView
-        android:id="@+id/imageViewBackground"
-        android:layout_width="@dimen/no_dp"
-        android:layout_height="@dimen/no_dp"
-        android:contentDescription="@string/background"
-        android:scaleType="centerCrop"
-        android:src="@drawable/background"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/textViewVersion"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/pairing_phone_camera_text_version_margin_top"
-        android:layout_marginEnd="@dimen/pairing_phone_camera_text_version_margin_sides"
-        android:textColor="@color/white"
-        android:textStyle="italic"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="Version 3.0.0" />
-
-    <ImageView
-        android:id="@+id/imageViewLogo"
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/pairing_phone_camera_image_focus_margin_sides"
-        android:layout_marginTop="@dimen/pairing_phone_camera_image_focus_margin_top"
-        android:layout_marginEnd="@dimen/pairing_phone_camera_image_focus_margin_sides"
-        android:contentDescription="@string/focus_logo_background"
-        android:src="@drawable/focus_logo_background"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewVersion" />
+        android:layout_height="match_parent"
+        android:background="@drawable/background_blue"
+        tools:context=".ui.login.LoginActivity">
 
-    <TextView
-        android:id="@+id/textViewLoginExit"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:clickable="true"
-        android:focusable="true"
-        android:text="@string/exit"
-        android:textColor="@color/white"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        <ImageView
+            android:id="@+id/imageViewFMALogoNoAnimation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/focus_logo_background"
+            android:src="@drawable/ic_logo_focus"
+            android:visibility="gone"
+            app:layout_constraintBottom_toTopOf="@id/loginGuideline1" />
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/constrainContainer"
-        android:layout_width="@dimen/no_dp"
-        android:layout_height="@dimen/no_dp"
-        android:paddingStart="@dimen/login_constrain_parent_padding"
-        android:paddingEnd="@dimen/login_constrain_parent_padding"
-        android:visibility="visible"
-        app:layout_constraintBottom_toTopOf="@+id/textViewLoginExit"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageViewLogo" />
+        <ImageView
+            android:id="@+id/imageViewFMALogo"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:contentDescription="@string/focus_logo_background"
+            android:src="@drawable/ic_logo_focus_anim" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <ImageView
+            android:id="@+id/imageViewSafeFleetFooterLogo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/focus_logo_background"
+            android:src="@drawable/ic_logo_safefleet"
+            android:visibility="gone"
+            app:layout_constraintBottom_toTopOf="@id/loginGuideline2" />
+
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/fragmentContainer"
+            android:layout_width="@dimen/no_dp"
+            android:layout_height="@dimen/no_dp"
+            android:paddingStart="@dimen/login_constrain_parent_padding"
+            android:paddingEnd="@dimen/login_constrain_parent_padding"
+            android:visibility="visible"
+            app:layout_constraintBottom_toTopOf="@+id/imageViewSafeFleetFooterLogo"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/loginGuideline1" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/loginGuideline1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.15" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/loginGuideline2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.97" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <include layout="@layout/bottom_sheet_instructions_connect_camera" />
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

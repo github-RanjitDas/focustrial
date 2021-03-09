@@ -7,4 +7,5 @@ import com.safefleet.mobile.commons.helpers.Result
 interface PairingPhoneWithCameraRepository : BaseRepository {
     val progressPairingCamera: LiveData<Result<Int>>
     suspend fun loadPairingCamera(hostnameToConnect: String, ipAddressClient: String)
+    suspend fun isPossibleTheConnection(hostnameToConnect: String): Result<Unit>
 }

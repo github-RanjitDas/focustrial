@@ -4,79 +4,39 @@ import com.lawmobile.data.datasource.remote.fileList.FileListRemoteDataSource
 import com.lawmobile.data.entities.FileList
 import com.lawmobile.data.entities.RemoteVideoMetadata
 import com.lawmobile.data.entities.VideoListMetadata
+import com.lawmobile.data.mappers.FileMapper
+import com.lawmobile.data.mappers.PhotoMetadataMapper
+import com.lawmobile.data.mappers.VideoMetadataMapper
 import com.lawmobile.domain.entities.CameraInfo
-import com.lawmobile.domain.entities.DomainInformationFile
-import com.lawmobile.domain.entities.DomainInformationFileResponse
+import com.lawmobile.domain.entities.DomainCameraFile
+import com.lawmobile.domain.entities.DomainInformationImageMetadata
 import com.lawmobile.domain.repository.fileList.FileListRepository
-import com.safefleet.mobile.avml.cameras.entities.*
+import com.safefleet.mobile.avml.cameras.entities.CameraConnectPhotoMetadata
+import com.safefleet.mobile.avml.cameras.entities.CameraConnectVideoMetadata
+import com.safefleet.mobile.avml.cameras.entities.PhotoMetadata
+import com.safefleet.mobile.avml.cameras.entities.VideoMetadata
 import com.safefleet.mobile.commons.helpers.Result
+import com.safefleet.mobile.commons.helpers.doIfSuccess
 import kotlinx.coroutines.delay
 
 class FileListRepositoryImpl(private val fileListRemoteDataSource: FileListRemoteDataSource) :
     FileListRepository {
-    override suspend fun getSnapshotList(): Result<DomainInformationFileResponse> {
-        return when (val response = fileListRemoteDataSource.getSnapshotList()) {
-            is Result.Success -> {
-                val domainInformationFileResponse = DomainInformationFileResponse()
-                val items = response.data.items.sortedByDescending { it.date }.map {
-                    DomainInformationFile(it, null)
-                }
-                domainInformationFileResponse.errors.addAll(response.data.errors)
-                if (items.size < FileList.listOfImages.size) {
-                    domainInformationFileResponse.listItems.addAll(FileList.listOfImages)
-                    return Result.Success(domainInformationFileResponse)
-                }
-
-                domainInformationFileResponse.listItems.addAll(items)
-                FileList.changeListOfImages(items)
-                return Result.Success(domainInformationFileResponse)
-            }
-            is Result.Error -> response
-        }
-    }
-
-    override suspend fun getVideoList(): Result<DomainInformationFileResponse> {
-        return when (val response = fileListRemoteDataSource.getVideoList()) {
-            is Result.Success -> {
-                val domainInformationFileResponse = DomainInformationFileResponse()
-                val items = response.data.items.sortedByDescending { it.date }.map {
-                    val remoteMetadata = VideoListMetadata.getVideoMetadata(it.name)
-                    DomainInformationFile(it, remoteMetadata?.videoMetadata)
-                }
-                domainInformationFileResponse.errors.addAll(response.data.errors)
-                if (items.size < FileList.listOfVideos.size) {
-                    domainInformationFileResponse.listItems.addAll(FileList.listOfVideos.map {
-                        val remoteMetadata =
-                            VideoListMetadata.getVideoMetadata(it.cameraConnectFile.name)
-                        DomainInformationFile(
-                            it.cameraConnectFile,
-                            remoteMetadata?.videoMetadata
-                        )
-                    })
-                    return  Result.Success(domainInformationFileResponse)
-                }
-
-                FileList.changeListOfVideos(items)
-                domainInformationFileResponse.listItems.addAll(items)
-                return Result.Success(domainInformationFileResponse)
-            }
-            is Result.Error -> response
-        }
-    }
-
 
     override suspend fun savePartnerIdVideos(
-        cameraConnectFileList: List<CameraConnectFile>,
+        domainFileList: List<DomainCameraFile>,
         partnerID: String
     ): Result<Unit> {
+        val cameraConnectFileList = FileMapper.domainToCameraList(domainFileList)
         val errorsInFiles = ArrayList<String>()
+
         cameraConnectFileList.forEach {
             val cameraConnectVideoMetadata: CameraConnectVideoMetadata?
-            val remoteVideoMetadata = VideoListMetadata.getVideoMetadata(it.name)
-            if (remoteVideoMetadata != null && remoteVideoMetadata.videoMetadata.metadata != null) {
-                remoteVideoMetadata.videoMetadata.metadata!!.partnerID = partnerID
-                remoteVideoMetadata.videoMetadata.nameFolder = it.nameFolder
-                cameraConnectVideoMetadata = remoteVideoMetadata.videoMetadata
+            val remoteVideoMetadata = VideoListMetadata.getVideoMetadata(it.name)?.videoMetadata
+
+            if (remoteVideoMetadata?.metadata != null) {
+                remoteVideoMetadata.metadata!!.partnerID = partnerID
+                remoteVideoMetadata.nameFolder = it.nameFolder
+                cameraConnectVideoMetadata = VideoMetadataMapper.domainToCamera(remoteVideoMetadata)
             } else {
                 val partnerMetadata = VideoMetadata(partnerID = partnerID)
                 cameraConnectVideoMetadata = CameraConnectVideoMetadata(
@@ -96,7 +56,7 @@ class FileListRepositoryImpl(private val fileListRemoteDataSource: FileListRemot
             } else {
                 VideoListMetadata.saveOrUpdateVideoMetadata(
                     RemoteVideoMetadata(
-                        cameraConnectVideoMetadata,
+                        VideoMetadataMapper.cameraToDomain(cameraConnectVideoMetadata),
                         true
                     )
                 )
@@ -107,29 +67,61 @@ class FileListRepositoryImpl(private val fileListRemoteDataSource: FileListRemot
     }
 
     override suspend fun savePartnerIdSnapshot(
-        cameraConnectFileList: List<CameraConnectFile>,
+        domainFileList: List<DomainCameraFile>,
         partnerID: String
     ): Result<Unit> {
-        val errorsInFiles = ArrayList<String>()
-        cameraConnectFileList.forEach {
+        val cameraConnectFileList = FileMapper.domainToCameraList(domainFileList)
+        val itemsFinal = mutableListOf<CameraConnectPhotoMetadata>()
+        val listPhotosSaved = ArrayList<CameraConnectPhotoMetadata>()
+        val resultGetMetadataOfPhotos = fileListRemoteDataSource.getSavedPhotosMetadata()
 
+        if (resultGetMetadataOfPhotos is Result.Error) {
+            return resultGetMetadataOfPhotos
+        }
+
+        listPhotosSaved.addAll((resultGetMetadataOfPhotos as Result.Success).data)
+        itemsFinal.addAll(listPhotosSaved)
+        val errorsInFiles = ArrayList<String>()
+
+        cameraConnectFileList.forEach { fileItem ->
+            itemsFinal.removeAll { it.fileName == fileItem.name }
             val partnerMetadata = PhotoMetadata(partnerID = partnerID)
-            val cameraConnectSnapshotMetadata = CameraConnectPhotoMetadata(
-                fileName = it.name,
+            val cameraPhotoMetadata = CameraConnectPhotoMetadata(
+                fileName = fileItem.name,
                 officerId = CameraInfo.officerId,
-                path = it.path,
+                path = fileItem.path,
                 x1sn = CameraInfo.serialNumber,
                 metadata = partnerMetadata,
-                nameFolder = it.nameFolder
+                nameFolder = fileItem.nameFolder
             )
-            delay(200)
-            val result =
-                fileListRemoteDataSource.savePartnerIdSnapshot(cameraConnectSnapshotMetadata)
-            if (result is Result.Error) {
-                errorsInFiles.add(it.name)
+
+            delay(150)
+
+            val resultPartnerOnly =
+                fileListRemoteDataSource.savePartnerIdSnapshot(cameraPhotoMetadata)
+            itemsFinal.removeAll { it.fileName == fileItem.name }
+            itemsFinal.add(cameraPhotoMetadata)
+
+            if (resultPartnerOnly is Result.Error) {
+                errorsInFiles.add(cameraPhotoMetadata.fileName)
+            } else {
+                val item = FileList.getMetadataOfImageInList(fileItem.name)
+                val newItemPhoto = DomainInformationImageMetadata(
+                    PhotoMetadataMapper.cameraToDomain(cameraPhotoMetadata),
+                    item?.videosAssociated
+                )
+                FileList.updateItemInImageMetadataList(newItemPhoto)
             }
         }
-        return if (errorsInFiles.isEmpty()) Result.Success(Unit)
-        else Result.Error(Exception("Partner ID could not be associated to: $errorsInFiles"))
+
+        delay(300)
+
+        val resultJSONOnly = fileListRemoteDataSource.savePartnerIdInAllSnapshots(itemsFinal)
+        resultJSONOnly.doIfSuccess {
+            return if (errorsInFiles.isEmpty()) Result.Success(Unit)
+            else Result.Error(java.lang.Exception("Partner ID could not be associated to: $errorsInFiles"))
+        }
+
+        return Result.Error(java.lang.Exception("Partner ID could not be associated"))
     }
 }

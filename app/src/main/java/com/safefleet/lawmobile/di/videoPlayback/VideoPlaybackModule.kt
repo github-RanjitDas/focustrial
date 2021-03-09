@@ -9,23 +9,23 @@ import com.lawmobile.domain.usecase.videoPlayback.VideoPlaybackUseCaseImpl
 import com.safefleet.mobile.avml.cameras.external.CameraConnectService
 import dagger.Module
 import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.components.ActivityComponent
 
+@InstallIn(ActivityComponent::class)
 @Module
-class VideoPlaybackModule {
-
-    @Module
+abstract class VideoPlaybackModule {
+    
     companion object {
-        @JvmStatic
+        
         @Provides
         fun provideVideoPlaybackRemoteDataSource(cameraConnectService: CameraConnectService): VideoPlaybackRemoteDataSource =
             VideoPlaybackRemoteDataSourceImpl(cameraConnectService)
 
-        @JvmStatic
         @Provides
         fun provideVideoPlaybackRepository(videoPlaybackRemoteDataSource: VideoPlaybackRemoteDataSource): VideoPlaybackRepository =
             VideoPlaybackRepositoryImpl(videoPlaybackRemoteDataSource)
 
-        @JvmStatic
         @Provides
         fun provideVideoPlaybackUseCase(videoPlaybackRepository: VideoPlaybackRepository): VideoPlaybackUseCase =
             VideoPlaybackUseCaseImpl(videoPlaybackRepository)

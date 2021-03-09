@@ -19,6 +19,7 @@ ext.fileFilter = [
         //Classes I intentionally don't want to test
         "**/*Activity.*",
         '**/*Constants.*',
+        "**/*DeviceHelper.*",
         '**/App.class',
         '**/*Adapter.*',
         '**/*ViewHolder*.*',
@@ -33,6 +34,7 @@ ext.fileFilter = [
         "**/models/**",
         "**/app/**",
         "**/adapters/**",
+        "**/widgets/**",
         '**/extensions/*.*',
         "**/*VLCMediaPlayer.*",
         "com.lawmobile.domain.CameraInfo*"

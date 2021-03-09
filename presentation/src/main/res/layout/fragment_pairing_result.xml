@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.lawmobile.presentation.ui.login.pairingPhoneWithCamera.PairingResultFragment">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/pairingProgressLayout"
+        android:layout_width="@dimen/no_dp"
+        android:layout_height="@dimen/no_dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/connecting_to_camera"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_p2"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/circularProgressbar" />
+
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/circularProgressbar"
+            android:layout_width="@dimen/pairing_phone_camera_progress_bar_size"
+            android:layout_height="@dimen/pairing_phone_camera_progress_bar_size"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:lottie_autoPlay="true"
+            app:lottie_loop="true"
+            app:lottie_rawRes="@raw/circular_loading" />
+
+        <TextView
+            android:id="@+id/textViewProgressConnection"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/jura_semi_bold"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_h5"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="0%" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/pairingResultLayout"
+        android:layout_width="@dimen/no_dp"
+        android:layout_height="@dimen/no_dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/imageViewResultPairing"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/margin_bottom_image_view_result_pairing"
+            android:background="@drawable/background_button_white"
+            android:contentDescription="@string/go_to_validate_ssid"
+            android:padding="@dimen/result_pairing_image_padding"
+            android:src="@drawable/ic_successful_green"
+            app:layout_constraintBottom_toTopOf="@id/textViewResultPairing"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/textViewResultPairing"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/pairing_phone_camera_text_title_margin_top"
+            android:gravity="center"
+            android:text="@string/success_connection_to_camera"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_h5"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/buttonRetry"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_top_button_retry"
+            android:background="@drawable/background_button_white"
+            android:contentDescription="@string/go_to_validate_ssid"
+            android:text="@string/try_again_button_pairing"
+            android:textAllCaps="false"
+            android:textColor="@color/blue"
+            android:textSize="@dimen/button_retry_text_size"
+            android:visibility="gone"
+            app:layout_constraintTop_toBottomOf="@id/textViewResultPairing" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

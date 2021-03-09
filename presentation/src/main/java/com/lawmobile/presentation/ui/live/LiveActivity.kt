@@ -3,74 +3,133 @@ package com.lawmobile.presentation.ui.live
 import android.content.Intent
 import android.content.pm.ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
 import android.content.pm.ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+import android.os.Build
 import android.os.Bundle
-import android.view.View
-import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
-import androidx.lifecycle.Observer
+import android.text.Html
+import android.view.animation.AnimationUtils
+import androidx.activity.viewModels
+import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import com.lawmobile.domain.entities.CameraInfo
+import com.lawmobile.domain.entities.DomainCatalog
 import com.lawmobile.presentation.R
-import com.lawmobile.presentation.extensions.createAlertProgress
-import com.lawmobile.presentation.extensions.setOnCheckedChangeListenerCheckConnection
-import com.lawmobile.presentation.extensions.setOnClickListenerCheckConnection
-import com.lawmobile.presentation.extensions.showToast
+import com.lawmobile.presentation.entities.AlertInformation
+import com.lawmobile.presentation.extensions.*
 import com.lawmobile.presentation.ui.base.BaseActivity
 import com.lawmobile.presentation.ui.fileList.FileListActivity
 import com.lawmobile.presentation.ui.helpSection.HelpPageActivity
+import com.lawmobile.presentation.ui.live.LiveActivityViewModel.Companion.SCALE_BYTES
+import com.lawmobile.presentation.ui.login.LoginActivity
 import com.lawmobile.presentation.utils.Constants.FILE_LIST_SELECTOR
 import com.lawmobile.presentation.utils.Constants.SNAPSHOT_LIST
 import com.lawmobile.presentation.utils.Constants.VIDEO_LIST
-import com.safefleet.mobile.avml.cameras.entities.CameraConnectCatalog
+import com.lawmobile.presentation.utils.EspressoIdlingResource
 import com.safefleet.mobile.avml.cameras.entities.CatalogTypes
+import com.safefleet.mobile.commons.animations.Animations
+import com.safefleet.mobile.commons.helpers.Event
 import com.safefleet.mobile.commons.helpers.Result
+import com.safefleet.mobile.commons.helpers.doIfError
+import com.safefleet.mobile.commons.helpers.doIfSuccess
+import com.safefleet.mobile.commons.widgets.linearProgressBar.SafeFleetLinearProgressBarBehavior.ASCENDANT
+import com.safefleet.mobile.commons.widgets.linearProgressBar.SafeFleetLinearProgressBarBehavior.DESCENDANT
+import com.safefleet.mobile.commons.widgets.linearProgressBar.SafeFleetLinearProgressBarRanges.*
 import kotlinx.android.synthetic.main.activity_live_view.*
-import javax.inject.Inject
+import kotlinx.android.synthetic.main.live_view_app_bar.*
 
 class LiveActivity : BaseActivity() {
 
-    @Inject
-    lateinit var liveActivityViewModel: LiveActivityViewModel
-
-    private lateinit var dialogProgressSnapShot: AlertDialog
-    private lateinit var dialogProgressVideo: AlertDialog
+    private val liveActivityViewModel: LiveActivityViewModel by viewModels()
+    private val blinkAnimation = Animations.createBlinkAnimation(BLINK_ANIMATION_DURATION)
+    private var isViewLoaded = false
+    private var isBatteryAlertShowed = false
+    private var isStorageAlertShowed = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_live_view)
-        configureObservers()
-        getCatalogInfo()
-        dialogProgressSnapShot = createAlertProgress(R.string.taking_snapshot)
-        dialogProgressVideo = createAlertProgress()
+        overridePendingTransition(0, 0)
+
+        if (isInPortraitMode()) {
+            setOfficerName()
+            configureObservers()
+            waitUntilViewIsLoadedToGetInformation()
+            animateAppBar()
+            animateContainer()
+            turnOnLiveView()
+        }
+    }
+
+    private fun logout() {
+        liveActivityViewModel.disconnectCamera()
+        startActivity(Intent(this, LoginActivity::class.java))
+        finish()
+    }
+
+    private fun setOfficerName() {
+        try {
+            textViewOfficerName.text = CameraInfo.officerName.split(" ")[0]
+            textViewOfficerLastName.text = CameraInfo.officerName.split(" ")[1]
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 
     override fun onResume() {
         super.onResume()
-        updateLiveOrPlaybackActive(buttonSwitchLiveView.isChecked)
+        updateLiveOrPlaybackActive(buttonSwitchLiveView.isActivated)
         setUrlLive()
         startLiveVideoView()
         configureListeners()
+        if (!cameFromLandscape) refreshActivityInformation(isViewLoaded)
+        else cameFromLandscape = false
     }
 
-    private fun getCatalogInfo() {
-        liveActivityViewModel.getCatalogInfo()
+    private fun waitUntilViewIsLoadedToGetInformation() {
+        liveActivityViewModel.waitToFinish(VIEW_LOADING_TIME)
+    }
+
+    private fun animateAppBar() {
+        val animation = AnimationUtils.loadAnimation(this, R.anim.top_to_bottom_anim).apply {
+            startOffset = 0
+        }
+        liveViewAppBar.startAnimation(animation)
+    }
+
+    private fun animateContainer() {
+        val animation = AnimationUtils.loadAnimation(this, R.anim.slide_in_right).apply {
+            startOffset = 300
+        }
+        liveViewContainerLayout.startAnimation(animation)
+    }
+
+    private fun turnOnLiveView() {
+        buttonSwitchLiveView.isActivated = true
     }
 
     private fun configureListeners() {
         toggleFullScreenLiveView.setOnClickListenerCheckConnection {
             changeOrientationLive()
         }
-        buttonSnapshot.setOnClickListenerCheckConnection {
-            dialogProgressSnapShot.show()
-            changeStatusSwitch(true)
-            takePhoto()
+
+        buttonSnapshot.setClickListenerCheckConnection {
+            showShadowLoading(getString(R.string.taking_snapshot))
+            activateSwitch(true)
+            liveActivityViewModel.takePhoto()
         }
-        buttonStreaming.setOnClickListenerCheckConnection {
-            dialogProgressVideo.show()
-            changeStatusSwitch(true)
+
+        buttonRecord.setClickListenerCheckConnection {
+            if (!isRecordingVideo) {
+                showShadowLoading(getString(R.string.starting_recording))
+            } else {
+                showShadowLoading(getString(R.string.stopping_recording))
+            }
+            buttonSwitchLiveView.isActivated = true
+            activateSwitch(true)
             manageRecordingVideo()
         }
-        buttonSwitchLiveView.setOnCheckedChangeListenerCheckConnection { _, isChecked ->
-            changeStatusSwitch(isChecked)
+
+        buttonSwitchLiveView.setClickListenerCheckConnection {
+            activateSwitch(buttonSwitchLiveView.isActivated)
         }
 
         buttonSnapshotList.setOnClickListenerCheckConnection {
@@ -86,6 +145,18 @@ class LiveActivity : BaseActivity() {
             intent.putExtra("LiveActivity", true)
             startActivity(intent)
         }
+
+        buttonLogout.setOnClickListenerCheckConnection {
+            this.createAlertConfirmAppExit(::logout)
+        }
+    }
+
+    private fun refreshActivityInformation(isViewLoaded: Boolean) {
+        if (isViewLoaded) {
+            if (CameraInfo.events.isEmpty()) {
+                liveActivityViewModel.getCatalogInfo()
+            } else liveActivityViewModel.getBatteryLevel()
+        }
     }
 
     private fun startFileListIntent(fileType: String) {
@@ -95,66 +166,220 @@ class LiveActivity : BaseActivity() {
         startActivity(fileListIntent)
     }
 
-    private fun changeStatusSwitch(isChecked: Boolean) {
-        updateLiveOrPlaybackActive(isChecked)
-        changeVisibilityView(isChecked)
-        buttonSwitchLiveView.isChecked = isChecked
-        toggleFullScreenLiveView.isClickable = isChecked
-        if (isChecked) {
-            buttonSwitchLiveView.setBackgroundResource(R.drawable.ic_switch_on)
-            return
-        }
-
-        buttonSwitchLiveView.setBackgroundResource(R.drawable.ic_switch_off)
+    private fun activateSwitch(isActive: Boolean) {
+        updateLiveOrPlaybackActive(isActive)
+        changeVisibilityView(isActive)
+        toggleFullScreenLiveView.isClickable = isActive
     }
 
     private fun changeVisibilityView(isVisible: Boolean) {
-        if (isVisible) {
-            liveStreamingView.setBackgroundResource(R.color.transparent)
-            return
-        }
-        liveStreamingView.setBackgroundResource(R.color.black)
+        if (isVisible) liveStreamingView.setBackgroundResource(R.color.transparent)
+        else liveStreamingView.setBackgroundResource(R.color.black)
     }
 
     private fun configureObservers() {
-        liveActivityViewModel.stopRecordVideo.observe(this, Observer {
-            dialogProgressVideo.dismiss()
-            manageResultInRecordingVideo(it)
-        })
-
-        liveActivityViewModel.startRecordVideo.observe(this, Observer {
-            dialogProgressVideo.dismiss()
-            manageResultInRecordingVideo(it)
-        })
-
-        liveActivityViewModel.resultTakePhotoLiveData.observe(this, Observer {
-            dialogProgressSnapShot.dismiss()
-            manageResultTakePhoto(it)
-        })
-
-        liveActivityViewModel.catalogInfoLiveData.observe(this, Observer(::setCatalogInfo))
+        with(liveActivityViewModel) {
+            isWaitFinishedLiveData.observe(this@LiveActivity, ::startRetrievingInformation)
+            catalogInfoLiveData.observe(this@LiveActivity, ::setCatalogInfo)
+            batteryLevelLiveData.observe(this@LiveActivity, ::setBatteryLevel)
+            storageLiveData.observe(this@LiveActivity, ::setStorageLevels)
+            resultRecordVideoLiveData.observe(this@LiveActivity, ::manageResultInRecordingVideo)
+            resultStopVideoLiveData.observe(this@LiveActivity, ::manageResultInRecordingVideo)
+            resultTakePhotoLiveData.observe(this@LiveActivity, ::manageResultTakePhoto)
+        }
     }
 
-    private fun setCatalogInfo(catalogInfoList: Result<List<CameraConnectCatalog>>) {
-        when (catalogInfoList) {
-            is Result.Success -> {
+    private fun startRetrievingInformation(isViewLoaded: Boolean) {
+        if (isViewLoaded && CameraInfo.events.isEmpty()) liveActivityViewModel.getCatalogInfo()
+        this.isViewLoaded = isViewLoaded
+    }
+
+    private fun setCatalogInfo(domainCatalogList: Result<List<DomainCatalog>>) {
+        with(domainCatalogList) {
+            doIfSuccess { catalogInfoList ->
                 val eventNames =
-                    catalogInfoList.data.filter { it.type == CatalogTypes.EVENT.value }
+                    catalogInfoList.filter { it.type == CatalogTypes.EVENT.value }
                 CameraInfo.events.addAll(eventNames)
             }
-            is Result.Error -> {
-                this.showToast(getString(R.string.catalog_error), Toast.LENGTH_SHORT)
+            doIfError {
+                liveViewAppBar.showErrorSnackBar(
+                    getString(R.string.catalog_error),
+                    CATALOG_ERROR_ANIMATION_DURATION
+                ) {
+                    liveActivityViewModel.getCatalogInfo()
+                }
+            }
+        }
+        liveActivityViewModel.getBatteryLevel()
+    }
+
+    private fun setBatteryLevel(result: Event<Result<Int>>) {
+        result.getContentIfNotHandled()?.run {
+            doIfSuccess(::manageBatteryLevel)
+            doIfError {
+                showBatteryLevelNotAvailable()
+            }
+        }
+        liveActivityViewModel.getStorageLevels()
+    }
+
+    private fun manageBatteryLevel(batteryPercent: Int) {
+        if (batteryPercent > 0) {
+            progressBatteryLevel.setProgress(batteryPercent, DESCENDANT)
+            setColorInBattery(batteryPercent)
+            setTextInProgressBattery(batteryPercent)
+        } else showBatteryLevelNotAvailable()
+    }
+
+    private fun showBatteryLevelNotAvailable() {
+        textViewBatteryPercent.text = getString(R.string.not_available)
+        progressBatteryLevel.setProgress(0, ASCENDANT)
+        liveViewAppBar.showErrorSnackBar(getString(R.string.battery_level_error))
+    }
+
+    private fun setColorInBattery(batteryPercent: Int) {
+        when (batteryPercent) {
+            in LOW_DESCENDANT_RANGE.value -> {
+                imageViewBattery.backgroundTintList =
+                    ContextCompat.getColorStateList(this@LiveActivity, R.color.red)
+                imageViewBattery.startAnimationIfEnabled(blinkAnimation)
+                if (!isBatteryAlertShowed) {
+                    createAlertForInformationCamera(
+                        R.string.battery_alert_title,
+                        R.string.battery_alert_description
+                    )
+                    isBatteryAlertShowed = true
+                }
+            }
+            in MEDIUM_DESCENDANT_RANGE.value -> {
+                imageViewBattery.backgroundTintList =
+                    ContextCompat.getColorStateList(this@LiveActivity, R.color.red)
+                imageViewBattery.clearAnimation()
+            }
+            else -> {
+                imageViewBattery.backgroundTintList =
+                    ContextCompat.getColorStateList(this@LiveActivity, R.color.darkBlue)
+                imageViewBattery.clearAnimation()
             }
         }
     }
 
-    private fun manageResultTakePhoto(result: Result<Unit>) {
-        if (result is Result.Success) {
-            liveActivityViewModel.playSoundTakePhoto()
-            this.showToast(getString(R.string.live_view_take_photo_success), Toast.LENGTH_LONG)
-        } else {
-            this.showToast(getString(R.string.live_view_take_photo_failed), Toast.LENGTH_LONG)
+    private fun setTextInProgressBattery(batteryPercent: Int) {
+        val hoursLeft =
+            ((batteryPercent * BATTERY_TOTAL_HOURS) / TOTAL_PERCENTAGE).toString().subSequence(0, 3)
+        val textBatteryPercent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
+            Html.fromHtml(getString(R.string.battery_percent, batteryPercent, hoursLeft), 0)
+        else getString(R.string.battery_percent, batteryPercent, hoursLeft)
+        textViewBatteryPercent.text = textBatteryPercent
+    }
+
+    private fun setStorageLevels(result: Event<Result<List<Double>>>) {
+        result.getContentIfNotHandled()?.run {
+            doIfSuccess {
+                setColorInStorageLevel(it)
+                setTextStorageLevel(it)
+            }
+            doIfError {
+                textViewStorageLevels.text = getString(R.string.not_available)
+                progressBatteryLevel.setProgress(0, ASCENDANT)
+                liveViewAppBar.showErrorSnackBar(getString(R.string.storage_level_error))
+            }
         }
+        EspressoIdlingResource.decrement()
+    }
+
+    private fun setColorInStorageLevel(information: List<Double>) {
+        val actualPercent =
+            TOTAL_PERCENTAGE - ((information[FREE_STORAGE_POSITION] * TOTAL_PERCENTAGE) / information[TOTAL_STORAGE_POSITION])
+        progressStorageLevel.setProgress(
+            actualPercent.toInt(),
+            ASCENDANT
+        )
+
+        if (actualPercent.toInt() in HIGH_ASCENDANT_RANGE.value) {
+            imageViewStorage.backgroundTintList =
+                ContextCompat.getColorStateList(this@LiveActivity, R.color.red)
+            imageViewStorage.startAnimationIfEnabled(blinkAnimation)
+        } else {
+            imageViewStorage.backgroundTintList =
+                ContextCompat.getColorStateList(this@LiveActivity, R.color.darkBlue)
+            imageViewStorage.clearAnimation()
+        }
+
+        if (actualPercent.toInt() >= PERCENT_TO_SHOW_ALERT_MEMORY_CAPACITY && !isStorageAlertShowed) {
+            isStorageAlertShowed = true
+            createAlertForInformationCamera(
+                R.string.storage_alert_title,
+                R.string.storage_alert_description
+            )
+        }
+    }
+
+    private fun setTextStorageLevel(information: List<Double>) {
+        val textToStorage = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            Html.fromHtml(getStringStorageLevel(information), 0)
+        } else {
+            getStringStorageLevel(information)
+        }
+
+        textViewStorageLevels.text = textToStorage
+    }
+
+    private fun getStringStorageLevel(information: List<Double>): String {
+        val used = information[USED_STORAGE_POSITION]
+        val free = information[FREE_STORAGE_POSITION]
+        var usedFormat = String.format("%.0f", used) + " MB"
+        var freeFormat = String.format("%.0f", free) + " MB"
+        if (used >= SCALE_BYTES) {
+            usedFormat = String.format("%.1f", used / SCALE_BYTES) + " GB"
+        }
+
+        if (free >= SCALE_BYTES) {
+            freeFormat = String.format("%.1f", free / SCALE_BYTES) + " GB"
+        }
+
+        return getString(R.string.storage_level, usedFormat, freeFormat)
+    }
+
+    private fun createAlertForInformationCamera(title: Int, message: Int) {
+        val alertInformation = AlertInformation(
+            title = title,
+            message = message,
+            onClickPositiveButton = { dialogInterface ->
+                dialogInterface.dismiss()
+            })
+        this.createAlertInformation(alertInformation)
+    }
+
+    private fun manageResultTakePhoto(result: Event<Result<Unit>>) {
+        hideShadowLoading()
+        result.getContentIfNotHandled()?.run {
+            doIfSuccess {
+                liveActivityViewModel.playSoundTakePhoto()
+                liveViewAppBar.showSuccessSnackBar(getString(R.string.live_view_take_photo_success))
+            }
+            doIfError {
+                liveViewAppBar.showErrorSnackBar(getString(R.string.live_view_take_photo_failed))
+            }
+        }
+    }
+
+    private fun hideShadowLoading() {
+        EspressoIdlingResource.decrement()
+        viewLiveStreamingShadow.isVisible = false
+        viewDisableButtons.isVisible = false
+        viewLoading.isVisible = false
+        textViewLoading.isVisible = false
+    }
+
+    private fun showShadowLoading(message: String) {
+        EspressoIdlingResource.increment()
+        buttonSwitchLiveView.isActivated = true
+        viewLiveStreamingShadow.isVisible = true
+        viewDisableButtons.isVisible = true
+        viewLoading.isVisible = true
+        textViewLoading.isVisible = true
+        textViewLoading.text = message
     }
 
     private fun manageRecordingVideo() {
@@ -167,31 +392,30 @@ class LiveActivity : BaseActivity() {
     }
 
     private fun manageResultInRecordingVideo(result: Result<Unit>) {
-        when (result) {
-            is Result.Success -> {
-                changeImageDependsRecordingVideo()
-            }
-            is Result.Error -> {
-                Toast.makeText(this, result.exception.message, Toast.LENGTH_LONG).show()
-            }
+        hideShadowLoading()
+        isRecordingVideo = !isRecordingVideo
+        showRecordingIndicator(isRecordingVideo)
+        result.doIfError {
+            liveViewAppBar.showErrorSnackBar(getString(R.string.error_saving_video))
         }
     }
 
-    private fun changeImageDependsRecordingVideo() {
-        isRecordingVideo = !isRecordingVideo
-        if (isRecordingVideo) {
-            imageRecordingIndicator.visibility = View.VISIBLE
-            buttonStreaming.setBackgroundResource(R.drawable.ic_record_active)
-            return
+    private fun showRecordingIndicator(show: Boolean) {
+        imageRecordingIndicator.isVisible = show
+        textLiveViewRecording.isVisible = show
+        buttonRecord.isActivated = show
+        if (show) {
+            val animation = Animations.createBlinkAnimation(BLINK_ANIMATION_DURATION)
+            imageRecordingIndicator.startAnimationIfEnabled(animation)
+        } else {
+            imageRecordingIndicator.clearAnimation()
         }
-
-        imageRecordingIndicator.visibility = View.INVISIBLE
-        buttonStreaming.setBackgroundResource(R.drawable.ic_record)
     }
 
     private fun changeOrientationLive() {
+        cameFromLandscape = true
         requestedOrientation =
-            if (resources.configuration.orientation == SCREEN_ORIENTATION_PORTRAIT) {
+            if (isInPortraitMode()) {
                 SCREEN_ORIENTATION_LANDSCAPE
             } else {
                 SCREEN_ORIENTATION_PORTRAIT
@@ -212,9 +436,18 @@ class LiveActivity : BaseActivity() {
         liveActivityViewModel.startVLCMediaPlayer()
     }
 
-    private fun takePhoto() {
-        liveActivityViewModel.takePhoto()
-    }
-
     override fun onBackPressed() {}
+
+    companion object {
+        private var cameFromLandscape = false
+        private const val BLINK_ANIMATION_DURATION = 1000L
+        private const val CATALOG_ERROR_ANIMATION_DURATION = 7000
+        private const val BATTERY_TOTAL_HOURS = 10f
+        private const val VIEW_LOADING_TIME = 800L
+        private const val FREE_STORAGE_POSITION = 0
+        private const val USED_STORAGE_POSITION = 1
+        private const val TOTAL_STORAGE_POSITION = 2
+        private const val TOTAL_PERCENTAGE = 100
+        private const val PERCENT_TO_SHOW_ALERT_MEMORY_CAPACITY = 95
+    }
 }

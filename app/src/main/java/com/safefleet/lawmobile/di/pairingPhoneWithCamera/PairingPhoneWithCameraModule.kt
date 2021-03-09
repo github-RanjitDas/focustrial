@@ -9,26 +9,25 @@ import com.lawmobile.domain.usecase.pairingPhoneWithCamera.PairingPhoneWithCamer
 import com.safefleet.mobile.avml.cameras.external.CameraConnectService
 import dagger.Module
 import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.components.ApplicationComponent
 
+@InstallIn(ApplicationComponent::class)
 @Module
 class PairingPhoneWithCameraModule {
 
-    @Module
     companion object {
 
-        @JvmStatic
         @Provides
         fun providePairingPhoneWithCameraDataSource(
             cameraConnectService: CameraConnectService
         ): PairingPhoneWithCameraRemoteDataSource =
             PairingPhoneWithCameraRemoteDataSourceImpl(cameraConnectService)
 
-        @JvmStatic
         @Provides
         fun providePairingPhoneWithCameraRepository(pairingPhoneWithCameraRemoteDataSource: PairingPhoneWithCameraRemoteDataSource): PairingPhoneWithCameraRepository =
             PairingPhoneWithCameraRepositoryImpl(pairingPhoneWithCameraRemoteDataSource)
 
-        @JvmStatic
         @Provides
         fun providePairingPhoneWithCameraUseCase(pairingPhoneWithCameraRepository: PairingPhoneWithCameraRepository): PairingPhoneWithCameraUseCase =
             PairingPhoneWithCameraUseCaseImpl(pairingPhoneWithCameraRepository)

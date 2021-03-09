@@ -1,6 +1,5 @@
 package com.lawmobile.domain.usecase.fileList
 
-import com.lawmobile.domain.entities.DomainInformationFileResponse
 import com.lawmobile.domain.repository.fileList.FileListRepository
 import com.safefleet.mobile.commons.helpers.Result
 import io.mockk.coEvery
@@ -16,62 +15,6 @@ internal class FileListUseCaseImplTest {
 
     private val fileListUseCaseImpl: FileListUseCaseImpl by lazy {
         FileListUseCaseImpl(fileListRepository)
-    }
-
-    @Test
-    fun testGetSnapshotListFlow() {
-        coEvery { fileListRepository.getSnapshotList() } returns Result.Success(mockk())
-        runBlocking {
-            fileListUseCaseImpl.getSnapshotList()
-        }
-        coVerify { fileListRepository.getSnapshotList() }
-    }
-
-    @Test
-    fun testGetSnapshotListSuccess() {
-        val domainInformation: DomainInformationFileResponse = mockk()
-        val result = Result.Success(domainInformation)
-        coEvery { fileListRepository.getSnapshotList() } returns result
-        runBlocking {
-            Assert.assertEquals(fileListUseCaseImpl.getSnapshotList(), result)
-        }
-    }
-
-    @Test
-    fun testGetSnapshotListFailed() {
-        val result = Result.Error(mockk())
-        coEvery { fileListRepository.getSnapshotList() } returns result
-        runBlocking {
-            Assert.assertEquals(fileListUseCaseImpl.getSnapshotList(), result)
-        }
-    }
-
-    @Test
-    fun testGetVideoListFlow() {
-        coEvery { fileListRepository.getVideoList() } returns Result.Success(mockk())
-        runBlocking {
-            fileListUseCaseImpl.getVideoList()
-        }
-        coVerify { fileListRepository.getVideoList() }
-    }
-
-    @Test
-    fun testGetVideoListSuccess() {
-        val domainInformation: DomainInformationFileResponse = mockk()
-        val result = Result.Success(domainInformation)
-        coEvery { fileListRepository.getVideoList() } returns result
-        runBlocking {
-            Assert.assertEquals(fileListUseCaseImpl.getVideoList(), result)
-        }
-    }
-
-    @Test
-    fun testGetVideoListFailed() {
-        val result = Result.Error(mockk())
-        coEvery { fileListRepository.getVideoList() } returns result
-        runBlocking {
-            Assert.assertEquals(fileListUseCaseImpl.getVideoList(), result)
-        }
     }
 
     @Test

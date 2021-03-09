@@ -1,6 +1,5 @@
 package com.safefleet.lawmobile.tests
 
-
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
 import com.lawmobile.presentation.ui.login.LoginActivity
@@ -8,12 +7,15 @@ import com.safefleet.lawmobile.screens.FileListScreen
 import com.safefleet.lawmobile.screens.LiveViewScreen
 import com.safefleet.lawmobile.screens.LoginScreen
 import org.junit.Before
+import org.junit.FixMethodOrder
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.junit.runners.MethodSorters
 
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @LargeTest
 @RunWith(AndroidJUnit4::class)
-class AppNavigationTest : EspressoBaseTest<LoginActivity>(LoginActivity::class.java) {
+class AppNavigationTest : EspressoStartActivityBaseTest<LoginActivity>(LoginActivity::class.java) {
 
     companion object {
         val liveViewScreen = LiveViewScreen()
@@ -21,52 +23,62 @@ class AppNavigationTest : EspressoBaseTest<LoginActivity>(LoginActivity::class.j
     }
 
     @Before
-    fun login() = LoginScreen().login()
-
-    @Test
-    fun verifySwitchBetweenSnapshotsAndVideosList_FMA_564() {
-        liveViewScreen.openSnapshotsList()
-        fileListScreen.switchToVideosList()
-        // TODO: implement missing steps when videos are mocked
+    fun login() {
+        LoginScreen().login()
     }
 
     @Test
-    fun verifyLiveViewToggleBehaviorAfterNavigation_FMA_214() {
-        liveViewScreen.isLiveViewDisplayed()
-        liveViewScreen.isLiveViewToggleEnabled()
-
-        liveViewScreen.switchLiveViewToggle()
-        liveViewScreen.isLiveViewToggleDisabled()
-
-        liveViewScreen.openSnapshotsList()
-        fileListScreen.goBack()
-
-        liveViewScreen.isLiveViewDisplayed()
-        liveViewScreen.isLiveViewToggleDisabled()
-
-        liveViewScreen.switchLiveViewToggle()
-        liveViewScreen.isLiveViewToggleEnabled()
+    fun b_verifySwitchBetweenSnapshotsAndVideosList_FMA_564() {
+        with(fileListScreen) {
+            liveViewScreen.openSnapshotList()
+            clickOnSimpleListButton()
+            isFileListDisplayed()
+            clickOnBack()
+            liveViewScreen.openVideoList()
+            isFileListDisplayed()
+        }
     }
 
     @Test
-    fun verifyRecordingAfterNavigation_FMA_549() {
-        liveViewScreen.isLiveViewDisplayed()
+    fun c_verifyLiveViewToggleBehaviorAfterNavigation_FMA_214() {
+        with(liveViewScreen) {
+            isLiveViewDisplayed()
+            isLiveViewToggleEnabled()
 
-        liveViewScreen.startRecording()
-        liveViewScreen.isRecordingInProgress()
+            switchLiveViewToggle()
+            isLiveViewToggleDisabled()
 
-        liveViewScreen.openSnapshotsList()
-        fileListScreen.goBack()
+            openSnapshotList()
+            fileListScreen.clickOnBack()
 
-        liveViewScreen.isRecordingInProgress()
+            isLiveViewDisplayed()
+            isLiveViewToggleDisabled()
 
-        liveViewScreen.openVideosList()
-        fileListScreen.goBack()
-
-        liveViewScreen.isRecordingInProgress()
-
-        liveViewScreen.stopRecording()
-        liveViewScreen.isRecordingNotInProgress()
+            switchLiveViewToggle()
+            isLiveViewToggleEnabled()
+        }
     }
 
+    @Test
+    fun a_verifyRecordingAfterNavigation_FMA_549() {
+        with(liveViewScreen) {
+            isLiveViewDisplayed()
+
+            startRecording()
+            isRecordingInProgress()
+
+            openSnapshotList()
+            fileListScreen.clickOnBack()
+
+            isRecordingInProgress()
+
+            openVideoList()
+            fileListScreen.clickOnBack()
+
+            isRecordingInProgress()
+
+            stopRecording()
+            isRecordingNotInProgress()
+        }
+    }
 }

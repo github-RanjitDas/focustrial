@@ -2,43 +2,50 @@ package com.lawmobile.presentation.ui.live
 
 import android.media.MediaActionSound
 import android.view.SurfaceView
+import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.viewModelScope
+import com.lawmobile.domain.entities.DomainCatalog
 import com.lawmobile.domain.usecase.liveStreaming.LiveStreamingUseCase
 import com.lawmobile.presentation.ui.base.BaseViewModel
 import com.lawmobile.presentation.utils.VLCMediaPlayer
-import com.safefleet.mobile.avml.cameras.entities.CameraConnectCatalog
-import com.safefleet.mobile.commons.helpers.Result
+import com.safefleet.mobile.commons.helpers.*
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-class LiveActivityViewModel @Inject constructor(
+class LiveActivityViewModel @ViewModelInject constructor(
     private val vlcMediaPlayer: VLCMediaPlayer,
     private val liveStreamingUseCase: LiveStreamingUseCase,
     private val mediaActionSound: MediaActionSound
 ) : BaseViewModel() {
 
-    private val startRecordVideoMediator: MediatorLiveData<Result<Unit>> = MediatorLiveData()
-    val startRecordVideo: LiveData<Result<Unit>> get() = startRecordVideoMediator
+    private val resultRecordVideoMediator: MediatorLiveData<Result<Unit>> = MediatorLiveData()
+    val resultRecordVideoLiveData: LiveData<Result<Unit>> get() = resultRecordVideoMediator
 
-    private val stopRecordVideoMediator: MediatorLiveData<Result<Unit>> = MediatorLiveData()
-    val stopRecordVideo: LiveData<Result<Unit>> get() = stopRecordVideoMediator
+    private val resultStopVideoMediator: MediatorLiveData<Result<Unit>> = MediatorLiveData()
+    val resultStopVideoLiveData: LiveData<Result<Unit>> get() = resultStopVideoMediator
 
-    private val resultTakePhotoMediatorLiveData = MediatorLiveData<Result<Unit>>()
-    val resultTakePhotoLiveData: LiveData<Result<Unit>> get() = resultTakePhotoMediatorLiveData
+    private val resultTakePhotoMediatorLiveData = MediatorLiveData<Event<Result<Unit>>>()
+    val resultTakePhotoLiveData: LiveData<Event<Result<Unit>>> get() = resultTakePhotoMediatorLiveData
+
+    private val batteryLevelMediatorLiveData = MediatorLiveData<Event<Result<Int>>>()
+    val batteryLevelLiveData: LiveData<Event<Result<Int>>> get() = batteryLevelMediatorLiveData
+
+    private val storageMediatorLiveData = MediatorLiveData<Event<Result<List<Double>>>>()
+    val storageLiveData: LiveData<Event<Result<List<Double>>>> get() = storageMediatorLiveData
+
+    private val catalogInfoMediatorLiveData =
+        MediatorLiveData<Result<List<DomainCatalog>>>()
+    val catalogInfoLiveData: LiveData<Result<List<DomainCatalog>>> get() = catalogInfoMediatorLiveData
 
     fun getUrlLive(): String = liveStreamingUseCase.getUrlForLiveStream()
 
-    private val catalogInfoMediatorLiveData =
-        MediatorLiveData<Result<List<CameraConnectCatalog>>>()
-    val catalogInfoLiveData get() = catalogInfoMediatorLiveData
-
     fun getCatalogInfo() {
         viewModelScope.launch {
-            catalogInfoMediatorLiveData.postValue(
-                liveStreamingUseCase.getCatalogInfo()
-            )
+            val catalogInfo =
+                getResultWithAttempts(RETRY_ATTEMPTS) { liveStreamingUseCase.getCatalogInfo() }
+            catalogInfoMediatorLiveData.postValue(catalogInfo)
         }
     }
 
@@ -56,7 +63,7 @@ class LiveActivityViewModel @Inject constructor(
 
     fun takePhoto() {
         viewModelScope.launch {
-            resultTakePhotoMediatorLiveData.postValue(liveStreamingUseCase.takePhoto())
+            resultTakePhotoMediatorLiveData.postValue(Event(liveStreamingUseCase.takePhoto()))
         }
     }
 
@@ -66,15 +73,67 @@ class LiveActivityViewModel @Inject constructor(
 
     fun startRecordVideo() {
         viewModelScope.launch {
-            startRecordVideoMediator.postValue(liveStreamingUseCase.startRecordVideo())
+            resultRecordVideoMediator.postValue(liveStreamingUseCase.startRecordVideo())
         }
     }
 
     fun stopRecordVideo() {
         viewModelScope.launch {
-            stopRecordVideoMediator.postValue(liveStreamingUseCase.stopRecordVideo())
+            resultStopVideoMediator.postValue(liveStreamingUseCase.stopRecordVideo())
         }
     }
 
+    fun getBatteryLevel() {
+        viewModelScope.launch {
+            val batteryLevel: Result<Int> =
+                getResultWithAttempts(RETRY_ATTEMPTS) { liveStreamingUseCase.getBatteryLevel() }
+            batteryLevelMediatorLiveData.postValue(
+                Event(batteryLevel)
+            )
+        }
+    }
 
+    fun getStorageLevels() {
+        viewModelScope.launch {
+            val gigabyteList = mutableListOf<Double>()
+            val freeStorageResult =
+                getResultWithAttempts(RETRY_ATTEMPTS) { liveStreamingUseCase.getFreeStorage() }
+            with(freeStorageResult) {
+                doIfSuccess { freeKb ->
+                    val storageFreeMb = freeKb.toDouble() / SCALE_BYTES
+                    gigabyteList.add(storageFreeMb)
+                    delay(200)
+                    val totalStorageResult =
+                        getResultWithAttempts(RETRY_ATTEMPTS) { liveStreamingUseCase.getTotalStorage() }
+
+                    with(totalStorageResult) {
+                        doIfSuccess { totalKb ->
+                            val totalMb = (totalKb.toDouble() / SCALE_BYTES)
+                            val usedBytes = totalMb - storageFreeMb
+                            gigabyteList.add(usedBytes)
+                            gigabyteList.add(totalMb)
+                            storageMediatorLiveData.postValue(Event(Result.Success(gigabyteList)))
+                        }
+                        doIfError {
+                            storageMediatorLiveData.postValue(Event(Result.Error(it)))
+                        }
+                    }
+                }
+                doIfError {
+                    storageMediatorLiveData.postValue(Event(Result.Error(it)))
+                }
+            }
+        }
+    }
+
+    fun disconnectCamera(){
+        viewModelScope.launch {
+            liveStreamingUseCase.disconnectCamera()
+        }
+    }
+
+    companion object {
+        const val SCALE_BYTES = 1024
+        const val RETRY_ATTEMPTS = 5
+    }
 }

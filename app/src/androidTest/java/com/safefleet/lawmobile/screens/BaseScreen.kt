@@ -2,19 +2,14 @@ package com.safefleet.lawmobile.screens
 
 import com.safefleet.lawmobile.R
 import com.safefleet.lawmobile.helpers.Alert
-import com.safefleet.lawmobile.helpers.ToastMessage
-import com.schibsted.spain.barista.interaction.BaristaClickInteractions.clickOn
+import com.schibsted.spain.barista.interaction.BaristaClickInteractions
 
 
 open class BaseScreen {
 
-    private val alert = Alert()
-    protected val toastMessage = ToastMessage()
-
     fun isDisconnectionAlertDisplayed() {
-        alert.isDisconnectionAlertDisplayed()
+        Alert.isDisconnectionAlertDisplayed()
     }
 
-    fun goBack() = clickOn(R.id.textViewFileListBack)
-
+    fun clickOnCancel() = BaristaClickInteractions.clickOn(R.string.cancel)
 }

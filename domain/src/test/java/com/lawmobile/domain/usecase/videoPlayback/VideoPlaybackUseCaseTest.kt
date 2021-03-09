@@ -1,7 +1,7 @@
 package com.lawmobile.domain.usecase.videoPlayback
 
+import com.lawmobile.domain.entities.DomainCameraFile
 import com.lawmobile.domain.repository.videoPlayback.VideoPlaybackRepository
-import com.safefleet.mobile.avml.cameras.entities.CameraConnectFile
 import com.safefleet.mobile.commons.helpers.Result
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -21,32 +21,32 @@ class VideoPlaybackUseCaseTest {
 
     @Test
     fun testGetInformationResourcesVideoSuccess() {
-        val cameraConnectFile: CameraConnectFile = mockk()
-        coEvery { videoPlaybackRepository.getInformationResourcesVideo(cameraConnectFile) } returns Result.Success(
+        val domainCameraFile: DomainCameraFile = mockk()
+        coEvery { videoPlaybackRepository.getInformationResourcesVideo(domainCameraFile) } returns Result.Success(
             mockk()
         )
         runBlocking {
             val result =
-                videoPlaybackUseCaseImpl.getInformationResourcesVideo(cameraConnectFile)
+                videoPlaybackUseCaseImpl.getInformationResourcesVideo(domainCameraFile)
             Assert.assertTrue(result is Result.Success)
         }
 
-        coVerify { videoPlaybackRepository.getInformationResourcesVideo(cameraConnectFile) }
+        coVerify { videoPlaybackRepository.getInformationResourcesVideo(domainCameraFile) }
     }
 
     @Test
     fun testGetInformationResourcesVideoError() {
-        val cameraConnectFile: CameraConnectFile = mockk()
-        coEvery { videoPlaybackRepository.getInformationResourcesVideo(cameraConnectFile) } returns Result.Error(
+        val domainCameraFile: DomainCameraFile = mockk()
+        coEvery { videoPlaybackRepository.getInformationResourcesVideo(domainCameraFile) } returns Result.Error(
             mockk()
         )
         runBlocking {
             val result =
-                videoPlaybackUseCaseImpl.getInformationResourcesVideo(cameraConnectFile)
+                videoPlaybackUseCaseImpl.getInformationResourcesVideo(domainCameraFile)
             Assert.assertTrue(result is Result.Error)
         }
 
-        coVerify { videoPlaybackRepository.getInformationResourcesVideo(cameraConnectFile) }
+        coVerify { videoPlaybackRepository.getInformationResourcesVideo(domainCameraFile) }
     }
 
     @Test

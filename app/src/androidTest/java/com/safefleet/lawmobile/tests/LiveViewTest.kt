@@ -7,12 +7,15 @@ import com.safefleet.lawmobile.helpers.DeviceUtils
 import com.safefleet.lawmobile.screens.LiveViewScreen
 import com.safefleet.lawmobile.screens.LoginScreen
 import org.junit.Before
+import org.junit.FixMethodOrder
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.junit.runners.MethodSorters
 
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @LargeTest
 @RunWith(AndroidJUnit4::class)
-class LiveViewTest : EspressoBaseTest<LoginActivity>(LoginActivity::class.java) {
+class LiveViewTest : EspressoStartActivityBaseTest<LoginActivity>(LoginActivity::class.java) {
 
     private val liveViewScreen = LiveViewScreen()
     private val device = DeviceUtils()
@@ -21,33 +24,35 @@ class LiveViewTest : EspressoBaseTest<LoginActivity>(LoginActivity::class.java) 
     fun login() = LoginScreen().login()
 
     @Test
-    fun verifyLiveViewIsDisplayed_FMA_389() {
+    fun a_verifyLiveViewIsDisplayed_FMA_389() {
         liveViewScreen.isLiveViewDisplayed()
     }
 
     @Test
-    fun verifyVideoInFullScreen_FMA_391() {
-        liveViewScreen.isLiveViewDisplayed()
+    fun b_verifyVideoInFullScreen_FMA_391() {
+        with(liveViewScreen) {
+            isLiveViewDisplayed()
 
-        device.switchToLandscape()
-        liveViewScreen.isLiveViewDisplayed()
+            device.switchToLandscape()
+            isLiveViewDisplayed()
 
-        liveViewScreen.switchFullScreenMode()
-        liveViewScreen.isVideoInFullScreen()
+            switchFullScreenMode()
+            isVideoInFullScreen()
 
-        liveViewScreen.switchFullScreenMode()
-        liveViewScreen.isLiveViewDisplayed()
+            switchFullScreenMode()
+            isLiveViewDisplayed()
 
-        device.switchToPortrait()
+            device.switchToPortrait()
+        }
     }
 
     @Test
-    fun verifyLiveViewToggleOnDisconnection_FMA_423() {
-        mockUtils.disconnectCamera()
+    fun c_verifyLiveViewToggleOnDisconnection_FMA_423() {
+        with(liveViewScreen) {
+            mockUtils.disconnectCamera()
 
-        liveViewScreen.switchLiveViewToggle()
-        liveViewScreen.isDisconnectionAlertDisplayed()
-
-        mockUtils.restoreCameraConnection()
+            switchLiveViewToggle()
+            isDisconnectionAlertDisplayed()
+        }
     }
 }
