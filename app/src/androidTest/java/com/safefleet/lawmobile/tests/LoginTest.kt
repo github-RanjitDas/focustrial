@@ -26,11 +26,11 @@ class LoginTest : EspressoStartActivityBaseTest<LoginActivity>(LoginActivity::cl
     }
 
     @Test
-    fun a_verifyAppLogin_FMA_1036_1037() {
+    fun verifyAppLogin_FMA_1036_1037() {
         with(loginScreen) {
             isLogoDisplayed()
             isConnectToCameraTextDisplayed()
-            isInstructionsTextDisplayed()
+            isInstructionsButtonDisplayed()
             isFooterLogoDisplayed()
 
             clickOnGo()
@@ -49,7 +49,7 @@ class LoginTest : EspressoStartActivityBaseTest<LoginActivity>(LoginActivity::cl
     }
 
     @Test
-    fun b_verifyIncorrectLogin_FMA_1038() {
+    fun verifyIncorrectLogin_FMA_1038() {
         with(loginScreen) {
             clickOnGo()
 
@@ -70,7 +70,7 @@ class LoginTest : EspressoStartActivityBaseTest<LoginActivity>(LoginActivity::cl
     }
 
     @Test
-    fun c_verifyPairingDisconnectionScenario_FMA_1039_1041() {
+    fun verifyPairingDisconnectionScenario_FMA_1039_1041() {
         with(loginScreen) {
             mockUtils.disconnectCamera()
 
@@ -94,35 +94,30 @@ class LoginTest : EspressoStartActivityBaseTest<LoginActivity>(LoginActivity::cl
     }
 
     @Test
-    fun d_verifyInstructionsToConnectCamera_FMA_1322() {
+    fun verifyInstructionsToConnectCamera_FMA_1322() {
         with(loginScreen) {
             clickOnCameraInstructions()
 
-            isInstructionsTitleDisplayed()
-            isInstructionsImageDisplayed()
-            isInstructionsTextDisplayed()
-            isInstructionsGotItButtonDisplayed()
+            isInstructionPopUpDisplayed()
 
             clickOnCloseInstructions()
 
             isLogoDisplayed()
             isConnectToCameraTextDisplayed()
-            isInstructionsTextDisplayed()
+            isInstructionsButtonDisplayed()
             isFooterLogoDisplayed()
 
             clickOnCameraInstructions()
 
-            isInstructionsTitleDisplayed()
-            isInstructionsImageDisplayed()
-            isInstructionsTextDisplayed()
-            isInstructionsGotItButtonDisplayed()
+            isInstructionPopUpDisplayed()
 
             clickOnGotIt()
 
             isLogoDisplayed()
             isConnectToCameraTextDisplayed()
-            isInstructionsTextDisplayed()
+            isInstructionsButtonDisplayed()
             isFooterLogoDisplayed()
+            isInstructionsPopUpNotDisplayed()
         }
     }
 }
