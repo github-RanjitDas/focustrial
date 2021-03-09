@@ -50,7 +50,7 @@ class SnapshotListTest : EspressoStartActivityBaseTest<LoginActivity>(LoginActiv
     }
 
     @Test
-    fun b_verifyNoSnapshotsTakenSimpleList_FMA_559() {
+    fun verifyNoSnapshotsTakenSimpleList_FMA_559() {
         setSimpleListViews()
         mockUtils.clearSnapshotsOnX1()
         with(liveViewScreen) {
@@ -75,7 +75,7 @@ class SnapshotListTest : EspressoStartActivityBaseTest<LoginActivity>(LoginActiv
     }
 
     @Test
-    fun b_verifyNoSnapshotsTakenThumbnailList_FMA_559() {
+    fun verifyNoSnapshotsTakenThumbnailList_FMA_559() {
         setThumbnailListViews()
         mockUtils.clearSnapshotsOnX1()
         with(liveViewScreen) {
@@ -98,7 +98,7 @@ class SnapshotListTest : EspressoStartActivityBaseTest<LoginActivity>(LoginActiv
     }
 
     @Test
-    fun a_verifySimpleCheckboxWhenSnapshotsDontFit_FMA_560() {
+    fun verifySimpleCheckboxWhenSnapshotsDontFit_FMA_560() {
         setSimpleListViews()
         liveViewScreen.openSnapshotList()
 
@@ -134,7 +134,7 @@ class SnapshotListTest : EspressoStartActivityBaseTest<LoginActivity>(LoginActiv
     }
 
     @Test
-    fun a_verifyThumbnailCheckboxWhenSnapshotsDontFit_FMA_560() {
+    fun verifyThumbnailCheckboxWhenSnapshotsDontFit_FMA_560() {
         setThumbnailListViews()
         liveViewScreen.openSnapshotList()
 
@@ -257,7 +257,7 @@ class SnapshotListTest : EspressoStartActivityBaseTest<LoginActivity>(LoginActiv
     }
 
     @Test
-    fun c_verifyUpdatingSimpleSnapshotsList_FMA_563() {
+    fun verifyUpdatingSimpleSnapshotsList_FMA_563() {
         setSimpleListViews()
         mockUtils.clearSnapshotsOnX1()
         val takenSnapshots = extraSnapshotsList.items.subList(0, 3)
@@ -286,7 +286,7 @@ class SnapshotListTest : EspressoStartActivityBaseTest<LoginActivity>(LoginActiv
     }
 
     @Test
-    fun c_verifyUpdatingThumbnailSnapshotsList_FMA_563() {
+    fun verifyUpdatingThumbnailSnapshotsList_FMA_563() {
         setThumbnailListViews()
         mockUtils.clearSnapshotsOnX1()
         val takenSnapshots = extraSnapshotsList.items.subList(0, 3)

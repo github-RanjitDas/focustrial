@@ -6,6 +6,7 @@ import com.safefleet.lawmobile.testData.TestLoginData
 import com.schibsted.spain.barista.assertion.BaristaImageViewAssertions.assertHasDrawable
 import com.schibsted.spain.barista.assertion.BaristaVisibilityAssertions.assertContains
 import com.schibsted.spain.barista.assertion.BaristaVisibilityAssertions.assertDisplayed
+import com.schibsted.spain.barista.assertion.BaristaVisibilityAssertions.assertNotDisplayed
 import com.schibsted.spain.barista.interaction.BaristaClickInteractions.clickOn
 import com.schibsted.spain.barista.interaction.BaristaEditTextInteractions.writeTo
 import com.schibsted.spain.barista.interaction.BaristaSleepInteractions
@@ -29,18 +30,15 @@ class LoginScreen : BaseScreen() {
 
     fun clickOnCameraInstructions() = clickOn(R.id.buttonInstructionsToLinkCamera)
 
-    fun isInstructionsTitleDisplayed() =
-        assertContains(R.id.textViewInstructionsTitle, R.string.instructions_to_link_camera)
-
-    fun isInstructionsTextDisplayed() =
+    fun isInstructionsButtonDisplayed() =
         assertDisplayed(R.id.buttonInstructionsToLinkCamera, R.string.instructions_to_link_camera)
 
-    fun isInstructionsImageDisplayed() =
+    fun isInstructionPopUpDisplayed() {
+        assertContains(R.id.textViewInstructionsTitle, R.string.instructions_to_link_camera)
+        assertDisplayed(R.id.buttonInstructionsToLinkCamera, R.string.instructions_to_link_camera)
         assertHasDrawable(R.id.imageViewWifiInstructions, R.drawable.ic_wifi_camera)
-
-    fun isInstructionsGotItButtonDisplayed() =
         assertContains(R.id.buttonDismissInstructions, R.string.got_it)
-
+    }
     fun clickOnGotIt() = clickOn(R.id.buttonDismissInstructions)
 
     fun clickOnCloseInstructions() = clickOn(R.id.buttonCloseInstructions)
@@ -80,4 +78,16 @@ class LoginScreen : BaseScreen() {
     }
 
     fun isWifiOffAlertDisplayed() = Alert.isWifiOffAlertDisplayed()
+
+    fun isInstructionsPopUpNotDisplayed() {
+        assertNotDisplayed(R.id.textViewInstructionsTitle)
+        assertNotDisplayed(R.string.instruction_1)
+        assertNotDisplayed(R.string.instruction_2)
+        assertNotDisplayed(R.string.instruction_3)
+        assertNotDisplayed(R.string.instruction_4)
+        assertNotDisplayed(R.string.instruction_5)
+        assertNotDisplayed(R.string.instruction_6)
+        assertNotDisplayed(R.id.imageViewWifiInstructions)
+        assertNotDisplayed(R.id.buttonDismissInstructions)
+    }
 }

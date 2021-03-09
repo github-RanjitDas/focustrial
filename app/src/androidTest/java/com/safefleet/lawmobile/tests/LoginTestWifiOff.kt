@@ -23,7 +23,7 @@ class LoginTestWifiOff : EspressoBaseTest() {
     }
 
     @Test
-    fun h_verifyPairingWifiOff_FMA_1040() {
+    fun verifyPairingWifiOff_FMA_1040() {
         with(LoginTest.loginScreen) {
             mockUtils.turnWifiOff()
 

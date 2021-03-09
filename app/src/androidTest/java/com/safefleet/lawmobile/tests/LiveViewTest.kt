@@ -24,12 +24,12 @@ class LiveViewTest : EspressoStartActivityBaseTest<LoginActivity>(LoginActivity:
     fun login() = LoginScreen().login()
 
     @Test
-    fun a_verifyLiveViewIsDisplayed_FMA_389() {
+    fun verifyLiveViewIsDisplayed_FMA_389() {
         liveViewScreen.isLiveViewDisplayed()
     }
 
     @Test
-    fun b_verifyVideoInFullScreen_FMA_391() {
+    fun verifyVideoInFullScreen_FMA_391() {
         with(liveViewScreen) {
             isLiveViewDisplayed()
 
@@ -47,7 +47,7 @@ class LiveViewTest : EspressoStartActivityBaseTest<LoginActivity>(LoginActivity:
     }
 
     @Test
-    fun c_verifyLiveViewToggleOnDisconnection_FMA_423() {
+    fun verifyLiveViewToggleOnDisconnection_FMA_423() {
         with(liveViewScreen) {
             mockUtils.disconnectCamera()
 
