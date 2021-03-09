@@ -14,6 +14,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageButton
+            android:id="@+id/closeMenu"
             android:layout_width="@dimen/menu_live_view_icon_close_size"
             android:layout_height="@dimen/menu_live_view_icon_close_size"
             android:background="@color/transparent"

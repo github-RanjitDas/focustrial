@@ -1,55 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.appbar.AppBarLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.appbar.AppBarLayout 
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/live_view_app_bar_height"
-        android:background="@drawable/background_app_bar">
-
-        <ImageView
-            android:id="@+id/imageView"
-            android:layout_width="@dimen/app_bar_logo_width"
-            android:layout_height="@dimen/app_bar_logo_height"
-            android:layout_marginHorizontal="@dimen/app_bar_logo_margin_horizontal"
-            android:background="@drawable/ic_logo_focus"
-            android:contentDescription="@string/focus_mobile_app_logo_description"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <View
-            android:id="@+id/viewAppBarDivider"
-            android:layout_width="@dimen/app_bar_divider_width"
-            android:layout_height="match_parent"
-            android:layout_marginVertical="@dimen/app_bar_divider_margin_vertical"
-            android:background="@color/whiteTransparentLive"
-            app:layout_constraintEnd_toStartOf="@id/buttonMenu" />
-
-        <ImageView
-            android:id="@+id/buttonNotification"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:contentDescription="@string/focus_mobile_app_logo_description"
-            android:padding="@dimen/app_bar_logout_padding"
-            android:src="@drawable/ic_notification"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="@id/viewAppBarDivider"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <ImageView
-            android:id="@+id/buttonMenu"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:contentDescription="@string/focus_mobile_app_logo_description"
-            android:padding="@dimen/app_bar_logout_padding"
-            android:src="@drawable/ic_menu_tap_bar"
-            app:layout_constraintBottom_toBottomOf="parent"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/live_view_app_bar_height"
+            android:background="@drawable/background_app_bar"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="@dimen/app_bar_logo_width"
+                android:layout_height="@dimen/app_bar_logo_height"
+                android:layout_marginHorizontal="@dimen/app_bar_logo_margin_horizontal"
+                android:background="@drawable/ic_logo_focus"
+                android:contentDescription="@string/focus_mobile_app_logo_description"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <View
+                android:id="@+id/viewAppBarDivider"
+                android:layout_width="@dimen/app_bar_divider_width"
+                android:layout_height="match_parent"
+                android:layout_marginVertical="@dimen/app_bar_divider_margin_vertical"
+                android:background="@color/whiteTransparentLive"
+                app:layout_constraintEnd_toStartOf="@id/buttonMenu" />
+
+            <ImageView
+                android:id="@+id/buttonNotification"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/focus_mobile_app_logo_description"
+                android:padding="@dimen/app_bar_logout_padding"
+                android:src="@drawable/ic_notification"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@id/viewAppBarDivider"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/buttonMenu"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/focus_mobile_app_logo_description"
+                android:padding="@dimen/app_bar_logout_padding"
+                android:src="@drawable/ic_menu_tap_bar"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+        
 
 </com.google.android.material.appbar.AppBarLayout>

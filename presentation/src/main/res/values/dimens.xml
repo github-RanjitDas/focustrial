@@ -66,6 +66,8 @@
     <dimen name="menu_live_view_logout_section_height">56dp</dimen>
     <dimen name="menu_live_view_text_items_size">18sp</dimen>
     <dimen name="menu_live_view_item_navigation_margin">20dp</dimen>
+    <dimen name="menu_live_view_margin_menu_open">38dp</dimen>
+
     <!-- File List -->
     <dimen name="file_list_item_height">50dp</dimen>
     <dimen name="file_list_checkbox_margin_start">18dp</dimen>
