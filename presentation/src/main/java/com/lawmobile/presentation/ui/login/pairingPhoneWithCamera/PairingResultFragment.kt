@@ -98,7 +98,11 @@ class PairingResultFragment : BaseFragment() {
         pairingViewModel.cameraPairingProgress = ::manageResponseProgressInConnectionCamera
         pairingViewModel.isWaitFinishedLiveData.observe(
             viewLifecycleOwner
-        ) { if (it) connectionSuccess(true) }
+        ) {
+            it.getContentIfNotHandled()?.run {
+                if (this) connectionSuccess(true)
+            }
+        }
     }
 
     private fun manageResponseProgressInConnectionCamera(result: Result<Int>) {

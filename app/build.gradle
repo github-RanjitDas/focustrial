@@ -126,7 +126,7 @@ dependencies {
     //Base repository
     implementation 'com.safefleet.mobile:external-hardware:1.0.1-SNAPSHOT@jar'
     implementation 'com.safefleet.mobile:android-commons:1.0.0-SNAPSHOT@aar'
-    implementation 'com.safefleet.mobile:safefleet-ui:1.0.0-SNAPSHOT@aar'
+    implementation 'com.safefleet.mobile:safefleet-ui:1.2.0-SNAPSHOT@aar'
 
     implementation project(path: Modules.presentation)
     implementation project(path: Modules.data)

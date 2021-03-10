@@ -4,18 +4,19 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.safefleet.mobile.kotlin_commons.helpers.Event
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 open class BaseViewModel @Inject constructor() : ViewModel() {
-    val isWaitFinishedLiveData: LiveData<Boolean> get() = isWaitFinishedMediator
-    private val isWaitFinishedMediator = MediatorLiveData<Boolean>()
+    val isWaitFinishedLiveData: LiveData<Event<Boolean>> get() = isWaitFinishedMediator
+    private val isWaitFinishedMediator = MediatorLiveData<Event<Boolean>>()
     fun waitToFinish(time: Long) {
         viewModelScope.launch {
-            isWaitFinishedMediator.postValue(false)
+            isWaitFinishedMediator.postValue(Event(false))
             delay(time)
-            isWaitFinishedMediator.postValue(true)
+            isWaitFinishedMediator.postValue(Event(true))
         }
     }
 

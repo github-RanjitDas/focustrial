@@ -40,7 +40,7 @@ class FileListActivity : BaseActivity() {
     private val fileListViewModel: FileListViewModel by viewModels()
 
     private val simpleFileListFragment = SimpleFileListFragment()
-    private var thumbnailFileListFragment = ThumbnailFileListFragment()
+    private val thumbnailFileListFragment = ThumbnailFileListFragment()
 
     private lateinit var actualFragment: String
     private var listType: String? = null
