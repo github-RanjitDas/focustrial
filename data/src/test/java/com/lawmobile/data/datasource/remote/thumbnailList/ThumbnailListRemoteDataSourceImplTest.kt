@@ -1,5 +1,6 @@
 package com.lawmobile.data.datasource.remote.thumbnailList
 
+import com.lawmobile.data.utils.CameraServiceFactory
 import com.safefleet.mobile.external_hardware.cameras.CameraService
 import com.safefleet.mobile.external_hardware.cameras.entities.CameraFile
 import com.safefleet.mobile.external_hardware.cameras.entities.FileResponseWithErrors
@@ -17,13 +18,17 @@ import org.junit.jupiter.api.Test
 internal class ThumbnailListRemoteDataSourceImplTest {
 
     private val cameraService: CameraService = mockk()
+    private val cameraServiceFactory: CameraServiceFactory = mockk {
+        every { create() } returns cameraService
+    }
     private val linkSnapshotsRemoteDataSourceImpl: ThumbnailListRemoteDataSourceImpl by lazy {
-        ThumbnailListRemoteDataSourceImpl(cameraService)
+        ThumbnailListRemoteDataSourceImpl(cameraServiceFactory)
     }
 
     @BeforeEach
     fun setup() {
         clearAllMocks()
+        every { cameraServiceFactory.create() } returns cameraService
     }
 
     @Test

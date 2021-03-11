@@ -1,5 +1,6 @@
 package com.lawmobile.data.datasource.remote.liveStreaming
 
+import com.lawmobile.data.utils.CameraServiceFactory
 import com.safefleet.mobile.external_hardware.cameras.CameraService
 import com.safefleet.mobile.kotlin_commons.helpers.Result
 import io.mockk.coEvery
@@ -16,9 +17,12 @@ import org.junit.jupiter.api.TestInstance
 class LiveStreamingRemoteDataSourceImplTest {
 
     private val cameraService: CameraService = mockk()
+    private val cameraServiceFactory: CameraServiceFactory = mockk {
+        every { create() } returns cameraService
+    }
 
     private val liveStreamingRemoteDataSourceImpl by lazy {
-        LiveStreamingRemoteDataSourceImpl(cameraService)
+        LiveStreamingRemoteDataSourceImpl(cameraServiceFactory)
     }
 
     @Test

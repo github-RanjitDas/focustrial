@@ -3,10 +3,10 @@ package com.safefleet.lawmobile.di.snapshotDetail
 import com.lawmobile.data.datasource.remote.snapshotDetail.SnapshotDetailRemoteDataSource
 import com.lawmobile.data.datasource.remote.snapshotDetail.SnapshotDetailRemoteDataSourceImpl
 import com.lawmobile.data.repository.snapshotDetail.SnapshotDetailRepositoryImpl
+import com.lawmobile.data.utils.CameraServiceFactory
 import com.lawmobile.domain.repository.snapshotDetail.SnapshotDetailRepository
 import com.lawmobile.domain.usecase.snapshotDetail.SnapshotDetailUseCase
 import com.lawmobile.domain.usecase.snapshotDetail.SnapshotDetailUseCaseImpl
-import com.safefleet.mobile.external_hardware.cameras.CameraService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -18,7 +18,7 @@ class SnapshotDetailModule {
 
     companion object {
         @Provides
-        fun provideSnapshotDetailRemoteDataSource(cameraService: CameraService): SnapshotDetailRemoteDataSource =
+        fun provideSnapshotDetailRemoteDataSource(cameraService: CameraServiceFactory): SnapshotDetailRemoteDataSource =
             SnapshotDetailRemoteDataSourceImpl(cameraService)
 
         @Provides

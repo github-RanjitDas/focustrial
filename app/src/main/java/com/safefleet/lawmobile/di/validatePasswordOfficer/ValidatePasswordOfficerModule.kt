@@ -3,10 +3,10 @@ package com.safefleet.lawmobile.di.validatePasswordOfficer
 import com.lawmobile.data.datasource.remote.validatePasswordOfficer.ValidatePasswordOfficerRemoteDataSource
 import com.lawmobile.data.datasource.remote.validatePasswordOfficer.ValidatePasswordOfficerRemoteDataSourceImpl
 import com.lawmobile.data.repository.validatePasswordOfficer.ValidatePasswordOfficerRepositoryImpl
+import com.lawmobile.data.utils.CameraServiceFactory
 import com.lawmobile.domain.repository.validatePasswordOfficer.ValidatePasswordOfficerRepository
 import com.lawmobile.domain.usecase.validatePasswordOfficer.ValidatePasswordOfficerUseCase
 import com.lawmobile.domain.usecase.validatePasswordOfficer.ValidatePasswordOfficerUseCaseImpl
-import com.safefleet.mobile.external_hardware.cameras.CameraService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -20,7 +20,7 @@ class ValidatePasswordOfficerModule {
 
         @Provides
         fun provideValidatePasswordOfficerRemoteDataSource(
-            cameraService: CameraService
+            cameraService: CameraServiceFactory
         ): ValidatePasswordOfficerRemoteDataSource =
             ValidatePasswordOfficerRemoteDataSourceImpl(cameraService)
 

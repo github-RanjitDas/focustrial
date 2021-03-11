@@ -1,5 +1,6 @@
 package com.lawmobile.data.datasource.remote.simpleList
 
+import com.lawmobile.data.utils.CameraServiceFactory
 import com.lawmobile.domain.entities.VideoListMetadata
 import com.safefleet.mobile.external_hardware.cameras.CameraService
 import com.safefleet.mobile.external_hardware.cameras.entities.CameraFile
@@ -16,9 +17,12 @@ import org.junit.jupiter.api.Test
 internal class SimpleListRemoteDataSourceImplTest {
 
     private val cameraService: CameraService = mockk()
+    private val cameraServiceFactory: CameraServiceFactory = mockk {
+        every { create() } returns cameraService
+    }
 
     private val simpleListRemoteDataSourceImpl by lazy {
-        SimpleListRemoteDataSourceImpl(cameraService)
+        SimpleListRemoteDataSourceImpl(cameraServiceFactory)
     }
 
     @Test

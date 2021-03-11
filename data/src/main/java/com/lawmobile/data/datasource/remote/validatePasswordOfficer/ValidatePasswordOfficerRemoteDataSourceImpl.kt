@@ -1,11 +1,14 @@
 package com.lawmobile.data.datasource.remote.validatePasswordOfficer
 
-import com.safefleet.mobile.external_hardware.cameras.CameraService
+import com.lawmobile.data.utils.CameraServiceFactory
 import com.safefleet.mobile.external_hardware.cameras.entities.CameraUser
 import com.safefleet.mobile.kotlin_commons.helpers.Result
 
-class ValidatePasswordOfficerRemoteDataSourceImpl(private val cameraService: CameraService) :
+class ValidatePasswordOfficerRemoteDataSourceImpl(cameraServiceFactory: CameraServiceFactory) :
     ValidatePasswordOfficerRemoteDataSource {
+
+    private var cameraService = cameraServiceFactory.create()
+
     override suspend fun getUserInformation(): Result<CameraUser> {
         return try {
             cameraService.getUserResponse()

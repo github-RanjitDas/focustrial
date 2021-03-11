@@ -1,14 +1,17 @@
 package com.lawmobile.data.datasource.remote.snapshotDetail
 
-import com.safefleet.mobile.external_hardware.cameras.CameraService
+import com.lawmobile.data.utils.CameraServiceFactory
 import com.safefleet.mobile.external_hardware.cameras.entities.CameraFile
 import com.safefleet.mobile.external_hardware.cameras.entities.FileResponseWithErrors
 import com.safefleet.mobile.external_hardware.cameras.entities.PhotoInformation
 import com.safefleet.mobile.external_hardware.cameras.entities.VideoInformation
 import com.safefleet.mobile.kotlin_commons.helpers.Result
 
-class SnapshotDetailRemoteDataSourceImpl(private val cameraService: CameraService) :
+class SnapshotDetailRemoteDataSourceImpl(cameraServiceFactory: CameraServiceFactory) :
     SnapshotDetailRemoteDataSource {
+
+    private var cameraService = cameraServiceFactory.create()
+
     override suspend fun getImageBytes(cameraFile: CameraFile): Result<ByteArray> {
         return cameraService.getImageBytes(cameraFile)
     }

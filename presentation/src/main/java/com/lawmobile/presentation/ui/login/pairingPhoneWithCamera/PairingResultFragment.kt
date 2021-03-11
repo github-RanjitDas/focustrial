@@ -71,7 +71,6 @@ class PairingResultFragment : BaseFragment() {
     private fun saveSerialNumberIfItIsCorrect() {
         val serialNumberCamera = pairingViewModel.getNetworkName()
         if (CameraType.isValidNumberCameraBWC(serialNumberCamera)) {
-            CameraInfo.setCameraType(serialNumberCamera)
             CameraInfo.serialNumber = serialNumberCamera.replace("X", "")
         }
     }

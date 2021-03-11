@@ -1,12 +1,14 @@
 package com.lawmobile.data.datasource.remote.pairingPhoneWithCamera
 
+import com.lawmobile.data.utils.CameraServiceFactory
 import com.lawmobile.domain.entities.CacheManager
-import com.safefleet.mobile.external_hardware.cameras.CameraService
 import com.safefleet.mobile.kotlin_commons.helpers.Result
 
 open class PairingPhoneWithCameraRemoteDataSourceImpl(
-    private val cameraService: CameraService
+    cameraServiceFactory: CameraServiceFactory
 ) : PairingPhoneWithCameraRemoteDataSource {
+
+    private var cameraService = cameraServiceFactory.create()
 
     override suspend fun loadPairingCamera(
         hostnameToConnect: String,
