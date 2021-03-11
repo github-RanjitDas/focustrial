@@ -1,10 +1,12 @@
 package com.lawmobile.data.datasource.remote.pairingPhoneWithCamera
 
+import com.lawmobile.data.utils.CameraServiceFactory
 import com.safefleet.mobile.external_hardware.cameras.CameraService
 import com.safefleet.mobile.kotlin_commons.helpers.Result
 import io.mockk.Runs
 import io.mockk.coEvery
 import io.mockk.coVerify
+import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
 import kotlinx.coroutines.runBlocking
@@ -16,9 +18,12 @@ import org.junit.jupiter.api.TestInstance
 class PairingPhoneWithCameraRemoteDataSourceImplTest {
 
     private val cameraService: CameraService = mockk(relaxed = true)
+    private val cameraServiceFactory: CameraServiceFactory = mockk {
+        every { create() } returns cameraService
+    }
 
     private val pairingPhoneWithCameraRemoteDataSourceImpl by lazy {
-        PairingPhoneWithCameraRemoteDataSourceImpl(cameraService)
+        PairingPhoneWithCameraRemoteDataSourceImpl(cameraServiceFactory)
     }
 
     @Test

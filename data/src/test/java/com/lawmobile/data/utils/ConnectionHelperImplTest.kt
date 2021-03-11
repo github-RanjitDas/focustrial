@@ -13,7 +13,10 @@ class ConnectionHelperImplTest {
         every { isCameraConnected("10.10.10.10") } returns true
         every { isCameraConnected("") } returns false
     }
-    private val connectionHelperImpl = ConnectionHelperImpl(cameraService)
+    private val cameraServiceFactory: CameraServiceFactory = mockk {
+        every { create() } returns cameraService
+    }
+    private val connectionHelperImpl = ConnectionHelperImpl(cameraServiceFactory)
 
     @Test
     fun testFlowIsCameraConnected() {

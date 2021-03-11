@@ -1,21 +1,23 @@
 package com.safefleet.lawmobile.di.cameraService
 
 import com.google.gson.Gson
+import com.lawmobile.data.utils.CameraServiceFactory
+import com.lawmobile.data.utils.CameraServiceFactoryImpl
 import com.lawmobile.data.utils.ConnectionHelperImpl
-import com.lawmobile.domain.entities.CameraInfo
-import com.lawmobile.domain.entities.CameraType
 import com.lawmobile.domain.utils.ConnectionHelper
 import com.lawmobile.presentation.utils.CameraHelper
 import com.lawmobile.presentation.utils.WifiHelper
 import com.safefleet.mobile.external_hardware.cameras.CameraService
-import com.safefleet.mobile.external_hardware.cameras.x1.X1CameraHelper
-import com.safefleet.mobile.external_hardware.cameras.x1.X1CameraService
+import com.safefleet.mobile.external_hardware.cameras.helpers.XCameraHelper
+import com.safefleet.mobile.external_hardware.cameras.x1.X1CameraServiceImpl
+import com.safefleet.mobile.external_hardware.cameras.x2.X2CameraServiceImpl
 import com.safefleet.mobile.kotlin_commons.socket.SocketHelper
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ApplicationComponent
 import java.net.Socket
+import javax.inject.Named
 import javax.inject.Singleton
 
 @InstallIn(ApplicationComponent::class)
@@ -29,22 +31,33 @@ class CameraServiceModule {
 
         @Provides
         @Singleton
-        fun provideCameraHelperX1(cmdHelper: SocketHelper, dataHelper: SocketHelper): X1CameraHelper =
-            X1CameraHelper(Gson(), cmdHelper, dataHelper)
+        fun provideCameraHelperX1(cmdHelper: SocketHelper, dataHelper: SocketHelper): XCameraHelper =
+            XCameraHelper(Gson(), cmdHelper, dataHelper)
 
         @Provides
         @Singleton
-        fun provideCameraService(x1CameraHelper: X1CameraHelper): CameraService {
-            return when (CameraInfo.cameraType) {
-                CameraType.X1 -> X1CameraService(x1CameraHelper)
-                CameraType.X2 -> X1CameraService(x1CameraHelper)
-            }
+        @Named("x1CameraService")
+        fun provideCameraServiceX1(xCameraHelper: XCameraHelper): CameraService {
+            return X1CameraServiceImpl(xCameraHelper)
         }
 
         @Provides
         @Singleton
-        fun provideConnectionHelper(cameraService: CameraService): ConnectionHelper =
-            ConnectionHelperImpl(cameraService)
+        @Named("x2CameraService")
+        fun provideCameraServiceX2(xCameraHelper: XCameraHelper): CameraService {
+            return X2CameraServiceImpl(xCameraHelper)
+        }
+
+        @Provides
+        @Singleton
+        fun provideCameraServiceFactory(@Named("x1CameraService") x1CameraService: CameraService, @Named("x2CameraService") x2CameraService: CameraService): CameraServiceFactory {
+            return CameraServiceFactoryImpl(x1CameraService, x2CameraService)
+        }
+
+        @Provides
+        @Singleton
+        fun provideConnectionHelper(cameraServiceFactory: CameraServiceFactory): ConnectionHelper =
+            ConnectionHelperImpl(cameraServiceFactory)
 
         @Provides
         @Singleton

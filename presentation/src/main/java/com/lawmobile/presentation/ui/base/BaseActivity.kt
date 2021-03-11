@@ -3,18 +3,22 @@ package com.lawmobile.presentation.ui.base
 import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.view.WindowManager
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
+import com.lawmobile.domain.entities.CameraInfo
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.entities.NeutralAlertInformation
 import com.lawmobile.presentation.extensions.checkIfSessionIsExpired
 import com.lawmobile.presentation.extensions.createAlertMobileDataActive
 import com.lawmobile.presentation.extensions.createAlertProgress
 import com.lawmobile.presentation.extensions.createAlertSessionExpired
+import com.lawmobile.presentation.extensions.showToast
 import com.lawmobile.presentation.security.RootedHelper
 import com.lawmobile.presentation.ui.login.LoginActivity
+import com.lawmobile.presentation.utils.CameraHelper
 import com.lawmobile.presentation.utils.EspressoIdlingResource
 import com.lawmobile.presentation.utils.MobileDataStatus
 import dagger.hilt.android.AndroidEntryPoint
@@ -46,6 +50,9 @@ open class BaseActivity : AppCompatActivity() {
         createMobileDataDialog()
         mobileDataStatus.observe(this, Observer(::showMobileDataDialog))
         updateLastInteraction()
+        if (CameraInfo.officerName.isNotEmpty()) {
+            reviewNotificationInCamera()
+        }
     }
 
     private fun createMobileDataDialog() {
@@ -60,6 +67,12 @@ open class BaseActivity : AppCompatActivity() {
         isMobileDataAlertShowing.postValue(active)
         if (active) mobileDataDialog.show()
         else mobileDataDialog.dismiss()
+    }
+
+    private fun reviewNotificationInCamera() {
+        CameraHelper.getInstance().reviewNotificationInCamera {
+            showToast(it.type + it.value, Toast.LENGTH_LONG)
+        }
     }
 
     override fun onStop() {

@@ -1,5 +1,6 @@
 package com.lawmobile.presentation.utils
 
+import com.lawmobile.domain.entities.DomainNotification
 import com.lawmobile.domain.utils.ConnectionHelper
 
 class CameraHelper(
@@ -19,5 +20,9 @@ class CameraHelper(
 
     fun checkWithAlertIfTheCameraIsConnected(): Boolean {
         return connectionHelper.isCameraConnected(wifiHelper.getGatewayAddress())
+    }
+
+    fun reviewNotificationInCamera(notificationCallback: (DomainNotification) -> Unit) {
+        connectionHelper.reviewNotificationInCamera(notificationCallback = notificationCallback)
     }
 }

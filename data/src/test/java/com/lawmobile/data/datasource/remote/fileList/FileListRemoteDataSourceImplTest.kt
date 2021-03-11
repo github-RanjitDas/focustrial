@@ -1,10 +1,12 @@
 package com.lawmobile.data.datasource.remote.fileList
 
+import com.lawmobile.data.utils.CameraServiceFactory
 import com.safefleet.mobile.external_hardware.cameras.CameraService
 import com.safefleet.mobile.external_hardware.cameras.entities.PhotoInformation
 import com.safefleet.mobile.kotlin_commons.helpers.Result
 import io.mockk.coEvery
 import io.mockk.coVerify
+import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert
@@ -13,9 +15,12 @@ import org.junit.jupiter.api.Test
 internal class FileListRemoteDataSourceImplTest {
 
     private val cameraService: CameraService = mockk()
+    private val cameraServiceFactory: CameraServiceFactory = mockk {
+        every { create() } returns cameraService
+    }
 
     private val fileListRemoteDataSourceImpl by lazy {
-        FileListRemoteDataSourceImpl(cameraService)
+        FileListRemoteDataSourceImpl(cameraServiceFactory)
     }
 
     @Test

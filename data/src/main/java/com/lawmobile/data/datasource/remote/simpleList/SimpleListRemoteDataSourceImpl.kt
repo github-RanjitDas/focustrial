@@ -1,9 +1,9 @@
 package com.lawmobile.data.datasource.remote.simpleList
 
 import com.lawmobile.data.mappers.VideoMetadataMapper
+import com.lawmobile.data.utils.CameraServiceFactory
 import com.lawmobile.domain.entities.RemoteVideoMetadata
 import com.lawmobile.domain.entities.VideoListMetadata
-import com.safefleet.mobile.external_hardware.cameras.CameraService
 import com.safefleet.mobile.external_hardware.cameras.entities.CameraFile
 import com.safefleet.mobile.external_hardware.cameras.entities.FileResponseWithErrors
 import com.safefleet.mobile.kotlin_commons.helpers.Result
@@ -12,8 +12,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 
-class SimpleListRemoteDataSourceImpl(private val cameraConnectService: CameraService) :
+class SimpleListRemoteDataSourceImpl(cameraServiceFactory: CameraServiceFactory) :
     SimpleListRemoteDataSource {
+
+    private var cameraConnectService = cameraServiceFactory.create()
 
     override suspend fun getSnapshotList(): Result<FileResponseWithErrors> =
         cameraConnectService.getListOfImages()

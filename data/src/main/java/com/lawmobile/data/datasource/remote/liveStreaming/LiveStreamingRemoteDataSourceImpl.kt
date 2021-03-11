@@ -1,11 +1,14 @@
 package com.lawmobile.data.datasource.remote.liveStreaming
 
-import com.safefleet.mobile.external_hardware.cameras.CameraService
+import com.lawmobile.data.utils.CameraServiceFactory
 import com.safefleet.mobile.external_hardware.cameras.entities.CameraCatalog
 import com.safefleet.mobile.kotlin_commons.helpers.Result
 
-class LiveStreamingRemoteDataSourceImpl(private val cameraService: CameraService) :
+class LiveStreamingRemoteDataSourceImpl(cameraServiceFactory: CameraServiceFactory) :
     LiveStreamingRemoteDataSource {
+
+    private var cameraService = cameraServiceFactory.create()
+
     override fun getUrlForLiveStream(): String =
         cameraService.getUrlForLiveStream()
 

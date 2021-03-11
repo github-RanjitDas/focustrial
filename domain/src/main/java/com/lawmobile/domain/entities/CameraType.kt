@@ -2,31 +2,27 @@ package com.lawmobile.domain.entities
 
 enum class CameraType {
     X1 {
-        override fun getStringToIdentifySSID(): String {
-            return "X57"
-        }
-
-        override fun reviewIfIsThisTypeOfCamera(serialNumber: String): Boolean {
-            return serialNumber.contains(getStringToIdentifySSID())
+        override fun getPossibleStringsToIdentifySSID(): List<String> {
+            return listOf("X57")
         }
     },
     X2 {
-        override fun getStringToIdentifySSID(): String {
-            return "FocusX2"
-        }
-
-        override fun reviewIfIsThisTypeOfCamera(serialNumber: String): Boolean {
-            return serialNumber.contains(getStringToIdentifySSID())
+        override fun getPossibleStringsToIdentifySSID(): List<String> {
+            return listOf("FocusX2", "AmbaCam", "01")
         }
     };
 
-    open fun getStringToIdentifySSID(): String = ""
-    open fun reviewIfIsThisTypeOfCamera(serialNumber: String): Boolean = false
+    open fun getPossibleStringsToIdentifySSID(): List<String> = emptyList()
+    open fun reviewIfIsThisTypeOfCamera(serialNumber: String): Boolean {
+        getPossibleStringsToIdentifySSID().forEach {
+            if (serialNumber.contains(it)) return true
+        }
+        return false
+    }
 
     companion object {
         fun isValidNumberCameraBWC(codeCamera: String): Boolean =
-            codeCamera.contains(X1.getStringToIdentifySSID()) ||
-                codeCamera.contains(X2.getStringToIdentifySSID())
+            X1.reviewIfIsThisTypeOfCamera(codeCamera) || X2.reviewIfIsThisTypeOfCamera(codeCamera)
 
         fun getTypeOfCamera(serialNumber: String): CameraType {
             if (X1.reviewIfIsThisTypeOfCamera(serialNumber)) {
