@@ -7,8 +7,9 @@ import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.cardview.widget.CardView
 import androidx.core.view.isVisible
-import androidx.lifecycle.Observer
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.lawmobile.domain.entities.CameraInfo
+import com.lawmobile.domain.entities.CameraType
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.databinding.ActivityLoginBinding
 import com.lawmobile.presentation.extensions.attachFragmentWithAnimation
@@ -16,7 +17,8 @@ import com.lawmobile.presentation.extensions.isAnimationsEnabled
 import com.lawmobile.presentation.extensions.showErrorSnackBar
 import com.lawmobile.presentation.extensions.verifyForAskingPermission
 import com.lawmobile.presentation.ui.base.BaseActivity
-import com.lawmobile.presentation.ui.live.LiveActivity
+import com.lawmobile.presentation.ui.live.x1.LiveX1Activity
+import com.lawmobile.presentation.ui.live.x2.LiveX2Activity
 import com.lawmobile.presentation.ui.login.pairingPhoneWithCamera.PairingResultFragment
 import com.lawmobile.presentation.ui.login.pairingPhoneWithCamera.StartPairingFragment
 import com.lawmobile.presentation.ui.login.validateOfficerPassword.ValidateOfficerPasswordFragment
@@ -74,9 +76,12 @@ class LoginActivity : BaseActivity() {
             (activityLoginBinding.imageViewFMALogo.drawable as AnimatedVectorDrawable).start()
             loginActivityViewModel.waitToFinish(ANIMATION_DURATION)
             loginActivityViewModel.isWaitFinishedLiveData.observe(
-                this,
-                Observer(::showLoginViews)
-            )
+                this
+            ) {
+                it.getContentIfNotHandled()?.run {
+                    showLoginViews(this)
+                }
+            }
         } else {
             activityLoginBinding.imageViewFMALogoNoAnimation.isVisible = true
             activityLoginBinding.imageViewFMALogo.isVisible = false
@@ -93,7 +98,11 @@ class LoginActivity : BaseActivity() {
     }
 
     private fun startLiveViewActivity() {
-        val liveActivityIntent = Intent(this, LiveActivity::class.java)
+        val liveActivityIntent =
+            when (CameraInfo.cameraType) {
+                CameraType.X1 -> Intent(this, LiveX1Activity::class.java)
+                CameraType.X2 -> Intent(this, LiveX2Activity::class.java)
+            }
         startActivity(liveActivityIntent)
         finish()
     }

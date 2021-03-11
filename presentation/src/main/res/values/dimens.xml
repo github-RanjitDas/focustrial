@@ -21,8 +21,6 @@
 
     <!-- Live view -->
     <dimen name="live_view_toggle_full_screen_size">30dp</dimen>
-    <dimen name="live_view_surface_view_height_default">220dp</dimen>
-    <dimen name="live_view_secondary_button_height">60dp</dimen>
     <dimen name="live_view_label_text_size">16sp</dimen>
     <dimen name="dialog_height_parent">120dp</dimen>
     <dimen name="item_file_bottom_margin">1dp</dimen>
@@ -34,8 +32,6 @@
     <dimen name="app_bar_divider_margin_vertical">20dp</dimen>
     <dimen name="app_bar_logout_padding">14dp</dimen>
     <dimen name="camera_status_margin_horizontal">14dp</dimen>
-    <dimen name="camera_status_margin_vertical">10dp</dimen>
-    <dimen name="battery_margin_top">10dp</dimen>
     <dimen name="battery_percent_text_size">11sp</dimen>
     <dimen name="battery_level_height">10dp</dimen>
     <dimen name="battery_level_margin_horizontal">10dp</dimen>
@@ -49,7 +45,6 @@
     <dimen name="toggle_full_screen_padding">5dp</dimen>
     <dimen name="switch_margin">10dp</dimen>
     <dimen name="recording_padding_horizontal">10dp</dimen>
-    <dimen name="live_view_divider_margin_top">10dp</dimen>
     <dimen name="button_snapshot_list_padding_start">25dp</dimen>
     <dimen name="button_snapshot_list_text_size">15sp</dimen>
     <dimen name="button_video_list_padding_horizontal">25dp</dimen>
@@ -66,7 +61,6 @@
     <dimen name="menu_live_view_logout_section_height">56dp</dimen>
     <dimen name="menu_live_view_text_items_size">18sp</dimen>
     <dimen name="menu_live_view_item_navigation_margin">20dp</dimen>
-    <dimen name="menu_live_view_margin_menu_open">38dp</dimen>
 
     <!-- File List -->
     <dimen name="file_list_item_height">50dp</dimen>
@@ -138,7 +132,6 @@
     <dimen name="padding_10dp">10dp</dimen>
     <dimen name="margin_20dp">20dp</dimen>
     <dimen name="margin_30dp">30dp</dimen>
-    <dimen name="margin_39dp">39dp</dimen>
     <dimen name="margin_18dp">18dp</dimen>
     <dimen name="margin_5dp">5dp</dimen>
     <dimen name="text_size_12sp">12sp</dimen>

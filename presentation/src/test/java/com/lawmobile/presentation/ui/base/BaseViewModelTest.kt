@@ -31,7 +31,7 @@ internal class BaseViewModelTest {
         baseViewModel.waitToFinish(100)
         runBlocking {
             delay(150)
-            Assert.assertTrue(baseViewModel.isWaitFinishedLiveData.value!!)
+            Assert.assertTrue(baseViewModel.isWaitFinishedLiveData.value!!.getContent())
         }
     }
 }

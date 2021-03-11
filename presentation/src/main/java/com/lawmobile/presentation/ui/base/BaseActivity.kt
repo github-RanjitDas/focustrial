@@ -32,7 +32,6 @@ open class BaseActivity : AppCompatActivity() {
 
     private var isLiveVideoOrPlaybackActive: Boolean = false
     private lateinit var mobileDataDialog: AlertDialog
-    var isRecordingVideo: Boolean = false
     var isMobileDataAlertShowing = MutableLiveData<Boolean>()
     private var loadingDialog: AlertDialog? = null
 
@@ -82,10 +81,7 @@ open class BaseActivity : AppCompatActivity() {
     }
 
     fun updateLiveOrPlaybackActive(isActive: Boolean) {
-        if (isActive) {
-            updateLastInteraction()
-        }
-
+        if (isActive) updateLastInteraction()
         isLiveVideoOrPlaybackActive = isActive
     }
 
@@ -112,5 +108,6 @@ open class BaseActivity : AppCompatActivity() {
         const val PERMISSION_FOR_LOCATION = 100
         const val MAX_TIME_SESSION = 300000
         lateinit var lastInteraction: Timestamp
+        var isRecordingVideo: Boolean = false
     }
 }
