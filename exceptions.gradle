@@ -41,5 +41,7 @@ ext.fileFilter = [
         "**/*VLCMediaPlayer.*",
         "**/*DataStatus.**",
         //Temporal empty file that is decreasing the coverage
-        "**/LoginActivityViewModel.**"
+        "**/LoginActivityViewModel.**",
+        "**/OnSwipeTouchListener.**",
+        "**/LiveActivityBaseViewModel.**"
 ]

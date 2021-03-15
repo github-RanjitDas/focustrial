@@ -6,7 +6,7 @@ import com.lawmobile.domain.usecase.liveStreaming.LiveStreamingUseCase
 import com.lawmobile.presentation.ui.base.BaseViewModel
 import kotlinx.coroutines.launch
 
-class MenuLiveViewModel @ViewModelInject constructor(
+class LiveMenuViewModel @ViewModelInject constructor(
     private val liveStreamingUseCase: LiveStreamingUseCase
 ) : BaseViewModel() {
 

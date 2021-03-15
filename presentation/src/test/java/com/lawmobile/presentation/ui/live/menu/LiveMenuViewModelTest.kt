@@ -13,10 +13,14 @@ import org.junit.jupiter.api.extension.ExtendWith
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @ExtendWith(InstantExecutorExtension::class)
-class MenuLiveViewModelTest {
+class LiveMenuViewModelTest {
 
     private val liveStreamingUseCase: LiveStreamingUseCase = mockk()
-    private val menuLiveViewModel: MenuLiveViewModel by lazy { MenuLiveViewModel(liveStreamingUseCase) }
+    private val menuLiveViewModel: LiveMenuViewModel by lazy {
+        LiveMenuViewModel(
+            liveStreamingUseCase
+        )
+    }
 
     @Test
     fun testFlowDisconnectCamera() {

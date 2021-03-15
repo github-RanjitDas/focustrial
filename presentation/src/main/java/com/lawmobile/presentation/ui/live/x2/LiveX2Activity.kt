@@ -1,16 +1,20 @@
 package com.lawmobile.presentation.ui.live.x2
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.animation.AnimationUtils
 import androidx.activity.viewModels
+import androidx.core.view.isVisible
 import com.lawmobile.domain.entities.CameraInfo
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.databinding.ActivityLiveViewBinding
-import com.lawmobile.presentation.extensions.attachFragmentWithAnimation
+import com.lawmobile.presentation.extensions.attachFragment
+import com.lawmobile.presentation.extensions.setOnSwipeRightListener
 import com.lawmobile.presentation.ui.base.BaseActivity
 import com.lawmobile.presentation.ui.live.LiveActivityBaseViewModel
-import com.lawmobile.presentation.ui.live.appBar.x1.LiveAppBarX1Fragment
+import com.lawmobile.presentation.ui.live.appBar.x2.LiveAppBarX2Fragment
 import com.lawmobile.presentation.ui.live.controls.x1.LiveControlsX1Fragment
+import com.lawmobile.presentation.ui.live.menu.LiveMenuFragment
 import com.lawmobile.presentation.ui.live.navigation.x1.LiveNavigationX1Fragment
 import com.lawmobile.presentation.ui.live.statusBar.x1.LiveStatusBarX1Fragment
 import com.lawmobile.presentation.ui.live.statusBar.x2.LiveStatusBarX2Fragment
@@ -23,11 +27,14 @@ class LiveX2Activity : BaseActivity() {
     private val viewModel: LiveActivityBaseViewModel by viewModels()
     private lateinit var binding: ActivityLiveViewBinding
 
-    private val appBarFragment = LiveAppBarX1Fragment()
+    private val appBarFragment = LiveAppBarX2Fragment()
     private val statusBarFragment = LiveStatusBarX2Fragment()
     private val streamFragment = LiveStreamFragment()
     private val controlsFragment = LiveControlsX1Fragment()
     private val navigationFragment = LiveNavigationX1Fragment()
+    private val menuFragment = LiveMenuFragment()
+
+    private var isMenuOpen = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,10 +60,28 @@ class LiveX2Activity : BaseActivity() {
         if (isInPortraitMode()) updateLiveOrPlaybackActive(controlsFragment.buttonSwitchLiveView.isActivated)
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private fun setListeners() {
         controlsFragment.onCameraOperation = ::onCameraOperation
         controlsFragment.onLiveStreamSwitchClick = ::onLiveStreamSwitchClick
         controlsFragment.onCameraOperationFinished = ::onCameraOperationFinished
+        appBarFragment.onTapMenuButton = ::onTapMenuButton
+        menuFragment.onCloseMenuButton = ::onCloseMenuButton
+        binding.shadowOpenMenuView?.setOnSwipeRightListener { onCloseMenuButton() }
+    }
+
+    private fun onTapMenuButton() {
+        binding.menuContainer?.isVisible = true
+        binding.shadowOpenMenuView?.isVisible = true
+        isMenuOpen = true
+        animateOpenMenuContainer()
+    }
+
+    private fun onCloseMenuButton() {
+        animateCloseMenuContainer()
+        isMenuOpen = false
+        binding.menuContainer?.isVisible = false
+        binding.shadowOpenMenuView?.isVisible = false
     }
 
     private fun onCameraOperation(message: String) {
@@ -86,15 +111,25 @@ class LiveX2Activity : BaseActivity() {
         }
     }
 
+    private fun animateOpenMenuContainer() {
+        val animation = AnimationUtils.loadAnimation(this, R.anim.slide_in_right)
+        binding.menuContainer?.startAnimation(animation)
+    }
+
+    private fun animateCloseMenuContainer() {
+        val animation = AnimationUtils.loadAnimation(this, R.anim.slide_out_right)
+        val animationShadow = AnimationUtils.loadAnimation(this, R.anim.fade_out)
+        binding.menuContainer?.startAnimation(animation)
+        binding.shadowOpenMenuView?.startAnimation(animationShadow)
+    }
+
     private fun animateAppBar() {
-        val animation = AnimationUtils.loadAnimation(this, R.anim.top_to_bottom_anim).apply {
-            startOffset = 0
-        }
+        val animation = AnimationUtils.loadAnimation(this, R.anim.top_to_bottom_anim)
         binding.appBarContainer.startAnimation(animation)
     }
 
     private fun animateContainer() {
-        val animation = AnimationUtils.loadAnimation(this, R.anim.slide_in_right).apply {
+        val animation = AnimationUtils.loadAnimation(this, R.anim.slide_and_fade_in_right).apply {
             startOffset = 300
         }
         with(binding) {
@@ -115,55 +150,54 @@ class LiveX2Activity : BaseActivity() {
         setStreamFragment()
         setControlsFragment()
         setNavigationFragment()
+        setMenuFragment()
+    }
+
+    private fun setMenuFragment() {
+        supportFragmentManager.attachFragment(
+            containerId = R.id.menuContainer,
+            fragment = menuFragment,
+            tag = LiveMenuFragment.TAG
+        )
     }
 
     private fun setNavigationFragment() {
-        supportFragmentManager.attachFragmentWithAnimation(
+        supportFragmentManager.attachFragment(
             containerId = R.id.navigationContainer,
             fragment = navigationFragment,
-            tag = LiveNavigationX1Fragment.TAG,
-            animationIn = R.anim.bottom_to_top_anim,
-            animationOut = android.R.anim.fade_out
+            tag = LiveNavigationX1Fragment.TAG
         )
     }
 
     private fun setControlsFragment() {
-        supportFragmentManager.attachFragmentWithAnimation(
+        supportFragmentManager.attachFragment(
             containerId = R.id.controlsContainer,
             fragment = controlsFragment,
-            tag = LiveControlsX1Fragment.TAG,
-            animationIn = R.anim.bottom_to_top_anim,
-            animationOut = android.R.anim.fade_out
+            tag = LiveControlsX1Fragment.TAG
         )
     }
 
     private fun setStreamFragment() {
-        supportFragmentManager.attachFragmentWithAnimation(
+        supportFragmentManager.attachFragment(
             containerId = R.id.streamContainer,
             fragment = streamFragment,
-            tag = LiveStreamFragment.TAG,
-            animationIn = R.anim.bottom_to_top_anim,
-            animationOut = android.R.anim.fade_out
+            tag = LiveStreamFragment.TAG
         )
     }
 
     private fun setStatusBarFragment() {
-        supportFragmentManager.attachFragmentWithAnimation(
+        supportFragmentManager.attachFragment(
             containerId = R.id.statusBarContainer,
             fragment = statusBarFragment,
-            tag = LiveStatusBarX1Fragment.TAG,
-            animationIn = R.anim.bottom_to_top_anim,
-            animationOut = android.R.anim.fade_out
+            tag = LiveStatusBarX1Fragment.TAG
         )
     }
 
     private fun setAppBarFragment() {
-        supportFragmentManager.attachFragmentWithAnimation(
+        supportFragmentManager.attachFragment(
             containerId = R.id.appBarContainer,
             fragment = appBarFragment,
-            tag = LiveAppBarX1Fragment.TAG,
-            animationIn = R.anim.bottom_to_top_anim,
-            animationOut = android.R.anim.fade_out
+            tag = LiveAppBarX2Fragment.TAG
         )
     }
 
@@ -173,5 +207,7 @@ class LiveX2Activity : BaseActivity() {
 
     companion object {
         private const val VIEW_LOADING_TIME = 800L
+        private const val SWIPE_THRESHOLD = 100
+        private const val SWIPE_VELOCITY_THRESHOLD = 100
     }
 }

@@ -6,6 +6,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.ui.base.BaseActivity
 import com.lawmobile.presentation.utils.EspressoIdlingResource
+import com.lawmobile.presentation.utils.OnSwipeTouchListener
 import com.safefleet.mobile.safefleet_ui.widgets.SafeFleetClickable
 import com.safefleet.mobile.safefleet_ui.widgets.snackbar.SafeFleetSnackBar
 import com.safefleet.mobile.safefleet_ui.widgets.snackbar.SafeFleetSnackBarSettings
@@ -27,6 +28,33 @@ fun View.setOnClickListenerCheckConnection(callback: (View) -> Unit) {
     }
 }
 
+fun View.setOnTouchListenerCheckConnection(
+    onClick: ((View) -> Unit)? = null,
+    onSwipe: ((View) -> Unit)? = null
+) {
+    setOnTouchListener(
+        object : OnSwipeTouchListener(context) {
+            override fun onClick() {
+                onClick?.let { context.checkSession(it, this@setOnTouchListenerCheckConnection) }
+            }
+
+            override fun onSwipeRight() {
+                onSwipe?.invoke(this@setOnTouchListenerCheckConnection)
+            }
+        }
+    )
+}
+
+fun View.setOnSwipeRightListener(callback: (View) -> Unit) {
+    setOnTouchListener(
+        object : OnSwipeTouchListener(context) {
+            override fun onSwipeRight() {
+                callback(this@setOnSwipeRightListener)
+            }
+        }
+    )
+}
+
 fun SafeFleetClickable.setClickListenerCheckConnection(callback: (View) -> Unit) {
     onClicked = {
         context.checkSession(callback, it)
@@ -39,7 +67,11 @@ fun SafeFleetClickable.setCheckedListenerCheckConnection(callback: (View) -> Uni
     }
 }
 
-fun View.showErrorSnackBar(message: String, duration: Int = Snackbar.LENGTH_SHORT, onRetryClick: ((View) -> Unit)? = null) {
+fun View.showErrorSnackBar(
+    message: String,
+    duration: Int = Snackbar.LENGTH_SHORT,
+    onRetryClick: ((View) -> Unit)? = null
+) {
     SafeFleetSnackBar.make(
         SafeFleetSnackBarSettings(
             this,
