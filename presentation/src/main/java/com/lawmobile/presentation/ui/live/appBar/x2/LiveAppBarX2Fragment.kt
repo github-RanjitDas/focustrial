@@ -11,9 +11,9 @@ import com.lawmobile.presentation.ui.base.BaseFragment
 class LiveAppBarX2Fragment : BaseFragment() {
 
     private var _liveAppBaeMenuFragment: LiveViewAppBarMenuBinding? = null
-    private val liveAppBarMenuResultBinding get() = _liveAppBaeMenuFragment!!
+    private val binding get() = _liveAppBaeMenuFragment!!
 
-    lateinit var tapInMenuButton: () -> Unit
+    lateinit var onTapMenuButton: () -> Unit
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -22,7 +22,7 @@ class LiveAppBarX2Fragment : BaseFragment() {
     ): View {
         _liveAppBaeMenuFragment =
             LiveViewAppBarMenuBinding.inflate(inflater, container, false)
-        return liveAppBarMenuResultBinding.root
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -31,8 +31,8 @@ class LiveAppBarX2Fragment : BaseFragment() {
     }
 
     private fun setListeners() {
-        liveAppBarMenuResultBinding.buttonMenu.setOnClickListenerCheckConnection {
-            tapInMenuButton()
+        binding.buttonMenu.setOnClickListenerCheckConnection {
+            onTapMenuButton()
         }
     }
 
@@ -40,7 +40,7 @@ class LiveAppBarX2Fragment : BaseFragment() {
         val TAG = LiveAppBarX2Fragment::class.java.simpleName
         fun createInstance(tapInMenuButton: () -> Unit): LiveAppBarX2Fragment {
             return LiveAppBarX2Fragment().apply {
-                this.tapInMenuButton = tapInMenuButton
+                this.onTapMenuButton = tapInMenuButton
             }
         }
     }

@@ -132,7 +132,7 @@ class LoginActivity : BaseActivity() {
             containerId = R.id.fragmentContainer,
             fragment = ValidateOfficerPasswordFragment.createInstance(validateSuccessPasswordOfficer),
             tag = ValidateOfficerPasswordFragment.TAG,
-            animationIn = R.anim.slide_in_right,
+            animationIn = R.anim.slide_and_fade_in_right,
             animationOut = 0
         )
     }

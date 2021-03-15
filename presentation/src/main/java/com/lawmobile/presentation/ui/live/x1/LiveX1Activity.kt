@@ -93,7 +93,7 @@ class LiveX1Activity : BaseActivity() {
     }
 
     private fun animateContainer() {
-        val animation = AnimationUtils.loadAnimation(this, R.anim.slide_in_right).apply {
+        val animation = AnimationUtils.loadAnimation(this, R.anim.slide_and_fade_in_right).apply {
             startOffset = 300
         }
         with(binding) {
