@@ -1,6 +1,8 @@
 package com.lawmobile.presentation.ui.login
 
-import androidx.hilt.lifecycle.ViewModelInject
 import com.lawmobile.presentation.ui.base.BaseViewModel
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
-class LoginActivityViewModel @ViewModelInject constructor() : BaseViewModel()
+@HiltViewModel
+class LoginActivityViewModel @Inject constructor() : BaseViewModel()

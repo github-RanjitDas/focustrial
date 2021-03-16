@@ -6,9 +6,9 @@ import com.safefleet.lawmobile.di.thumbnailList.ThumbnailListComponent
 import com.safefleet.lawmobile.di.validatePasswordOfficer.ValidatePasswordOfficerComponent
 import dagger.Module
 import dagger.hilt.InstallIn
-import dagger.hilt.android.components.ApplicationComponent
+import dagger.hilt.components.SingletonComponent
 
-@InstallIn(ApplicationComponent::class)
+@InstallIn(SingletonComponent::class)
 @Module(
     subcomponents = [
         PairingPhoneWithCameraComponent::class,

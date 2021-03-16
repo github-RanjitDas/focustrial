@@ -15,12 +15,12 @@ import com.safefleet.mobile.kotlin_commons.socket.SocketHelper
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.components.ApplicationComponent
+import dagger.hilt.components.SingletonComponent
 import java.net.Socket
 import javax.inject.Named
 import javax.inject.Singleton
 
-@InstallIn(ApplicationComponent::class)
+@InstallIn(SingletonComponent::class)
 @Module
 class CameraServiceModule {
 
@@ -31,7 +31,10 @@ class CameraServiceModule {
 
         @Provides
         @Singleton
-        fun provideCameraHelperX1(cmdHelper: SocketHelper, dataHelper: SocketHelper): XCameraHelper =
+        fun provideCameraHelperX1(
+            cmdHelper: SocketHelper,
+            dataHelper: SocketHelper
+        ): XCameraHelper =
             XCameraHelper(Gson(), cmdHelper, dataHelper)
 
         @Provides
@@ -50,7 +53,10 @@ class CameraServiceModule {
 
         @Provides
         @Singleton
-        fun provideCameraServiceFactory(@Named("x1CameraService") x1CameraService: CameraService, @Named("x2CameraService") x2CameraService: CameraService): CameraServiceFactory {
+        fun provideCameraServiceFactory(
+            @Named("x1CameraService") x1CameraService: CameraService,
+            @Named("x2CameraService") x2CameraService: CameraService
+        ): CameraServiceFactory {
             return CameraServiceFactoryImpl(x1CameraService, x2CameraService)
         }
 

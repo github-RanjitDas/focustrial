@@ -14,8 +14,8 @@ import com.safefleet.lawmobile.testData.TestLoginData
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.components.ApplicationComponent
 import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.components.SingletonComponent
 import io.mockk.every
 import io.mockk.mockk
 import org.videolan.libvlc.LibVLC
@@ -23,7 +23,7 @@ import org.videolan.libvlc.MediaPlayer
 import javax.inject.Singleton
 
 @Module
-@InstallIn(ApplicationComponent::class)
+@InstallIn(SingletonComponent::class)
 class AppModule {
 
     companion object {
