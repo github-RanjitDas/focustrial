@@ -1,4 +1,4 @@
-package com.lawmobile.presentation.ui.thumbnailList
+package com.lawmobile.presentation.ui.fileList.thumbnailList
 
 import com.lawmobile.domain.entities.DomainCameraFile
 import com.lawmobile.domain.entities.DomainInformationImage

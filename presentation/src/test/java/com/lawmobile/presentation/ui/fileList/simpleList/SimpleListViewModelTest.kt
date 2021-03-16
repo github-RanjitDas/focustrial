@@ -1,4 +1,4 @@
-package com.lawmobile.presentation.ui.simpleList
+package com.lawmobile.presentation.ui.fileList.simpleList
 
 import com.lawmobile.domain.entities.DomainInformationFileResponse
 import com.lawmobile.domain.usecase.simpleList.SimpleListUseCase

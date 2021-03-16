@@ -21,6 +21,7 @@ import com.lawmobile.presentation.ui.base.BaseFragment
 import com.lawmobile.presentation.ui.fileList.FileListActivity
 import com.lawmobile.presentation.ui.helpSection.HelpPageActivity
 import com.lawmobile.presentation.ui.login.LoginActivity
+import com.lawmobile.presentation.ui.notificationList.NotificationListActivity
 import com.lawmobile.presentation.utils.Constants
 
 class LiveMenuFragment : BaseFragment() {
@@ -73,45 +74,56 @@ class LiveMenuFragment : BaseFragment() {
     private fun setListeners() {
 
         binding.textViewSnapshots.setOnTouchListenerCheckConnection(
-            { startFileListIntent(Constants.SNAPSHOT_LIST) },
+            {
+                startFileListActivity(Constants.SNAPSHOT_LIST)
+                onCloseMenuButton()
+            },
             { onCloseMenuButton() }
         )
 
         binding.textViewVideos.setOnTouchListenerCheckConnection(
-            { startFileListIntent(Constants.VIDEO_LIST) },
+            {
+                startFileListActivity(Constants.VIDEO_LIST)
+                onCloseMenuButton()
+            },
             { onCloseMenuButton() }
         )
 
         binding.textViewSettings.setOnTouchListenerCheckConnection(
             {
-                this.showToastNotSupportedYet()
+                showToastNotSupportedYet()
+                onCloseMenuButton()
             },
             { onCloseMenuButton() }
         )
 
         binding.textViewNotification.setOnTouchListenerCheckConnection(
             {
-                this.showToastNotSupportedYet()
+                startNotificationListActivity()
+                onCloseMenuButton()
             },
             { onCloseMenuButton() }
         )
 
         binding.textViewDiagnose.setOnTouchListenerCheckConnection(
             {
-                this.showToastNotSupportedYet()
+                showToastNotSupportedYet()
+                onCloseMenuButton()
             },
             { onCloseMenuButton() }
         )
 
         binding.textViewHelp.setOnTouchListenerCheckConnection(
             {
-                this.showHelpView()
+                startHelpActivity()
+                onCloseMenuButton()
             },
             { onCloseMenuButton() }
         )
 
         binding.viewLogout.setOnClickListenerCheckConnection {
-            activity?.createAlertConfirmAppExit(::logoutApplication)
+            requireActivity().createAlertConfirmAppExit(::logoutApplication)
+            onCloseMenuButton()
         }
 
         binding.closeMenu.setOnClickListenerCheckConnection {
@@ -119,14 +131,18 @@ class LiveMenuFragment : BaseFragment() {
         }
     }
 
-    private fun startFileListIntent(fileType: String) {
+    private fun startNotificationListActivity() {
+        startActivity(Intent(requireContext(), NotificationListActivity::class.java))
+    }
+
+    private fun startFileListActivity(fileType: String) {
         (activity as BaseActivity).updateLiveOrPlaybackActive(false)
         val fileListIntent = Intent(activity, FileListActivity::class.java)
         fileListIntent.putExtra(Constants.FILE_LIST_SELECTOR, fileType)
         startActivity(fileListIntent)
     }
 
-    private fun showHelpView() {
+    private fun startHelpActivity() {
         val intent = Intent(activity, HelpPageActivity::class.java)
         startActivity(intent)
     }

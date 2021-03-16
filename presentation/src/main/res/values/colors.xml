@@ -21,5 +21,6 @@
     <color name="blackTransparentMenuOpen">#99000000</color>
     <color name="greenSuccess">#5fbb66</color>
     <color name="backgroundCardView">#D7DEEA</color>
+    <color name="blueTransparent">#330068AF</color>
 
 </resources>

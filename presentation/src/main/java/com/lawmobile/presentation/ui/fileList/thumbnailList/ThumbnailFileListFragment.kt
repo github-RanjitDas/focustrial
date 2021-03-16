@@ -1,4 +1,4 @@
-package com.lawmobile.presentation.ui.thumbnailList
+package com.lawmobile.presentation.ui.fileList.thumbnailList
 
 import android.os.Bundle
 import android.view.LayoutInflater

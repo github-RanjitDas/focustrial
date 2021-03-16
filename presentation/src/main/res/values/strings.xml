@@ -201,6 +201,10 @@
     <string name="not_available">Not available</string>
     <string name="user_guide">User Guide</string>
     <string name="image_error_thumbnail">this thumbnail did not load correctly</string>
+    <string name="notification_type">notification type</string>
+    <string name="notifications">Notifications</string>
+    <string name="notification">Notification</string>
+    <string name="type">Type</string>
 
     <string-array name="gender_spinner">
         <item>Select</item>

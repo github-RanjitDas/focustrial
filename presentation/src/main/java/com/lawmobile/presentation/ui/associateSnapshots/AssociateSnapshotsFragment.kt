@@ -18,8 +18,8 @@ import com.lawmobile.presentation.extensions.setOnClickListenerCheckConnection
 import com.lawmobile.presentation.extensions.showErrorSnackBar
 import com.lawmobile.presentation.ui.base.BaseFragment
 import com.lawmobile.presentation.ui.fileList.FileListBaseFragment.Companion.checkableListInit
-import com.lawmobile.presentation.ui.simpleList.SimpleFileListFragment
-import com.lawmobile.presentation.ui.thumbnailList.ThumbnailFileListFragment
+import com.lawmobile.presentation.ui.fileList.simpleList.SimpleFileListFragment
+import com.lawmobile.presentation.ui.fileList.thumbnailList.ThumbnailFileListFragment
 import com.lawmobile.presentation.utils.Constants.FILE_LIST_TYPE
 import com.lawmobile.presentation.utils.Constants.SIMPLE_FILE_LIST
 import com.lawmobile.presentation.utils.Constants.SNAPSHOT_LIST

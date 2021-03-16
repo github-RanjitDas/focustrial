@@ -1,4 +1,4 @@
-package com.lawmobile.presentation.ui.simpleList
+package com.lawmobile.presentation.ui.fileList.simpleList
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData

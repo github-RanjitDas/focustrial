@@ -1,4 +1,4 @@
-package com.lawmobile.presentation.ui.simpleList
+package com.lawmobile.presentation.ui.fileList.simpleList
 
 import android.os.Build
 import android.text.Html
