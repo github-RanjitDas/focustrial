@@ -1,6 +1,5 @@
 package com.lawmobile.presentation.ui.thumbnailList
 
-import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.viewModelScope
@@ -14,10 +13,13 @@ import com.lawmobile.presentation.ui.base.BaseViewModel
 import com.safefleet.mobile.kotlin_commons.helpers.Event
 import com.safefleet.mobile.kotlin_commons.helpers.Result
 import com.safefleet.mobile.kotlin_commons.helpers.getResultWithAttempts
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class ThumbnailListFragmentViewModel @ViewModelInject constructor(private val thumbnailListUseCase: ThumbnailListUseCase) :
+@HiltViewModel
+class ThumbnailListFragmentViewModel @Inject constructor(private val thumbnailListUseCase: ThumbnailListUseCase) :
     BaseViewModel() {
 
     private val thumbnailBytesListMediatorLiveData =

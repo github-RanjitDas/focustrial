@@ -1,6 +1,5 @@
 package com.lawmobile.presentation.ui.simpleList
 
-import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.viewModelScope
@@ -9,9 +8,12 @@ import com.lawmobile.domain.usecase.simpleList.SimpleListUseCase
 import com.lawmobile.presentation.extensions.postValueWithTimeout
 import com.lawmobile.presentation.ui.base.BaseViewModel
 import com.safefleet.mobile.kotlin_commons.helpers.Result
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class SimpleListViewModel @ViewModelInject constructor(private val simpleListUseCase: SimpleListUseCase) :
+@HiltViewModel
+class SimpleListViewModel @Inject constructor(private val simpleListUseCase: SimpleListUseCase) :
     BaseViewModel() {
 
     private val fileListMediator: MediatorLiveData<Result<DomainInformationFileResponse>> =

@@ -1,7 +1,6 @@
 package com.lawmobile.presentation.ui.videoPlayback
 
 import android.view.SurfaceView
-import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.viewModelScope
@@ -12,10 +11,13 @@ import com.lawmobile.domain.usecase.videoPlayback.VideoPlaybackUseCase
 import com.lawmobile.presentation.ui.base.BaseViewModel
 import com.lawmobile.presentation.utils.VLCMediaPlayer
 import com.safefleet.mobile.kotlin_commons.helpers.Result
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import org.videolan.libvlc.MediaPlayer
+import javax.inject.Inject
 
-class VideoPlaybackViewModel @ViewModelInject constructor(
+@HiltViewModel
+class VideoPlaybackViewModel @Inject constructor(
     private val videoPlaybackUseCase: VideoPlaybackUseCase,
     private val vlcMediaPlayer: VLCMediaPlayer
 ) : BaseViewModel() {

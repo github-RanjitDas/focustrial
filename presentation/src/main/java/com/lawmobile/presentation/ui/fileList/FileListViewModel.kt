@@ -1,6 +1,5 @@
 package com.lawmobile.presentation.ui.fileList
 
-import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.viewModelScope
@@ -8,9 +7,12 @@ import com.lawmobile.domain.entities.DomainCameraFile
 import com.lawmobile.domain.usecase.fileList.FileListUseCase
 import com.lawmobile.presentation.ui.base.BaseViewModel
 import com.safefleet.mobile.kotlin_commons.helpers.Result
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class FileListViewModel @ViewModelInject constructor(private val fileListUseCase: FileListUseCase) :
+@HiltViewModel
+class FileListViewModel @Inject constructor(private val fileListUseCase: FileListUseCase) :
     BaseViewModel() {
 
     private val videoPartnerIdMediator: MediatorLiveData<Result<Unit>> =
