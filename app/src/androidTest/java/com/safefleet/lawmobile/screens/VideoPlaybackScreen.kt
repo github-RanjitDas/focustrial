@@ -13,7 +13,7 @@ import com.schibsted.spain.barista.interaction.BaristaScrollInteractions
 class VideoPlaybackScreen : BaseScreen() {
 
     fun clickOnSave() = clickOn(R.id.saveButtonVideoPlayback)
-    fun clickOnBack() = clickOn(R.id.backArrowFileListAppBar)
+    fun clickOnBack() = clickOn(R.id.imageButtonBackArrow)
     fun clickOnAccept() = clickOn(R.string.accept)
     fun clickOnAddSnapshots() = clickOn(R.id.buttonAssociateSnapshots)
 

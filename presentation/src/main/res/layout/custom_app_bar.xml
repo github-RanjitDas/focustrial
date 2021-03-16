@@ -5,13 +5,13 @@
     tools:parentTag="androidx.constraintlayout.widget.ConstraintLayout">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/layoutFileListAppBar"
+        android:id="@+id/layoutCustomAppBar"
         android:layout_width="match_parent"
         android:layout_height="@dimen/live_view_app_bar_height"
         android:background="@drawable/background_app_bar">
 
         <ImageButton
-            android:id="@+id/backArrowFileListAppBar"
+            android:id="@+id/imageButtonBackArrow"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/no_dp"
             android:background="@color/transparent"
@@ -23,7 +23,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/fileListAppBarTitle"
+            android:id="@+id/textViewTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/title_placeholder"
@@ -32,7 +32,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/buttonThumbnailList"
             app:layout_constraintHorizontal_bias="0.14"
-            app:layout_constraintStart_toEndOf="@+id/backArrowFileListAppBar"
+            app:layout_constraintStart_toEndOf="@+id/imageButtonBackArrow"
             app:layout_constraintTop_toTopOf="parent" />
 
         <com.safefleet.mobile.safefleet_ui.widgets.SafeFleetGridButton

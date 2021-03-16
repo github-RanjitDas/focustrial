@@ -7,7 +7,7 @@ import androidx.test.espresso.UiController
 import androidx.test.espresso.ViewAction
 import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.ViewMatchers
-import com.lawmobile.presentation.ui.simpleList.SimpleFileListAdapter
+import com.lawmobile.presentation.ui.fileList.simpleList.SimpleFileListAdapter
 import org.hamcrest.Matcher
 
 object CustomCheckboxAction {

@@ -1,4 +1,4 @@
-package com.lawmobile.presentation.ui.thumbnailList
+package com.lawmobile.presentation.ui.fileList.thumbnailList
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData

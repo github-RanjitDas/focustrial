@@ -14,7 +14,7 @@
         tools:context=".ui.fileList.FileListActivity">
 
         <include
-            android:id="@+id/layoutFileListAppBar"
+            android:id="@+id/layoutCustomAppBar"
             layout="@layout/custom_app_bar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />

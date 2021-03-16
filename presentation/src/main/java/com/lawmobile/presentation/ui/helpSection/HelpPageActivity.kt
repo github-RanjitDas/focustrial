@@ -25,11 +25,11 @@ class HelpPageActivity : BaseActivity() {
     }
 
     private fun setAppBar() {
-        with(activityHelpPageBinding.layoutFileListAppBar) {
-            fileListAppBarTitle.text = getString(R.string.user_guide)
+        with(activityHelpPageBinding.layoutCustomAppBar) {
+            textViewTitle.text = getString(R.string.user_guide)
             buttonSimpleList.isVisible = false
             buttonThumbnailList.isVisible = false
-            backArrowFileListAppBar.setOnClickListener {
+            imageButtonBackArrow.setOnClickListener {
                 onBackPressed()
             }
         }

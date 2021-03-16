@@ -89,7 +89,7 @@ class FileListScreen : BaseScreen() {
     fun areNoFilesFound(@StringRes message: Int) =
         assertDisplayed(R.id.noFilesTextView, message)
 
-    fun clickOnBack() = clickOn(R.id.backArrowFileListAppBar)
+    fun clickOnBack() = clickOn(R.id.imageButtonBackArrow)
 
     fun clickOnItemInPosition(position: Int) =
         BaristaListInteractions.clickListItem(recyclerView, position)
