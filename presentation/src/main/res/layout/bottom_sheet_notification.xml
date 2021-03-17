@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/bottomSheetNotification"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:behavior_hideable="true"
+        app:cardElevation="@dimen/no_dp"
+        app:layout_behavior="@string/bottom_sheet_behavior">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingTop="@dimen/padding_40dp">
+
+                <include
+                    android:id="@+id/layoutNotificationInformation"
+                    layout="@layout/custom_notification_information" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <TextView
+                android:id="@+id/textViewNotificationDetailTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:padding="@dimen/instructions_title_padding"
+                android:text="@string/notification_detail"
+                android:textSize="@dimen/instructions_text_size"
+                android:textStyle="bold"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <View
+                android:id="@+id/dividerNotifications"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/instructions_divider_size"
+                android:background="@color/grey"
+                app:layout_constraintTop_toBottomOf="@id/textViewNotificationDetailTitle" />
+
+            <ImageButton
+                android:id="@+id/imageButtonCloseNotification"
+                android:layout_width="@dimen/custom_notification_size_close_button"
+                android:layout_height="@dimen/custom_notification_size_close_button"
+                android:background="@color/transparent"
+                android:contentDescription="@string/alert_notification_dismiss_button"
+                android:src="@drawable/ic_cancel"
+                android:tint="@color/greyNotificationAction"
+                android:layout_marginEnd="@dimen/margin_18dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/textViewNotificationDetailTitle"
+                app:layout_constraintBottom_toBottomOf="@id/textViewNotificationDetailTitle" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.cardview.widget.CardView>
+
+</merge>

@@ -206,6 +206,12 @@
     <string name="notification">Notification</string>
     <string name="type">Type</string>
 
+    <!-- Alert notification-->
+    <string name="alert_notification_dismiss_button">Dismiss</string>
+    <string name="alert_notification_information_image">Image type of notification</string>
+    <string name="dismiss">Dismiss</string>
+    <string name="notification_detail">Notification Detail</string>
+
     <string-array name="gender_spinner">
         <item>Select</item>
         <item>Male</item>

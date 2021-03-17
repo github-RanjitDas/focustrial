@@ -137,24 +137,24 @@ class LiveMenuFragment : BaseFragment() {
 
     private fun startFileListActivity(fileType: String) {
         (activity as BaseActivity).updateLiveOrPlaybackActive(false)
-        val fileListIntent = Intent(activity, FileListActivity::class.java)
+        val fileListIntent = Intent(requireActivity(), FileListActivity::class.java)
         fileListIntent.putExtra(Constants.FILE_LIST_SELECTOR, fileType)
         startActivity(fileListIntent)
     }
 
     private fun startHelpActivity() {
-        val intent = Intent(activity, HelpPageActivity::class.java)
+        val intent = Intent(requireActivity(), HelpPageActivity::class.java)
         startActivity(intent)
     }
 
     private fun logoutApplication() {
         liveMenuViewModel.disconnectCamera()
-        startActivity(Intent(activity, LoginActivity::class.java))
-        activity?.finish()
+        startActivity(Intent(requireActivity(), LoginActivity::class.java))
+        requireActivity().finish()
     }
 
     private fun showToastNotSupportedYet() {
-        activity?.showToast(
+        requireActivity().showToast(
             getString(R.string.live_view_menu_feature_not_supported),
             Toast.LENGTH_LONG
         )
