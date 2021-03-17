@@ -1,6 +1,5 @@
 package com.lawmobile.presentation.ui.live.x2
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.animation.AnimationUtils
 import androidx.activity.viewModels
@@ -60,7 +59,6 @@ class LiveX2Activity : BaseActivity() {
         if (isInPortraitMode()) updateLiveOrPlaybackActive(controlsFragment.buttonSwitchLiveView.isActivated)
     }
 
-    @SuppressLint("ClickableViewAccessibility")
     private fun setListeners() {
         controlsFragment.onCameraOperation = ::onCameraOperation
         controlsFragment.onLiveStreamSwitchClick = ::onLiveStreamSwitchClick
@@ -71,7 +69,7 @@ class LiveX2Activity : BaseActivity() {
     }
 
     private fun onTapMenuButton() {
-        binding.menuContainer?.isVisible = true
+        binding.menuContainer.isVisible = true
         binding.shadowOpenMenuView?.isVisible = true
         isMenuOpen = true
         animateOpenMenuContainer()
@@ -80,7 +78,7 @@ class LiveX2Activity : BaseActivity() {
     private fun onCloseMenuButton() {
         animateCloseMenuContainer()
         isMenuOpen = false
-        binding.menuContainer?.isVisible = false
+        binding.menuContainer.isVisible = false
         binding.shadowOpenMenuView?.isVisible = false
     }
 
@@ -113,13 +111,13 @@ class LiveX2Activity : BaseActivity() {
 
     private fun animateOpenMenuContainer() {
         val animation = AnimationUtils.loadAnimation(this, R.anim.slide_in_right)
-        binding.menuContainer?.startAnimation(animation)
+        binding.menuContainer.startAnimation(animation)
     }
 
     private fun animateCloseMenuContainer() {
         val animation = AnimationUtils.loadAnimation(this, R.anim.slide_out_right)
         val animationShadow = AnimationUtils.loadAnimation(this, R.anim.fade_out)
-        binding.menuContainer?.startAnimation(animation)
+        binding.menuContainer.startAnimation(animation)
         binding.shadowOpenMenuView?.startAnimation(animationShadow)
     }
 
@@ -207,7 +205,5 @@ class LiveX2Activity : BaseActivity() {
 
     companion object {
         private const val VIEW_LOADING_TIME = 800L
-        private const val SWIPE_THRESHOLD = 100
-        private const val SWIPE_VELOCITY_THRESHOLD = 100
     }
 }

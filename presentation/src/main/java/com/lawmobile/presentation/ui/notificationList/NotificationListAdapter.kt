@@ -4,10 +4,14 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.lawmobile.domain.entities.DomainNotification
+import com.lawmobile.domain.entities.NotificationType
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.databinding.NotificationListRecyclerItemBinding
+import com.lawmobile.presentation.extensions.setOnClickListenerCheckConnection
 
-class NotificationListAdapter : RecyclerView.Adapter<NotificationListAdapter.ViewHolder>() {
+class NotificationListAdapter(
+    private val onNotificationItemCLick: (DomainNotification) -> Unit
+) : RecyclerView.Adapter<NotificationListAdapter.ViewHolder>() {
 
     var notificationList = mutableListOf<DomainNotification>()
         set(value) {
@@ -35,7 +39,7 @@ class NotificationListAdapter : RecyclerView.Adapter<NotificationListAdapter.Vie
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding =
             NotificationListRecyclerItemBinding.inflate(LayoutInflater.from(parent.context))
-        return ViewHolder(binding)
+        return ViewHolder(binding, onNotificationItemCLick)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
@@ -46,30 +50,45 @@ class NotificationListAdapter : RecyclerView.Adapter<NotificationListAdapter.Vie
         return notificationList.size
     }
 
-    inner class ViewHolder(val binding: NotificationListRecyclerItemBinding) :
+    inner class ViewHolder(
+        private val binding: NotificationListRecyclerItemBinding,
+        private val onNotificationItemCLick: (DomainNotification) -> Unit
+    ) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(notification: DomainNotification) {
             setNotificationType(notification.type)
+            setTextViews(notification)
+            setListener(notification)
+        }
+
+        private fun setListener(notification: DomainNotification) {
+            binding.layoutNotificationItem.setOnClickListenerCheckConnection {
+                onNotificationItemCLick(notification)
+            }
+        }
+
+        private fun setTextViews(notification: DomainNotification) {
             binding.textViewNotification.text = notification.value
             binding.textViewNotificationDate.text = DATE_PLACEHOLDER
         }
 
-        private fun setNotificationType(type: String) {
+        private fun setNotificationType(type: NotificationType) {
             when (type) {
-                WARNING -> {
+                NotificationType.WARNING -> {
                     binding.imageViewNotificationType.setImageResource(R.drawable.ic_warning_icon)
                 }
-                ERROR -> {
+                NotificationType.ERROR -> {
                     binding.imageViewNotificationType.setImageResource(R.drawable.ic_error_icon)
+                }
+                NotificationType.INFORMATION -> {
+                    binding.imageViewNotificationType.setImageResource(R.drawable.ic_info_icon)
                 }
             }
         }
     }
 
     companion object {
-        private const val WARNING = "Warning"
-        private const val ERROR = "Error"
         private const val DATE_PLACEHOLDER = "10/12/2020"
     }
 }

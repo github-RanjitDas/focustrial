@@ -4,7 +4,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.lawmobile.domain.entities.DomainNotification
+import com.lawmobile.domain.entities.NotificationType
 import com.lawmobile.presentation.databinding.LiveViewAppBarMenuBinding
+import com.lawmobile.presentation.extensions.createNotificationDialog
 import com.lawmobile.presentation.extensions.setOnClickListenerCheckConnection
 import com.lawmobile.presentation.ui.base.BaseFragment
 
@@ -33,6 +36,15 @@ class LiveAppBarX2Fragment : BaseFragment() {
     private fun setListeners() {
         binding.buttonMenu.setOnClickListenerCheckConnection {
             onTapMenuButton()
+        }
+        binding.buttonNotification.setOnClickListenerCheckConnection {
+            requireContext().createNotificationDialog(
+                DomainNotification(
+                    NotificationType.INFORMATION,
+                    "Started video recording",
+                    date = "20/10/2021"
+                )
+            ) {}
         }
     }
 

@@ -3,7 +3,6 @@ package com.lawmobile.presentation.ui.base
 import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.view.WindowManager
-import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.MutableLiveData
@@ -15,7 +14,7 @@ import com.lawmobile.presentation.extensions.checkIfSessionIsExpired
 import com.lawmobile.presentation.extensions.createAlertMobileDataActive
 import com.lawmobile.presentation.extensions.createAlertProgress
 import com.lawmobile.presentation.extensions.createAlertSessionExpired
-import com.lawmobile.presentation.extensions.showToast
+import com.lawmobile.presentation.extensions.createNotificationDialog
 import com.lawmobile.presentation.security.RootedHelper
 import com.lawmobile.presentation.ui.login.LoginActivity
 import com.lawmobile.presentation.utils.CameraHelper
@@ -71,7 +70,7 @@ open class BaseActivity : AppCompatActivity() {
 
     private fun reviewNotificationInCamera() {
         CameraHelper.getInstance().reviewNotificationInCamera {
-            showToast(it.type + it.value, Toast.LENGTH_LONG)
+            this.createNotificationDialog(it) {}
         }
     }
 

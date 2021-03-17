@@ -7,11 +7,13 @@ import android.provider.Settings
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import com.lawmobile.domain.entities.DomainNotification
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.entities.AlertInformation
 import com.lawmobile.presentation.entities.NeutralAlertInformation
 import com.lawmobile.presentation.ui.base.BaseActivity
 import com.lawmobile.presentation.utils.CameraHelper
+import com.lawmobile.presentation.widgets.CustomNotificationDialog
 import com.safefleet.mobile.safefleet_ui.widgets.SafeFleetConfirmationDialog
 import kotlin.system.exitProcess
 
@@ -164,3 +166,16 @@ fun Context.isAnimationsEnabled() =
         Settings.Global.ANIMATOR_DURATION_SCALE,
         0F
     ) != 0F
+
+fun Context.createNotificationDialog(domainNotification: DomainNotification, callback: () -> Unit) {
+    CustomNotificationDialog(
+        this,
+        false,
+        domainNotification
+    ).apply {
+        onDismissClicked = {
+            callback()
+        }
+        show()
+    }
+}

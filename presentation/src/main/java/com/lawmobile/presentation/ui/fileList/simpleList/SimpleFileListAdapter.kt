@@ -103,7 +103,7 @@ class SimpleFileListAdapter(
             onFileCheck?.invoke(isAnyFileChecked(), selectedItemsSize())
             setDataToViews(remoteCameraFile)
             enableCheckBoxes(remoteCameraFile)
-            setListener(remoteCameraFile)
+            setListeners(remoteCameraFile)
         }
 
         private fun setDataToViews(remoteCameraFile: DomainInformationFile) {
@@ -138,7 +138,7 @@ class SimpleFileListAdapter(
             }
         }
 
-        private fun setListener(remoteCameraFile: DomainInformationFile) {
+        private fun setListeners(remoteCameraFile: DomainInformationFile) {
             checkboxSimpleListItem.setCheckedListenerCheckConnection {
                 selectItemFromTheList(remoteCameraFile)
             }

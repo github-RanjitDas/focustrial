@@ -11,6 +11,6 @@ class NotificationResponseMapperTest {
     fun testCameraToDomain() {
         val cameraNotification = NotificationResponse("7", "type", "value")
         val response = NotificationResponseMapper.cameraToDomain(cameraNotification)
-        Assert.assertEquals(response, DomainNotification("type", "value"))
+        Assert.assertEquals(response, DomainNotification(response.type, "value"))
     }
 }
