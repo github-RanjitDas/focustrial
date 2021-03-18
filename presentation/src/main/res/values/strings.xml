@@ -42,9 +42,9 @@
     <string name="icon_close_menu">Close Menu</string>
     <string name="live_view_menu_item_view_snapshots">View Snapshots</string>
     <string name="live_view_menu_item_view_videos">View Videos</string>
-    <string name="live_view_menu_item_bodyworn_settings">Bodyworn Settings</string>
+    <string name="live_view_menu_item_bodyworn_settings">Body-worn Settings</string>
     <string name="live_view_menu_item_notification">Notifications</string>
-    <string name="live_view_menu_item_diagnose">Diagnose Bodyworn</string>
+    <string name="live_view_menu_item_diagnose">Body-worn Diagnosis</string>
     <string name="live_view_menu_item_help">Help</string>
     <string name="live_view_menu_logout">Logout</string>
     <string name="live_view_menu_feature_not_supported">This feature is not supported yet</string>

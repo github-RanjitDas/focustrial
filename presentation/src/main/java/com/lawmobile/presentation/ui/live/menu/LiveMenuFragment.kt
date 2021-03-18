@@ -89,14 +89,6 @@ class LiveMenuFragment : BaseFragment() {
             { onCloseMenuButton() }
         )
 
-        binding.textViewSettings.setOnTouchListenerCheckConnection(
-            {
-                showToastNotSupportedYet()
-                onCloseMenuButton()
-            },
-            { onCloseMenuButton() }
-        )
-
         binding.textViewNotification.setOnTouchListenerCheckConnection(
             {
                 startNotificationListActivity()
