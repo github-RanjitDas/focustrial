@@ -23,5 +23,6 @@
     <color name="backgroundCardView">#D7DEEA</color>
     <color name="blueTransparent">#330068AF</color>
     <color name="greyNotificationAction">#5B616A</color>
+    <color name="blueDiagnosisButton">#184C89</color>
 
 </resources>

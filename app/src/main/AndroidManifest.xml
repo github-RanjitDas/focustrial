@@ -73,6 +73,13 @@
             android:theme="@style/AppTheme.NoActionBar"
             tools:ignore="LockedOrientationActivity" />
 
+        <activity
+            android:name="com.lawmobile.presentation.ui.bodyWornDiagnosis.BodyWornDiagnosisActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"
+            tools:ignore="LockedOrientationActivity"
+            />
+
         <service
             android:name="com.lawmobile.presentation.security.IsolatedService"
             android:enabled="true"
