@@ -47,7 +47,6 @@
     <string name="live_view_menu_item_diagnose">Body-worn Diagnosis</string>
     <string name="live_view_menu_item_help">Help</string>
     <string name="live_view_menu_logout">Logout</string>
-    <string name="live_view_menu_feature_not_supported">This feature is not supported yet</string>
 
     <!-- Snapshots -->
     <string name="live_view_take_photo_success">Snapshot captured successfully</string>
@@ -232,5 +231,15 @@
         <item>Select</item>
         <item>Default</item>
     </string-array>
+
+    <!-- Body Worn Diagnosis -->
+    <string name="body_worn_diagnosis_button_text">START</string>
+    <string name="body_worn_diagnosis_loading_text">Diagnosing</string>
+    <string name="body_worn_diagnosis_success_text">SUCCESS</string>
+    <string name="body_worn_diagnosis_error_text">ERROR</string>
+    <string name="body_worn_icon_result_description">Icon result diagnosis</string>
+    <string name="body_worn_icon_error_is_not_possible_get_diagnosis">Error retrieving body-worn Diagnosis, please try again</string>
+    <string name="body_worn_result_success_description">Success - your Body-worn Camera hardware is operating correctly, no issues reported</string>
+    <string name="body_worn_result_failed_description">There are one or more issues with the Body-worn Camera hardware that will prevent it from working properly! Please contact your administrator and report this issue</string>
 
 </resources>

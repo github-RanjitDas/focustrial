@@ -6,18 +6,16 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.viewModels
 import com.lawmobile.domain.entities.CameraInfo
-import com.lawmobile.presentation.R
 import com.lawmobile.presentation.databinding.FragmentLiveMenuX2Binding
 import com.lawmobile.presentation.extensions.createAlertConfirmAppExit
 import com.lawmobile.presentation.extensions.setOnClickListenerCheckConnection
 import com.lawmobile.presentation.extensions.setOnSwipeRightListener
 import com.lawmobile.presentation.extensions.setOnTouchListenerCheckConnection
-import com.lawmobile.presentation.extensions.showToast
 import com.lawmobile.presentation.ui.base.BaseActivity
 import com.lawmobile.presentation.ui.base.BaseFragment
+import com.lawmobile.presentation.ui.bodyWornDiagnosis.BodyWornDiagnosisActivity
 import com.lawmobile.presentation.ui.fileList.FileListActivity
 import com.lawmobile.presentation.ui.helpSection.HelpPageActivity
 import com.lawmobile.presentation.ui.login.LoginActivity
@@ -45,9 +43,9 @@ class LiveMenuFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setListeners()
-        setTouchListeners()
         setInformationOfOfficer()
+        setTouchListeners()
+        setListeners()
     }
 
     private fun setInformationOfOfficer() {
@@ -99,7 +97,7 @@ class LiveMenuFragment : BaseFragment() {
 
         binding.textViewDiagnose.setOnTouchListenerCheckConnection(
             {
-                showToastNotSupportedYet()
+                startBodyWornDiagnosisActivity()
                 onCloseMenuButton()
             },
             { onCloseMenuButton() }
@@ -123,10 +121,6 @@ class LiveMenuFragment : BaseFragment() {
         }
     }
 
-    private fun startNotificationListActivity() {
-        startActivity(Intent(requireContext(), NotificationListActivity::class.java))
-    }
-
     private fun startFileListActivity(fileType: String) {
         (activity as BaseActivity).updateLiveOrPlaybackActive(false)
         val fileListIntent = Intent(requireActivity(), FileListActivity::class.java)
@@ -134,9 +128,16 @@ class LiveMenuFragment : BaseFragment() {
         startActivity(fileListIntent)
     }
 
+    private fun startNotificationListActivity() {
+        startActivity(Intent(requireContext(), NotificationListActivity::class.java))
+    }
+
+    private fun startBodyWornDiagnosisActivity() {
+        startActivity(Intent(requireContext(), BodyWornDiagnosisActivity::class.java))
+    }
+
     private fun startHelpActivity() {
-        val intent = Intent(requireActivity(), HelpPageActivity::class.java)
-        startActivity(intent)
+        startActivity(Intent(requireActivity(), HelpPageActivity::class.java))
     }
 
     private fun logoutApplication() {
@@ -145,20 +146,7 @@ class LiveMenuFragment : BaseFragment() {
         requireActivity().finish()
     }
 
-    private fun showToastNotSupportedYet() {
-        requireActivity().showToast(
-            getString(R.string.live_view_menu_feature_not_supported),
-            Toast.LENGTH_LONG
-        )
-    }
-
     companion object {
-        fun createInstance(closeFragment: () -> Unit): LiveMenuFragment {
-            return LiveMenuFragment().apply {
-                this.onCloseMenuButton = closeFragment
-            }
-        }
-
         val TAG = LiveMenuFragment::class.java.simpleName
     }
 }

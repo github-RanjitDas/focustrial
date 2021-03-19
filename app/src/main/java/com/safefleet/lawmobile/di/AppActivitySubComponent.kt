@@ -1,5 +1,6 @@
 package com.safefleet.lawmobile.di
 
+import com.safefleet.lawmobile.di.bodyWornDiagnosis.BodyWornDiagnosisComponent
 import com.safefleet.lawmobile.di.fileList.FileListComponent
 import com.safefleet.lawmobile.di.helpSection.HelpPageComponent
 import com.safefleet.lawmobile.di.liveStreaming.LiveStreamingComponent
@@ -18,7 +19,8 @@ import dagger.hilt.components.SingletonComponent
         LiveStreamingComponent::class,
         LoginComponent::class,
         SnapshotDetailComponent::class,
-        VideoPlaybackComponent::class
+        VideoPlaybackComponent::class,
+        BodyWornDiagnosisComponent::class
     ]
 )
 class AppActivitySubComponent
