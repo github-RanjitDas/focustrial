@@ -32,7 +32,7 @@ open class LiveStatusBarBaseFragment : BaseFragment() {
 
     private val sharedViewModel: LiveStatusBarBaseViewModel by activityViewModels()
 
-    private val blinkAnimation = Animations.createBlinkAnimation(BLINK_ANIMATION_DURATION)
+    val blinkAnimation = Animations.createBlinkAnimation(BLINK_ANIMATION_DURATION)
 
     private var isBatteryAlertShowed = false
     private var isStorageAlertShowed = false
@@ -50,6 +50,8 @@ open class LiveStatusBarBaseFragment : BaseFragment() {
     lateinit var batteryBarColors: SafeFleetLinearProgressBarColors
     lateinit var storageBarRanges: SafeFleetLinearProgressBarRanges
     lateinit var storageBarColors: SafeFleetLinearProgressBarColors
+
+    var onBatteryLow: (() -> Unit)? = null
 
     @ColorRes var highRangeColor: Int = 0
 
@@ -142,7 +144,7 @@ open class LiveStatusBarBaseFragment : BaseFragment() {
                         requireContext(),
                         batteryBarColors.lowRangeColor
                     )
-                imageViewBattery.startAnimationIfEnabled(blinkAnimation)
+                onBatteryLow?.invoke()
                 if (!isBatteryAlertShowed) {
                     createAlertForInformationCamera(
                         R.string.battery_alert_title,

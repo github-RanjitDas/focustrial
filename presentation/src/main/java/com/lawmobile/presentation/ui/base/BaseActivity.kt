@@ -3,11 +3,13 @@ package com.lawmobile.presentation.ui.base
 import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.view.WindowManager
+import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import com.lawmobile.domain.entities.CameraInfo
+import com.lawmobile.domain.entities.DomainNotification
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.entities.NeutralAlertInformation
 import com.lawmobile.presentation.extensions.checkIfSessionIsExpired
@@ -18,8 +20,12 @@ import com.lawmobile.presentation.extensions.createNotificationDialog
 import com.lawmobile.presentation.security.RootedHelper
 import com.lawmobile.presentation.ui.login.LoginActivity
 import com.lawmobile.presentation.utils.CameraHelper
+import com.lawmobile.presentation.utils.CameraNotificationManager
 import com.lawmobile.presentation.utils.EspressoIdlingResource
 import com.lawmobile.presentation.utils.MobileDataStatus
+import com.safefleet.mobile.kotlin_commons.extensions.doIfError
+import com.safefleet.mobile.kotlin_commons.extensions.doIfSuccess
+import com.safefleet.mobile.kotlin_commons.helpers.Result
 import dagger.hilt.android.AndroidEntryPoint
 import java.sql.Timestamp
 import javax.inject.Inject
@@ -27,11 +33,13 @@ import javax.inject.Inject
 @AndroidEntryPoint
 open class BaseActivity : AppCompatActivity() {
 
-    @Inject
-    lateinit var baseViewModel: BaseViewModel
+    private val viewModel: BaseViewModel by viewModels()
 
     @Inject
     lateinit var mobileDataStatus: MobileDataStatus
+
+    @Inject
+    lateinit var cameraNotificationManager: CameraNotificationManager
 
     private var isLiveVideoOrPlaybackActive: Boolean = false
     private lateinit var mobileDataDialog: AlertDialog
@@ -42,15 +50,52 @@ open class BaseActivity : AppCompatActivity() {
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         super.onCreate(savedInstanceState)
 
+        verifyDeviceIsNotRooted()
+        setObservers()
+        createMobileDataDialog()
+        observeMobileData()
+        updateLastInteraction()
+        onOfficerLogged()
+    }
+
+    private fun verifyDeviceIsNotRooted() {
         if (RootedHelper.isDeviceRooted(this)) {
             finish()
             return
         }
-        createMobileDataDialog()
+    }
+
+    private fun observeMobileData() {
         mobileDataStatus.observe(this, Observer(::showMobileDataDialog))
-        updateLastInteraction()
+    }
+
+    private fun onOfficerLogged() {
         if (CameraInfo.officerName.isNotEmpty()) {
+            viewModel.startReadingEvents()
             reviewNotificationInCamera()
+        }
+    }
+
+    private fun setObservers() {
+        viewModel.setNotificationManager(cameraNotificationManager)
+        viewModel.logEventsLiveData().observe(this, ::handleEvents)
+    }
+
+    private fun handleEvents(result: Result<List<DomainNotification>>) {
+        with(result) {
+            doIfSuccess {
+                if (notificationList.isEmpty()) {
+                    notificationList = it
+                    return@with
+                }
+                if (it.size > notificationList.size) {
+                    this@BaseActivity.createNotificationDialog(it.last()) {}
+                    notificationList = it
+                }
+            }
+            doIfError {
+                println(it.message)
+            }
         }
     }
 
@@ -121,5 +166,6 @@ open class BaseActivity : AppCompatActivity() {
         const val MAX_TIME_SESSION = 300000
         lateinit var lastInteraction: Timestamp
         var isRecordingVideo: Boolean = false
+        private var notificationList = listOf<DomainNotification>()
     }
 }

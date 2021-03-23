@@ -62,7 +62,7 @@ dependencies {
     testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutines_test_version"
 
     //external_hardware
-    implementation 'com.safefleet.mobile:external-hardware:2.1.0-SNAPSHOT@jar'
+    implementation 'com.safefleet.mobile:external-hardware:2.2.0-SNAPSHOT@jar'
 
     implementation project(path: Modules.domain)
 }

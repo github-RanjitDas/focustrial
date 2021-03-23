@@ -9,7 +9,7 @@ import androidx.cardview.widget.CardView
 import androidx.core.view.isVisible
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.lawmobile.domain.entities.CameraInfo
-import com.lawmobile.domain.entities.CameraType
+import com.lawmobile.domain.enums.CameraType
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.databinding.ActivityLoginBinding
 import com.lawmobile.presentation.extensions.attachFragmentWithAnimation

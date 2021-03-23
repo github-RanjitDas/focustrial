@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.databinding.FragmentLiveStatusBarBinding
 import com.lawmobile.presentation.extensions.setOnClickListenerCheckConnection
+import com.lawmobile.presentation.extensions.startAnimationIfEnabled
 import com.lawmobile.presentation.ui.helpSection.HelpPageActivity
 import com.lawmobile.presentation.ui.live.statusBar.LiveStatusBarBaseFragment
 import com.safefleet.mobile.safefleet_ui.widgets.linearProgressBar.SafeFleetLinearProgressBarColors
@@ -40,6 +41,9 @@ class LiveStatusBarX1Fragment : LiveStatusBarBaseFragment() {
         binding.buttonOpenHelpPage.setOnClickListenerCheckConnection {
             val intent = Intent(requireContext(), HelpPageActivity::class.java)
             startActivity(intent)
+        }
+        onBatteryLow = {
+            imageViewBattery.startAnimationIfEnabled(blinkAnimation)
         }
     }
 

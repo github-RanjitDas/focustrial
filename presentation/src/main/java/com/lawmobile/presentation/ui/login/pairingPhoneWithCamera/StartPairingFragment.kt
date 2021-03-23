@@ -18,7 +18,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.lawmobile.domain.entities.CameraInfo
-import com.lawmobile.domain.entities.CameraType
+import com.lawmobile.domain.enums.CameraType
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.databinding.FragmentStartPairingBinding
 import com.lawmobile.presentation.entities.AlertInformation

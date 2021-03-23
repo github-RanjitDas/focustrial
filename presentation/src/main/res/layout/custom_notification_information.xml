@@ -12,7 +12,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="wrap_content"
+        android:layout_width="@dimen/no_dp"
         android:layout_height="wrap_content"
         android:id="@+id/layoutInformation"
         app:layout_constraintStart_toStartOf="@id/guidelineVertical2"
@@ -25,34 +25,44 @@
             android:layout_height="@dimen/custom_notification_size_image_type"
             android:contentDescription="@string/alert_notification_information_image"
             android:src="@drawable/ic_error_icon"
-            app:layout_constraintEnd_toStartOf="@id/textViewNotificationTitle"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/layoutInformationTitle"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            />
+            app:layout_constraintBottom_toBottomOf="parent" />
 
-        <TextView
-            android:id="@+id/textViewNotificationTitle"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layoutInformationTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/custom_notification_margin_start_title_and_date"
-            android:fontFamily="@font/roboto_bold"
-            android:textColor="@color/black"
-            android:textSize="@dimen/custom_notification_size_text_tile"
-            app:layout_constraintStart_toEndOf="@id/imageViewNotificationIcon"
-            tools:text="NO GPS Signal"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/imageViewNotificationIcon">
 
-        <TextView
-            android:id="@+id/textViewNotificationDate"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/custom_notification_margin_top_date"
-            android:textSize="@dimen/custom_notification_size_text_date"
-            app:layout_constraintStart_toStartOf="@id/textViewNotificationTitle"
-            app:layout_constraintEnd_toEndOf="@id/textViewNotificationTitle"
-            app:layout_constraintTop_toBottomOf="@+id/textViewNotificationTitle"
-            tools:text="2020-03-15 / 16:33:21" />
+            <TextView
+                android:id="@+id/textViewNotificationTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/roboto_bold"
+                android:textColor="@color/black"
+                android:textSize="@dimen/custom_notification_size_text_tile"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                tools:text="NO GPS Signal"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/textViewNotificationDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/custom_notification_margin_top_date"
+                android:textSize="@dimen/custom_notification_size_text_date"
+                app:layout_constraintStart_toStartOf="@id/textViewNotificationTitle"
+                app:layout_constraintEnd_toEndOf="@id/textViewNotificationTitle"
+                app:layout_constraintTop_toBottomOf="@+id/textViewNotificationTitle"
+                tools:text="2020-03-15 / 16:33:21" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

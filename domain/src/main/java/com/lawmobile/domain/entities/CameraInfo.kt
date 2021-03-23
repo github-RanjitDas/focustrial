@@ -1,5 +1,7 @@
 package com.lawmobile.domain.entities
 
+import com.lawmobile.domain.enums.CameraType
+
 object CameraInfo {
     var cameraType: CameraType = CameraType.X1
     var events = mutableListOf<DomainCatalog>()

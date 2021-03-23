@@ -35,7 +35,7 @@ class FileListViewModelTest {
         val result = Result.Success(Unit)
         coEvery { fileListUseCase.savePartnerIdVideos(any(), any()) } returns result
         fileListViewModel.associatePartnerIdToVideoList(listOf(mockk()), "")
-        Assert.assertEquals(fileListViewModel.videoPartnerIdLiveData.value, result)
+        Assert.assertEquals(result, fileListViewModel.videoPartnerIdLiveData.value)
         coVerify { fileListUseCase.savePartnerIdVideos(any(), any()) }
     }
 

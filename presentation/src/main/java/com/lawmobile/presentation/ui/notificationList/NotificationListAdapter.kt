@@ -4,7 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.lawmobile.domain.entities.DomainNotification
-import com.lawmobile.domain.entities.NotificationType
+import com.lawmobile.domain.enums.NotificationType
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.databinding.NotificationListRecyclerItemBinding
 import com.lawmobile.presentation.extensions.setOnClickListenerCheckConnection

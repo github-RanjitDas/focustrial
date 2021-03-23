@@ -43,5 +43,6 @@ ext.fileFilter = [
         //Temporal empty file that is decreasing the coverage
         "**/LoginActivityViewModel.**",
         "**/OnSwipeTouchListener.**",
-        "**/LiveActivityBaseViewModel.**"
+        "**/LiveActivityBaseViewModel.**",
+        "**/CameraNotificationManager.**"
 ]

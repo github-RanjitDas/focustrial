@@ -84,8 +84,7 @@
             android:name="com.lawmobile.presentation.security.IsolatedService"
             android:enabled="true"
             android:isolatedProcess="true"
-            android:process=":tmpService"
-            />
+            android:process=":tmpService" />
 
     </application>
 

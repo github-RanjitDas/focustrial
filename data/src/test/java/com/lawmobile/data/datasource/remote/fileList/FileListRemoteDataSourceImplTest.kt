@@ -101,7 +101,10 @@ internal class FileListRemoteDataSourceImplTest {
         val result = Result.Success(Unit)
         coEvery { cameraService.saveAllPhotoMetadata(any()) } returns result
         runBlocking {
-            Assert.assertEquals(fileListRemoteDataSourceImpl.savePartnerIdInAllSnapshots(mockk()), result)
+            Assert.assertEquals(
+                result,
+                fileListRemoteDataSourceImpl.savePartnerIdInAllSnapshots(mockk())
+            )
         }
     }
 
@@ -110,7 +113,10 @@ internal class FileListRemoteDataSourceImplTest {
         val result = Result.Error(mockk())
         coEvery { cameraService.saveAllPhotoMetadata(any()) } returns result
         runBlocking {
-            Assert.assertEquals(fileListRemoteDataSourceImpl.savePartnerIdInAllSnapshots(mockk()), result)
+            Assert.assertEquals(
+                result,
+                fileListRemoteDataSourceImpl.savePartnerIdInAllSnapshots(mockk())
+            )
         }
     }
 }
