@@ -1,7 +1,7 @@
 package com.lawmobile.data.mappers
 
 import com.lawmobile.domain.entities.DomainNotification
-import com.lawmobile.domain.entities.NotificationType
+import com.lawmobile.domain.enums.NotificationType
 import com.safefleet.mobile.external_hardware.cameras.entities.NotificationResponse
 
 object NotificationResponseMapper {
@@ -11,6 +11,11 @@ object NotificationResponseMapper {
             NotificationType.ERROR.value -> NotificationType.ERROR
             else -> NotificationType.INFORMATION
         }
-        return DomainNotification(typeNotification, notificationResponse.param)
+        val name = when (typeNotification) {
+            NotificationType.INFORMATION -> notificationResponse.type
+            NotificationType.WARNING, NotificationType.ERROR ->
+                notificationResponse.type.split(":").last()
+        }
+        return DomainNotification(name, typeNotification, notificationResponse.param)
     }
 }

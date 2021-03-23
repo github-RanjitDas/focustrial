@@ -1,7 +1,7 @@
 package com.lawmobile.data.utils
 
 import com.lawmobile.domain.entities.CameraInfo
-import com.lawmobile.domain.entities.CameraType
+import com.lawmobile.domain.enums.CameraType
 import com.safefleet.mobile.external_hardware.cameras.CameraService
 
 class CameraServiceFactoryImpl(

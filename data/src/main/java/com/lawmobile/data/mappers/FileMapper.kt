@@ -5,14 +5,7 @@ import com.safefleet.mobile.external_hardware.cameras.entities.CameraFile
 
 object FileMapper {
     fun domainToCameraList(domainFileList: List<DomainCameraFile>) =
-        domainFileList.map {
-            CameraFile(
-                it.name,
-                it.date,
-                it.path,
-                it.nameFolder
-            )
-        }
+        domainFileList.map { domainToCamera(it) }
 
     fun cameraToDomain(cameraFile: CameraFile) =
         cameraFile.run {

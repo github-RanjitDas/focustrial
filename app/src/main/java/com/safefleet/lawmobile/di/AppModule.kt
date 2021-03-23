@@ -22,9 +22,7 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 class AppModule {
-
     companion object {
-
         @Provides
         @Singleton
         fun provideWifiManager(@ApplicationContext context: Context): WifiManager =

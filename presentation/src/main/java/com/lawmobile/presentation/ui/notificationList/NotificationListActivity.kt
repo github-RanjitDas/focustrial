@@ -7,7 +7,7 @@ import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.lawmobile.domain.entities.DomainNotification
-import com.lawmobile.domain.entities.NotificationType
+import com.lawmobile.domain.enums.NotificationType
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.databinding.ActivityNotificationListBinding
 import com.lawmobile.presentation.extensions.setOnClickListenerCheckConnection
@@ -35,18 +35,22 @@ class NotificationListActivity : BaseActivity() {
 
         notificationListAdapter.notificationList = mutableListOf(
             DomainNotification(
+                "Battery",
                 NotificationType.WARNING,
                 "Low battery"
             ),
             DomainNotification(
+                "Bluetooth",
                 NotificationType.ERROR,
                 "Bluetooth not available"
             ),
             DomainNotification(
+                "Memory",
                 NotificationType.WARNING,
                 "Full memory"
             ),
             DomainNotification(
+                "Video",
                 NotificationType.INFORMATION,
                 "Starting video recording"
             )

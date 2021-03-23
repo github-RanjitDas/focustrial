@@ -1,6 +1,6 @@
 package com.lawmobile.presentation.ui.login.pairingPhoneWithCamera
 
-import com.lawmobile.domain.entities.CameraType
+import com.lawmobile.domain.enums.CameraType
 import com.lawmobile.domain.usecase.pairingPhoneWithCamera.PairingPhoneWithCameraUseCase
 import com.lawmobile.presentation.InstantExecutorExtension
 import com.lawmobile.presentation.ui.login.pairingPhoneWithCamera.PairingViewModel.Companion.EXCEPTION_GET_PARAMS_TO_CONNECT
@@ -50,7 +50,7 @@ class PairingViewModelTest {
         Dispatchers.setMain(Dispatchers.Unconfined)
     }
 
-    /*@Test
+    @Test
     fun testGetProgressConnectionWithTheCamera() {
         every { wifiHelper.getGatewayAddress() } returns DEFAULT_GATEWAY_ADDRESS
         every { wifiHelper.getIpAddress() } returns DEFAULT_GATEWAY_ADDRESS
@@ -58,11 +58,13 @@ class PairingViewModelTest {
             pairingPhoneWithCameraUseCase.loadPairingCamera(any(), any(), any())
         } just Runs
 
+        viewModel.cameraPairingProgress = mockk()
         viewModel.getProgressConnectionWithTheCamera()
+
         coVerify {
             pairingPhoneWithCameraUseCase.loadPairingCamera(any(), any(), any())
         }
-    }*/
+    }
 
     @Test
     fun testGetProgressConnectionWithTheCameraErrorInIpAddress() {

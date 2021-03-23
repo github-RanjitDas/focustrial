@@ -8,6 +8,7 @@ import com.safefleet.mobile.external_hardware.cameras.entities.CameraCatalog
 import com.safefleet.mobile.external_hardware.cameras.entities.CameraFile
 import com.safefleet.mobile.external_hardware.cameras.entities.CameraUser
 import com.safefleet.mobile.external_hardware.cameras.entities.FileResponseWithErrors
+import com.safefleet.mobile.external_hardware.cameras.entities.LogEvent
 import com.safefleet.mobile.external_hardware.cameras.entities.NotificationResponse
 import com.safefleet.mobile.external_hardware.cameras.entities.PhotoInformation
 import com.safefleet.mobile.external_hardware.cameras.entities.VideoFileInfo
@@ -45,6 +46,10 @@ class CameraConnectServiceX1Mock : CameraService {
         return Result.Success(90)
     }
 
+    override fun getCanReadNotification(): Boolean {
+        return true
+    }
+
     override suspend fun getImageBytes(cameraFile: CameraFile): Result<ByteArray> {
         return Result.Error(mockk())
     }
@@ -61,6 +66,19 @@ class CameraConnectServiceX1Mock : CameraService {
     override suspend fun getListOfVideos(): Result<FileResponseWithErrors> {
         FileList.videoList = emptyList()
         return Result.Success(videoList)
+    }
+
+    override suspend fun getLogEvents(): Result<List<LogEvent>> {
+        return Result.Success(
+            listOf(
+                LogEvent(
+                    name = "event",
+                    date = "10/12/2020 19:53:25",
+                    type = "warn: low battery",
+                    value = "please charge your camera"
+                )
+            )
+        )
     }
 
     override suspend fun getMetadataOfPhotos(): Result<List<PhotoInformation>> {

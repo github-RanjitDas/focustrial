@@ -33,7 +33,6 @@
                 android:id="@+id/layoutNotificationInformation"
                 layout="@layout/custom_notification_information"/>
 
-
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.cardview.widget.CardView>

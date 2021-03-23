@@ -41,5 +41,6 @@ ext.pitestExclusions = [
         "com.lawmobile.data.repository.snapshotDetail.SnapshotDetailRepositoryImpl*",
         "com.lawmobile.data.mappers.FileResponseMapper*",
         "com.lawmobile.presentation.utils.MobileDataStatus*",
-        "com.lawmobile.presentation.utils.OnSwipeTouchListener*"
+        "com.lawmobile.presentation.utils.OnSwipeTouchListener*",
+        "com.lawmobile.presentation.utils.CameraNotificationManager*"
 ]

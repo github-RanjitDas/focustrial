@@ -1,7 +1,7 @@
 package com.lawmobile.data.datasource.remote.pairingPhoneWithCamera
 
 import com.lawmobile.data.utils.CameraServiceFactory
-import com.lawmobile.domain.entities.CacheManager
+import com.lawmobile.domain.utils.CacheManager
 import com.safefleet.mobile.kotlin_commons.helpers.Result
 
 open class PairingPhoneWithCameraRemoteDataSourceImpl(

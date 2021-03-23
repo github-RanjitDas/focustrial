@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.lawmobile.domain.entities.DomainNotification
-import com.lawmobile.domain.entities.NotificationType
+import com.lawmobile.domain.enums.NotificationType
 import com.lawmobile.presentation.databinding.LiveViewAppBarMenuBinding
 import com.lawmobile.presentation.extensions.createNotificationDialog
 import com.lawmobile.presentation.extensions.setOnClickListenerCheckConnection
@@ -40,6 +40,7 @@ class LiveAppBarX2Fragment : BaseFragment() {
         binding.buttonNotification.setOnClickListenerCheckConnection {
             requireContext().createNotificationDialog(
                 DomainNotification(
+                    "StartedVideo",
                     NotificationType.INFORMATION,
                     "Started video recording",
                     date = "20/10/2021"

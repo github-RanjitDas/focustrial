@@ -1,4 +1,4 @@
-package com.lawmobile.domain.entities
+package com.lawmobile.domain.enums
 
 enum class CameraType {
     X1 {
