@@ -1,7 +1,8 @@
 package com.lawmobile.data.mappers
 
-import com.lawmobile.domain.entities.DomainNotification
-import com.lawmobile.domain.enums.NotificationType
+import com.lawmobile.domain.entities.CameraEvent
+import com.lawmobile.domain.enums.EventTag
+import com.lawmobile.domain.enums.EventType
 import com.safefleet.mobile.external_hardware.cameras.entities.NotificationResponse
 import org.junit.Assert
 import org.junit.jupiter.api.Test
@@ -14,9 +15,10 @@ class NotificationResponseMapperTest {
         val response = NotificationResponseMapper.cameraToDomain(cameraNotification)
         Assert.assertEquals(
             response,
-            DomainNotification(
+            CameraEvent(
                 name = "Information",
-                type = NotificationType.INFORMATION,
+                eventType = EventType.NOTIFICATION,
+                eventTag = EventTag.INFORMATION,
                 value = "value"
             )
         )

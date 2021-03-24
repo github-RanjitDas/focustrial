@@ -7,7 +7,7 @@ import android.provider.Settings
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import com.lawmobile.domain.entities.DomainNotification
+import com.lawmobile.domain.entities.CameraEvent
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.entities.AlertInformation
 import com.lawmobile.presentation.entities.NeutralAlertInformation
@@ -167,11 +167,11 @@ fun Context.isAnimationsEnabled() =
         0F
     ) != 0F
 
-fun Context.createNotificationDialog(domainNotification: DomainNotification, callback: () -> Unit) {
+fun Context.createNotificationDialog(cameraEvent: CameraEvent, callback: () -> Unit) {
     CustomNotificationDialog(
         this,
         false,
-        domainNotification
+        cameraEvent
     ).apply {
         onDismissClicked = {
             callback()

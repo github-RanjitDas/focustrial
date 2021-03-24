@@ -4,8 +4,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.lawmobile.domain.entities.DomainNotification
-import com.lawmobile.domain.enums.NotificationType
+import com.lawmobile.domain.entities.CameraEvent
+import com.lawmobile.domain.enums.EventTag
+import com.lawmobile.domain.enums.EventType
 import com.lawmobile.presentation.databinding.LiveViewAppBarMenuBinding
 import com.lawmobile.presentation.extensions.createNotificationDialog
 import com.lawmobile.presentation.extensions.setOnClickListenerCheckConnection
@@ -13,8 +14,8 @@ import com.lawmobile.presentation.ui.base.BaseFragment
 
 class LiveAppBarX2Fragment : BaseFragment() {
 
-    private var _liveAppBaeMenuFragment: LiveViewAppBarMenuBinding? = null
-    private val binding get() = _liveAppBaeMenuFragment!!
+    private var _liveAppBarMenuFragment: LiveViewAppBarMenuBinding? = null
+    private val binding get() = _liveAppBarMenuFragment!!
 
     lateinit var onTapMenuButton: () -> Unit
 
@@ -23,7 +24,7 @@ class LiveAppBarX2Fragment : BaseFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _liveAppBaeMenuFragment =
+        _liveAppBarMenuFragment =
             LiveViewAppBarMenuBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -39,9 +40,10 @@ class LiveAppBarX2Fragment : BaseFragment() {
         }
         binding.buttonNotification.setOnClickListenerCheckConnection {
             requireContext().createNotificationDialog(
-                DomainNotification(
+                CameraEvent(
                     "StartedVideo",
-                    NotificationType.INFORMATION,
+                    EventType.NOTIFICATION,
+                    EventTag.INFORMATION,
                     "Started video recording",
                     date = "20/10/2021"
                 )
@@ -51,10 +53,5 @@ class LiveAppBarX2Fragment : BaseFragment() {
 
     companion object {
         val TAG = LiveAppBarX2Fragment::class.java.simpleName
-        fun createInstance(tapInMenuButton: () -> Unit): LiveAppBarX2Fragment {
-            return LiveAppBarX2Fragment().apply {
-                this.onTapMenuButton = tapInMenuButton
-            }
-        }
     }
 }

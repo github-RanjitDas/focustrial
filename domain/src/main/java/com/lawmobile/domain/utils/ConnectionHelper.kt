@@ -1,8 +1,8 @@
 package com.lawmobile.domain.utils
 
-import com.lawmobile.domain.entities.DomainNotification
+import com.lawmobile.domain.entities.CameraEvent
 
 interface ConnectionHelper {
     fun isCameraConnected(ipAddress: String): Boolean
-    fun reviewNotificationInCamera(notificationCallback: (DomainNotification) -> Unit)
+    fun reviewNotificationInCamera(notificationCallback: (CameraEvent) -> Unit)
 }

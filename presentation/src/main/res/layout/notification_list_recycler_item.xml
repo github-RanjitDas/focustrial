@@ -23,21 +23,28 @@
 
     <TextView
         android:id="@+id/textViewNotification"
-        android:layout_width="wrap_content"
+        android:layout_width="@dimen/no_dp"
         android:layout_height="wrap_content"
         android:textSize="@dimen/text_size_12sp"
+        android:maxLines="1"
+        android:singleLine="true"
+        android:ellipsize="end"
+        android:layout_marginEnd="@dimen/margin_20dp"
         app:layout_constraintStart_toEndOf="@id/guideline2Notification"
         app:layout_constraintTop_toTopOf="@id/imageViewNotificationType"
-        app:layout_constraintBottom_toBottomOf="@id/imageViewNotificationType"/>
+        app:layout_constraintBottom_toBottomOf="@id/imageViewNotificationType"
+        app:layout_constraintEnd_toStartOf="@+id/textViewNotificationDate" />
 
     <TextView
         android:id="@+id/textViewNotificationDate"
-        android:layout_width="wrap_content"
+        android:layout_width="@dimen/no_dp"
         android:layout_height="wrap_content"
         android:textSize="@dimen/text_size_12sp"
+        android:layout_marginEnd="@dimen/margin_20dp"
         app:layout_constraintStart_toEndOf="@id/guideline3Notification"
         app:layout_constraintTop_toTopOf="@id/imageViewNotificationType"
-        app:layout_constraintBottom_toBottomOf="@id/imageViewNotificationType"/>
+        app:layout_constraintBottom_toBottomOf="@id/imageViewNotificationType"
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline1Notification"

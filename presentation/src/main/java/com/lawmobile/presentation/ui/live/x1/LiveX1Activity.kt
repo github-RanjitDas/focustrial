@@ -80,7 +80,7 @@ class LiveX1Activity : BaseActivity() {
 
     private fun startRetrievingInformation(isViewLoaded: Event<Boolean>) {
         isViewLoaded.getContentIfNotHandled()?.let {
-            if (it && CameraInfo.events.isEmpty()) statusBarFragment.getCameraStatus(it)
+            if (it && CameraInfo.metadataEvents.isEmpty()) statusBarFragment.getCameraStatus(it)
             statusBarFragment.isViewLoaded = it
         }
     }

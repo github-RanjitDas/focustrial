@@ -2,18 +2,21 @@ package com.lawmobile.presentation.ui.notificationList
 
 import android.os.Bundle
 import android.view.View
+import androidx.activity.viewModels
 import androidx.cardview.widget.CardView
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.lawmobile.domain.entities.DomainNotification
-import com.lawmobile.domain.enums.NotificationType
+import com.lawmobile.domain.entities.CameraEvent
+import com.lawmobile.domain.enums.EventTag
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.databinding.ActivityNotificationListBinding
 import com.lawmobile.presentation.extensions.setOnClickListenerCheckConnection
 import com.lawmobile.presentation.ui.base.BaseActivity
 
 class NotificationListActivity : BaseActivity() {
+
+    private val viewModel: NotificationListViewModel by viewModels()
 
     private lateinit var binding: ActivityNotificationListBinding
     private lateinit var notificationListAdapter: NotificationListAdapter
@@ -32,29 +35,12 @@ class NotificationListActivity : BaseActivity() {
         setAdapter()
         setRecyclerView()
         configureBottomSheet()
+        setNotificationList()
+    }
 
-        notificationListAdapter.notificationList = mutableListOf(
-            DomainNotification(
-                "Battery",
-                NotificationType.WARNING,
-                "Low battery"
-            ),
-            DomainNotification(
-                "Bluetooth",
-                NotificationType.ERROR,
-                "Bluetooth not available"
-            ),
-            DomainNotification(
-                "Memory",
-                NotificationType.WARNING,
-                "Full memory"
-            ),
-            DomainNotification(
-                "Video",
-                NotificationType.INFORMATION,
-                "Starting video recording"
-            )
-        )
+    private fun setNotificationList() {
+        notificationListAdapter.notificationList = viewModel.getNotificationList() as MutableList
+        binding.textViewEmptyList.isVisible = notificationListAdapter.notificationList.isEmpty()
     }
 
     private fun configureBottomSheet() {
@@ -78,8 +64,7 @@ class NotificationListActivity : BaseActivity() {
                     override fun onStateChanged(bottomSheet: View, newState: Int) {
                         when (newState) {
                             BottomSheetBehavior.STATE_HIDDEN ->
-                                shadowNotificationListView.isVisible =
-                                    false
+                                shadowNotificationListView.isVisible = false
                             else -> shadowNotificationListView.isVisible = true
                         }
                     }
@@ -103,6 +88,9 @@ class NotificationListActivity : BaseActivity() {
             textViewNotification.setOnClickListener {
                 notificationListAdapter.sortByNotification()
             }
+            textViewDateAndTime.setOnClickListener {
+                notificationListAdapter.sortByDate()
+            }
             layoutCustomAppBar.imageButtonBackArrow.setOnClickListenerCheckConnection {
                 onBackPressed()
             }
@@ -121,24 +109,23 @@ class NotificationListActivity : BaseActivity() {
         notificationListAdapter = NotificationListAdapter(::onNotificationItemCLick)
     }
 
-    private fun onNotificationItemCLick(domainNotification: DomainNotification) {
+    private fun onNotificationItemCLick(cameraEvent: CameraEvent) {
         showBottomSheet()
-        setNotificationInformation(domainNotification)
+        setNotificationInformation(cameraEvent)
     }
 
-    private fun setNotificationInformation(domainNotification: DomainNotification) {
+    private fun setNotificationInformation(cameraEvent: CameraEvent) {
         with(binding.bottomSheetNotification.layoutNotificationInformation) {
-            textViewNotificationTitle.text =
-                domainNotification.value
+            textViewNotificationTitle.text = cameraEvent.name
             with(imageViewNotificationIcon) {
-                when (domainNotification.type) {
-                    NotificationType.ERROR -> setImageResource(R.drawable.ic_error_icon)
-                    NotificationType.WARNING -> setImageResource(R.drawable.ic_warning_icon)
-                    NotificationType.INFORMATION -> setImageResource(R.drawable.ic_info_icon)
+                when (cameraEvent.eventTag) {
+                    EventTag.ERROR -> setImageResource(R.drawable.ic_error_icon)
+                    EventTag.WARNING -> setImageResource(R.drawable.ic_warning_icon)
+                    EventTag.INFORMATION -> setImageResource(R.drawable.ic_info_icon)
                 }
             }
-            textViewNotificationDate.text = DATE_PLACEHOLDER
-            textViewNotificationMessage.text = MESSAGE_PLACEHOLDER
+            textViewNotificationDate.text = cameraEvent.date
+            textViewNotificationMessage.text = cameraEvent.value
         }
     }
 
@@ -146,10 +133,5 @@ class NotificationListActivity : BaseActivity() {
         binding.layoutCustomAppBar.textViewTitle.text = getString(R.string.notifications)
         binding.layoutCustomAppBar.buttonThumbnailList.isVisible = false
         binding.layoutCustomAppBar.buttonSimpleList.isVisible = false
-    }
-
-    companion object {
-        private const val DATE_PLACEHOLDER = "10/12/2020"
-        private const val MESSAGE_PLACEHOLDER = "Please check your device signal or check your device connection"
     }
 }

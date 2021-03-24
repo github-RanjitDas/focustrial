@@ -1,4 +1,4 @@
-package com.lawmobile.data.datasource.remote.notification
+package com.lawmobile.data.datasource.remote.events
 
 import com.lawmobile.data.utils.CameraServiceFactory
 import com.safefleet.mobile.external_hardware.cameras.CameraService
@@ -13,14 +13,14 @@ import kotlinx.coroutines.runBlocking
 import org.junit.Assert
 import org.junit.jupiter.api.Test
 
-internal class NotificationRemoteDataSourceImplTest {
+internal class EventsRemoteDataSourceImplTest {
 
     private val cameraService: CameraService = mockk()
     private val cameraServiceFactory: CameraServiceFactory = mockk {
         every { create() } returns cameraService
     }
     private val notificationRemoteDataSourceImpl by lazy {
-        NotificationRemoteDataSourceImpl(cameraServiceFactory)
+        EventsRemoteDataSourceImpl(cameraServiceFactory)
     }
 
     @Test

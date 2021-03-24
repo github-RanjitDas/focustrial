@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import com.lawmobile.domain.entities.CameraInfo
+import com.lawmobile.domain.entities.CameraInfo.isOfficerLogged
 import com.lawmobile.presentation.databinding.FragmentLiveMenuX2Binding
 import com.lawmobile.presentation.extensions.createAlertConfirmAppExit
 import com.lawmobile.presentation.extensions.setOnClickListenerCheckConnection
@@ -142,6 +143,8 @@ class LiveMenuFragment : BaseFragment() {
 
     private fun logoutApplication() {
         liveMenuViewModel.disconnectCamera()
+        liveMenuViewModel.stopReadingEvents()
+        isOfficerLogged = false
         startActivity(Intent(requireActivity(), LoginActivity::class.java))
         requireActivity().finish()
     }

@@ -1,6 +1,6 @@
 package com.lawmobile.data.mappers
 
-import com.lawmobile.domain.enums.NotificationType
+import com.lawmobile.domain.enums.EventTag
 import com.safefleet.mobile.external_hardware.cameras.entities.LogEvent
 import org.junit.Assert
 import org.junit.jupiter.api.Test
@@ -35,7 +35,7 @@ internal class LogEventMapperTest {
                     domain.name, camera[index].type.split(":").last()
                 )
                 Assert.assertEquals(
-                    domain.type, NotificationType.WARNING
+                    domain.eventTag, EventTag.WARNING
                 )
             }
         }
@@ -69,7 +69,7 @@ internal class LogEventMapperTest {
                     domain.name, camera[index].type.split(":").last()
                 )
                 Assert.assertEquals(
-                    domain.type, NotificationType.ERROR
+                    domain.eventTag, EventTag.ERROR
                 )
             }
         }
@@ -103,7 +103,7 @@ internal class LogEventMapperTest {
                     domain.name, camera[index].type.split(":").last()
                 )
                 Assert.assertEquals(
-                    domain.type, NotificationType.INFORMATION
+                    domain.eventTag, EventTag.INFORMATION
                 )
             }
         }
@@ -137,7 +137,7 @@ internal class LogEventMapperTest {
                     domain.name, camera[index].type.split(":").last()
                 )
                 Assert.assertEquals(
-                    domain.type, NotificationType.INFORMATION
+                    domain.eventTag, EventTag.INFORMATION
                 )
             }
         }
@@ -171,7 +171,7 @@ internal class LogEventMapperTest {
                     domain.name, camera[index].type.split(":").last()
                 )
                 Assert.assertEquals(
-                    domain.type, NotificationType.INFORMATION
+                    domain.eventTag, EventTag.INFORMATION
                 )
             }
         }

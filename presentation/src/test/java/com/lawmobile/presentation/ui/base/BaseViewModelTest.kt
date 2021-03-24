@@ -1,7 +1,7 @@
 package com.lawmobile.presentation.ui.base
 
 import com.lawmobile.presentation.InstantExecutorExtension
-import com.lawmobile.presentation.utils.CameraNotificationManager
+import com.lawmobile.presentation.utils.CameraEventsManager
 import com.safefleet.mobile.kotlin_commons.helpers.Result
 import io.mockk.Runs
 import io.mockk.every
@@ -23,8 +23,9 @@ import org.junit.jupiter.api.extension.ExtendWith
 @ExtendWith(InstantExecutorExtension::class)
 internal class BaseViewModelTest {
 
-    private val cameraNotificationManager: CameraNotificationManager = mockk {
+    private val cameraEventsManager: CameraEventsManager = mockk {
         every { startReading() } just Runs
+        every { stopReading() } just Runs
     }
 
     private val baseViewModel: BaseViewModel by lazy {
@@ -35,7 +36,7 @@ internal class BaseViewModelTest {
     @BeforeEach
     fun setUp() {
         Dispatchers.setMain(Dispatchers.Unconfined)
-        baseViewModel.setNotificationManager(cameraNotificationManager)
+        baseViewModel.setNotificationManager(cameraEventsManager)
     }
 
     @Test
@@ -50,18 +51,24 @@ internal class BaseViewModelTest {
     @Test
     fun startReadingEventsFlow() {
         baseViewModel.startReadingEvents()
-        verify { cameraNotificationManager.startReading() }
+        verify { cameraEventsManager.startReading() }
+    }
+
+    @Test
+    fun stopReadingEventsFlow() {
+        baseViewModel.stopReadingEvents()
+        verify { cameraEventsManager.stopReading() }
     }
 
     @Test
     fun logsEventLiveDataSuccess() {
-        every { cameraNotificationManager.logEventsLiveData.value } returns Result.Success(mockk())
+        every { cameraEventsManager.logEventsLiveData.value } returns Result.Success(mockk())
         Assert.assertTrue(baseViewModel.logEventsLiveData().value is Result.Success)
     }
 
     @Test
     fun logsEventLiveDataError() {
-        every { cameraNotificationManager.logEventsLiveData.value } returns Result.Error(mockk())
+        every { cameraEventsManager.logEventsLiveData.value } returns Result.Error(mockk())
         Assert.assertTrue(baseViewModel.logEventsLiveData().value is Result.Error)
     }
 

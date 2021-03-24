@@ -1,6 +1,6 @@
 package com.lawmobile.data.mappers
 
-import com.lawmobile.domain.entities.DomainCatalog
+import com.lawmobile.domain.entities.MetadataEvent
 import com.safefleet.mobile.external_hardware.cameras.entities.CameraCatalog
 import io.mockk.mockk
 import org.junit.jupiter.api.Assertions.assertFalse
@@ -47,9 +47,9 @@ internal class CatalogMapperTest {
 
     @Test
     fun domainToCamera() {
-        val domainCatalog: DomainCatalog = mockk(relaxed = true)
-        val cameraConnectCatalog = CatalogMapper.domainToCamera(domainCatalog)
-        with(domainCatalog) {
+        val metadataEvent: MetadataEvent = mockk(relaxed = true)
+        val cameraConnectCatalog = CatalogMapper.domainToCamera(metadataEvent)
+        with(metadataEvent) {
             cameraConnectCatalog.let {
                 assertTrue(it?.id == id)
                 assertTrue(it?.name == name)
