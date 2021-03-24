@@ -5,15 +5,15 @@ import android.content.Context
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
-import com.lawmobile.domain.entities.DomainNotification
-import com.lawmobile.domain.enums.NotificationType
+import com.lawmobile.domain.entities.CameraEvent
+import com.lawmobile.domain.enums.EventTag
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.databinding.DialogCustomNotificationBinding
 
 class CustomNotificationDialog(
     context: Context,
     cancelable: Boolean,
-    private val domainNotification: DomainNotification
+    private val cameraEvent: CameraEvent
 ) : Dialog(
     context,
     cancelable,
@@ -41,14 +41,14 @@ class CustomNotificationDialog(
     }
 
     private fun setNotificationIcon() {
-        when (domainNotification.type) {
-            NotificationType.ERROR -> {
+        when (cameraEvent.eventTag) {
+            EventTag.ERROR -> {
                 binding.layoutNotificationInformation.imageViewNotificationIcon.setImageResource(R.drawable.ic_error_icon)
             }
-            NotificationType.WARNING -> {
+            EventTag.WARNING -> {
                 binding.layoutNotificationInformation.imageViewNotificationIcon.setImageResource(R.drawable.ic_warning_icon)
             }
-            NotificationType.INFORMATION -> {
+            EventTag.INFORMATION -> {
                 binding.layoutNotificationInformation.imageViewNotificationIcon.setImageResource(R.drawable.ic_info_icon)
             }
         }
@@ -56,9 +56,9 @@ class CustomNotificationDialog(
 
     private fun setTextViews() {
         with(binding.layoutNotificationInformation) {
-            textViewNotificationTitle.text = domainNotification.name
-            textViewNotificationMessage.text = domainNotification.value
-            textViewNotificationDate.text = domainNotification.date
+            textViewNotificationTitle.text = cameraEvent.name
+            textViewNotificationMessage.text = cameraEvent.value
+            textViewNotificationDate.text = cameraEvent.date
         }
     }
 

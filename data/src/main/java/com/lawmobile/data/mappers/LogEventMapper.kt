@@ -1,8 +1,8 @@
 package com.lawmobile.data.mappers
 
-import com.lawmobile.domain.entities.DomainNotification
-import com.lawmobile.domain.enums.LogEventType
-import com.lawmobile.domain.enums.NotificationType
+import com.lawmobile.domain.entities.CameraEvent
+import com.lawmobile.domain.enums.EventTag
+import com.lawmobile.domain.enums.EventType
 import com.safefleet.mobile.external_hardware.cameras.entities.LogEvent
 
 object LogEventMapper {
@@ -11,21 +11,24 @@ object LogEventMapper {
 
     private fun cameraToDomainNotification(logEvent: LogEvent) =
         logEvent.run {
-            val notificationType = when (name) {
-                LogEventType.NOTIFICATION.value -> {
+            var eventType = EventType.CAMERA
+            val eventTag = when (name) {
+                EventType.NOTIFICATION.value -> {
+                    eventType = EventType.NOTIFICATION
                     when (type.split(":").first()) {
-                        NotificationType.WARNING.value -> NotificationType.WARNING
-                        NotificationType.ERROR.value -> NotificationType.ERROR
-                        else -> NotificationType.INFORMATION
+                        EventTag.WARNING.value -> EventTag.WARNING
+                        EventTag.ERROR.value -> EventTag.ERROR
+                        else -> EventTag.INFORMATION
                     }
                 }
-                LogEventType.CAMERA.value -> NotificationType.INFORMATION
-                else -> NotificationType.INFORMATION
+                EventType.CAMERA.value -> EventTag.INFORMATION
+                else -> EventTag.INFORMATION
             }
-            DomainNotification(
+            CameraEvent(
                 name = type.split(":").last(),
                 date = date,
-                type = notificationType,
+                eventType = eventType,
+                eventTag = eventTag,
                 value = value
             )
         }

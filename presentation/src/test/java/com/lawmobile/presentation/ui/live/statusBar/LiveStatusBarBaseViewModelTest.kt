@@ -39,7 +39,7 @@ internal class LiveStatusBarBaseViewModelTest {
             mockk()
         )
         runBlocking {
-            liveStatusBarBaseViewModel.getCatalogInfo()
+            liveStatusBarBaseViewModel.getMetadataEvents()
             Assert.assertTrue(liveStatusBarBaseViewModel.catalogInfoLiveData.value is Result.Success)
         }
         coVerify { liveStreamingUseCase.getCatalogInfo() }
@@ -49,7 +49,7 @@ internal class LiveStatusBarBaseViewModelTest {
     fun testGetCatalogInfoError() {
         coEvery { liveStreamingUseCase.getCatalogInfo() } returns Result.Error(mockk())
         runBlocking {
-            liveStatusBarBaseViewModel.getCatalogInfo()
+            liveStatusBarBaseViewModel.getMetadataEvents()
             delay(1500)
             Assert.assertTrue(liveStatusBarBaseViewModel.catalogInfoLiveData.value is Result.Error)
         }

@@ -3,7 +3,7 @@ package com.lawmobile.presentation.ui.live.statusBar
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.viewModelScope
-import com.lawmobile.domain.entities.DomainCatalog
+import com.lawmobile.domain.entities.MetadataEvent
 import com.lawmobile.domain.usecase.liveStreaming.LiveStreamingUseCase
 import com.lawmobile.presentation.ui.base.BaseViewModel
 import com.safefleet.mobile.kotlin_commons.extensions.doIfError
@@ -21,8 +21,8 @@ class LiveStatusBarBaseViewModel @Inject constructor(
     private val liveStreamingUseCase: LiveStreamingUseCase
 ) : BaseViewModel() {
 
-    private val catalogInfoMediatorLiveData = MediatorLiveData<Result<List<DomainCatalog>>>()
-    val catalogInfoLiveData: LiveData<Result<List<DomainCatalog>>> get() = catalogInfoMediatorLiveData
+    private val catalogInfoMediatorLiveData = MediatorLiveData<Result<List<MetadataEvent>>>()
+    val catalogInfoLiveData: LiveData<Result<List<MetadataEvent>>> get() = catalogInfoMediatorLiveData
 
     private val batteryLevelMediatorLiveData = MediatorLiveData<Event<Result<Int>>>()
     val batteryLevelLiveData: LiveData<Event<Result<Int>>> get() = batteryLevelMediatorLiveData
@@ -30,7 +30,7 @@ class LiveStatusBarBaseViewModel @Inject constructor(
     private val storageMediatorLiveData = MediatorLiveData<Event<Result<List<Double>>>>()
     val storageLiveData: LiveData<Event<Result<List<Double>>>> get() = storageMediatorLiveData
 
-    fun getCatalogInfo() {
+    fun getMetadataEvents() {
         viewModelScope.launch {
             val catalogInfo =
                 getResultWithAttempts(RETRY_ATTEMPTS) { liveStreamingUseCase.getCatalogInfo() }

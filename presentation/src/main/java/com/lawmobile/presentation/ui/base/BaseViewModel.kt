@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.lawmobile.presentation.utils.CameraNotificationManager
+import com.lawmobile.presentation.utils.CameraEventsManager
 import com.safefleet.mobile.kotlin_commons.helpers.Event
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
@@ -17,8 +17,8 @@ open class BaseViewModel @Inject constructor() : ViewModel() {
     val isWaitFinishedLiveData: LiveData<Event<Boolean>> get() = isWaitFinishedMediator
     private val isWaitFinishedMediator = MediatorLiveData<Event<Boolean>>()
 
-    fun setNotificationManager(instance: CameraNotificationManager) {
-        cameraNotificationManager = instance
+    fun setNotificationManager(instance: CameraEventsManager) {
+        cameraEventsManager = instance
     }
 
     fun waitToFinish(time: Long) {
@@ -29,14 +29,18 @@ open class BaseViewModel @Inject constructor() : ViewModel() {
         }
     }
 
-    fun logEventsLiveData() = cameraNotificationManager.logEventsLiveData
+    fun logEventsLiveData() = cameraEventsManager.logEventsLiveData
 
     fun startReadingEvents() {
-        cameraNotificationManager.startReading()
+        cameraEventsManager.startReading()
+    }
+
+    fun stopReadingEvents() {
+        cameraEventsManager.stopReading()
     }
 
     companion object {
-        private lateinit var cameraNotificationManager: CameraNotificationManager
+        private lateinit var cameraEventsManager: CameraEventsManager
         private const val LOADING_TIMEOUT = 20000L
         fun getLoadingTimeOut() = LOADING_TIMEOUT
     }

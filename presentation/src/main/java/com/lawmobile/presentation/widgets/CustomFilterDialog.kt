@@ -64,7 +64,7 @@ class CustomFilterDialog constructor(
                 context.getString(R.string.select_event),
                 context.getString(R.string.no_event)
             )
-        events.addAll(CameraInfo.events.map { it.name })
+        events.addAll(CameraInfo.metadataEvents.map { it.name })
         binding.eventsSpinnerFilter.adapter = ArrayAdapter(context, R.layout.spinner_item, events)
     }
 
@@ -115,7 +115,7 @@ class CustomFilterDialog constructor(
             context.getString(R.string.no_event) ->
                 binding.eventsSpinnerFilter.setSelection(1)
             else -> {
-                val eventIndex = CameraInfo.events.indexOfFirst {
+                val eventIndex = CameraInfo.metadataEvents.indexOfFirst {
                     it.name == currentFilters[EVENT_POSITION]
                 } + 2
                 binding.eventsSpinnerFilter.setSelection(eventIndex)

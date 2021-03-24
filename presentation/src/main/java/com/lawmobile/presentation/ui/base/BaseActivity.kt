@@ -8,8 +8,8 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
-import com.lawmobile.domain.entities.CameraInfo
-import com.lawmobile.domain.entities.DomainNotification
+import com.lawmobile.domain.entities.CameraEvent
+import com.lawmobile.domain.entities.CameraInfo.isOfficerLogged
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.entities.NeutralAlertInformation
 import com.lawmobile.presentation.extensions.checkIfSessionIsExpired
@@ -19,8 +19,8 @@ import com.lawmobile.presentation.extensions.createAlertSessionExpired
 import com.lawmobile.presentation.extensions.createNotificationDialog
 import com.lawmobile.presentation.security.RootedHelper
 import com.lawmobile.presentation.ui.login.LoginActivity
+import com.lawmobile.presentation.utils.CameraEventsManager
 import com.lawmobile.presentation.utils.CameraHelper
-import com.lawmobile.presentation.utils.CameraNotificationManager
 import com.lawmobile.presentation.utils.EspressoIdlingResource
 import com.lawmobile.presentation.utils.MobileDataStatus
 import com.safefleet.mobile.kotlin_commons.extensions.doIfError
@@ -39,7 +39,7 @@ open class BaseActivity : AppCompatActivity() {
     lateinit var mobileDataStatus: MobileDataStatus
 
     @Inject
-    lateinit var cameraNotificationManager: CameraNotificationManager
+    lateinit var cameraEventsManager: CameraEventsManager
 
     private var isLiveVideoOrPlaybackActive: Boolean = false
     private lateinit var mobileDataDialog: AlertDialog
@@ -70,28 +70,21 @@ open class BaseActivity : AppCompatActivity() {
     }
 
     private fun onOfficerLogged() {
-        if (CameraInfo.officerName.isNotEmpty()) {
+        if (isOfficerLogged) {
             viewModel.startReadingEvents()
             reviewNotificationInCamera()
         }
     }
 
     private fun setObservers() {
-        viewModel.setNotificationManager(cameraNotificationManager)
+        viewModel.setNotificationManager(cameraEventsManager)
         viewModel.logEventsLiveData().observe(this, ::handleEvents)
     }
 
-    private fun handleEvents(result: Result<List<DomainNotification>>) {
+    private fun handleEvents(result: Result<List<CameraEvent>>) {
         with(result) {
             doIfSuccess {
-                if (notificationList.isEmpty()) {
-                    notificationList = it
-                    return@with
-                }
-                if (it.size > notificationList.size) {
-                    this@BaseActivity.createNotificationDialog(it.last()) {}
-                    notificationList = it
-                }
+                createNotificationDialog(it.last()) {}
             }
             doIfError {
                 println(it.message)
@@ -115,7 +108,7 @@ open class BaseActivity : AppCompatActivity() {
 
     private fun reviewNotificationInCamera() {
         CameraHelper.getInstance().reviewNotificationInCamera {
-            this.createNotificationDialog(it) {}
+            createNotificationDialog(it) {}
         }
     }
 
@@ -166,6 +159,5 @@ open class BaseActivity : AppCompatActivity() {
         const val MAX_TIME_SESSION = 300000
         lateinit var lastInteraction: Timestamp
         var isRecordingVideo: Boolean = false
-        private var notificationList = listOf<DomainNotification>()
     }
 }

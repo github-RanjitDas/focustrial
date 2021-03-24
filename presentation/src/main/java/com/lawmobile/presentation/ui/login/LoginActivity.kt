@@ -9,6 +9,7 @@ import androidx.cardview.widget.CardView
 import androidx.core.view.isVisible
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.lawmobile.domain.entities.CameraInfo
+import com.lawmobile.domain.entities.CameraInfo.isOfficerLogged
 import com.lawmobile.domain.enums.CameraType
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.databinding.ActivityLoginBinding
@@ -101,7 +102,10 @@ class LoginActivity : BaseActivity() {
         val liveActivityIntent =
             when (CameraInfo.cameraType) {
                 CameraType.X1 -> Intent(this, LiveX1Activity::class.java)
-                CameraType.X2 -> Intent(this, LiveX2Activity::class.java)
+                CameraType.X2 -> {
+                    isOfficerLogged = true
+                    Intent(this, LiveX2Activity::class.java)
+                }
             }
         startActivity(liveActivityIntent)
         finish()

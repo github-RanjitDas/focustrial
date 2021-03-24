@@ -9,7 +9,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
 import com.lawmobile.domain.entities.CameraInfo
-import com.lawmobile.domain.entities.DomainCatalog
+import com.lawmobile.domain.entities.MetadataEvent
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.entities.AlertInformation
 import com.lawmobile.presentation.enums.CatalogTypes
@@ -68,18 +68,18 @@ open class LiveStatusBarBaseFragment : BaseFragment() {
 
     fun getCameraStatus(isViewLoaded: Boolean) {
         if (isViewLoaded) {
-            if (CameraInfo.events.isEmpty()) {
-                sharedViewModel.getCatalogInfo()
+            if (CameraInfo.metadataEvents.isEmpty()) {
+                sharedViewModel.getMetadataEvents()
             } else sharedViewModel.getBatteryLevel()
         }
     }
 
-    private fun setCatalogInfo(domainCatalogList: Result<List<DomainCatalog>>) {
-        with(domainCatalogList) {
+    private fun setCatalogInfo(metadataEventList: Result<List<MetadataEvent>>) {
+        with(metadataEventList) {
             doIfSuccess { catalogInfoList ->
                 val eventNames =
                     catalogInfoList.filter { it.type == CatalogTypes.EVENT.value }
-                CameraInfo.events.addAll(eventNames)
+                CameraInfo.metadataEvents.addAll(eventNames)
             }
             doIfError {
                 parentLayout.showErrorSnackBar(
@@ -87,7 +87,7 @@ open class LiveStatusBarBaseFragment : BaseFragment() {
                     CATALOG_ERROR_ANIMATION_DURATION
                 ) {
                     requireContext().verifySessionBeforeAction {
-                        sharedViewModel.getCatalogInfo()
+                        sharedViewModel.getMetadataEvents()
                     }
                 }
             }

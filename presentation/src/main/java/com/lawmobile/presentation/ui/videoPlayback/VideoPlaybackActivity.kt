@@ -196,14 +196,14 @@ class VideoPlaybackActivity : BaseActivity() {
     }
 
     private fun verifyEventEmpty() {
-        if (CameraInfo.events.isEmpty()) {
+        if (CameraInfo.metadataEvents.isEmpty()) {
             showErrorInEvents()
         }
     }
 
     private fun setCatalogLists() {
         eventList.add(getString(R.string.select))
-        eventList.addAll(CameraInfo.events.map { it.name })
+        eventList.addAll(CameraInfo.metadataEvents.map { it.name })
         raceList.addAll(resources.getStringArray(R.array.race_spinner))
         genderList.addAll(resources.getStringArray(R.array.gender_spinner))
 
@@ -616,7 +616,7 @@ class VideoPlaybackActivity : BaseActivity() {
         var race: String? = null
         val event =
             if (binding.eventValue.selectedItemPosition != 0)
-                CameraInfo.events[binding.eventValue.selectedItemPosition - 1]
+                CameraInfo.metadataEvents[binding.eventValue.selectedItemPosition - 1]
             else null
 
         if (binding.genderValue.selectedItem != genderList[0]) {

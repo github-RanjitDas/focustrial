@@ -1,21 +1,22 @@
 package com.lawmobile.data.mappers
 
-import com.lawmobile.domain.entities.DomainNotification
-import com.lawmobile.domain.enums.NotificationType
+import com.lawmobile.domain.entities.CameraEvent
+import com.lawmobile.domain.enums.EventTag
+import com.lawmobile.domain.enums.EventType
 import com.safefleet.mobile.external_hardware.cameras.entities.NotificationResponse
 
 object NotificationResponseMapper {
-    fun cameraToDomain(notificationResponse: NotificationResponse): DomainNotification {
+    fun cameraToDomain(notificationResponse: NotificationResponse): CameraEvent {
         val typeNotification = when (notificationResponse.type.split(":").first()) {
-            NotificationType.WARNING.value -> NotificationType.WARNING
-            NotificationType.ERROR.value -> NotificationType.ERROR
-            else -> NotificationType.INFORMATION
+            EventTag.WARNING.value -> EventTag.WARNING
+            EventTag.ERROR.value -> EventTag.ERROR
+            else -> EventTag.INFORMATION
         }
         val name = when (typeNotification) {
-            NotificationType.INFORMATION -> notificationResponse.type
-            NotificationType.WARNING, NotificationType.ERROR ->
+            EventTag.INFORMATION -> notificationResponse.type
+            EventTag.WARNING, EventTag.ERROR ->
                 notificationResponse.type.split(":").last()
         }
-        return DomainNotification(name, typeNotification, notificationResponse.param)
+        return CameraEvent(name, EventType.NOTIFICATION, typeNotification, notificationResponse.param)
     }
 }
