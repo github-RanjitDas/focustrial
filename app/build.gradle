@@ -7,6 +7,7 @@ plugins {
     id 'dagger.hilt.android.plugin'
     id 'com.google.gms.google-services'
     id 'com.google.firebase.crashlytics'
+    id 'com.squareup.sqldelight'
 }
 
 apply from: '../ktlint.gradle'
@@ -128,7 +129,11 @@ dependencies {
     implementation 'com.safefleet.mobile:android-commons:1.1.0-SNAPSHOT@aar'
     implementation 'com.safefleet.mobile:safefleet-ui:1.2.0-SNAPSHOT@aar'
 
+    implementation "com.squareup.sqldelight:android-driver:$sqldelight_version"
+    implementation "com.squareup.sqldelight:sqlite-driver:$sqldelight_version"
+
     implementation project(path: Modules.presentation)
     implementation project(path: Modules.data)
     implementation project(path: Modules.domain)
+    implementation project(path: Modules.database)
 }

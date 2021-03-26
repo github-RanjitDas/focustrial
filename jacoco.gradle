@@ -8,18 +8,21 @@ task testDebugUnitTestCoverage(type: JacocoReport) {
     dependsOn ":presentation:testDebugUnitTest"
     dependsOn ":domain:testDebugUnitTest"
     dependsOn ":data:testDebugUnitTest"
+    dependsOn ":database:testDebugUnitTest"
 
     classDirectories.from = files([
             fileTree(dir: "$buildDir/tmp/kotlin-classes/debug", exclude: fileFilter),
             fileTree(dir: "$project.rootDir/presentation/build/intermediates/javac/debug", exclude: fileFilter),
             fileTree(dir: "$project.rootDir/domain/build/classes", exclude: fileFilter),
-            fileTree(dir: "$project.rootDir/data/build/classes", exclude: fileFilter)
+            fileTree(dir: "$project.rootDir/data/build/classes", exclude: fileFilter),
+            fileTree(dir: "$project.rootDir/database/build/classes", exclude: fileFilter)
     ])
 
     def coverageSourceDirs = [
             "$project.rootDir/presentation/src/main/java",
             "$project.rootDir/domain/src/main/java",
-            "$project.rootDir/data/src/main/java"
+            "$project.rootDir/data/src/main/java",
+            "$project.rootDir/database/src/main/java"
     ]
 
     additionalSourceDirs.from = files(coverageSourceDirs)
@@ -27,7 +30,8 @@ task testDebugUnitTestCoverage(type: JacocoReport) {
     executionData.from = fileTree(dir: project.rootDir, include: [
             'presentation/build/jacoco/testDebugUnitTest.exec',
             'domain/build/jacoco/testDebugUnitTest.exec',
-            'data/build/jacoco/testDebugUnitTest.exec'
+            'data/build/jacoco/testDebugUnitTest.exec',
+            'database/build/jacoco/testDebugUnitTest.exec'
     ])
 
     reports {

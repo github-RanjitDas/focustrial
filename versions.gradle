@@ -37,5 +37,6 @@ ext {
     pitest_junit5_plugin_version = "0.9" //pitest run fails for versions higher than 0.9
     recycker_version = '1.1.0'
     sonar_version = '2.7.1'
+    sqldelight_version = '1.4.4'
     ui_automator_version = '2.2.0'
 }
