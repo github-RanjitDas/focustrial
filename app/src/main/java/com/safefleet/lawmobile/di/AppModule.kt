@@ -7,9 +7,12 @@ import android.net.ConnectivityManager
 import android.net.wifi.WifiConfiguration
 import android.net.wifi.WifiManager
 import com.google.gson.Gson
+import com.lawmobile.database.Database
 import com.lawmobile.presentation.utils.MobileDataStatus
 import com.lawmobile.presentation.utils.VLCMediaPlayer
 import com.lawmobile.presentation.utils.WifiHelper
+import com.squareup.sqldelight.android.AndroidSqliteDriver
+import com.squareup.sqldelight.db.SqlDriver
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -23,6 +26,20 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 class AppModule {
     companion object {
+
+        @Provides
+        @Singleton
+        fun provideSqlDriver(context: Context): SqlDriver =
+            AndroidSqliteDriver(
+                schema = Database.Schema,
+                context = context,
+                name = "Database.db"
+            )
+
+        @Provides
+        @Singleton
+        fun provideDatabase(driver: SqlDriver): Database = Database(driver)
+
         @Provides
         @Singleton
         fun provideWifiManager(@ApplicationContext context: Context): WifiManager =

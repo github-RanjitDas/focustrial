@@ -1,0 +1,33 @@
+CREATE TABLE IF NOT EXISTS DbCameraEvent (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    eventType TEXT NOT NULL,
+    eventTag TEXT NOT NULL,
+    value TEXT,
+    date TEXT NOT NULL,
+    isRead INTEGER NOT NULL
+);
+
+getAllEvents:
+SELECT *
+FROM DbCameraEvent;
+
+getEventById:
+SELECT *
+FROM DbCameraEvent
+WHERE id = :id;
+
+saveEvent:
+INSERT INTO DbCameraEvent
+VALUES (id = :id, name = :_name, eventType = :_eventType, eventTag = :_eventTag, value = :_value, date = :_date, isRead = :_isRead);
+
+setEventRead:
+UPDATE DbCameraEvent
+SET isRead = :_isRead
+WHERE date = :_date;
+
+getLastEventId:
+SELECT last_insert_rowid();
+
+clearAllEvents:
+DELETE FROM DbCameraEvent;

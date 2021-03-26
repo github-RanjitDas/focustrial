@@ -6,11 +6,11 @@ plugins {
     id 'kotlin-kapt'
     id 'jacoco'
     id 'dagger.hilt.android.plugin'
+    id 'pl.droidsonroids.pitest'
 }
 
 apply from: '../jacoco.gradle'
 apply from: '../pitest-exceptions.gradle'
-apply plugin: 'pl.droidsonroids.pitest'
 apply from: '../ktlint.gradle'
 
 check.dependsOn ktlint
