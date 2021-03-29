@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <shape xmlns:android="http://schemas.android.com/apk/res/android">
     <gradient
-        android:startColor="#0068AF"
+        android:angle="@integer/mtb_from"
         android:endColor="#004C85"
-        android:type="linear"
-        android:angle="@integer/mtb_from" />
+        android:startColor="#0068AF"
+        android:type="linear" />
+
+    <corners
+        android:bottomLeftRadius="@dimen/corner_main_menu"
+        android:topLeftRadius="@dimen/corner_main_menu" />
 </shape>
