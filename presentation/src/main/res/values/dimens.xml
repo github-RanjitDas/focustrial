@@ -184,4 +184,5 @@
     <dimen name="body_worn_diagnosis_margin_top_loading_text">25dp</dimen>
     <dimen name="body_worn_diagnosis_size_icon_result">70dp</dimen>
     <dimen name="body_worn_diagnosis_margin_texts">20dp</dimen>
+    <dimen name="corner_main_menu">7dp</dimen>
 </resources>
