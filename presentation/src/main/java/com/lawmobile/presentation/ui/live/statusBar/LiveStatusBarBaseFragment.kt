@@ -198,7 +198,7 @@ open class LiveStatusBarBaseFragment : BaseFragment() {
             imageViewStorage.startAnimationIfEnabled(blinkAnimation)
         } else {
             imageViewStorage.backgroundTintList =
-                ContextCompat.getColorStateList(requireContext(), R.color.darkBlue)
+                ContextCompat.getColorStateList(requireContext(), R.color.greenSuccess)
             imageViewStorage.clearAnimation()
         }
 
