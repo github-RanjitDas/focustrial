@@ -7,14 +7,14 @@
     tools:context=".ui.bodyWornDiagnosis.BodyWornDiagnosisActivity">
 
     <include
-        layout="@layout/custom_app_bar"
-        android:id="@+id/layoutCustomAppBar" />
+        android:id="@+id/layoutCustomAppBar"
+        layout="@layout/custom_app_bar" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:visibility="gone"
         android:id="@+id/sectionBodyWornStartDiagnosis"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -40,9 +40,9 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/sectionProgressDiagnosis"
-        android:visibility="gone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -77,25 +77,86 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/sectionResultDiagnosis"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0">
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintGuide_percent="0.35"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintGuide_percent="0.25"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintGuide_percent="0.3"
+            app:layout_constraintStart_toStartOf="parent" />
+
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/constraintLayout2"
-            android:layout_width="wrap_content"
+            android:layout_width="@dimen/no_dp"
             android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginHorizontal="@dimen/margin_30dp"
+            android:background="@drawable/background_stroke_body_worn_diagnosis_success"
+            android:padding="@dimen/padding_50dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintTop_toTopOf="@+id/guideline3">
+
+            <TextView
+                android:id="@+id/textDescriptionDiagnosis"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/body_worn_result_success_description"
+                android:textSize="@dimen/text_h5"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="@dimen/padding_10dp"
+            android:background="@drawable/background_solid_body_worn_diagnosis_success"
+            app:layout_constraintBottom_toTopOf="@+id/guideline1"
+            app:layout_constraintEnd_toEndOf="@+id/constraintLayout2"
+            app:layout_constraintStart_toStartOf="@+id/constraintLayout2"
+            app:layout_constraintTop_toTopOf="@+id/guideline2">
 
             <ImageView
                 android:id="@+id/imageIconResult"
                 android:layout_width="@dimen/body_worn_diagnosis_size_icon_result"
                 android:layout_height="@dimen/body_worn_diagnosis_size_icon_result"
+                android:layout_margin="@dimen/margin_10dp"
                 android:contentDescription="@string/body_worn_icon_result_description"
                 android:src="@drawable/ic_success_icon"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -106,35 +167,29 @@
                 android:id="@+id/textTitleDiagnosis"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/margin_20dp"
                 android:fontFamily="@font/roboto_bold"
+                android:layout_marginHorizontal="@dimen/margin_10dp"
                 android:text="@string/body_worn_diagnosis_success_text"
-                android:textColor="@color/greenSuccess"
+                android:textColor="@color/white"
                 android:textSize="@dimen/text_h3"
                 app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/imageIconResult"
                 app:layout_constraintTop_toTopOf="parent" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <TextView
-            android:id="@+id/textDescriptionDiagnosis"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/body_worn_diagnosis_margin_texts"
-            android:text="@string/body_worn_result_success_description"
-            android:textSize="@dimen/text_h5"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/constraintLayout2" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <Button
             android:id="@+id/buttonOkFinishedDiagnosis"
-            android:background="@drawable/background_button_blue"
-            android:layout_margin="@dimen/margin_30dp"
             android:layout_width="@dimen/no_dp"
             android:layout_height="wrap_content"
+            android:layout_margin="@dimen/margin_30dp"
+            android:background="@drawable/background_button_blue"
+            android:fontFamily="@font/roboto_regular"
             android:text="@string/OK"
             android:textColor="@color/white"
+            android:textSize="@dimen/text_size_20sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
