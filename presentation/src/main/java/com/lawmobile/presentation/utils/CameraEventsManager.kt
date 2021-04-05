@@ -28,7 +28,7 @@ class CameraEventsManager @Inject constructor(
     private val notificationTask = object : Runnable {
         override fun run() {
             notificationHandler.postDelayed(this, NOTIFICATION_PERIOD)
-            if (eventsUseCase.isPossibleToReadLog()) {
+            if (isReadyToReadEvents && eventsUseCase.isPossibleToReadLog()) {
                 launch {
                     _logEventsLiveData.postValue(
                         eventsUseCase.getLogEvents()
@@ -43,6 +43,7 @@ class CameraEventsManager @Inject constructor(
     }
 
     fun stopReading() {
+        isReadyToReadEvents = false
         notificationHandler.removeCallbacks(notificationTask)
         job.cancel()
     }
@@ -52,5 +53,6 @@ class CameraEventsManager @Inject constructor(
 
     companion object {
         private const val NOTIFICATION_PERIOD = 5000L
+        var isReadyToReadEvents = false
     }
 }

@@ -18,6 +18,7 @@ import com.lawmobile.presentation.extensions.showErrorSnackBar
 import com.lawmobile.presentation.extensions.startAnimationIfEnabled
 import com.lawmobile.presentation.extensions.verifySessionBeforeAction
 import com.lawmobile.presentation.ui.base.BaseFragment
+import com.lawmobile.presentation.utils.CameraEventsManager
 import com.lawmobile.presentation.utils.EspressoIdlingResource
 import com.safefleet.mobile.kotlin_commons.extensions.doIfError
 import com.safefleet.mobile.kotlin_commons.extensions.doIfSuccess
@@ -67,6 +68,7 @@ open class LiveStatusBarBaseFragment : BaseFragment() {
     }
 
     fun getCameraStatus(isViewLoaded: Boolean) {
+        CameraEventsManager.isReadyToReadEvents = false
         if (isViewLoaded) {
             if (CameraInfo.metadataEvents.isEmpty()) {
                 sharedViewModel.getMetadataEvents()
@@ -184,6 +186,7 @@ open class LiveStatusBarBaseFragment : BaseFragment() {
                 parentLayout.showErrorSnackBar(getString(R.string.storage_level_error))
             }
         }
+        CameraEventsManager.isReadyToReadEvents = true
         EspressoIdlingResource.decrement()
     }
 

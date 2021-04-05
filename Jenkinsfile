@@ -15,7 +15,7 @@ node('jenkins-builds-slave') {
                   ]]
          ]
 
-        def imageDocker = "245255707803.dkr.ecr.us-east-1.amazonaws.com/android-sdk-seon:sdk29-gradle5.6.4-fastlane"
+        def imageDocker = "245255707803.dkr.ecr.us-east-1.amazonaws.com/android-sdk-seon:sdk29-gradle6.0.0-fastlane"
 
         stage('Checkout') {
             logger.stage()
