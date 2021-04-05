@@ -51,11 +51,15 @@ open class BaseActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         verifyDeviceIsNotRooted()
+        setEventsManager()
         setObservers()
         createMobileDataDialog()
-        observeMobileData()
         updateLastInteraction()
-        onOfficerLogged()
+        startReadingEvents()
+    }
+
+    private fun setEventsManager() {
+        viewModel.setNotificationManager(cameraEventsManager)
     }
 
     private fun verifyDeviceIsNotRooted() {
@@ -65,11 +69,7 @@ open class BaseActivity : AppCompatActivity() {
         }
     }
 
-    private fun observeMobileData() {
-        mobileDataStatus.observe(this, Observer(::showMobileDataDialog))
-    }
-
-    private fun onOfficerLogged() {
+    private fun startReadingEvents() {
         if (isOfficerLogged) {
             viewModel.startReadingEvents()
             reviewNotificationInCamera()
@@ -77,7 +77,7 @@ open class BaseActivity : AppCompatActivity() {
     }
 
     private fun setObservers() {
-        viewModel.setNotificationManager(cameraEventsManager)
+        mobileDataStatus.observe(this, Observer(::showMobileDataDialog))
         viewModel.logEventsLiveData().observe(this, ::handleEvents)
     }
 
