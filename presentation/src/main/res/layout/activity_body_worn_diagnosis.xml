@@ -118,7 +118,7 @@
 
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/constraintLayout2"
+            android:id="@+id/titleBackgroundStroke"
             android:layout_width="@dimen/no_dp"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/margin_30dp"
@@ -143,13 +143,14 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/titleBackgroundSolid"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingHorizontal="@dimen/padding_10dp"
             android:background="@drawable/background_solid_body_worn_diagnosis_success"
             app:layout_constraintBottom_toTopOf="@+id/guideline1"
-            app:layout_constraintEnd_toEndOf="@+id/constraintLayout2"
-            app:layout_constraintStart_toStartOf="@+id/constraintLayout2"
+            app:layout_constraintEnd_toEndOf="@+id/titleBackgroundStroke"
+            app:layout_constraintStart_toStartOf="@+id/titleBackgroundStroke"
             app:layout_constraintTop_toTopOf="@+id/guideline2">
 
             <ImageView
