@@ -4,6 +4,7 @@ import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import com.safefleet.lawmobile.R
+import com.safefleet.lawmobile.helpers.CustomAssertionActions.waitUntil
 import com.safefleet.lawmobile.helpers.isActivated
 import com.safefleet.lawmobile.helpers.isNotActivated
 import com.schibsted.spain.barista.assertion.BaristaVisibilityAssertions.assertDisplayed
@@ -77,10 +78,6 @@ class LiveViewScreen : BaseScreen() {
         assertDisplayed(R.id.textLiveViewRecording)
     }
 
-    fun isUserGuideDisplayed() {
-        assertDisplayed(R.id.pdfView)
-    }
-
     fun switchLiveViewToggle() = clickOn(R.id.buttonSwitchLiveView)
 
     fun switchFullScreenMode() = clickOn(R.id.toggleFullScreenLiveView)
@@ -94,6 +91,7 @@ class LiveViewScreen : BaseScreen() {
     fun takeSnapshot() {
         clickOn(R.id.buttonSnapshot)
         assertDisplayed(R.string.live_view_take_photo_success)
+        waitUntil { assertNotExist(R.string.live_view_take_photo_success) }
     }
 
     fun startRecording() {
@@ -104,5 +102,6 @@ class LiveViewScreen : BaseScreen() {
     fun stopRecording() {
         isRecordingInProgress()
         clickOn(R.id.buttonRecord)
+        waitUntil { isRecordingNotInProgress() }
     }
 }

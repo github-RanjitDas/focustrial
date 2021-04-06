@@ -28,18 +28,13 @@ class LoginTest : EspressoStartActivityBaseTest<LoginActivity>(LoginActivity::cl
     @Test
     fun verifyAppLogin_FMA_1036_1037() {
         with(loginScreen) {
-            isLogoDisplayed()
-            isConnectToCameraTextDisplayed()
-            isInstructionsButtonDisplayed()
-            isFooterLogoDisplayed()
+            isPairingScreenDisplayed()
 
             clickOnGo()
 
             isPairingSuccessDisplayed()
 
-            isLogoDisplayed()
-            isPasswordTextDisplayed()
-            isFooterLogoDisplayed()
+            isLoginScreenDisplayed()
 
             typePassword(OFFICER_PASSWORD)
             clickOnLogin()
@@ -55,7 +50,7 @@ class LoginTest : EspressoStartActivityBaseTest<LoginActivity>(LoginActivity::cl
 
             isPairingSuccessDisplayed()
 
-            isPasswordTextDisplayed()
+            isLoginScreenDisplayed()
             clickOnLogin()
 
             isIncorrectPasswordToastDisplayed()
@@ -82,7 +77,7 @@ class LoginTest : EspressoStartActivityBaseTest<LoginActivity>(LoginActivity::cl
             retryPairing()
             isPairingSuccessDisplayed()
 
-            isPasswordTextDisplayed()
+            isLoginScreenDisplayed()
 
             mockUtils.disconnectCamera()
 
@@ -102,10 +97,7 @@ class LoginTest : EspressoStartActivityBaseTest<LoginActivity>(LoginActivity::cl
 
             clickOnCloseInstructions()
 
-            isLogoDisplayed()
-            isConnectToCameraTextDisplayed()
-            isInstructionsButtonDisplayed()
-            isFooterLogoDisplayed()
+            isPairingScreenDisplayed()
 
             clickOnCameraInstructions()
 
@@ -113,10 +105,7 @@ class LoginTest : EspressoStartActivityBaseTest<LoginActivity>(LoginActivity::cl
 
             clickOnGotIt()
 
-            isLogoDisplayed()
-            isConnectToCameraTextDisplayed()
-            isInstructionsButtonDisplayed()
-            isFooterLogoDisplayed()
+            isPairingScreenDisplayed()
             isInstructionsPopUpNotDisplayed()
         }
     }

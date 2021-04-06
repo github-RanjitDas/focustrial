@@ -2,6 +2,7 @@ package com.safefleet.lawmobile.screens
 
 import com.safefleet.lawmobile.R
 import com.safefleet.lawmobile.helpers.Alert
+import com.safefleet.lawmobile.helpers.CustomAssertionActions.waitUntil
 import com.safefleet.lawmobile.helpers.ToastMessage
 import com.safefleet.mobile.external_hardware.cameras.entities.VideoInformation
 import com.schibsted.spain.barista.assertion.BaristaVisibilityAssertions.assertDisplayed
@@ -78,8 +79,10 @@ class VideoPlaybackScreen : BaseScreen() {
     fun isSavedSuccessDisplayed() =
         ToastMessage.isToastDisplayed(R.string.video_metadata_saved_success)
 
-    fun isEventMandatoryDisplayed() =
+    fun isEventMandatoryDisplayed() {
         ToastMessage.isToastDisplayed(R.string.event_mandatory)
+        waitUntil { ToastMessage.isToastNotDisplayed(R.string.event_mandatory) }
+    }
 
     fun isMetadataChangesAlertDisplayed() = Alert.isMetadataChangesDisplayed()
 

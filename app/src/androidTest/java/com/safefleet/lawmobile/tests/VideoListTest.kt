@@ -161,6 +161,7 @@ class VideoListTest : EspressoStartActivityBaseTest<LoginActivity>(LoginActivity
         with(liveViewScreen) {
             openVideoList()
 
+            fileListScreen.isVideosListScreenDisplayed()
             fileListScreen.clickOnBack()
 
             isLiveViewDisplayed()

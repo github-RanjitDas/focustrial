@@ -23,7 +23,7 @@ class HelpPageViewTest : EspressoStartActivityBaseTest<LoginActivity>(LoginActiv
         LoginScreen().login()
         with(liveViewScreen) {
             openHelpPage()
-            isUserGuideDisplayed()
+            helpPageScreen.isUserGuideDisplayed()
         }
     }
 

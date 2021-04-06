@@ -5,6 +5,7 @@ import androidx.annotation.StringRes
 import androidx.test.espresso.assertion.ViewAssertions
 import com.lawmobile.data.extensions.getCreationDate
 import com.safefleet.lawmobile.R
+import com.safefleet.lawmobile.helpers.CustomAssertionActions.waitUntil
 import com.safefleet.lawmobile.helpers.CustomCheckboxAction
 import com.safefleet.lawmobile.helpers.isActivated
 import com.safefleet.lawmobile.helpers.isNotActivated
@@ -135,4 +136,30 @@ class FileListScreen : BaseScreen() {
     }
 
     fun isNoFilesFoundDisplayed() = assertDisplayed(R.id.noFilesTextView)
+
+    fun isSelectVideosToAssociateDisplayed() =
+        waitUntil { assertDisplayed(R.string.select_videos_to_associate) }
+
+    fun isViewDateTimeDisplayed() =
+        assertDisplayed(R.id.textViewDateAndTime, R.string.date_and_time)
+
+    fun isViewEventDisplayed() = assertDisplayed(R.id.textViewEvent, R.string.event)
+
+    fun isSnapshotsTitleDisplayed() = assertDisplayed(R.string.snapshots_title)
+
+    fun isSelectSnapshotsToAssociateDisplayed() =
+        waitUntil { assertDisplayed(R.string.select_snapshots_to_associate) }
+
+    fun isVideosListScreenDisplayed() {
+        isSelectVideosToAssociateDisplayed()
+        isFilterButtonDisplayed()
+        isViewDateTimeDisplayed()
+        isViewEventDisplayed()
+    }
+
+    fun isSnapshotsListScreenDisplayed() {
+        isSelectSnapshotsToAssociateDisplayed()
+        isFilterButtonDisplayed()
+        isSnapshotsTitleDisplayed()
+    }
 }
