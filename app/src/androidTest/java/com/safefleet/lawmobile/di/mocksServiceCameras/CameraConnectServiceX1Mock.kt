@@ -46,6 +46,10 @@ class CameraConnectServiceX1Mock : CameraService {
         return Result.Success(90)
     }
 
+    override suspend fun getBodyWornDiagnosis(): Result<Boolean> {
+        return Result.Success(true)
+    }
+
     override fun getCanReadNotification(): Boolean {
         return true
     }
