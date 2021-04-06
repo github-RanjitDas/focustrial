@@ -2,6 +2,7 @@ package com.safefleet.lawmobile.screens
 
 import com.safefleet.lawmobile.R
 import com.safefleet.lawmobile.helpers.Alert
+import com.safefleet.lawmobile.helpers.CustomAssertionActions.waitUntil
 import com.safefleet.lawmobile.testData.TestLoginData
 import com.schibsted.spain.barista.assertion.BaristaImageViewAssertions.assertHasDrawable
 import com.schibsted.spain.barista.assertion.BaristaVisibilityAssertions.assertContains
@@ -9,7 +10,6 @@ import com.schibsted.spain.barista.assertion.BaristaVisibilityAssertions.assertD
 import com.schibsted.spain.barista.assertion.BaristaVisibilityAssertions.assertNotDisplayed
 import com.schibsted.spain.barista.interaction.BaristaClickInteractions.clickOn
 import com.schibsted.spain.barista.interaction.BaristaEditTextInteractions.writeTo
-import com.schibsted.spain.barista.interaction.BaristaSleepInteractions
 
 class LoginScreen : BaseScreen() {
 
@@ -39,6 +39,7 @@ class LoginScreen : BaseScreen() {
         assertHasDrawable(R.id.imageViewWifiInstructions, R.drawable.ic_wifi_camera)
         assertContains(R.id.buttonDismissInstructions, R.string.got_it)
     }
+
     fun clickOnGotIt() = clickOn(R.id.buttonDismissInstructions)
 
     fun clickOnCloseInstructions() = clickOn(R.id.buttonCloseInstructions)
@@ -46,7 +47,6 @@ class LoginScreen : BaseScreen() {
     fun isPairingSuccessDisplayed() {
         assertHasDrawable(R.id.imageViewResultPairing, R.drawable.ic_successful_green)
         assertContains(R.id.textViewResultPairing, R.string.success_connection_to_camera)
-        BaristaSleepInteractions.sleep(1000)
     }
 
     fun isIncorrectPasswordToastDisplayed() {
@@ -72,7 +72,7 @@ class LoginScreen : BaseScreen() {
         } catch (e: Exception) {
             e.printStackTrace()
         }
-        BaristaSleepInteractions.sleep(1000)
+        isLoginScreenDisplayed()
         typePassword()
         clickOnLogin()
     }
@@ -80,7 +80,7 @@ class LoginScreen : BaseScreen() {
     fun isWifiOffAlertDisplayed() = Alert.isWifiOffAlertDisplayed()
 
     fun isInstructionsPopUpNotDisplayed() {
-        assertNotDisplayed(R.id.textViewInstructionsTitle)
+        waitUntil { assertNotDisplayed(R.id.textViewInstructionsTitle) }
         assertNotDisplayed(R.string.instruction_1)
         assertNotDisplayed(R.string.instruction_2)
         assertNotDisplayed(R.string.instruction_3)
@@ -89,5 +89,22 @@ class LoginScreen : BaseScreen() {
         assertNotDisplayed(R.string.instruction_6)
         assertNotDisplayed(R.id.imageViewWifiInstructions)
         assertNotDisplayed(R.id.buttonDismissInstructions)
+    }
+
+    fun isGoButtonDisplayed() = assertDisplayed(R.id.buttonGo)
+
+    fun isPairingScreenDisplayed() {
+        isLogoDisplayed()
+        isConnectToCameraTextDisplayed()
+        isGoButtonDisplayed()
+        isInstructionsButtonDisplayed()
+        isFooterLogoDisplayed()
+    }
+
+    fun isLoginScreenDisplayed() {
+        waitUntil { assertDisplayed(R.id.buttonLogin) }
+        isLogoDisplayed()
+        isPasswordTextDisplayed()
+        isFooterLogoDisplayed()
     }
 }

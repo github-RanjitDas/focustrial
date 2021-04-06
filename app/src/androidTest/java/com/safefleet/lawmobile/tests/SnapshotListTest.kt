@@ -3,14 +3,12 @@ package com.safefleet.lawmobile.tests
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
 import com.lawmobile.presentation.ui.login.LoginActivity
-import com.lawmobile.presentation.utils.EspressoIdlingResource
 import com.safefleet.lawmobile.R
 import com.safefleet.lawmobile.screens.FileListScreen
 import com.safefleet.lawmobile.screens.FilterDialogScreen
 import com.safefleet.lawmobile.screens.LiveViewScreen
 import com.safefleet.lawmobile.screens.LoginScreen
 import com.safefleet.lawmobile.testData.CameraFilesData
-import com.schibsted.spain.barista.interaction.BaristaSleepInteractions
 import org.junit.Before
 import org.junit.FixMethodOrder
 import org.junit.Test
@@ -63,7 +61,6 @@ class SnapshotListTest : EspressoStartActivityBaseTest<LoginActivity>(LoginActiv
             takeSnapshot()
             takeSnapshot()
             takeSnapshot()
-            EspressoIdlingResource.increment()
 
             openSnapshotList()
             fileListScreen.clickOnSimpleListButton()
@@ -87,7 +84,6 @@ class SnapshotListTest : EspressoStartActivityBaseTest<LoginActivity>(LoginActiv
             takeSnapshot()
             takeSnapshot()
             takeSnapshot()
-            EspressoIdlingResource.increment()
 
             openSnapshotList()
 
@@ -264,6 +260,7 @@ class SnapshotListTest : EspressoStartActivityBaseTest<LoginActivity>(LoginActiv
 
         with(liveViewScreen) {
             openSnapshotList()
+            fileListScreen.isSnapshotsListScreenDisplayed()
             fileListScreen.clickOnSimpleListButton()
 
             fileListScreen.clickOnBack()
@@ -274,12 +271,8 @@ class SnapshotListTest : EspressoStartActivityBaseTest<LoginActivity>(LoginActiv
             takeSnapshot()
             takeSnapshot()
 
-            BaristaSleepInteractions.sleep(2000)
-
             openSnapshotList()
             fileListScreen.clickOnSimpleListButton()
-
-            BaristaSleepInteractions.sleep(2000)
 
             fileListScreen.areFilesSortedByDate(takenSnapshots)
         }
@@ -301,7 +294,6 @@ class SnapshotListTest : EspressoStartActivityBaseTest<LoginActivity>(LoginActiv
             takeSnapshot()
             takeSnapshot()
             takeSnapshot()
-            EspressoIdlingResource.increment()
 
             openSnapshotList()
 

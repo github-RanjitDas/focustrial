@@ -9,7 +9,6 @@ import com.safefleet.lawmobile.screens.LiveViewScreen
 import com.safefleet.lawmobile.screens.LoginScreen
 import com.safefleet.lawmobile.screens.VideoPlaybackScreen
 import com.safefleet.lawmobile.testData.VideoPlaybackMetadata
-import com.schibsted.spain.barista.interaction.BaristaSleepInteractions
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -60,7 +59,6 @@ class VideoPlaybackTest : EspressoStartActivityBaseTest<LoginActivity>(LoginActi
             clickOnSave()
             isEventMandatoryDisplayed()
             selectEvent(defaultMetadata)
-            BaristaSleepInteractions.sleep(1000)
             clickOnSave()
             isSavedSuccessDisplayed()
             fileListScreen.isFileListDisplayed()
@@ -76,7 +74,6 @@ class VideoPlaybackTest : EspressoStartActivityBaseTest<LoginActivity>(LoginActi
             mockUtils.disconnectCamera()
             clickOnSave()
             isDisconnectionAlertDisplayed()
-            BaristaSleepInteractions.sleep(1000)
         }
     }
 
@@ -88,7 +85,6 @@ class VideoPlaybackTest : EspressoStartActivityBaseTest<LoginActivity>(LoginActi
             mockUtils.disconnectCamera()
             clickOnBack()
             isDisconnectionAlertDisplayed()
-            BaristaSleepInteractions.sleep(1000)
         }
     }
 
@@ -108,8 +104,6 @@ class VideoPlaybackTest : EspressoStartActivityBaseTest<LoginActivity>(LoginActi
             }
             fileListScreen.clickOnBack()
             stopRecording()
-            BaristaSleepInteractions.sleep(1000)
-            isRecordingNotInProgress()
         }
     }
 
