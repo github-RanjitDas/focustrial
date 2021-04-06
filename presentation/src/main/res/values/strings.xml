@@ -234,7 +234,7 @@
 
     <!-- Body Worn Diagnosis -->
     <string name="body_worn_diagnosis_button_text">START</string>
-    <string name="body_worn_diagnosis_loading_text">Diagnosing</string>
+    <string name="body_worn_diagnosis_loading_text">Diagnosing…</string>
     <string name="body_worn_diagnosis_success_text">Success</string>
     <string name="body_worn_diagnosis_error_text">ERROR</string>
     <string name="body_worn_icon_result_description">Icon result diagnosis</string>

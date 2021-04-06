@@ -63,7 +63,7 @@ class BodyWornDiagnosisActivity : BaseActivity() {
                     binding.imageIconResult.setImageResource(R.drawable.ic_success_icon)
                     binding.textTitleDiagnosis.text =
                         getString(R.string.body_worn_diagnosis_success_text)
-                    binding.textTitleDiagnosis.setTextColor(getColor(R.color.greenSuccess))
+                    binding.textTitleDiagnosis.setTextColor(getColor(R.color.white))
                     binding.textDescriptionDiagnosis.text =
                         getString(R.string.body_worn_result_success_description)
                 } else {
@@ -71,7 +71,7 @@ class BodyWornDiagnosisActivity : BaseActivity() {
                     binding.titleBackgroundStroke.setBackgroundResource(R.drawable.background_stroke_body_worn_diagnosis_error)
                     binding.imageIconResult.setImageResource(R.drawable.ic_error_icon)
                     binding.textTitleDiagnosis.text = getString(R.string.body_worn_diagnosis_error_text)
-                    binding.textTitleDiagnosis.setTextColor(getColor(R.color.red))
+                    binding.textTitleDiagnosis.setTextColor(getColor(R.color.white))
                     binding.textDescriptionDiagnosis.text =
                         getString(R.string.body_worn_result_failed_description)
                 }

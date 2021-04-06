@@ -3,6 +3,7 @@ package com.safefleet.lawmobile.di.bodyWornDiagnosis
 import com.lawmobile.data.datasource.remote.bodyWornDiagnosis.BodyWornDiagnosisDataSource
 import com.lawmobile.data.datasource.remote.bodyWornDiagnosis.BodyWornDiagnosisDataSourceImpl
 import com.lawmobile.data.repository.bodyWornDiagnosis.BodyWornDiagnosisRepositoryImpl
+import com.lawmobile.data.utils.CameraServiceFactory
 import com.lawmobile.domain.repository.bodyWornDiagnosis.BodyWornDiagnosisRepository
 import com.lawmobile.domain.usecase.bodyWornDiagnosis.BodyWornDiagnosisUseCase
 import com.lawmobile.domain.usecase.bodyWornDiagnosis.BodyWornDiagnosisUseCaseImpl
@@ -18,8 +19,8 @@ class BodyWornDiagnosisModule {
     companion object {
 
         @Provides
-        fun provideBodyWornDiagnosisDataSource(): BodyWornDiagnosisDataSource =
-            BodyWornDiagnosisDataSourceImpl()
+        fun provideBodyWornDiagnosisDataSource(cameraFactory: CameraServiceFactory): BodyWornDiagnosisDataSource =
+            BodyWornDiagnosisDataSourceImpl(cameraFactory)
 
         @Provides
         fun provideBodyWornDiagnosisRepository(bodyWornDiagnosisDataSource: BodyWornDiagnosisDataSource): BodyWornDiagnosisRepository =
