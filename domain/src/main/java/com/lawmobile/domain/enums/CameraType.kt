@@ -8,7 +8,7 @@ enum class CameraType {
     },
     X2 {
         override fun getPossibleStringsToIdentifySSID(): List<String> {
-            return listOf("FocusX2", "AmbaCam", "01")
+            return listOf("FocusX2", "AmbaCam", "01", "X0")
         }
     };
 

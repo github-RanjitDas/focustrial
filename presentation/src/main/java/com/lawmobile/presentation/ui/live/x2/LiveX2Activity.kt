@@ -73,6 +73,7 @@ class LiveX2Activity : BaseActivity() {
         binding.shadowOpenMenuView?.isVisible = true
         isMenuOpen = true
         animateOpenMenuContainer()
+        menuFragment.openMenu()
     }
 
     private fun onCloseMenuButton() {

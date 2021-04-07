@@ -1,15 +1,17 @@
 package com.lawmobile.data.mappers
 
+import com.lawmobile.data.dao.entities.LocalCameraEvent
 import com.lawmobile.domain.entities.CameraEvent
 import com.lawmobile.domain.enums.EventTag
 import com.lawmobile.domain.enums.EventType
 import com.safefleet.mobile.external_hardware.cameras.entities.LogEvent
 
-object LogEventMapper {
-    fun cameraToDomainNotificationList(logEventList: List<LogEvent>) =
-        logEventList.map { cameraToDomainNotification(it) }
+object CameraEventMapper {
 
-    private fun cameraToDomainNotification(logEvent: LogEvent) =
+    fun cameraToDomainList(logEventList: List<LogEvent>) =
+        logEventList.map { cameraToDomain(it) }
+
+    private fun cameraToDomain(logEvent: LogEvent) =
         logEvent.run {
             var eventType = EventType.CAMERA
             val eventTag = when (name) {
@@ -32,4 +34,32 @@ object LogEventMapper {
                 value = value
             )
         }
+
+    fun localToDomainList(events: List<LocalCameraEvent>) =
+        events.map { localToDomain(it) }
+
+    private fun localToDomain(event: LocalCameraEvent) = event.run {
+        CameraEvent(
+            name = name,
+            eventType = EventType.getByValue(eventType),
+            eventTag = EventTag.getByValue(eventTag),
+            value = value,
+            date = date,
+            isRead = isRead == 1L
+        )
+    }
+
+    fun domainToLocalList(events: List<CameraEvent>) =
+        events.map { domainToLocal(it) }
+
+    private fun domainToLocal(event: CameraEvent) = event.run {
+        LocalCameraEvent(
+            name = name,
+            eventType = eventType.value,
+            eventTag = eventTag.value,
+            value = value,
+            date = date,
+            isRead = if (isRead) 1 else 0
+        )
+    }
 }

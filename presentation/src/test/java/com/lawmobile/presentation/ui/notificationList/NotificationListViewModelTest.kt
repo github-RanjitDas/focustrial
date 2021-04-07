@@ -4,9 +4,13 @@ import com.lawmobile.domain.entities.CameraEvent
 import com.lawmobile.domain.enums.EventType
 import com.lawmobile.domain.usecase.events.EventsUseCase
 import com.lawmobile.presentation.InstantExecutorExtension
+import com.safefleet.mobile.kotlin_commons.helpers.Result
+import io.mockk.Runs
+import io.mockk.coEvery
+import io.mockk.coVerify
 import io.mockk.every
+import io.mockk.just
 import io.mockk.mockk
-import io.mockk.verify
 import org.junit.Assert
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
@@ -23,26 +27,40 @@ internal class NotificationListViewModelTest {
     }
 
     @Test
-    fun getNotificationListResult() {
-        val notificationList = listOf<CameraEvent>(
-            mockk {
-                every { eventType } returns EventType.NOTIFICATION
-            },
-            mockk {
-                every { eventType } returns EventType.NOTIFICATION
-            }
+    fun getNotificationListSuccess() {
+        val result = Result.Success(
+            listOf<CameraEvent>(mockk { every { eventType } returns EventType.NOTIFICATION })
         )
-        every { eventsUseCase.getNotificationList() } returns notificationList
+        coEvery { eventsUseCase.getAllNotificationEvents() } returns result
+        notificationListViewModel.getAllNotificationEvents()
         Assert.assertEquals(
-            notificationList,
-            notificationListViewModel.getNotificationList()
+            result,
+            notificationListViewModel.notificationListResult.value
+        )
+    }
+
+    @Test
+    fun getNotificationListError() {
+        val result = Result.Error(mockk())
+        coEvery { eventsUseCase.getAllNotificationEvents() } returns result
+        notificationListViewModel.getAllNotificationEvents()
+        Assert.assertEquals(
+            result,
+            notificationListViewModel.notificationListResult.value
         )
     }
 
     @Test
     fun getNotificationListFlow() {
-        every { eventsUseCase.getNotificationList() } returns mockk()
-        notificationListViewModel.getNotificationList()
-        verify { eventsUseCase.getNotificationList() }
+        coEvery { eventsUseCase.getAllNotificationEvents() } returns mockk()
+        notificationListViewModel.getAllNotificationEvents()
+        coVerify { eventsUseCase.getAllNotificationEvents() }
+    }
+
+    @Test
+    fun setAllNotificationsAsRead() {
+        coEvery { eventsUseCase.setAllNotificationsAsRead() } just Runs
+        notificationListViewModel.setAllNotificationsAsRead()
+        coVerify { eventsUseCase.setAllNotificationsAsRead() }
     }
 }

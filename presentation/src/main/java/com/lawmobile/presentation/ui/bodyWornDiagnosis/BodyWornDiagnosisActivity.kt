@@ -69,7 +69,7 @@ class BodyWornDiagnosisActivity : BaseActivity() {
                 } else {
                     binding.titleBackgroundSolid.setBackgroundResource(R.drawable.background_solid_body_worn_diagnosis_error)
                     binding.titleBackgroundStroke.setBackgroundResource(R.drawable.background_stroke_body_worn_diagnosis_error)
-                    binding.imageIconResult.setImageResource(R.drawable.ic_error_icon)
+                    binding.imageIconResult.setImageResource(R.drawable.ic_error_diagnosis_icon)
                     binding.textTitleDiagnosis.text = getString(R.string.body_worn_diagnosis_error_text)
                     binding.textTitleDiagnosis.setTextColor(getColor(R.color.white))
                     binding.textDescriptionDiagnosis.text =

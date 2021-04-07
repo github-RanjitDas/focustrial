@@ -37,8 +37,11 @@ class EventsModule {
         EventsRemoteDataSourceImpl(cameraService)
 
     @Provides
-    fun provideEventsRepository(eventsRemoteDataSource: EventsRemoteDataSource): EventsRepository =
-        EventsRepositoryImpl(eventsRemoteDataSource)
+    fun provideEventsRepository(
+        eventsRemoteDataSource: EventsRemoteDataSource,
+        eventsLocalDataSource: EventsLocalDataSource
+    ): EventsRepository =
+        EventsRepositoryImpl(eventsRemoteDataSource, eventsLocalDataSource)
 
     @Provides
     fun provideEventsUseCase(eventsRepository: EventsRepository): EventsUseCase =

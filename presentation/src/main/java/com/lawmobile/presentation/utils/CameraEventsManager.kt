@@ -31,7 +31,7 @@ class CameraEventsManager @Inject constructor(
             if (isReadyToReadEvents && eventsUseCase.isPossibleToReadLog()) {
                 launch {
                     _logEventsLiveData.postValue(
-                        eventsUseCase.getLogEvents()
+                        eventsUseCase.getCameraEvents()
                     )
                 }
             }
@@ -43,6 +43,7 @@ class CameraEventsManager @Inject constructor(
     }
 
     fun stopReading() {
+        launch { eventsUseCase.clearAllEvents() }
         isReadyToReadEvents = false
         notificationHandler.removeCallbacks(notificationTask)
         job.cancel()

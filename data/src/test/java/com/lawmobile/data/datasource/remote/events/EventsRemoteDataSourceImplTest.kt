@@ -26,7 +26,7 @@ internal class EventsRemoteDataSourceImplTest {
     @Test
     fun getLogEventsFlow() {
         coEvery { cameraService.getLogEvents() } returns mockk()
-        runBlocking { notificationRemoteDataSourceImpl.getLogEvents() }
+        runBlocking { notificationRemoteDataSourceImpl.getCameraEvents() }
         coVerify { cameraService.getLogEvents() }
     }
 
@@ -37,7 +37,7 @@ internal class EventsRemoteDataSourceImplTest {
         runBlocking {
             Assert.assertEquals(
                 result,
-                notificationRemoteDataSourceImpl.getLogEvents()
+                notificationRemoteDataSourceImpl.getCameraEvents()
             )
         }
     }
@@ -49,7 +49,7 @@ internal class EventsRemoteDataSourceImplTest {
         runBlocking {
             Assert.assertEquals(
                 result,
-                notificationRemoteDataSourceImpl.getLogEvents()
+                notificationRemoteDataSourceImpl.getCameraEvents()
             )
         }
     }

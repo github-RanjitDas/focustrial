@@ -2,6 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/layoutMenu"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/background_menu">
@@ -73,7 +74,7 @@
         android:background="@color/whiteTransparentMenuHeader"
         app:layout_constraintBottom_toBottomOf="parent">
 
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/viewLogout"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/no_dp"
@@ -96,6 +97,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <ImageView
+                android:id="@+id/imageButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/margin_20dp"
@@ -105,7 +107,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-        </LinearLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -201,8 +203,25 @@
                 android:textColor="@color/white"
                 android:textSize="@dimen/menu_live_view_text_items_size"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/dividerSettings" />
+
+            <TextView
+                android:visibility="gone"
+                android:id="@+id/textPendingNotification"
+                android:background="@drawable/background_notification_text"
+                android:layout_width="@dimen/menu_live_view_item_notification_size"
+                android:layout_height="@dimen/menu_live_view_item_notification_size"
+                android:layout_marginStart="@dimen/menu_live_view_item_notification_margin_start"
+                android:gravity="center"
+                android:fontFamily="@font/roboto_bold"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_size_14sp"
+                app:layout_constraintBottom_toBottomOf="@+id/text_view_notification"
+                app:layout_constraintStart_toStartOf="@+id/text_view_notification"
+                app:layout_constraintTop_toBottomOf="@+id/text_view_videos"
+                tools:text="3" />
 
             <View
                 android:id="@+id/dividerNotifications"

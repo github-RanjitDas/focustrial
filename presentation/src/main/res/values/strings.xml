@@ -242,5 +242,6 @@
     <string name="body_worn_result_success_description">Your Body-worn Camera hardware is operating correctly, no issues reported.</string>
     <string name="body_worn_result_failed_description">There are one or more issues with the Body-worn Camera hardware that will prevent it from working properly! Please contact your administrator and report this issue</string>
     <string name="no_notifications_found">No notifications found</string>
+    <string name="notification_list_error">Could not load the notification list, please retry or checkout BWC again</string>
 
 </resources>

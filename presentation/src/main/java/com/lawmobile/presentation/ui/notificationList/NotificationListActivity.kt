@@ -7,12 +7,17 @@ import androidx.cardview.widget.CardView
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.snackbar.Snackbar
 import com.lawmobile.domain.entities.CameraEvent
 import com.lawmobile.domain.enums.EventTag
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.databinding.ActivityNotificationListBinding
 import com.lawmobile.presentation.extensions.setOnClickListenerCheckConnection
+import com.lawmobile.presentation.extensions.showErrorSnackBar
 import com.lawmobile.presentation.ui.base.BaseActivity
+import com.safefleet.mobile.kotlin_commons.extensions.doIfError
+import com.safefleet.mobile.kotlin_commons.extensions.doIfSuccess
+import com.safefleet.mobile.kotlin_commons.helpers.Result
 
 class NotificationListActivity : BaseActivity() {
 
@@ -32,14 +37,36 @@ class NotificationListActivity : BaseActivity() {
 
         setCustomAppBar()
         setListeners()
+        setObservers()
         setAdapter()
         setRecyclerView()
         configureBottomSheet()
-        setNotificationList()
+        getNotificationList()
+        setAllNotificationsAsRead()
     }
 
-    private fun setNotificationList() {
-        notificationListAdapter.notificationList = viewModel.getNotificationList() as MutableList
+    private fun setObservers() {
+        viewModel.notificationListResult.observe(this, ::setNotificationList)
+    }
+
+    private fun getNotificationList() {
+        viewModel.getAllNotificationEvents()
+    }
+
+    private fun setNotificationList(result: Result<List<CameraEvent>>) {
+        with(result) {
+            doIfSuccess {
+                notificationListAdapter.notificationList = it as MutableList
+            }
+            doIfError {
+                binding.root.showErrorSnackBar(
+                    getString(R.string.notification_list_error),
+                    Snackbar.LENGTH_INDEFINITE
+                ) {
+                    getNotificationList()
+                }
+            }
+        }
         binding.textViewEmptyList.isVisible = notificationListAdapter.notificationList.isEmpty()
     }
 
@@ -133,5 +160,9 @@ class NotificationListActivity : BaseActivity() {
         binding.layoutCustomAppBar.textViewTitle.text = getString(R.string.notifications)
         binding.layoutCustomAppBar.buttonThumbnailList.isVisible = false
         binding.layoutCustomAppBar.buttonSimpleList.isVisible = false
+    }
+
+    private fun setAllNotificationsAsRead() {
+        viewModel.setAllNotificationsAsRead()
     }
 }

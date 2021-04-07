@@ -119,14 +119,12 @@ internal class CameraEventsDaoImplTest {
                 any(),
                 any(),
                 any(),
-                any(),
                 any()
             )
         } just Runs
         cameraEventsDaoImpl.saveEvent(event)
         verify {
             database.databaseQueries.saveEvent(
-                any(),
                 any(),
                 any(),
                 any(),
@@ -145,9 +143,67 @@ internal class CameraEventsDaoImplTest {
     }
 
     @Test
-    fun clearAllEvents() {
+    fun clearAllEventsFlow() {
         every { database.databaseQueries.clearAllEvents() } just Runs
         cameraEventsDaoImpl.clearAllEvents()
         verify { database.databaseQueries.clearAllEvents() }
+    }
+
+    @Test
+    fun getAllNotificationEventsFlow() {
+        val result = mockk<List<DbCameraEvent>>(relaxed = true)
+        every { database.databaseQueries.getAllNotificationEvents().executeAsList() } returns result
+        cameraEventsDaoImpl.getAllNotificationEvents()
+        verify { database.databaseQueries.getAllNotificationEvents().executeAsList() }
+    }
+
+    @Test
+    fun getAllNotificationEventsResult() {
+        val response = listOf(mockk<DbCameraEvent>(relaxed = true))
+        val result = DbEventsMapper.dbToLocalList(response)
+        every { database.databaseQueries.getAllNotificationEvents().executeAsList() } returns response
+        Assert.assertEquals(
+            result,
+            cameraEventsDaoImpl.getAllNotificationEvents()
+        )
+    }
+
+    @Test
+    fun getEventsCountFlow() {
+        every { database.databaseQueries.getEventsCount().executeAsOne() } returns 1
+        cameraEventsDaoImpl.getEventsCount()
+        verify { database.databaseQueries.getEventsCount().executeAsOne() }
+    }
+
+    @Test
+    fun getEventsCountResult() {
+        every { database.databaseQueries.getEventsCount().executeAsOne() } returns 1
+        Assert.assertEquals(
+            1,
+            cameraEventsDaoImpl.getEventsCount()
+        )
+    }
+
+    @Test
+    fun getPendingNotificationsCountFlow() {
+        every { database.databaseQueries.getPendingNotificationsCount().executeAsOne() } returns 1
+        cameraEventsDaoImpl.getPendingNotificationsCount()
+        verify { database.databaseQueries.getPendingNotificationsCount().executeAsOne() }
+    }
+
+    @Test
+    fun getPendingNotificationsCountResult() {
+        every { database.databaseQueries.getPendingNotificationsCount().executeAsOne() } returns 1
+        Assert.assertEquals(
+            1,
+            cameraEventsDaoImpl.getPendingNotificationsCount()
+        )
+    }
+
+    @Test
+    fun setAllNotificationsAsReadFlow() {
+        every { database.databaseQueries.setAllNotificationsAsRead() } just Runs
+        cameraEventsDaoImpl.setAllNotificationsAsRead()
+        verify { database.databaseQueries.setAllNotificationsAsRead() }
     }
 }

@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import com.lawmobile.domain.entities.CameraInfo
 import com.lawmobile.domain.entities.CameraInfo.isOfficerLogged
@@ -22,6 +23,8 @@ import com.lawmobile.presentation.ui.helpSection.HelpPageActivity
 import com.lawmobile.presentation.ui.login.LoginActivity
 import com.lawmobile.presentation.ui.notificationList.NotificationListActivity
 import com.lawmobile.presentation.utils.Constants
+import com.safefleet.mobile.kotlin_commons.extensions.doIfSuccess
+import com.safefleet.mobile.kotlin_commons.helpers.Result
 
 class LiveMenuFragment : BaseFragment() {
 
@@ -45,6 +48,7 @@ class LiveMenuFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setInformationOfOfficer()
+        setObservers()
         setTouchListeners()
         setListeners()
     }
@@ -57,6 +61,17 @@ class LiveMenuFragment : BaseFragment() {
                 CameraInfo.officerName.split(" ")[1]
         } catch (e: Exception) {
             e.printStackTrace()
+        }
+    }
+
+    private fun setObservers() {
+        liveMenuViewModel.pendingNotificationsCountResult.observe(viewLifecycleOwner, ::reviewPendingNotifications)
+    }
+
+    private fun reviewPendingNotifications(result: Result<Int>) {
+        result.doIfSuccess {
+            binding.textPendingNotification.isVisible = it > 0
+            binding.textPendingNotification.text = it.toString()
         }
     }
 
@@ -142,11 +157,15 @@ class LiveMenuFragment : BaseFragment() {
     }
 
     private fun logoutApplication() {
-        liveMenuViewModel.disconnectCamera()
         liveMenuViewModel.stopReadingEvents()
+        liveMenuViewModel.disconnectCamera()
         isOfficerLogged = false
         startActivity(Intent(requireActivity(), LoginActivity::class.java))
         requireActivity().finish()
+    }
+
+    fun openMenu() {
+        liveMenuViewModel.getPendingNotificationsCount()
     }
 
     companion object {
