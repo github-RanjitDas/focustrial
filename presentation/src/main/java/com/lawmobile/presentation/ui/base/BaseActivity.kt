@@ -74,7 +74,6 @@ open class BaseActivity : AppCompatActivity() {
 
     private fun startReadingEvents() {
         if (isOfficerLogged) {
-            viewModel.startReadingEvents()
             reviewNotificationInCamera()
         }
     }
@@ -125,7 +124,9 @@ open class BaseActivity : AppCompatActivity() {
 
     private fun reviewNotificationInCamera() {
         CameraHelper.getInstance().reviewNotificationInCamera {
-            createNotificationDialog(it) {}
+            runOnUiThread {
+                this@BaseActivity.createNotificationDialog(it) {}
+            }
         }
     }
 

@@ -1,9 +1,11 @@
 package com.lawmobile.data.mappers
 
+import com.lawmobile.data.utils.DateHelper.dateToString
 import com.lawmobile.domain.entities.CameraEvent
 import com.lawmobile.domain.enums.EventTag
 import com.lawmobile.domain.enums.EventType
 import com.safefleet.mobile.external_hardware.cameras.entities.NotificationResponse
+import java.util.Date
 
 object NotificationResponseMapper {
     fun cameraToDomain(notificationResponse: NotificationResponse): CameraEvent {
@@ -17,6 +19,12 @@ object NotificationResponseMapper {
             EventTag.WARNING, EventTag.ERROR ->
                 notificationResponse.type.split(":").last()
         }
-        return CameraEvent(name, EventType.NOTIFICATION, typeNotification, notificationResponse.param)
+        return CameraEvent(
+            name,
+            EventType.NOTIFICATION,
+            typeNotification,
+            notificationResponse.param,
+            dateToString(Date(), "MM/dd/yyyy HH:mm:ss")
+        )
     }
 }

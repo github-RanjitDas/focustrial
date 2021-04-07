@@ -157,7 +157,6 @@ class LiveMenuFragment : BaseFragment() {
     }
 
     private fun logoutApplication() {
-        liveMenuViewModel.stopReadingEvents()
         liveMenuViewModel.disconnectCamera()
         isOfficerLogged = false
         startActivity(Intent(requireActivity(), LoginActivity::class.java))
