@@ -7,7 +7,6 @@ import io.mockk.Runs
 import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
-import io.mockk.verify
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
@@ -46,18 +45,6 @@ internal class BaseViewModelTest {
             delay(150)
             Assert.assertTrue(baseViewModel.isWaitFinishedLiveData.value!!.getContent())
         }
-    }
-
-    @Test
-    fun startReadingEventsFlow() {
-        baseViewModel.startReadingEvents()
-        verify { cameraEventsManager.startReading() }
-    }
-
-    @Test
-    fun stopReadingEventsFlow() {
-        baseViewModel.stopReadingEvents()
-        verify { cameraEventsManager.stopReading() }
     }
 
     @Test

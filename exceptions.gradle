@@ -44,5 +44,6 @@ ext.fileFilter = [
         "**/LoginActivityViewModel.**",
         "**/OnSwipeTouchListener.**",
         "**/LiveActivityBaseViewModel.**",
-        "**/CameraEventsManager.**"
+        "**/CameraEventsManager.**",
+        "**/DateHelper.**"
 ]

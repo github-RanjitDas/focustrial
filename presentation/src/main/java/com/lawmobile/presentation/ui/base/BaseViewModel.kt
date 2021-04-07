@@ -31,14 +31,6 @@ open class BaseViewModel @Inject constructor() : ViewModel() {
 
     fun logEventsLiveData() = cameraEventsManager.logEventsLiveData
 
-    fun startReadingEvents() {
-        cameraEventsManager.startReading()
-    }
-
-    fun stopReadingEvents() {
-        cameraEventsManager.stopReading()
-    }
-
     companion object {
         private lateinit var cameraEventsManager: CameraEventsManager
         private const val LOADING_TIMEOUT = 20000L
