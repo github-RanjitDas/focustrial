@@ -16,12 +16,12 @@ class NotificationResponseMapperTest {
     fun testCameraToDomain() {
         mockkObject(DateHelper)
         every { DateHelper.dateToString(any(), any(), any()) } returns "07/22/2020"
-        val cameraNotification = NotificationResponse("7", "Information", "value")
+        val cameraNotification = NotificationResponse("7", "low_storage_warning", "value")
         val response = NotificationResponseMapper.cameraToDomain(cameraNotification)
         Assert.assertEquals(
             response,
             CameraEvent(
-                name = "Information",
+                name = "low_storage_warning",
                 eventType = EventType.NOTIFICATION,
                 eventTag = EventTag.INFORMATION,
                 date = "07/22/2020",
