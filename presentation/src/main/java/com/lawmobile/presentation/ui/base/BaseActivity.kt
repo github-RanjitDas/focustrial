@@ -10,6 +10,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import com.lawmobile.domain.entities.CameraEvent
 import com.lawmobile.domain.entities.CameraInfo.isOfficerLogged
+import com.lawmobile.domain.enums.EventType
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.entities.NeutralAlertInformation
 import com.lawmobile.presentation.extensions.checkIfSessionIsExpired
@@ -124,8 +125,8 @@ open class BaseActivity : AppCompatActivity() {
 
     private fun reviewNotificationInCamera() {
         CameraHelper.getInstance().reviewNotificationInCamera {
-            runOnUiThread {
-                this@BaseActivity.createNotificationDialog(it) {}
+            if (it.eventType == EventType.NOTIFICATION) runOnUiThread {
+                createNotificationDialog(it) {}
             }
         }
     }
