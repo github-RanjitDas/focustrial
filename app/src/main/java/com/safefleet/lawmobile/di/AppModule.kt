@@ -29,7 +29,7 @@ class AppModule {
 
         @Provides
         @Singleton
-        fun provideSqlDriver(context: Context): SqlDriver =
+        fun provideSqlDriver(@ApplicationContext context: Context): SqlDriver =
             AndroidSqliteDriver(
                 schema = Database.Schema,
                 context = context,

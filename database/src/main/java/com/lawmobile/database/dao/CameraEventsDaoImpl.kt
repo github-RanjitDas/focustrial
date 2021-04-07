@@ -11,6 +11,11 @@ class CameraEventsDaoImpl(private val database: Database) : CameraEventsDao {
         return DbEventsMapper.dbToLocalList(dbEvents)
     }
 
+    override fun getAllNotificationEvents(): List<LocalCameraEvent> {
+        val dbEvents = database.databaseQueries.getAllNotificationEvents().executeAsList()
+        return DbEventsMapper.dbToLocalList(dbEvents)
+    }
+
     override fun getEventById(id: Long): LocalCameraEvent {
         val dbEvent = database.databaseQueries.getEventById(id).executeAsOne()
         return DbEventsMapper.dbToLocal(dbEvent)
@@ -20,18 +25,27 @@ class CameraEventsDaoImpl(private val database: Database) : CameraEventsDao {
         return database.databaseQueries.getLastEventId().executeAsOne()
     }
 
+    override fun getEventsCount() =
+        database.databaseQueries.getEventsCount().executeAsOne().toInt()
+
+    override fun getPendingNotificationsCount() =
+        database.databaseQueries.getPendingNotificationsCount().executeAsOne().toInt()
+
     override fun saveEvent(event: LocalCameraEvent) {
         with(event) {
             database.databaseQueries.saveEvent(
-                id = null,
-                _name = name,
-                _eventType = eventType,
-                _eventTag = eventTag,
-                _value = value,
-                _date = date,
-                _isRead = isRead
+                name = name,
+                eventType = eventType,
+                eventTag = eventTag,
+                value = value,
+                date = date,
+                isRead = isRead
             )
         }
+    }
+
+    override fun setAllNotificationsAsRead() {
+        database.databaseQueries.setAllNotificationsAsRead()
     }
 
     override fun setEventRead(isRead: Long, date: String) {

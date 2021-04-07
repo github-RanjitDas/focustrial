@@ -5,7 +5,6 @@ import com.lawmobile.domain.enums.CameraType
 object CameraInfo {
     var cameraType: CameraType = CameraType.X1
     var metadataEvents = mutableListOf<MetadataEvent>()
-    var cameraEventList = listOf<CameraEvent>()
     var isOfficerLogged: Boolean = false
     var officerId = ""
     var serialNumber = ""
@@ -14,7 +13,6 @@ object CameraInfo {
 
     fun cleanInfo() {
         metadataEvents = mutableListOf()
-        cameraEventList = listOf()
         isOfficerLogged = false
         officerId = ""
         serialNumber = ""

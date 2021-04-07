@@ -2,6 +2,7 @@
 <com.google.android.material.appbar.AppBarLayout 
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
@@ -42,6 +43,22 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="@id/viewAppBarDivider"
                 app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/textPendingNotification"
+                android:visibility="visible"
+                android:fontFamily="@font/roboto_bold"
+                android:background="@drawable/background_notification_text"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_size_14sp"
+                android:gravity="center"
+                android:layout_width="@dimen/live_view_size_pending_notification"
+                android:layout_height="@dimen/live_view_size_pending_notification"
+                android:layout_marginTop="@dimen/margin_5dp"
+                android:layout_marginEnd="@dimen/margin_5dp"
+                app:layout_constraintEnd_toEndOf="@+id/buttonNotification"
+                app:layout_constraintTop_toTopOf="@+id/buttonNotification"
+                tools:text="5" />
 
             <ImageView
                 android:id="@+id/buttonMenu"

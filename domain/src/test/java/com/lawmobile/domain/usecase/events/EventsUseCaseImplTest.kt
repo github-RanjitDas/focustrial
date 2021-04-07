@@ -4,9 +4,11 @@ import com.lawmobile.domain.entities.CameraEvent
 import com.lawmobile.domain.enums.EventType
 import com.lawmobile.domain.repository.events.EventsRepository
 import com.safefleet.mobile.kotlin_commons.helpers.Result
+import io.mockk.Runs
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
+import io.mockk.just
 import io.mockk.mockk
 import io.mockk.verify
 import kotlinx.coroutines.runBlocking
@@ -22,37 +24,37 @@ internal class EventsUseCaseImplTest {
     }
 
     @Test
-    fun getLogEventsFlow() {
-        coEvery { eventsRepository.getLogEvents() } returns mockk()
-        runBlocking { eventsUseCaseImpl.getLogEvents() }
-        coVerify { eventsRepository.getLogEvents() }
+    fun getCameraEventsFlow() {
+        coEvery { eventsRepository.getCameraEvents() } returns mockk()
+        runBlocking { eventsUseCaseImpl.getCameraEvents() }
+        coVerify { eventsRepository.getCameraEvents() }
     }
 
     @Test
-    fun getLogEventsSuccess() {
-        coEvery { eventsRepository.getLogEvents() } returns Result.Success(mockk())
+    fun getCameraEventsSuccess() {
+        coEvery { eventsRepository.getCameraEvents() } returns Result.Success(mockk())
         runBlocking {
-            Assert.assertTrue(eventsUseCaseImpl.getLogEvents() is Result.Success)
+            Assert.assertTrue(eventsUseCaseImpl.getCameraEvents() is Result.Success)
         }
     }
 
     @Test
-    fun getLogEventsError() {
-        coEvery { eventsRepository.getLogEvents() } returns Result.Error(mockk())
+    fun getCameraEventsError() {
+        coEvery { eventsRepository.getCameraEvents() } returns Result.Error(mockk())
         runBlocking {
-            Assert.assertTrue(eventsUseCaseImpl.getLogEvents() is Result.Error)
+            Assert.assertTrue(eventsUseCaseImpl.getCameraEvents() is Result.Error)
         }
     }
 
     @Test
-    fun getNotificationListFlow() {
-        every { eventsRepository.getNotificationList() } returns mockk()
-        eventsUseCaseImpl.getNotificationList()
-        verify { eventsRepository.getNotificationList() }
+    fun getAllNotificationEventsFlow() {
+        coEvery { eventsRepository.getAllNotificationEvents() } returns mockk()
+        runBlocking { eventsUseCaseImpl.getAllNotificationEvents() }
+        coVerify { eventsRepository.getAllNotificationEvents() }
     }
 
     @Test
-    fun getNotificationListResult() {
+    fun getAllNotificationEventsResult() {
         val notificationList = listOf<CameraEvent>(
             mockk {
                 every { eventType } returns EventType.NOTIFICATION
@@ -61,11 +63,14 @@ internal class EventsUseCaseImplTest {
                 every { eventType } returns EventType.NOTIFICATION
             }
         )
-        every { eventsRepository.getNotificationList() } returns notificationList
-        Assert.assertEquals(
-            notificationList,
-            eventsUseCaseImpl.getNotificationList()
-        )
+        coEvery { eventsRepository.getAllNotificationEvents() } returns Result.Success(notificationList)
+        runBlocking {
+            val result = eventsUseCaseImpl.getAllNotificationEvents() as Result.Success
+            Assert.assertEquals(
+                notificationList,
+                result.data
+            )
+        }
     }
 
     @Test
@@ -85,5 +90,46 @@ internal class EventsUseCaseImplTest {
     fun isPossibleToReadLogFalse() {
         every { eventsRepository.isPossibleToReadLog() } returns false
         Assert.assertFalse(eventsUseCaseImpl.isPossibleToReadLog())
+    }
+
+    @Test
+    fun setAllNotificationsAsReadFlow() {
+        coEvery { eventsRepository.setAllNotificationsAsRead() } just Runs
+        runBlocking { eventsUseCaseImpl.setAllNotificationsAsRead() }
+        coVerify { eventsRepository.setAllNotificationsAsRead() }
+    }
+
+    @Test
+    fun clearAllEventsFlow() {
+        coEvery { eventsRepository.clearAllEvents() } just Runs
+        runBlocking { eventsUseCaseImpl.clearAllEvents() }
+        coVerify { eventsRepository.clearAllEvents() }
+    }
+
+    @Test
+    fun getPendingNotificationsCountFlow() {
+        coEvery { eventsRepository.getPendingNotificationsCount() } returns Result.Success(1)
+        runBlocking { eventsUseCaseImpl.getPendingNotificationsCount() }
+        coVerify { eventsRepository.getPendingNotificationsCount() }
+    }
+
+    @Test
+    fun getPendingNotificationsCountSuccess() {
+        coEvery { eventsRepository.getPendingNotificationsCount() } returns Result.Success(1)
+        runBlocking {
+            Assert.assertTrue(
+                eventsUseCaseImpl.getPendingNotificationsCount() is Result.Success
+            )
+        }
+    }
+
+    @Test
+    fun getPendingNotificationsCountError() {
+        coEvery { eventsRepository.getPendingNotificationsCount() } returns Result.Error(mockk())
+        runBlocking {
+            Assert.assertTrue(
+                eventsUseCaseImpl.getPendingNotificationsCount() is Result.Error
+            )
+        }
     }
 }

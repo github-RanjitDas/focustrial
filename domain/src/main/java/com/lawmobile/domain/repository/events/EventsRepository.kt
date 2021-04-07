@@ -5,7 +5,10 @@ import com.lawmobile.domain.repository.BaseRepository
 import com.safefleet.mobile.kotlin_commons.helpers.Result
 
 interface EventsRepository : BaseRepository {
-    suspend fun getLogEvents(): Result<List<CameraEvent>>
-    fun getNotificationList(): List<CameraEvent>
+    suspend fun getCameraEvents(): Result<List<CameraEvent>>
+    suspend fun getAllNotificationEvents(): Result<List<CameraEvent>>
+    suspend fun getPendingNotificationsCount(): Result<Int>
     fun isPossibleToReadLog(): Boolean
+    suspend fun setAllNotificationsAsRead()
+    suspend fun clearAllEvents()
 }

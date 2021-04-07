@@ -12,19 +12,38 @@ getAllEvents:
 SELECT *
 FROM DbCameraEvent;
 
+getAllNotificationEvents:
+SELECT *
+FROM DbCameraEvent
+WHERE eventType = "Notification";
+
 getEventById:
 SELECT *
 FROM DbCameraEvent
 WHERE id = :id;
 
+getEventsCount:
+SELECT COUNT(*)
+FROM DbCameraEvent;
+
+getPendingNotificationsCount:
+SELECT COUNT(*)
+FROM DbCameraEvent
+WHERE eventType = "Notification" AND isRead = 0;
+
 saveEvent:
-INSERT INTO DbCameraEvent
-VALUES (id = :id, name = :_name, eventType = :_eventType, eventTag = :_eventTag, value = :_value, date = :_date, isRead = :_isRead);
+INSERT INTO DbCameraEvent (name, eventType, eventTag, value, date, isRead)
+VALUES (:name, :eventType, :eventTag, :value, :date, :isRead);
+
+setAllNotificationsAsRead:
+UPDATE DbCameraEvent
+SET isRead = 1
+WHERE eventType = "Notification";
 
 setEventRead:
 UPDATE DbCameraEvent
-SET isRead = :_isRead
-WHERE date = :_date;
+SET isRead = :isRead
+WHERE date = :date;
 
 getLastEventId:
 SELECT last_insert_rowid();

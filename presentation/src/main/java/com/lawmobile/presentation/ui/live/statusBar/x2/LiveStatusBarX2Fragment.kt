@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.databinding.FragmentLiveStatusBarBinding
 import com.lawmobile.presentation.extensions.setOnClickListenerCheckConnection
+import com.lawmobile.presentation.ui.base.BaseActivity
 import com.lawmobile.presentation.ui.helpSection.HelpPageActivity
 import com.lawmobile.presentation.ui.live.statusBar.LiveStatusBarBaseFragment
 import com.safefleet.mobile.safefleet_ui.widgets.linearProgressBar.SafeFleetLinearProgressBarColors
@@ -34,6 +35,11 @@ class LiveStatusBarX2Fragment : LiveStatusBarBaseFragment() {
         configureProgressBars()
         setSharedViews()
         setListeners()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        reviewItemsToBlink()
     }
 
     private fun setListeners() {
@@ -79,7 +85,24 @@ class LiveStatusBarX2Fragment : LiveStatusBarBaseFragment() {
         imageViewStorage = binding.imageViewStorage
     }
 
+    private fun reviewItemsToBlink() {
+        (requireActivity() as BaseActivity).onNotificationBatteryWarning = {
+            imageViewBattery.startAnimation(blinkAnimation)
+        }
+
+        (requireActivity() as BaseActivity).onNotificationStorageWarning = {
+            imageViewStorage.startAnimation(blinkAnimation)
+        }
+
+        if (blinkBatteryLevel) imageViewBattery.startAnimation(blinkAnimation)
+        if (blinkStorageLevel) imageViewStorage.startAnimation(blinkAnimation)
+    }
+
     companion object {
         val TAG = LiveStatusBarX2Fragment::class.java.simpleName
+        var blinkBatteryLevel: Boolean = false
+        var blinkStorageLevel: Boolean = false
+        const val NAME_BATTERY_WARNING = "low_battery_warning"
+        const val NAME_STORAGE_WARNING = "low_storage_warning"
     }
 }

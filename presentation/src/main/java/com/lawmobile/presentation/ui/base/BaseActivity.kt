@@ -18,6 +18,7 @@ import com.lawmobile.presentation.extensions.createAlertProgress
 import com.lawmobile.presentation.extensions.createAlertSessionExpired
 import com.lawmobile.presentation.extensions.createNotificationDialog
 import com.lawmobile.presentation.security.RootedHelper
+import com.lawmobile.presentation.ui.live.statusBar.x2.LiveStatusBarX2Fragment
 import com.lawmobile.presentation.ui.login.LoginActivity
 import com.lawmobile.presentation.utils.CameraEventsManager
 import com.lawmobile.presentation.utils.CameraHelper
@@ -45,6 +46,8 @@ open class BaseActivity : AppCompatActivity() {
     private lateinit var mobileDataDialog: AlertDialog
     var isMobileDataAlertShowing = MutableLiveData<Boolean>()
     private var loadingDialog: AlertDialog? = null
+    var onNotificationBatteryWarning: (() -> Unit)? = null
+    var onNotificationStorageWarning: (() -> Unit)? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
@@ -52,7 +55,7 @@ open class BaseActivity : AppCompatActivity() {
 
         verifyDeviceIsNotRooted()
         setEventsManager()
-        setObservers()
+        setBaseObservers()
         createMobileDataDialog()
         updateLastInteraction()
         startReadingEvents()
@@ -76,7 +79,7 @@ open class BaseActivity : AppCompatActivity() {
         }
     }
 
-    private fun setObservers() {
+    private fun setBaseObservers() {
         mobileDataStatus.observe(this, Observer(::showMobileDataDialog))
         viewModel.logEventsLiveData().observe(this, ::handleEvents)
     }
@@ -84,10 +87,24 @@ open class BaseActivity : AppCompatActivity() {
     private fun handleEvents(result: Result<List<CameraEvent>>) {
         with(result) {
             doIfSuccess {
+                reviewIfNotificationsContainsBatteryOrStorageWarning(it)
                 createNotificationDialog(it.last()) {}
             }
             doIfError {
                 println(it.message)
+            }
+        }
+    }
+
+    private fun reviewIfNotificationsContainsBatteryOrStorageWarning(names: List<CameraEvent>) {
+        names.forEach { event ->
+            if (event.name == LiveStatusBarX2Fragment.NAME_BATTERY_WARNING) {
+                LiveStatusBarX2Fragment.blinkBatteryLevel = true
+                onNotificationBatteryWarning?.invoke()
+            }
+            if (event.name == LiveStatusBarX2Fragment.NAME_STORAGE_WARNING) {
+                LiveStatusBarX2Fragment.blinkStorageLevel = true
+                onNotificationStorageWarning?.invoke()
             }
         }
     }

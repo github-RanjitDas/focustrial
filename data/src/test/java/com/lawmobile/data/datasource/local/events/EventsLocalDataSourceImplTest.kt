@@ -169,21 +169,105 @@ internal class EventsLocalDataSourceImplTest {
     }
 
     @Test
-    fun clearAllEventsSuccess() {
-        every { cameraEventsDao.clearAllEvents() } just Runs
+    fun clearAllEventsError() {
+        every { cameraEventsDao.clearAllEvents() } throws Exception()
+        runBlocking { eventsLocalDataSourceImpl.clearAllEvents() }
+        verify { cameraEventsDao.clearAllEvents() }
+    }
+
+    @Test
+    fun getAllNotificationEventsFlow() {
+        every { cameraEventsDao.getAllNotificationEvents() } returns mockk()
+        runBlocking { eventsLocalDataSourceImpl.getAllNotificationEvents() }
+        verify { cameraEventsDao.getAllNotificationEvents() }
+    }
+
+    @Test
+    fun getAllNotificationEventsSuccess() {
+        every { cameraEventsDao.getAllNotificationEvents() } returns mockk()
         runBlocking {
             Assert.assertTrue(
-                eventsLocalDataSourceImpl.clearAllEvents() is Result.Success
+                eventsLocalDataSourceImpl.getAllNotificationEvents() is Result.Success
             )
         }
     }
 
     @Test
-    fun clearAllEventsError() {
-        every { cameraEventsDao.clearAllEvents() } throws Exception()
+    fun getAllNotificationEventsError() {
+        every { cameraEventsDao.getAllNotificationEvents() } throws Exception()
         runBlocking {
             Assert.assertTrue(
-                eventsLocalDataSourceImpl.clearAllEvents() is Result.Error
+                eventsLocalDataSourceImpl.getAllNotificationEvents() is Result.Error
+            )
+        }
+    }
+
+    @Test
+    fun getPendingNotificationsCountFlow() {
+        every { cameraEventsDao.getPendingNotificationsCount() } returns 1
+        runBlocking { eventsLocalDataSourceImpl.getPendingNotificationsCount() }
+        verify { cameraEventsDao.getPendingNotificationsCount() }
+    }
+
+    @Test
+    fun getPendingNotificationsCountSuccess() {
+        every { cameraEventsDao.getPendingNotificationsCount() } returns 1
+        runBlocking {
+            Assert.assertTrue(
+                eventsLocalDataSourceImpl.getPendingNotificationsCount() is Result.Success
+            )
+        }
+    }
+
+    @Test
+    fun getPendingNotificationsCountError() {
+        every { cameraEventsDao.getPendingNotificationsCount() } throws Exception()
+        runBlocking {
+            Assert.assertTrue(
+                eventsLocalDataSourceImpl.getPendingNotificationsCount() is Result.Error
+            )
+        }
+    }
+
+    @Test
+    fun setAllNotificationsAsReadFlow() {
+        every { cameraEventsDao.setAllNotificationsAsRead() } returns mockk()
+        runBlocking { eventsLocalDataSourceImpl.setAllNotificationsAsRead() }
+        verify { cameraEventsDao.setAllNotificationsAsRead() }
+    }
+
+    @Test
+    fun setAllNotificationsAsReadError() {
+        every { cameraEventsDao.setAllNotificationsAsRead() } throws Exception()
+        runBlocking { eventsLocalDataSourceImpl.setAllNotificationsAsRead() }
+        verify { cameraEventsDao.setAllNotificationsAsRead() }
+    }
+
+    @Test
+    fun getEventsCountFlow() {
+        every { cameraEventsDao.getEventsCount() } returns 1
+        runBlocking { eventsLocalDataSourceImpl.getEventsCount() }
+        verify { cameraEventsDao.getEventsCount() }
+    }
+
+    @Test
+    fun getEventsCountSuccess() {
+        every { cameraEventsDao.getEventsCount() } returns 1
+        runBlocking {
+            Assert.assertEquals(
+                1,
+                eventsLocalDataSourceImpl.getEventsCount()
+            )
+        }
+    }
+
+    @Test
+    fun getEventsCountError() {
+        every { cameraEventsDao.getEventsCount() } throws Exception()
+        runBlocking {
+            Assert.assertEquals(
+                0,
+                eventsLocalDataSourceImpl.getEventsCount()
             )
         }
     }

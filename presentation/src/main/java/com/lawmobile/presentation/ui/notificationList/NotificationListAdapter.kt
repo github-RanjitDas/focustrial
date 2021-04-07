@@ -65,12 +65,14 @@ class NotificationListAdapter(
 
         fun bind(notification: CameraEvent) {
             setNotificationType(notification.eventTag)
+            setNotificationStyle(notification)
             setTextViews(notification)
             setListener(notification)
         }
 
         private fun setListener(notification: CameraEvent) {
             binding.layoutNotificationItem.setOnClickListenerCheckConnection {
+                binding.layoutNotificationItem.setBackgroundResource(R.color.white)
                 onNotificationItemCLick(notification)
             }
         }
@@ -78,6 +80,12 @@ class NotificationListAdapter(
         private fun setTextViews(notification: CameraEvent) {
             binding.textViewNotification.text = notification.value
             binding.textViewNotificationDate.text = notification.date
+        }
+
+        private fun setNotificationStyle(notification: CameraEvent) {
+            val colorBackground =
+                if (notification.isRead) R.color.white else R.color.backgroundCardView
+            binding.layoutNotificationItem.setBackgroundResource(colorBackground)
         }
 
         private fun setNotificationType(type: EventTag) {
