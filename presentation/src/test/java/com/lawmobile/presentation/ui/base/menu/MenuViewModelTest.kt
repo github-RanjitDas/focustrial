@@ -1,4 +1,4 @@
-package com.lawmobile.presentation.ui.live.menu
+package com.lawmobile.presentation.ui.base.menu
 
 import com.lawmobile.domain.usecase.events.EventsUseCase
 import com.lawmobile.domain.usecase.liveStreaming.LiveStreamingUseCase
@@ -15,13 +15,13 @@ import org.junit.jupiter.api.extension.ExtendWith
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @ExtendWith(InstantExecutorExtension::class)
-class LiveMenuViewModelTest {
+class MenuViewModelTest {
 
     private val liveStreamingUseCase: LiveStreamingUseCase = mockk()
     private val eventsUseCase: EventsUseCase = mockk()
 
-    private val liveMenuViewModel: LiveMenuViewModel by lazy {
-        LiveMenuViewModel(
+    private val menuViewModel: MenuViewModel by lazy {
+        MenuViewModel(
             liveStreamingUseCase,
             eventsUseCase
         )
@@ -30,14 +30,14 @@ class LiveMenuViewModelTest {
     @Test
     fun testFlowDisconnectCameraFlow() {
         coEvery { liveStreamingUseCase.disconnectCamera() } returns Result.Success(Unit)
-        runBlocking { liveMenuViewModel.disconnectCamera() }
+        runBlocking { menuViewModel.disconnectCamera() }
         coVerify { liveStreamingUseCase.disconnectCamera() }
     }
 
     @Test
     fun getPendingNotificationsCountFlow() {
         coEvery { eventsUseCase.getPendingNotificationsCount() } returns Result.Success(1)
-        runBlocking { liveMenuViewModel.getPendingNotificationsCount() }
+        runBlocking { menuViewModel.getPendingNotificationsCount() }
         coVerify { eventsUseCase.getPendingNotificationsCount() }
     }
 
@@ -45,11 +45,11 @@ class LiveMenuViewModelTest {
     fun getPendingNotificationsCountSuccess() {
         val result = Result.Success(1)
         coEvery { eventsUseCase.getPendingNotificationsCount() } returns result
-        liveMenuViewModel.getPendingNotificationsCount()
+        menuViewModel.getPendingNotificationsCount()
         runBlocking {
             Assert.assertEquals(
                 result,
-                liveMenuViewModel.pendingNotificationsCountResult.value
+                menuViewModel.pendingNotificationsCountResult.value
             )
         }
     }
@@ -58,11 +58,11 @@ class LiveMenuViewModelTest {
     fun getPendingNotificationsCountError() {
         val result = Result.Success(1)
         coEvery { eventsUseCase.getPendingNotificationsCount() } returns result
-        liveMenuViewModel.getPendingNotificationsCount()
+        menuViewModel.getPendingNotificationsCount()
         runBlocking {
             Assert.assertEquals(
                 result,
-                liveMenuViewModel.pendingNotificationsCountResult.value
+                menuViewModel.pendingNotificationsCountResult.value
             )
         }
     }

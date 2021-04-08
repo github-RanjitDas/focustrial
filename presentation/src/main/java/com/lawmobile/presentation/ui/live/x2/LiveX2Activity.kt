@@ -7,13 +7,17 @@ import androidx.core.view.isVisible
 import com.lawmobile.domain.entities.CameraInfo
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.databinding.ActivityLiveViewBinding
+import com.lawmobile.presentation.entities.MenuInformation
 import com.lawmobile.presentation.extensions.attachFragment
+import com.lawmobile.presentation.extensions.closeMenuButton
+import com.lawmobile.presentation.extensions.openMenuButton
 import com.lawmobile.presentation.extensions.setOnSwipeRightListener
 import com.lawmobile.presentation.ui.base.BaseActivity
+import com.lawmobile.presentation.ui.base.appBar.x2.AppBarX2Fragment
+import com.lawmobile.presentation.ui.base.menu.MenuFragment
+import com.lawmobile.presentation.ui.base.menu.MenuFragment.Companion.isInMainScreen
 import com.lawmobile.presentation.ui.live.LiveActivityBaseViewModel
-import com.lawmobile.presentation.ui.live.appBar.x2.LiveAppBarX2Fragment
 import com.lawmobile.presentation.ui.live.controls.x1.LiveControlsX1Fragment
-import com.lawmobile.presentation.ui.live.menu.LiveMenuFragment
 import com.lawmobile.presentation.ui.live.navigation.x1.LiveNavigationX1Fragment
 import com.lawmobile.presentation.ui.live.statusBar.x1.LiveStatusBarX1Fragment
 import com.lawmobile.presentation.ui.live.statusBar.x2.LiveStatusBarX2Fragment
@@ -26,14 +30,14 @@ class LiveX2Activity : BaseActivity() {
     private val viewModel: LiveActivityBaseViewModel by viewModels()
     private lateinit var binding: ActivityLiveViewBinding
 
-    private val appBarFragment = LiveAppBarX2Fragment()
+    private val appBarFragment = AppBarX2Fragment.createInstance(true, "")
     private val statusBarFragment = LiveStatusBarX2Fragment()
     private val streamFragment = LiveStreamFragment()
     private val controlsFragment = LiveControlsX1Fragment()
     private val navigationFragment = LiveNavigationX1Fragment()
-    private val menuFragment = LiveMenuFragment()
+    private val menuFragment = MenuFragment()
 
-    private var isMenuOpen = false
+    private lateinit var menuInformation: MenuInformation
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,6 +45,8 @@ class LiveX2Activity : BaseActivity() {
         setContentView(binding.root)
         overridePendingTransition(0, 0)
         activitySetup()
+        menuInformation =
+            MenuInformation(this, menuFragment, binding.layoutCustomMenu.shadowOpenMenuView)
     }
 
     private fun activitySetup() {
@@ -56,6 +62,7 @@ class LiveX2Activity : BaseActivity() {
 
     override fun onResume() {
         super.onResume()
+        isInMainScreen = true
         if (isInPortraitMode()) updateLiveOrPlaybackActive(controlsFragment.buttonSwitchLiveView.isActivated)
     }
 
@@ -63,24 +70,19 @@ class LiveX2Activity : BaseActivity() {
         controlsFragment.onCameraOperation = ::onCameraOperation
         controlsFragment.onLiveStreamSwitchClick = ::onLiveStreamSwitchClick
         controlsFragment.onCameraOperationFinished = ::onCameraOperationFinished
-        appBarFragment.onTapMenuButton = ::onTapMenuButton
-        menuFragment.onCloseMenuButton = ::onCloseMenuButton
-        binding.shadowOpenMenuView?.setOnSwipeRightListener { onCloseMenuButton() }
-    }
-
-    private fun onTapMenuButton() {
-        binding.menuContainer.isVisible = true
-        binding.shadowOpenMenuView?.isVisible = true
-        isMenuOpen = true
-        animateOpenMenuContainer()
-        menuFragment.openMenu()
+        menuFragment.onCloseMenuButton = {
+            binding.layoutCustomMenu.menuContainer.closeMenuButton(menuInformation)
+        }
+        appBarFragment.onTapMenuButton = {
+            binding.layoutCustomMenu.menuContainer.openMenuButton(menuInformation)
+        }
+        binding.layoutCustomMenu.shadowOpenMenuView.setOnSwipeRightListener { onCloseMenuButton() }
     }
 
     private fun onCloseMenuButton() {
         animateCloseMenuContainer()
-        isMenuOpen = false
-        binding.menuContainer.isVisible = false
-        binding.shadowOpenMenuView?.isVisible = false
+        binding.layoutCustomMenu.menuContainer.isVisible = false
+        binding.layoutCustomMenu.shadowOpenMenuView.isVisible = false
     }
 
     private fun onCameraOperation(message: String) {
@@ -110,16 +112,11 @@ class LiveX2Activity : BaseActivity() {
         }
     }
 
-    private fun animateOpenMenuContainer() {
-        val animation = AnimationUtils.loadAnimation(this, R.anim.slide_in_right)
-        binding.menuContainer.startAnimation(animation)
-    }
-
     private fun animateCloseMenuContainer() {
         val animation = AnimationUtils.loadAnimation(this, R.anim.slide_out_right)
         val animationShadow = AnimationUtils.loadAnimation(this, R.anim.fade_out)
-        binding.menuContainer.startAnimation(animation)
-        binding.shadowOpenMenuView?.startAnimation(animationShadow)
+        binding.layoutCustomMenu.menuContainer.startAnimation(animation)
+        binding.layoutCustomMenu.shadowOpenMenuView.startAnimation(animationShadow)
     }
 
     private fun animateAppBar() {
@@ -156,7 +153,7 @@ class LiveX2Activity : BaseActivity() {
         supportFragmentManager.attachFragment(
             containerId = R.id.menuContainer,
             fragment = menuFragment,
-            tag = LiveMenuFragment.TAG
+            tag = MenuFragment.TAG
         )
     }
 
@@ -196,7 +193,7 @@ class LiveX2Activity : BaseActivity() {
         supportFragmentManager.attachFragment(
             containerId = R.id.appBarContainer,
             fragment = appBarFragment,
-            tag = LiveAppBarX2Fragment.TAG
+            tag = AppBarX2Fragment.TAG
         )
     }
 

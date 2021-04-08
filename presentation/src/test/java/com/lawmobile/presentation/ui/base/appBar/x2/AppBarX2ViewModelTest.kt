@@ -1,4 +1,4 @@
-package com.lawmobile.presentation.ui.live.appBar.x2
+package com.lawmobile.presentation.ui.base.appBar.x2
 
 import com.lawmobile.domain.usecase.events.EventsUseCase
 import com.lawmobile.presentation.InstantExecutorExtension
@@ -13,18 +13,18 @@ import org.junit.jupiter.api.extension.ExtendWith
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @ExtendWith(InstantExecutorExtension::class)
-internal class LiveAppBarX2ViewModelTest {
+internal class AppBarX2ViewModelTest {
 
     private val eventsUseCase: EventsUseCase = mockk()
 
-    private val liveAppBarX2ViewModel: LiveAppBarX2ViewModel by lazy {
-        LiveAppBarX2ViewModel(eventsUseCase)
+    private val appBarX2ViewModel: AppBarX2ViewModel by lazy {
+        AppBarX2ViewModel(eventsUseCase)
     }
 
     @Test
     fun getNumberOfPendingNotificationFlow() {
         coEvery { eventsUseCase.getPendingNotificationsCount() } returns Result.Success(1)
-        liveAppBarX2ViewModel.getPendingNotificationsCount()
+        appBarX2ViewModel.getPendingNotificationsCount()
         coVerify { eventsUseCase.getPendingNotificationsCount() }
     }
 
@@ -32,10 +32,10 @@ internal class LiveAppBarX2ViewModelTest {
     fun getNumberOfPendingNotificationSuccess() {
         val result = Result.Success(1)
         coEvery { eventsUseCase.getPendingNotificationsCount() } returns result
-        liveAppBarX2ViewModel.getPendingNotificationsCount()
+        appBarX2ViewModel.getPendingNotificationsCount()
         Assert.assertEquals(
             result,
-            liveAppBarX2ViewModel.pendingNotificationSizeResult.value
+            appBarX2ViewModel.pendingNotificationSizeResult.value
         )
     }
 
@@ -43,10 +43,10 @@ internal class LiveAppBarX2ViewModelTest {
     fun getNumberOfPendingNotificationError() {
         val result = Result.Error(Exception())
         coEvery { eventsUseCase.getPendingNotificationsCount() } returns result
-        liveAppBarX2ViewModel.getPendingNotificationsCount()
+        appBarX2ViewModel.getPendingNotificationsCount()
         Assert.assertEquals(
             result,
-            liveAppBarX2ViewModel.pendingNotificationSizeResult.value
+            appBarX2ViewModel.pendingNotificationSizeResult.value
         )
     }
 }

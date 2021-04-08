@@ -5,6 +5,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+
+    <include
+        android:visibility="gone"
+        android:id="@+id/layoutCustomMenu"
+        layout="@layout/custom_frame_menu" />
+
     <FrameLayout
         android:id="@+id/appBarContainer"
         app:layout_constraintTop_toTopOf="parent"
@@ -43,14 +49,6 @@
         android:layout_height="@dimen/no_dp"
         android:visibility="gone"/>
 
-    <FrameLayout
-        android:id="@+id/menuContainer"
-        android:layout_width="@dimen/no_dp"
-        android:layout_height="match_parent"
-        android:visibility="gone"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/guidelineVertical1" />
-
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineTopStream2"
         android:layout_width="wrap_content"
@@ -81,17 +79,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintGuide_percent="0.91"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guidelineVertical1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintGuide_percent="0.15"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

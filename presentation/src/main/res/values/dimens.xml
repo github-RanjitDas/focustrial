@@ -131,7 +131,7 @@
     <dimen name="text_size_16sp">16sp</dimen>
     <dimen name="padding_horizontal_buttons">15dp</dimen>
     <dimen name="padding_15dp">15dp</dimen>
-    <dimen name="margin_top_associate_snapshots_button">80dp</dimen>
+    <dimen name="margin_top_associate_snapshots_button">20dp</dimen>
     <dimen name="padding_10dp">10dp</dimen>
     <dimen name="margin_20dp">20dp</dimen>
     <dimen name="margin_30dp">30dp</dimen>

@@ -148,6 +148,10 @@ class ThumbnailFileListFragment : FileListBaseFragment() {
         startFileListIntent(file.domainCameraFile)
     }
 
+    fun reviewIfShowCheckBoxes() {
+        if (thumbnailFileListAdapter?.showCheckBoxes == true) showCheckBoxes()
+    }
+
     fun showCheckBoxes() {
         thumbnailFileListAdapter?.run {
             showCheckBoxes = !showCheckBoxes

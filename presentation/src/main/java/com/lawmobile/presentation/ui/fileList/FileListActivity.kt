@@ -4,16 +4,14 @@ import android.os.Bundle
 import android.view.View
 import androidx.activity.viewModels
 import androidx.cardview.widget.CardView
-import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.lawmobile.domain.entities.DomainCameraFile
 import com.lawmobile.domain.entities.DomainInformationForList
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.databinding.ActivityFileListBinding
 import com.lawmobile.presentation.extensions.attachFragment
-import com.lawmobile.presentation.extensions.createFilterDialog
-import com.lawmobile.presentation.extensions.setClickListenerCheckConnection
 import com.lawmobile.presentation.extensions.setOnClickListenerCheckConnection
 import com.lawmobile.presentation.extensions.showErrorSnackBar
 import com.lawmobile.presentation.extensions.showSuccessSnackBar
@@ -21,33 +19,26 @@ import com.lawmobile.presentation.ui.base.BaseActivity
 import com.lawmobile.presentation.ui.fileList.FileListBaseFragment.Companion.checkableListInit
 import com.lawmobile.presentation.ui.fileList.simpleList.SimpleFileListFragment
 import com.lawmobile.presentation.ui.fileList.thumbnailList.ThumbnailFileListFragment
-import com.lawmobile.presentation.utils.Constants.FILE_LIST_SELECTOR
-import com.lawmobile.presentation.utils.Constants.FILE_LIST_TYPE
-import com.lawmobile.presentation.utils.Constants.SIMPLE_FILE_LIST
-import com.lawmobile.presentation.utils.Constants.SNAPSHOT_LIST
-import com.lawmobile.presentation.utils.Constants.THUMBNAIL_FILE_LIST
-import com.lawmobile.presentation.utils.Constants.VIDEO_LIST
+import com.lawmobile.presentation.utils.Constants
 import com.lawmobile.presentation.widgets.CustomFilterDialog
 import com.safefleet.mobile.android_commons.extensions.hideKeyboard
 import com.safefleet.mobile.kotlin_commons.extensions.doIfError
 import com.safefleet.mobile.kotlin_commons.extensions.doIfSuccess
 import com.safefleet.mobile.kotlin_commons.helpers.Result
 
-class FileListActivity : BaseActivity() {
+open class FileListActivity : BaseActivity() {
 
-    private lateinit var binding: ActivityFileListBinding
-
+    lateinit var binding: ActivityFileListBinding
     private val fileListViewModel: FileListViewModel by viewModels()
 
-    private val simpleFileListFragment = SimpleFileListFragment()
-    private val thumbnailFileListFragment = ThumbnailFileListFragment()
+    lateinit var actualFragment: String
+    var listType: String? = null
+    var filterDialog: CustomFilterDialog? = null
 
-    private lateinit var actualFragment: String
-    private var listType: String? = null
+    val simpleFileListFragment = SimpleFileListFragment()
+    val thumbnailFileListFragment = ThumbnailFileListFragment()
 
-    private var filterDialog: CustomFilterDialog? = null
-
-    private val bottomSheetBehavior: BottomSheetBehavior<CardView> by lazy {
+    val bottomSheetBehavior: BottomSheetBehavior<CardView> by lazy {
         BottomSheetBehavior.from(binding.bottomSheetPartnerId.bottomSheetPartnerId)
     }
 
@@ -55,142 +46,63 @@ class FileListActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityFileListBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        listType = intent.extras?.getString(FILE_LIST_SELECTOR)
-
+        listType = intent.extras?.getString(Constants.FILE_LIST_SELECTOR)
         setExtras()
         setObservers()
-        setCustomAppBar()
-        setListTypeFragment()
-        setListeners()
         configureBottomSheet()
-    }
-
-    private fun setListTypeFragment() {
-        when (listType) {
-            VIDEO_LIST -> setSimpleFileListFragment()
-            SNAPSHOT_LIST -> setThumbnailListFragment()
-        }
-    }
-
-    private fun setCustomAppBar() {
-        when (listType) {
-            SNAPSHOT_LIST -> {
-                binding.layoutCustomAppBar.textViewTitle.text =
-                    getString(R.string.snapshots_title)
-            }
-            VIDEO_LIST -> {
-                binding.layoutCustomAppBar.textViewTitle.text =
-                    getString(R.string.videos_title)
-                binding.layoutCustomAppBar.buttonThumbnailList.isVisible = false
-                binding.layoutCustomAppBar.buttonSimpleList.isVisible = false
-            }
-        }
     }
 
     private fun setExtras() {
         simpleFileListFragment.arguments =
-            Bundle().apply { putString(FILE_LIST_TYPE, listType) }
+            Bundle().apply { putString(Constants.FILE_LIST_TYPE, listType) }
         thumbnailFileListFragment.arguments =
-            Bundle().apply { putString(FILE_LIST_TYPE, listType) }
+            Bundle().apply { putString(Constants.FILE_LIST_TYPE, listType) }
     }
 
-    private fun setObservers() {
+    fun setObservers() {
         fileListViewModel.snapshotPartnerIdLiveData.observe(this, Observer(::handlePartnerIdResult))
         fileListViewModel.videoPartnerIdLiveData.observe(this, Observer(::handlePartnerIdResult))
     }
 
-    private fun setSimpleFileListFragment() {
-        actualFragment = SIMPLE_FILE_LIST
-        binding.layoutCustomAppBar.buttonSimpleList.isActivated = true
-        binding.layoutCustomAppBar.buttonThumbnailList.isActivated = false
-        binding.textViewSelectedItems.isVisible = false
+    fun activateButtonAssociate() {
+        when (actualFragment) {
+            Constants.SIMPLE_FILE_LIST -> {
+                simpleFileListFragment.showCheckBoxes()
+                simpleFileListFragment.simpleFileListAdapter?.uncheckAllItems()
+            }
+            Constants.THUMBNAIL_FILE_LIST -> {
+                thumbnailFileListFragment.showCheckBoxes()
+                thumbnailFileListFragment.thumbnailFileListAdapter?.uncheckAllItems()
+            }
+        }
+    }
+
+    fun attachSimpleFileListFragment() {
+        actualFragment = Constants.SIMPLE_FILE_LIST
         resetButtonAssociate()
         supportFragmentManager.attachFragment(
             R.id.fragmentListHolder,
             simpleFileListFragment,
-            SIMPLE_FILE_LIST
+            Constants.SIMPLE_FILE_LIST
         )
     }
 
-    private fun setThumbnailListFragment() {
-        actualFragment = THUMBNAIL_FILE_LIST
-        binding.layoutCustomAppBar.buttonThumbnailList.isActivated = true
-        binding.layoutCustomAppBar.buttonSimpleList.isActivated = false
-        binding.textViewSelectedItems.isVisible = false
+    fun attachThumbnailListFragment() {
+        actualFragment = Constants.THUMBNAIL_FILE_LIST
         resetButtonAssociate()
         supportFragmentManager.attachFragment(
             R.id.fragmentListHolder,
             thumbnailFileListFragment,
-            THUMBNAIL_FILE_LIST
+            Constants.THUMBNAIL_FILE_LIST
         )
     }
 
-    private fun setListeners() {
-        simpleFileListFragment.onFileCheck = ::enableAssociatePartnerButton
-        thumbnailFileListFragment.onImageCheck = ::enableAssociatePartnerButton
-        binding.layoutCustomAppBar.buttonThumbnailList.setClickListenerCheckConnection { setThumbnailListFragment() }
-        binding.layoutCustomAppBar.buttonSimpleList.setClickListenerCheckConnection { setSimpleFileListFragment() }
-        binding.layoutCustomAppBar.imageButtonBackArrow.setOnClickListenerCheckConnection { onBackPressed() }
-        binding.buttonSelectSnapshotsToAssociate.setOnClickListenerCheckConnection { showCheckBoxes() }
-        binding.buttonAssociatePartnerIdList.setOnClickListenerCheckConnection { showAssignToOfficerBottomSheet() }
-        binding.buttonOpenFilters.setOnClickListenerCheckConnection { showFilterDialog() }
-    }
-
-    private fun showFilterDialog() {
-        var listToFilter = listOf<DomainInformationForList>()
-
+    fun resetButtonAssociate() {
         when (actualFragment) {
-            SIMPLE_FILE_LIST ->
-                listToFilter = simpleFileListFragment.fileListBackup
-            THUMBNAIL_FILE_LIST ->
-                listToFilter = thumbnailFileListFragment.fileListBackup
+            Constants.SIMPLE_FILE_LIST -> simpleFileListFragment.reviewIfShowCheckBoxes()
+            Constants.THUMBNAIL_FILE_LIST -> thumbnailFileListFragment.reviewIfShowCheckBoxes()
         }
-
-        if (filterDialog == null) {
-            filterDialog =
-                binding.layoutFilterTags.createFilterDialog(::handleOnApplyFilterClick)
-        }
-
-        filterDialog?.apply {
-            this.listToFilter = listToFilter
-            show()
-            when (listType) {
-                VIDEO_LIST -> filterDialog?.isEventSpinnerFilterVisible(true)
-                SNAPSHOT_LIST -> filterDialog?.isEventSpinnerFilterVisible(false)
-            }
-            simpleFileListFragment.filter = this
-            thumbnailFileListFragment.filter = this
-        }
-    }
-
-    private fun handleOnApplyFilterClick(it: Boolean) {
-        binding.scrollFilterTags.isVisible = it
-        updateFilterButtonState(it)
-        when (actualFragment) {
-            SIMPLE_FILE_LIST ->
-                simpleFileListFragment.applyFiltersToList()
-            THUMBNAIL_FILE_LIST ->
-                thumbnailFileListFragment.applyFiltersToList()
-        }
-    }
-
-    private fun updateFilterButtonState(it: Boolean) {
-        with(binding.buttonOpenFilters) {
-            background = if (it) {
-                setImageResource(R.drawable.ic_filter_white)
-                ContextCompat.getDrawable(
-                    context,
-                    R.drawable.background_button_blue
-                )
-            } else {
-                setImageResource(R.drawable.ic_filter)
-                ContextCompat.getDrawable(
-                    context,
-                    R.drawable.border_rounded_blue
-                )
-            }
-        }
+        binding.buttonAssociatePartnerIdList.isVisible = false
     }
 
     private fun configureBottomSheet() {
@@ -220,98 +132,47 @@ class FileListActivity : BaseActivity() {
     }
 
     private fun associatePartnerId(partnerId: String) {
-
         if (partnerId.isEmpty()) {
             binding.constraintLayoutFileList.showErrorSnackBar(getString(R.string.valid_partner_id_message))
             return
         }
-
         showLoadingDialog()
-
-        val listSelected = when (actualFragment) {
-            SIMPLE_FILE_LIST ->
-                simpleFileListFragment.simpleFileListAdapter?.fileList?.filter { it.isSelected }
-                    ?.map { it.domainCameraFile }
-            THUMBNAIL_FILE_LIST ->
-                thumbnailFileListFragment.thumbnailFileListAdapter?.fileList?.filter { it.isSelected }
-                    ?.map { it.domainCameraFile }
-            else -> throw Exception("List type not supported")
-        }
-
-        listSelected?.let {
-            when (listType) {
-                SNAPSHOT_LIST -> fileListViewModel.associatePartnerIdToSnapshotList(
-                    it,
-                    partnerId
-                )
-                VIDEO_LIST -> fileListViewModel.associatePartnerIdToVideoList(
-                    it,
-                    partnerId
-                )
-            }
-        }
-
+        associateItemsSelected(getListSelectedToAssociatePartnerId(), partnerId)
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
     }
 
-    private fun resetButtonAssociate() {
-        with(binding.buttonSelectSnapshotsToAssociate) {
-            isActivated = false
-            text = when (listType) {
-                VIDEO_LIST -> getString(R.string.select_videos_to_associate)
-                else -> getString(R.string.select_snapshots_to_associate)
+    private fun getListSelectedToAssociatePartnerId(): List<DomainCameraFile>? {
+        return when (actualFragment) {
+            Constants.SIMPLE_FILE_LIST ->
+                simpleFileListFragment.simpleFileListAdapter?.fileList?.filter { it.isSelected }
+                    ?.map { it.domainCameraFile }
+            Constants.THUMBNAIL_FILE_LIST ->
+                thumbnailFileListFragment.thumbnailFileListAdapter?.fileList?.filter { it.isSelected }
+                    ?.map { it.domainCameraFile }
+            else -> null
+        }
+    }
+
+    private fun associateItemsSelected(
+        listSelected: List<DomainCameraFile>?,
+        partnerId: String
+    ) {
+        listSelected?.let {
+            when (listType) {
+                Constants.SNAPSHOT_LIST -> {
+                    fileListViewModel.associatePartnerIdToSnapshotList(it, partnerId)
+                }
+                Constants.VIDEO_LIST -> {
+                    fileListViewModel.associatePartnerIdToVideoList(it, partnerId)
+                }
             }
         }
+    }
 
+    fun handleOnApplyFilterClick() {
         when (actualFragment) {
-            SIMPLE_FILE_LIST -> {
-                if (simpleFileListFragment.simpleFileListAdapter?.showCheckBoxes == true)
-                    simpleFileListFragment.showCheckBoxes()
-            }
-            THUMBNAIL_FILE_LIST -> {
-                if (thumbnailFileListFragment.thumbnailFileListAdapter?.showCheckBoxes == true)
-                    thumbnailFileListFragment.showCheckBoxes()
-            }
-        }
-
-        binding.buttonAssociatePartnerIdList.isVisible = false
-    }
-
-    private fun activateButtonAssociate() {
-        with(binding.buttonSelectSnapshotsToAssociate) {
-            isActivated = true
-            text = getString(R.string.cancel)
-        }
-        when (actualFragment) {
-            SIMPLE_FILE_LIST -> {
-                simpleFileListFragment.showCheckBoxes()
-                simpleFileListFragment.simpleFileListAdapter?.uncheckAllItems()
-            }
-            THUMBNAIL_FILE_LIST -> {
-                thumbnailFileListFragment.showCheckBoxes()
-                thumbnailFileListFragment.thumbnailFileListAdapter?.uncheckAllItems()
-            }
-        }
-    }
-
-    private fun showCheckBoxes() {
-        if (binding.buttonSelectSnapshotsToAssociate.isActivated) resetButtonAssociate()
-        else activateButtonAssociate()
-    }
-
-    private fun showAssignToOfficerBottomSheet() {
-        bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
-    }
-
-    private fun enableAssociatePartnerButton(activate: Boolean, selectedItems: Int) {
-        binding.buttonAssociatePartnerIdList.run {
-            isVisible = activate
-            isActivated = activate
-        }
-
-        binding.textViewSelectedItems.run {
-            isVisible = selectedItems > 0
-            text = getString(R.string.items_selected, selectedItems)
+            Constants.SIMPLE_FILE_LIST -> simpleFileListFragment.applyFiltersToList()
+            Constants.THUMBNAIL_FILE_LIST -> thumbnailFileListFragment.applyFiltersToList()
         }
     }
 
@@ -328,6 +189,36 @@ class FileListActivity : BaseActivity() {
             }
         }
         hideLoadingDialog()
+    }
+
+    fun enableAssociatePartnerButton(activate: Boolean) {
+        binding.buttonAssociatePartnerIdList.run {
+            isVisible = activate
+            isActivated = activate
+        }
+    }
+
+    fun getListToFilter(): List<DomainInformationForList> {
+        return when (actualFragment) {
+            Constants.SIMPLE_FILE_LIST ->
+                simpleFileListFragment.fileListBackup
+            Constants.THUMBNAIL_FILE_LIST ->
+                thumbnailFileListFragment.fileListBackup
+            else -> emptyList()
+        }
+    }
+
+    fun applyFilterDialog(list: List<DomainInformationForList>) {
+        filterDialog?.apply {
+            this.listToFilter = list
+            show()
+            when (listType) {
+                Constants.VIDEO_LIST -> filterDialog?.isEventSpinnerFilterVisible(true)
+                Constants.SNAPSHOT_LIST -> filterDialog?.isEventSpinnerFilterVisible(false)
+            }
+            simpleFileListFragment.filter = this
+            thumbnailFileListFragment.filter = this
+        }
     }
 
     override fun onBackPressed() {

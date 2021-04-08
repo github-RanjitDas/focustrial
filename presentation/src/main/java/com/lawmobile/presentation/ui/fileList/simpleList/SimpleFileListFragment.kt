@@ -101,6 +101,10 @@ class SimpleFileListFragment : FileListBaseFragment() {
         fragmentFileListBinding.textViewEvent.setOnClickListenerCheckConnection { simpleFileListAdapter?.sortByEvent() }
     }
 
+    fun reviewIfShowCheckBoxes() {
+        if (simpleFileListAdapter?.showCheckBoxes == true) showCheckBoxes()
+    }
+
     fun showCheckBoxes() {
         simpleFileListAdapter?.run {
             showCheckBoxes = !showCheckBoxes
