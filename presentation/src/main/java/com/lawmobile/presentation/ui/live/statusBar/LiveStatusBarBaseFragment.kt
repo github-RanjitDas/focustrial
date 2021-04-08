@@ -58,6 +58,7 @@ open class LiveStatusBarBaseFragment : BaseFragment() {
 
     override fun onResume() {
         super.onResume()
+        if (CameraInfo.metadataEvents.isNotEmpty()) isViewLoaded = true
         getCameraStatus(isViewLoaded)
     }
 

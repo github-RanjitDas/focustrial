@@ -1,4 +1,4 @@
-package com.lawmobile.presentation.ui.live.menu
+package com.lawmobile.presentation.ui.base.menu
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
@@ -12,7 +12,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class LiveMenuViewModel @Inject constructor(
+class MenuViewModel @Inject constructor(
     private val liveStreamingUseCase: LiveStreamingUseCase,
     private val eventsUseCase: EventsUseCase
 ) : BaseViewModel() {

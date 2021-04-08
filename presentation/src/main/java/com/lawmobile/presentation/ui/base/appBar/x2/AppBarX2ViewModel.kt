@@ -1,4 +1,4 @@
-package com.lawmobile.presentation.ui.live.appBar.x2
+package com.lawmobile.presentation.ui.base.appBar.x2
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
@@ -11,7 +11,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class LiveAppBarX2ViewModel @Inject constructor(
+class AppBarX2ViewModel @Inject constructor(
     private val eventsUseCase: EventsUseCase
 ) : BaseViewModel() {
 

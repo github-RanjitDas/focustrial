@@ -12,9 +12,14 @@ import com.lawmobile.domain.entities.CameraEvent
 import com.lawmobile.domain.enums.EventTag
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.databinding.ActivityNotificationListBinding
-import com.lawmobile.presentation.extensions.setOnClickListenerCheckConnection
+import com.lawmobile.presentation.entities.MenuInformation
+import com.lawmobile.presentation.extensions.attachFragment
+import com.lawmobile.presentation.extensions.closeMenuButton
+import com.lawmobile.presentation.extensions.openMenuButton
 import com.lawmobile.presentation.extensions.showErrorSnackBar
 import com.lawmobile.presentation.ui.base.BaseActivity
+import com.lawmobile.presentation.ui.base.appBar.x2.AppBarX2Fragment
+import com.lawmobile.presentation.ui.base.menu.MenuFragment
 import com.safefleet.mobile.kotlin_commons.extensions.doIfError
 import com.safefleet.mobile.kotlin_commons.extensions.doIfSuccess
 import com.safefleet.mobile.kotlin_commons.helpers.Result
@@ -23,6 +28,9 @@ class NotificationListActivity : BaseActivity() {
 
     private val viewModel: NotificationListViewModel by viewModels()
 
+    private val menuFragment = MenuFragment()
+    private lateinit var menuInformation: MenuInformation
+    private lateinit var appBarFragment: AppBarX2Fragment
     private lateinit var binding: ActivityNotificationListBinding
     private lateinit var notificationListAdapter: NotificationListAdapter
 
@@ -34,7 +42,7 @@ class NotificationListActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityNotificationListBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
+        menuInformation = MenuInformation(this, menuFragment, binding.layoutCustomMenu.shadowOpenMenuView)
         setCustomAppBar()
         setListeners()
         setObservers()
@@ -43,6 +51,12 @@ class NotificationListActivity : BaseActivity() {
         configureBottomSheet()
         getNotificationList()
         setAllNotificationsAsRead()
+        attachFragments()
+    }
+
+    private fun attachFragments() {
+        attachMenuFragment()
+        attachAppBarFragment()
     }
 
     private fun setObservers() {
@@ -118,9 +132,14 @@ class NotificationListActivity : BaseActivity() {
             textViewDateAndTime.setOnClickListener {
                 notificationListAdapter.sortByDate()
             }
-            layoutCustomAppBar.imageButtonBackArrow.setOnClickListenerCheckConnection {
-                onBackPressed()
+            menuFragment.onCloseMenuButton = {
+                binding.layoutCustomMenu.menuContainer.closeMenuButton(menuInformation)
             }
+            appBarFragment.onTapMenuButton = {
+                binding.layoutCustomMenu.menuContainer.openMenuButton(menuInformation)
+            }
+
+            appBarFragment.onBackPressed = ::onBackPressed
         }
     }
 
@@ -157,9 +176,24 @@ class NotificationListActivity : BaseActivity() {
     }
 
     private fun setCustomAppBar() {
-        binding.layoutCustomAppBar.textViewTitle.text = getString(R.string.notifications)
-        binding.layoutCustomAppBar.buttonThumbnailList.isVisible = false
-        binding.layoutCustomAppBar.buttonSimpleList.isVisible = false
+        appBarFragment =
+            AppBarX2Fragment.createInstance(false, getString(R.string.notifications), false)
+    }
+
+    private fun attachAppBarFragment() {
+        supportFragmentManager.attachFragment(
+            containerId = R.id.appBarContainer,
+            fragment = appBarFragment,
+            tag = AppBarX2Fragment.TAG
+        )
+    }
+
+    private fun attachMenuFragment() {
+        supportFragmentManager.attachFragment(
+            containerId = R.id.menuContainer,
+            fragment = menuFragment,
+            tag = MenuFragment.TAG
+        )
     }
 
     private fun setAllNotificationsAsRead() {

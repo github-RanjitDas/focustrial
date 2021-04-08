@@ -1,4 +1,4 @@
-package com.lawmobile.presentation.ui.live.menu
+package com.lawmobile.presentation.ui.base.menu
 
 import android.annotation.SuppressLint
 import android.content.Intent
@@ -12,27 +12,29 @@ import com.lawmobile.domain.entities.CameraInfo
 import com.lawmobile.domain.entities.CameraInfo.isOfficerLogged
 import com.lawmobile.presentation.databinding.FragmentLiveMenuX2Binding
 import com.lawmobile.presentation.extensions.createAlertConfirmAppExit
+import com.lawmobile.presentation.extensions.getIntentDependsCameraType
 import com.lawmobile.presentation.extensions.setOnClickListenerCheckConnection
 import com.lawmobile.presentation.extensions.setOnSwipeRightListener
 import com.lawmobile.presentation.extensions.setOnTouchListenerCheckConnection
 import com.lawmobile.presentation.ui.base.BaseActivity
 import com.lawmobile.presentation.ui.base.BaseFragment
 import com.lawmobile.presentation.ui.bodyWornDiagnosis.BodyWornDiagnosisActivity
-import com.lawmobile.presentation.ui.fileList.FileListActivity
+import com.lawmobile.presentation.ui.fileList.x1.FileListX1Activity
+import com.lawmobile.presentation.ui.fileList.x2.FileListX2Activity
 import com.lawmobile.presentation.ui.helpSection.HelpPageActivity
+import com.lawmobile.presentation.ui.live.x1.LiveX1Activity
+import com.lawmobile.presentation.ui.live.x2.LiveX2Activity
 import com.lawmobile.presentation.ui.login.LoginActivity
 import com.lawmobile.presentation.ui.notificationList.NotificationListActivity
 import com.lawmobile.presentation.utils.Constants
 import com.safefleet.mobile.kotlin_commons.extensions.doIfSuccess
 import com.safefleet.mobile.kotlin_commons.helpers.Result
 
-class LiveMenuFragment : BaseFragment() {
+class MenuFragment : BaseFragment() {
 
     private var _fragmentPairingMenuLive: FragmentLiveMenuX2Binding? = null
     private val binding get() = _fragmentPairingMenuLive!!
-
-    private val liveMenuViewModel: LiveMenuViewModel by viewModels()
-
+    private val menuViewModel: MenuViewModel by viewModels()
     lateinit var onCloseMenuButton: () -> Unit
 
     override fun onCreateView(
@@ -65,7 +67,10 @@ class LiveMenuFragment : BaseFragment() {
     }
 
     private fun setObservers() {
-        liveMenuViewModel.pendingNotificationsCountResult.observe(viewLifecycleOwner, ::reviewPendingNotifications)
+        menuViewModel.pendingNotificationsCountResult.observe(
+            viewLifecycleOwner,
+            ::reviewPendingNotifications
+        )
     }
 
     private fun reviewPendingNotifications(result: Result<Int>) {
@@ -86,6 +91,14 @@ class LiveMenuFragment : BaseFragment() {
     }
 
     private fun setListeners() {
+
+        binding.textViewDashboard.setOnTouchListenerCheckConnection(
+            {
+                startMainScreen()
+                onCloseMenuButton()
+            },
+            { onCloseMenuButton() }
+        )
 
         binding.textViewSnapshots.setOnTouchListenerCheckConnection(
             {
@@ -137,15 +150,31 @@ class LiveMenuFragment : BaseFragment() {
         }
     }
 
+    private fun startMainScreen() {
+        isInMainScreen = true
+        if (activity is LiveX2Activity) return
+        val intent =
+            requireActivity().getIntentDependsCameraType(LiveX1Activity(), LiveX2Activity())
+        startActivity(intent)
+    }
+
     private fun startFileListActivity(fileType: String) {
+        if (activity is FileListX2Activity && currentListView == fileType) return
+        currentListView = fileType
         (activity as BaseActivity).updateLiveOrPlaybackActive(false)
-        val fileListIntent = Intent(requireActivity(), FileListActivity::class.java)
+        val fileListIntent =
+            requireActivity().getIntentDependsCameraType(FileListX1Activity(), FileListX2Activity())
         fileListIntent.putExtra(Constants.FILE_LIST_SELECTOR, fileType)
         startActivity(fileListIntent)
+        if (!isInMainScreen) requireActivity().finish()
+        isInMainScreen = false
     }
 
     private fun startNotificationListActivity() {
+        if (activity is NotificationListActivity) return
         startActivity(Intent(requireContext(), NotificationListActivity::class.java))
+        if (!isInMainScreen) requireActivity().finish()
+        isInMainScreen = false
     }
 
     private fun startBodyWornDiagnosisActivity() {
@@ -157,17 +186,19 @@ class LiveMenuFragment : BaseFragment() {
     }
 
     private fun logoutApplication() {
-        liveMenuViewModel.disconnectCamera()
+        menuViewModel.disconnectCamera()
         isOfficerLogged = false
         startActivity(Intent(requireActivity(), LoginActivity::class.java))
         requireActivity().finish()
     }
 
     fun openMenu() {
-        liveMenuViewModel.getPendingNotificationsCount()
+        menuViewModel.getPendingNotificationsCount()
     }
 
     companion object {
-        val TAG = LiveMenuFragment::class.java.simpleName
+        var currentListView = ""
+        var isInMainScreen = true
+        val TAG = MenuFragment::class.java.simpleName
     }
 }

@@ -40,6 +40,7 @@
     <!-- Live View Menu -->
     <string name="icon_user_menu">Officer Information Menu</string>
     <string name="icon_close_menu">Close Menu</string>
+    <string name="live_view_menu_item_dashboard">Dashboard</string>
     <string name="live_view_menu_item_view_snapshots">View Snapshots</string>
     <string name="live_view_menu_item_view_videos">View Videos</string>
     <string name="live_view_menu_item_bodyworn_settings">Body-worn Settings</string>
@@ -91,7 +92,6 @@
     <string name="playback_race">Race</string>
     <string name="playback_driver_license">Driver License</string>
     <string name="playback_license_plate">License Plate</string>
-    <string name="select">Select</string>
     <string name="select_event">Select event</string>
     <string name="event_mandatory">Please select Event Type</string>
     <string name="catalog_error">Unable to get events, please retry or checkout BWC again</string>
@@ -171,6 +171,8 @@
     <string name="videos_title">Videos</string>
     <string name="associate_with_an_officer">Associate with an officer</string>
     <string name="select_snapshots_to_associate">Select snapshots to associate</string>
+    <string name="select">Select</string>
+    <string name="selected">Selected</string>
     <string name="date_and_time">Date and time</string>
     <string name="event">Event</string>
     <string name="officer_id_hint">Officer ID</string>

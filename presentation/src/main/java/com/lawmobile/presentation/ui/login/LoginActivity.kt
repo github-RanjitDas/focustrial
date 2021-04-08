@@ -1,19 +1,16 @@
 package com.lawmobile.presentation.ui.login
 
 import android.Manifest
-import android.content.Intent
 import android.graphics.drawable.AnimatedVectorDrawable
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.cardview.widget.CardView
 import androidx.core.view.isVisible
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.lawmobile.domain.entities.CameraInfo
-import com.lawmobile.domain.entities.CameraInfo.isOfficerLogged
-import com.lawmobile.domain.enums.CameraType
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.databinding.ActivityLoginBinding
 import com.lawmobile.presentation.extensions.attachFragmentWithAnimation
+import com.lawmobile.presentation.extensions.getIntentDependsCameraType
 import com.lawmobile.presentation.extensions.isAnimationsEnabled
 import com.lawmobile.presentation.extensions.showErrorSnackBar
 import com.lawmobile.presentation.extensions.verifyForAskingPermission
@@ -99,15 +96,8 @@ class LoginActivity : BaseActivity() {
     }
 
     private fun startLiveViewActivity() {
-        val liveActivityIntent =
-            when (CameraInfo.cameraType) {
-                CameraType.X1 -> Intent(this, LiveX1Activity::class.java)
-                CameraType.X2 -> {
-                    isOfficerLogged = true
-                    Intent(this, LiveX2Activity::class.java)
-                }
-            }
-        startActivity(liveActivityIntent)
+        val intent = getIntentDependsCameraType(LiveX1Activity(), LiveX2Activity())
+        startActivity(intent)
         finish()
     }
 
