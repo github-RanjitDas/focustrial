@@ -15,12 +15,12 @@ class AppBarX2ViewModel @Inject constructor(
     private val eventsUseCase: EventsUseCase
 ) : BaseViewModel() {
 
-    private val _pendingNotificationsSizeResult: MediatorLiveData<Result<Int>> = MediatorLiveData()
-    val pendingNotificationSizeResult: LiveData<Result<Int>> get() = _pendingNotificationsSizeResult
+    private val _pendingNotificationsCountResult: MediatorLiveData<Result<Int>> = MediatorLiveData()
+    val pendingNotificationCountResult: LiveData<Result<Int>> get() = _pendingNotificationsCountResult
 
     fun getPendingNotificationsCount() {
         viewModelScope.launch {
-            _pendingNotificationsSizeResult.postValue(eventsUseCase.getPendingNotificationsCount())
+            _pendingNotificationsCountResult.postValue(eventsUseCase.getPendingNotificationsCount())
         }
     }
 }

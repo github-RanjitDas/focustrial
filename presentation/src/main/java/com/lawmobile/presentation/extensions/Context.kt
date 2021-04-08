@@ -169,17 +169,12 @@ fun Context.isAnimationsEnabled() =
         0F
     ) != 0F
 
-fun Context.createNotificationDialog(cameraEvent: CameraEvent, callback: () -> Unit) {
+fun Context.createNotificationDialog(cameraEvent: CameraEvent) {
     CustomNotificationDialog(
         this,
         false,
         cameraEvent
-    ).apply {
-        onDismissClicked = {
-            callback()
-        }
-        show()
-    }
+    ).show()
 }
 
 fun Context.getIntentDependsCameraType(activityForX1: BaseActivity, activityForX2: BaseActivity): Intent {

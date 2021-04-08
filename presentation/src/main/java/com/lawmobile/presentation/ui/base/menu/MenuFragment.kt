@@ -57,10 +57,8 @@ class MenuFragment : BaseFragment() {
 
     private fun setInformationOfOfficer() {
         try {
-            binding.textViewOfficerName.text =
-                CameraInfo.officerName.split(" ")[0]
-            binding.textViewOfficerLastName.text =
-                CameraInfo.officerName.split(" ")[1]
+            binding.textViewOfficerName.text = CameraInfo.officerName.split(" ")[0]
+            binding.textViewOfficerLastName.text = CameraInfo.officerName.split(" ")[1]
         } catch (e: Exception) {
             e.printStackTrace()
         }

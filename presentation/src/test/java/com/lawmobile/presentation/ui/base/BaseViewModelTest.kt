@@ -1,10 +1,10 @@
 package com.lawmobile.presentation.ui.base
 
+import com.lawmobile.domain.usecase.events.EventsUseCase
 import com.lawmobile.presentation.InstantExecutorExtension
-import com.lawmobile.presentation.utils.CameraEventsManager
-import com.safefleet.mobile.kotlin_commons.helpers.Result
 import io.mockk.Runs
-import io.mockk.every
+import io.mockk.coEvery
+import io.mockk.coVerify
 import io.mockk.just
 import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers
@@ -22,10 +22,7 @@ import org.junit.jupiter.api.extension.ExtendWith
 @ExtendWith(InstantExecutorExtension::class)
 internal class BaseViewModelTest {
 
-    private val cameraEventsManager: CameraEventsManager = mockk {
-        every { startReading() } just Runs
-        every { stopReading() } just Runs
-    }
+    private val eventsUseCase: EventsUseCase = mockk()
 
     private val baseViewModel: BaseViewModel by lazy {
         BaseViewModel()
@@ -35,7 +32,6 @@ internal class BaseViewModelTest {
     @BeforeEach
     fun setUp() {
         Dispatchers.setMain(Dispatchers.Unconfined)
-        baseViewModel.setNotificationManager(cameraEventsManager)
     }
 
     @Test
@@ -48,23 +44,19 @@ internal class BaseViewModelTest {
     }
 
     @Test
-    fun logsEventLiveDataSuccess() {
-        every { cameraEventsManager.logEventsLiveData.value } returns Result.Success(mockk())
-        Assert.assertTrue(baseViewModel.logEventsLiveData().value is Result.Success)
-    }
-
-    @Test
-    fun logsEventLiveDataError() {
-        every { cameraEventsManager.logEventsLiveData.value } returns Result.Error(mockk())
-        Assert.assertTrue(baseViewModel.logEventsLiveData().value is Result.Error)
-    }
-
-    @Test
     fun getLoadingTimeout() {
         val timeout = 20000L
         Assert.assertEquals(
             timeout,
             BaseViewModel.getLoadingTimeOut()
         )
+    }
+
+    @Test
+    fun saveNotificationEventFlow() {
+        coEvery { eventsUseCase.saveEvent(any()) } just Runs
+        baseViewModel.setEventsUseCase(eventsUseCase)
+        baseViewModel.saveNotificationEvent(mockk())
+        coVerify { eventsUseCase.saveEvent(any()) }
     }
 }

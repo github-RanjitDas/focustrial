@@ -35,7 +35,7 @@ internal class AppBarX2ViewModelTest {
         appBarX2ViewModel.getPendingNotificationsCount()
         Assert.assertEquals(
             result,
-            appBarX2ViewModel.pendingNotificationSizeResult.value
+            appBarX2ViewModel.pendingNotificationCountResult.value
         )
     }
 
@@ -46,7 +46,7 @@ internal class AppBarX2ViewModelTest {
         appBarX2ViewModel.getPendingNotificationsCount()
         Assert.assertEquals(
             result,
-            appBarX2ViewModel.pendingNotificationSizeResult.value
+            appBarX2ViewModel.pendingNotificationCountResult.value
         )
     }
 }

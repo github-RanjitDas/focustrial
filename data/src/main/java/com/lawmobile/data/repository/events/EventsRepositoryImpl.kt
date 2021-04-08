@@ -13,6 +13,11 @@ class EventsRepositoryImpl(
     private val eventsLocalDataSource: EventsLocalDataSource
 ) : EventsRepository {
 
+    override suspend fun saveEvent(cameraEvent: CameraEvent) {
+        val localEvent = CameraEventMapper.domainToLocal(cameraEvent)
+        eventsLocalDataSource.saveEvent(localEvent)
+    }
+
     override suspend fun getCameraEvents(): Result<List<CameraEvent>> {
         return when (val result = eventsRemoteDataSource.getCameraEvents()) {
             is Result.Success -> {
@@ -49,7 +54,6 @@ class EventsRepositoryImpl(
     private suspend fun saveEventsInLocal(remoteEventList: List<CameraEvent>): Result<List<CameraEvent>> {
         if (cameraHasNewEvents(remoteEventList)) {
             if (eventsAreNotEmpty()) {
-                remoteEventList.last().isRead = true
                 clearAllEvents()
                 return saveEventsResult(remoteEventList)
             } else {
@@ -73,8 +77,8 @@ class EventsRepositoryImpl(
         }
     }
 
-    override suspend fun getAllNotificationEvents(): Result<List<CameraEvent>> =
-        when (val result = eventsLocalDataSource.getAllNotificationEvents()) {
+    override suspend fun getNotificationEvents(): Result<List<CameraEvent>> =
+        when (val result = eventsLocalDataSource.getNotificationEvents()) {
             is Result.Success -> Result.Success(CameraEventMapper.localToDomainList(result.data))
             is Result.Error -> result
         }

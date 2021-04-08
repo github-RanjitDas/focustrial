@@ -13,7 +13,7 @@ import org.junit.jupiter.api.Test
 class NotificationResponseMapperTest {
 
     @Test
-    fun testCameraToDomain() {
+    fun testCameraToDomainNotification() {
         mockkObject(DateHelper)
         every { DateHelper.dateToString(any(), any(), any()) } returns "07/22/2020"
         val cameraNotification = NotificationResponse("7", "low_storage_warning", "value")
@@ -21,11 +21,29 @@ class NotificationResponseMapperTest {
         Assert.assertEquals(
             response,
             CameraEvent(
-                name = "low_storage_warning",
+                name = "Notification",
                 eventType = EventType.NOTIFICATION,
                 eventTag = EventTag.INFORMATION,
                 date = "07/22/2020",
-                value = "value"
+                value = "low_storage_warning"
+            )
+        )
+    }
+
+    @Test
+    fun testCameraToDomainCameraEvent() {
+        mockkObject(DateHelper)
+        every { DateHelper.dateToString(any(), any(), any()) } returns "07/22/2020"
+        val cameraNotification = NotificationResponse("7", "new_event", "value")
+        val response = NotificationResponseMapper.cameraToDomain(cameraNotification)
+        Assert.assertEquals(
+            response,
+            CameraEvent(
+                name = "cameraEvent",
+                eventType = EventType.CAMERA,
+                eventTag = EventTag.INFORMATION,
+                date = "07/22/2020",
+                value = "new_event"
             )
         )
     }

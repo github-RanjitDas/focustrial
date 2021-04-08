@@ -23,8 +23,6 @@ class CustomNotificationDialog(
 
     private lateinit var binding: DialogCustomNotificationBinding
 
-    var onDismissClicked: (() -> Unit)? = null
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val view = findViewById<View>(android.R.id.content) as ViewGroup
@@ -68,7 +66,6 @@ class CustomNotificationDialog(
     }
 
     override fun onClick(v: View?) {
-        onDismissClicked?.invoke()
         dismiss()
     }
 }

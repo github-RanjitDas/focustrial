@@ -48,9 +48,9 @@ internal class EventsUseCaseImplTest {
 
     @Test
     fun getAllNotificationEventsFlow() {
-        coEvery { eventsRepository.getAllNotificationEvents() } returns mockk()
-        runBlocking { eventsUseCaseImpl.getAllNotificationEvents() }
-        coVerify { eventsRepository.getAllNotificationEvents() }
+        coEvery { eventsRepository.getNotificationEvents() } returns mockk()
+        runBlocking { eventsUseCaseImpl.getNotificationEvents() }
+        coVerify { eventsRepository.getNotificationEvents() }
     }
 
     @Test
@@ -63,9 +63,9 @@ internal class EventsUseCaseImplTest {
                 every { eventType } returns EventType.NOTIFICATION
             }
         )
-        coEvery { eventsRepository.getAllNotificationEvents() } returns Result.Success(notificationList)
+        coEvery { eventsRepository.getNotificationEvents() } returns Result.Success(notificationList)
         runBlocking {
-            val result = eventsUseCaseImpl.getAllNotificationEvents() as Result.Success
+            val result = eventsUseCaseImpl.getNotificationEvents() as Result.Success
             Assert.assertEquals(
                 notificationList,
                 result.data
@@ -131,5 +131,12 @@ internal class EventsUseCaseImplTest {
                 eventsUseCaseImpl.getPendingNotificationsCount() is Result.Error
             )
         }
+    }
+
+    @Test
+    fun saveEventFlow() {
+        coEvery { eventsRepository.saveEvent(any()) } just Runs
+        runBlocking { eventsUseCaseImpl.saveEvent(mockk()) }
+        coVerify { eventsRepository.saveEvent(any()) }
     }
 }

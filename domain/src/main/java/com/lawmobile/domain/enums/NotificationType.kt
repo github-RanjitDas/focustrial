@@ -31,6 +31,21 @@ enum class NotificationType(val value: String) {
         override fun getTypeOfEvent(): EventType {
             return EventType.NOTIFICATION
         }
+    },
+    VIDEO_RECORD_COMPLETE("video_record_complete") {
+        override fun getTypeOfEvent(): EventType {
+            return EventType.CAMERA
+        }
+    },
+    STARTING_VIDEO_RECORD("starting_video_record") {
+        override fun getTypeOfEvent(): EventType {
+            return EventType.CAMERA
+        }
+    },
+    DEFAULT("") {
+        override fun getTypeOfEvent(): EventType {
+            return EventType.CAMERA
+        }
     };
 
     open fun getTypeOfEvent(): EventType {
@@ -46,7 +61,9 @@ enum class NotificationType(val value: String) {
                 DIAGNOSIS.value -> DIAGNOSIS
                 LOW_BATTERY.value -> LOW_BATTERY
                 LOW_STORAGE.value -> LOW_STORAGE
-                else -> throw Exception("Notification type not supported or does not exist")
+                VIDEO_RECORD_COMPLETE.value -> VIDEO_RECORD_COMPLETE
+                STARTING_VIDEO_RECORD.value -> STARTING_VIDEO_RECORD
+                else -> DEFAULT
             }
         }
     }

@@ -8,9 +8,9 @@ import com.safefleet.mobile.external_hardware.cameras.CameraService
 class ConnectionHelperImpl(cameraServiceFactory: CameraServiceFactory) : ConnectionHelper {
     private val cameraService: CameraService = cameraServiceFactory.create()
     override fun isCameraConnected(ipAddress: String) = cameraService.isCameraConnected(ipAddress)
-    override fun reviewNotificationInCamera(notificationCallback: (CameraEvent) -> Unit) {
+    override fun onCameraEvent(callback: (CameraEvent) -> Unit) {
         cameraService.arriveNotificationFromCamera = {
-            notificationCallback.invoke(NotificationResponseMapper.cameraToDomain(it))
+            callback.invoke(NotificationResponseMapper.cameraToDomain(it))
         }
     }
 }

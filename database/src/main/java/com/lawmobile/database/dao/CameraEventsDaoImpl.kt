@@ -11,8 +11,8 @@ class CameraEventsDaoImpl(private val database: Database) : CameraEventsDao {
         return DbEventsMapper.dbToLocalList(dbEvents)
     }
 
-    override fun getAllNotificationEvents(): List<LocalCameraEvent> {
-        val dbEvents = database.databaseQueries.getAllNotificationEvents().executeAsList()
+    override fun getNotificationEvents(): List<LocalCameraEvent> {
+        val dbEvents = database.databaseQueries.getNotificationEvents().executeAsList()
         return DbEventsMapper.dbToLocalList(dbEvents)
     }
 

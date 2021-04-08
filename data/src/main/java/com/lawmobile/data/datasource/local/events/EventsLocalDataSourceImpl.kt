@@ -14,9 +14,9 @@ class EventsLocalDataSourceImpl(private val cameraEventsDao: CameraEventsDao) :
             Result.Error(e)
         }
 
-    override suspend fun getAllNotificationEvents(): Result<List<LocalCameraEvent>> =
+    override suspend fun getNotificationEvents(): Result<List<LocalCameraEvent>> =
         try {
-            Result.Success(cameraEventsDao.getAllNotificationEvents())
+            Result.Success(cameraEventsDao.getNotificationEvents())
         } catch (e: Exception) {
             Result.Error(e)
         }
@@ -43,6 +43,14 @@ class EventsLocalDataSourceImpl(private val cameraEventsDao: CameraEventsDao) :
         } catch (e: Exception) {
             Result.Error(e)
         }
+
+    override suspend fun saveEvent(localEvent: LocalCameraEvent) {
+        try {
+            cameraEventsDao.saveEvent(localEvent)
+        } catch (e: Exception) {
+            println("error saving event in the database" + e.message)
+        }
+    }
 
     override suspend fun saveAllEvents(events: List<LocalCameraEvent>): Result<Unit> =
         try {

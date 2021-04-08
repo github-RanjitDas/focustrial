@@ -55,8 +55,8 @@ class LiveStatusBarBaseViewModel @Inject constructor(
                 getResultWithAttempts(RETRY_ATTEMPTS) { liveStreamingUseCase.getFreeStorage() }
             with(freeStorageResult) {
                 doIfSuccess { freeKb ->
-                    val storageFreeMb = freeKb.toDouble() / SCALE_BYTES
-                    gigabyteList.add(storageFreeMb)
+                    val freeStorageMb = freeKb.toDouble() / SCALE_BYTES
+                    gigabyteList.add(freeStorageMb)
                     delay(200)
                     val totalStorageResult =
                         getResultWithAttempts(RETRY_ATTEMPTS) { liveStreamingUseCase.getTotalStorage() }
@@ -64,7 +64,7 @@ class LiveStatusBarBaseViewModel @Inject constructor(
                     with(totalStorageResult) {
                         doIfSuccess { totalKb ->
                             val totalMb = (totalKb.toDouble() / SCALE_BYTES)
-                            val usedBytes = totalMb - storageFreeMb
+                            val usedBytes = totalMb - freeStorageMb
                             gigabyteList.add(usedBytes)
                             gigabyteList.add(totalMb)
                             storageMediatorLiveData.postValue(Event(Result.Success(gigabyteList)))
