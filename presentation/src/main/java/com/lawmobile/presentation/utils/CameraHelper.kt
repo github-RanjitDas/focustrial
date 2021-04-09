@@ -22,7 +22,7 @@ class CameraHelper(
         return connectionHelper.isCameraConnected(wifiHelper.getGatewayAddress())
     }
 
-    fun reviewNotificationInCamera(notificationCallback: (CameraEvent) -> Unit) {
-        connectionHelper.reviewNotificationInCamera(notificationCallback = notificationCallback)
+    fun onCameraEvent(callback: (CameraEvent) -> Unit) {
+        connectionHelper.onCameraEvent(callback)
     }
 }

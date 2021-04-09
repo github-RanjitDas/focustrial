@@ -52,7 +52,7 @@ object CameraEventMapper {
     fun domainToLocalList(events: List<CameraEvent>) =
         events.map { domainToLocal(it) }
 
-    private fun domainToLocal(event: CameraEvent) = event.run {
+    fun domainToLocal(event: CameraEvent) = event.run {
         LocalCameraEvent(
             name = name,
             eventType = eventType.value,

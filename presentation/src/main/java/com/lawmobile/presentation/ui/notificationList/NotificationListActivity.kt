@@ -60,14 +60,31 @@ class NotificationListActivity : BaseActivity() {
     }
 
     private fun setObservers() {
-        viewModel.notificationListResult.observe(this, ::setNotificationList)
+        viewModel.cameraEventsResult.observe(this, ::manageCameraEventsResult)
+        viewModel.notificationEventsResult.observe(this, ::manageNotificationEventsResult)
     }
 
     private fun getNotificationList() {
-        viewModel.getAllNotificationEvents()
+        viewModel.getCameraEvents()
     }
 
-    private fun setNotificationList(result: Result<List<CameraEvent>>) {
+    private fun manageCameraEventsResult(result: Result<List<CameraEvent>>) {
+        with(result) {
+            doIfSuccess {
+                viewModel.getNotificationEvents()
+            }
+            doIfError {
+                binding.root.showErrorSnackBar(
+                    getString(R.string.notification_list_error),
+                    Snackbar.LENGTH_INDEFINITE
+                ) {
+                    viewModel.getCameraEvents()
+                }
+            }
+        }
+    }
+
+    private fun manageNotificationEventsResult(result: Result<List<CameraEvent>>) {
         with(result) {
             doIfSuccess {
                 notificationListAdapter.notificationList = it as MutableList
@@ -77,7 +94,7 @@ class NotificationListActivity : BaseActivity() {
                     getString(R.string.notification_list_error),
                     Snackbar.LENGTH_INDEFINITE
                 ) {
-                    getNotificationList()
+                    viewModel.getNotificationEvents()
                 }
             }
         }

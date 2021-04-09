@@ -1,32 +1,49 @@
 package com.lawmobile.presentation.ui.live.statusBar.x2
 
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
+import android.text.Html
 import android.util.Range
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import com.lawmobile.presentation.R
-import com.lawmobile.presentation.databinding.FragmentLiveStatusBarBinding
+import com.lawmobile.presentation.databinding.FragmentLiveStatusBarX2Binding
 import com.lawmobile.presentation.extensions.setOnClickListenerCheckConnection
+import com.lawmobile.presentation.extensions.showErrorSnackBar
+import com.lawmobile.presentation.extensions.startAnimationIfEnabled
 import com.lawmobile.presentation.ui.base.BaseActivity
 import com.lawmobile.presentation.ui.helpSection.HelpPageActivity
 import com.lawmobile.presentation.ui.live.statusBar.LiveStatusBarBaseFragment
+import com.lawmobile.presentation.utils.CameraEventsManager
+import com.lawmobile.presentation.utils.EspressoIdlingResource
+import com.safefleet.mobile.kotlin_commons.extensions.doIfError
+import com.safefleet.mobile.kotlin_commons.extensions.doIfSuccess
+import com.safefleet.mobile.kotlin_commons.helpers.Event
+import com.safefleet.mobile.kotlin_commons.helpers.Result
 import com.safefleet.mobile.safefleet_ui.widgets.linearProgressBar.SafeFleetLinearProgressBarColors
 import com.safefleet.mobile.safefleet_ui.widgets.linearProgressBar.SafeFleetLinearProgressBarRanges
 
 class LiveStatusBarX2Fragment : LiveStatusBarBaseFragment() {
 
-    private val binding: FragmentLiveStatusBarBinding get() = _binding!!
-    private var _binding: FragmentLiveStatusBarBinding? = null
+    private val binding: FragmentLiveStatusBarX2Binding get() = _binding!!
+    private var _binding: FragmentLiveStatusBarX2Binding? = null
+
+    private lateinit var storageBarRanges: SafeFleetLinearProgressBarRanges
+    private lateinit var storageBarColors: SafeFleetLinearProgressBarColors
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        if (isInPortraitMode()) setSharedObservers()
-        _binding = FragmentLiveStatusBarBinding.inflate(inflater, container, false)
+        if (isInPortraitMode()) {
+            setSharedObservers()
+            setObservers()
+        }
+        _binding = FragmentLiveStatusBarX2Binding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -37,16 +54,13 @@ class LiveStatusBarX2Fragment : LiveStatusBarBaseFragment() {
         setListeners()
     }
 
-    override fun onResume() {
-        super.onResume()
-        reviewItemsToBlink()
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        getCameraStatus(isViewLoaded)
     }
 
-    private fun setListeners() {
-        binding.buttonOpenHelpPage.setOnClickListenerCheckConnection {
-            val intent = Intent(requireContext(), HelpPageActivity::class.java)
-            startActivity(intent)
-        }
+    private fun setObservers() {
+        sharedViewModel.storageLiveData.observe(viewLifecycleOwner, ::setStorageLevels)
     }
 
     private fun configureProgressBars() {
@@ -80,29 +94,88 @@ class LiveStatusBarX2Fragment : LiveStatusBarBaseFragment() {
         textViewBattery = binding.textViewBatteryPercent
         progressBarBattery = binding.progressBatteryLevel
         imageViewBattery = binding.imageViewBattery
-        textViewStorage = binding.textViewStorageLevels
-        progressBarStorage = binding.progressStorageLevel
-        imageViewStorage = binding.imageViewStorage
     }
 
-    private fun reviewItemsToBlink() {
-        (requireActivity() as BaseActivity).onNotificationBatteryWarning = {
-            imageViewBattery.startAnimation(blinkAnimation)
+    private fun setListeners() {
+        with(BaseActivity) {
+            onBatteryLevelChanged = ::manageBatteryLevel
+            onStorageLevelChanged = ::manageStorageLevel
+            onLowBattery = ::manageLowBattery
+            onLowStorage = ::manageLowStorage
         }
 
-        (requireActivity() as BaseActivity).onNotificationStorageWarning = {
-            imageViewStorage.startAnimation(blinkAnimation)
+        binding.buttonOpenHelpPage.setOnClickListenerCheckConnection {
+            val intent = Intent(requireContext(), HelpPageActivity::class.java)
+            startActivity(intent)
         }
+    }
 
-        if (blinkBatteryLevel) imageViewBattery.startAnimation(blinkAnimation)
-        if (blinkStorageLevel) imageViewStorage.startAnimation(blinkAnimation)
+    private fun manageLowStorage() {
+        binding.imageViewStorage.startAnimationIfEnabled(blinkAnimation)
+        createAlertForInformationCamera(
+            R.string.storage_alert_title,
+            R.string.storage_alert_description
+        )
+    }
+
+    private fun manageLowBattery() {
+        imageViewBattery.startAnimationIfEnabled(blinkAnimation)
+        createAlertForInformationCamera(
+            R.string.battery_alert_title,
+            R.string.battery_alert_description
+        )
+    }
+
+    private fun setStorageLevels(result: Event<Result<List<Double>>>) {
+        result.getContentIfNotHandled()?.run {
+            doIfSuccess {
+                manageStorageLevel(getUsedStoragePercent(it))
+            }
+            doIfError {
+                binding.textViewStorageLevels.text = getString(R.string.not_available)
+                progressBarBattery.setProgress(0)
+                parentLayout.showErrorSnackBar(getString(R.string.storage_level_error))
+            }
+        }
+        CameraEventsManager.isReadyToReadEvents = true
+        EspressoIdlingResource.decrement()
+    }
+
+    private fun manageStorageLevel(usedPercent: Double) {
+        requireActivity().runOnUiThread {
+            setColorInStorageLevel(usedPercent)
+            setTextStorageLevel(usedPercent)
+        }
+    }
+
+    private fun getUsedStoragePercent(information: List<Double>) =
+        (TOTAL_PERCENTAGE - ((information[FREE_STORAGE_POSITION] * TOTAL_PERCENTAGE) / information[TOTAL_STORAGE_POSITION]))
+
+    private fun setColorInStorageLevel(usedPercent: Double) {
+        binding.progressStorageLevel.setProgress(usedPercent.toInt())
+        binding.imageViewStorage.apply {
+            if (usedPercent.toInt() in storageBarRanges.highRange) {
+                backgroundTintList =
+                    ContextCompat.getColorStateList(requireContext(), R.color.red)
+            } else {
+                backgroundTintList =
+                    ContextCompat.getColorStateList(requireContext(), R.color.greenSuccess)
+                clearAnimation()
+            }
+        }
+    }
+
+    private fun setTextStorageLevel(usedPercent: Double) {
+        val usedStorageString = getString(R.string.storage_level_x2, usedPercent.toInt())
+
+        val textToStorage = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            Html.fromHtml(usedStorageString, 0)
+        } else usedStorageString
+
+        binding.textViewStorageLevels.text = textToStorage
     }
 
     companion object {
         val TAG = LiveStatusBarX2Fragment::class.java.simpleName
-        var blinkBatteryLevel: Boolean = false
-        var blinkStorageLevel: Boolean = false
-        const val NAME_BATTERY_WARNING = "low_battery_warning"
-        const val NAME_STORAGE_WARNING = "low_storage_warning"
     }
 }

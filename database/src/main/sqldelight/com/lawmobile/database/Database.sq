@@ -12,7 +12,7 @@ getAllEvents:
 SELECT *
 FROM DbCameraEvent;
 
-getAllNotificationEvents:
+getNotificationEvents:
 SELECT *
 FROM DbCameraEvent
 WHERE eventType = "Notification";

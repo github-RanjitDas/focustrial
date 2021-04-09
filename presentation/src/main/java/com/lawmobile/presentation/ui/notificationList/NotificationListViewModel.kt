@@ -15,12 +15,21 @@ import javax.inject.Inject
 class NotificationListViewModel @Inject constructor(private val eventsUseCase: EventsUseCase) :
     BaseViewModel() {
 
-    val notificationListResult: LiveData<Result<List<CameraEvent>>> get() = _notificationListResult
+    val cameraEventsResult: LiveData<Result<List<CameraEvent>>> get() = _cameraEventsResult
+    private val _cameraEventsResult = MediatorLiveData<Result<List<CameraEvent>>>()
+
+    val notificationEventsResult: LiveData<Result<List<CameraEvent>>> get() = _notificationListResult
     private val _notificationListResult = MediatorLiveData<Result<List<CameraEvent>>>()
 
-    fun getAllNotificationEvents() {
+    fun getCameraEvents() {
         viewModelScope.launch {
-            _notificationListResult.postValue(eventsUseCase.getAllNotificationEvents())
+            _cameraEventsResult.postValue(eventsUseCase.getCameraEvents())
+        }
+    }
+
+    fun getNotificationEvents() {
+        viewModelScope.launch {
+            _notificationListResult.postValue(eventsUseCase.getNotificationEvents())
         }
     }
 

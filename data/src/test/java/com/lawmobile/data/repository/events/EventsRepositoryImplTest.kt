@@ -228,11 +228,11 @@ internal class EventsRepositoryImplTest {
                 every { eventType } returns EventType.CAMERA.value
             }
         )
-        coEvery { eventsLocalDataSource.getAllNotificationEvents() } returns Result.Success(
+        coEvery { eventsLocalDataSource.getNotificationEvents() } returns Result.Success(
             cameraEventList
         )
         runBlocking {
-            val result = eventsRepositoryImpl.getAllNotificationEvents() as Result.Success
+            val result = eventsRepositoryImpl.getNotificationEvents() as Result.Success
             Assert.assertTrue(result.data.size == 2)
         }
     }
@@ -297,5 +297,12 @@ internal class EventsRepositoryImplTest {
                 eventsRepositoryImpl.getPendingNotificationsCount() is Result.Error
             )
         }
+    }
+
+    @Test
+    fun saveEventFlow() {
+        coEvery { eventsLocalDataSource.saveEvent(any()) } just Runs
+        runBlocking { eventsRepositoryImpl.saveEvent(mockk(relaxed = true)) }
+        coVerify { eventsLocalDataSource.saveEvent(any()) }
     }
 }

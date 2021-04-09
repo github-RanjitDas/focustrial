@@ -152,19 +152,19 @@ internal class CameraEventsDaoImplTest {
     @Test
     fun getAllNotificationEventsFlow() {
         val result = mockk<List<DbCameraEvent>>(relaxed = true)
-        every { database.databaseQueries.getAllNotificationEvents().executeAsList() } returns result
-        cameraEventsDaoImpl.getAllNotificationEvents()
-        verify { database.databaseQueries.getAllNotificationEvents().executeAsList() }
+        every { database.databaseQueries.getNotificationEvents().executeAsList() } returns result
+        cameraEventsDaoImpl.getNotificationEvents()
+        verify { database.databaseQueries.getNotificationEvents().executeAsList() }
     }
 
     @Test
     fun getAllNotificationEventsResult() {
         val response = listOf(mockk<DbCameraEvent>(relaxed = true))
         val result = DbEventsMapper.dbToLocalList(response)
-        every { database.databaseQueries.getAllNotificationEvents().executeAsList() } returns response
+        every { database.databaseQueries.getNotificationEvents().executeAsList() } returns response
         Assert.assertEquals(
             result,
-            cameraEventsDaoImpl.getAllNotificationEvents()
+            cameraEventsDaoImpl.getNotificationEvents()
         )
     }
 

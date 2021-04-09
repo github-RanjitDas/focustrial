@@ -71,7 +71,7 @@ class AppBarX2Fragment : BaseFragment() {
     }
 
     private fun setObservers() {
-        viewModel.pendingNotificationSizeResult.observe(
+        viewModel.pendingNotificationCountResult.observe(
             viewLifecycleOwner,
             ::reviewPendingNotifications
         )

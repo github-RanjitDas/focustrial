@@ -189,4 +189,7 @@
     <dimen name="body_worn_diagnosis_size_icon_result">50dp</dimen>
     <dimen name="body_worn_diagnosis_margin_texts">20dp</dimen>
     <dimen name="corner_main_menu">7dp</dimen>
+    <dimen name="battery_level_height_x2">15dp</dimen>
+    <dimen name="storage_level_height_x2">15dp</dimen>
+    <dimen name="margin_4dp">4dp</dimen>
 </resources>

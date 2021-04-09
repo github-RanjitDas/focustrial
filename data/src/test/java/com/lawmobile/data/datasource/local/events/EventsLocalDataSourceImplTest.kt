@@ -177,27 +177,27 @@ internal class EventsLocalDataSourceImplTest {
 
     @Test
     fun getAllNotificationEventsFlow() {
-        every { cameraEventsDao.getAllNotificationEvents() } returns mockk()
-        runBlocking { eventsLocalDataSourceImpl.getAllNotificationEvents() }
-        verify { cameraEventsDao.getAllNotificationEvents() }
+        every { cameraEventsDao.getNotificationEvents() } returns mockk()
+        runBlocking { eventsLocalDataSourceImpl.getNotificationEvents() }
+        verify { cameraEventsDao.getNotificationEvents() }
     }
 
     @Test
     fun getAllNotificationEventsSuccess() {
-        every { cameraEventsDao.getAllNotificationEvents() } returns mockk()
+        every { cameraEventsDao.getNotificationEvents() } returns mockk()
         runBlocking {
             Assert.assertTrue(
-                eventsLocalDataSourceImpl.getAllNotificationEvents() is Result.Success
+                eventsLocalDataSourceImpl.getNotificationEvents() is Result.Success
             )
         }
     }
 
     @Test
     fun getAllNotificationEventsError() {
-        every { cameraEventsDao.getAllNotificationEvents() } throws Exception()
+        every { cameraEventsDao.getNotificationEvents() } throws Exception()
         runBlocking {
             Assert.assertTrue(
-                eventsLocalDataSourceImpl.getAllNotificationEvents() is Result.Error
+                eventsLocalDataSourceImpl.getNotificationEvents() is Result.Error
             )
         }
     }
@@ -270,5 +270,19 @@ internal class EventsLocalDataSourceImplTest {
                 eventsLocalDataSourceImpl.getEventsCount()
             )
         }
+    }
+
+    @Test
+    fun saveEventFlow() {
+        every { cameraEventsDao.saveEvent(any()) } just Runs
+        runBlocking { eventsLocalDataSourceImpl.saveEvent(mockk(relaxed = true)) }
+        verify { cameraEventsDao.saveEvent(any()) }
+    }
+
+    @Test
+    fun saveEventError() {
+        every { cameraEventsDao.saveEvent(any()) } throws Exception()
+        runBlocking { eventsLocalDataSourceImpl.saveEvent(mockk(relaxed = true)) }
+        verify { cameraEventsDao.saveEvent(any()) }
     }
 }

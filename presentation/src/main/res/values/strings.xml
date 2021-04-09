@@ -145,12 +145,14 @@
     <string name="taking_snapshot">Taking snapshot</string>
     <string name="starting_recording">Starting recording</string>
     <string name="stopping_recording">Stopping recording</string>
-    <string name="battery_percent"><![CDATA[<b><big>%1$d%%</big></b> - %2$s hour left]]></string>
-    <string name="storage_level"><![CDATA[Used  &nbsp;&nbsp; -  &nbsp;&nbsp; Free <br/><b><big>%1$s </big></b> - <b><big>%2$s </big></b>]]></string>
+    <string name="battery_percent"><![CDATA[<b>%1$d%%</b> ~ %2$s hour left]]></string>
+    <string name="storage_level_x1"><![CDATA[Used  &nbsp;&nbsp; -  &nbsp;&nbsp; Free <br/><b>%1$s</b> - <b>%2$s</b>]]></string>
+    <string name="storage_level_x2"><![CDATA[<b>%1$d%%</b> used]]></string>
     <string name="battery_level_error">Error retrieving battery level</string>
     <string name="storage_level_error">Error retrieving storage level</string>
-    <string name="battery_percent_placeholder">100% - 10 hour left</string>
-    <string name="storage_level_placeholder">Used \  - \  Free\n 272 MB - 57.7GB</string>
+    <string name="battery_percent_placeholder"><b>100%</b> - 10 hour left</string>
+    <string name="storage_level_placeholder_x1">Used \  - \  Free\n <b>272 MB</b> - <b>57.7GB</b></string>
+    <string name="storage_level_placeholder_x2"><b>0%</b> used</string>
     <string name="app_bar_name_default">James</string>
     <string name="app_bar_last_name_default">Mendez</string>
     <string name="_1">1.</string>
@@ -244,6 +246,6 @@
     <string name="body_worn_result_success_description">Your Body-worn Camera hardware is operating correctly, no issues reported.</string>
     <string name="body_worn_result_failed_description">There are one or more issues with the Body-worn Camera hardware that will prevent it from working properly! Please contact your administrator and report this issue</string>
     <string name="no_notifications_found">No notifications found</string>
-    <string name="notification_list_error">Could not load the notification list, please retry or checkout BWC again</string>
+    <string name="notification_list_error">Unable to get notification list, please retry or checkout BWC</string>
 
 </resources>

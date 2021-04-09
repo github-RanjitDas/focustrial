@@ -34,14 +34,16 @@
         android:layout_height="wrap_content"
         android:text="@string/battery_percent_placeholder"
         android:textSize="@dimen/battery_percent_text_size"
+        android:paddingBottom="@dimen/margin_4dp"
         app:layout_constraintStart_toStartOf="@id/progressBatteryLevel"
         app:layout_constraintBottom_toTopOf="@id/progressBatteryLevel"
-        tools:ignore="SmallSp" />
+        tools:ignore="SmallSp"
+        app:layout_constraintEnd_toEndOf="@+id/progressBatteryLevel" />
 
     <com.safefleet.mobile.safefleet_ui.widgets.linearProgressBar.SafeFleetLinearProgressBar
         android:id="@+id/progressBatteryLevel"
         android:layout_width="@dimen/no_dp"
-        android:layout_height="@dimen/battery_level_height"
+        android:layout_height="@dimen/battery_level_height_x2"
         android:layout_marginHorizontal="@dimen/battery_level_margin_horizontal"
         app:layout_constraintBottom_toBottomOf="@id/imageViewBattery"
         app:layout_constraintEnd_toStartOf="@id/guidelineMidVertical"
@@ -59,11 +61,12 @@
 
     <TextView
         android:id="@+id/textViewStorageLevels"
-        android:layout_width="@dimen/no_dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingEnd="@dimen/storage_levels_padding_end"
-        android:text="@string/storage_level_placeholder"
+        android:text="@string/storage_level_placeholder_x2"
         android:textSize="@dimen/storage_levels_text_size"
+        android:paddingBottom="@dimen/margin_4dp"
         app:layout_constraintBottom_toTopOf="@+id/progressStorageLevel"
         app:layout_constraintEnd_toEndOf="@+id/progressStorageLevel"
         app:layout_constraintStart_toStartOf="@id/progressStorageLevel"
@@ -72,7 +75,7 @@
     <com.safefleet.mobile.safefleet_ui.widgets.linearProgressBar.SafeFleetLinearProgressBar
         android:id="@+id/progressStorageLevel"
         android:layout_width="@dimen/no_dp"
-        android:layout_height="@dimen/storage_level_height"
+        android:layout_height="@dimen/storage_level_height_x2"
         android:layout_marginHorizontal="@dimen/storage_level_margin_horizontal"
         app:layout_constraintBottom_toBottomOf="@id/imageViewStorage"
         app:layout_constraintEnd_toEndOf="parent"

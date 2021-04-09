@@ -7,6 +7,7 @@ import androidx.activity.viewModels
 import androidx.cardview.widget.CardView
 import androidx.core.view.isVisible
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.lawmobile.domain.entities.CameraInfo
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.databinding.ActivityLoginBinding
 import com.lawmobile.presentation.extensions.attachFragmentWithAnimation
@@ -96,6 +97,7 @@ class LoginActivity : BaseActivity() {
     }
 
     private fun startLiveViewActivity() {
+        CameraInfo.isOfficerLogged = true
         val intent = getIntentDependsCameraType(LiveX1Activity(), LiveX2Activity())
         startActivity(intent)
         finish()
