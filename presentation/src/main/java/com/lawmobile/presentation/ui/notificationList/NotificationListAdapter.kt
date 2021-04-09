@@ -78,7 +78,7 @@ class NotificationListAdapter(
         }
 
         private fun setTextViews(notification: CameraEvent) {
-            binding.textViewNotification.text = notification.value
+            binding.textViewNotification.text = notification.name
             binding.textViewNotificationDate.text = notification.date
         }
 

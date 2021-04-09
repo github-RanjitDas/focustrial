@@ -32,7 +32,7 @@ internal class CameraEventMapperTest {
                     domain.date, camera[index].date
                 )
                 Assert.assertEquals(
-                    domain.isRead, true
+                    domain.isRead, false
                 )
                 Assert.assertEquals(
                     domain.name, camera[index].type.split(":").last()
@@ -66,7 +66,7 @@ internal class CameraEventMapperTest {
                     domain.date, camera[index].date
                 )
                 Assert.assertEquals(
-                    domain.isRead, true
+                    domain.isRead, false
                 )
                 Assert.assertEquals(
                     domain.name, camera[index].type.split(":").last()
@@ -100,7 +100,7 @@ internal class CameraEventMapperTest {
                     domain.date, camera[index].date
                 )
                 Assert.assertEquals(
-                    domain.isRead, true
+                    domain.isRead, false
                 )
                 Assert.assertEquals(
                     domain.name, camera[index].type.split(":").last()
@@ -134,7 +134,7 @@ internal class CameraEventMapperTest {
                     domain.date, camera[index].date
                 )
                 Assert.assertEquals(
-                    domain.isRead, true
+                    domain.isRead, false
                 )
                 Assert.assertEquals(
                     domain.name, camera[index].type.split(":").last()
@@ -168,7 +168,7 @@ internal class CameraEventMapperTest {
                     domain.date, camera[index].date
                 )
                 Assert.assertEquals(
-                    domain.isRead, true
+                    domain.isRead, false
                 )
                 Assert.assertEquals(
                     domain.name, camera[index].type.split(":").last()

@@ -49,9 +49,12 @@ class NotificationListActivity : BaseActivity() {
         setAdapter()
         setRecyclerView()
         configureBottomSheet()
-        getNotificationList()
-        setAllNotificationsAsRead()
         attachFragments()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        getNotificationList()
     }
 
     private fun attachFragments() {
@@ -65,6 +68,7 @@ class NotificationListActivity : BaseActivity() {
     }
 
     private fun getNotificationList() {
+        showLoadingDialog()
         viewModel.getCameraEvents()
     }
 
@@ -74,6 +78,7 @@ class NotificationListActivity : BaseActivity() {
                 viewModel.getNotificationEvents()
             }
             doIfError {
+                hideLoadingDialog()
                 binding.root.showErrorSnackBar(
                     getString(R.string.notification_list_error),
                     Snackbar.LENGTH_INDEFINITE
@@ -98,6 +103,8 @@ class NotificationListActivity : BaseActivity() {
                 }
             }
         }
+        hideLoadingDialog()
+        setAllNotificationsAsRead()
         binding.textViewEmptyList.isVisible = notificationListAdapter.notificationList.isEmpty()
     }
 
@@ -194,7 +201,7 @@ class NotificationListActivity : BaseActivity() {
 
     private fun setCustomAppBar() {
         appBarFragment =
-            AppBarX2Fragment.createInstance(false, getString(R.string.notifications), false)
+            AppBarX2Fragment.createInstance(false, getString(R.string.notifications))
     }
 
     private fun attachAppBarFragment() {

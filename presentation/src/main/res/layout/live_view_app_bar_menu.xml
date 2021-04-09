@@ -82,7 +82,7 @@
 
             <TextView
                 android:id="@+id/textPendingNotification"
-                android:visibility="visible"
+                android:visibility="gone"
                 android:fontFamily="@font/roboto_bold"
                 android:background="@drawable/background_notification_text"
                 android:textColor="@color/white"

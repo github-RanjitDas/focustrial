@@ -24,7 +24,8 @@ object NotificationResponseMapper {
             eventType = eventType,
             eventTag = eventTag,
             value = eventValue,
-            date = dateToString(Date(), "MM/dd/yyyy HH:mm:ss")
+            date = dateToString(Date(), "MM/dd/yyyy HH:mm:ss"),
+            isRead = true
         )
     }
 }

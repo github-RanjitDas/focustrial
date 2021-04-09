@@ -35,6 +35,7 @@ ext.pitestExclusions = [
         "com.lawmobile.presentation.ui.base.BaseViewModel*",
         "com.lawmobile.data.repository.thumbnailList.ThumbnailListRepositoryImpl*",
         "com.lawmobile.data.repository.simpleList.SimpleListRepositoryImpl*",
+        "com.lawmobile.data.repository.events.EventsRepositoryImpl*",
         "com.lawmobile.presentation.utils.MobileDataStatus*",
         "com.lawmobile.data.repository.fileList.FileListRepositoryImpl*",
         "com.lawmobile.data.repository.liveStreaming.LiveStreamingRepositoryImpl*",
