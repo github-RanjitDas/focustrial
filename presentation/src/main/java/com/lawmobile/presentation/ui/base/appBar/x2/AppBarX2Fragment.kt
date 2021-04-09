@@ -64,7 +64,9 @@ class AppBarX2Fragment : BaseFragment() {
         }
 
         binding.buttonNotification.setOnClickListenerCheckConnection {
-            startActivity(Intent(requireContext(), NotificationListActivity::class.java))
+            if (activity !is NotificationListActivity) {
+                startActivity(Intent(requireContext(), NotificationListActivity::class.java))
+            }
         }
 
         binding.imageButtonBackArrow.setOnClickListenerCheckConnection { onBackPressed() }

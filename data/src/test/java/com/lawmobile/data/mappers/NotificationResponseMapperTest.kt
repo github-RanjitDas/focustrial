@@ -25,7 +25,8 @@ class NotificationResponseMapperTest {
                 eventType = EventType.NOTIFICATION,
                 eventTag = EventTag.INFORMATION,
                 date = "07/22/2020",
-                value = "low_storage_warning"
+                value = "low_storage_warning",
+                isRead = true
             )
         )
     }
@@ -43,7 +44,8 @@ class NotificationResponseMapperTest {
                 eventType = EventType.CAMERA,
                 eventTag = EventTag.INFORMATION,
                 date = "07/22/2020",
-                value = "new_event"
+                value = "new_event",
+                isRead = true
             )
         )
     }

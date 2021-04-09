@@ -173,12 +173,12 @@ internal class EventsRepositoryImplTest {
         every { eventsLocalDataSource.getEventsCount() } returns 1
         coEvery { eventsLocalDataSource.getAllEvents() } returns mockk(relaxed = true)
         coEvery { eventsRemoteDataSource.getCameraEvents() } returns Result.Success(notificationList)
-        coEvery { eventsLocalDataSource.saveAllEvents(any()) } returns Result.Error(mockk())
+        coEvery { eventsLocalDataSource.saveAllEvents(any()) } returns Result.Success(mockk())
         coEvery { eventsLocalDataSource.clearAllEvents() } just Runs
 
         runBlocking {
             Assert.assertTrue(
-                eventsRepositoryImpl.getCameraEvents() is Result.Error
+                eventsRepositoryImpl.getCameraEvents() is Result.Success
             )
         }
     }
@@ -202,7 +202,7 @@ internal class EventsRepositoryImplTest {
 
         runBlocking {
             Assert.assertTrue(
-                eventsRepositoryImpl.getCameraEvents() is Result.Error
+                eventsRepositoryImpl.getCameraEvents() is Result.Success
             )
         }
     }
@@ -274,13 +274,19 @@ internal class EventsRepositoryImplTest {
 
     @Test
     fun getPendingNotificationsCountFlow() {
+        coEvery { eventsRemoteDataSource.getCameraEvents() } returns Result.Success(mockk(relaxed = true))
+        coEvery { eventsLocalDataSource.getAllEvents() } returns Result.Success(mockk(relaxed = true))
         coEvery { eventsLocalDataSource.getPendingNotificationsCount() } returns Result.Success(1)
+        coEvery { eventsLocalDataSource.getEventsCount() } returns 3
         runBlocking { eventsRepositoryImpl.getPendingNotificationsCount() }
         coVerify { eventsLocalDataSource.getPendingNotificationsCount() }
     }
 
     @Test
     fun getPendingNotificationsCountSuccess() {
+        coEvery { eventsRemoteDataSource.getCameraEvents() } returns Result.Success(mockk(relaxed = true))
+        coEvery { eventsLocalDataSource.getAllEvents() } returns Result.Success(mockk(relaxed = true))
+        coEvery { eventsLocalDataSource.getEventsCount() } returns 3
         coEvery { eventsLocalDataSource.getPendingNotificationsCount() } returns Result.Success(1)
         runBlocking {
             Assert.assertTrue(
@@ -291,6 +297,9 @@ internal class EventsRepositoryImplTest {
 
     @Test
     fun getPendingNotificationsCountError() {
+        coEvery { eventsRemoteDataSource.getCameraEvents() } returns Result.Success(mockk(relaxed = true))
+        coEvery { eventsLocalDataSource.getAllEvents() } returns Result.Success(mockk(relaxed = true))
+        coEvery { eventsLocalDataSource.getEventsCount() } returns 3
         coEvery { eventsLocalDataSource.getPendingNotificationsCount() } returns Result.Error(mockk())
         runBlocking {
             Assert.assertTrue(

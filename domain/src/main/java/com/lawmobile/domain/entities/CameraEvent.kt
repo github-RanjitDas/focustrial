@@ -9,5 +9,5 @@ data class CameraEvent(
     val eventTag: EventTag,
     val value: String? = null,
     var date: String = "",
-    var isRead: Boolean = true
+    var isRead: Boolean = false
 )

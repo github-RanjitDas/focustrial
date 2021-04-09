@@ -7,6 +7,7 @@ import com.lawmobile.domain.entities.CameraEvent
 import com.lawmobile.domain.repository.events.EventsRepository
 import com.safefleet.mobile.kotlin_commons.extensions.doIfSuccess
 import com.safefleet.mobile.kotlin_commons.helpers.Result
+import com.safefleet.mobile.kotlin_commons.helpers.getResultWithAttempts
 
 class EventsRepositoryImpl(
     private val eventsRemoteDataSource: EventsRemoteDataSource,
@@ -19,7 +20,10 @@ class EventsRepositoryImpl(
     }
 
     override suspend fun getCameraEvents(): Result<List<CameraEvent>> {
-        return when (val result = eventsRemoteDataSource.getCameraEvents()) {
+        val result = getResultWithAttempts(3, 500) {
+            eventsRemoteDataSource.getCameraEvents()
+        }
+        return when (result) {
             is Result.Success -> {
                 val remoteEventList = CameraEventMapper
                     .cameraToDomainList(result.data)
@@ -28,10 +32,35 @@ class EventsRepositoryImpl(
                     .let { manageEventsReadStatus(it) }
 
                 saveEventsInLocal(remoteEventList)
+
+                return Result.Success(remoteEventList)
             }
+
             is Result.Error -> result
         }
     }
+
+    override suspend fun getNotificationEvents(): Result<List<CameraEvent>> =
+        when (val result = eventsLocalDataSource.getNotificationEvents()) {
+            is Result.Success -> Result.Success(CameraEventMapper.localToDomainList(result.data))
+            is Result.Error -> result
+        }
+
+    override suspend fun getPendingNotificationsCount(): Result<Int> {
+        val resultRemoteEvents = getCameraEvents()
+
+        resultRemoteEvents.doIfSuccess {
+            return eventsLocalDataSource.getPendingNotificationsCount()
+        }
+        return Result.Error(Exception("Error to get pending notification"))
+    }
+
+    override fun isPossibleToReadLog() = eventsRemoteDataSource.isPossibleToReadLog()
+
+    override suspend fun setAllNotificationsAsRead() =
+        eventsLocalDataSource.setAllNotificationsAsRead()
+
+    override suspend fun clearAllEvents() = eventsLocalDataSource.clearAllEvents()
 
     private suspend fun manageEventsReadStatus(eventList: List<CameraEvent>): List<CameraEvent> {
         with(eventsLocalDataSource.getAllEvents()) {
@@ -51,17 +80,15 @@ class EventsRepositoryImpl(
         return eventList
     }
 
-    private suspend fun saveEventsInLocal(remoteEventList: List<CameraEvent>): Result<List<CameraEvent>> {
+    private suspend fun saveEventsInLocal(remoteEventList: List<CameraEvent>) {
         if (cameraHasNewEvents(remoteEventList)) {
             if (eventsAreNotEmpty()) {
                 clearAllEvents()
-                return saveEventsResult(remoteEventList)
+                saveEventsResult(remoteEventList)
             } else {
-                val result = saveEventsResult(remoteEventList)
-                if (result is Result.Error) return result
+                saveEventsResult(remoteEventList)
             }
         }
-        return Result.Error(Exception("There are no new events"))
     }
 
     private fun cameraHasNewEvents(notificationList: List<CameraEvent>) =
@@ -71,25 +98,10 @@ class EventsRepositoryImpl(
 
     private suspend fun saveEventsResult(remoteEventList: List<CameraEvent>): Result<List<CameraEvent>> {
         val localEventList = CameraEventMapper.domainToLocalList(remoteEventList)
+
         return when (val result = eventsLocalDataSource.saveAllEvents(localEventList)) {
             is Result.Success -> Result.Success(remoteEventList)
             is Result.Error -> result
         }
     }
-
-    override suspend fun getNotificationEvents(): Result<List<CameraEvent>> =
-        when (val result = eventsLocalDataSource.getNotificationEvents()) {
-            is Result.Success -> Result.Success(CameraEventMapper.localToDomainList(result.data))
-            is Result.Error -> result
-        }
-
-    override suspend fun getPendingNotificationsCount() =
-        eventsLocalDataSource.getPendingNotificationsCount()
-
-    override fun isPossibleToReadLog() = eventsRemoteDataSource.isPossibleToReadLog()
-
-    override suspend fun setAllNotificationsAsRead() =
-        eventsLocalDataSource.setAllNotificationsAsRead()
-
-    override suspend fun clearAllEvents() = eventsLocalDataSource.clearAllEvents()
 }
