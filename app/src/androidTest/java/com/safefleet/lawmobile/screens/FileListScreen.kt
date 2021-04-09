@@ -137,28 +137,25 @@ class FileListScreen : BaseScreen() {
 
     fun isNoFilesFoundDisplayed() = assertDisplayed(R.id.noFilesTextView)
 
-    fun isSelectVideosToAssociateDisplayed() =
-        waitUntil { assertDisplayed(R.string.select_videos_to_associate) }
-
-    fun isViewDateTimeDisplayed() =
+    fun isDateTimeHeaderDisplayed() =
         assertDisplayed(R.id.textViewDateAndTime, R.string.date_and_time)
 
-    fun isViewEventDisplayed() = assertDisplayed(R.id.textViewEvent, R.string.event)
+    fun isEventHeaderDisplayed() = assertDisplayed(R.id.textViewEvent, R.string.event)
 
     fun isSnapshotsTitleDisplayed() = assertDisplayed(R.string.snapshots_title)
 
-    fun isSelectSnapshotsToAssociateDisplayed() =
-        waitUntil { assertDisplayed(R.string.select_snapshots_to_associate) }
+    fun isSelectDisplayed() =
+        waitUntil { assertDisplayed(R.string.select) }
 
     fun isVideosListScreenDisplayed() {
-        isSelectVideosToAssociateDisplayed()
+        isSelectDisplayed()
         isFilterButtonDisplayed()
-        isViewDateTimeDisplayed()
-        isViewEventDisplayed()
+        isDateTimeHeaderDisplayed()
+        isEventHeaderDisplayed()
     }
 
     fun isSnapshotsListScreenDisplayed() {
-        isSelectSnapshotsToAssociateDisplayed()
+        isSelectDisplayed()
         isFilterButtonDisplayed()
         isSnapshotsTitleDisplayed()
     }
