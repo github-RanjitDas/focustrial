@@ -29,4 +29,9 @@ object Alert {
         assertDisplayed(R.string.please_turn_wifi_on)
         assertDisplayed(R.string.OK)
     }
+
+    fun isExitAppDialogDisplayed() {
+        assertDisplayed(R.string.logout)
+        assertDisplayed(R.string.logout_message)
+    }
 }

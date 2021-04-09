@@ -1,9 +1,10 @@
 package com.safefleet.lawmobile.helpers
 
+import com.lawmobile.domain.enums.CameraType
 import com.lawmobile.presentation.utils.CameraHelper
-import com.safefleet.lawmobile.di.AppModule
 import com.safefleet.lawmobile.di.mocksServiceCameras.CameraConnectServiceX1Mock
 import com.safefleet.lawmobile.testData.CameraFilesData
+import com.safefleet.lawmobile.testData.TestLoginData
 import com.safefleet.mobile.external_hardware.cameras.entities.FileResponseWithErrors
 import com.safefleet.mobile.kotlin_commons.helpers.Result
 import io.mockk.every
@@ -12,6 +13,11 @@ import io.mockk.mockkObject
 import io.mockk.unmockkObject
 
 class MockUtils {
+
+    companion object {
+        var wifiEnabled = true
+        var cameraSSID = TestLoginData.SSID_X1.value
+    }
 
     fun disconnectCamera() {
         val cameraHelperMock: CameraHelper = mockk {
@@ -52,10 +58,18 @@ class MockUtils {
 
     fun turnWifiOff() {
 //      This function only works when used before launching an app Activity
-        AppModule.wifiEnabled = false
+        wifiEnabled = false
     }
 
     fun turnWifiOn() {
-        AppModule.wifiEnabled = true
+        wifiEnabled = true
+    }
+
+    fun setCameraType(cameraType: CameraType) {
+        if (cameraType == CameraType.X1) {
+            cameraSSID = TestLoginData.SSID_X1.value
+        } else {
+            cameraSSID = TestLoginData.SSID_X2.value
+        }
     }
 }

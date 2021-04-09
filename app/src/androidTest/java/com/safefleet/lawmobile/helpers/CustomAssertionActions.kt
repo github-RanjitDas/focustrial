@@ -1,5 +1,10 @@
 package com.safefleet.lawmobile.helpers
 
+import androidx.test.espresso.ViewAction
+import androidx.test.espresso.action.GeneralLocation
+import androidx.test.espresso.action.GeneralSwipeAction
+import androidx.test.espresso.action.Press
+import androidx.test.espresso.action.Swipe
 import com.schibsted.spain.barista.interaction.BaristaSleepInteractions
 
 object CustomAssertionActions {
@@ -24,5 +29,14 @@ object CustomAssertionActions {
             }
         } while (System.currentTimeMillis() < endTime)
         espressoAssertion()
+    }
+
+    fun customSwipeRight(): ViewAction? {
+        return GeneralSwipeAction(
+            Swipe.FAST,
+            GeneralLocation.CENTER_LEFT,
+            GeneralLocation.CENTER_RIGHT,
+            Press.FINGER
+        )
     }
 }

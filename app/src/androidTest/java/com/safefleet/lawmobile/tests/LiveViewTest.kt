@@ -6,6 +6,7 @@ import com.lawmobile.presentation.ui.login.LoginActivity
 import com.safefleet.lawmobile.helpers.DeviceUtils
 import com.safefleet.lawmobile.screens.LiveViewScreen
 import com.safefleet.lawmobile.screens.LoginScreen
+import com.safefleet.lawmobile.screens.MainMenuScreen
 import org.junit.Before
 import org.junit.FixMethodOrder
 import org.junit.Test
@@ -19,6 +20,7 @@ class LiveViewTest : EspressoStartActivityBaseTest<LoginActivity>(LoginActivity:
 
     private val liveViewScreen = LiveViewScreen()
     private val device = DeviceUtils()
+    private val mainMenuScreen = MainMenuScreen()
 
     @Before
     fun login() = LoginScreen().login()
@@ -53,6 +55,16 @@ class LiveViewTest : EspressoStartActivityBaseTest<LoginActivity>(LoginActivity:
 
             switchLiveViewToggle()
             isDisconnectionAlertDisplayed()
+        }
+    }
+
+    /**
+     * Test case: https://safefleet.atlassian.net/browse/FMA-1767
+     */
+    @Test
+    fun verifyMainMenuIsNotDisplayedOnX1() {
+        with(mainMenuScreen) {
+            isMenuButtonNotContained()
         }
     }
 }

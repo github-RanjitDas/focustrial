@@ -11,6 +11,8 @@ import com.lawmobile.database.Database
 import com.lawmobile.presentation.utils.MobileDataStatus
 import com.lawmobile.presentation.utils.VLCMediaPlayer
 import com.lawmobile.presentation.utils.WifiHelper
+import com.safefleet.lawmobile.helpers.MockUtils.Companion.cameraSSID
+import com.safefleet.lawmobile.helpers.MockUtils.Companion.wifiEnabled
 import com.safefleet.lawmobile.testData.TestLoginData
 import com.squareup.sqldelight.android.AndroidSqliteDriver
 import com.squareup.sqldelight.db.SqlDriver
@@ -30,7 +32,6 @@ import javax.inject.Singleton
 class AppModule {
 
     companion object {
-        var wifiEnabled = true
 
         @Provides
         @Singleton
@@ -61,14 +62,15 @@ class AppModule {
         fun provideWifiHelper(wifiManager: WifiManager): WifiHelper = mockk {
             every { getGatewayAddress() } returns "192.168.42.1"
             every { getIpAddress() } returns "192.168.42.2"
-            every { isEqualsValueWithSSID(TestLoginData.SSID.value) } returns true
+            every { isEqualsValueWithSSID(TestLoginData.SSID_X1.value) } returns true
+            every { isEqualsValueWithSSID(TestLoginData.SSID_X2.value) } returns true
             every { isEqualsValueWithSSID(TestLoginData.INVALID_SSID.value) } returns false
             if (wifiEnabled) {
                 every { isWifiEnable() } returns true
             } else {
                 every { isWifiEnable() } returns false andThen true
             }
-            every { getSSIDWiFi() } returns TestLoginData.SSID.value
+            every { getSSIDWiFi() } returns cameraSSID
         }
 
         @Provides
