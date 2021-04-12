@@ -1,5 +1,6 @@
 package com.lawmobile.presentation.ui.notificationList
 
+import android.graphics.Typeface
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -65,14 +66,14 @@ class NotificationListAdapter(
 
         fun bind(notification: CameraEvent) {
             setNotificationType(notification.eventTag)
-            setNotificationStyle(notification)
+            configureNotificationStyle(notification)
             setTextViews(notification)
             setListener(notification)
         }
 
         private fun setListener(notification: CameraEvent) {
             binding.layoutNotificationItem.setOnClickListenerCheckConnection {
-                binding.layoutNotificationItem.setBackgroundResource(R.color.white)
+                setNotificationStyleAsRead()
                 onNotificationItemCLick(notification)
             }
         }
@@ -82,10 +83,21 @@ class NotificationListAdapter(
             binding.textViewNotificationDate.text = notification.date
         }
 
-        private fun setNotificationStyle(notification: CameraEvent) {
-            val colorBackground =
-                if (notification.isRead) R.color.white else R.color.backgroundCardView
-            binding.layoutNotificationItem.setBackgroundResource(colorBackground)
+        private fun configureNotificationStyle(notification: CameraEvent) {
+            if (notification.isRead) setNotificationStyleAsRead()
+            else setNotificationStyleAsUnread()
+        }
+
+        private fun setNotificationStyleAsRead() {
+            binding.layoutNotificationItem.setBackgroundResource(R.color.white)
+            binding.textViewNotificationDate.setTypeface(null, Typeface.NORMAL)
+            binding.textViewNotification.setTypeface(null, Typeface.NORMAL)
+        }
+
+        private fun setNotificationStyleAsUnread() {
+            binding.layoutNotificationItem.setBackgroundResource(R.color.backgroundCardView)
+            binding.textViewNotification.setTypeface(null, Typeface.BOLD)
+            binding.textViewNotificationDate.setTypeface(null, Typeface.BOLD)
         }
 
         private fun setNotificationType(type: EventTag) {
