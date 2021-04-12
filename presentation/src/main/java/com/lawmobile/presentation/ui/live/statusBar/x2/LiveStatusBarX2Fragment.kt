@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import com.lawmobile.domain.entities.CameraInfo
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.databinding.FragmentLiveStatusBarX2Binding
 import com.lawmobile.presentation.extensions.setOnClickListenerCheckConnection
@@ -57,6 +58,13 @@ class LiveStatusBarX2Fragment : LiveStatusBarBaseFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         getCameraStatus(isViewLoaded)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (CameraInfo.metadataEvents.isNotEmpty()) {
+            sharedViewModel.getBatteryLevel()
+        }
     }
 
     private fun setObservers() {
@@ -111,23 +119,19 @@ class LiveStatusBarX2Fragment : LiveStatusBarBaseFragment() {
     }
 
     private fun manageLowStorage() {
-        requireActivity().runOnUiThread {
-            binding.imageViewStorage.startAnimationIfEnabled(blinkAnimation)
-            createAlertForInformationCamera(
-                R.string.storage_alert_title,
-                R.string.storage_alert_description
-            )
-        }
+        binding.imageViewStorage.startAnimationIfEnabled(blinkAnimation)
+        createAlertForInformationCamera(
+            R.string.storage_alert_title,
+            R.string.storage_alert_description
+        )
     }
 
     private fun manageLowBattery() {
-        requireActivity().runOnUiThread {
-            imageViewBattery.startAnimationIfEnabled(blinkAnimation)
-            createAlertForInformationCamera(
-                R.string.battery_alert_title,
-                R.string.battery_alert_description
-            )
-        }
+        imageViewBattery.startAnimationIfEnabled(blinkAnimation)
+        createAlertForInformationCamera(
+            R.string.battery_alert_title,
+            R.string.battery_alert_description
+        )
     }
 
     private fun setStorageLevels(result: Event<Result<List<Double>>>) {
