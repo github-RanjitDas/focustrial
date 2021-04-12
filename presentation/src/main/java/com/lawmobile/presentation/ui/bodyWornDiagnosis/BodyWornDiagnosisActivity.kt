@@ -32,6 +32,7 @@ class BodyWornDiagnosisActivity : BaseActivity() {
             getString(R.string.live_view_menu_item_diagnose)
         binding.layoutCustomAppBar.buttonThumbnailList.isVisible = false
         binding.layoutCustomAppBar.buttonSimpleList.isVisible = false
+        binding.layoutCustomAppBar.imageButtonBackArrow.setImageResource(R.drawable.ic_cancel)
     }
 
     private fun configureListeners() {
