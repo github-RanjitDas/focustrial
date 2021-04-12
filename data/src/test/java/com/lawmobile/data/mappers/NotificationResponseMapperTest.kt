@@ -21,11 +21,11 @@ class NotificationResponseMapperTest {
         Assert.assertEquals(
             response,
             CameraEvent(
-                name = "Notification",
+                name = "low_storage_warning",
                 eventType = EventType.NOTIFICATION,
                 eventTag = EventTag.INFORMATION,
                 date = "07/22/2020",
-                value = "low_storage_warning",
+                value = "value",
                 isRead = true
             )
         )
@@ -40,11 +40,11 @@ class NotificationResponseMapperTest {
         Assert.assertEquals(
             response,
             CameraEvent(
-                name = "cameraEvent",
+                name = "new_event",
                 eventType = EventType.CAMERA,
                 eventTag = EventTag.INFORMATION,
                 date = "07/22/2020",
-                value = "new_event",
+                value = "value",
                 isRead = true
             )
         )

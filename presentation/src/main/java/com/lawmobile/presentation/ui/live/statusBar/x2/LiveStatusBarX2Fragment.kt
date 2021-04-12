@@ -111,19 +111,23 @@ class LiveStatusBarX2Fragment : LiveStatusBarBaseFragment() {
     }
 
     private fun manageLowStorage() {
-        binding.imageViewStorage.startAnimationIfEnabled(blinkAnimation)
-        createAlertForInformationCamera(
-            R.string.storage_alert_title,
-            R.string.storage_alert_description
-        )
+        requireActivity().runOnUiThread {
+            binding.imageViewStorage.startAnimationIfEnabled(blinkAnimation)
+            createAlertForInformationCamera(
+                R.string.storage_alert_title,
+                R.string.storage_alert_description
+            )
+        }
     }
 
     private fun manageLowBattery() {
-        imageViewBattery.startAnimationIfEnabled(blinkAnimation)
-        createAlertForInformationCamera(
-            R.string.battery_alert_title,
-            R.string.battery_alert_description
-        )
+        requireActivity().runOnUiThread {
+            imageViewBattery.startAnimationIfEnabled(blinkAnimation)
+            createAlertForInformationCamera(
+                R.string.battery_alert_title,
+                R.string.battery_alert_description
+            )
+        }
     }
 
     private fun setStorageLevels(result: Event<Result<List<Double>>>) {

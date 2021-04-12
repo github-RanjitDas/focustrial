@@ -77,10 +77,10 @@ open class BaseActivity : AppCompatActivity() {
 
     private fun manageCameraEvent(cameraEvent: CameraEvent) {
         if (cameraEvent.eventType == EventType.NOTIFICATION) {
-            runOnUiThread { createNotificationDialog(cameraEvent) }
             when (cameraEvent.name) {
                 NotificationType.LOW_BATTERY.value -> onLowBattery?.invoke()
                 NotificationType.LOW_STORAGE.value -> onLowStorage?.invoke()
+                else -> runOnUiThread { createNotificationDialog(cameraEvent) }
             }
         } else when (cameraEvent.name) {
             NotificationType.BATTERY_LEVEL.value -> {
