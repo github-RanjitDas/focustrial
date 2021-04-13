@@ -6,27 +6,27 @@ import com.lawmobile.presentation.ui.login.LoginActivity
 import com.safefleet.lawmobile.screens.LiveViewScreen
 import com.safefleet.lawmobile.screens.LoginScreen
 import com.safefleet.lawmobile.testData.TestLoginData
-import org.junit.FixMethodOrder
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.junit.runners.MethodSorters
 
-@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @LargeTest
 @RunWith(AndroidJUnit4::class)
 class LoginTest : EspressoStartActivityBaseTest<LoginActivity>(LoginActivity::class.java) {
-    // This class tests FMA-248 User story
+
     companion object {
         val OFFICER_PASSWORD = TestLoginData.OFFICER_PASSWORD.value
-
         const val INVALID_OFFICER_PASSWORD = "950887928"
 
         val loginScreen = LoginScreen()
         val liveViewScreen = LiveViewScreen()
     }
 
+    /**
+     * Test case: https://safefleet.atlassian.net/browse/FMA-1036
+     * Test case: https://safefleet.atlassian.net/browse/FMA-1037
+     */
     @Test
-    fun verifyAppLogin_FMA_1036_1037() {
+    fun verifyAppLogin() {
         with(loginScreen) {
             isPairingScreenDisplayed()
 
@@ -43,8 +43,11 @@ class LoginTest : EspressoStartActivityBaseTest<LoginActivity>(LoginActivity::cl
         }
     }
 
+    /**
+     * Test case: https://safefleet.atlassian.net/browse/FMA-1038
+     */
     @Test
-    fun verifyIncorrectLogin_FMA_1038() {
+    fun verifyIncorrectLogin() {
         with(loginScreen) {
             clickOnGo()
 
@@ -64,8 +67,12 @@ class LoginTest : EspressoStartActivityBaseTest<LoginActivity>(LoginActivity::cl
         }
     }
 
+    /**
+     * Test case: https://safefleet.atlassian.net/browse/FMA-1039
+     * Test case: https://safefleet.atlassian.net/browse/FMA-1041
+     */
     @Test
-    fun verifyPairingDisconnectionScenario_FMA_1039_1041() {
+    fun verifyPairingDisconnectionScenario() {
         with(loginScreen) {
             mockUtils.disconnectCamera()
 
@@ -88,8 +95,11 @@ class LoginTest : EspressoStartActivityBaseTest<LoginActivity>(LoginActivity::cl
         }
     }
 
+    /**
+     * Test case: https://safefleet.atlassian.net/browse/FMA-1322
+     */
     @Test
-    fun verifyInstructionsToConnectCamera_FMA_1322() {
+    fun verifyInstructionsToConnectCamera() {
         with(loginScreen) {
             clickOnCameraInstructions()
 

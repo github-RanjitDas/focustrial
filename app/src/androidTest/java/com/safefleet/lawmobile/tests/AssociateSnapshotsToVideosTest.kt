@@ -19,7 +19,7 @@ import org.junit.runner.RunWith
 @LargeTest
 @Suppress
 @RunWith(AndroidJUnit4::class)
-class AssociateSnapshotsTest :
+class AssociateSnapshotsToVideosTest :
     EspressoStartActivityBaseTest<LoginActivity>(LoginActivity::class.java) {
 
     companion object {
@@ -49,8 +49,11 @@ class AssociateSnapshotsTest :
         }
     }
 
+    /**
+     * Test case: https://safefleet.atlassian.net/browse/FMA-1389
+     */
     @Test
-    fun linkThumbnailSnapshotsToVideo_FMA_1389() {
+    fun linkThumbnailSnapshotsToVideo() {
         setThumbnailListViews()
         liveViewScreen.openVideoList()
         with(fileListScreen) {
@@ -77,8 +80,11 @@ class AssociateSnapshotsTest :
         }
     }
 
+    /**
+     * Test case: https://safefleet.atlassian.net/browse/FMA-1389
+     */
     @Test
-    fun linkSimpleSnapshotsToVideo_FMA_1389() {
+    fun linkSimpleSnapshotsToVideo() {
         setSimpleListViews()
         liveViewScreen.openVideoList()
         with(fileListScreen) {
@@ -106,8 +112,11 @@ class AssociateSnapshotsTest :
         }
     }
 
+    /**
+     * Test case: https://safefleet.atlassian.net/browse/FMA-1396
+     */
     @Test
-    fun linkSnapshotsToVideoCancel_FMA_1396() {
+    fun linkSnapshotsToVideoCancel() {
         setThumbnailListViews()
         liveViewScreen.openVideoList()
         with(fileListScreen) {
@@ -135,8 +144,11 @@ class AssociateSnapshotsTest :
         }
     }
 
+    /**
+     * Test case: https://safefleet.atlassian.net/browse/FMA-1396
+     */
     @Test
-    fun linkSimpleToVideoCancel_FMA_1396() {
+    fun linkSimpleToVideoCancel() {
         setSimpleListViews()
         liveViewScreen.openVideoList()
         with(fileListScreen) {
@@ -165,8 +177,11 @@ class AssociateSnapshotsTest :
         }
     }
 
+    /**
+     * Test case: https://safefleet.atlassian.net/browse/FMA-1398
+     */
     @Test
-    fun linkThumbnailSnapshotsToVideoNoSnapshots_FMA_1398() {
+    fun linkThumbnailSnapshotsToVideoNoSnapshots() {
         mockUtils.clearSnapshotsOnX1()
         liveViewScreen.openVideoList()
         with(fileListScreen) {
@@ -187,8 +202,11 @@ class AssociateSnapshotsTest :
         }
     }
 
+    /**
+     * Test case: https://safefleet.atlassian.net/browse/FMA-1398
+     */
     @Test
-    fun linkSimpleSnapshotsToVideoNoSnapshots_FMA_1398() {
+    fun linkSimpleSnapshotsToVideoNoSnapshots() {
         mockUtils.clearSnapshotsOnX1()
         liveViewScreen.openVideoList()
         with(fileListScreen) {
@@ -211,8 +229,11 @@ class AssociateSnapshotsTest :
         }
     }
 
+    /**
+     * Test case: https://safefleet.atlassian.net/browse/FMA-1400
+     */
     @Test
-    fun linkThumbnailSnapshotsToVideoFilter_FMA_1400() {
+    fun linkThumbnailSnapshotsToVideoFilter() {
         setThumbnailListViews()
         liveViewScreen.openVideoList()
         with(fileListScreen) {
@@ -252,8 +273,11 @@ class AssociateSnapshotsTest :
         }
     }
 
+    /**
+     * Test case: https://safefleet.atlassian.net/browse/FMA-1400
+     */
     @Test
-    fun linkSimpleSnapshotsToVideoFilter_FMA_1400() {
+    fun linkSimpleSnapshotsToVideoFilter() {
         setSimpleListViews()
         liveViewScreen.openVideoList()
         with(fileListScreen) {

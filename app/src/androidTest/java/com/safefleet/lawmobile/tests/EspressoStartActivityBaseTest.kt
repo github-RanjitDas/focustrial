@@ -28,8 +28,8 @@ open class EspressoStartActivityBaseTest<T : Activity>(testActivityClass: Class<
     val activityRule = ActivityScenarioRule(testActivityClass)
 
     // Comment this @Before statement if you want to disable barista defaults
-    /*@Before
+    /* @Before
     fun startActivity() {
         baristaRule.launchActivity()
-    }*/
+    } */
 }
