@@ -4,6 +4,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
 import com.lawmobile.presentation.ui.login.LoginActivity
 import com.safefleet.lawmobile.R
+import com.safefleet.lawmobile.helpers.SmokeTest
 import com.safefleet.lawmobile.screens.FileListScreen
 import com.safefleet.lawmobile.screens.FilterDialogScreen
 import com.safefleet.lawmobile.screens.LiveViewScreen
@@ -164,6 +165,7 @@ class SnapshotListTest : EspressoStartActivityBaseTest<LoginActivity>(LoginActiv
         }
     }
 
+    @SmokeTest
     @Test
     fun verifySimpleCheckboxFunctionality_FMA_561() {
         setSimpleListViews()
@@ -252,6 +254,7 @@ class SnapshotListTest : EspressoStartActivityBaseTest<LoginActivity>(LoginActiv
         }
     }
 
+    @SmokeTest
     @Test
     fun verifyUpdatingSimpleSnapshotsList_FMA_563() {
         setSimpleListViews()
@@ -260,7 +263,7 @@ class SnapshotListTest : EspressoStartActivityBaseTest<LoginActivity>(LoginActiv
 
         with(liveViewScreen) {
             openSnapshotList()
-            fileListScreen.isSnapshotsListScreenDisplayed()
+            fileListScreen.isSnapshotsListX1ScreenDisplayed()
             fileListScreen.clickOnSimpleListButton()
 
             fileListScreen.clickOnBack()
@@ -323,6 +326,7 @@ class SnapshotListTest : EspressoStartActivityBaseTest<LoginActivity>(LoginActiv
         fileListScreen.isDisconnectionAlertDisplayed()
     }
 
+    @SmokeTest
     @Test
     fun associateSimpleSnapshotToPartner_FMA_1176() {
         setSimpleListViews()
@@ -340,6 +344,7 @@ class SnapshotListTest : EspressoStartActivityBaseTest<LoginActivity>(LoginActiv
         }
     }
 
+    @SmokeTest
     @Test
     fun associateThumbnailSnapshotToPartner_FMA_1176() {
         setThumbnailListViews()

@@ -4,6 +4,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
 import com.lawmobile.presentation.ui.login.LoginActivity
 import com.safefleet.lawmobile.R
+import com.safefleet.lawmobile.helpers.SmokeTest
 import com.safefleet.lawmobile.screens.FileListScreen
 import com.safefleet.lawmobile.screens.LiveViewScreen
 import com.safefleet.lawmobile.screens.LoginScreen
@@ -38,6 +39,7 @@ class VideoPlaybackTest : EspressoStartActivityBaseTest<LoginActivity>(LoginActi
         }
     }
 
+    @SmokeTest
     @Test
     fun verifySaveVideoMetadataSuccess_FMA_722() {
         liveViewScreen.openVideoList()

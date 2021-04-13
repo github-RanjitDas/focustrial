@@ -2,8 +2,10 @@ package com.safefleet.lawmobile.tests
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
+import androidx.test.filters.MediumTest
 import com.lawmobile.presentation.ui.login.LoginActivity
 import com.safefleet.lawmobile.R
+import com.safefleet.lawmobile.helpers.SmokeTest
 import com.safefleet.lawmobile.screens.FileListScreen
 import com.safefleet.lawmobile.screens.FilterDialogScreen
 import com.safefleet.lawmobile.screens.LiveViewScreen
@@ -42,6 +44,7 @@ class VideoListTest : EspressoStartActivityBaseTest<LoginActivity>(LoginActivity
         }
     }
 
+    @MediumTest
     @Test
     fun verifyNoVideosTaken_FMA_575() {
         setSimpleRecyclerView()
@@ -103,6 +106,7 @@ class VideoListTest : EspressoStartActivityBaseTest<LoginActivity>(LoginActivity
         }
     }
 
+    @SmokeTest
     @Test
     fun verifyCheckboxFunctionality_FMA_561() {
         setSimpleRecyclerView()
@@ -152,6 +156,7 @@ class VideoListTest : EspressoStartActivityBaseTest<LoginActivity>(LoginActivity
         }
     }
 
+    @SmokeTest
     @Test
     fun verifyUpdatingVideosList_FMA_578() {
         mockUtils.clearVideosOnX1()
@@ -161,7 +166,7 @@ class VideoListTest : EspressoStartActivityBaseTest<LoginActivity>(LoginActivity
         with(liveViewScreen) {
             openVideoList()
 
-            fileListScreen.isVideosListScreenDisplayed()
+            fileListScreen.isVideosListX1ScreenDisplayed()
             fileListScreen.clickOnBack()
 
             isLiveViewDisplayed()
@@ -196,6 +201,7 @@ class VideoListTest : EspressoStartActivityBaseTest<LoginActivity>(LoginActivity
         fileListScreen.isDisconnectionAlertDisplayed()
     }
 
+    @SmokeTest
     @Test
     fun associateVideoToPartner_FMA_1176() {
         setSimpleRecyclerView()
