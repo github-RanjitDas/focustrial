@@ -34,6 +34,7 @@ class FileListX1Activity : FileListActivity() {
     }
 
     private fun attachListTypeFragment() {
+        filterSectionFragment.resetButtonAssociateSnapshot(listType)
         when (listType) {
             Constants.VIDEO_LIST -> {
                 appBarFragment.isSimpleListActivity(true)
