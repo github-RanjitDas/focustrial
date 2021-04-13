@@ -4,6 +4,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
 import com.lawmobile.presentation.ui.login.LoginActivity
 import com.safefleet.lawmobile.helpers.DeviceUtils
+import com.safefleet.lawmobile.helpers.SmokeTest
 import com.safefleet.lawmobile.screens.LiveViewScreen
 import com.safefleet.lawmobile.screens.LoginScreen
 import com.safefleet.lawmobile.screens.MainMenuScreen
@@ -25,11 +26,13 @@ class LiveViewTest : EspressoStartActivityBaseTest<LoginActivity>(LoginActivity:
     @Before
     fun login() = LoginScreen().login()
 
+    @SmokeTest
     @Test
     fun verifyLiveViewIsDisplayed_FMA_389() {
         liveViewScreen.isLiveViewDisplayed()
     }
 
+    @SmokeTest
     @Test
     fun verifyVideoInFullScreen_FMA_391() {
         with(liveViewScreen) {
@@ -48,6 +51,7 @@ class LiveViewTest : EspressoStartActivityBaseTest<LoginActivity>(LoginActivity:
         }
     }
 
+    @SmokeTest
     @Test
     fun verifyLiveViewToggleOnDisconnection_FMA_423() {
         with(liveViewScreen) {
@@ -61,6 +65,7 @@ class LiveViewTest : EspressoStartActivityBaseTest<LoginActivity>(LoginActivity:
     /**
      * Test case: https://safefleet.atlassian.net/browse/FMA-1767
      */
+    @SmokeTest
     @Test
     fun verifyMainMenuIsNotDisplayedOnX1() {
         with(mainMenuScreen) {

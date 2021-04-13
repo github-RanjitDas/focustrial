@@ -31,7 +31,7 @@ object CustomAssertionActions {
         espressoAssertion()
     }
 
-    fun customSwipeRight(): ViewAction? {
+    fun customSwipeRight(): ViewAction {
         return GeneralSwipeAction(
             Swipe.FAST,
             GeneralLocation.CENTER_LEFT,
