@@ -152,26 +152,29 @@ class VideoPlaybackActivity : BaseActivity() {
     }
 
     private fun setAppBar() {
-        binding.layoutCustomAppBar?.textViewTitle?.text =
-            getString(R.string.video_detail)
-        binding.layoutCustomAppBar?.buttonSimpleList?.isVisible = false
-        binding.layoutCustomAppBar?.buttonThumbnailList?.isVisible = false
+        binding.layoutCustomAppBar?.run {
+            textViewTitle.text = getString(R.string.video_detail)
+            buttonSimpleList.isVisible = false
+            buttonThumbnailList.isVisible = false
+        }
     }
 
     private fun addEditTextFilter() {
-        binding.partnerIdValue.filters = getFiltersWithLength(20)
-        binding.ticket1Value.filters = getFiltersWithLength(20)
-        binding.ticket2Value.filters = getFiltersWithLength(20)
-        binding.case1Value.filters = getFiltersWithLength(50)
-        binding.case2Value.filters = getFiltersWithLength(50)
-        binding.dispatch1Value.filters = getFiltersWithLength(30)
-        binding.dispatch2Value.filters = getFiltersWithLength(30)
-        binding.locationValue.filters = getFiltersWithLength(30)
-        binding.notesValue.filters = getFiltersWithLength(100)
-        binding.firstNameValue.filters = getFiltersWithLength(30)
-        binding.lastNameValue.filters = getFiltersWithLength(30)
-        binding.driverLicenseValue.filters = getFiltersWithLength(30)
-        binding.licensePlateValue.filters = getFiltersWithLength(30)
+        with(binding) {
+            partnerIdValue.filters = getFiltersWithLength(20)
+            ticket1Value.filters = getFiltersWithLength(20)
+            ticket2Value.filters = getFiltersWithLength(20)
+            case1Value.filters = getFiltersWithLength(50)
+            case2Value.filters = getFiltersWithLength(50)
+            dispatch1Value.filters = getFiltersWithLength(30)
+            dispatch2Value.filters = getFiltersWithLength(30)
+            locationValue.filters = getFiltersWithLength(30)
+            notesValue.filters = getFiltersWithLength(100)
+            firstNameValue.filters = getFiltersWithLength(30)
+            lastNameValue.filters = getFiltersWithLength(30)
+            driverLicenseValue.filters = getFiltersWithLength(30)
+            licensePlateValue.filters = getFiltersWithLength(30)
+        }
     }
 
     private fun getFiltersWithLength(length: Int): Array<InputFilter> {
@@ -207,12 +210,14 @@ class VideoPlaybackActivity : BaseActivity() {
         raceList.addAll(resources.getStringArray(R.array.race_spinner))
         genderList.addAll(resources.getStringArray(R.array.gender_spinner))
 
-        binding.eventValue.adapter =
-            ArrayAdapter(this, R.layout.spinner_item, eventList)
-        binding.raceValue.adapter =
-            ArrayAdapter(this, R.layout.spinner_item, raceList)
-        binding.genderValue.adapter =
-            ArrayAdapter(this, R.layout.spinner_item, genderList)
+        with(binding) {
+            eventValue.adapter =
+                ArrayAdapter(this@VideoPlaybackActivity, R.layout.spinner_item, eventList)
+            raceValue.adapter =
+                ArrayAdapter(this@VideoPlaybackActivity, R.layout.spinner_item, raceList)
+            genderValue.adapter =
+                ArrayAdapter(this@VideoPlaybackActivity, R.layout.spinner_item, genderList)
+        }
     }
 
     private fun showErrorInEvents() {
@@ -239,23 +244,25 @@ class VideoPlaybackActivity : BaseActivity() {
     }
 
     private fun configureListeners() {
-        binding.buttonPlay.setOnClickListenerCheckConnection {
-            manageButtonPlayPause()
-        }
-        binding.buttonFullScreen.setOnClickListenerCheckConnection {
-            changeScreenOrientation()
-        }
-        binding.buttonAspect.setOnClickListenerCheckConnection {
-            videoPlaybackViewModel.changeAspectRatio()
-        }
-        binding.saveButtonVideoPlayback.setOnClickListenerCheckConnection {
-            saveVideoMetadataInCamera()
-        }
-        binding.layoutCustomAppBar?.imageButtonBackArrow?.setOnClickListenerCheckConnection {
-            onBackPressed()
-        }
-        binding.buttonAssociateSnapshots.setOnClickListenerCheckConnection {
-            showAssociateSnapshotsBottomSheet()
+        with(binding) {
+            buttonPlay.setOnClickListenerCheckConnection {
+                manageButtonPlayPause()
+            }
+            buttonFullScreen.setOnClickListenerCheckConnection {
+                changeScreenOrientation()
+            }
+            buttonAspect.setOnClickListenerCheckConnection {
+                videoPlaybackViewModel.changeAspectRatio()
+            }
+            saveButtonVideoPlayback.setOnClickListenerCheckConnection {
+                saveVideoMetadataInCamera()
+            }
+            layoutCustomAppBar?.imageButtonBackArrow?.setOnClickListenerCheckConnection {
+                onBackPressed()
+            }
+            buttonAssociateSnapshots.setOnClickListenerCheckConnection {
+                showAssociateSnapshotsBottomSheet()
+            }
         }
         configureListenerSeekBar()
         configureMediaEventListener()
@@ -344,36 +351,28 @@ class VideoPlaybackActivity : BaseActivity() {
     }
 
     private fun setVideoMetadata(videoMetadata: DomainVideoMetadata) {
-        videoMetadata.metadata?.run {
-            binding.eventValue.setSelection(
-                getSpinnerSelection(
-                    eventList,
-                    event?.name
-                )
-            )
-            binding.partnerIdValue.setText(partnerID)
-            binding.ticket1Value.setText(ticketNumber)
-            binding.ticket2Value.setText(ticketNumber2)
-            binding.case1Value.setText(caseNumber)
-            binding.case2Value.setText(caseNumber2)
-            binding.dispatch1Value.setText(dispatchNumber)
-            binding.dispatch2Value.setText(dispatchNumber2)
-            binding.locationValue.setText(location)
-            binding.notesValue.setText(remarks)
-            binding.firstNameValue.setText(firstName)
-            binding.lastNameValue.setText(lastName)
-            binding.genderValue.setSelection(
-                getSpinnerSelection(
-                    genderList,
-                    gender
-                )
-            )
-            binding.raceValue.setSelection(getSpinnerSelection(raceList, race))
-            binding.driverLicenseValue.setText(driverLicense)
-            binding.licensePlateValue.setText(licensePlate)
+        videoMetadata.metadata?.let {
+            with(binding) {
+                eventValue.setSelection(getSpinnerSelection(eventList, it.event?.name))
+                partnerIdValue.setText(it.partnerID)
+                ticket1Value.setText(it.ticketNumber)
+                ticket2Value.setText(it.ticketNumber2)
+                case1Value.setText(it.caseNumber)
+                case2Value.setText(it.caseNumber2)
+                dispatch1Value.setText(it.dispatchNumber)
+                dispatch2Value.setText(it.dispatchNumber2)
+                locationValue.setText(it.location)
+                notesValue.setText(it.remarks)
+                firstNameValue.setText(it.firstName)
+                lastNameValue.setText(it.lastName)
+                genderValue.setSelection(getSpinnerSelection(genderList, it.gender))
+                raceValue.setSelection(getSpinnerSelection(raceList, it.race))
+                driverLicenseValue.setText(it.driverLicense)
+                licensePlateValue.setText(it.licensePlate)
+            }
         }
 
-        (videoMetadata.associatedPhotos)?.let {
+        videoMetadata.associatedPhotos?.let {
             SnapshotsAssociatedByUser.setTemporalValue(it as MutableList)
             SnapshotsAssociatedByUser.setFinalValue(it)
             associateSnapshotsFragment.setSnapshotsAssociatedFromMetadata(it)
@@ -509,10 +508,11 @@ class VideoPlaybackActivity : BaseActivity() {
     private fun isAllowedToAttemptToGetInformation() = currentAttempts <= ATTEMPTS_ALLOWED
 
     private fun setVideoInformation() {
-        binding.videoNameValue.text = currentVideo?.name
-        binding.startTimeValue.text = currentVideo?.getCreationDate()
-        binding.durationValue.text =
-            totalDurationVideoInMilliSeconds.convertMilliSecondsToString()
+        with(binding) {
+            videoNameValue.text = currentVideo?.name
+            startTimeValue.text = currentVideo?.getCreationDate()
+            durationValue.text = totalDurationVideoInMilliSeconds.convertMilliSecondsToString()
+        }
     }
 
     private fun createVideoPlaybackInSurface(domainInformationVideo: DomainInformationVideo) {
@@ -611,7 +611,6 @@ class VideoPlaybackActivity : BaseActivity() {
     }
 
     private fun getNewMetadataFromForm(): DomainVideoMetadata {
-
         var gender: String? = null
         var race: String? = null
         val event =
@@ -628,8 +627,8 @@ class VideoPlaybackActivity : BaseActivity() {
         }
 
         return DomainVideoMetadata(
-            binding.videoNameValue.text.toString(),
-            DomainMetadata(
+            fileName = binding.videoNameValue.text.toString(),
+            metadata = DomainMetadata(
                 event = event,
                 partnerID = binding.partnerIdValue.text.toString(),
                 ticketNumber = binding.ticket1Value.text.toString(),
@@ -647,11 +646,17 @@ class VideoPlaybackActivity : BaseActivity() {
                 driverLicense = binding.driverLicenseValue.text.toString(),
                 licensePlate = binding.licensePlateValue.text.toString()
             ),
-            currentVideo?.nameFolder,
-            CameraInfo.officerId,
-            currentVideo?.path,
-            SnapshotsAssociatedByUser.value,
-            CameraInfo.serialNumber
+            nameFolder = currentVideo?.nameFolder,
+            officerId = CameraInfo.officerId,
+            path = currentVideo?.path,
+            associatedPhotos = SnapshotsAssociatedByUser.value,
+            serialNumber = CameraInfo.serialNumber,
+            endTime = currentMetadata.endTime,
+            gmtOffset = currentMetadata.gmtOffset,
+            hash = currentMetadata.hash,
+            preEvent = currentMetadata.preEvent,
+            startTime = currentMetadata.startTime,
+            videoSpecs = currentMetadata.videoSpecs
         )
     }
 
