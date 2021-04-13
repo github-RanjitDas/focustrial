@@ -1,7 +1,8 @@
 package com.lawmobile.presentation.ui.helpSection
 
 import android.os.Bundle
-import androidx.core.view.isVisible
+import android.view.View
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.databinding.ActivityHelpPageBinding
 import com.lawmobile.presentation.extensions.verifySessionBeforeAction
@@ -17,7 +18,24 @@ class HelpPageActivity : BaseActivity() {
         setContentView(activityHelpPageBinding.root)
 
         setAppBar()
+        setBottomSheetBehavior()
         loadPDFGuide()
+    }
+
+    private fun setBottomSheetBehavior() {
+        val bottomSheetBehavior = BottomSheetBehavior.from(activityHelpPageBinding.containerHelpPage)
+        bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+        bottomSheetBehavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
+            override fun onStateChanged(bottomSheet: View, newState: Int) {
+                if (newState == BottomSheetBehavior.STATE_HIDDEN) {
+                    finish()
+                    overridePendingTransition(0, 0)
+                }
+            }
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {
+                // Does not need any special behaviour
+            }
+        })
     }
 
     private fun loadPDFGuide() {
@@ -25,10 +43,9 @@ class HelpPageActivity : BaseActivity() {
     }
 
     private fun setAppBar() {
-        with(activityHelpPageBinding.layoutCustomAppBar) {
+        with(activityHelpPageBinding) {
             textViewTitle.text = getString(R.string.user_guide)
-            buttonSimpleList.isVisible = false
-            buttonThumbnailList.isVisible = false
+            imageButtonBackArrow.setImageResource(R.drawable.ic_cancel)
             imageButtonBackArrow.setOnClickListener {
                 onBackPressed()
             }
