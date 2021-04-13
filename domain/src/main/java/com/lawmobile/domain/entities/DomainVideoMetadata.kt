@@ -7,5 +7,11 @@ data class DomainVideoMetadata(
     val officerId: String? = null,
     val path: String? = null,
     val associatedPhotos: List<DomainPhotoAssociated>? = null,
-    val serialNumber: String? = null
+    val serialNumber: String? = null,
+    var endTime: String? = null,
+    var gmtOffset: String? = null,
+    var hash: DomainHashVideo? = null,
+    var preEvent: String? = null,
+    var startTime: String? = null,
+    var videoSpecs: String? = null
 )
