@@ -43,7 +43,6 @@ class CameraEventsManager @Inject constructor(
     }
 
     fun stopReading() {
-        launch { eventsUseCase.clearAllEvents() }
         isReadyToReadEvents = false
         notificationHandler.removeCallbacks(notificationTask)
         job.cancel()

@@ -59,49 +59,6 @@ internal class CameraEventsDaoImplTest {
     }
 
     @Test
-    fun getEventByIdFlow() {
-        every {
-            database.databaseQueries.getEventById(any()).executeAsOne()
-        } returns mockk(relaxed = true)
-        cameraEventsDaoImpl.getEventById(1)
-        verify { database.databaseQueries.getEventById(any()) }
-    }
-
-    @Test
-    fun getEventByIdResult() {
-        val result = DbCameraEvent(
-            1,
-            "event",
-            "Camera",
-            "Information",
-            "Greetings",
-            "20/12/20",
-            1
-        )
-        every { database.databaseQueries.getEventById(any()).executeAsOne() } returns result
-        Assert.assertEquals(
-            DbEventsMapper.dbToLocal(result),
-            cameraEventsDaoImpl.getEventById(1)
-        )
-    }
-
-    @Test
-    fun getLastEventIdFlow() {
-        every { database.databaseQueries.getLastEventId().executeAsOne() } returns 1
-        cameraEventsDaoImpl.getLastEventId()
-        verify { database.databaseQueries.getLastEventId().executeAsOne() }
-    }
-
-    @Test
-    fun getLastEventIdResult() {
-        every { database.databaseQueries.getLastEventId().executeAsOne() } returns 1
-        Assert.assertEquals(
-            1,
-            cameraEventsDaoImpl.getLastEventId()
-        )
-    }
-
-    @Test
     fun saveEventFlow() {
         val event = LocalCameraEvent(
             1,
@@ -133,13 +90,6 @@ internal class CameraEventsDaoImplTest {
                 any()
             )
         }
-    }
-
-    @Test
-    fun setEventReadFlow() {
-        every { database.databaseQueries.setEventRead(any(), any()) } just Runs
-        cameraEventsDaoImpl.setEventRead(1, "")
-        verify { database.databaseQueries.setEventRead(any(), any()) }
     }
 
     @Test
@@ -205,5 +155,12 @@ internal class CameraEventsDaoImplTest {
         every { database.databaseQueries.setAllNotificationsAsRead() } just Runs
         cameraEventsDaoImpl.setAllNotificationsAsRead()
         verify { database.databaseQueries.setAllNotificationsAsRead() }
+    }
+
+    @Test
+    fun deleteOutdatedEventsFlow() {
+        every { database.databaseQueries.deleteOutdatedEvents(any()) } just Runs
+        cameraEventsDaoImpl.deleteOutdatedEvents("")
+        verify { database.databaseQueries.deleteOutdatedEvents(any()) }
     }
 }

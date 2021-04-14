@@ -100,7 +100,7 @@ class SnapshotDetailRepositoryImplTest {
             )
             val item = FileList.getMetadataOfImageInList("fileName.PNG")
             Assert.assertTrue(response is Result.Success)
-            Assert.assertEquals(item?.cameraConnectPhotoMetadata?.metadata?.partnerID, "partnerId")
+            Assert.assertEquals(item?.photoMetadata?.metadata?.partnerID, "partnerId")
         }
     }
 

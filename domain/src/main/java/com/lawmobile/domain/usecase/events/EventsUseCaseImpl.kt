@@ -11,7 +11,6 @@ class EventsUseCaseImpl(
     override suspend fun getNotificationEvents() = eventsRepository.getNotificationEvents()
     override fun isPossibleToReadLog() = eventsRepository.isPossibleToReadLog()
     override suspend fun setAllNotificationsAsRead() = eventsRepository.setAllNotificationsAsRead()
-    override suspend fun clearAllEvents() = eventsRepository.clearAllEvents()
     override suspend fun getPendingNotificationsCount() =
         eventsRepository.getPendingNotificationsCount()
 }

@@ -119,19 +119,23 @@ class LiveStatusBarX2Fragment : LiveStatusBarBaseFragment() {
     }
 
     private fun manageLowStorage() {
-        binding.imageViewStorage.startAnimationIfEnabled(blinkAnimation)
-        createAlertForInformationCamera(
-            R.string.storage_alert_title,
-            R.string.storage_alert_description
-        )
+        requireActivity().runOnUiThread {
+            binding.imageViewStorage.startAnimationIfEnabled(blinkAnimation)
+            createAlertForInformationCamera(
+                R.string.storage_alert_title,
+                R.string.storage_alert_description
+            )
+        }
     }
 
     private fun manageLowBattery() {
-        imageViewBattery.startAnimationIfEnabled(blinkAnimation)
-        createAlertForInformationCamera(
-            R.string.battery_alert_title,
-            R.string.battery_alert_description
-        )
+        requireActivity().runOnUiThread {
+            imageViewBattery.startAnimationIfEnabled(blinkAnimation)
+            createAlertForInformationCamera(
+                R.string.battery_alert_title,
+                R.string.battery_alert_description
+            )
+        }
     }
 
     private fun setStorageLevels(result: Event<Result<List<Double>>>) {
@@ -162,12 +166,12 @@ class LiveStatusBarX2Fragment : LiveStatusBarBaseFragment() {
     private fun setColorInStorageLevel(usedPercent: Double) {
         binding.progressStorageLevel.setProgress(usedPercent.toInt())
         binding.imageViewStorage.apply {
-            if (usedPercent.toInt() in storageBarRanges.highRange) {
-                backgroundTintList =
-                    ContextCompat.getColorStateList(requireContext(), R.color.red)
-            } else {
+            if (usedPercent.toInt() in storageBarRanges.lowRange) {
                 backgroundTintList =
                     ContextCompat.getColorStateList(requireContext(), R.color.greenSuccess)
+            } else {
+                backgroundTintList =
+                    ContextCompat.getColorStateList(requireContext(), R.color.red)
                 clearAnimation()
             }
         }

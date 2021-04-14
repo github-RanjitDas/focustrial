@@ -61,53 +61,6 @@ internal class EventsLocalDataSourceImplTest {
     }
 
     @Test
-    fun getLastEventFlow() {
-        every { cameraEventsDao.getLastEventId() } returns 1
-        every { cameraEventsDao.getEventById(any()) } returns mockk()
-        runBlocking { eventsLocalDataSourceImpl.getLastEvent() }
-        verify {
-            cameraEventsDao.getLastEventId()
-            cameraEventsDao.getEventById(any())
-        }
-    }
-
-    @Test
-    fun getLastEventSuccess() {
-        every { cameraEventsDao.getLastEventId() } returns 1
-        every { cameraEventsDao.getEventById(any()) } returns mockk()
-        runBlocking {
-            Assert.assertTrue(
-                eventsLocalDataSourceImpl.getLastEvent() is Result.Success
-            )
-        }
-    }
-
-    @Test
-    fun getLastEventError() {
-        every { cameraEventsDao.getLastEventId() } returns 1
-        every { cameraEventsDao.getEventById(any()) } throws Exception()
-        runBlocking {
-            Assert.assertTrue(
-                eventsLocalDataSourceImpl.getLastEvent() is Result.Error
-            )
-        }
-    }
-
-    @Test
-    fun getLastEventResult() {
-        val event: LocalCameraEvent = mockk()
-        every { cameraEventsDao.getLastEventId() } returns 1
-        every { cameraEventsDao.getEventById(any()) } returns event
-        runBlocking {
-            val result = eventsLocalDataSourceImpl.getLastEvent() as Result.Success
-            Assert.assertEquals(
-                event,
-                result.data
-            )
-        }
-    }
-
-    @Test
     fun saveAllEventsFlow() {
         every { cameraEventsDao.saveEvent(any()) } just Runs
         runBlocking { eventsLocalDataSourceImpl.saveAllEvents(listOf(mockk())) }
@@ -130,33 +83,6 @@ internal class EventsLocalDataSourceImplTest {
         runBlocking {
             Assert.assertTrue(
                 eventsLocalDataSourceImpl.saveAllEvents(listOf(mockk())) is Result.Error
-            )
-        }
-    }
-
-    @Test
-    fun setEventReadFlow() {
-        every { cameraEventsDao.setEventRead(any(), any()) } just Runs
-        runBlocking { eventsLocalDataSourceImpl.setEventRead(true, "") }
-        verify { cameraEventsDao.setEventRead(any(), any()) }
-    }
-
-    @Test
-    fun setEventReadSuccess() {
-        every { cameraEventsDao.setEventRead(any(), any()) } just Runs
-        runBlocking {
-            Assert.assertTrue(
-                eventsLocalDataSourceImpl.setEventRead(true, "") is Result.Success
-            )
-        }
-    }
-
-    @Test
-    fun setEventReadError() {
-        every { cameraEventsDao.setEventRead(any(), any()) } throws Exception()
-        runBlocking {
-            Assert.assertTrue(
-                eventsLocalDataSourceImpl.setEventRead(true, "") is Result.Error
             )
         }
     }
@@ -284,5 +210,19 @@ internal class EventsLocalDataSourceImplTest {
         every { cameraEventsDao.saveEvent(any()) } throws Exception()
         runBlocking { eventsLocalDataSourceImpl.saveEvent(mockk(relaxed = true)) }
         verify { cameraEventsDao.saveEvent(any()) }
+    }
+
+    @Test
+    fun deleteOutdatedEventsFlow() {
+        every { cameraEventsDao.deleteOutdatedEvents(any()) } just Runs
+        runBlocking { eventsLocalDataSourceImpl.deleteOutdatedEvents("") }
+        verify { cameraEventsDao.deleteOutdatedEvents(any()) }
+    }
+
+    @Test
+    fun deleteOutdatedEventsError() {
+        every { cameraEventsDao.deleteOutdatedEvents(any()) } throws Exception()
+        runBlocking { eventsLocalDataSourceImpl.deleteOutdatedEvents("") }
+        verify { cameraEventsDao.deleteOutdatedEvents(any()) }
     }
 }

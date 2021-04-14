@@ -21,14 +21,6 @@ class EventsLocalDataSourceImpl(private val cameraEventsDao: CameraEventsDao) :
             Result.Error(e)
         }
 
-    override suspend fun getLastEvent(): Result<LocalCameraEvent> =
-        try {
-            val eventId = cameraEventsDao.getLastEventId()
-            Result.Success(cameraEventsDao.getEventById(eventId))
-        } catch (e: Exception) {
-            Result.Error(e)
-        }
-
     override fun getEventsCount() =
         try {
             cameraEventsDao.getEventsCount()
@@ -62,19 +54,20 @@ class EventsLocalDataSourceImpl(private val cameraEventsDao: CameraEventsDao) :
             Result.Error(e)
         }
 
-    override suspend fun setEventRead(isRead: Boolean, date: String): Result<Unit> =
-        try {
-            val isReadLong: Long = if (isRead) 1 else 0
-            Result.Success(cameraEventsDao.setEventRead(isReadLong, date))
-        } catch (e: Exception) {
-            Result.Error(e)
-        }
-
     override suspend fun setAllNotificationsAsRead() =
         try {
             cameraEventsDao.setAllNotificationsAsRead()
         } catch (e: Exception) {
             println("error updating notifications in database" + e.message)
+        }
+
+    override suspend fun deleteOutdatedEvents(date: String): Result<Unit> =
+        try {
+            cameraEventsDao.deleteOutdatedEvents(date)
+            Result.Success(Unit)
+        } catch (e: Exception) {
+            println("error deleting outdated events in database" + e.message)
+            Result.Error(e)
         }
 
     override suspend fun clearAllEvents() =
