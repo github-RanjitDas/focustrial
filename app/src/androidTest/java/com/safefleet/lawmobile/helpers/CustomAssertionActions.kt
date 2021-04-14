@@ -5,7 +5,7 @@ import androidx.test.espresso.action.GeneralLocation
 import androidx.test.espresso.action.GeneralSwipeAction
 import androidx.test.espresso.action.Press
 import androidx.test.espresso.action.Swipe
-import com.schibsted.spain.barista.interaction.BaristaSleepInteractions
+import com.schibsted.spain.barista.interaction.BaristaSleepInteractions.sleep
 
 object CustomAssertionActions {
 
@@ -25,7 +25,7 @@ object CustomAssertionActions {
                 return
             } catch (e: Throwable) {
                 e.printStackTrace()
-                BaristaSleepInteractions.sleep(100)
+                sleep(100)
             }
         } while (System.currentTimeMillis() < endTime)
         espressoAssertion()

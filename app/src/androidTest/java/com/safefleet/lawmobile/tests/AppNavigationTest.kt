@@ -28,9 +28,12 @@ class AppNavigationTest : EspressoStartActivityBaseTest<LoginActivity>(LoginActi
         LoginScreen().login()
     }
 
+    /**
+     * Test case: https://safefleet.atlassian.net/browse/FMA-214
+     */
     @SmokeTest
     @Test
-    fun verifyLiveViewToggleBehaviorAfterNavigation_FMA_214() {
+    fun verifyLiveViewToggleBehaviorAfterNavigation() {
         with(liveViewScreen) {
             isLiveViewDisplayed()
             isLiveViewToggleEnabled()
@@ -49,9 +52,12 @@ class AppNavigationTest : EspressoStartActivityBaseTest<LoginActivity>(LoginActi
         }
     }
 
+    /**
+     * Test case: https://safefleet.atlassian.net/browse/FMA-549
+     */
     @SmokeTest
     @Test
-    fun verifyRecordingAfterNavigation_FMA_549() {
+    fun verifyRecordingAfterNavigation() {
         with(liveViewScreen) {
             isLiveViewDisplayed()
 

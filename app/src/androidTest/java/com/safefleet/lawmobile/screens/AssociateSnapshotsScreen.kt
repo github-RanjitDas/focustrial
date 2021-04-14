@@ -9,20 +9,19 @@ import com.schibsted.spain.barista.interaction.BaristaClickInteractions.clickOn
 
 class AssociateSnapshotsScreen : BaseScreen() {
 
-    fun isAssociateScreenButtonsDisplayed() {
-        assertDisplayed(R.id.buttonThumbnailListAssociate)
-        assertDisplayed(R.id.buttonSimpleListAssociate)
-        assertDisplayed(R.id.buttonFilterAssociateImages)
-        isFilterNotActive()
+    fun clickOnSimpleListButton() {
+        clickOn(R.id.buttonSimpleListAssociate)
     }
 
     fun clickOnAssociateSnapshots() {
         clickOn(R.id.buttonAssociateImages)
     }
 
-    fun isSnapshotsAddedSuccessDisplayed() {
-        assertDisplayed(R.string.snapshots_added_success)
-        EspressoIdlingResource.increment()
+    fun isAssociateScreenButtonsDisplayed() {
+        assertDisplayed(R.id.buttonThumbnailListAssociate)
+        assertDisplayed(R.id.buttonSimpleListAssociate)
+        assertDisplayed(R.id.buttonFilterAssociateImages)
+        isFilterNotActive()
     }
 
     fun clickOnClose() {
@@ -31,6 +30,11 @@ class AssociateSnapshotsScreen : BaseScreen() {
 
     fun clickOnFilter() {
         clickOn(R.id.buttonFilterAssociateImages)
+    }
+
+    fun isSnapshotsAddedSuccessDisplayed() {
+        assertDisplayed(R.string.snapshots_added_success)
+        EspressoIdlingResource.increment()
     }
 
     fun isNoSnapshotsSelectedDisplayed() {
@@ -52,9 +56,5 @@ class AssociateSnapshotsScreen : BaseScreen() {
             R.id.buttonFilterAssociateImages,
             R.drawable.ic_filter_white
         )
-    }
-
-    fun clickOnSimpleListButton() {
-        clickOn(R.id.buttonSimpleListAssociate)
     }
 }

@@ -9,12 +9,14 @@ import com.schibsted.spain.barista.assertion.BaristaVisibilityAssertions.assertD
 import com.schibsted.spain.barista.assertion.BaristaVisibilityAssertions.assertNotDisplayed
 import com.schibsted.spain.barista.interaction.BaristaClickInteractions.clickOn
 import com.schibsted.spain.barista.interaction.BaristaEditTextInteractions.writeTo
-import com.schibsted.spain.barista.interaction.BaristaScrollInteractions
+import com.schibsted.spain.barista.interaction.BaristaScrollInteractions.safelyScrollTo
 
 class VideoPlaybackScreen : BaseScreen() {
 
     fun clickOnSave() = clickOn(R.id.saveButtonVideoPlayback)
+
     fun clickOnBack() = clickOn(R.id.imageButtonBackArrow)
+
     fun clickOnAddSnapshots() = clickOn(R.id.buttonAssociateSnapshots)
 
     fun selectEvent(data: VideoInformation) {
@@ -86,17 +88,17 @@ class VideoPlaybackScreen : BaseScreen() {
     fun isMetadataChangesAlertDisplayed() = Alert.isMetadataChangesDisplayed()
 
     fun isAddSnapshotsButtonDisplayed() {
-        BaristaScrollInteractions.safelyScrollTo(R.id.buttonAssociateSnapshots)
-        assertDisplayed(R.id.buttonAssociateSnapshots)
+        safelyScrollTo(R.id.buttonAssociateSnapshots)
+        waitUntil { assertDisplayed(R.id.buttonAssociateSnapshots) }
     }
 
     fun thereIsNoSnapshotAssociated() {
-        BaristaScrollInteractions.safelyScrollTo(R.id.layoutAssociatedSnapshots)
+        safelyScrollTo(R.id.layoutAssociatedSnapshots)
         assertNotDisplayed(R.id.layoutAssociatedSnapshots)
     }
 
     fun thereAreSnapshotsAssociated() {
-        BaristaScrollInteractions.safelyScrollTo(R.id.layoutAssociatedSnapshots)
+        safelyScrollTo(R.id.layoutAssociatedSnapshots)
         assertDisplayed(R.id.layoutAssociatedSnapshots)
     }
 }

@@ -11,7 +11,8 @@ import com.safefleet.lawmobile.helpers.isActivated
 import com.safefleet.lawmobile.helpers.isNotActivated
 import com.safefleet.mobile.external_hardware.cameras.entities.CameraFile
 import com.schibsted.spain.barista.assertion.BaristaImageViewAssertions.assertHasDrawable
-import com.schibsted.spain.barista.assertion.BaristaListAssertions
+import com.schibsted.spain.barista.assertion.BaristaListAssertions.assertCustomAssertionAtPosition
+import com.schibsted.spain.barista.assertion.BaristaListAssertions.assertDisplayedAtPosition
 import com.schibsted.spain.barista.assertion.BaristaRecyclerViewAssertions
 import com.schibsted.spain.barista.assertion.BaristaVisibilityAssertions.assertDisplayed
 import com.schibsted.spain.barista.assertion.BaristaVisibilityAssertions.assertNotDisplayed
@@ -30,31 +31,8 @@ class FileListScreen : BaseScreen() {
     @IdRes
     var targetCheckBox: Int = 0
 
-    fun areCheckboxesUnselected(startPosition: Int, endPosition: Int) {
-        for (position in (startPosition..endPosition)) {
-            isCheckboxUnselected(position)
-        }
-    }
-
     fun scrollListToPosition(position: Int) {
         BaristaListInteractions.scrollListToPosition(recyclerView, position)
-    }
-
-    private fun isFileDisplayedAtPosition(fileDate: String, position: Int) {
-        BaristaListAssertions.assertDisplayedAtPosition(
-            recyclerView,
-            position,
-            targetView,
-            fileDate
-        )
-    }
-
-    fun areFilesSortedByDate(filesList: List<CameraFile>) {
-        val sortedFilesList = filesList.sortedByDescending { it.getCreationDate() }
-
-        for ((itemCount, file) in sortedFilesList.withIndex()) {
-            isFileDisplayedAtPosition(file.getCreationDate(), itemCount)
-        }
     }
 
     fun selectCheckboxOnPosition(position: Int) {
@@ -64,31 +42,6 @@ class FileListScreen : BaseScreen() {
             position
         )
     }
-
-    fun isCheckboxSelected(position: Int) {
-        BaristaListAssertions.assertCustomAssertionAtPosition(
-            recyclerView,
-            position,
-            targetCheckBox,
-            ViewAssertions.matches(isActivated())
-        )
-    }
-
-    fun isCheckboxUnselected(position: Int) {
-        BaristaListAssertions.assertCustomAssertionAtPosition(
-            recyclerView,
-            position,
-            targetCheckBox,
-            ViewAssertions.matches(isNotActivated())
-        )
-    }
-
-    fun checkFileEvent(event: String?) = event?.let { assertDisplayed(it) }
-
-    fun isFileListDisplayed() = assertDisplayed(R.id.fileListRecycler)
-
-    fun areNoFilesFound(@StringRes message: Int) =
-        assertDisplayed(R.id.noFilesTextView, message)
 
     fun clickOnBack() = clickOn(R.id.imageButtonBackArrow)
 
@@ -120,8 +73,56 @@ class FileListScreen : BaseScreen() {
         assertHasDrawable(R.id.buttonOpenFilters, R.drawable.ic_filter)
     }
 
+    fun checkFileEvent(event: String?) = event?.let { assertDisplayed(it) }
+
     fun matchItemsCount(count: Int) =
         BaristaRecyclerViewAssertions.assertRecyclerViewItemCount(recyclerView, count)
+
+    fun areCheckboxesUnselected(startPosition: Int, endPosition: Int) {
+        for (position in (startPosition..endPosition)) {
+            isCheckboxUnselected(position)
+        }
+    }
+
+    private fun isFileDisplayedAtPosition(fileDate: String, position: Int) {
+        assertDisplayedAtPosition(
+            recyclerView,
+            position,
+            targetView,
+            fileDate
+        )
+    }
+
+    fun areFilesSortedByDate(filesList: List<CameraFile>) {
+        val sortedFilesList = filesList.sortedByDescending { it.getCreationDate() }
+
+        for ((itemCount, file) in sortedFilesList.withIndex()) {
+            isFileDisplayedAtPosition(file.getCreationDate(), itemCount)
+        }
+    }
+
+    fun isCheckboxSelected(position: Int) {
+        assertCustomAssertionAtPosition(
+            recyclerView,
+            position,
+            targetCheckBox,
+            ViewAssertions.matches(isActivated())
+        )
+    }
+
+    fun isCheckboxUnselected(position: Int) {
+        assertCustomAssertionAtPosition(
+            recyclerView,
+            position,
+            targetCheckBox,
+            ViewAssertions.matches(isNotActivated())
+        )
+    }
+
+    fun isFileListDisplayed() = assertDisplayed(R.id.fileListRecycler)
+
+    fun areNoFilesFound(@StringRes message: Int) =
+        assertDisplayed(R.id.noFilesTextView, message)
 
     fun isFilterButtonDisplayed() = assertDisplayed(R.id.buttonOpenFilters)
 
@@ -144,37 +145,22 @@ class FileListScreen : BaseScreen() {
 
     private fun isSnapshotsTitleDisplayed() = assertDisplayed(R.string.snapshots_title)
 
-    private fun isSelectSnapshotsDisplayed() =
-        waitUntil { assertDisplayed(R.string.select_snapshots_to_associate) }
-
-    private fun isSelectVideosDisplayed() =
-        waitUntil { assertDisplayed(R.string.select_snapshots_to_associate) }
-
-    private fun isSelectDisplayed() =
+    fun isSelectDisplayed() =
         waitUntil { assertDisplayed(R.string.select) }
 
-    fun isVideosListX1ScreenDisplayed() {
-        isSelectVideosDisplayed()
+    fun isSelectVideosToAssociateDisplayed() =
+        waitUntil { assertDisplayed(R.string.select_videos_to_associate) }
+
+    fun isSelectSnapshotsToAssociateDisplayed() =
+        waitUntil { assertDisplayed(R.string.select_snapshots_to_associate) }
+
+    fun isVideosListScreenDisplayed() {
         isFilterButtonDisplayed()
         isDateTimeHeaderDisplayed()
         isEventHeaderDisplayed()
     }
 
-    fun isVideosListX2ScreenDisplayed() {
-        isSelectDisplayed()
-        isFilterButtonDisplayed()
-        isDateTimeHeaderDisplayed()
-        isEventHeaderDisplayed()
-    }
-
-    fun isSnapshotsListX1ScreenDisplayed() {
-        isSelectSnapshotsDisplayed()
-        isFilterButtonDisplayed()
-        isSnapshotsTitleDisplayed()
-    }
-
-    fun isSnapshotsListX2ScreenDisplayed() {
-        isSelectDisplayed()
+    fun isSnapshotsListScreenDisplayed() {
         isFilterButtonDisplayed()
         isSnapshotsTitleDisplayed()
     }

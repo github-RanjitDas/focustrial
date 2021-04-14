@@ -13,14 +13,6 @@ import com.schibsted.spain.barista.interaction.BaristaEditTextInteractions.write
 
 class LoginScreen : BaseScreen() {
 
-    fun isLogoDisplayed() = assertDisplayed(R.id.imageViewFMALogoNoAnimation)
-
-    fun isConnectToCameraTextDisplayed() =
-        assertDisplayed(R.id.textViewConnectToCamera, R.string.waiting_for_camera)
-
-    fun isPasswordTextDisplayed() =
-        assertContains(R.id.textViewPassword, R.string.welcome_officer)
-
     fun typePassword(officerPassword: String = TestLoginData.OFFICER_PASSWORD.value) =
         writeTo(R.id.editTextOfficerPassword, officerPassword)
 
@@ -30,37 +22,9 @@ class LoginScreen : BaseScreen() {
 
     fun clickOnCameraInstructions() = clickOn(R.id.buttonInstructionsToLinkCamera)
 
-    fun isInstructionsButtonDisplayed() =
-        assertDisplayed(R.id.buttonInstructionsToLinkCamera, R.string.instructions_to_link_camera)
-
-    fun isInstructionPopUpDisplayed() {
-        assertContains(R.id.textViewInstructionsTitle, R.string.instructions_to_link_camera)
-        assertDisplayed(R.id.buttonInstructionsToLinkCamera, R.string.instructions_to_link_camera)
-        assertHasDrawable(R.id.imageViewWifiInstructions, R.drawable.ic_wifi_camera)
-        assertContains(R.id.buttonDismissInstructions, R.string.got_it)
-    }
-
     fun clickOnGotIt() = clickOn(R.id.buttonDismissInstructions)
 
     fun clickOnCloseInstructions() = clickOn(R.id.buttonCloseInstructions)
-
-    fun isPairingSuccessDisplayed() {
-        assertHasDrawable(R.id.imageViewResultPairing, R.drawable.ic_successful_green)
-        assertContains(R.id.textViewResultPairing, R.string.success_connection_to_camera)
-    }
-
-    fun isIncorrectPasswordToastDisplayed() {
-        assertDisplayed(R.string.incorrect_password)
-    }
-
-    fun isFooterLogoDisplayed() {
-        assertHasDrawable(R.id.imageViewSafeFleetFooterLogo, R.drawable.ic_logo_safefleet)
-    }
-
-    fun isPairingErrorDisplayed() {
-        assertHasDrawable(R.id.imageViewResultPairing, R.drawable.ic_error_big)
-        assertDisplayed(R.id.textViewResultPairing, R.string.error_connection_to_camera)
-    }
 
     fun retryPairing() {
         clickOn(R.id.buttonRetry)
@@ -77,6 +41,42 @@ class LoginScreen : BaseScreen() {
         clickOnLogin()
     }
 
+    private fun isLogoDisplayed() = assertDisplayed(R.id.imageViewFMALogoNoAnimation)
+
+    private fun isConnectToCameraTextDisplayed() =
+        assertDisplayed(R.id.textViewConnectToCamera, R.string.waiting_for_camera)
+
+    private fun isPasswordTextDisplayed() =
+        assertContains(R.id.textViewPassword, R.string.welcome_officer)
+
+    private fun isInstructionsButtonDisplayed() =
+        assertDisplayed(R.id.buttonInstructionsToLinkCamera, R.string.instructions_to_link_camera)
+
+    fun isInstructionPopUpDisplayed() {
+        assertContains(R.id.textViewInstructionsTitle, R.string.instructions_to_link_camera)
+        assertDisplayed(R.id.buttonInstructionsToLinkCamera, R.string.instructions_to_link_camera)
+        assertHasDrawable(R.id.imageViewWifiInstructions, R.drawable.ic_wifi_camera)
+        assertContains(R.id.buttonDismissInstructions, R.string.got_it)
+    }
+
+    fun isPairingSuccessDisplayed() {
+        assertHasDrawable(R.id.imageViewResultPairing, R.drawable.ic_successful_green)
+        assertContains(R.id.textViewResultPairing, R.string.success_connection_to_camera)
+    }
+
+    fun isIncorrectPasswordToastDisplayed() {
+        assertDisplayed(R.string.incorrect_password)
+    }
+
+    private fun isFooterLogoDisplayed() {
+        assertHasDrawable(R.id.imageViewSafeFleetFooterLogo, R.drawable.ic_logo_safefleet)
+    }
+
+    fun isPairingErrorDisplayed() {
+        assertHasDrawable(R.id.imageViewResultPairing, R.drawable.ic_error_big)
+        assertDisplayed(R.id.textViewResultPairing, R.string.error_connection_to_camera)
+    }
+
     fun isWifiOffAlertDisplayed() = Alert.isWifiOffAlertDisplayed()
 
     fun isInstructionsPopUpNotDisplayed() {
@@ -91,7 +91,7 @@ class LoginScreen : BaseScreen() {
         assertNotDisplayed(R.id.buttonDismissInstructions)
     }
 
-    fun isGoButtonDisplayed() = assertDisplayed(R.id.buttonGo)
+    private fun isGoButtonDisplayed() = assertDisplayed(R.id.buttonGo)
 
     fun isPairingScreenDisplayed() {
         isLogoDisplayed()
@@ -104,7 +104,7 @@ class LoginScreen : BaseScreen() {
     fun isLoginScreenDisplayed() {
         waitUntil { assertDisplayed(R.id.buttonLogin) }
         isLogoDisplayed()
-        isPasswordTextDisplayed()
+        waitUntil { isPasswordTextDisplayed() }
         isFooterLogoDisplayed()
     }
 }

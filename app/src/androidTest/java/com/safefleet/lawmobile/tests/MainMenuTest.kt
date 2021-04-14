@@ -69,7 +69,8 @@ class MainMenuTest : EspressoBaseTest() {
 
             clickOnViewSnapshots()
 
-            fileListScreen.isSnapshotsListX2ScreenDisplayed()
+            fileListScreen.isSelectDisplayed()
+            fileListScreen.isSnapshotsListScreenDisplayed()
         }
     }
 
@@ -83,7 +84,8 @@ class MainMenuTest : EspressoBaseTest() {
 
             clickOnViewVideos()
 
-            fileListScreen.isVideosListX2ScreenDisplayed()
+            fileListScreen.isSelectDisplayed()
+            fileListScreen.isVideosListScreenDisplayed()
         }
     }
 

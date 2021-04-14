@@ -14,6 +14,33 @@ import com.schibsted.spain.barista.interaction.BaristaClickInteractions.clickOn
 
 class LiveViewScreen : BaseScreen() {
 
+    fun switchLiveViewToggle() = clickOn(R.id.buttonSwitchLiveView)
+
+    fun switchFullScreenMode() = waitUntil { clickOn(R.id.toggleFullScreenLiveView) }
+
+    fun openSnapshotList() = clickOn(R.id.buttonSnapshotList)
+
+    fun openVideoList() = clickOn(R.id.buttonVideoList)
+
+    fun openHelpPage() = clickOn(R.id.buttonOpenHelpPage)
+
+    fun takeSnapshot() {
+        clickOn(R.id.buttonSnapshot)
+        assertDisplayed(R.string.live_view_take_photo_success)
+        waitUntil { assertNotExist(R.string.live_view_take_photo_success) }
+    }
+
+    fun startRecording() {
+        isRecordingNotInProgress()
+        clickOn(R.id.buttonRecord)
+    }
+
+    fun stopRecording() {
+        isRecordingInProgress()
+        clickOn(R.id.buttonRecord)
+        waitUntil { isRecordingNotInProgress() }
+    }
+
     fun isLiveViewNotDisplayed() {
         assertNotExist(R.id.buttonSwitchLiveView)
         assertNotExist(R.id.liveStreamingView)
@@ -76,32 +103,5 @@ class LiveViewScreen : BaseScreen() {
     fun isRecordingInProgress() {
         onView(withId(R.id.buttonRecord)).check(matches(isActivated()))
         assertDisplayed(R.id.textLiveViewRecording)
-    }
-
-    fun switchLiveViewToggle() = clickOn(R.id.buttonSwitchLiveView)
-
-    fun switchFullScreenMode() = clickOn(R.id.toggleFullScreenLiveView)
-
-    fun openSnapshotList() = clickOn(R.id.buttonSnapshotList)
-
-    fun openVideoList() = clickOn(R.id.buttonVideoList)
-
-    fun openHelpPage() = clickOn(R.id.buttonOpenHelpPage)
-
-    fun takeSnapshot() {
-        clickOn(R.id.buttonSnapshot)
-        assertDisplayed(R.string.live_view_take_photo_success)
-        waitUntil { assertNotExist(R.string.live_view_take_photo_success) }
-    }
-
-    fun startRecording() {
-        isRecordingNotInProgress()
-        clickOn(R.id.buttonRecord)
-    }
-
-    fun stopRecording() {
-        isRecordingInProgress()
-        clickOn(R.id.buttonRecord)
-        waitUntil { isRecordingNotInProgress() }
     }
 }

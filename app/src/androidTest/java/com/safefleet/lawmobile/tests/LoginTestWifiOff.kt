@@ -22,8 +22,11 @@ class LoginTestWifiOff : EspressoBaseTest() {
         baristaRule.launchActivity()
     }
 
+    /**
+     * Test case: https://safefleet.atlassian.net/browse/FMA-1040
+     */
     @Test
-    fun verifyPairingWifiOff_FMA_1040() {
+    fun verifyPairingWifiOff() {
         with(LoginTest.loginScreen) {
             mockUtils.turnWifiOff()
 

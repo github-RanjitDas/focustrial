@@ -11,19 +11,15 @@ import com.safefleet.lawmobile.screens.LiveViewScreen
 import com.safefleet.lawmobile.screens.LoginScreen
 import com.safefleet.lawmobile.testData.CameraFilesData
 import org.junit.Before
-import org.junit.FixMethodOrder
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.junit.runners.MethodSorters
 
-@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @LargeTest
 @RunWith(AndroidJUnit4::class)
 class SnapshotListTest : EspressoStartActivityBaseTest<LoginActivity>(LoginActivity::class.java) {
     companion object {
         private val snapshotsList = CameraFilesData.DEFAULT_SNAPSHOT_LIST.value
         private val snapshotsQuantity = snapshotsList.items.size
-
         private val extraSnapshotsList = CameraFilesData.EXTRA_SNAPSHOT_LIST.value
 
         private val fileListScreen = FileListScreen()
@@ -48,8 +44,11 @@ class SnapshotListTest : EspressoStartActivityBaseTest<LoginActivity>(LoginActiv
         }
     }
 
+    /**
+     * Test case: https://safefleet.atlassian.net/browse/FMA-559
+     */
     @Test
-    fun verifyNoSnapshotsTakenSimpleList_FMA_559() {
+    fun verifyNoSnapshotsTakenSimpleList() {
         setSimpleListViews()
         mockUtils.clearSnapshotsOnX1()
         with(liveViewScreen) {
@@ -72,8 +71,11 @@ class SnapshotListTest : EspressoStartActivityBaseTest<LoginActivity>(LoginActiv
         }
     }
 
+    /**
+     * Test case: https://safefleet.atlassian.net/browse/FMA-559
+     */
     @Test
-    fun verifyNoSnapshotsTakenThumbnailList_FMA_559() {
+    fun verifyNoSnapshotsTakenThumbnailList() {
         setThumbnailListViews()
         mockUtils.clearSnapshotsOnX1()
         with(liveViewScreen) {
@@ -94,8 +96,11 @@ class SnapshotListTest : EspressoStartActivityBaseTest<LoginActivity>(LoginActiv
         }
     }
 
+    /**
+     * Test case: https://safefleet.atlassian.net/browse/FMA-560
+     */
     @Test
-    fun verifySimpleCheckboxWhenSnapshotsDontFit_FMA_560() {
+    fun verifySimpleCheckboxWhenSnapshotsDontFit() {
         setSimpleListViews()
         liveViewScreen.openSnapshotList()
 
@@ -130,8 +135,11 @@ class SnapshotListTest : EspressoStartActivityBaseTest<LoginActivity>(LoginActiv
         }
     }
 
+    /**
+     * Test case: https://safefleet.atlassian.net/browse/FMA-560
+     */
     @Test
-    fun verifyThumbnailCheckboxWhenSnapshotsDontFit_FMA_560() {
+    fun verifyThumbnailCheckboxWhenSnapshotsDontFit() {
         setThumbnailListViews()
         liveViewScreen.openSnapshotList()
 
@@ -165,9 +173,12 @@ class SnapshotListTest : EspressoStartActivityBaseTest<LoginActivity>(LoginActiv
         }
     }
 
+    /**
+     * Test case: https://safefleet.atlassian.net/browse/FMA-561
+     */
     @SmokeTest
     @Test
-    fun verifySimpleCheckboxFunctionality_FMA_561() {
+    fun verifySimpleCheckboxFunctionality() {
         setSimpleListViews()
         liveViewScreen.openSnapshotList()
 
@@ -196,8 +207,11 @@ class SnapshotListTest : EspressoStartActivityBaseTest<LoginActivity>(LoginActiv
         }
     }
 
+    /**
+     * Test case: https://safefleet.atlassian.net/browse/FMA-561
+     */
     @Test
-    fun verifyThumbnailCheckboxFunctionality_FMA_561() {
+    fun verifyThumbnailCheckboxFunctionality() {
         setThumbnailListViews()
         liveViewScreen.openSnapshotList()
 
@@ -225,8 +239,11 @@ class SnapshotListTest : EspressoStartActivityBaseTest<LoginActivity>(LoginActiv
         }
     }
 
+    /**
+     * Test case: https://safefleet.atlassian.net/browse/FMA-562
+     */
     @Test
-    fun verifyScrollWhenSimpleSnapshotsDontFit_FMA_562() {
+    fun verifyScrollWhenSimpleSnapshotsDontFit() {
         setSimpleListViews()
         liveViewScreen.openSnapshotList()
 
@@ -240,8 +257,11 @@ class SnapshotListTest : EspressoStartActivityBaseTest<LoginActivity>(LoginActiv
         }
     }
 
+    /**
+     * Test case: https://safefleet.atlassian.net/browse/FMA-562
+     */
     @Test
-    fun verifyScrollWhenThumbnailSnapshotsDontFit_FMA_562() {
+    fun verifyScrollWhenThumbnailSnapshotsDontFit() {
         setThumbnailListViews()
         liveViewScreen.openSnapshotList()
 
@@ -254,16 +274,19 @@ class SnapshotListTest : EspressoStartActivityBaseTest<LoginActivity>(LoginActiv
         }
     }
 
-    @SmokeTest
+    /**
+     * Test case: https://safefleet.atlassian.net/browse/FMA-563
+     */
     @Test
-    fun verifyUpdatingSimpleSnapshotsList_FMA_563() {
+    fun verifyUpdatingSimpleSnapshotsList() {
         setSimpleListViews()
         mockUtils.clearSnapshotsOnX1()
         val takenSnapshots = extraSnapshotsList.items.subList(0, 3)
 
         with(liveViewScreen) {
             openSnapshotList()
-            fileListScreen.isSnapshotsListX1ScreenDisplayed()
+            fileListScreen.isSelectSnapshotsToAssociateDisplayed()
+            fileListScreen.isSnapshotsListScreenDisplayed()
             fileListScreen.clickOnSimpleListButton()
 
             fileListScreen.clickOnBack()
@@ -281,8 +304,11 @@ class SnapshotListTest : EspressoStartActivityBaseTest<LoginActivity>(LoginActiv
         }
     }
 
+    /**
+     * Test case: https://safefleet.atlassian.net/browse/FMA-563
+     */
     @Test
-    fun verifyUpdatingThumbnailSnapshotsList_FMA_563() {
+    fun verifyUpdatingThumbnailSnapshotsList() {
         setThumbnailListViews()
         mockUtils.clearSnapshotsOnX1()
         val takenSnapshots = extraSnapshotsList.items.subList(0, 3)
@@ -304,8 +330,11 @@ class SnapshotListTest : EspressoStartActivityBaseTest<LoginActivity>(LoginActiv
         }
     }
 
+    /**
+     * Test case: https://safefleet.atlassian.net/browse/FMA-566
+     */
     @Test
-    fun verifyDisconnectionOpeningSnapsList_FMA_566() {
+    fun verifyDisconnectionOpeningSnapsList() {
         setSimpleListViews()
         mockUtils.disconnectCamera()
 
@@ -313,8 +342,11 @@ class SnapshotListTest : EspressoStartActivityBaseTest<LoginActivity>(LoginActiv
         liveViewScreen.isDisconnectionAlertDisplayed()
     }
 
+    /**
+     * Test case: https://safefleet.atlassian.net/browse/FMA-567
+     */
     @Test
-    fun verifyDisconnectionSwitchToVideosList_FMA_567() {
+    fun verifyDisconnectionSwitchToVideosList() {
         setSimpleListViews()
         liveViewScreen.openSnapshotList()
         fileListScreen.clickOnBack()
@@ -326,9 +358,11 @@ class SnapshotListTest : EspressoStartActivityBaseTest<LoginActivity>(LoginActiv
         fileListScreen.isDisconnectionAlertDisplayed()
     }
 
-    @SmokeTest
+    /**
+     * Test case: https://safefleet.atlassian.net/browse/FMA-1176
+     */
     @Test
-    fun associateSimpleSnapshotToPartner_FMA_1176() {
+    fun associateSimpleSnapshotToPartner() {
         setSimpleListViews()
         liveViewScreen.openSnapshotList()
 
@@ -344,9 +378,11 @@ class SnapshotListTest : EspressoStartActivityBaseTest<LoginActivity>(LoginActiv
         }
     }
 
-    @SmokeTest
+    /**
+     * Test case: https://safefleet.atlassian.net/browse/FMA-1176
+     */
     @Test
-    fun associateThumbnailSnapshotToPartner_FMA_1176() {
+    fun associateThumbnailSnapshotToPartner() {
         setThumbnailListViews()
         liveViewScreen.openSnapshotList()
 
@@ -361,8 +397,11 @@ class SnapshotListTest : EspressoStartActivityBaseTest<LoginActivity>(LoginActiv
         }
     }
 
+    /**
+     * Test case: https://safefleet.atlassian.net/browse/FMA-1271
+     */
     @Test
-    fun filterThumbnailSnapshots_FMA_1271() {
+    fun filterThumbnailSnapshots() {
         liveViewScreen.openSnapshotList()
 
         with(fileListScreen) {
@@ -401,8 +440,11 @@ class SnapshotListTest : EspressoStartActivityBaseTest<LoginActivity>(LoginActiv
         }
     }
 
+    /**
+     * Test case: https://safefleet.atlassian.net/browse/FMA-1271
+     */
     @Test
-    fun filterSimpleSnapshots_FMA_1271() {
+    fun filterSimpleSnapshots() {
         liveViewScreen.openSnapshotList()
 
         with(fileListScreen) {
@@ -441,8 +483,11 @@ class SnapshotListTest : EspressoStartActivityBaseTest<LoginActivity>(LoginActiv
         }
     }
 
+    /**
+     * Test case: https://safefleet.atlassian.net/browse/FMA-1274
+     */
     @Test
-    fun filterThumbnailSnapshotsNoMatch_FMA_1274() {
+    fun filterThumbnailSnapshotsNoMatch() {
         liveViewScreen.openSnapshotList()
 
         with(fileListScreen) {
@@ -472,8 +517,11 @@ class SnapshotListTest : EspressoStartActivityBaseTest<LoginActivity>(LoginActiv
         }
     }
 
+    /**
+     * Test case: https://safefleet.atlassian.net/browse/FMA-1274
+     */
     @Test
-    fun filterSimpleSnapshotsNoMatch_FMA_1274() {
+    fun filterSimpleSnapshotsNoMatch() {
         liveViewScreen.openSnapshotList()
 
         with(fileListScreen) {
@@ -503,8 +551,11 @@ class SnapshotListTest : EspressoStartActivityBaseTest<LoginActivity>(LoginActiv
         }
     }
 
+    /**
+     * Test case:  https://safefleet.atlassian.net/browse/FMA-1281
+     */
     @Test
-    fun filterSnapshotsPersistence_FMA_1281() {
+    fun filterSnapshotsPersistence() {
         liveViewScreen.openSnapshotList()
 
         with(fileListScreen) {

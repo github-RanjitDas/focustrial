@@ -6,6 +6,7 @@ import com.safefleet.lawmobile.helpers.CustomAssertionActions.waitUntil
 import com.schibsted.spain.barista.assertion.BaristaVisibilityAssertions.assertDisplayed
 
 class HelpPageScreen : BaseScreen() {
+
     fun goBack() = pressBack()
 
     fun isUserGuideDisplayed() {

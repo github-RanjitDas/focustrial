@@ -4,6 +4,7 @@ import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import com.safefleet.lawmobile.R
 import com.safefleet.lawmobile.helpers.CustomAssertionActions.customSwipeRight
+import com.safefleet.lawmobile.helpers.CustomAssertionActions.waitUntil
 import com.schibsted.spain.barista.assertion.BaristaVisibilityAssertions.assertDisplayed
 import com.schibsted.spain.barista.assertion.BaristaVisibilityAssertions.assertNotContains
 import com.schibsted.spain.barista.assertion.BaristaVisibilityAssertions.assertNotDisplayed
@@ -50,7 +51,7 @@ class MainMenuScreen : BaseScreen() {
         assertDisplayed(R.id.viewLogout)
     }
 
-    fun isMenuButtonNotContained() = assertNotContains(R.id.buttonMenu)
+    fun isMenuButtonNotContained() = waitUntil { assertNotContains(R.id.buttonMenu) }
 
     fun isMainMenuNotDisplayed() {
         assertNotDisplayed(R.id.text_view_snapshots, R.string.live_view_menu_item_view_snapshots)

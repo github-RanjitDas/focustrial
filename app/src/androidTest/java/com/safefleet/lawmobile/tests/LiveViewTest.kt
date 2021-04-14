@@ -26,15 +26,21 @@ class LiveViewTest : EspressoStartActivityBaseTest<LoginActivity>(LoginActivity:
     @Before
     fun login() = LoginScreen().login()
 
+    /**
+     * Test case: https://safefleet.atlassian.net/browse/FMA-389
+     */
     @SmokeTest
     @Test
-    fun verifyLiveViewIsDisplayed_FMA_389() {
+    fun verifyLiveViewIsDisplayed() {
         liveViewScreen.isLiveViewDisplayed()
     }
 
+    /**
+     * Test case: https://safefleet.atlassian.net/browse/FMA-391
+     */
     @SmokeTest
     @Test
-    fun verifyVideoInFullScreen_FMA_391() {
+    fun verifyVideoInFullScreen() {
         with(liveViewScreen) {
             isLiveViewDisplayed()
 
@@ -51,9 +57,12 @@ class LiveViewTest : EspressoStartActivityBaseTest<LoginActivity>(LoginActivity:
         }
     }
 
+    /**
+     * Test case: https://safefleet.atlassian.net/browse/FMA-423
+     */
     @SmokeTest
     @Test
-    fun verifyLiveViewToggleOnDisconnection_FMA_423() {
+    fun verifyLiveViewToggleOnDisconnection() {
         with(liveViewScreen) {
             mockUtils.disconnectCamera()
 
