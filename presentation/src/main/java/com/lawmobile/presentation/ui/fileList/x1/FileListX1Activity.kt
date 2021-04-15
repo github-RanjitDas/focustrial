@@ -25,6 +25,7 @@ class FileListX1Activity : FileListActivity() {
     override fun onResume() {
         super.onResume()
         appBarFragment.isSimpleListActivity(actualFragment == Constants.SIMPLE_FILE_LIST)
+        checkButtonSelectedToChangeText()
     }
 
     private fun attachFragments() {
@@ -46,6 +47,13 @@ class FileListX1Activity : FileListActivity() {
                 filterSectionFragment.isTextSelectedVisible(false)
                 attachThumbnailListFragment()
             }
+        }
+    }
+
+    private fun checkButtonSelectedToChangeText() {
+        if (!filterSectionFragment.isButtonSelectedSnapshotActive()) {
+            filterSectionFragment.resetButtonAssociateSnapshot(listType)
+            resetButtonAssociate()
         }
     }
 
