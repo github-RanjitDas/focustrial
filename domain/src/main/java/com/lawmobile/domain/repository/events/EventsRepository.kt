@@ -11,5 +11,6 @@ interface EventsRepository : BaseRepository {
     suspend fun getPendingNotificationsCount(): Result<Int>
     fun isPossibleToReadLog(): Boolean
     suspend fun setAllNotificationsAsRead()
+    suspend fun deleteOutdatedEvents(date: String): Result<Unit>
     suspend fun clearAllEvents()
 }

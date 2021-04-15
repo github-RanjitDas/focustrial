@@ -100,13 +100,6 @@ internal class EventsUseCaseImplTest {
     }
 
     @Test
-    fun clearAllEventsFlow() {
-        coEvery { eventsRepository.clearAllEvents() } just Runs
-        runBlocking { eventsUseCaseImpl.clearAllEvents() }
-        coVerify { eventsRepository.clearAllEvents() }
-    }
-
-    @Test
     fun getPendingNotificationsCountFlow() {
         coEvery { eventsRepository.getPendingNotificationsCount() } returns Result.Success(1)
         runBlocking { eventsUseCaseImpl.getPendingNotificationsCount() }

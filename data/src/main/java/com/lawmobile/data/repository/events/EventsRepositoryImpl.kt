@@ -8,6 +8,8 @@ import com.lawmobile.domain.repository.events.EventsRepository
 import com.safefleet.mobile.kotlin_commons.extensions.doIfSuccess
 import com.safefleet.mobile.kotlin_commons.helpers.Result
 import com.safefleet.mobile.kotlin_commons.helpers.getResultWithAttempts
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 class EventsRepositoryImpl(
     private val eventsRemoteDataSource: EventsRemoteDataSource,
@@ -19,10 +21,17 @@ class EventsRepositoryImpl(
         eventsLocalDataSource.saveEvent(localEvent)
     }
 
+    override suspend fun deleteOutdatedEvents(date: String): Result<Unit> =
+        eventsLocalDataSource.deleteOutdatedEvents(date)
+
     override suspend fun getCameraEvents(): Result<List<CameraEvent>> {
+        val removeResult = removeOutdatedEventsFromDB()
+        if (removeResult is Result.Error) return removeResult
+
         val result = getResultWithAttempts(3, 500) {
             eventsRemoteDataSource.getCameraEvents()
         }
+
         return when (result) {
             is Result.Success -> {
                 val remoteEventList = CameraEventMapper
@@ -31,13 +40,19 @@ class EventsRepositoryImpl(
                     .toList()
                     .let { manageEventsReadStatus(it) }
 
-                saveEventsInLocal(remoteEventList)
-
-                return Result.Success(remoteEventList)
+                val saveResult = saveEventsInLocal(remoteEventList)
+                return if (saveResult is Result.Error) saveResult
+                else Result.Success(remoteEventList)
             }
 
             is Result.Error -> result
         }
+    }
+
+    private suspend fun removeOutdatedEventsFromDB(): Result<Unit> {
+        val format = SimpleDateFormat("MM/dd/yyyy", Locale.ENGLISH)
+        val currentDate: String = format.format(System.currentTimeMillis()) + " 00:00:00"
+        return deleteOutdatedEvents(currentDate)
     }
 
     override suspend fun getNotificationEvents(): Result<List<CameraEvent>> =
@@ -80,27 +95,22 @@ class EventsRepositoryImpl(
         return eventList
     }
 
-    private suspend fun saveEventsInLocal(remoteEventList: List<CameraEvent>) {
+    private suspend fun saveEventsInLocal(remoteEventList: List<CameraEvent>): Result<Unit> =
         if (cameraHasNewEvents(remoteEventList)) {
-            if (eventsAreNotEmpty()) {
-                clearAllEvents()
-                saveEventsResult(remoteEventList)
-            } else {
-                saveEventsResult(remoteEventList)
-            }
-        }
-    }
+            if (databaseEventsAreNotEmpty()) clearAllEvents()
+            saveEventsResult(remoteEventList)
+        } else Result.Success(Unit)
 
     private fun cameraHasNewEvents(notificationList: List<CameraEvent>) =
         notificationList.size > eventsLocalDataSource.getEventsCount()
 
-    private fun eventsAreNotEmpty() = eventsLocalDataSource.getEventsCount() != 0
+    private fun databaseEventsAreNotEmpty() = eventsLocalDataSource.getEventsCount() != 0
 
-    private suspend fun saveEventsResult(remoteEventList: List<CameraEvent>): Result<List<CameraEvent>> {
+    private suspend fun saveEventsResult(remoteEventList: List<CameraEvent>): Result<Unit> {
         val localEventList = CameraEventMapper.domainToLocalList(remoteEventList)
 
         return when (val result = eventsLocalDataSource.saveAllEvents(localEventList)) {
-            is Result.Success -> Result.Success(remoteEventList)
+            is Result.Success -> Result.Success(Unit)
             is Result.Error -> result
         }
     }

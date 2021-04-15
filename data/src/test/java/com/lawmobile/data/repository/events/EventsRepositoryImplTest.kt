@@ -62,6 +62,7 @@ internal class EventsRepositoryImplTest {
             )
         )
 
+        coEvery { eventsLocalDataSource.deleteOutdatedEvents(any()) } returns Result.Success(Unit)
         coEvery { eventsRemoteDataSource.getCameraEvents() } returns remoteEvents
         coEvery { eventsLocalDataSource.getAllEvents() } returns localEvents
         every { eventsLocalDataSource.getEventsCount() } returns 1
@@ -71,6 +72,7 @@ internal class EventsRepositoryImplTest {
         runBlocking { eventsRepositoryImpl.getCameraEvents() }
 
         coVerify {
+            eventsLocalDataSource.deleteOutdatedEvents(any())
             eventsLocalDataSource.getEventsCount()
             eventsLocalDataSource.getAllEvents()
             eventsRemoteDataSource.getCameraEvents()
@@ -104,6 +106,7 @@ internal class EventsRepositoryImplTest {
             emptyList<LocalCameraEvent>()
         )
 
+        coEvery { eventsLocalDataSource.deleteOutdatedEvents(any()) } returns Result.Success(Unit)
         coEvery { eventsRemoteDataSource.getCameraEvents() } returns remoteEvents
         coEvery { eventsLocalDataSource.getAllEvents() } returns localEvents
         every { eventsLocalDataSource.getEventsCount() } returns 0
@@ -112,6 +115,7 @@ internal class EventsRepositoryImplTest {
         runBlocking { eventsRepositoryImpl.getCameraEvents() }
 
         coVerify {
+            eventsLocalDataSource.deleteOutdatedEvents(any())
             eventsLocalDataSource.getEventsCount()
             eventsLocalDataSource.getAllEvents()
             eventsRemoteDataSource.getCameraEvents()
@@ -139,6 +143,7 @@ internal class EventsRepositoryImplTest {
         )
 
         every { eventsLocalDataSource.getEventsCount() } returns 1
+        coEvery { eventsLocalDataSource.deleteOutdatedEvents(any()) } returns Result.Success(Unit)
         coEvery { eventsLocalDataSource.getAllEvents() } returns mockk(relaxed = true)
         coEvery { eventsRemoteDataSource.getCameraEvents() } returns Result.Success(notificationList)
         coEvery { eventsLocalDataSource.saveAllEvents(any()) } returns Result.Success(Unit)
@@ -171,6 +176,7 @@ internal class EventsRepositoryImplTest {
         )
 
         every { eventsLocalDataSource.getEventsCount() } returns 1
+        coEvery { eventsLocalDataSource.deleteOutdatedEvents(any()) } returns Result.Success(Unit)
         coEvery { eventsLocalDataSource.getAllEvents() } returns mockk(relaxed = true)
         coEvery { eventsRemoteDataSource.getCameraEvents() } returns Result.Success(notificationList)
         coEvery { eventsLocalDataSource.saveAllEvents(any()) } returns Result.Success(mockk())
@@ -196,19 +202,21 @@ internal class EventsRepositoryImplTest {
         )
 
         every { eventsLocalDataSource.getEventsCount() } returns 0
+        coEvery { eventsLocalDataSource.deleteOutdatedEvents(any()) } returns Result.Success(Unit)
         coEvery { eventsLocalDataSource.getAllEvents() } returns mockk(relaxed = true)
         coEvery { eventsRemoteDataSource.getCameraEvents() } returns Result.Success(notificationList)
         coEvery { eventsLocalDataSource.saveAllEvents(any()) } returns Result.Error(mockk())
 
         runBlocking {
             Assert.assertTrue(
-                eventsRepositoryImpl.getCameraEvents() is Result.Success
+                eventsRepositoryImpl.getCameraEvents() is Result.Error
             )
         }
     }
 
     @Test
     fun getCameraEventsError() {
+        coEvery { eventsLocalDataSource.deleteOutdatedEvents(any()) } returns Result.Success(Unit)
         coEvery { eventsRemoteDataSource.getCameraEvents() } returns Result.Error(mockk(relaxed = true))
         runBlocking {
             Assert.assertTrue(
@@ -274,6 +282,7 @@ internal class EventsRepositoryImplTest {
 
     @Test
     fun getPendingNotificationsCountFlow() {
+        coEvery { eventsLocalDataSource.deleteOutdatedEvents(any()) } returns Result.Success(Unit)
         coEvery { eventsRemoteDataSource.getCameraEvents() } returns Result.Success(mockk(relaxed = true))
         coEvery { eventsLocalDataSource.getAllEvents() } returns Result.Success(mockk(relaxed = true))
         coEvery { eventsLocalDataSource.getPendingNotificationsCount() } returns Result.Success(1)
@@ -284,6 +293,7 @@ internal class EventsRepositoryImplTest {
 
     @Test
     fun getPendingNotificationsCountSuccess() {
+        coEvery { eventsLocalDataSource.deleteOutdatedEvents(any()) } returns Result.Success(Unit)
         coEvery { eventsRemoteDataSource.getCameraEvents() } returns Result.Success(mockk(relaxed = true))
         coEvery { eventsLocalDataSource.getAllEvents() } returns Result.Success(mockk(relaxed = true))
         coEvery { eventsLocalDataSource.getEventsCount() } returns 3
@@ -297,6 +307,7 @@ internal class EventsRepositoryImplTest {
 
     @Test
     fun getPendingNotificationsCountError() {
+        coEvery { eventsLocalDataSource.deleteOutdatedEvents(any()) } returns Result.Success(Unit)
         coEvery { eventsRemoteDataSource.getCameraEvents() } returns Result.Success(mockk(relaxed = true))
         coEvery { eventsLocalDataSource.getAllEvents() } returns Result.Success(mockk(relaxed = true))
         coEvery { eventsLocalDataSource.getEventsCount() } returns 3

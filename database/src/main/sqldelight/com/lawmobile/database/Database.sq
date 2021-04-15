@@ -17,11 +17,6 @@ SELECT *
 FROM DbCameraEvent
 WHERE eventType = "Notification";
 
-getEventById:
-SELECT *
-FROM DbCameraEvent
-WHERE id = :id;
-
 getEventsCount:
 SELECT COUNT(*)
 FROM DbCameraEvent;
@@ -40,13 +35,9 @@ UPDATE DbCameraEvent
 SET isRead = 1
 WHERE eventType = "Notification";
 
-setEventRead:
-UPDATE DbCameraEvent
-SET isRead = :isRead
-WHERE date = :date;
-
-getLastEventId:
-SELECT last_insert_rowid();
+deleteOutdatedEvents:
+DELETE FROM DbCameraEvent
+WHERE date < :date;
 
 clearAllEvents:
 DELETE FROM DbCameraEvent;

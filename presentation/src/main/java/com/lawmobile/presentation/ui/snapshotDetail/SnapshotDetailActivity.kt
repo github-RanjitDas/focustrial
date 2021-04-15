@@ -277,7 +277,7 @@ class SnapshotDetailActivity : BaseActivity() {
     }
 
     private fun setOfficerAssociatedInView() {
-        domainInformationImageMetadata?.cameraConnectPhotoMetadata?.metadata?.partnerID?.let {
+        domainInformationImageMetadata?.photoMetadata?.metadata?.partnerID?.let {
             binding.officerValue.text = it
         } ?: run {
             binding.officerValue.text = getString(R.string.none)

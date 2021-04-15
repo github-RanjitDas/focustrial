@@ -11,5 +11,4 @@ interface EventsUseCase : BaseUseCase {
     suspend fun getPendingNotificationsCount(): Result<Int>
     fun isPossibleToReadLog(): Boolean
     suspend fun setAllNotificationsAsRead()
-    suspend fun clearAllEvents()
 }
