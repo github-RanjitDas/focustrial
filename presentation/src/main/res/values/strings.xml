@@ -240,7 +240,7 @@
     <string name="body_worn_diagnosis_button_text">START</string>
     <string name="body_worn_diagnosis_loading_text">Diagnosing…</string>
     <string name="body_worn_diagnosis_success_text">Success</string>
-    <string name="body_worn_diagnosis_error_text">ERROR</string>
+    <string name="body_worn_diagnosis_error_text">Error</string>
     <string name="body_worn_icon_result_description">Icon result diagnosis</string>
     <string name="body_worn_icon_error_is_not_possible_get_diagnosis">Error retrieving body-worn Diagnosis, please try again</string>
     <string name="body_worn_result_success_description">Your Body-worn Camera hardware is operating correctly, no issues reported.</string>
