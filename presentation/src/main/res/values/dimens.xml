@@ -161,6 +161,7 @@
     <dimen name="margin_80dp">80dp</dimen>
     <dimen name="fake_video_playback_surface_view_height">106dp</dimen>
     <dimen name="help_page_pdf_margin_top">65dp</dimen>
+    <dimen name="height_app_bar_body_worn_diagnosis">65dp</dimen>
     <dimen name="notification_icon_size">20dp</dimen>
     <dimen name="padding_30dp">30dp</dimen>
     <dimen name="margin_1dp">1dp</dimen>
@@ -192,4 +193,5 @@
     <dimen name="battery_level_height_x2">15dp</dimen>
     <dimen name="storage_level_height_x2">15dp</dimen>
     <dimen name="margin_4dp">4dp</dimen>
+    <dimen name="padding_20dp">20dp</dimen>
 </resources>

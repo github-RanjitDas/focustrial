@@ -25,6 +25,7 @@ class HelpPageActivity : BaseActivity() {
     private fun setBottomSheetBehavior() {
         val bottomSheetBehavior = BottomSheetBehavior.from(activityHelpPageBinding.containerHelpPage)
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+        bottomSheetBehavior.isDraggable = false
         bottomSheetBehavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
             override fun onStateChanged(bottomSheet: View, newState: Int) {
                 if (newState == BottomSheetBehavior.STATE_HIDDEN) {
