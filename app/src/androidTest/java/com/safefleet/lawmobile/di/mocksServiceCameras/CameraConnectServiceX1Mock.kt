@@ -1,6 +1,7 @@
 package com.safefleet.lawmobile.di.mocksServiceCameras
 
 import com.lawmobile.domain.entities.FileList
+import com.safefleet.lawmobile.helpers.MockUtils.Companion.bodyWornDiagnosisResult
 import com.safefleet.lawmobile.testData.CameraFilesData
 import com.safefleet.lawmobile.testData.TestLoginData
 import com.safefleet.mobile.external_hardware.cameras.CameraService
@@ -47,7 +48,7 @@ class CameraConnectServiceX1Mock : CameraService {
     }
 
     override suspend fun getBodyWornDiagnosis(): Result<Boolean> {
-        return Result.Success(true)
+        return bodyWornDiagnosisResult
     }
 
     override fun getCanReadNotification(): Boolean {
