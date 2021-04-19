@@ -17,6 +17,7 @@ class MockUtils {
     companion object {
         var wifiEnabled = true
         var cameraSSID = TestLoginData.SSID_X1.value
+        var bodyWornDiagnosisResult: Result<Boolean> = Result.Success(true)
     }
 
     fun disconnectCamera() {
@@ -71,5 +72,9 @@ class MockUtils {
         } else {
             cameraSSID = TestLoginData.SSID_X2.value
         }
+    }
+
+    fun setBodyWornDiagnosisResult(result: Result<Boolean>) {
+        bodyWornDiagnosisResult = result
     }
 }
