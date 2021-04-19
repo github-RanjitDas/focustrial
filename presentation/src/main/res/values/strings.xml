@@ -7,7 +7,7 @@
 
     <!--Alerts -->
     <string name="the_camera_was_disconnected">Camera disconnected</string>
-    <string name="the_camera_was_disconnected_description">Your X1 was disconnected from Focus Mobile App, please close the App and reconnect</string>
+    <string name="the_camera_was_disconnected_description">Your BWC was disconnected from Focus Mobile App, please close the App and reconnect</string>
     <string name="loading_wait">Loading…</string>
     <string name="connection_finished">Connection Finished</string>
     <string name="connection_finished_description">After 5 minutes without interaction the BWC disconnects</string>
@@ -29,7 +29,7 @@
     <string name="enter_password">Password</string>
     <string name="incorrect_password">The password you have entered is incorrect, try again</string>
     <string name="wifi_is_off">The WIFI is off</string>
-    <string name="please_turn_wifi_on">The WIFI is set to off on your device, please set the WIFI to on and reconnect the X1 with FMA</string>
+    <string name="please_turn_wifi_on">The WIFI is set to off on your device, please set the WIFI to on and reconnect the BWC with FMA</string>
 
     <!-- Live view -->
     <string name="image_description_full_screen_size">Full Screen size</string>
@@ -128,8 +128,8 @@
     <string name="button_link_snapshots_description">button link snapshots</string>
     <string name="valid_partner_id_message">You must enter a valid Partner ID</string>
     <string name="mobile_data_status_title">Mobile Data</string>
-    <string name="mobile_data_status_message">Please disable Mobile Data on your device in order to connect the X1 with Focus Mobile App</string>
-    <string name="verify_camera_wifi">Please verify the X1 WIFI connection between the X1 and Focus Mobile App</string>
+    <string name="mobile_data_status_message">Please disable Mobile Data on your device in order to connect the BWC with the Focus Mobile App</string>
+    <string name="verify_camera_wifi">Please verify the WIFI connection between the BWC and Focus Mobile App</string>
     <string name="error_saving_video">Error checking video saved in camera, please wait and try again</string>
     <string name="go">GO</string>
     <string name="login">Login</string>
