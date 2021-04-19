@@ -80,8 +80,8 @@ open class BaseActivity : AppCompatActivity() {
             when (cameraEvent.name) {
                 NotificationType.LOW_BATTERY.value -> onLowBattery?.invoke()
                 NotificationType.LOW_STORAGE.value -> onLowStorage?.invoke()
-                else -> runOnUiThread { createNotificationDialog(cameraEvent) }
             }
+            runOnUiThread { createNotificationDialog(cameraEvent) }
         } else when (cameraEvent.name) {
             NotificationType.BATTERY_LEVEL.value -> {
                 cameraEvent.value?.toInt()?.let {

@@ -121,20 +121,12 @@ class LiveStatusBarX2Fragment : LiveStatusBarBaseFragment() {
     private fun manageLowStorage() {
         requireActivity().runOnUiThread {
             binding.imageViewStorage.startAnimationIfEnabled(blinkAnimation)
-            createAlertForInformationCamera(
-                R.string.storage_alert_title,
-                R.string.storage_alert_description
-            )
         }
     }
 
     private fun manageLowBattery() {
         requireActivity().runOnUiThread {
             imageViewBattery.startAnimationIfEnabled(blinkAnimation)
-            createAlertForInformationCamera(
-                R.string.battery_alert_title,
-                R.string.battery_alert_description
-            )
         }
     }
 
