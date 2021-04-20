@@ -10,6 +10,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
 import com.lawmobile.domain.entities.CameraInfo
 import com.lawmobile.domain.entities.MetadataEvent
+import com.lawmobile.domain.enums.CameraType
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.entities.AlertInformation
 import com.lawmobile.presentation.enums.CatalogTypes
@@ -100,10 +101,14 @@ open class LiveStatusBarBaseFragment : BaseFragment() {
 
     fun manageBatteryLevel(batteryPercent: Int) {
         requireActivity().runOnUiThread {
-            if (batteryPercent > 0) {
-                progressBarBattery.setProgress(batteryPercent)
-                setColorInBattery(batteryPercent)
-                setTextInProgressBattery(batteryPercent)
+            if (batteryPercent >= 0) {
+                if (batteryPercent == 0 && CameraInfo.cameraType == CameraType.X1) {
+                    showBatteryLevelNotAvailable()
+                } else {
+                    progressBarBattery.setProgress(batteryPercent)
+                    setColorInBattery(batteryPercent)
+                    setTextInProgressBattery(batteryPercent)
+                }
             } else showBatteryLevelNotAvailable()
         }
     }
