@@ -11,6 +11,7 @@ import com.lawmobile.database.Database
 import com.lawmobile.presentation.utils.MobileDataStatus
 import com.lawmobile.presentation.utils.VLCMediaPlayer
 import com.lawmobile.presentation.utils.WifiHelper
+import com.lawmobile.presentation.utils.WifiStatus
 import com.squareup.sqldelight.android.AndroidSqliteDriver
 import com.squareup.sqldelight.db.SqlDriver
 import dagger.Module
@@ -79,5 +80,10 @@ class AppModule {
         @Singleton
         fun provideMobileDataStatus(connectivityManager: ConnectivityManager) =
             MobileDataStatus(connectivityManager)
+
+        @Provides
+        @Singleton
+        fun provideWifiStatus(connectivityManager: ConnectivityManager) =
+            WifiStatus(connectivityManager)
     }
 }
