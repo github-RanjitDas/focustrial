@@ -145,7 +145,7 @@
     <string name="taking_snapshot">Taking snapshot</string>
     <string name="starting_recording">Starting recording</string>
     <string name="stopping_recording">Stopping recording</string>
-    <string name="battery_percent"><![CDATA[<b>%1$d%%</b> ~ %2$s hour left]]></string>
+    <string name="battery_percent"><![CDATA[<b>%1$d%%</b> ~ %2$s left]]></string>
     <string name="storage_level_x1"><![CDATA[Used  &nbsp;&nbsp; -  &nbsp;&nbsp; Free <br/><b>%1$s</b> - <b>%2$s</b>]]></string>
     <string name="storage_level_x2"><![CDATA[<b>%1$d%%</b> used]]></string>
     <string name="battery_level_error">Error retrieving battery level</string>
