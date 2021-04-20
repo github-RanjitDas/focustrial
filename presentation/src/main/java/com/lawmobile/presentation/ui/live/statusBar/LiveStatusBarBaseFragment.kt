@@ -138,12 +138,18 @@ open class LiveStatusBarBaseFragment : BaseFragment() {
     }
 
     private fun setTextInProgressBattery(batteryPercent: Int) {
-        val hoursLeft =
+        var hoursLeftText =
             ((batteryPercent * BATTERY_TOTAL_HOURS) / TOTAL_PERCENTAGE).toString()
                 .subSequence(0, 3)
+        val hoursLeftNumber = hoursLeftText.toString().toFloat()
+
+        hoursLeftText =
+            if (hoursLeftNumber < 1) (hoursLeftNumber * 60).toInt().toString() + " minutes"
+            else "$hoursLeftText hours"
+
         val textBatteryPercent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
-            Html.fromHtml(getString(R.string.battery_percent, batteryPercent, hoursLeft), 0)
-        else getString(R.string.battery_percent, batteryPercent, hoursLeft)
+            Html.fromHtml(getString(R.string.battery_percent, batteryPercent, hoursLeftText), 0)
+        else getString(R.string.battery_percent, batteryPercent, hoursLeftText)
         textViewBattery.text = textBatteryPercent
     }
 
