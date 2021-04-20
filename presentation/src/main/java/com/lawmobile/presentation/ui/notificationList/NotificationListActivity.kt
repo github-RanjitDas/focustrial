@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.snackbar.Snackbar
 import com.lawmobile.domain.entities.CameraEvent
+import com.lawmobile.domain.entities.CameraInfo
 import com.lawmobile.domain.enums.EventTag
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.databinding.ActivityNotificationListBinding
@@ -221,6 +222,7 @@ class NotificationListActivity : BaseActivity() {
     }
 
     private fun setAllNotificationsAsRead() {
+        CameraInfo.currentNotificationCount = 0
         viewModel.setAllNotificationsAsRead()
     }
 }

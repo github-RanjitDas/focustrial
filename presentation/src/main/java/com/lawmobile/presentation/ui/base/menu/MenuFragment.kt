@@ -49,13 +49,19 @@ class MenuFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setInformationOfOfficer()
+        setOfficerInformation()
+        setCurrentNotificationCount()
         setObservers()
         setTouchListeners()
         setListeners()
     }
 
-    private fun setInformationOfOfficer() {
+    private fun setCurrentNotificationCount() {
+        binding.textPendingNotification.isVisible = CameraInfo.currentNotificationCount > 0
+        binding.textPendingNotification.text = CameraInfo.currentNotificationCount.toString()
+    }
+
+    private fun setOfficerInformation() {
         try {
             binding.textViewOfficerName.text = CameraInfo.officerName.split(" ")[0]
             binding.textViewOfficerLastName.text = CameraInfo.officerName.split(" ")[1]
@@ -73,8 +79,8 @@ class MenuFragment : BaseFragment() {
 
     private fun reviewPendingNotifications(result: Result<Int>) {
         result.doIfSuccess {
-            binding.textPendingNotification.isVisible = it > 0
-            binding.textPendingNotification.text = it.toString()
+            CameraInfo.currentNotificationCount = it
+            setCurrentNotificationCount()
         }
     }
 

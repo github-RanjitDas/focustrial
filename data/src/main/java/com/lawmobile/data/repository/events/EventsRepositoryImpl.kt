@@ -8,6 +8,8 @@ import com.lawmobile.domain.repository.events.EventsRepository
 import com.safefleet.mobile.kotlin_commons.extensions.doIfSuccess
 import com.safefleet.mobile.kotlin_commons.helpers.Result
 import com.safefleet.mobile.kotlin_commons.helpers.getResultWithAttempts
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -24,15 +26,15 @@ class EventsRepositoryImpl(
     override suspend fun deleteOutdatedEvents(date: String): Result<Unit> =
         eventsLocalDataSource.deleteOutdatedEvents(date)
 
-    override suspend fun getCameraEvents(): Result<List<CameraEvent>> {
+    override suspend fun getCameraEvents(): Result<List<CameraEvent>> = withContext(Dispatchers.IO) {
         val removeResult = removeOutdatedEventsFromDB()
-        if (removeResult is Result.Error) return removeResult
+        if (removeResult is Result.Error) return@withContext removeResult
 
         val result = getResultWithAttempts(3, 500) {
             eventsRemoteDataSource.getCameraEvents()
         }
 
-        return when (result) {
+        return@withContext when (result) {
             is Result.Success -> {
                 val remoteEventList = CameraEventMapper
                     .cameraToDomainList(result.data)
@@ -41,7 +43,7 @@ class EventsRepositoryImpl(
                     .let { manageEventsReadStatus(it) }
 
                 val saveResult = saveEventsInLocal(remoteEventList)
-                return if (saveResult is Result.Error) saveResult
+                return@withContext if (saveResult is Result.Error) saveResult
                 else Result.Success(remoteEventList)
             }
 

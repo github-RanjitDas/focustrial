@@ -17,7 +17,6 @@ import com.lawmobile.presentation.extensions.createAlertInformation
 import com.lawmobile.presentation.extensions.showErrorSnackBar
 import com.lawmobile.presentation.extensions.verifySessionBeforeAction
 import com.lawmobile.presentation.ui.base.BaseFragment
-import com.lawmobile.presentation.utils.CameraEventsManager
 import com.safefleet.mobile.kotlin_commons.extensions.doIfError
 import com.safefleet.mobile.kotlin_commons.extensions.doIfSuccess
 import com.safefleet.mobile.kotlin_commons.helpers.Event
@@ -53,7 +52,6 @@ open class LiveStatusBarBaseFragment : BaseFragment() {
     }
 
     fun getCameraStatus(isViewLoaded: Boolean) {
-        CameraEventsManager.isReadyToReadEvents = false
         if (isViewLoaded) {
             if (CameraInfo.metadataEvents.isEmpty()) {
                 sharedViewModel.getMetadataEvents()

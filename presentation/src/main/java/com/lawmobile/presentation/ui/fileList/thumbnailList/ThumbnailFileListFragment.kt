@@ -10,6 +10,7 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
+import com.lawmobile.domain.entities.CameraInfo
 import com.lawmobile.domain.entities.DomainCameraFile
 import com.lawmobile.domain.entities.DomainInformationFile
 import com.lawmobile.domain.entities.DomainInformationFileResponse
@@ -314,7 +315,7 @@ class ThumbnailFileListFragment : FileListBaseFragment() {
 
         if (!subList.isNullOrEmpty()) {
             uploadImageInAdapter(subList)
-        }
+        } else onInformationLoaded()
     }
 
     private fun uploadImageInAdapter(subList: List<DomainInformationImage>) {
@@ -349,6 +350,10 @@ class ThumbnailFileListFragment : FileListBaseFragment() {
                 loadNewImage()
             }
         }
+    }
+
+    private fun onInformationLoaded() {
+        CameraInfo.onReadyToGetNotifications?.invoke()
     }
 
     override fun onPause() {

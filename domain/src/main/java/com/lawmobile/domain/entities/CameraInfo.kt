@@ -10,6 +10,8 @@ object CameraInfo {
     var serialNumber = ""
     var officerName = ""
     var areNewChanges = false
+    var currentNotificationCount = 0
+    var onReadyToGetNotifications: (() -> Unit)? = null
 
     fun cleanInfo() {
         metadataEvents = mutableListOf()
@@ -18,6 +20,7 @@ object CameraInfo {
         serialNumber = ""
         officerName = ""
         areNewChanges = false
+        currentNotificationCount = 0
     }
 
     fun setCameraType(serialNumber: String) {
