@@ -7,7 +7,6 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
 import com.lawmobile.domain.entities.CameraEvent
 import com.lawmobile.domain.entities.CameraInfo
 import com.lawmobile.domain.entities.CameraInfo.isOfficerLogged
@@ -18,6 +17,7 @@ import com.lawmobile.domain.usecase.events.EventsUseCase
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.entities.NeutralAlertInformation
 import com.lawmobile.presentation.extensions.checkIfSessionIsExpired
+import com.lawmobile.presentation.extensions.createAlertErrorConnection
 import com.lawmobile.presentation.extensions.createAlertMobileDataActive
 import com.lawmobile.presentation.extensions.createAlertProgress
 import com.lawmobile.presentation.extensions.createAlertSessionExpired
@@ -27,6 +27,7 @@ import com.lawmobile.presentation.ui.login.LoginActivity
 import com.lawmobile.presentation.utils.CameraHelper
 import com.lawmobile.presentation.utils.EspressoIdlingResource
 import com.lawmobile.presentation.utils.MobileDataStatus
+import com.lawmobile.presentation.utils.WifiStatus
 import dagger.hilt.android.AndroidEntryPoint
 import java.sql.Timestamp
 import javax.inject.Inject
@@ -40,11 +41,15 @@ open class BaseActivity : AppCompatActivity() {
     lateinit var mobileDataStatus: MobileDataStatus
 
     @Inject
+    lateinit var wifiStatus: WifiStatus
+
+    @Inject
     lateinit var eventsUseCase: EventsUseCase
 
     private var isLiveVideoOrPlaybackActive: Boolean = false
+    var isNetworkAlertShowing = MutableLiveData<Boolean>()
+
     private lateinit var mobileDataDialog: AlertDialog
-    var isMobileDataAlertShowing = MutableLiveData<Boolean>()
     private var loadingDialog: AlertDialog? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -53,7 +58,7 @@ open class BaseActivity : AppCompatActivity() {
 
         verifyDeviceIsNotRooted()
         setBaseObservers()
-        createMobileDataDialog()
+        createNetworkDialogs()
         updateLastInteraction()
         setEventsUseCase()
         setEventsListener()
@@ -99,10 +104,18 @@ open class BaseActivity : AppCompatActivity() {
     }
 
     private fun setBaseObservers() {
-        mobileDataStatus.observe(this, Observer(::showMobileDataDialog))
+        mobileDataStatus.observe(this, ::showMobileDataDialog)
+        wifiStatus.observe(this, ::showWifiOffDialog)
     }
 
-    private fun createMobileDataDialog() {
+    private fun showWifiOffDialog(active: Boolean) {
+        if (isOfficerLogged && !active) {
+            isNetworkAlertShowing.postValue(!active)
+            createAlertErrorConnection()
+        }
+    }
+
+    private fun createNetworkDialogs() {
         val alertInformation = NeutralAlertInformation(
             R.string.mobile_data_status_title,
             R.string.mobile_data_status_message
@@ -111,9 +124,11 @@ open class BaseActivity : AppCompatActivity() {
     }
 
     private fun showMobileDataDialog(active: Boolean) {
-        isMobileDataAlertShowing.postValue(active)
-        if (active) mobileDataDialog.show()
-        else mobileDataDialog.dismiss()
+        if (isNetworkAlertShowing.value == false) {
+            isNetworkAlertShowing.postValue(active)
+            if (active) mobileDataDialog.show()
+            else mobileDataDialog.dismiss()
+        }
     }
 
     override fun onStop() {

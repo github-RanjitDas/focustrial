@@ -228,19 +228,12 @@ class VideoPlaybackActivity : BaseActivity() {
     }
 
     private fun setObservers() {
-        isMobileDataAlertShowing.observe(this, Observer(::managePlaybackOnAlert))
-        videoPlaybackViewModel.domainInformationVideoLiveData.observe(
-            this,
-            Observer(::manageGetVideoInformationResult)
-        )
-        videoPlaybackViewModel.saveVideoMetadataLiveData.observe(
-            this,
-            Observer(::manageSaveVideoMetadataResult)
-        )
-        videoPlaybackViewModel.videoMetadataLiveData.observe(
-            this,
-            Observer(::manageGetVideoMetadataResult)
-        )
+        isNetworkAlertShowing.observe(this, Observer(::managePlaybackOnAlert))
+        videoPlaybackViewModel.let {
+            it.domainInformationVideoLiveData.observe(this, ::manageGetVideoInformationResult)
+            it.saveVideoMetadataLiveData.observe(this, ::manageSaveVideoMetadataResult)
+            it.videoMetadataLiveData.observe(this, ::manageGetVideoMetadataResult)
+        }
     }
 
     private fun configureListeners() {
