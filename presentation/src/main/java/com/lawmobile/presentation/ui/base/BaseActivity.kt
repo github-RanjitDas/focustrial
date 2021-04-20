@@ -48,6 +48,7 @@ open class BaseActivity : AppCompatActivity() {
 
     private var isLiveVideoOrPlaybackActive: Boolean = false
     var isNetworkAlertShowing = MutableLiveData<Boolean>()
+    private var isWifiAlertShowing = false
 
     private lateinit var mobileDataDialog: AlertDialog
     private var loadingDialog: AlertDialog? = null
@@ -109,7 +110,8 @@ open class BaseActivity : AppCompatActivity() {
     }
 
     private fun showWifiOffDialog(active: Boolean) {
-        if (isOfficerLogged && !active) {
+        if (isOfficerLogged && !active && !isWifiAlertShowing) {
+            isWifiAlertShowing = !active
             isNetworkAlertShowing.postValue(!active)
             createAlertErrorConnection()
         }
@@ -124,7 +126,7 @@ open class BaseActivity : AppCompatActivity() {
     }
 
     private fun showMobileDataDialog(active: Boolean) {
-        if (isNetworkAlertShowing.value == false) {
+        if (!isWifiAlertShowing) {
             isNetworkAlertShowing.postValue(active)
             if (active) mobileDataDialog.show()
             else mobileDataDialog.dismiss()
