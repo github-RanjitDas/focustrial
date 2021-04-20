@@ -7,12 +7,16 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
+import com.lawmobile.domain.entities.CameraInfo
 import com.lawmobile.presentation.databinding.LiveViewAppBarMenuBinding
 import com.lawmobile.presentation.extensions.setOnClickListenerCheckConnection
 import com.lawmobile.presentation.ui.base.BaseFragment
 import com.lawmobile.presentation.ui.notificationList.NotificationListActivity
 import com.safefleet.mobile.kotlin_commons.extensions.doIfSuccess
 import com.safefleet.mobile.kotlin_commons.helpers.Result
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class AppBarX2Fragment : BaseFragment() {
 
@@ -46,16 +50,21 @@ class AppBarX2Fragment : BaseFragment() {
         configureView()
     }
 
+    override fun onResume() {
+        super.onResume()
+        setCurrentNotificationCount()
+    }
+
+    private fun setCurrentNotificationCount() {
+        binding.textPendingNotification.isVisible = CameraInfo.currentNotificationCount > 0
+        binding.textPendingNotification.text = CameraInfo.currentNotificationCount.toString()
+    }
+
     private fun configureView() {
         binding.textViewTitle.text = title
         binding.imageView.isVisible = isLogoActive
         binding.constrainAppBarTitle.isVisible = !isLogoActive
         binding.buttonNotification.isVisible = isBellIconActive
-    }
-
-    override fun onResume() {
-        super.onResume()
-        viewModel.getPendingNotificationsCount()
     }
 
     private fun setListeners() {
@@ -70,6 +79,13 @@ class AppBarX2Fragment : BaseFragment() {
         }
 
         binding.imageButtonBackArrow.setOnClickListenerCheckConnection { onBackPressed() }
+
+        CameraInfo.onReadyToGetNotifications = {
+            lifecycleScope.launch {
+                delay(500)
+                viewModel.getPendingNotificationsCount()
+            }
+        }
     }
 
     private fun setObservers() {
@@ -81,8 +97,8 @@ class AppBarX2Fragment : BaseFragment() {
 
     private fun reviewPendingNotifications(result: Result<Int>) {
         result.doIfSuccess {
-            binding.textPendingNotification.isVisible = it > 0
-            binding.textPendingNotification.text = it.toString()
+            CameraInfo.currentNotificationCount = it
+            setCurrentNotificationCount()
         }
     }
 

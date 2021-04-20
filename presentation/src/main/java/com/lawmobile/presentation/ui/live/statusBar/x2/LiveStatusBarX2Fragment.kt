@@ -18,7 +18,6 @@ import com.lawmobile.presentation.extensions.startAnimationIfEnabled
 import com.lawmobile.presentation.ui.base.BaseActivity
 import com.lawmobile.presentation.ui.helpSection.HelpPageActivity
 import com.lawmobile.presentation.ui.live.statusBar.LiveStatusBarBaseFragment
-import com.lawmobile.presentation.utils.CameraEventsManager
 import com.lawmobile.presentation.utils.EspressoIdlingResource
 import com.safefleet.mobile.kotlin_commons.extensions.doIfError
 import com.safefleet.mobile.kotlin_commons.extensions.doIfSuccess
@@ -62,9 +61,7 @@ class LiveStatusBarX2Fragment : LiveStatusBarBaseFragment() {
 
     override fun onResume() {
         super.onResume()
-        if (CameraInfo.metadataEvents.isNotEmpty()) {
-            sharedViewModel.getBatteryLevel()
-        }
+        sharedViewModel.getBatteryLevel()
     }
 
     private fun setObservers() {
@@ -141,8 +138,12 @@ class LiveStatusBarX2Fragment : LiveStatusBarBaseFragment() {
                 parentLayout.showErrorSnackBar(getString(R.string.storage_level_error))
             }
         }
-        CameraEventsManager.isReadyToReadEvents = true
+        onInformationLoaded()
         EspressoIdlingResource.decrement()
+    }
+
+    private fun onInformationLoaded() {
+        CameraInfo.onReadyToGetNotifications?.invoke()
     }
 
     private fun manageStorageLevel(usedPercent: Double) {

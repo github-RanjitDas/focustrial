@@ -16,7 +16,6 @@ import com.lawmobile.presentation.extensions.showErrorSnackBar
 import com.lawmobile.presentation.extensions.startAnimationIfEnabled
 import com.lawmobile.presentation.ui.helpSection.HelpPageActivity
 import com.lawmobile.presentation.ui.live.statusBar.LiveStatusBarBaseFragment
-import com.lawmobile.presentation.utils.CameraEventsManager
 import com.lawmobile.presentation.utils.EspressoIdlingResource
 import com.safefleet.mobile.kotlin_commons.extensions.doIfError
 import com.safefleet.mobile.kotlin_commons.extensions.doIfSuccess
@@ -129,7 +128,6 @@ class LiveStatusBarX1Fragment : LiveStatusBarBaseFragment() {
                 parentLayout.showErrorSnackBar(getString(R.string.storage_level_error))
             }
         }
-        CameraEventsManager.isReadyToReadEvents = true
         EspressoIdlingResource.decrement()
     }
 

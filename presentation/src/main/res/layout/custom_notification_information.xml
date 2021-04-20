@@ -15,9 +15,9 @@
         android:layout_width="@dimen/no_dp"
         android:layout_height="wrap_content"
         android:id="@+id/layoutInformation"
-        app:layout_constraintStart_toStartOf="@id/guidelineVertical2"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/guidelineHorizontal1"
-        app:layout_constraintEnd_toEndOf="@id/guidelineVertical5">
+        app:layout_constraintEnd_toEndOf="parent">
 
         <ImageView
             android:id="@+id/imageViewNotificationIcon"
@@ -25,9 +25,9 @@
             android:layout_height="@dimen/custom_notification_size_image_type"
             android:contentDescription="@string/alert_notification_information_image"
             android:src="@drawable/ic_error_icon"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@id/layoutInformationTitle"
             app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginEnd="@dimen/margin_10dp"
             app:layout_constraintBottom_toBottomOf="parent" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -35,8 +35,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/imageViewNotificationIcon">
+            app:layout_constraintEnd_toEndOf="@id/guidelineVerticalCenter"
+            app:layout_constraintStart_toStartOf="@id/guidelineVerticalCenter">
 
             <TextView
                 android:id="@+id/textViewNotificationTitle"
@@ -63,6 +63,16 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guidelineVerticalCenter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintGuide_percent="0.55" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
