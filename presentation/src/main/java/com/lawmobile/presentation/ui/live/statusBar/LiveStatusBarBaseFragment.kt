@@ -96,6 +96,10 @@ open class LiveStatusBarBaseFragment : BaseFragment() {
     private fun showBatteryLevelNotAvailable() {
         textViewBattery.text = getString(R.string.not_available)
         progressBarBattery.setProgress(0)
+        imageViewBattery.backgroundTintList = ContextCompat.getColorStateList(
+            requireContext(),
+            batteryBarColors.lowRangeColor
+        )
         parentLayout.showErrorSnackBar(getString(R.string.battery_level_error))
     }
 
