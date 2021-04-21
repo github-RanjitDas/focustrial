@@ -129,9 +129,9 @@ dependencies {
     debugApi 'com.google.firebase:firebase-crashlytics'
 
     //Base repository
-    implementation 'com.safefleet.mobile:external-hardware:2.4.5-SNAPSHOT@jar'
-    implementation 'com.safefleet.mobile:android-commons:1.2.0-SNAPSHOT@aar'
-    implementation 'com.safefleet.mobile:safefleet-ui:1.2.0-SNAPSHOT@aar'
+    implementation 'com.safefleet.mobile:external-hardware:2.4.5@jar'
+    implementation 'com.safefleet.mobile:android-commons:1.2.0@aar'
+    implementation 'com.safefleet.mobile:safefleet-ui:1.2.0@aar'
 
     implementation "com.squareup.sqldelight:android-driver:$sqldelight_version"
     implementation "com.squareup.sqldelight:sqlite-driver:$sqldelight_version"

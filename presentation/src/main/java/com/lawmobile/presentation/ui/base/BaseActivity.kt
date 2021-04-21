@@ -110,9 +110,9 @@ open class BaseActivity : AppCompatActivity() {
     }
 
     private fun showWifiOffDialog(active: Boolean) {
-        if (isOfficerLogged && !active && !isWifiAlertShowing) {
-            isWifiAlertShowing = !active
-            isNetworkAlertShowing.postValue(!active)
+        if (!active && !isWifiAlertShowing) {
+            isWifiAlertShowing = true
+            isNetworkAlertShowing.postValue(true)
             createAlertErrorConnection()
         }
     }

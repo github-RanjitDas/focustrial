@@ -11,6 +11,7 @@ import com.lawmobile.database.Database
 import com.lawmobile.presentation.utils.MobileDataStatus
 import com.lawmobile.presentation.utils.VLCMediaPlayer
 import com.lawmobile.presentation.utils.WifiHelper
+import com.lawmobile.presentation.utils.WifiStatus
 import com.safefleet.lawmobile.helpers.MockUtils.Companion.cameraSSID
 import com.safefleet.lawmobile.helpers.MockUtils.Companion.wifiEnabled
 import com.safefleet.lawmobile.testData.TestLoginData
@@ -119,5 +120,10 @@ class AppModule {
             mockk<MobileDataStatus>(relaxed = true) {
                 every { value } returns false
             }
+
+        @Provides
+        @Singleton
+        fun provideWifiStatus(connectivityManager: ConnectivityManager) =
+            WifiStatus(connectivityManager)
     }
 }
