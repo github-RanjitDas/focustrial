@@ -7,7 +7,7 @@ import com.lawmobile.data.utils.ConnectionHelperImpl
 import com.lawmobile.domain.utils.ConnectionHelper
 import com.lawmobile.presentation.utils.CameraHelper
 import com.lawmobile.presentation.utils.WifiHelper
-import com.safefleet.lawmobile.di.mocksServiceCameras.CameraConnectServiceX1Mock
+import com.safefleet.lawmobile.helpers.MockUtils
 import com.safefleet.mobile.external_hardware.cameras.CameraService
 import com.safefleet.mobile.external_hardware.cameras.helpers.XCameraHelper
 import com.safefleet.mobile.kotlin_commons.socket.SocketHelper
@@ -40,14 +40,14 @@ class CameraServiceModule {
         @Singleton
         @Named("x1CameraService")
         fun provideCameraServiceX1(xCameraHelper: XCameraHelper): CameraService {
-            return CameraConnectServiceX1Mock()
+            return MockUtils.cameraConnectServiceX1Mock
         }
 
         @Provides
         @Singleton
         @Named("x2CameraService")
         fun provideCameraServiceX2(xCameraHelper: XCameraHelper): CameraService {
-            return CameraConnectServiceX1Mock()
+            return MockUtils.cameraConnectServiceX1Mock
         }
 
         @Provides
