@@ -129,7 +129,7 @@ dependencies {
     debugApi 'com.google.firebase:firebase-crashlytics'
 
     //Base repository
-    implementation 'com.safefleet.mobile:external-hardware:2.4.5@jar'
+    implementation 'com.safefleet.mobile:external-hardware:3.0.0@jar'
     implementation 'com.safefleet.mobile:android-commons:1.2.0@aar'
     implementation 'com.safefleet.mobile:safefleet-ui:1.2.0@aar'
 
