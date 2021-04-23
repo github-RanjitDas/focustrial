@@ -641,7 +641,7 @@ class VideoPlaybackActivity : BaseActivity() {
             ),
             nameFolder = currentVideo?.nameFolder,
             officerId = CameraInfo.officerId,
-            path = currentVideo?.path,
+            path = currentMetadata.path ?: currentVideo?.path,
             associatedPhotos = SnapshotsAssociatedByUser.value,
             serialNumber = CameraInfo.serialNumber,
             endTime = currentMetadata.endTime,

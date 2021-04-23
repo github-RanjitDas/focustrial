@@ -26,7 +26,7 @@ import com.safefleet.mobile.kotlin_commons.extensions.doIfError
 import com.safefleet.mobile.kotlin_commons.extensions.doIfSuccess
 import com.safefleet.mobile.kotlin_commons.helpers.Result
 
-open class FileListActivity : BaseActivity() {
+open class FileListBaseActivity : BaseActivity() {
 
     lateinit var binding: ActivityFileListBinding
     private val fileListViewModel: FileListViewModel by viewModels()
@@ -37,6 +37,7 @@ open class FileListActivity : BaseActivity() {
 
     val simpleFileListFragment = SimpleFileListFragment()
     val thumbnailFileListFragment = ThumbnailFileListFragment()
+    var onPartnerIdAssociated: (() -> Unit)? = null
 
     val bottomSheetBehavior: BottomSheetBehavior<CardView> by lazy {
         BottomSheetBehavior.from(binding.bottomSheetPartnerId.bottomSheetPartnerId)
@@ -181,6 +182,7 @@ open class FileListActivity : BaseActivity() {
             doIfSuccess {
                 binding.constraintLayoutFileList.showSuccessSnackBar(getString(R.string.file_list_associate_partner_id_success))
                 resetButtonAssociate()
+                onPartnerIdAssociated?.invoke()
             }
             doIfError {
                 binding.constraintLayoutFileList.showErrorSnackBar(
