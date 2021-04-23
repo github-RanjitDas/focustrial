@@ -6,7 +6,7 @@
     android:layout_height="wrap_content">
 
     <Button
-        android:id="@+id/buttonSelectSnapshotsToAssociate"
+        android:id="@+id/buttonSelectToAssociate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/margin_20dp"
@@ -31,9 +31,9 @@
         android:textSize="@dimen/text_size_16sp"
         android:textStyle="bold"
         android:visibility="invisible"
-        app:layout_constraintBottom_toBottomOf="@id/buttonSelectSnapshotsToAssociate"
-        app:layout_constraintStart_toEndOf="@id/buttonSelectSnapshotsToAssociate"
-        app:layout_constraintTop_toTopOf="@id/buttonSelectSnapshotsToAssociate" />
+        app:layout_constraintBottom_toBottomOf="@id/buttonSelectToAssociate"
+        app:layout_constraintStart_toEndOf="@id/buttonSelectToAssociate"
+        app:layout_constraintTop_toTopOf="@id/buttonSelectToAssociate" />
 
     <ImageButton
         android:id="@+id/buttonOpenFilters"
@@ -44,9 +44,9 @@
         android:contentDescription="@string/associate_partner_id_content_description"
         android:padding="@dimen/padding_15dp"
         android:src="@drawable/ic_filter"
-        app:layout_constraintBottom_toBottomOf="@+id/buttonSelectSnapshotsToAssociate"
+        app:layout_constraintBottom_toBottomOf="@+id/buttonSelectToAssociate"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/buttonSelectSnapshotsToAssociate" />
+        app:layout_constraintTop_toTopOf="@+id/buttonSelectToAssociate" />
 
     <ScrollView
         android:id="@+id/scrollFilterTags"
@@ -56,7 +56,7 @@
         android:layout_marginTop="@dimen/margin_11dp"
         android:orientation="horizontal"
         android:visibility="gone"
-        app:layout_constraintTop_toBottomOf="@id/buttonSelectSnapshotsToAssociate">
+        app:layout_constraintTop_toBottomOf="@id/buttonSelectToAssociate">
 
         <HorizontalScrollView
             android:layout_width="wrap_content"

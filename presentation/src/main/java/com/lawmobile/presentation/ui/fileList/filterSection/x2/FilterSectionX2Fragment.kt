@@ -20,7 +20,7 @@ class FilterSectionX2Fragment : BaseFragment() {
     private var isViewCreated: Boolean = false
     private var isNavigationActive: Boolean = false
 
-    lateinit var onTapButtonSelectSnapshotAssociate: () -> Unit
+    lateinit var onTapSelectButtonToAssociate: () -> Unit
     lateinit var onTapButtonOpenFilters: () -> Unit
     lateinit var onTapThumbnail: () -> Unit
     lateinit var onTapSimpleList: () -> Unit
@@ -46,26 +46,26 @@ class FilterSectionX2Fragment : BaseFragment() {
         binding.buttonThumbnailList.isVisible = isNavigationActive
     }
 
-    fun resetButtonAssociateSnapshot() {
+    fun resetButtonSelectToAssociate() {
         if (!isViewCreated) return
-        with(binding.buttonSelectSnapshotsToAssociate) {
+        with(binding.buttonSelectToAssociate) {
             isActivated = false
             text = getString(R.string.select)
         }
     }
 
     fun changeTextSelectedItems(selectedItems: Int) {
-        if (selectedItems > 0 || isButtonSelectedSnapshotActive()) {
-            binding.buttonSelectSnapshotsToAssociate.text =
+        if (selectedItems > 0 || isButtonSelectToAssociateActive()) {
+            binding.buttonSelectToAssociate.text =
                 getString(R.string.items_selected, selectedItems)
         }
     }
 
-    fun isButtonSelectedSnapshotActive() = binding.buttonSelectSnapshotsToAssociate.isActivated
+    fun isButtonSelectToAssociateActive() = binding.buttonSelectToAssociate.isActivated
 
-    fun activateButtonAssociate() {
+    fun activateSelectButtonToAssociate() {
         if (!isViewCreated) return
-        with(binding.buttonSelectSnapshotsToAssociate) {
+        with(binding.buttonSelectToAssociate) {
             isActivated = true
             text = getString(R.string.items_selected, 0)
         }
@@ -100,7 +100,7 @@ class FilterSectionX2Fragment : BaseFragment() {
     }
 
     private fun setListener() {
-        binding.buttonSelectSnapshotsToAssociate.setOnClickListenerCheckConnection { onTapButtonSelectSnapshotAssociate() }
+        binding.buttonSelectToAssociate.setOnClickListenerCheckConnection { onTapSelectButtonToAssociate() }
         binding.buttonOpenFilters.setOnClickListenerCheckConnection { onTapButtonOpenFilters() }
         binding.buttonSimpleList.setClickListenerCheckConnection { onTapSimpleList() }
         binding.buttonThumbnailList.setClickListenerCheckConnection { onTapThumbnail() }

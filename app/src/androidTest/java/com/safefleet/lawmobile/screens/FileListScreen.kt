@@ -48,7 +48,7 @@ class FileListScreen : BaseScreen() {
     fun clickOnItemInPosition(position: Int) =
         BaristaListInteractions.clickListItem(recyclerView, position)
 
-    fun clickOnSelectFilesToAssociate() = clickOn(R.id.buttonSelectSnapshotsToAssociate)
+    fun clickOnSelectFilesToAssociate() = clickOn(R.id.buttonSelectToAssociate)
 
     fun clickOnAssociateWithAnOfficer() = clickOn(R.string.associate_with_an_officer)
 

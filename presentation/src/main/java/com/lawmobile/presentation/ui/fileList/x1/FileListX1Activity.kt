@@ -6,11 +6,11 @@ import com.lawmobile.presentation.R
 import com.lawmobile.presentation.extensions.attachFragment
 import com.lawmobile.presentation.extensions.setOnClickListenerCheckConnection
 import com.lawmobile.presentation.ui.base.appBar.x1.AppBarX1Fragment
-import com.lawmobile.presentation.ui.fileList.FileListActivity
+import com.lawmobile.presentation.ui.fileList.FileListBaseActivity
 import com.lawmobile.presentation.ui.fileList.filterSection.x1.FilterSectionX1Fragment
 import com.lawmobile.presentation.utils.Constants
 
-class FileListX1Activity : FileListActivity() {
+class FileListX1Activity : FileListBaseActivity() {
 
     private lateinit var appBarFragment: AppBarX1Fragment
     private var filterSectionFragment = FilterSectionX1Fragment()

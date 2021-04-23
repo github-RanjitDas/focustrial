@@ -10,11 +10,11 @@ import com.lawmobile.presentation.extensions.openMenuButton
 import com.lawmobile.presentation.extensions.setOnClickListenerCheckConnection
 import com.lawmobile.presentation.ui.base.appBar.x2.AppBarX2Fragment
 import com.lawmobile.presentation.ui.base.menu.MenuFragment
-import com.lawmobile.presentation.ui.fileList.FileListActivity
+import com.lawmobile.presentation.ui.fileList.FileListBaseActivity
 import com.lawmobile.presentation.ui.fileList.filterSection.x2.FilterSectionX2Fragment
 import com.lawmobile.presentation.utils.Constants
 
-class FileListX2Activity : FileListActivity() {
+class FileListX2Activity : FileListBaseActivity() {
 
     private val menuFragment = MenuFragment()
     private lateinit var menuInformation: MenuInformation
@@ -67,19 +67,19 @@ class FileListX2Activity : FileListActivity() {
 
         filterSectionFragment.onTapSimpleList = {
             filterSectionFragment.isSimpleListActivity(true)
-            filterSectionFragment.resetButtonAssociateSnapshot()
+            filterSectionFragment.resetButtonSelectToAssociate()
             attachSimpleFileListFragment()
         }
 
         filterSectionFragment.onTapThumbnail = {
             filterSectionFragment.isSimpleListActivity(false)
-            filterSectionFragment.resetButtonAssociateSnapshot()
+            filterSectionFragment.resetButtonSelectToAssociate()
             attachThumbnailListFragment()
         }
 
         appBarFragment.onBackPressed = ::onBackPressed
         binding.buttonAssociatePartnerIdList.setOnClickListenerCheckConnection { showAssignToOfficerBottomSheet() }
-        filterSectionFragment.onTapButtonSelectSnapshotAssociate = ::showCheckBoxes
+        filterSectionFragment.onTapSelectButtonToAssociate = ::showCheckBoxes
         filterSectionFragment.onTapButtonOpenFilters = ::showFilterDialog
 
         menuFragment.onCloseMenuButton = {
@@ -87,6 +87,10 @@ class FileListX2Activity : FileListActivity() {
         }
         appBarFragment.onTapMenuButton = {
             binding.layoutCustomMenu.menuContainer.openMenuButton(menuInformation)
+        }
+
+        onPartnerIdAssociated = {
+            filterSectionFragment.resetButtonSelectToAssociate()
         }
     }
 
@@ -134,11 +138,11 @@ class FileListX2Activity : FileListActivity() {
     }
 
     private fun showCheckBoxes() {
-        if (filterSectionFragment.isButtonSelectedSnapshotActive()) {
-            filterSectionFragment.resetButtonAssociateSnapshot()
+        if (filterSectionFragment.isButtonSelectToAssociateActive()) {
+            filterSectionFragment.resetButtonSelectToAssociate()
             resetButtonAssociate()
         } else {
-            filterSectionFragment.activateButtonAssociate()
+            filterSectionFragment.activateSelectButtonToAssociate()
             activateButtonAssociate()
         }
     }

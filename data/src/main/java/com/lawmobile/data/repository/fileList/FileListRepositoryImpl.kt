@@ -43,7 +43,7 @@ class FileListRepositoryImpl(private val fileListRemoteDataSource: FileListRemot
                     fileName = it.name,
                     officerId = CameraInfo.officerId,
                     x1sn = CameraInfo.serialNumber,
-                    path = it.path,
+                    path = remoteVideoMetadata?.path ?: it.path,
                     metadata = partnerMetadata,
                     nameFolder = it.nameFolder
                 )
