@@ -6,7 +6,7 @@ import com.lawmobile.domain.entities.DomainMetadata
 import com.lawmobile.domain.entities.DomainPhotoAssociated
 import com.lawmobile.domain.entities.DomainVideoMetadata
 import com.lawmobile.domain.enums.CameraType
-import com.safefleet.mobile.external_hardware.cameras.entities.HashVideo
+import com.safefleet.mobile.external_hardware.cameras.entities.HashMetadataFile
 import com.safefleet.mobile.external_hardware.cameras.entities.PhotoAssociated
 import com.safefleet.mobile.external_hardware.cameras.entities.VideoInformation
 import com.safefleet.mobile.external_hardware.cameras.entities.VideoMetadata
@@ -109,13 +109,13 @@ object VideoMetadataMapper {
             )
         }
 
-    private fun domainHashToRemote(hashDomain: DomainHashVideo?): HashVideo? {
+    private fun domainHashToRemote(hashDomain: DomainHashVideo?): HashMetadataFile? {
         hashDomain?.let {
-            return HashVideo(hashDomain.function, hashDomain.sums)
+            return HashMetadataFile(hashDomain.function, hashDomain.sums)
         } ?: return null
     }
 
-    private fun hashRemoteToDomain(hash: HashVideo?): DomainHashVideo? {
+    private fun hashRemoteToDomain(hash: HashMetadataFile?): DomainHashVideo? {
         hash?.let {
             return DomainHashVideo(hash.function, hash.sums)
         } ?: return null
