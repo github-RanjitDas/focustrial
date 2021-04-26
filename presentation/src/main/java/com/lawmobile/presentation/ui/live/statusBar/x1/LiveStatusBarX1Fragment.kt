@@ -177,6 +177,11 @@ class LiveStatusBarX1Fragment : LiveStatusBarBaseFragment() {
         return getString(R.string.storage_level_x1, usedFormat, freeFormat)
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
+    }
+
     companion object {
         val TAG = LiveStatusBarX1Fragment::class.java.simpleName
         private const val PERCENT_TO_SHOW_ALERT_MEMORY_CAPACITY = 95

@@ -106,6 +106,11 @@ class FilterSectionX2Fragment : BaseFragment() {
         binding.buttonThumbnailList.setClickListenerCheckConnection { onTapThumbnail() }
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
+    }
+
     companion object {
         val TAG = FilterSectionX2Fragment::class.java.simpleName
         fun createInstance(isNavigationActive: Boolean = false): FilterSectionX2Fragment {
