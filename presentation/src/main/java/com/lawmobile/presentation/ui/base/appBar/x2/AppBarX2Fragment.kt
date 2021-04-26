@@ -28,6 +28,7 @@ class AppBarX2Fragment : BaseFragment() {
     private val viewModel: AppBarX2ViewModel by viewModels()
 
     private var isLogoActive: Boolean = false
+    private var callPendingNotification: Boolean = false
     private var isBellIconActive: Boolean = true
     private var title: String = ""
 
@@ -38,6 +39,7 @@ class AppBarX2Fragment : BaseFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        callPendingNotification = false
         _binding =
             LiveViewAppBarMenuBinding.inflate(inflater, container, false)
         return binding.root
@@ -83,9 +85,12 @@ class AppBarX2Fragment : BaseFragment() {
         binding.imageButtonBackArrow.setOnClickListenerCheckConnection { onBackPressed() }
 
         CameraInfo.onReadyToGetNotifications = {
-            lifecycleScope.launch {
-                delay(500)
-                viewModel.getPendingNotificationsCount()
+            if (!callPendingNotification && isInPortraitMode()) {
+                callPendingNotification = true
+                getPendingNotifications()
+            }
+            activity?.runOnUiThread {
+                hideLoadingDialog()
             }
         }
     }
@@ -95,6 +100,13 @@ class AppBarX2Fragment : BaseFragment() {
             viewLifecycleOwner,
             ::reviewPendingNotifications
         )
+    }
+
+    private fun getPendingNotifications() {
+        lifecycleScope.launch {
+            delay(500)
+            viewModel.getPendingNotificationsCount()
+        }
     }
 
     private fun reviewPendingNotifications(result: Result<Int>) {
