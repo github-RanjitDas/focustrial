@@ -34,8 +34,8 @@ import kotlin.math.min
 
 class ThumbnailFileListFragment : FileListBaseFragment() {
 
-    private var _fragmentFileListBinding: FragmentFileListBinding? = null
-    private val fragmentFileListBinding get() = _fragmentFileListBinding!!
+    private var _binding: FragmentFileListBinding? = null
+    private val binding get() = _binding!!
 
     private val thumbnailListFragmentViewModel: ThumbnailListFragmentViewModel by activityViewModels()
     private var imagesFailedToLoad: ArrayList<String> = arrayListOf()
@@ -54,9 +54,9 @@ class ThumbnailFileListFragment : FileListBaseFragment() {
         savedInstanceState: Bundle?
     ): View {
         setObservers()
-        _fragmentFileListBinding =
+        _binding =
             FragmentFileListBinding.inflate(inflater, container, false)
-        return fragmentFileListBinding.root
+        return binding.root
     }
 
     override fun onResume() {
@@ -85,9 +85,9 @@ class ThumbnailFileListFragment : FileListBaseFragment() {
     }
 
     private fun configureLayoutItems() {
-        fragmentFileListBinding.textViewEvent.isVisible = false
-        fragmentFileListBinding.textViewDateAndTime.isVisible = false
-        fragmentFileListBinding.dividerViewList.isVisible = false
+        binding.textViewEvent.isVisible = false
+        binding.textViewDateAndTime.isVisible = false
+        binding.dividerViewList.isVisible = false
     }
 
     private fun getSnapshotList() {
@@ -103,8 +103,8 @@ class ThumbnailFileListFragment : FileListBaseFragment() {
 
     private fun fillAdapter(listItems: MutableList<DomainInformationFile>) {
         showFileListRecycler(
-            fragmentFileListBinding.fileListRecycler,
-            fragmentFileListBinding.noFilesTextView
+            binding.fileListRecycler,
+            binding.noFilesTextView
         )
 
         fileListBackup = mutableListOf()
@@ -134,8 +134,8 @@ class ThumbnailFileListFragment : FileListBaseFragment() {
             as MutableList<DomainInformationImage>
         loadNewImage()
         manageFragmentContent(
-            fragmentFileListBinding.fileListRecycler,
-            fragmentFileListBinding.noFilesTextView
+            binding.fileListRecycler,
+            binding.noFilesTextView
         )
     }
 
@@ -167,7 +167,7 @@ class ThumbnailFileListFragment : FileListBaseFragment() {
     }
 
     private fun setRecyclerView() {
-        fragmentFileListBinding.fileListRecycler.apply {
+        binding.fileListRecycler.apply {
             setHasFixedSize(true)
             gridLayoutManager = GridLayoutManager(requireContext(), 2)
             layoutManager = gridLayoutManager
@@ -196,12 +196,12 @@ class ThumbnailFileListFragment : FileListBaseFragment() {
                 if (it.errors.isNotEmpty()) showErrorInSomeFiles(it.errors)
                 if (it.items.isNotEmpty()) fillAdapter(it.items)
                 else showEmptyListMessage(
-                    fragmentFileListBinding.fileListRecycler,
-                    fragmentFileListBinding.noFilesTextView
+                    binding.fileListRecycler,
+                    binding.noFilesTextView
                 )
             }
             doIfError {
-                fragmentFileListBinding.fileListLayout.showErrorSnackBar(
+                binding.fileListLayout.showErrorSnackBar(
                     getString(R.string.file_list_failed_load_files),
                     Snackbar.LENGTH_INDEFINITE
                 ) {
@@ -215,7 +215,7 @@ class ThumbnailFileListFragment : FileListBaseFragment() {
     }
 
     private fun showErrorInSomeFiles(errors: MutableList<String>) {
-        fragmentFileListBinding.fileListLayout.showErrorSnackBar(
+        binding.fileListLayout.showErrorSnackBar(
             getString(R.string.getting_files_error_description),
             Snackbar.LENGTH_LONG
         ) {
@@ -359,6 +359,11 @@ class ThumbnailFileListFragment : FileListBaseFragment() {
     override fun onPause() {
         super.onPause()
         cleanFileList()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
     }
 
     private fun checkIfFileExist(path: String) = File(path).exists()

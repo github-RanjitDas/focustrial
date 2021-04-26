@@ -20,8 +20,8 @@ import kotlinx.coroutines.launch
 
 class AppBarX2Fragment : BaseFragment() {
 
-    private var _liveAppBarMenuFragment: LiveViewAppBarMenuBinding? = null
-    private val binding get() = _liveAppBarMenuFragment!!
+    private var _binding: LiveViewAppBarMenuBinding? = null
+    private val binding get() = _binding!!
 
     lateinit var onTapMenuButton: () -> Unit
 
@@ -29,7 +29,7 @@ class AppBarX2Fragment : BaseFragment() {
 
     private var isLogoActive: Boolean = false
     private var isBellIconActive: Boolean = true
-    private lateinit var title: String
+    private var title: String = ""
 
     lateinit var onBackPressed: () -> Unit
 
@@ -38,21 +38,23 @@ class AppBarX2Fragment : BaseFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _liveAppBarMenuFragment =
+        _binding =
             LiveViewAppBarMenuBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setListeners()
-        setObservers()
-        configureView()
+        if (isInPortraitMode()) {
+            setListeners()
+            setObservers()
+            configureView()
+        }
     }
 
     override fun onResume() {
         super.onResume()
-        setCurrentNotificationCount()
+        if (isInPortraitMode()) setCurrentNotificationCount()
     }
 
     private fun setCurrentNotificationCount() {
@@ -100,6 +102,11 @@ class AppBarX2Fragment : BaseFragment() {
             CameraInfo.currentNotificationCount = it
             setCurrentNotificationCount()
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
     }
 
     companion object {

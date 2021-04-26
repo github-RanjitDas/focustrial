@@ -95,6 +95,11 @@ class FilterSectionX1Fragment : BaseFragment() {
         binding.buttonOpenFilters.setOnClickListenerCheckConnection { onTapButtonOpenFilters() }
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
+    }
+
     companion object {
         val TAG = FilterSectionX1Fragment::class.java.simpleName
     }

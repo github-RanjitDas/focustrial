@@ -180,6 +180,11 @@ class LiveStatusBarX2Fragment : LiveStatusBarBaseFragment() {
         binding.textViewStorageLevels.text = textToStorage
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
+    }
+
     companion object {
         val TAG = LiveStatusBarX2Fragment::class.java.simpleName
     }
