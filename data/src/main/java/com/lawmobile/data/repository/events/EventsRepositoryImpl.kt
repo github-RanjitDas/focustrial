@@ -64,12 +64,17 @@ class EventsRepositoryImpl(
         }
 
     override suspend fun getPendingNotificationsCount(): Result<Int> {
-        val resultRemoteEvents = getCameraEvents()
+        if (!callOnceGetEventsToPendingNotification) {
+            callOnceGetEventsToPendingNotification = true
+            val resultRemoteEvents = getCameraEvents()
+            resultRemoteEvents.doIfSuccess {
+                return eventsLocalDataSource.getPendingNotificationsCount()
+            }
 
-        resultRemoteEvents.doIfSuccess {
-            return eventsLocalDataSource.getPendingNotificationsCount()
+            return Result.Error(Exception("Error to get pending notification"))
         }
-        return Result.Error(Exception("Error to get pending notification"))
+
+        return eventsLocalDataSource.getPendingNotificationsCount()
     }
 
     override fun isPossibleToReadLog() = eventsRemoteDataSource.isPossibleToReadLog()
@@ -115,5 +120,9 @@ class EventsRepositoryImpl(
             is Result.Success -> Result.Success(Unit)
             is Result.Error -> result
         }
+    }
+
+    companion object {
+        var callOnceGetEventsToPendingNotification = false
     }
 }

@@ -128,6 +128,7 @@ class LiveStatusBarX1Fragment : LiveStatusBarBaseFragment() {
                 parentLayout.showErrorSnackBar(getString(R.string.storage_level_error))
             }
         }
+        hideLoadingDialog()
         EspressoIdlingResource.decrement()
     }
 
