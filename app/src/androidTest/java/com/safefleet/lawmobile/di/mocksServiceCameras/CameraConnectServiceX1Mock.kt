@@ -1,7 +1,9 @@
 package com.safefleet.lawmobile.di.mocksServiceCameras
 
 import com.lawmobile.domain.entities.FileList
+import com.safefleet.lawmobile.helpers.MockUtils
 import com.safefleet.lawmobile.helpers.MockUtils.Companion.bodyWornDiagnosisResult
+import com.safefleet.lawmobile.testData.CameraEventsData
 import com.safefleet.lawmobile.testData.CameraFilesData
 import com.safefleet.lawmobile.testData.TestLoginData
 import com.safefleet.mobile.external_hardware.cameras.CameraService
@@ -37,6 +39,7 @@ class CameraConnectServiceX1Mock : CameraService {
         var takenPhotos = 0
         var takenVideos = 0
         var result: Result<Int> = Result.Success(100)
+        var eventList: MutableList<LogEvent> = CameraEventsData.DEFAULT.value
     }
 
     override suspend fun disconnectCamera(): Result<Unit> {
@@ -44,7 +47,7 @@ class CameraConnectServiceX1Mock : CameraService {
     }
 
     override suspend fun getBatteryLevel(): Result<Int> {
-        return Result.Success(90)
+        return MockUtils.progressBatteryCamera
     }
 
     override suspend fun getBodyWornDiagnosis(): Result<Boolean> {
@@ -74,16 +77,7 @@ class CameraConnectServiceX1Mock : CameraService {
     }
 
     override suspend fun getLogEvents(): Result<List<LogEvent>> {
-        return Result.Success(
-            listOf(
-                LogEvent(
-                    name = "event",
-                    date = "10/12/2020 19:53:25",
-                    type = "warn: low battery",
-                    value = "please charge your camera"
-                )
-            )
-        )
+        return Result.Success(eventList)
     }
 
     override suspend fun getMetadataOfPhotos(): Result<List<PhotoInformation>> {
@@ -212,5 +206,9 @@ class CameraConnectServiceX1Mock : CameraService {
 
     override suspend fun getTotalStorage(): Result<String> {
         return Result.Success("60000000")
+    }
+
+    fun sendPushNotification(notificationResponse: NotificationResponse) {
+        arriveNotificationFromCamera?.invoke(notificationResponse)
     }
 }
