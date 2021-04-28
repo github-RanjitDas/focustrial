@@ -32,8 +32,8 @@ import com.safefleet.mobile.kotlin_commons.helpers.Result
 
 class MenuFragment : BaseFragment() {
 
-    private var _fragmentPairingMenuLive: FragmentLiveMenuX2Binding? = null
-    private val binding get() = _fragmentPairingMenuLive!!
+    private var _binding: FragmentLiveMenuX2Binding? = null
+    private val binding get() = _binding!!
     private val menuViewModel: MenuViewModel by viewModels()
     lateinit var onCloseMenuButton: () -> Unit
 
@@ -42,7 +42,7 @@ class MenuFragment : BaseFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _fragmentPairingMenuLive =
+        _binding =
             FragmentLiveMenuX2Binding.inflate(inflater, container, false)
         return binding.root
     }
@@ -198,6 +198,11 @@ class MenuFragment : BaseFragment() {
 
     fun openMenu() {
         menuViewModel.getPendingNotificationsCount()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
     }
 
     companion object {

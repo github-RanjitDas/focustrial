@@ -32,6 +32,11 @@ class LiveNavigationX1Fragment : LiveNavigationBaseFragment() {
         buttonVideoList = binding.buttonVideoList
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
+    }
+
     companion object {
         val TAG = LiveNavigationX1Fragment::class.java.simpleName
     }

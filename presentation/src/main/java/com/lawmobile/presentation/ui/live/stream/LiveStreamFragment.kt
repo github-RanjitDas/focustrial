@@ -83,6 +83,11 @@ class LiveStreamFragment : BaseFragment() {
         viewModel.stopVLCMediaPlayer()
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
+    }
+
     companion object {
         val TAG = LiveStreamFragment::class.java.simpleName
     }

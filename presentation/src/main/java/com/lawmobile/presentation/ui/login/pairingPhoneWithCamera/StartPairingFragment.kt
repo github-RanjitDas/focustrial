@@ -36,8 +36,8 @@ import com.safefleet.mobile.kotlin_commons.helpers.Result
 
 class StartPairingFragment : BaseFragment() {
 
-    private var _fragmentStartPairingBinding: FragmentStartPairingBinding? = null
-    private val fragmentStartPairingBinding get() = _fragmentStartPairingBinding!!
+    private var _binding: FragmentStartPairingBinding? = null
+    private val binding get() = _binding!!
 
     private val pairingViewModel: PairingViewModel by viewModels()
     lateinit var validateRequirements: (isSuccess: Boolean) -> Unit
@@ -50,9 +50,9 @@ class StartPairingFragment : BaseFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _fragmentStartPairingBinding =
+        _binding =
             FragmentStartPairingBinding.inflate(inflater, container, false)
-        return fragmentStartPairingBinding.root
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -73,13 +73,13 @@ class StartPairingFragment : BaseFragment() {
     }
 
     private fun setListeners() {
-        fragmentStartPairingBinding.buttonGo.setOnClickListener {
+        binding.buttonGo.setOnClickListener {
             if (!verifyMagiskInPhone()) {
                 verifyPermissionsToStartPairing()
             }
         }
 
-        fragmentStartPairingBinding.buttonInstructionsToLinkCamera.setOnClickListener {
+        binding.buttonInstructionsToLinkCamera.setOnClickListener {
             showBottomSheet()
         }
     }
@@ -165,7 +165,7 @@ class StartPairingFragment : BaseFragment() {
         with(result) {
             doIfSuccess { validateRequirements(true) }
             doIfError {
-                fragmentStartPairingBinding.layoutStartPairing.showErrorSnackBar(getString(R.string.verify_camera_wifi))
+                binding.layoutStartPairing.showErrorSnackBar(getString(R.string.verify_camera_wifi))
             }
         }
     }
@@ -207,6 +207,11 @@ class StartPairingFragment : BaseFragment() {
         override fun onServiceDisconnected(componentName: ComponentName) {
             isServiceBounded = false
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
     }
 
     companion object {

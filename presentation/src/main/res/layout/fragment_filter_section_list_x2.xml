@@ -6,7 +6,7 @@
     android:layout_height="wrap_content">
 
     <Button
-        android:id="@+id/buttonSelectSnapshotsToAssociate"
+        android:id="@+id/buttonSelectToAssociate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/margin_20dp"
@@ -29,9 +29,9 @@
         android:src="@drawable/ic_grid_selector"
         android:layout_marginEnd="@dimen/margin_16dp"
         android:contentDescription="@string/focus_mobile_app_logo_description"
-        app:layout_constraintBottom_toBottomOf="@+id/buttonSelectSnapshotsToAssociate"
+        app:layout_constraintBottom_toBottomOf="@+id/buttonSelectToAssociate"
         app:layout_constraintEnd_toStartOf="@+id/buttonSimpleList"
-        app:layout_constraintTop_toTopOf="@+id/buttonSelectSnapshotsToAssociate" />
+        app:layout_constraintTop_toTopOf="@+id/buttonSelectToAssociate" />
 
     <com.safefleet.mobile.safefleet_ui.widgets.SafeFleetListButton
         android:id="@+id/buttonSimpleList"
@@ -40,9 +40,9 @@
         android:layout_marginEnd="@dimen/margin_16dp"
         android:contentDescription="@string/focus_mobile_app_logo_description"
         android:src="@drawable/ic_list_selector"
-        app:layout_constraintBottom_toBottomOf="@+id/buttonSelectSnapshotsToAssociate"
+        app:layout_constraintBottom_toBottomOf="@+id/buttonSelectToAssociate"
         app:layout_constraintEnd_toStartOf="@+id/buttonOpenFilters"
-        app:layout_constraintTop_toTopOf="@+id/buttonSelectSnapshotsToAssociate" />
+        app:layout_constraintTop_toTopOf="@+id/buttonSelectToAssociate" />
 
     <ImageButton
         android:id="@+id/buttonOpenFilters"
@@ -53,9 +53,9 @@
         android:contentDescription="@string/associate_partner_id_content_description"
         android:padding="@dimen/padding_15dp"
         android:src="@drawable/ic_filter"
-        app:layout_constraintBottom_toBottomOf="@+id/buttonSelectSnapshotsToAssociate"
+        app:layout_constraintBottom_toBottomOf="@+id/buttonSelectToAssociate"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/buttonSelectSnapshotsToAssociate" />
+        app:layout_constraintTop_toTopOf="@+id/buttonSelectToAssociate" />
 
     <ScrollView
         android:id="@+id/scrollFilterTags"
@@ -65,7 +65,7 @@
         android:layout_marginTop="@dimen/margin_11dp"
         android:orientation="horizontal"
         android:visibility="gone"
-        app:layout_constraintTop_toBottomOf="@id/buttonSelectSnapshotsToAssociate">
+        app:layout_constraintTop_toBottomOf="@id/buttonSelectToAssociate">
 
         <HorizontalScrollView
             android:layout_width="wrap_content"

@@ -57,6 +57,11 @@ class LiveAppBarX1Fragment : BaseFragment() {
         requireActivity().finish()
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
+    }
+
     companion object {
         val TAG = LiveAppBarX1Fragment::class.java.simpleName
     }

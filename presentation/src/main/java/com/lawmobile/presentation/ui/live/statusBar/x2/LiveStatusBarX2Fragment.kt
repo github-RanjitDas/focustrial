@@ -59,11 +59,6 @@ class LiveStatusBarX2Fragment : LiveStatusBarBaseFragment() {
         getCameraStatus(isViewLoaded)
     }
 
-    override fun onResume() {
-        super.onResume()
-        sharedViewModel.getBatteryLevel()
-    }
-
     private fun setObservers() {
         sharedViewModel.storageLiveData.observe(viewLifecycleOwner, ::setStorageLevels)
     }
@@ -178,6 +173,11 @@ class LiveStatusBarX2Fragment : LiveStatusBarBaseFragment() {
         } else usedStorageString
 
         binding.textViewStorageLevels.text = textToStorage
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
     }
 
     companion object {

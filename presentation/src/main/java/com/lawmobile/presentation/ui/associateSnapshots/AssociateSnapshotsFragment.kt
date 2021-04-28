@@ -28,8 +28,8 @@ import com.lawmobile.presentation.widgets.CustomFilterDialog
 
 class AssociateSnapshotsFragment : BaseFragment() {
 
-    private var _fragmentAssociateSnapshotsBinding: FragmentAssociateSnapshotsBinding? = null
-    private val fragmentAssociateSnapshotsBinding get() = _fragmentAssociateSnapshotsBinding!!
+    private var _binding: FragmentAssociateSnapshotsBinding? = null
+    private val binding get() = _binding!!
 
     private var simpleFileListFragment = SimpleFileListFragment()
     private var thumbnailFileListFragment = ThumbnailFileListFragment()
@@ -43,9 +43,9 @@ class AssociateSnapshotsFragment : BaseFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _fragmentAssociateSnapshotsBinding =
+        _binding =
             FragmentAssociateSnapshotsBinding.inflate(inflater, container, false)
-        return fragmentAssociateSnapshotsBinding.root
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -75,16 +75,16 @@ class AssociateSnapshotsFragment : BaseFragment() {
         thumbnailFileListFragment.onImageCheck = { _, it ->
             showSelectedItemsCount(it)
         }
-        fragmentAssociateSnapshotsBinding.buttonFilterAssociateImages.setOnClickListenerCheckConnection {
+        binding.buttonFilterAssociateImages.setOnClickListenerCheckConnection {
             showFilterDialog()
         }
-        fragmentAssociateSnapshotsBinding.buttonThumbnailListAssociate.setClickListenerCheckConnection {
+        binding.buttonThumbnailListAssociate.setClickListenerCheckConnection {
             setThumbnailListFragment()
         }
-        fragmentAssociateSnapshotsBinding.buttonSimpleListAssociate.setClickListenerCheckConnection {
+        binding.buttonSimpleListAssociate.setClickListenerCheckConnection {
             setSimpleFileListFragment()
         }
-        fragmentAssociateSnapshotsBinding.buttonAssociateImages.setOnClickListenerCheckConnection {
+        binding.buttonAssociateImages.setOnClickListenerCheckConnection {
             addSnapshotsToVideo()
         }
     }
@@ -93,7 +93,7 @@ class AssociateSnapshotsFragment : BaseFragment() {
         if (areSnapshotsSelected()) {
             onAssociateSnapshots?.invoke()
         } else {
-            fragmentAssociateSnapshotsBinding.layoutAssociateImagesToVideo.showErrorSnackBar(
+            binding.layoutAssociateImagesToVideo.showErrorSnackBar(
                 getString(R.string.no_new_photo_selected_message)
             )
         }
@@ -117,7 +117,7 @@ class AssociateSnapshotsFragment : BaseFragment() {
 
         if (filterDialog == null) {
             filterDialog =
-                fragmentAssociateSnapshotsBinding.layoutAssociateFilterTags.createFilterDialog(::handleOnApplyFilterClick)
+                binding.layoutAssociateFilterTags.createFilterDialog(::handleOnApplyFilterClick)
         }
 
         filterDialog?.apply {
@@ -130,7 +130,7 @@ class AssociateSnapshotsFragment : BaseFragment() {
     }
 
     private fun handleOnApplyFilterClick(it: Boolean) {
-        fragmentAssociateSnapshotsBinding.scrollFilterAssociateTags.isVisible = it
+        binding.scrollFilterAssociateTags.isVisible = it
         updateButtonFilterState(it)
         when (actualFragment) {
             SIMPLE_FILE_LIST ->
@@ -141,7 +141,7 @@ class AssociateSnapshotsFragment : BaseFragment() {
     }
 
     private fun updateButtonFilterState(it: Boolean) {
-        with(fragmentAssociateSnapshotsBinding.buttonFilterAssociateImages) {
+        with(binding.buttonFilterAssociateImages) {
             background = if (!it) {
                 setImageResource(R.drawable.ic_filter_white)
                 ContextCompat.getDrawable(
@@ -160,8 +160,8 @@ class AssociateSnapshotsFragment : BaseFragment() {
 
     private fun setSimpleFileListFragment() {
         actualFragment = SIMPLE_FILE_LIST
-        fragmentAssociateSnapshotsBinding.buttonSimpleListAssociate.isActivated = true
-        fragmentAssociateSnapshotsBinding.buttonThumbnailListAssociate.isActivated = false
+        binding.buttonSimpleListAssociate.isActivated = true
+        binding.buttonThumbnailListAssociate.isActivated = false
         childFragmentManager.attachFragment(
             R.id.fragmentAssociateListHolder,
             simpleFileListFragment,
@@ -171,8 +171,8 @@ class AssociateSnapshotsFragment : BaseFragment() {
 
     private fun setThumbnailListFragment() {
         actualFragment = THUMBNAIL_FILE_LIST
-        fragmentAssociateSnapshotsBinding.buttonThumbnailListAssociate.isActivated = true
-        fragmentAssociateSnapshotsBinding.buttonSimpleListAssociate.isActivated = false
+        binding.buttonThumbnailListAssociate.isActivated = true
+        binding.buttonSimpleListAssociate.isActivated = false
         childFragmentManager.attachFragment(
             R.id.fragmentAssociateListHolder,
             thumbnailFileListFragment,
@@ -181,7 +181,7 @@ class AssociateSnapshotsFragment : BaseFragment() {
     }
 
     private fun showSelectedItemsCount(selectedItems: Int) {
-        fragmentAssociateSnapshotsBinding.textViewAssociatedItems.run {
+        binding.textViewAssociatedItems.run {
             isVisible = selectedItems > 0
             text = getString(R.string.items_selected, selectedItems)
         }
@@ -190,6 +190,7 @@ class AssociateSnapshotsFragment : BaseFragment() {
     override fun onDestroy() {
         checkableListInit = false
         super.onDestroy()
+        _binding = null
     }
 
     companion object {

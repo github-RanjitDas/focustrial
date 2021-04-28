@@ -38,7 +38,7 @@ class FilterSectionX1Fragment : BaseFragment() {
 
     fun resetButtonAssociateSnapshot(listType: String?) {
         if (!isViewCreated) return
-        with(binding.buttonSelectSnapshotsToAssociate) {
+        with(binding.buttonSelectToAssociate) {
             isActivated = false
             text = when (listType) {
                 Constants.VIDEO_LIST -> getString(R.string.select_videos_to_associate)
@@ -59,11 +59,11 @@ class FilterSectionX1Fragment : BaseFragment() {
         binding.textViewSelectedItems.isVisible = isVisible
     }
 
-    fun isButtonSelectedSnapshotActive() = binding.buttonSelectSnapshotsToAssociate.isActivated
+    fun isButtonSelectedSnapshotActive() = binding.buttonSelectToAssociate.isActivated
 
     fun activateButtonAssociate() {
         if (!isViewCreated) return
-        with(binding.buttonSelectSnapshotsToAssociate) {
+        with(binding.buttonSelectToAssociate) {
             isActivated = true
             text = getString(R.string.cancel)
         }
@@ -91,8 +91,13 @@ class FilterSectionX1Fragment : BaseFragment() {
     }
 
     private fun setListener() {
-        binding.buttonSelectSnapshotsToAssociate.setOnClickListenerCheckConnection { onTapButtonSelectSnapshotAssociate() }
+        binding.buttonSelectToAssociate.setOnClickListenerCheckConnection { onTapButtonSelectSnapshotAssociate() }
         binding.buttonOpenFilters.setOnClickListenerCheckConnection { onTapButtonOpenFilters() }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
     }
 
     companion object {

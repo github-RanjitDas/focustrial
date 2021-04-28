@@ -56,6 +56,11 @@ class AppBarX1Fragment : BaseFragment() {
         binding.buttonThumbnailList.isActivated = !isActive
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
+    }
+
     companion object {
         val TAG = AppBarX1Fragment::class.java.simpleName
         fun createInstance(title: String, showNavigationList: Boolean = false): AppBarX1Fragment {

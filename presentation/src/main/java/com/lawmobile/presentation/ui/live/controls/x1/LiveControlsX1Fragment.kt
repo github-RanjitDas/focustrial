@@ -39,6 +39,11 @@ class LiveControlsX1Fragment : LiveControlsBaseFragment() {
         textLiveViewRecording = binding.textLiveViewRecording
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
+    }
+
     companion object {
         val TAG = LiveControlsX1Fragment::class.java.simpleName
     }

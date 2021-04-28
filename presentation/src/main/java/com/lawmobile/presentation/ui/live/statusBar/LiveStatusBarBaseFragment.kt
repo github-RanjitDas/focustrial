@@ -54,10 +54,21 @@ open class LiveStatusBarBaseFragment : BaseFragment() {
 
     fun getCameraStatus(isViewLoaded: Boolean) {
         if (isViewLoaded) {
+            if (isInPortraitMode()) showLoadingDialog()
+            hideLoadingAfterTimeout()
             if (CameraInfo.metadataEvents.isEmpty()) {
                 sharedViewModel.getMetadataEvents()
             } else sharedViewModel.getBatteryLevel()
         }
+    }
+
+    private fun hideLoadingAfterTimeout() {
+        Thread {
+            Thread.sleep(2000)
+            activity?.runOnUiThread {
+                hideLoadingDialog()
+            }
+        }.start()
     }
 
     private fun setCatalogInfo(metadataEventList: Result<List<MetadataEvent>>) {

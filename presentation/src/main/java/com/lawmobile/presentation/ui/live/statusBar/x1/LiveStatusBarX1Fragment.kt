@@ -128,6 +128,7 @@ class LiveStatusBarX1Fragment : LiveStatusBarBaseFragment() {
                 parentLayout.showErrorSnackBar(getString(R.string.storage_level_error))
             }
         }
+        hideLoadingDialog()
         EspressoIdlingResource.decrement()
     }
 
@@ -175,6 +176,11 @@ class LiveStatusBarX1Fragment : LiveStatusBarBaseFragment() {
         if (free >= SCALE_BYTES) freeFormat = String.format("%.1f", free / SCALE_BYTES) + " GB"
 
         return getString(R.string.storage_level_x1, usedFormat, freeFormat)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
     }
 
     companion object {

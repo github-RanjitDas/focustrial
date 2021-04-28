@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.animation.AnimationUtils
 import androidx.activity.viewModels
 import androidx.core.view.isVisible
-import com.lawmobile.domain.entities.CameraInfo
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.databinding.ActivityLiveViewBinding
 import com.lawmobile.presentation.entities.MenuInformation
@@ -64,6 +63,7 @@ class LiveX2Activity : BaseActivity() {
         super.onResume()
         isInMainScreen = true
         if (isInPortraitMode()) updateLiveOrPlaybackActive(controlsFragment.buttonSwitchLiveView.isActivated)
+        statusBarFragment.getCameraStatus(statusBarFragment.isViewLoaded)
     }
 
     private fun setListeners() {
@@ -107,7 +107,7 @@ class LiveX2Activity : BaseActivity() {
 
     private fun startRetrievingInformation(isViewLoaded: Event<Boolean>) {
         isViewLoaded.getContentIfNotHandled()?.let {
-            if (it && CameraInfo.metadataEvents.isEmpty()) statusBarFragment.getCameraStatus(it)
+            statusBarFragment.getCameraStatus(it)
             statusBarFragment.isViewLoaded = it
         }
     }
