@@ -80,5 +80,4 @@ class WifiHelperTest {
         every { wifiManager.isWifiEnabled } returns false
         Assert.assertFalse(wifiHelper.isWifiEnable())
     }
-
 }

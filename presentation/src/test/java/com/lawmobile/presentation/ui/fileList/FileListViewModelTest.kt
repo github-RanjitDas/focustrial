@@ -2,7 +2,7 @@ package com.lawmobile.presentation.ui.fileList
 
 import com.lawmobile.domain.usecase.fileList.FileListUseCase
 import com.lawmobile.presentation.InstantExecutorExtension
-import com.safefleet.mobile.commons.helpers.Result
+import com.safefleet.mobile.kotlin_commons.helpers.Result
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
@@ -35,7 +35,7 @@ class FileListViewModelTest {
         val result = Result.Success(Unit)
         coEvery { fileListUseCase.savePartnerIdVideos(any(), any()) } returns result
         fileListViewModel.associatePartnerIdToVideoList(listOf(mockk()), "")
-        Assert.assertEquals(fileListViewModel.videoPartnerIdLiveData.value, result)
+        Assert.assertEquals(result, fileListViewModel.videoPartnerIdLiveData.value)
         coVerify { fileListUseCase.savePartnerIdVideos(any(), any()) }
     }
 

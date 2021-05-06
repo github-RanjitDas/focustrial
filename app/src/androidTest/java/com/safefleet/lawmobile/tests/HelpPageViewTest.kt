@@ -18,17 +18,23 @@ class HelpPageViewTest : EspressoStartActivityBaseTest<LoginActivity>(LoginActiv
         private val helpPageScreen = HelpPageScreen()
     }
 
+    /**
+     * Test case: https://safefleet.atlassian.net/browse/FMA-845
+     */
     @Test
-    fun openUserGuideFromLiveView_FMA_845() {
+    fun openUserGuideFromLiveView() {
         LoginScreen().login()
         with(liveViewScreen) {
             openHelpPage()
-            isUserGuideDisplayed()
+            helpPageScreen.isUserGuideDisplayed()
         }
     }
 
+    /**
+     * Test case: https://safefleet.atlassian.net/browse/FMA-847
+     */
     @Test
-    fun userGuideWhileRecording_FMA_847() {
+    fun userGuideWhileRecording() {
         LoginScreen().login()
         with(liveViewScreen) {
             startRecording()
@@ -38,8 +44,11 @@ class HelpPageViewTest : EspressoStartActivityBaseTest<LoginActivity>(LoginActiv
         }
     }
 
+    /**
+     * Test case: https://safefleet.atlassian.net/browse/FMA-849
+     */
     @Test
-    fun userGuideDisconnectionX1_FMA_849() {
+    fun userGuideDisconnectionX1() {
         LoginScreen().login()
         liveViewScreen.openHelpPage()
 

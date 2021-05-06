@@ -1,10 +1,15 @@
 package com.lawmobile.data.datasource.remote.thumbnailList
 
-import com.safefleet.mobile.avml.cameras.entities.CameraConnectFile
-import com.safefleet.mobile.avml.cameras.entities.CameraConnectFileResponseWithErrors
-import com.safefleet.mobile.avml.cameras.external.CameraConnectService
-import com.safefleet.mobile.commons.helpers.Result
-import io.mockk.*
+import com.lawmobile.data.utils.CameraServiceFactory
+import com.safefleet.mobile.external_hardware.cameras.CameraService
+import com.safefleet.mobile.external_hardware.cameras.entities.CameraFile
+import com.safefleet.mobile.external_hardware.cameras.entities.FileResponseWithErrors
+import com.safefleet.mobile.kotlin_commons.helpers.Result
+import io.mockk.clearAllMocks
+import io.mockk.coEvery
+import io.mockk.coVerify
+import io.mockk.every
+import io.mockk.mockk
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert
 import org.junit.jupiter.api.BeforeEach
@@ -12,20 +17,24 @@ import org.junit.jupiter.api.Test
 
 internal class ThumbnailListRemoteDataSourceImplTest {
 
-    private val cameraConnectService: CameraConnectService = mockk()
+    private val cameraService: CameraService = mockk()
+    private val cameraServiceFactory: CameraServiceFactory = mockk {
+        every { create() } returns cameraService
+    }
     private val linkSnapshotsRemoteDataSourceImpl: ThumbnailListRemoteDataSourceImpl by lazy {
-        ThumbnailListRemoteDataSourceImpl(cameraConnectService)
+        ThumbnailListRemoteDataSourceImpl(cameraServiceFactory)
     }
 
     @BeforeEach
     fun setup() {
         clearAllMocks()
+        every { cameraServiceFactory.create() } returns cameraService
     }
 
     @Test
     fun testGetImageBytesFlow() {
         val byteArray = "".toByteArray()
-        coEvery { cameraConnectService.getImageBytes(any()) } returns Result.Success(byteArray)
+        coEvery { cameraService.getImageBytes(any()) } returns Result.Success(byteArray)
 
         runBlocking {
             when (val result = linkSnapshotsRemoteDataSourceImpl.getImageBytes(mockk())) {
@@ -33,12 +42,12 @@ internal class ThumbnailListRemoteDataSourceImplTest {
             }
         }
 
-        coVerify { cameraConnectService.getImageBytes(any()) }
+        coVerify { cameraService.getImageBytes(any()) }
     }
 
     @Test
     fun testGetImageBytesSuccess() {
-        coEvery { cameraConnectService.getImageBytes(any()) } returns Result.Success("".toByteArray())
+        coEvery { cameraService.getImageBytes(any()) } returns Result.Success("".toByteArray())
 
         runBlocking {
             val result = linkSnapshotsRemoteDataSourceImpl.getImageBytes(mockk())
@@ -48,7 +57,7 @@ internal class ThumbnailListRemoteDataSourceImplTest {
 
     @Test
     fun testGetImageBytesError() {
-        coEvery { cameraConnectService.getImageBytes(any()) } returns Result.Error(mockk())
+        coEvery { cameraService.getImageBytes(any()) } returns Result.Error(mockk())
 
         runBlocking {
             val result = linkSnapshotsRemoteDataSourceImpl.getImageBytes(mockk())
@@ -58,21 +67,21 @@ internal class ThumbnailListRemoteDataSourceImplTest {
 
     @Test
     fun testGetSnapshotListFlow() {
-        coEvery { cameraConnectService.getListOfImages() } returns Result.Success(mockk())
+        coEvery { cameraService.getListOfImages() } returns Result.Success(mockk())
         runBlocking {
             linkSnapshotsRemoteDataSourceImpl.getSnapshotList()
         }
-        coVerify { cameraConnectService.getListOfImages() }
+        coVerify { cameraService.getListOfImages() }
     }
 
     @Test
     fun testGetSnapshotListSuccess() {
-        val cameraConnectFile: CameraConnectFile = mockk(relaxed = true)
-        val cameraResponse: CameraConnectFileResponseWithErrors = mockk {
-            every { items } returns arrayListOf(cameraConnectFile)
+        val cameraFile: CameraFile = mockk(relaxed = true)
+        val cameraResponse: FileResponseWithErrors = mockk {
+            every { items } returns arrayListOf(cameraFile)
         }
         val result = Result.Success(cameraResponse)
-        coEvery { cameraConnectService.getListOfImages() } returns result
+        coEvery { cameraService.getListOfImages() } returns result
         runBlocking {
             Assert.assertEquals(linkSnapshotsRemoteDataSourceImpl.getSnapshotList(), result)
         }
@@ -81,7 +90,7 @@ internal class ThumbnailListRemoteDataSourceImplTest {
     @Test
     fun testGetSnapshotListFailed() {
         val result = Result.Error(mockk())
-        coEvery { cameraConnectService.getListOfImages() } returns result
+        coEvery { cameraService.getListOfImages() } returns result
         runBlocking {
             Assert.assertEquals(linkSnapshotsRemoteDataSourceImpl.getSnapshotList(), result)
         }

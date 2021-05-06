@@ -7,23 +7,39 @@ import android.net.ConnectivityManager
 import android.net.wifi.WifiConfiguration
 import android.net.wifi.WifiManager
 import com.google.gson.Gson
+import com.lawmobile.database.Database
 import com.lawmobile.presentation.utils.MobileDataStatus
 import com.lawmobile.presentation.utils.VLCMediaPlayer
 import com.lawmobile.presentation.utils.WifiHelper
+import com.lawmobile.presentation.utils.WifiStatus
+import com.squareup.sqldelight.android.AndroidSqliteDriver
+import com.squareup.sqldelight.db.SqlDriver
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.components.ApplicationComponent
 import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.components.SingletonComponent
 import org.videolan.libvlc.LibVLC
 import org.videolan.libvlc.MediaPlayer
 import javax.inject.Singleton
 
 @Module
-@InstallIn(ApplicationComponent::class)
+@InstallIn(SingletonComponent::class)
 class AppModule {
-
     companion object {
+
+        @Provides
+        @Singleton
+        fun provideSqlDriver(@ApplicationContext context: Context): SqlDriver =
+            AndroidSqliteDriver(
+                schema = Database.Schema,
+                context = context,
+                name = "Database.db"
+            )
+
+        @Provides
+        @Singleton
+        fun provideDatabase(driver: SqlDriver): Database = Database(driver)
 
         @Provides
         @Singleton
@@ -65,5 +81,9 @@ class AppModule {
         fun provideMobileDataStatus(connectivityManager: ConnectivityManager) =
             MobileDataStatus(connectivityManager)
 
+        @Provides
+        @Singleton
+        fun provideWifiStatus(connectivityManager: ConnectivityManager) =
+            WifiStatus(connectivityManager)
     }
 }

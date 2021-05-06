@@ -7,12 +7,16 @@ import android.provider.Settings
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import com.lawmobile.domain.entities.CameraEvent
+import com.lawmobile.domain.entities.CameraInfo
+import com.lawmobile.domain.enums.CameraType
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.entities.AlertInformation
 import com.lawmobile.presentation.entities.NeutralAlertInformation
 import com.lawmobile.presentation.ui.base.BaseActivity
 import com.lawmobile.presentation.utils.CameraHelper
-import com.safefleet.mobile.commons.widgets.SafeFleetConfirmationDialog
+import com.lawmobile.presentation.widgets.CustomNotificationDialog
+import com.safefleet.mobile.safefleet_ui.widgets.SafeFleetConfirmationDialog
 import kotlin.system.exitProcess
 
 fun Context.createAlertInformation(alertInformation: AlertInformation) {
@@ -153,14 +157,29 @@ fun Context.isAnimationsEnabled() =
         contentResolver,
         Settings.Global.TRANSITION_ANIMATION_SCALE,
         0F
-    ) != 0F
-            && Settings.System.getFloat(
+    ) != 0F &&
+        Settings.System.getFloat(
         contentResolver,
         Settings.Global.WINDOW_ANIMATION_SCALE,
         0F
-    ) != 0F
-            && Settings.System.getFloat(
+    ) != 0F &&
+        Settings.System.getFloat(
         contentResolver,
         Settings.Global.ANIMATOR_DURATION_SCALE,
         0F
     ) != 0F
+
+fun Context.createNotificationDialog(cameraEvent: CameraEvent) {
+    CustomNotificationDialog(
+        this,
+        false,
+        cameraEvent
+    ).show()
+}
+
+fun Context.getIntentDependsCameraType(activityForX1: BaseActivity, activityForX2: BaseActivity): Intent {
+    return when (CameraInfo.cameraType) {
+        CameraType.X1 -> Intent(this, activityForX1::class.java)
+        CameraType.X2 -> Intent(this, activityForX2::class.java)
+    }
+}

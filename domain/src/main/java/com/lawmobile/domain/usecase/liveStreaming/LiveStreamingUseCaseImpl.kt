@@ -1,8 +1,8 @@
 package com.lawmobile.domain.usecase.liveStreaming
 
-import com.lawmobile.domain.entities.DomainCatalog
+import com.lawmobile.domain.entities.MetadataEvent
 import com.lawmobile.domain.repository.liveStreaming.LiveStreamingRepository
-import com.safefleet.mobile.commons.helpers.Result
+import com.safefleet.mobile.kotlin_commons.helpers.Result
 
 class LiveStreamingUseCaseImpl(private val liveStreamingRepository: LiveStreamingRepository) :
     LiveStreamingUseCase {
@@ -22,7 +22,7 @@ class LiveStreamingUseCaseImpl(private val liveStreamingRepository: LiveStreamin
         return liveStreamingRepository.takePhoto()
     }
 
-    override suspend fun getCatalogInfo(): Result<List<DomainCatalog>> =
+    override suspend fun getCatalogInfo(): Result<List<MetadataEvent>> =
         liveStreamingRepository.getCatalogInfo()
 
     override suspend fun getBatteryLevel(): Result<Int> =

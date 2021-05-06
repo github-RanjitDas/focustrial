@@ -6,7 +6,6 @@ import org.videolan.libvlc.LibVLC
 import org.videolan.libvlc.Media
 import org.videolan.libvlc.MediaPlayer
 
-
 class VLCMediaPlayer(private val libVLC: LibVLC, private val mediaPlayer: MediaPlayer) {
 
     private var currentMedia: Media? = null
@@ -90,8 +89,7 @@ class VLCMediaPlayer(private val libVLC: LibVLC, private val mediaPlayer: MediaP
         }
 
         mediaPlayer.time =
-                ((progress.toDouble() * mediaPlayer.media.duration.toDouble()) / 100).toLong()
-
+            ((progress.toDouble() * mediaPlayer.media.duration.toDouble()) / 100).toLong()
     }
 
     private fun detachAllViews() {
@@ -123,5 +121,4 @@ class VLCMediaPlayer(private val libVLC: LibVLC, private val mediaPlayer: MediaP
         const val ASPECT_RATIO_16_9 = "16:9"
         const val ASPECT_RATIO_21_9 = "21:9"
     }
-
 }

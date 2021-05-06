@@ -5,8 +5,14 @@ import com.lawmobile.domain.entities.DomainCameraFile
 import com.lawmobile.domain.usecase.videoPlayback.VideoPlaybackUseCase
 import com.lawmobile.presentation.InstantExecutorExtension
 import com.lawmobile.presentation.utils.VLCMediaPlayer
-import com.safefleet.mobile.commons.helpers.Result
-import io.mockk.*
+import com.safefleet.mobile.kotlin_commons.helpers.Result
+import io.mockk.Runs
+import io.mockk.coEvery
+import io.mockk.coVerify
+import io.mockk.every
+import io.mockk.just
+import io.mockk.mockk
+import io.mockk.verify
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
@@ -16,7 +22,6 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.api.extension.ExtendWith
-
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @ExtendWith(InstantExecutorExtension::class)
@@ -40,7 +45,7 @@ class VideoPlaybackViewModelTest {
         val domainCameraFile: DomainCameraFile = mockk()
 
         coEvery { videoPlaybackUseCase.getInformationResourcesVideo(any()) } returns
-                Result.Success(mockk())
+            Result.Success(mockk())
 
         runBlocking {
             videoPlaybackViewModel.getInformationOfVideo(domainCameraFile)
@@ -54,7 +59,7 @@ class VideoPlaybackViewModelTest {
     fun testGetInformationResourcesVideoError() {
         val domainCameraFile: DomainCameraFile = mockk()
         coEvery { videoPlaybackUseCase.getInformationResourcesVideo(any()) } returns
-                Result.Error(mockk())
+            Result.Error(mockk())
         runBlocking {
             videoPlaybackViewModel.getInformationOfVideo(domainCameraFile)
             Assert.assertTrue(videoPlaybackViewModel.domainInformationVideoLiveData.value is Result.Error)
@@ -126,6 +131,13 @@ class VideoPlaybackViewModelTest {
     }
 
     @Test
+    fun testSetMediaEventListener() {
+        every { vlcMediaPlayer.setMediaEventListener(any()) } just Runs
+        videoPlaybackViewModel.setMediaEventListener(mockk(relaxed = true))
+        verify { vlcMediaPlayer.setMediaEventListener(any()) }
+    }
+
+    @Test
     fun testGetVideoMetadataLiveDataSuccess() {
         coEvery {
             videoPlaybackUseCase.getVideoMetadata(
@@ -174,5 +186,4 @@ class VideoPlaybackViewModelTest {
         }
         coVerify { videoPlaybackUseCase.saveVideoMetadata(any()) }
     }
-
 }

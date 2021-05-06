@@ -19,7 +19,7 @@ ext.fileFilter = [
         //Classes I intentionally don't want to test
         "**/*Activity.*",
         '**/*Constants.*',
-        "**/*DeviceHelper.*",
+        "**/*RootedHelper.*",
         '**/App.class',
         '**/*Adapter.*',
         '**/*ViewHolder*.*',
@@ -31,11 +31,20 @@ ext.fileFilter = [
         "**/*Application.**",
         "**/res/**",
         "**/entities/**",
+        "**/enums/**",
+        "**/security/**",
         "**/models/**",
         "**/app/**",
         "**/adapters/**",
         "**/widgets/**",
         '**/extensions/*.*',
         "**/*VLCMediaPlayer.*",
-        "com.lawmobile.domain.CameraInfo*"
+        "**/*DataStatus.**",
+        "**/*WifiStatus.**",
+        //Temporal empty file that is decreasing the coverage
+        "**/LoginActivityViewModel.**",
+        "**/OnSwipeTouchListener.**",
+        "**/LiveActivityBaseViewModel.**",
+        "**/CameraEventsManager.**",
+        "**/DateHelper.**"
 ]

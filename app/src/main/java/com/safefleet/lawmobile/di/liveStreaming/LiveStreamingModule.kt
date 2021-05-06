@@ -4,24 +4,24 @@ import android.media.MediaActionSound
 import com.lawmobile.data.datasource.remote.liveStreaming.LiveStreamingRemoteDataSource
 import com.lawmobile.data.datasource.remote.liveStreaming.LiveStreamingRemoteDataSourceImpl
 import com.lawmobile.data.repository.liveStreaming.LiveStreamingRepositoryImpl
+import com.lawmobile.data.utils.CameraServiceFactory
 import com.lawmobile.domain.repository.liveStreaming.LiveStreamingRepository
 import com.lawmobile.domain.usecase.liveStreaming.LiveStreamingUseCase
 import com.lawmobile.domain.usecase.liveStreaming.LiveStreamingUseCaseImpl
-import com.safefleet.mobile.avml.cameras.external.CameraConnectService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.components.ActivityComponent
+import dagger.hilt.components.SingletonComponent
 
-@InstallIn(ActivityComponent::class)
+@InstallIn(SingletonComponent::class)
 @Module
 class LiveStreamingModule {
 
     companion object {
-        
+
         @Provides
-        fun provideLiveRemoteDataSource(cameraConnectService: CameraConnectService): LiveStreamingRemoteDataSource =
-            LiveStreamingRemoteDataSourceImpl(cameraConnectService)
+        fun provideLiveRemoteDataSource(cameraService: CameraServiceFactory): LiveStreamingRemoteDataSource =
+            LiveStreamingRemoteDataSourceImpl(cameraService)
 
         @Provides
         fun provideLiveRepository(liveStreamingRemoteDataSource: LiveStreamingRemoteDataSource): LiveStreamingRepository =

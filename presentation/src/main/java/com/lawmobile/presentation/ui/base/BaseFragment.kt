@@ -1,5 +1,6 @@
 package com.lawmobile.presentation.ui.base
 
+import android.content.pm.ActivityInfo
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import com.lawmobile.presentation.extensions.createAlertProgress
@@ -8,8 +9,6 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 open class BaseFragment : Fragment() {
-
-    private var loadingDialog: AlertDialog? = null
 
     fun showLoadingDialog() {
         EspressoIdlingResource.increment()
@@ -23,4 +22,10 @@ open class BaseFragment : Fragment() {
         EspressoIdlingResource.decrement()
     }
 
+    fun isInPortraitMode() =
+        resources.configuration.orientation == ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+
+    companion object {
+        private var loadingDialog: AlertDialog? = null
+    }
 }

@@ -15,25 +15,37 @@ import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.snackbar.Snackbar
-import com.lawmobile.domain.entities.*
+import com.lawmobile.domain.entities.CameraInfo
+import com.lawmobile.domain.entities.DomainCameraFile
+import com.lawmobile.domain.entities.DomainInformationVideo
+import com.lawmobile.domain.entities.DomainMetadata
+import com.lawmobile.domain.entities.DomainVideoMetadata
+import com.lawmobile.domain.entities.MetadataEvent
 import com.lawmobile.domain.extensions.getCreationDate
 import com.lawmobile.presentation.R
+import com.lawmobile.presentation.databinding.ActivityVideoPlaybackBinding
 import com.lawmobile.presentation.entities.SnapshotsAssociatedByUser
-import com.lawmobile.presentation.extensions.*
+import com.lawmobile.presentation.extensions.attachFragment
+import com.lawmobile.presentation.extensions.convertMilliSecondsToString
+import com.lawmobile.presentation.extensions.createAlertDialogUnsavedChanges
+import com.lawmobile.presentation.extensions.detachFragment
+import com.lawmobile.presentation.extensions.setOnClickListenerCheckConnection
+import com.lawmobile.presentation.extensions.showErrorSnackBar
+import com.lawmobile.presentation.extensions.showSuccessSnackBar
+import com.lawmobile.presentation.extensions.showToast
 import com.lawmobile.presentation.ui.associateSnapshots.AssociateSnapshotsFragment
 import com.lawmobile.presentation.ui.base.BaseActivity
 import com.lawmobile.presentation.utils.Constants.DOMAIN_CAMERA_FILE
-import com.safefleet.mobile.commons.helpers.Result
-import com.safefleet.mobile.commons.helpers.doIfError
-import com.safefleet.mobile.commons.helpers.doIfSuccess
-import com.safefleet.mobile.commons.helpers.hideKeyboard
-import com.safefleet.mobile.commons.widgets.SafeFleetFilterTag
-import kotlinx.android.synthetic.main.activity_video_playback.*
-import kotlinx.android.synthetic.main.bottom_sheet_associate_snapshots.*
-import kotlinx.android.synthetic.main.custom_app_bar.*
+import com.safefleet.mobile.android_commons.extensions.hideKeyboard
+import com.safefleet.mobile.kotlin_commons.extensions.doIfError
+import com.safefleet.mobile.kotlin_commons.extensions.doIfSuccess
+import com.safefleet.mobile.kotlin_commons.helpers.Result
+import com.safefleet.mobile.safefleet_ui.widgets.SafeFleetFilterTag
 import org.videolan.libvlc.MediaPlayer
 
 class VideoPlaybackActivity : BaseActivity() {
+
+    private lateinit var binding: ActivityVideoPlaybackBinding
 
     private val videoPlaybackViewModel: VideoPlaybackViewModel by viewModels()
     private val eventList = mutableListOf<String>()
@@ -46,12 +58,13 @@ class VideoPlaybackActivity : BaseActivity() {
 
     private var associateSnapshotsFragment = AssociateSnapshotsFragment()
     private val bottomSheetBehavior: BottomSheetBehavior<CardView> by lazy {
-        BottomSheetBehavior.from(bottomSheetAssociate)
+        BottomSheetBehavior.from(binding.bottomSheetAssociate!!.bottomSheetAssociate)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_video_playback)
+        binding = ActivityVideoPlaybackBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         setAppBar()
         showLoadingDialog()
@@ -89,10 +102,13 @@ class VideoPlaybackActivity : BaseActivity() {
     }
 
     private fun stopVideoWhenScrolling() {
-        scrollLayoutMetadata.viewTreeObserver.addOnScrollChangedListener {
+        binding.scrollLayoutMetadata.viewTreeObserver.addOnScrollChangedListener {
             val scrollBounds = Rect()
-            scrollLayoutMetadata.getHitRect(scrollBounds)
-            if (!fakeSurfaceVideoPlayback.getLocalVisibleRect(scrollBounds) && videoPlaybackViewModel.isMediaPlayerPlaying()) {
+            binding.scrollLayoutMetadata.getHitRect(scrollBounds)
+            if (!binding.fakeSurfaceVideoPlayback.getLocalVisibleRect(
+                    scrollBounds
+                ) && videoPlaybackViewModel.isMediaPlayerPlaying()
+            ) {
                 pauseVideoPlayback()
             }
         }
@@ -109,47 +125,57 @@ class VideoPlaybackActivity : BaseActivity() {
         bottomSheetBehavior.isDraggable = false
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
 
-        buttonCloseAssociateSnapshots.setOnClickListener {
+        binding.bottomSheetAssociate?.buttonCloseAssociateSnapshots?.setOnClickListener {
             SnapshotsAssociatedByUser.temporal.addAll(SnapshotsAssociatedByUser.value)
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
         }
 
         bottomSheetBehavior.addBottomSheetCallback(object :
-            BottomSheetBehavior.BottomSheetCallback() {
-            override fun onSlide(bottomSheet: View, slideOffset: Float) {}
-
-            override fun onStateChanged(bottomSheet: View, newState: Int) {
-                when (newState) {
-                    BottomSheetBehavior.STATE_HIDDEN -> {
-                        shadowPlaybackView?.isVisible = false
-                        supportFragmentManager.detachFragment(fragmentAssociateHolder.id)
-                    }
-                    else -> shadowPlaybackView?.isVisible = true
+                BottomSheetBehavior.BottomSheetCallback() {
+                override fun onSlide(bottomSheet: View, slideOffset: Float) {
+                    // The interface requires to implement this method but not needed
                 }
-            }
-        })
+
+                override fun onStateChanged(bottomSheet: View, newState: Int) {
+                    when (newState) {
+                        BottomSheetBehavior.STATE_HIDDEN -> {
+                            binding.shadowPlaybackView.isVisible = false
+                            binding.bottomSheetAssociate?.fragmentAssociateHolder?.id?.let {
+                                supportFragmentManager.detachFragment(
+                                    it
+                                )
+                            }
+                        }
+                        else -> binding.shadowPlaybackView.isVisible = true
+                    }
+                }
+            })
     }
 
     private fun setAppBar() {
-        fileListAppBarTitle.text = getString(R.string.video_detail)
-        buttonSimpleList.isVisible = false
-        buttonThumbnailList.isVisible = false
+        binding.layoutCustomAppBar?.run {
+            textViewTitle.text = getString(R.string.video_detail)
+            buttonSimpleList.isVisible = false
+            buttonThumbnailList.isVisible = false
+        }
     }
 
     private fun addEditTextFilter() {
-        partnerIdValue.filters = getFiltersWithLength(20)
-        ticket1Value.filters = getFiltersWithLength(20)
-        ticket2Value.filters = getFiltersWithLength(20)
-        case1Value.filters = getFiltersWithLength(50)
-        case2Value.filters = getFiltersWithLength(50)
-        dispatch1Value.filters = getFiltersWithLength(30)
-        dispatch2Value.filters = getFiltersWithLength(30)
-        locationValue.filters = getFiltersWithLength(30)
-        notesValue.filters = getFiltersWithLength(100)
-        firstNameValue.filters = getFiltersWithLength(30)
-        lastNameValue.filters = getFiltersWithLength(30)
-        driverLicenseValue.filters = getFiltersWithLength(30)
-        licensePlateValue.filters = getFiltersWithLength(30)
+        with(binding) {
+            partnerIdValue.filters = getFiltersWithLength(20)
+            ticket1Value.filters = getFiltersWithLength(20)
+            ticket2Value.filters = getFiltersWithLength(20)
+            case1Value.filters = getFiltersWithLength(50)
+            case2Value.filters = getFiltersWithLength(50)
+            dispatch1Value.filters = getFiltersWithLength(30)
+            dispatch2Value.filters = getFiltersWithLength(30)
+            locationValue.filters = getFiltersWithLength(30)
+            notesValue.filters = getFiltersWithLength(100)
+            firstNameValue.filters = getFiltersWithLength(30)
+            lastNameValue.filters = getFiltersWithLength(30)
+            driverLicenseValue.filters = getFiltersWithLength(30)
+            licensePlateValue.filters = getFiltersWithLength(30)
+        }
     }
 
     private fun getFiltersWithLength(length: Int): Array<InputFilter> {
@@ -159,10 +185,12 @@ class VideoPlaybackActivity : BaseActivity() {
 
         val lengthFilter = InputFilter.LengthFilter(length)
         val charactersFilter = InputFilter { source, _, _, _, _, _ ->
-            if (source != null
-                && (comma.contains("" + source)
-                        || ampersand.contains("" + source)
-                        || quotes.contains("" + source))
+            if (source != null &&
+                (
+                    comma.contains("" + source) ||
+                        ampersand.contains("" + source) ||
+                        quotes.contains("" + source)
+                    )
             ) {
                 ""
             } else null
@@ -172,63 +200,63 @@ class VideoPlaybackActivity : BaseActivity() {
     }
 
     private fun verifyEventEmpty() {
-        if (CameraInfo.events.isEmpty()) {
+        if (CameraInfo.metadataEvents.isEmpty()) {
             showErrorInEvents()
         }
     }
 
     private fun setCatalogLists() {
         eventList.add(getString(R.string.select))
-        eventList.addAll(CameraInfo.events.map { it.name })
+        eventList.addAll(CameraInfo.metadataEvents.map { it.name })
         raceList.addAll(resources.getStringArray(R.array.race_spinner))
         genderList.addAll(resources.getStringArray(R.array.gender_spinner))
 
-        eventValue.adapter = ArrayAdapter(this, R.layout.spinner_item, eventList)
-        raceValue.adapter = ArrayAdapter(this, R.layout.spinner_item, raceList)
-        genderValue.adapter = ArrayAdapter(this, R.layout.spinner_item, genderList)
+        with(binding) {
+            eventValue.adapter =
+                ArrayAdapter(this@VideoPlaybackActivity, R.layout.spinner_item, eventList)
+            raceValue.adapter =
+                ArrayAdapter(this@VideoPlaybackActivity, R.layout.spinner_item, raceList)
+            genderValue.adapter =
+                ArrayAdapter(this@VideoPlaybackActivity, R.layout.spinner_item, genderList)
+        }
     }
 
     private fun showErrorInEvents() {
-        layoutVideoPlayback.showErrorSnackBar(
+        binding.layoutVideoPlayback.showErrorSnackBar(
             getString(R.string.catalog_error_video_playback),
             Snackbar.LENGTH_LONG
         )
     }
 
     private fun setObservers() {
-        isMobileDataAlertShowing.observe(this, Observer(::managePlaybackOnAlert))
-        videoPlaybackViewModel.domainInformationVideoLiveData.observe(
-            this,
-            Observer(::manageGetVideoInformationResult)
-        )
-        videoPlaybackViewModel.saveVideoMetadataLiveData.observe(
-            this,
-            Observer(::manageSaveVideoMetadataResult)
-        )
-        videoPlaybackViewModel.videoMetadataLiveData.observe(
-            this,
-            Observer(::manageGetVideoMetadataResult)
-        )
+        isNetworkAlertShowing.observe(this, Observer(::managePlaybackOnAlert))
+        videoPlaybackViewModel.let {
+            it.domainInformationVideoLiveData.observe(this, ::manageGetVideoInformationResult)
+            it.saveVideoMetadataLiveData.observe(this, ::manageSaveVideoMetadataResult)
+            it.videoMetadataLiveData.observe(this, ::manageGetVideoMetadataResult)
+        }
     }
 
     private fun configureListeners() {
-        buttonPlay.setOnClickListenerCheckConnection {
-            manageButtonPlayPause()
-        }
-        buttonFullScreen.setOnClickListenerCheckConnection {
-            changeScreenOrientation()
-        }
-        buttonAspect.setOnClickListenerCheckConnection {
-            videoPlaybackViewModel.changeAspectRatio()
-        }
-        saveButtonVideoPlayback.setOnClickListenerCheckConnection {
-            saveVideoMetadataInCamera()
-        }
-        backArrowFileListAppBar.setOnClickListenerCheckConnection {
-            onBackPressed()
-        }
-        buttonAssociateSnapshots.setOnClickListenerCheckConnection {
-            showAssociateSnapshotsBottomSheet()
+        with(binding) {
+            buttonPlay.setOnClickListenerCheckConnection {
+                manageButtonPlayPause()
+            }
+            buttonFullScreen.setOnClickListenerCheckConnection {
+                changeScreenOrientation()
+            }
+            buttonAspect.setOnClickListenerCheckConnection {
+                videoPlaybackViewModel.changeAspectRatio()
+            }
+            saveButtonVideoPlayback.setOnClickListenerCheckConnection {
+                saveVideoMetadataInCamera()
+            }
+            layoutCustomAppBar?.imageButtonBackArrow?.setOnClickListenerCheckConnection {
+                onBackPressed()
+            }
+            buttonAssociateSnapshots.setOnClickListenerCheckConnection {
+                showAssociateSnapshotsBottomSheet()
+            }
         }
         configureListenerSeekBar()
         configureMediaEventListener()
@@ -243,9 +271,9 @@ class VideoPlaybackActivity : BaseActivity() {
 
         if (currentProgressInVideo == 100 && videoPlaybackViewModel.isMediaPlayerPlaying()) {
             updateLastInteraction()
-            buttonPlay.setImageResource(R.drawable.ic_media_play)
+            binding.buttonPlay.setImageResource(R.drawable.ic_media_play)
             updateLiveOrPlaybackActive(false)
-            buttonAspect.isClickable = false
+            binding.buttonAspect.isClickable = false
         }
     }
 
@@ -254,7 +282,7 @@ class VideoPlaybackActivity : BaseActivity() {
             pauseVideoPlayback()
         } else {
             setProgressToVideo(0)
-            buttonPlay.setImageResource(R.drawable.ic_media_pause)
+            binding.buttonPlay.setImageResource(R.drawable.ic_media_pause)
         }
     }
 
@@ -317,26 +345,28 @@ class VideoPlaybackActivity : BaseActivity() {
     }
 
     private fun setVideoMetadata(videoMetadata: DomainVideoMetadata) {
-        videoMetadata.metadata?.run {
-            eventValue.setSelection(getSpinnerSelection(eventList, event?.name))
-            partnerIdValue.setText(partnerID)
-            ticket1Value.setText(ticketNumber)
-            ticket2Value.setText(ticketNumber2)
-            case1Value.setText(caseNumber)
-            case2Value.setText(caseNumber2)
-            dispatch1Value.setText(dispatchNumber)
-            dispatch2Value.setText(dispatchNumber2)
-            locationValue.setText(location)
-            notesValue.setText(remarks)
-            firstNameValue.setText(firstName)
-            lastNameValue.setText(lastName)
-            genderValue.setSelection(getSpinnerSelection(genderList, gender))
-            raceValue.setSelection(getSpinnerSelection(raceList, race))
-            driverLicenseValue.setText(driverLicense)
-            licensePlateValue.setText(licensePlate)
+        videoMetadata.metadata?.let {
+            with(binding) {
+                eventValue.setSelection(getSpinnerSelection(eventList, it.event?.name))
+                partnerIdValue.setText(it.partnerID)
+                ticket1Value.setText(it.ticketNumber)
+                ticket2Value.setText(it.ticketNumber2)
+                case1Value.setText(it.caseNumber)
+                case2Value.setText(it.caseNumber2)
+                dispatch1Value.setText(it.dispatchNumber)
+                dispatch2Value.setText(it.dispatchNumber2)
+                locationValue.setText(it.location)
+                notesValue.setText(it.remarks)
+                firstNameValue.setText(it.firstName)
+                lastNameValue.setText(it.lastName)
+                genderValue.setSelection(getSpinnerSelection(genderList, it.gender))
+                raceValue.setSelection(getSpinnerSelection(raceList, it.race))
+                driverLicenseValue.setText(it.driverLicense)
+                licensePlateValue.setText(it.licensePlate)
+            }
         }
 
-        (videoMetadata.associatedPhotos)?.let {
+        videoMetadata.associatedPhotos?.let {
             SnapshotsAssociatedByUser.setTemporalValue(it as MutableList)
             SnapshotsAssociatedByUser.setFinalValue(it)
             associateSnapshotsFragment.setSnapshotsAssociatedFromMetadata(it)
@@ -363,28 +393,30 @@ class VideoPlaybackActivity : BaseActivity() {
         associateSnapshotsFragment.setSnapshotsAssociatedFromMetadata(SnapshotsAssociatedByUser.temporal)
         SnapshotsAssociatedByUser.setFinalValue(SnapshotsAssociatedByUser.temporal)
         showSnapshotsAssociated()
-        layoutVideoPlayback.showSuccessSnackBar(getString(R.string.snapshots_added_success))
+        binding.layoutVideoPlayback.showSuccessSnackBar(getString(R.string.snapshots_added_success))
     }
 
     private fun showSnapshotsAssociated() {
-        layoutAssociatedSnapshots?.removeAllViews()
-        layoutAssociatedSnapshots?.isVisible = !SnapshotsAssociatedByUser.value.isNullOrEmpty()
+        binding.layoutAssociatedSnapshots.removeAllViews()
+        binding.layoutAssociatedSnapshots.isVisible =
+            !SnapshotsAssociatedByUser.value.isNullOrEmpty()
         SnapshotsAssociatedByUser.value.forEach {
-            layoutAssociatedSnapshots?.childCount?.let { position ->
+            binding.layoutAssociatedSnapshots.childCount.let { position ->
                 createTagInPosition(position, it.date)
             }
         }
     }
 
     private fun createTagInPosition(position: Int, text: String) {
-        layoutAssociatedSnapshots?.addView(
+        binding.layoutAssociatedSnapshots.addView(
             SafeFleetFilterTag(this, null, 0).apply {
                 tagText = text
                 onClicked = {
                     removeAssociatedSnapshot(text)
                     showSnapshotsAssociated()
                 }
-            }, position
+            },
+            position
         )
     }
 
@@ -428,8 +460,8 @@ class VideoPlaybackActivity : BaseActivity() {
 
     private fun saveVideoMetadataInCamera() {
         hideKeyboard()
-        if (eventValue.selectedItem == eventList[0]) {
-            layoutVideoPlayback.showErrorSnackBar(getString(R.string.event_mandatory))
+        if (binding.eventValue.selectedItem == eventList[0]) {
+            binding.layoutVideoPlayback.showErrorSnackBar(getString(R.string.event_mandatory))
             return
         }
         CameraInfo.areNewChanges = true
@@ -467,35 +499,36 @@ class VideoPlaybackActivity : BaseActivity() {
     private fun getCameraConnectFileFromIntent() =
         intent?.getSerializableExtra(DOMAIN_CAMERA_FILE) as DomainCameraFile
 
-
     private fun isAllowedToAttemptToGetInformation() = currentAttempts <= ATTEMPTS_ALLOWED
 
     private fun setVideoInformation() {
-        videoNameValue.text = currentVideo?.name
-        startTimeValue.text = currentVideo?.getCreationDate()
-        durationValue.text = totalDurationVideoInMilliSeconds.convertMilliSecondsToString()
+        with(binding) {
+            videoNameValue.text = currentVideo?.name
+            startTimeValue.text = currentVideo?.getCreationDate()
+            durationValue.text = totalDurationVideoInMilliSeconds.convertMilliSecondsToString()
+        }
     }
 
     private fun createVideoPlaybackInSurface(domainInformationVideo: DomainInformationVideo) {
         videoPlaybackViewModel.createVLCMediaPlayer(
             domainInformationVideo.urlVideo,
-            surfaceVideoPlayback
+            binding.surfaceVideoPlayback
         )
     }
 
     private fun playVideoPlayback() {
-        buttonPlay.setImageResource(R.drawable.ic_media_pause)
+        binding.buttonPlay.setImageResource(R.drawable.ic_media_pause)
         updateLiveOrPlaybackActive(true)
         videoPlaybackViewModel.playMediaPlayer()
         setProgressToVideo(currentProgressInVideo)
-        buttonAspect.isClickable = true
+        binding.buttonAspect.isClickable = true
     }
 
     private fun pauseVideoPlayback() {
-        buttonPlay.setImageResource(R.drawable.ic_media_play)
+        binding.buttonPlay.setImageResource(R.drawable.ic_media_play)
         updateLiveOrPlaybackActive(false)
         videoPlaybackViewModel.pauseMediaPlayer()
-        buttonAspect.isClickable = false
+        binding.buttonAspect.isClickable = false
     }
 
     private fun changeScreenOrientation() {
@@ -524,47 +557,49 @@ class VideoPlaybackActivity : BaseActivity() {
 
     private fun verifyVideoMetadataWasEdited(): Boolean {
         if (!isVideoMetadataChangesSaved) {
-            verifyVideoMetadataIsNullOrEmpty()
+            verifyVideoMetadataParameters()
 
             val newMetadata = getNewMetadataFromForm().metadata
             val oldMetadata = currentMetadata.metadata
                 ?: return newMetadata?.run {
-                    event != null ||
-                            !partnerID.isNullOrEmpty() ||
-                            !ticketNumber.isNullOrEmpty() ||
-                            !ticketNumber2.isNullOrEmpty() ||
-                            !caseNumber.isNullOrEmpty() ||
-                            !dispatchNumber.isNullOrEmpty() ||
-                            !dispatchNumber2.isNullOrEmpty() ||
-                            !location.isNullOrEmpty() ||
-                            !remarks.isNullOrEmpty() ||
-                            !firstName.isNullOrEmpty() ||
-                            !lastName.isNullOrEmpty() ||
-                            !driverLicense.isNullOrEmpty() ||
-                            !licensePlate.isNullOrEmpty() ||
-                            !gender.isNullOrEmpty() ||
-                            !race.isNullOrEmpty()
+                    !event?.id.isNullOrEmpty() ||
+                        !event?.name.isNullOrEmpty() ||
+                        !event?.type.isNullOrEmpty() ||
+                        !partnerID.isNullOrEmpty() ||
+                        !ticketNumber.isNullOrEmpty() ||
+                        !ticketNumber2.isNullOrEmpty() ||
+                        !caseNumber.isNullOrEmpty() ||
+                        !dispatchNumber.isNullOrEmpty() ||
+                        !dispatchNumber2.isNullOrEmpty() ||
+                        !location.isNullOrEmpty() ||
+                        !remarks.isNullOrEmpty() ||
+                        !firstName.isNullOrEmpty() ||
+                        !lastName.isNullOrEmpty() ||
+                        !driverLicense.isNullOrEmpty() ||
+                        !licensePlate.isNullOrEmpty() ||
+                        !gender.isNullOrEmpty() ||
+                        !race.isNullOrEmpty()
                 } ?: false
 
             return oldMetadata.let { fromJson ->
                 newMetadata?.let { fromForm ->
                     fromJson.event?.name != fromForm.event?.name ||
-                            fromJson.partnerID != fromForm.partnerID ||
-                            fromJson.ticketNumber != fromForm.ticketNumber ||
-                            fromJson.ticketNumber2 != fromForm.ticketNumber2 ||
-                            fromJson.caseNumber != fromForm.caseNumber ||
-                            fromJson.caseNumber2 != fromForm.caseNumber2 ||
-                            fromJson.dispatchNumber != fromForm.dispatchNumber ||
-                            fromJson.dispatchNumber2 != fromForm.dispatchNumber2 ||
-                            fromJson.location != fromForm.location ||
-                            fromJson.remarks != fromForm.remarks ||
-                            fromJson.firstName != fromForm.firstName ||
-                            fromJson.lastName != fromForm.lastName ||
-                            fromJson.driverLicense != fromForm.driverLicense ||
-                            fromJson.licensePlate != fromForm.licensePlate ||
-                            fromJson.gender != fromForm.gender ||
-                            fromJson.race != fromForm.race ||
-                            currentMetadata.associatedPhotos != SnapshotsAssociatedByUser.value
+                        fromJson.partnerID != fromForm.partnerID ||
+                        fromJson.ticketNumber != fromForm.ticketNumber ||
+                        fromJson.ticketNumber2 != fromForm.ticketNumber2 ||
+                        fromJson.caseNumber != fromForm.caseNumber ||
+                        fromJson.caseNumber2 != fromForm.caseNumber2 ||
+                        fromJson.dispatchNumber != fromForm.dispatchNumber ||
+                        fromJson.dispatchNumber2 != fromForm.dispatchNumber2 ||
+                        fromJson.location != fromForm.location ||
+                        fromJson.remarks != fromForm.remarks ||
+                        fromJson.firstName != fromForm.firstName ||
+                        fromJson.lastName != fromForm.lastName ||
+                        fromJson.driverLicense != fromForm.driverLicense ||
+                        fromJson.licensePlate != fromForm.licensePlate ||
+                        fromJson.gender != fromForm.gender ||
+                        fromJson.race != fromForm.race ||
+                        currentMetadata.associatedPhotos ?: emptyList() != SnapshotsAssociatedByUser.value
                 } ?: false
             }
         }
@@ -572,111 +607,119 @@ class VideoPlaybackActivity : BaseActivity() {
     }
 
     private fun getNewMetadataFromForm(): DomainVideoMetadata {
-
         var gender: String? = null
         var race: String? = null
         val event =
-            if (eventValue.selectedItemPosition != 0)
-                CameraInfo.events[eventValue.selectedItemPosition - 1]
-            else null
+            if (binding.eventValue.selectedItemPosition != 0)
+                CameraInfo.metadataEvents[binding.eventValue.selectedItemPosition - 1]
+            else MetadataEvent("", "", "")
 
-        if (genderValue.selectedItem != genderList[0]) {
-            gender = genderValue.selectedItem.toString()
+        if (binding.genderValue.selectedItem != genderList[0]) {
+            gender = binding.genderValue.selectedItem.toString()
         }
 
-        if (raceValue.selectedItem != raceList[0]) {
-            race = raceValue.selectedItem.toString()
+        if (binding.raceValue.selectedItem != raceList[0]) {
+            race = binding.raceValue.selectedItem.toString()
         }
 
         return DomainVideoMetadata(
-            videoNameValue.text.toString(),
-            DomainMetadata(
+            fileName = binding.videoNameValue.text.toString(),
+            metadata = DomainMetadata(
                 event = event,
-                partnerID = partnerIdValue.text.toString(),
-                ticketNumber = ticket1Value.text.toString(),
-                ticketNumber2 = ticket2Value.text.toString(),
-                caseNumber = case1Value.text.toString(),
-                caseNumber2 = case2Value.text.toString(),
-                dispatchNumber = dispatch1Value.text.toString(),
-                dispatchNumber2 = dispatch2Value.text.toString(),
-                location = locationValue.text.toString(),
-                remarks = notesValue.text.toString(),
-                firstName = firstNameValue.text.toString(),
-                lastName = lastNameValue.text.toString(),
+                partnerID = binding.partnerIdValue.text.toString(),
+                ticketNumber = binding.ticket1Value.text.toString(),
+                ticketNumber2 = binding.ticket2Value.text.toString(),
+                caseNumber = binding.case1Value.text.toString(),
+                caseNumber2 = binding.case2Value.text.toString(),
+                dispatchNumber = binding.dispatch1Value.text.toString(),
+                dispatchNumber2 = binding.dispatch2Value.text.toString(),
+                location = binding.locationValue.text.toString(),
+                remarks = binding.notesValue.text.toString(),
+                firstName = binding.firstNameValue.text.toString(),
+                lastName = binding.lastNameValue.text.toString(),
                 gender = gender,
                 race = race,
-                driverLicense = driverLicenseValue.text.toString(),
-                licensePlate = licensePlateValue.text.toString()
+                driverLicense = binding.driverLicenseValue.text.toString(),
+                licensePlate = binding.licensePlateValue.text.toString()
             ),
-            currentVideo?.nameFolder,
-            CameraInfo.officerId,
-            currentVideo?.path,
-            SnapshotsAssociatedByUser.value,
-            CameraInfo.serialNumber
+            nameFolder = currentVideo?.nameFolder,
+            officerId = CameraInfo.officerId,
+            path = currentMetadata.path ?: currentVideo?.path,
+            associatedPhotos = SnapshotsAssociatedByUser.value,
+            serialNumber = CameraInfo.serialNumber,
+            endTime = currentMetadata.endTime,
+            gmtOffset = currentMetadata.gmtOffset,
+            hash = currentMetadata.hash,
+            preEvent = currentMetadata.preEvent,
+            startTime = currentMetadata.startTime,
+            videoSpecs = currentMetadata.videoSpecs
         )
     }
 
-    private fun verifyVideoMetadataIsNullOrEmpty() {
+    private fun verifyVideoMetadataParameters() {
         currentMetadata.metadata?.apply {
-            if (partnerID.isNullOrEmpty()) partnerID = ""
-            if (ticketNumber.isNullOrEmpty()) ticketNumber = ""
-            if (ticketNumber2.isNullOrEmpty()) ticketNumber2 = ""
-            if (caseNumber.isNullOrEmpty()) caseNumber = ""
-            if (caseNumber2.isNullOrEmpty()) caseNumber2 = ""
-            if (dispatchNumber.isNullOrEmpty()) dispatchNumber = ""
-            if (dispatchNumber2.isNullOrEmpty()) dispatchNumber2 = ""
-            if (location.isNullOrEmpty()) location = ""
-            if (remarks.isNullOrEmpty()) remarks = ""
-            if (firstName.isNullOrEmpty()) firstName = ""
-            if (lastName.isNullOrEmpty()) lastName = ""
-            if (driverLicense.isNullOrEmpty()) driverLicense = ""
-            if (licensePlate.isNullOrEmpty()) licensePlate = ""
+            partnerID = handleNullParameter(partnerID)
+            ticketNumber = handleNullParameter(ticketNumber)
+            ticketNumber2 = handleNullParameter(ticketNumber2)
+            caseNumber = handleNullParameter(caseNumber)
+            caseNumber2 = handleNullParameter(caseNumber2)
+            dispatchNumber = handleNullParameter(dispatchNumber)
+            dispatchNumber2 = handleNullParameter(dispatchNumber2)
+            location = handleNullParameter(location)
+            remarks = handleNullParameter(remarks)
+            firstName = handleNullParameter(firstName)
+            lastName = handleNullParameter(lastName)
+            driverLicense = handleNullParameter(driverLicense)
+            licensePlate = handleNullParameter(licensePlate)
         }
     }
+
+    private fun handleNullParameter(string: String?) = string ?: ""
 
     private fun updateProgressVideoInView() {
         val progressVideo =
             ((currentTimeVideoInMilliSeconds.toDouble() / totalDurationVideoInMilliSeconds.toDouble()) * 100).toInt()
-        seekProgressVideo.progress = progressVideo
+        binding.seekProgressVideo.progress = progressVideo
         val elapsedTime = currentTimeVideoInMilliSeconds.convertMilliSecondsToString()
         updateTextElapsedTimeAndLeftTime(elapsedTime)
     }
 
     private fun updateTextElapsedTimeAndLeftTime(elapsedTime: String) {
         runOnUiThread {
-            textViewPlayerTime.text = elapsedTime
-            textViewPlayerDuration.text =
+            binding.textViewPlayerTime.text = elapsedTime
+            binding.textViewPlayerDuration.text =
                 totalDurationVideoInMilliSeconds.convertMilliSecondsToString()
         }
     }
 
     private fun configureListenerSeekBar() {
         var isFromUser = false
-        seekProgressVideo.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+        binding.seekProgressVideo.setOnSeekBarChangeListener(object :
+                SeekBar.OnSeekBarChangeListener {
 
-            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                isFromUser = fromUser
-                currentProgressInVideo = progress
-            }
+                override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                    isFromUser = fromUser
+                    currentProgressInVideo = progress
+                }
 
-            override fun onStartTrackingTouch(seekBar: SeekBar?) {
-                Log.d("onStartTrackingTouch", seekBar.toString())
-            }
+                override fun onStartTrackingTouch(seekBar: SeekBar?) {
+                    Log.d("onStartTrackingTouch", seekBar.toString())
+                }
 
-            override fun onStopTrackingTouch(seekBar: SeekBar?) {
-                if (isFromUser) {
-                    seekBar?.let {
-                        setProgressToVideo(it.progress)
+                override fun onStopTrackingTouch(seekBar: SeekBar?) {
+                    if (isFromUser) {
+                        seekBar?.let {
+                            setProgressToVideo(it.progress)
+                        }
                     }
                 }
-            }
-        })
+            })
     }
 
     private fun setProgressToVideo(progress: Int) {
         currentProgressInVideo = progress
         videoPlaybackViewModel.setProgressMediaPlayer(progress.toFloat())
-        seekProgressVideo.progress = progress
+        binding.seekProgressVideo.progress = progress
         currentTimeVideoInMilliSeconds = totalDurationVideoInMilliSeconds * (progress / 100)
     }
 

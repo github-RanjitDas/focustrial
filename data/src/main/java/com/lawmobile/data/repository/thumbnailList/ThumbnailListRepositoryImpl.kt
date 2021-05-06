@@ -1,14 +1,14 @@
 package com.lawmobile.data.repository.thumbnailList
 
 import com.lawmobile.data.datasource.remote.thumbnailList.ThumbnailListRemoteDataSource
-import com.lawmobile.data.entities.FileList
 import com.lawmobile.data.mappers.FileMapper
 import com.lawmobile.data.mappers.FileResponseMapper
 import com.lawmobile.domain.entities.DomainCameraFile
 import com.lawmobile.domain.entities.DomainInformationFileResponse
 import com.lawmobile.domain.entities.DomainInformationImage
+import com.lawmobile.domain.entities.FileList
 import com.lawmobile.domain.repository.thumbnailList.ThumbnailListRepository
-import com.safefleet.mobile.commons.helpers.Result
+import com.safefleet.mobile.kotlin_commons.helpers.Result
 
 class ThumbnailListRepositoryImpl(
     private val thumbnailListRemoteDataSource: ThumbnailListRemoteDataSource

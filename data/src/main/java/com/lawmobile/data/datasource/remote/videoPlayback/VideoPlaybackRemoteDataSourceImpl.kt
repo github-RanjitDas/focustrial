@@ -1,24 +1,24 @@
 package com.lawmobile.data.datasource.remote.videoPlayback
 
+import com.lawmobile.data.utils.CameraServiceFactory
+import com.safefleet.mobile.external_hardware.cameras.entities.CameraFile
+import com.safefleet.mobile.external_hardware.cameras.entities.VideoFileInfo
+import com.safefleet.mobile.external_hardware.cameras.entities.VideoInformation
+import com.safefleet.mobile.kotlin_commons.helpers.Result
 
-import com.safefleet.mobile.avml.cameras.entities.CameraConnectFile
-import com.safefleet.mobile.avml.cameras.entities.CameraConnectVideoInfo
-import com.safefleet.mobile.avml.cameras.entities.CameraConnectVideoMetadata
-import com.safefleet.mobile.avml.cameras.external.CameraConnectService
-import com.safefleet.mobile.commons.helpers.Result
-
-class VideoPlaybackRemoteDataSourceImpl(private val cameraConnectService: CameraConnectService) :
+class VideoPlaybackRemoteDataSourceImpl(cameraServiceFactory: CameraServiceFactory) :
     VideoPlaybackRemoteDataSource {
 
-    override suspend fun getInformationResourcesVideo(cameraConnectFile: CameraConnectFile): Result<CameraConnectVideoInfo> =
-        cameraConnectService.getInformationResourcesVideo(cameraConnectFile)
+    private var cameraService = cameraServiceFactory.create()
 
-    override suspend fun saveVideoMetadata(cameraConnectVideoMetadata: CameraConnectVideoMetadata): Result<Unit> =
-        cameraConnectService.saveVideoMetadata(cameraConnectVideoMetadata)
+    override suspend fun getInformationResourcesVideo(cameraFile: CameraFile): Result<VideoFileInfo> =
+        cameraService.getInformationResourcesVideo(cameraFile)
+
+    override suspend fun saveVideoMetadata(videoInformation: VideoInformation): Result<Unit> =
+        cameraService.saveVideoMetadata(videoInformation)
 
     override suspend fun getVideoMetadata(
         fileName: String,
         folderName: String
-    ): Result<CameraConnectVideoMetadata> =
-        cameraConnectService.getVideoMetadata(fileName, folderName)
+    ): Result<VideoInformation> = cameraService.getVideoMetadata(fileName, folderName)
 }

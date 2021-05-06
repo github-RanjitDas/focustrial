@@ -1,12 +1,12 @@
 package com.lawmobile.domain.entities
 
-data class DomainMetadata (
+data class DomainMetadata(
     var caseNumber: String? = null,
     var caseNumber2: String? = null,
     var dispatchNumber: String? = null,
     var dispatchNumber2: String? = null,
     var driverLicense: String? = null,
-    val event: DomainCatalog? = null,
+    val event: MetadataEvent? = null,
     var firstName: String? = null,
     val gender: String? = null,
     var lastName: String? = null,

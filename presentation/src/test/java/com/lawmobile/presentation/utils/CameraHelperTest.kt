@@ -1,6 +1,6 @@
 package com.lawmobile.presentation.utils
 
-import com.safefleet.mobile.avml.cameras.external.CameraConnectService
+import com.lawmobile.domain.utils.ConnectionHelper
 import io.mockk.clearAllMocks
 import io.mockk.every
 import io.mockk.mockk
@@ -13,11 +13,11 @@ import org.junit.jupiter.api.TestInstance
 class CameraHelperTest {
 
     private val wifiHelper: WifiHelper = mockk()
-    private val cameraConnectService: CameraConnectService = mockk()
-    private val cameraHelper = CameraHelper(cameraConnectService, wifiHelper)
-    
+    private val connectionHelper: ConnectionHelper = mockk()
+    private val cameraHelper = CameraHelper(connectionHelper, wifiHelper)
+
     @BeforeEach
-    fun setUp(){
+    fun setUp() {
         clearAllMocks()
     }
 
@@ -30,14 +30,14 @@ class CameraHelperTest {
     @Test
     fun testCheckWithAlertIfTheCameraIsConnectedSuccess() {
         every { wifiHelper.getGatewayAddress() } returns ""
-        every { cameraConnectService.isCameraConnected(any()) } returns true
+        every { connectionHelper.isCameraConnected(any()) } returns true
         Assert.assertTrue(cameraHelper.checkWithAlertIfTheCameraIsConnected())
     }
 
     @Test
     fun testCheckWithAlertIfTheCameraIsConnectedFailed() {
         every { wifiHelper.getGatewayAddress() } returns ""
-        every { cameraConnectService.isCameraConnected(any()) } returns false
+        every { connectionHelper.isCameraConnected(any()) } returns false
         Assert.assertFalse(cameraHelper.checkWithAlertIfTheCameraIsConnected())
     }
 }

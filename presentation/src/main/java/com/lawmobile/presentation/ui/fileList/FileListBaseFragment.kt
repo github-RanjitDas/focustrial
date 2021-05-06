@@ -2,7 +2,9 @@ package com.lawmobile.presentation.ui.fileList
 
 import android.content.Intent
 import android.util.Log
+import android.widget.TextView
 import androidx.core.view.isVisible
+import androidx.recyclerview.widget.RecyclerView
 import com.lawmobile.domain.entities.CameraInfo
 import com.lawmobile.domain.entities.DomainCameraFile
 import com.lawmobile.domain.entities.DomainInformationForList
@@ -14,7 +16,6 @@ import com.lawmobile.presentation.utils.Constants
 import com.lawmobile.presentation.utils.Constants.SNAPSHOT_LIST
 import com.lawmobile.presentation.utils.Constants.VIDEO_LIST
 import com.lawmobile.presentation.widgets.CustomFilterDialog
-import kotlinx.android.synthetic.main.fragment_file_list.*
 
 open class FileListBaseFragment : BaseFragment() {
 
@@ -22,12 +23,12 @@ open class FileListBaseFragment : BaseFragment() {
     var isLoadedOnCreate = false
     var filter: CustomFilterDialog? = null
 
-    fun showFileListRecycler() {
+    fun showFileListRecycler(fileListRecycler: RecyclerView?, noFilesTextView: TextView?) {
         fileListRecycler?.isVisible = true
         noFilesTextView?.isVisible = false
     }
 
-    fun showEmptyListMessage() {
+    fun showEmptyListMessage(fileListRecycler: RecyclerView?, noFilesTextView: TextView?) {
         noFilesTextView?.isVisible = true
         fileListRecycler?.isVisible = false
         when (listType) {
@@ -36,12 +37,15 @@ open class FileListBaseFragment : BaseFragment() {
         }
     }
 
-    fun manageFragmentContent() {
-        if (!filter?.filteredList.isNullOrEmpty()) showFileListRecycler()
-        else showNoFilterResults()
+    fun manageFragmentContent(fileListRecycler: RecyclerView?, noFilesTextView: TextView?) {
+        if (!filter?.filteredList.isNullOrEmpty()) showFileListRecycler(
+            fileListRecycler,
+            noFilesTextView
+        )
+        else showNoFilterResults(fileListRecycler, noFilesTextView)
     }
 
-    private fun showNoFilterResults() {
+    private fun showNoFilterResults(fileListRecycler: RecyclerView?, noFilesTextView: TextView?) {
         noFilesTextView?.isVisible = true
         fileListRecycler?.isVisible = false
         when (listType) {

@@ -7,7 +7,7 @@
 
     <!--Alerts -->
     <string name="the_camera_was_disconnected">Camera disconnected</string>
-    <string name="the_camera_was_disconnected_description">Your X1 was disconnected from Focus Mobile App, please close the App and reconnect</string>
+    <string name="the_camera_was_disconnected_description">Your BWC was disconnected from Focus Mobile App, please close the App and reconnect</string>
     <string name="loading_wait">Loading…</string>
     <string name="connection_finished">Connection Finished</string>
     <string name="connection_finished_description">After 5 minutes without interaction the BWC disconnects</string>
@@ -22,14 +22,14 @@
     <string name="please_enable_permission">Please enable permission from settings</string>
     <string name="please_enable_permission_location">Required location permission for pairing the camera</string>
     <string name="waiting_for_camera" tools:ignore="ExtraTranslation">Click here to connect\nwith the camera</string>
-    <string name="go_to_validate_ssid">Go to validate ssid</string>
+    <string name="result_pairing_description">the result of the pairing process</string>
     <string name="instructions_to_link_camera">Instructions to link camera</string>
     <string name="connecting_to_camera">Connecting to Camera</string>
     <string name="welcome_officer">Please enter your password</string>
     <string name="enter_password">Password</string>
     <string name="incorrect_password">The password you have entered is incorrect, try again</string>
-    <string name="wifi_is_off">The WiFi is off</string>
-    <string name="please_turn_wifi_on">The WIFI is set to off on your device, please set the WIFI to on and reconnect the X1 with FMA</string>
+    <string name="wifi_is_off">The WIFI is off</string>
+    <string name="please_turn_wifi_on">The WIFI is set to off on your device, please set the WIFI to on and reconnect the BWC with FMA</string>
 
     <!-- Live view -->
     <string name="image_description_full_screen_size">Full Screen size</string>
@@ -37,17 +37,29 @@
     <string name="logout">Exit FMA</string>
     <string name="logout_message">Are you sure you want to exit the Focus Mobile App?</string>
 
+    <!-- Live View Menu -->
+    <string name="icon_user_menu">Officer Information Menu</string>
+    <string name="icon_close_menu">Close Menu</string>
+    <string name="live_view_menu_item_dashboard">Dashboard</string>
+    <string name="live_view_menu_item_view_snapshots">View Snapshots</string>
+    <string name="live_view_menu_item_view_videos">View Videos</string>
+    <string name="live_view_menu_item_bodyworn_settings">Body-worn Settings</string>
+    <string name="live_view_menu_item_notification">Notifications</string>
+    <string name="live_view_menu_item_diagnose">Body-worn Diagnosis</string>
+    <string name="live_view_menu_item_help">Help</string>
+    <string name="live_view_menu_logout">Logout</string>
+
     <!-- Snapshots -->
     <string name="live_view_take_photo_success">Snapshot captured successfully</string>
     <string name="live_view_take_photo_failed">The system failed to capture a snapshot</string>
     <string name="button_snapshot">Button Snapshot</string>
-    <string name="button_streaming">Button Streaming</string>
+    <string name="button_record_description">Button Record</string>
     <string name="take_snapshots">Take Snapshots</string>
     <string name="record_video">Record Video</string>
-    <string name="snapshot_list">Snapshot List</string>
+    <string name="snapshot_list_description">Snapshot List</string>
     <string name="view_snapshots">View Snapshots</string>
-    <string name="record_list">Record List</string>
-    <string name="videos">View Videos</string>
+    <string name="video_list_description">Video List</string>
+    <string name="view_videos">View Videos</string>
 
     <!-- List of Snapshots and videos from camera -->
     <string name="file_list_failed_load_files">Could not load files, please retry or checkout BWC again</string>
@@ -59,8 +71,8 @@
     <string name="getting_files_error_description">The system failed to retrieve all the requested files, please try again</string>
 
     <!-- Video playback -->
-    <string name="play_pause_button_video_playback">Play/Pause button video playback</string>
-    <string name="aspect_video_playback">Aspect video playback</string>
+    <string name="play_pause_playback_button_description">Play/Pause button video playback</string>
+    <string name="aspect_video_playback_description">Aspect video playback</string>
     <string name="video_default_time">00:00</string>
     <string name="playback_start_time">Start Time</string>
     <string name="playback_duration">Duration</string>
@@ -80,7 +92,6 @@
     <string name="playback_race">Race</string>
     <string name="playback_driver_license">Driver License</string>
     <string name="playback_license_plate">License Plate</string>
-    <string name="select">Select</string>
     <string name="select_event">Select event</string>
     <string name="event_mandatory">Please select Event Type</string>
     <string name="catalog_error">Unable to get events, please retry or checkout BWC again</string>
@@ -113,19 +124,19 @@
     <string name="associate_partner_id_content_description">Associate partner ID</string>
     <string name="file_list_associate_partner_id_success">The partner ID associated successfully</string>
     <string name="file_list_associate_partner_id_error">Partner ID could not be associated</string>
-    <string name="associate_partner_to_file_button">Associate partner to file button</string>
-    <string name="button_link_snapshots">buttonLinkSnapshots</string>
+    <string name="associate_partner_to_file_button_description">Associate partner to file button</string>
+    <string name="button_link_snapshots_description">button link snapshots</string>
     <string name="valid_partner_id_message">You must enter a valid Partner ID</string>
     <string name="mobile_data_status_title">Mobile Data</string>
-    <string name="mobile_data_status_message">Please disable Mobile Data on your device in order to connect the X1 with Focus Mobile App</string>
-    <string name="verify_camera_wifi">Please verify the X1 WIFI connection between the X1 and Focus Mobile App</string>
+    <string name="mobile_data_status_message">Please disable Mobile Data on your device in order to connect the BWC with the Focus Mobile App</string>
+    <string name="verify_camera_wifi">Please verify the WIFI connection between the BWC and Focus Mobile App</string>
     <string name="error_saving_video">Error checking video saved in camera, please wait and try again</string>
     <string name="go">GO</string>
     <string name="login">Login</string>
     <string name="success_connection_to_camera">You have successfully connected to the camera</string>
     <string name="try_again_button_pairing">Try Again</string>
     <string name="error_connection_to_camera">There was a problem connecting to your camera</string>
-    <string name="focus_mobile_app_logo">focus mobile app logo</string>
+    <string name="focus_mobile_app_logo_description">focus mobile app logo</string>
     <string name="camera_status">Camera status</string>
     <string name="memory_level">memory level</string>
     <string name="battery_level">battery level</string>
@@ -134,12 +145,14 @@
     <string name="taking_snapshot">Taking snapshot</string>
     <string name="starting_recording">Starting recording</string>
     <string name="stopping_recording">Stopping recording</string>
-    <string name="battery_percent"><![CDATA[<b>%1$d %%</b> - %2$s hour left]]></string>
-    <string name="storage_level"><![CDATA[Used  &nbsp;&nbsp; -  &nbsp;&nbsp; Free <br/><b>%1$s </b> - <b>%2$s </b>]]></string>
+    <string name="battery_percent"><![CDATA[<b>%1$d%%</b> ~ %2$s left]]></string>
+    <string name="storage_level_x1"><![CDATA[Used  &nbsp;&nbsp; -  &nbsp;&nbsp; Free <br/><b>%1$s</b> - <b>%2$s</b>]]></string>
+    <string name="storage_level_x2"><![CDATA[<b>%1$d%%</b> used]]></string>
     <string name="battery_level_error">Error retrieving battery level</string>
     <string name="storage_level_error">Error retrieving storage level</string>
-    <string name="battery_percent_placeholder">100% - 10 hour left</string>
-    <string name="storage_level_placeholder">Used \  - \  Free\n 272 MB - 57.7GB</string>
+    <string name="battery_percent_placeholder"><b>100%</b> - 10 hour left</string>
+    <string name="storage_level_placeholder_x1">Used \  - \  Free\n <b>272 MB</b> - <b>57.7GB</b></string>
+    <string name="storage_level_placeholder_x2"><b>0%</b> used</string>
     <string name="app_bar_name_default">James</string>
     <string name="app_bar_last_name_default">Mendez</string>
     <string name="_1">1.</string>
@@ -155,23 +168,25 @@
     <string name="_6">6.</string>
     <string name="instruction_6">When prompted, provide the SSID password to connect to the BWC.</string>
     <string name="got_it">Got it!</string>
-    <string name="close_instructions">close instructions</string>
+    <string name="close_instructions_description">close instructions</string>
     <string name="snapshots_title">Snapshots</string>
     <string name="videos_title">Videos</string>
     <string name="associate_with_an_officer">Associate with an officer</string>
     <string name="select_snapshots_to_associate">Select snapshots to associate</string>
+    <string name="select">Select</string>
+    <string name="selected">Selected</string>
     <string name="date_and_time">Date and time</string>
     <string name="event">Event</string>
     <string name="officer_id_hint">Officer ID</string>
     <string name="assign_to_officer_subtitle">Enter officer ID</string>
-    <string name="file_item_image">file item image</string>
+    <string name="file_item_image_description">file item image</string>
     <string name="select_videos_to_associate">Select videos to associate</string>
     <string name="button_help">\?</string>
-    <string name="add_images">Add snapshots</string>
+    <string name="add_snapshots">Add snapshots</string>
     <string name="associate_image_to_video">Associate snapshots to video</string>
     <string name="video_detail">Video Detail</string>
     <string name="time_divider"> / </string>
-    <string name="title">Title</string>
+    <string name="title_placeholder">Title</string>
     <string name="filter_title">Filter</string>
     <string name="apply">Apply</string>
     <string name="start_date_filter">Start date</string>
@@ -188,6 +203,17 @@
     <string name="no_videos_filter">No videos match to these criteria</string>
     <string name="not_available">Not available</string>
     <string name="user_guide">User Guide</string>
+    <string name="image_error_thumbnail">this thumbnail did not load correctly</string>
+    <string name="notification_type">notification type</string>
+    <string name="notifications">Notifications</string>
+    <string name="notification">Notification</string>
+    <string name="type">Type</string>
+
+    <!-- Alert notification-->
+    <string name="alert_notification_dismiss_button">Dismiss</string>
+    <string name="alert_notification_information_image">Image type of notification</string>
+    <string name="dismiss">Dismiss</string>
+    <string name="notification_detail">Notification Detail</string>
 
     <string-array name="gender_spinner">
         <item>Select</item>
@@ -209,5 +235,17 @@
         <item>Select</item>
         <item>Default</item>
     </string-array>
+
+    <!-- Body Worn Diagnosis -->
+    <string name="body_worn_diagnosis_button_text">START</string>
+    <string name="body_worn_diagnosis_loading_text">Diagnosing…</string>
+    <string name="body_worn_diagnosis_success_text">Success</string>
+    <string name="body_worn_diagnosis_error_text">Error</string>
+    <string name="body_worn_icon_result_description">Icon result diagnosis</string>
+    <string name="body_worn_icon_error_is_not_possible_get_diagnosis">Error retrieving body-worn Diagnosis, please try again</string>
+    <string name="body_worn_result_success_description">Your Body-worn Camera hardware is operating correctly, no issues reported.</string>
+    <string name="body_worn_result_failed_description">There are one or more issues with the Body-worn Camera hardware that will prevent it from working properly!\n\nPlease contact your administrator and report this issue</string>
+    <string name="no_notifications_found">No notifications found</string>
+    <string name="notification_list_error">Unable to get notification list, please retry or checkout BWC</string>
 
 </resources>

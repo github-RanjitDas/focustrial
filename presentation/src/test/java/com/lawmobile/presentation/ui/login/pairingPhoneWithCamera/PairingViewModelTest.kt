@@ -1,12 +1,18 @@
 package com.lawmobile.presentation.ui.login.pairingPhoneWithCamera
 
-import androidx.lifecycle.MediatorLiveData
+import com.lawmobile.domain.enums.CameraType
 import com.lawmobile.domain.usecase.pairingPhoneWithCamera.PairingPhoneWithCameraUseCase
 import com.lawmobile.presentation.InstantExecutorExtension
 import com.lawmobile.presentation.ui.login.pairingPhoneWithCamera.PairingViewModel.Companion.EXCEPTION_GET_PARAMS_TO_CONNECT
 import com.lawmobile.presentation.utils.WifiHelper
-import com.safefleet.mobile.commons.helpers.Result
-import io.mockk.*
+import com.safefleet.mobile.kotlin_commons.helpers.Result
+import io.mockk.Runs
+import io.mockk.coEvery
+import io.mockk.coVerify
+import io.mockk.every
+import io.mockk.just
+import io.mockk.mockk
+import io.mockk.runs
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
@@ -31,12 +37,12 @@ class PairingViewModelTest {
         every { isEqualsValueWithSSID("X") } returns false
     }
 
-    private val pairingPhoneWithCameraUseCase: PairingPhoneWithCameraUseCase = mockk {
-        every { progressPairingCamera } returns MediatorLiveData()
-    }
+    private val pairingPhoneWithCameraUseCase: PairingPhoneWithCameraUseCase = mockk()
     private val viewModel: PairingViewModel by lazy {
         PairingViewModel(pairingPhoneWithCameraUseCase, wifiHelper)
     }
+
+    private var cameraPairingProgress: Result<Int>? = null
 
     @ExperimentalCoroutinesApi
     @BeforeEach
@@ -49,12 +55,14 @@ class PairingViewModelTest {
         every { wifiHelper.getGatewayAddress() } returns DEFAULT_GATEWAY_ADDRESS
         every { wifiHelper.getIpAddress() } returns DEFAULT_GATEWAY_ADDRESS
         coEvery {
-            pairingPhoneWithCameraUseCase.loadPairingCamera(any(), any())
+            pairingPhoneWithCameraUseCase.loadPairingCamera(any(), any(), any())
         } just Runs
 
+        viewModel.cameraPairingProgress = mockk()
         viewModel.getProgressConnectionWithTheCamera()
+
         coVerify {
-            pairingPhoneWithCameraUseCase.loadPairingCamera(any(), any())
+            pairingPhoneWithCameraUseCase.loadPairingCamera(any(), any(), any())
         }
     }
 
@@ -62,32 +70,37 @@ class PairingViewModelTest {
     fun testGetProgressConnectionWithTheCameraErrorInIpAddress() {
         every { wifiHelper.getGatewayAddress() } returns DEFAULT_GATEWAY_ADDRESS
         every { wifiHelper.getIpAddress() } returns ""
+
+        viewModel.cameraPairingProgress = { cameraPairingProgress = it }
+
         coEvery {
-            pairingPhoneWithCameraUseCase.loadPairingCamera(any(), any())
+            pairingPhoneWithCameraUseCase.loadPairingCamera(any(), any(), any())
         } just Runs
 
         viewModel.getProgressConnectionWithTheCamera()
-        val error = viewModel.progressConnectionWithTheCamera.value as Result.Error
-        Assert.assertEquals(error.exception.message, EXCEPTION_GET_PARAMS_TO_CONNECT)
+        Assert.assertEquals((cameraPairingProgress as Result.Error).exception.message, EXCEPTION_GET_PARAMS_TO_CONNECT)
     }
 
     @Test
     fun testGetProgressConnectionWithTheCameraErrorInGatewayAddress() {
         every { wifiHelper.getGatewayAddress() } returns ""
         every { wifiHelper.getIpAddress() } returns DEFAULT_GATEWAY_ADDRESS
+
+        viewModel.cameraPairingProgress = { cameraPairingProgress = it }
+
         coEvery {
-            pairingPhoneWithCameraUseCase.loadPairingCamera(any(), any())
+            pairingPhoneWithCameraUseCase.loadPairingCamera(any(), any(), any())
         } just Runs
 
         viewModel.getProgressConnectionWithTheCamera()
-        val error = viewModel.progressConnectionWithTheCamera.value as Result.Error
-        Assert.assertEquals(error.exception.message, EXCEPTION_GET_PARAMS_TO_CONNECT)
+
+        Assert.assertEquals((cameraPairingProgress as Result.Error).exception.message, EXCEPTION_GET_PARAMS_TO_CONNECT)
     }
 
     @Test
     fun testIsValidNumberCameraBWC() {
-        Assert.assertTrue(viewModel.isValidNumberCameraBWC(DEFAULT_SSID))
-        Assert.assertFalse(viewModel.isValidNumberCameraBWC(""))
+        Assert.assertTrue(CameraType.isValidNumberCameraBWC(DEFAULT_SSID))
+        Assert.assertFalse(CameraType.isValidNumberCameraBWC(""))
     }
 
     @Test
@@ -127,7 +140,15 @@ class PairingViewModelTest {
 
     @Test
     fun testResetProgress() {
+        viewModel.cameraPairingProgress = { cameraPairingProgress = it }
+
         viewModel.resetProgress()
-        Assert.assertTrue(viewModel.progressConnectionWithTheCamera.value == Result.Success(0))
+        Assert.assertTrue(cameraPairingProgress == Result.Success(0))
+    }
+
+    @Test
+    fun testCleanCacheFiles() {
+        every { viewModel.cleanCacheFiles() } just runs
+        viewModel.cleanCacheFiles()
     }
 }

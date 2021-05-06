@@ -39,5 +39,4 @@ open class WifiHelper(private val wifiManager: WifiManager) {
     fun getSSIDWiFi(): String = wifiManager.connectionInfo.ssid.replace("\"", "")
 
     open fun isEqualsValueWithSSID(value: String): Boolean = getSSIDWiFi() == value
-
 }

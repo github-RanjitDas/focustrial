@@ -1,18 +1,28 @@
-apply plugin: 'com.android.application'
-apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
-apply plugin: 'kotlin-kapt'
-apply plugin: 'dagger.hilt.android.plugin'
+import dependencies.*
+
+plugins {
+    id 'com.android.application'
+    id 'kotlin-android'
+    id 'kotlin-kapt'
+    id 'dagger.hilt.android.plugin'
+    id 'com.google.gms.google-services'
+    id 'com.google.firebase.crashlytics'
+    id 'com.squareup.sqldelight'
+}
+
+apply from: '../ktlint.gradle'
+
+check.dependsOn ktlint
 
 android {
-    compileSdkVersion rootProject.ext.compileSdkVersion
+    compileSdkVersion AppConfig.compileSdkVersion
 
     defaultConfig {
-        applicationId rootProject.ext.applicationId
-        minSdkVersion rootProject.ext.minSdkVersion
-        targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode rootProject.ext.buildVersion
-        versionName "$rootProject.ext.major.$rootProject.ext.minor.$rootProject.ext.patch"
+        applicationId AppConfig.applicationId
+        minSdkVersion AppConfig.minSdkVersion
+        targetSdkVersion AppConfig.targetSdkVersion
+        versionCode AppConfig.buildVersion
+        versionName AppConfig.versionName
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles 'consumer-rules.pro'
@@ -21,9 +31,9 @@ android {
     signingConfigs {
         release {
             storeFile file(RELEASE_STORE_FILE)
-            storePassword KEYSTORE_PASSWORD
-            keyAlias KEYSTORE_ALIAS
-            keyPassword KEYSTORE_PASSWORD
+            storePassword System.getenv("KEYSTORE_PASSWORD")
+            keyAlias System.getenv("KEYSTORE_ALIAS")
+            keyPassword System.getenv("KEYSTORE_PASSWORD")
         }
     }
 
@@ -52,13 +62,17 @@ android {
     }
 
     kotlinOptions {
-        jvmTarget = rootProject.ext.jvmTarget
+        jvmTarget = AppConfig.jvmTarget
     }
 
     configurations.all {
         resolutionStrategy.force "com.google.code.findbugs:jsr305:$find_bugs_version"
     }
 
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 }
 
 dependencies {
@@ -70,12 +84,6 @@ dependencies {
 
     // Mockk
     androidTestImplementation "io.mockk:mockk-android:$mockk_version"
-
-    // Junit5
-    testImplementation "org.junit.jupiter:junit-jupiter-api:$junit5_version"
-    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$junit5_version"
-    testRuntimeOnly "org.junit.vintage:junit-vintage-engine:$junit5_version"
-    testImplementation "org.junit.jupiter:junit-jupiter-params:$junit5_version"
 
     //Espresso
     androidTestImplementation "androidx.test.espresso:espresso-core:$espresso_version"
@@ -107,14 +115,29 @@ dependencies {
     implementation "com.google.dagger:hilt-android:$hilt_version"
     kapt "com.google.dagger:hilt-android-compiler:$hilt_version"
     kaptAndroidTest "com.google.dagger:hilt-android-compiler:$hilt_version"
-    testImplementation "com.google.dagger:hilt-android-testing:$hilt_version"
     kaptTest "com.google.dagger:hilt-android-compiler:$hilt_version"
     implementation "androidx.hilt:hilt-lifecycle-viewmodel:$hilt_jetpack_version"
     kapt "androidx.hilt:hilt-compiler:$hilt_jetpack_version"
     kaptAndroidTest "androidx.hilt:hilt-compiler:$hilt_jetpack_version"
-    androidTestImplementation "com.google.dagger:hilt-android-testing:$hilt_version"
 
-    implementation project(path: ':presentation')
-    implementation project(path: ':data')
-    implementation project(path: ':domain')
+    // Import the Firebase BoM
+    debugApi platform("com.google.firebase:firebase-bom:$firebase_bom_version")
+
+    // Firebase analytics and crashlytics
+    debugApi 'com.google.firebase:firebase-analytics-ktx'
+    debugApi "com.google.firebase:firebase-core:$firebase_core_version"
+    debugApi 'com.google.firebase:firebase-crashlytics'
+
+    //Base repository
+    implementation 'com.safefleet.mobile:external-hardware:3.0.0@jar'
+    implementation 'com.safefleet.mobile:android-commons:1.2.0@aar'
+    implementation 'com.safefleet.mobile:safefleet-ui:1.2.0@aar'
+
+    implementation "com.squareup.sqldelight:android-driver:$sqldelight_version"
+    implementation "com.squareup.sqldelight:sqlite-driver:$sqldelight_version"
+
+    implementation project(path: Modules.presentation)
+    implementation project(path: Modules.data)
+    implementation project(path: Modules.domain)
+    implementation project(path: Modules.database)
 }

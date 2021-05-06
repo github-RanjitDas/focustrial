@@ -1,20 +1,30 @@
 package com.lawmobile.data.datasource.remote.pairingPhoneWithCamera
 
-import androidx.lifecycle.LiveData
-import com.safefleet.mobile.avml.cameras.external.CameraConnectService
-import com.safefleet.mobile.commons.helpers.Result
+import com.lawmobile.data.utils.CameraServiceFactory
+import com.lawmobile.domain.utils.CacheManager
+import com.safefleet.mobile.kotlin_commons.helpers.Result
 
 open class PairingPhoneWithCameraRemoteDataSourceImpl(
-    private val cameraConnectService: CameraConnectService
+    cameraServiceFactory: CameraServiceFactory
 ) : PairingPhoneWithCameraRemoteDataSource {
-    override var progressPairingCamera: LiveData<Result<Int>> =
-        cameraConnectService.progressPairingCamera
 
-    override suspend fun loadPairingCamera(hostnameToConnect: String, ipAddressClient: String) {
-        cameraConnectService.loadPairingCamera(hostnameToConnect, ipAddressClient)
+    private var cameraService = cameraServiceFactory.create()
+
+    override suspend fun loadPairingCamera(
+        hostnameToConnect: String,
+        ipAddressClient: String,
+        progressPairingCamera: ((Result<Int>) -> Unit)
+    ) {
+        cameraService.progressPairingCamera = progressPairingCamera
+        cameraService.loadPairingCamera(hostnameToConnect, ipAddressClient)
     }
 
     override suspend fun isPossibleTheConnection(hostnameToConnect: String): Result<Unit> {
-        return cameraConnectService.isPossibleTheConnection(hostnameToConnect)
+        return cameraService.isPossibleTheConnection(hostnameToConnect)
+    }
+
+    override fun cleanCacheFiles() {
+        CacheManager.cleanFileLists()
+        cameraService.cleanCacheFiles()
     }
 }

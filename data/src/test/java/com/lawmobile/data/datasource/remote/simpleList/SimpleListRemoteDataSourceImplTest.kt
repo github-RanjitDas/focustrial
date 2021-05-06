@@ -1,10 +1,11 @@
 package com.lawmobile.data.datasource.remote.simpleList
 
-import com.lawmobile.data.entities.VideoListMetadata
-import com.safefleet.mobile.avml.cameras.entities.CameraConnectFile
-import com.safefleet.mobile.avml.cameras.entities.CameraConnectFileResponseWithErrors
-import com.safefleet.mobile.avml.cameras.external.CameraConnectService
-import com.safefleet.mobile.commons.helpers.Result
+import com.lawmobile.data.utils.CameraServiceFactory
+import com.lawmobile.domain.entities.VideoListMetadata
+import com.safefleet.mobile.external_hardware.cameras.CameraService
+import com.safefleet.mobile.external_hardware.cameras.entities.CameraFile
+import com.safefleet.mobile.external_hardware.cameras.entities.FileResponseWithErrors
+import com.safefleet.mobile.kotlin_commons.helpers.Result
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
@@ -15,29 +16,32 @@ import org.junit.jupiter.api.Test
 
 internal class SimpleListRemoteDataSourceImplTest {
 
-    private val cameraConnectService: CameraConnectService = mockk()
+    private val cameraService: CameraService = mockk()
+    private val cameraServiceFactory: CameraServiceFactory = mockk {
+        every { create() } returns cameraService
+    }
 
     private val simpleListRemoteDataSourceImpl by lazy {
-        SimpleListRemoteDataSourceImpl(cameraConnectService)
+        SimpleListRemoteDataSourceImpl(cameraServiceFactory)
     }
 
     @Test
     fun testGetSnapshotListFlow() {
-        coEvery { cameraConnectService.getListOfImages() } returns Result.Success(mockk())
+        coEvery { cameraService.getListOfImages() } returns Result.Success(mockk())
         runBlocking {
             simpleListRemoteDataSourceImpl.getSnapshotList()
         }
-        coVerify { cameraConnectService.getListOfImages() }
+        coVerify { cameraService.getListOfImages() }
     }
 
     @Test
     fun testGetSnapshotListSuccess() {
-        val cameraConnectFile: CameraConnectFile = mockk(relaxed = true)
-        val cameraResponse: CameraConnectFileResponseWithErrors = mockk {
-            every { items } returns arrayListOf(cameraConnectFile)
+        val cameraFile: CameraFile = mockk(relaxed = true)
+        val cameraResponse: FileResponseWithErrors = mockk {
+            every { items } returns arrayListOf(cameraFile)
         }
         val result = Result.Success(cameraResponse)
-        coEvery { cameraConnectService.getListOfImages() } returns result
+        coEvery { cameraService.getListOfImages() } returns result
         runBlocking {
             Assert.assertEquals(simpleListRemoteDataSourceImpl.getSnapshotList(), result)
         }
@@ -46,7 +50,7 @@ internal class SimpleListRemoteDataSourceImplTest {
     @Test
     fun testGetSnapshotListFailed() {
         val result = Result.Error(mockk())
-        coEvery { cameraConnectService.getListOfImages() } returns result
+        coEvery { cameraService.getListOfImages() } returns result
         runBlocking {
             Assert.assertEquals(simpleListRemoteDataSourceImpl.getSnapshotList(), result)
         }
@@ -54,15 +58,15 @@ internal class SimpleListRemoteDataSourceImplTest {
 
     @Test
     fun testGetVideoListFlow() {
-        val cameraConnectFile: CameraConnectFile = mockk(relaxed = true)
-        val cameraResponse: CameraConnectFileResponseWithErrors = mockk {
-            every { items } returns arrayListOf(cameraConnectFile)
+        val cameraFile: CameraFile = mockk(relaxed = true)
+        val cameraResponse: FileResponseWithErrors = mockk {
+            every { items } returns arrayListOf(cameraFile)
         }
-        coEvery { cameraConnectService.getListOfVideos() } returns Result.Success(cameraResponse)
+        coEvery { cameraService.getListOfVideos() } returns Result.Success(cameraResponse)
 
         VideoListMetadata.metadataList = mutableListOf()
         coEvery {
-            cameraConnectService.getVideoMetadata(
+            cameraService.getVideoMetadata(
                 any(),
                 any()
             )
@@ -71,21 +75,21 @@ internal class SimpleListRemoteDataSourceImplTest {
             simpleListRemoteDataSourceImpl.getVideoList()
         }
         coVerify {
-            cameraConnectService.getListOfVideos()
-            cameraConnectService.getVideoMetadata(any(), any())
+            cameraService.getListOfVideos()
+            cameraService.getVideoMetadata(any(), any())
         }
     }
 
     @Test
     fun testGetVideoListSuccess() {
-        val cameraConnectFile: CameraConnectFile = mockk(relaxed = true)
-        val cameraResponse: CameraConnectFileResponseWithErrors = mockk {
-            every { items } returns arrayListOf(cameraConnectFile)
+        val cameraFile: CameraFile = mockk(relaxed = true)
+        val cameraResponse: FileResponseWithErrors = mockk {
+            every { items } returns arrayListOf(cameraFile)
         }
         val result = Result.Success(cameraResponse)
-        coEvery { cameraConnectService.getListOfVideos() } returns result
+        coEvery { cameraService.getListOfVideos() } returns result
         coEvery {
-            cameraConnectService.getVideoMetadata(
+            cameraService.getVideoMetadata(
                 any(),
                 any()
             )
@@ -98,7 +102,7 @@ internal class SimpleListRemoteDataSourceImplTest {
     @Test
     fun testGetVideoListFailed() {
         val result = Result.Error(mockk())
-        coEvery { cameraConnectService.getListOfVideos() } returns result
+        coEvery { cameraService.getListOfVideos() } returns result
         runBlocking {
             Assert.assertEquals(simpleListRemoteDataSourceImpl.getVideoList(), result)
         }

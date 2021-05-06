@@ -1,21 +1,22 @@
 package com.lawmobile.domain.usecase.pairingPhoneWithCamera
 
-import androidx.lifecycle.LiveData
 import com.lawmobile.domain.repository.pairingPhoneWithCamera.PairingPhoneWithCameraRepository
-import com.safefleet.mobile.commons.helpers.Result
-import io.mockk.*
+import com.safefleet.mobile.kotlin_commons.helpers.Result
+import io.mockk.Runs
+import io.mockk.coEvery
+import io.mockk.coVerify
+import io.mockk.just
+import io.mockk.mockk
 import kotlinx.coroutines.runBlocking
-import org.junit.Assert
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class PairingPhoneWithCameraUseCaseImplTest {
 
-    private val progressCamera: LiveData<Result<Int>> = mockk()
+    private val progressPairingCamera: ((Result<Int>) -> Unit) = { }
     private val pairingPhoneWithCameraRepository: PairingPhoneWithCameraRepository = mockk {
-        coEvery { loadPairingCamera(any(), any()) } just Runs
-        coEvery { progressPairingCamera } returns progressCamera
+        coEvery { loadPairingCamera(any(), any(), any()) } just Runs
     }
 
     private val useCase: PairingPhoneWithCameraUseCaseImpl by lazy {
@@ -27,17 +28,12 @@ class PairingPhoneWithCameraUseCaseImplTest {
     @Test
     fun testGetProgressConnectionWithTheCamera() {
         runBlocking {
-            useCase.loadPairingCamera("", "")
+            useCase.loadPairingCamera("", "", progressPairingCamera)
         }
 
         coVerify {
-            pairingPhoneWithCameraRepository.loadPairingCamera("", "")
+            pairingPhoneWithCameraRepository.loadPairingCamera("", "", progressPairingCamera)
         }
-    }
-
-    @Test
-    fun testToCheckPairingLiveData() {
-        Assert.assertEquals(useCase.progressPairingCamera, progressCamera)
     }
 
     @Test

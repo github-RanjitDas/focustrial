@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/layoutStatusBar">
+
+    <TextView
+        android:id="@+id/textViewCameraStatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/camera_status"
+        android:textColor="@color/black"
+        android:layout_marginHorizontal="@dimen/camera_status_margin_horizontal"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="@id/guidelineMidHorizontal" />
+
+    <ImageView
+        android:id="@+id/imageViewBattery"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/ic_battery"
+        android:contentDescription="@string/battery_level"
+        app:layout_constraintVertical_bias="0.4"
+        app:layout_constraintStart_toStartOf="@id/textViewCameraStatus"
+        app:layout_constraintTop_toBottomOf="@id/guidelineMidHorizontal"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+    <TextView
+        android:id="@+id/textViewBatteryPercent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/battery_percent_placeholder"
+        android:textSize="@dimen/battery_percent_text_size"
+        app:layout_constraintStart_toStartOf="@id/progressBatteryLevel"
+        app:layout_constraintBottom_toTopOf="@id/progressBatteryLevel"
+        tools:ignore="SmallSp" />
+
+    <com.safefleet.mobile.safefleet_ui.widgets.linearProgressBar.SafeFleetLinearProgressBar
+        android:id="@+id/progressBatteryLevel"
+        android:layout_width="@dimen/no_dp"
+        android:layout_height="@dimen/battery_level_height"
+        android:layout_marginHorizontal="@dimen/battery_level_margin_horizontal"
+        app:layout_constraintBottom_toBottomOf="@id/imageViewBattery"
+        app:layout_constraintEnd_toStartOf="@id/guidelineMidVertical"
+        app:layout_constraintStart_toEndOf="@id/imageViewBattery" />
+
+    <ImageView
+        android:id="@+id/imageViewStorage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/storage_margin_horizontal"
+        android:background="@drawable/ic_memory"
+        android:contentDescription="@string/memory_level"
+        app:layout_constraintBottom_toBottomOf="@id/imageViewBattery"
+        app:layout_constraintStart_toStartOf="@id/guidelineMidVertical" />
+
+    <TextView
+        android:id="@+id/textViewStorageLevels"
+        android:layout_width="@dimen/no_dp"
+        android:layout_height="wrap_content"
+        android:paddingEnd="@dimen/storage_levels_padding_end"
+        android:text="@string/storage_level_placeholder_x1"
+        android:textSize="@dimen/storage_levels_text_size"
+        app:layout_constraintBottom_toTopOf="@+id/progressStorageLevel"
+        app:layout_constraintEnd_toEndOf="@+id/progressStorageLevel"
+        app:layout_constraintStart_toStartOf="@id/progressStorageLevel"
+        tools:ignore="RtlSymmetry,SmallSp" />
+
+    <com.safefleet.mobile.safefleet_ui.widgets.linearProgressBar.SafeFleetLinearProgressBar
+        android:id="@+id/progressStorageLevel"
+        android:layout_width="@dimen/no_dp"
+        android:layout_height="@dimen/storage_level_height"
+        android:layout_marginHorizontal="@dimen/storage_level_margin_horizontal"
+        app:layout_constraintBottom_toBottomOf="@id/imageViewStorage"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/imageViewStorage" />
+
+    <Button
+        android:id="@+id/buttonOpenHelpPage"
+        android:layout_width="@dimen/size_25dp"
+        android:layout_height="@dimen/size_25dp"
+        android:text="@string/button_help"
+        android:padding="@dimen/no_dp"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        android:contentDescription="@string/button_link_snapshots_description"
+        android:background="@drawable/background_button_help"
+        app:layout_constraintTop_toTopOf="@id/textViewCameraStatus"
+        app:layout_constraintEnd_toEndOf="@id/progressStorageLevel" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineMidVertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintGuide_percent="0.50"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineMidHorizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintGuide_percent="0.40"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

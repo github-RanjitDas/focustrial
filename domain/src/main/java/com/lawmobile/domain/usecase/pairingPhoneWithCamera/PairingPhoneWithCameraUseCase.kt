@@ -1,11 +1,16 @@
 package com.lawmobile.domain.usecase.pairingPhoneWithCamera
 
-import androidx.lifecycle.LiveData
 import com.lawmobile.domain.usecase.BaseUseCase
-import com.safefleet.mobile.commons.helpers.Result
+import com.safefleet.mobile.kotlin_commons.helpers.Result
 
 interface PairingPhoneWithCameraUseCase : BaseUseCase {
-    val progressPairingCamera: LiveData<Result<Int>>
-    suspend fun loadPairingCamera(hostnameToConnect: String, ipAddressClient: String)
+    suspend fun loadPairingCamera(
+        hostnameToConnect: String,
+        ipAddressClient: String,
+        progressPairingCamera: ((Result<Int>) -> Unit)
+    )
+
     suspend fun isPossibleTheConnection(hostnameToConnect: String): Result<Unit>
+
+    fun cleanCacheFiles()
 }

@@ -1,22 +1,23 @@
 package com.lawmobile.data.repository.pairingPhoneWithCamera
 
-import androidx.lifecycle.LiveData
 import com.lawmobile.data.datasource.remote.pairingPhoneWithCamera.PairingPhoneWithCameraRemoteDataSource
-import com.safefleet.mobile.commons.helpers.Result
-import io.mockk.*
+import com.safefleet.mobile.kotlin_commons.helpers.Result
+import io.mockk.Runs
+import io.mockk.coEvery
+import io.mockk.coVerify
+import io.mockk.just
+import io.mockk.mockk
 import kotlinx.coroutines.runBlocking
-import org.junit.Assert
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class PairingPhoneWithCameraRepositoryImplTest {
 
-    private val progressCamera: LiveData<Result<Int>> = mockk()
+    private val progressPairingCamera: ((Result<Int>) -> Unit) = { }
     private val pairingPhoneWithCameraRemoteDataSource: PairingPhoneWithCameraRemoteDataSource =
         mockk {
-            every { progressPairingCamera } returns progressCamera
-            coEvery { loadPairingCamera(any(), any()) } just Runs
+            coEvery { loadPairingCamera(any(), any(), any()) } just Runs
         }
 
     private val pairingPhoneWithCameraRepositoryImpl by lazy {
@@ -26,20 +27,12 @@ class PairingPhoneWithCameraRepositoryImplTest {
     @Test
     fun testGetProgressConnectionWithTheCamera() {
         runBlocking {
-            pairingPhoneWithCameraRepositoryImpl.loadPairingCamera("", "")
+            pairingPhoneWithCameraRepositoryImpl.loadPairingCamera("", "", progressPairingCamera)
         }
 
         coVerify {
-            pairingPhoneWithCameraRemoteDataSource.loadPairingCamera("", "")
+            pairingPhoneWithCameraRemoteDataSource.loadPairingCamera("", "", progressPairingCamera)
         }
-    }
-
-    @Test
-    fun testToCheckPairingLiveData() {
-        Assert.assertEquals(
-            pairingPhoneWithCameraRepositoryImpl.progressPairingCamera,
-            progressCamera
-        )
     }
 
     @Test
@@ -47,5 +40,15 @@ class PairingPhoneWithCameraRepositoryImplTest {
         coEvery { pairingPhoneWithCameraRemoteDataSource.isPossibleTheConnection(any()) } returns Result.Success(Unit)
         runBlocking { pairingPhoneWithCameraRepositoryImpl.isPossibleTheConnection("10.10.10.4") }
         coVerify { pairingPhoneWithCameraRemoteDataSource.isPossibleTheConnection("10.10.10.4") }
+    }
+
+    @Test
+    fun testCleanCacheFiles() {
+        coEvery { pairingPhoneWithCameraRemoteDataSource.cleanCacheFiles() } just Runs
+
+        runBlocking {
+            pairingPhoneWithCameraRepositoryImpl.cleanCacheFiles()
+        }
+        coVerify { pairingPhoneWithCameraRemoteDataSource.cleanCacheFiles() }
     }
 }

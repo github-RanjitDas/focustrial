@@ -1,0 +1,76 @@
+import dependencies.Modules
+
+plugins {
+    id 'jacoco'
+    id 'java-library'
+    id 'kotlin'
+    id 'kotlin-kapt'
+    id 'com.squareup.sqldelight'
+}
+
+apply from: '../jacoco.gradle'
+apply from: '../pitest-exceptions.gradle'
+apply from: '../ktlint.gradle'
+apply plugin: 'info.solidsoft.pitest'
+
+sqldelight {
+    Database {
+        packageName = "com.lawmobile.database"
+    }
+}
+
+task testDebugUnitTest {
+    group = 'Verification'
+    dependsOn test
+}
+
+task pitestDebug {
+    group = 'Verification'
+    dependsOn "pitest"
+}
+
+test {
+    useJUnitPlatform()
+    jacoco {
+        destinationFile = file("$buildDir/jacoco/testDebugUnitTest.exec")
+        includeNoLocationClasses = true
+        excludes = ['jdk.internal.*']
+    }
+}
+
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    testImplementation "junit:junit:$junit_version"
+
+    // Junit5
+    testImplementation "org.junit.jupiter:junit-jupiter-api:$junit5_version"
+    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$junit5_version"
+    testImplementation "org.junit.jupiter:junit-jupiter-params:$junit5_version"
+
+    // Mockk
+    testImplementation "io.mockk:mockk:$mockk_version"
+
+    implementation project(path: Modules.data)
+}
+
+pitest {
+    //Add Inspection exclusions since IntelliJ is sending invalid warnings for pitest plugin
+    //noinspection GrFinalVariableAccess,GroovyAccessibility
+    targetClasses = ["com.lawmobile.database.*"]
+    //noinspection GrFinalVariableAccess,GroovyAccessibility
+    targetTests = ["com.lawmobile.database.*"]
+    //noinspection GrFinalVariableAccess,GroovyAccessibility
+    excludedClasses = pitestExclusions
+    testPlugin = 'junit5'
+    threads = Runtime.getRuntime().availableProcessors()
+    outputFormats = ['XML', 'HTML']
+    enableDefaultIncrementalAnalysis =  true
+    timestampedReports = false
+}

@@ -2,7 +2,7 @@ package com.lawmobile.domain.usecase.fileList
 
 import com.lawmobile.domain.entities.DomainCameraFile
 import com.lawmobile.domain.repository.fileList.FileListRepository
-import com.safefleet.mobile.commons.helpers.Result
+import com.safefleet.mobile.kotlin_commons.helpers.Result
 
 class FileListUseCaseImpl(private val fileListRepository: FileListRepository) : FileListUseCase {
     override suspend fun savePartnerIdVideos(

@@ -6,12 +6,12 @@ import android.view.WindowManager.LayoutParams.TYPE_TOAST
 import androidx.annotation.StringRes
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.Root
+import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import org.hamcrest.Description
 import org.hamcrest.TypeSafeMatcher
-
 
 /**
  * Author: http://www.qaautomated.com/2016/01/how-to-test-toast-message-using-espresso.html
@@ -44,7 +44,6 @@ class ToastMatcher(private val maxFailures: Int = DEFAULT_MAX_FAILURES) : TypeSa
         /** Default for maximum number of retries to wait for the toast to pop up */
         private const val DEFAULT_MAX_FAILURES = 5
     }
-
 }
 
 object ToastMessage {
@@ -53,5 +52,11 @@ object ToastMessage {
         onView(withText(stringId))
             .inRoot(ToastMatcher(maxFailures = 10))
             .check(matches(isDisplayed()))
+    }
+
+    fun isToastNotDisplayed(@StringRes stringId: Int) {
+        onView(withText(stringId))
+            .inRoot(ToastMatcher(maxFailures = 10))
+            .check(doesNotExist())
     }
 }

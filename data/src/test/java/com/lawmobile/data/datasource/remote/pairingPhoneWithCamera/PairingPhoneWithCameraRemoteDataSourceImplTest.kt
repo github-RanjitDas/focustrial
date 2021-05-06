@@ -1,48 +1,61 @@
 package com.lawmobile.data.datasource.remote.pairingPhoneWithCamera
 
-import androidx.lifecycle.LiveData
-import com.lawmobile.data.InstantExecutorExtension
-import com.safefleet.mobile.avml.cameras.external.CameraConnectService
-import com.safefleet.mobile.commons.helpers.Result
-import io.mockk.*
+import com.lawmobile.data.utils.CameraServiceFactory
+import com.safefleet.mobile.external_hardware.cameras.CameraService
+import com.safefleet.mobile.kotlin_commons.helpers.Result
+import io.mockk.Runs
+import io.mockk.coEvery
+import io.mockk.coVerify
+import io.mockk.every
+import io.mockk.just
+import io.mockk.mockk
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
-import org.junit.jupiter.api.extension.ExtendWith
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@ExtendWith(InstantExecutorExtension::class)
 class PairingPhoneWithCameraRemoteDataSourceImplTest {
 
-    private val progressCamera: LiveData<Result<Int>> = mockk()
-    private val cameraConnectService: CameraConnectService = mockk {
-        every { progressPairingCamera } returns progressCamera
+    private val cameraService: CameraService = mockk(relaxed = true)
+    private val cameraServiceFactory: CameraServiceFactory = mockk {
+        every { create() } returns cameraService
     }
 
     private val pairingPhoneWithCameraRemoteDataSourceImpl by lazy {
-        PairingPhoneWithCameraRemoteDataSourceImpl(cameraConnectService)
+        PairingPhoneWithCameraRemoteDataSourceImpl(cameraServiceFactory)
     }
 
     @Test
     fun testLoadPairingCamera() {
-        coEvery { cameraConnectService.loadPairingCamera(any(), any()) } just Runs
+        val progressPairingCamera: ((Result<Int>) -> Unit) = { }
+        coEvery { cameraService.loadPairingCamera(any(), any()) } just Runs
+
         runBlocking {
-            pairingPhoneWithCameraRemoteDataSourceImpl.loadPairingCamera("", "")
+            pairingPhoneWithCameraRemoteDataSourceImpl.loadPairingCamera(
+                "",
+                "",
+                progressPairingCamera
+            )
         }
-
-        Assert.assertEquals(
-            pairingPhoneWithCameraRemoteDataSourceImpl.progressPairingCamera,
-            progressCamera
-        )
-
-        coVerify { cameraConnectService.loadPairingCamera("", "") }
+        Assert.assertTrue(cameraService.progressPairingCamera != null)
+        coVerify { cameraService.loadPairingCamera("", "") }
     }
 
     @Test
     fun testIsPossibleTheConnection() {
-        coEvery { cameraConnectService.isPossibleTheConnection(any()) } returns Result.Success(Unit)
+        coEvery { cameraService.isPossibleTheConnection(any()) } returns Result.Success(Unit)
         runBlocking { pairingPhoneWithCameraRemoteDataSourceImpl.isPossibleTheConnection("10.10.10.4") }
-        coVerify { cameraConnectService.isPossibleTheConnection("10.10.10.4") }
+        coVerify { cameraService.isPossibleTheConnection("10.10.10.4") }
+    }
+
+    @Test
+    fun testCleanCacheFiles() {
+        coEvery { cameraService.cleanCacheFiles() } just Runs
+
+        runBlocking {
+            pairingPhoneWithCameraRemoteDataSourceImpl.cleanCacheFiles()
+        }
+        coVerify { cameraService.cleanCacheFiles() }
     }
 }

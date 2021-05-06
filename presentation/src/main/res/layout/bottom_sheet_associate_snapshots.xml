@@ -33,7 +33,7 @@
                 android:layout_height="@dimen/button_close_instructions_size"
                 android:layout_marginEnd="@dimen/button_close_instructions_margin_end"
                 android:background="@color/transparent"
-                android:contentDescription="@string/close_instructions"
+                android:contentDescription="@string/close_instructions_description"
                 android:src="@drawable/ic_close"
                 app:layout_constraintBottom_toBottomOf="@id/textViewAssociateSnapshots"
                 app:layout_constraintEnd_toEndOf="parent"

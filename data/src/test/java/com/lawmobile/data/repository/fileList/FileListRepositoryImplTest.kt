@@ -1,15 +1,20 @@
 package com.lawmobile.data.repository.fileList
 
 import com.lawmobile.data.datasource.remote.fileList.FileListRemoteDataSource
-import com.lawmobile.data.entities.RemoteVideoMetadata
-import com.lawmobile.data.entities.VideoListMetadata
 import com.lawmobile.domain.entities.DomainCameraFile
 import com.lawmobile.domain.entities.DomainMetadata
 import com.lawmobile.domain.entities.DomainVideoMetadata
-import com.safefleet.mobile.avml.cameras.entities.CameraConnectVideoMetadata
-import com.safefleet.mobile.avml.cameras.entities.VideoMetadata
-import com.safefleet.mobile.commons.helpers.Result
-import io.mockk.*
+import com.lawmobile.domain.entities.RemoteVideoMetadata
+import com.lawmobile.domain.entities.VideoListMetadata
+import com.safefleet.mobile.external_hardware.cameras.entities.VideoInformation
+import com.safefleet.mobile.external_hardware.cameras.entities.VideoMetadata
+import com.safefleet.mobile.kotlin_commons.helpers.Result
+import io.mockk.clearAllMocks
+import io.mockk.coEvery
+import io.mockk.coVerify
+import io.mockk.every
+import io.mockk.mockk
+import io.mockk.mockkObject
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert
@@ -90,12 +95,13 @@ internal class FileListRepositoryImplTest {
                 fileListRepositoryImpl.savePartnerIdVideos(
                     listOf(domainCameraFile),
                     "1234"
-                ), result
+                ),
+                result
             )
             Assert.assertEquals(1, VideoListMetadata.metadataList.size)
         }
 
-        val resultMetadata = CameraConnectVideoMetadata(
+        val resultMetadata = VideoInformation(
             "",
             "",
             "",
@@ -105,7 +111,6 @@ internal class FileListRepositoryImplTest {
         )
 
         coVerify { fileListRemoteDataSource.savePartnerIdVideos(resultMetadata) }
-
     }
 
     @Test
@@ -162,8 +167,10 @@ internal class FileListRepositoryImplTest {
                 fileListRepositoryImpl.savePartnerIdSnapshot(
                     listOf(
                         domainCameraFile
-                    ), ""
-                ), result
+                    ),
+                    ""
+                ),
+                result
             )
         }
 

@@ -4,8 +4,10 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
 import com.lawmobile.presentation.ui.login.LoginActivity
 import com.safefleet.lawmobile.helpers.DeviceUtils
+import com.safefleet.lawmobile.helpers.SmokeTest
 import com.safefleet.lawmobile.screens.LiveViewScreen
 import com.safefleet.lawmobile.screens.LoginScreen
+import com.safefleet.lawmobile.screens.MainMenuScreen
 import org.junit.Before
 import org.junit.FixMethodOrder
 import org.junit.Test
@@ -19,17 +21,26 @@ class LiveViewTest : EspressoStartActivityBaseTest<LoginActivity>(LoginActivity:
 
     private val liveViewScreen = LiveViewScreen()
     private val device = DeviceUtils()
+    private val mainMenuScreen = MainMenuScreen()
 
     @Before
     fun login() = LoginScreen().login()
 
+    /**
+     * Test case: https://safefleet.atlassian.net/browse/FMA-389
+     */
+    @SmokeTest
     @Test
-    fun a_verifyLiveViewIsDisplayed_FMA_389() {
+    fun verifyLiveViewIsDisplayed() {
         liveViewScreen.isLiveViewDisplayed()
     }
 
+    /**
+     * Test case: https://safefleet.atlassian.net/browse/FMA-391
+     */
+    @SmokeTest
     @Test
-    fun b_verifyVideoInFullScreen_FMA_391() {
+    fun verifyVideoInFullScreen() {
         with(liveViewScreen) {
             isLiveViewDisplayed()
 
@@ -46,13 +57,28 @@ class LiveViewTest : EspressoStartActivityBaseTest<LoginActivity>(LoginActivity:
         }
     }
 
+    /**
+     * Test case: https://safefleet.atlassian.net/browse/FMA-423
+     */
+    @SmokeTest
     @Test
-    fun c_verifyLiveViewToggleOnDisconnection_FMA_423() {
+    fun verifyLiveViewToggleOnDisconnection() {
         with(liveViewScreen) {
             mockUtils.disconnectCamera()
 
             switchLiveViewToggle()
             isDisconnectionAlertDisplayed()
+        }
+    }
+
+    /**
+     * Test case: https://safefleet.atlassian.net/browse/FMA-1767
+     */
+    @SmokeTest
+    @Test
+    fun verifyMainMenuIsNotDisplayedOnX1() {
+        with(mainMenuScreen) {
+            isMenuButtonNotContained()
         }
     }
 }

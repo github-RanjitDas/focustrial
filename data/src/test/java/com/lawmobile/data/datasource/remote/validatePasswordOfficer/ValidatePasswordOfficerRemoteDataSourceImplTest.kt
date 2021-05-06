@@ -1,32 +1,35 @@
 package com.lawmobile.data.datasource.remote.validatePasswordOfficer
 
-import com.lawmobile.data.InstantExecutorExtension
 import com.lawmobile.data.datasource.remote.validatePasswordOfficer.ValidatePasswordOfficerRemoteDataSourceImpl.Companion.ERROR_IN_INFORMATION_USER
-import com.safefleet.mobile.avml.cameras.entities.CameraConnectUserResponse
-import com.safefleet.mobile.avml.cameras.external.CameraConnectService
-import com.safefleet.mobile.commons.helpers.Result
-import io.mockk.*
+import com.lawmobile.data.utils.CameraServiceFactory
+import com.safefleet.mobile.external_hardware.cameras.CameraService
+import com.safefleet.mobile.external_hardware.cameras.entities.CameraUser
+import com.safefleet.mobile.kotlin_commons.helpers.Result
+import io.mockk.coEvery
+import io.mockk.every
+import io.mockk.mockk
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
-import org.junit.jupiter.api.extension.ExtendWith
 import java.lang.Exception
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@ExtendWith(InstantExecutorExtension::class)
 class ValidatePasswordOfficerRemoteDataSourceImplTest {
 
-    private val connectCameraUserResult = Result.Success(CameraConnectUserResponse("", "", ""))
-    private val cameraConnectService: CameraConnectService = mockk()
+    private val connectCameraUserResult = Result.Success(CameraUser("", "", ""))
+    private val cameraService: CameraService = mockk()
+    private val cameraServiceFactory: CameraServiceFactory = mockk {
+        every { create() } returns cameraService
+    }
 
     private val validatePasswordOfficerRemoteDataSourceImpl by lazy {
-        ValidatePasswordOfficerRemoteDataSourceImpl(cameraConnectService)
+        ValidatePasswordOfficerRemoteDataSourceImpl(cameraServiceFactory)
     }
 
     @Test
     fun testGetUserInformationFromDataSourceSuccess() {
-        coEvery { cameraConnectService.getUserResponse() } returns connectCameraUserResult
+        coEvery { cameraService.getUserResponse() } returns connectCameraUserResult
         runBlocking {
             Assert.assertEquals(
                 connectCameraUserResult,
@@ -37,7 +40,7 @@ class ValidatePasswordOfficerRemoteDataSourceImplTest {
 
     @Test
     fun testGetUserInformationFromDataSourceSuccessFailed() {
-        coEvery { cameraConnectService.getUserResponse() } throws Exception("")
+        coEvery { cameraService.getUserResponse() } throws Exception("")
         runBlocking {
             val responseError =
                 validatePasswordOfficerRemoteDataSourceImpl.getUserInformation() as Result.Error

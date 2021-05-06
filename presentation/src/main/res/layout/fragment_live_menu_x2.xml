@@ -1,0 +1,303 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/layoutMenu"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background_menu">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constrainInformationUser"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/whiteTransparentMenuHeader"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageButton
+            android:id="@+id/closeMenu"
+            android:layout_width="@dimen/menu_live_view_icon_close_size"
+            android:layout_height="@dimen/menu_live_view_icon_close_size"
+            android:background="@color/transparent"
+            android:contentDescription="@string/icon_close_menu"
+            android:src="@drawable/ic_cancel"
+            android:tint="@color/white"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="@dimen/menu_live_view_icon_user_size"
+            android:layout_height="@dimen/menu_live_view_icon_user_size"
+            android:layout_marginStart="@dimen/menu_live_view_icon_user_margin"
+            android:layout_marginTop="@dimen/menu_live_view_icon_user_margin"
+            android:layout_marginBottom="@dimen/menu_live_view_icon_user_margin"
+            android:contentDescription="@string/icon_user_menu"
+            android:src="@drawable/ic_user"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/textViewOfficerName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/menu_live_view_name_margin_start"
+            android:fontFamily="@font/roboto_bold"
+            android:paddingHorizontal="@dimen/app_bar_name_padding_horizontal"
+            android:text="@string/app_bar_name_default"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_h3"
+            app:layout_constraintStart_toEndOf="@+id/imageView2"
+            app:layout_constraintTop_toTopOf="@+id/imageView2" />
+
+        <TextView
+            android:id="@+id/textViewOfficerLastName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/roboto_regular"
+            android:paddingHorizontal="@dimen/app_bar_last_name_padding_horizontal"
+            android:text="@string/app_bar_last_name_default"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_size_14sp"
+            app:layout_constraintStart_toStartOf="@+id/textViewOfficerName"
+            app:layout_constraintTop_toBottomOf="@id/textViewOfficerName" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constrainLogout"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/menu_live_view_logout_section_height"
+        android:background="@color/whiteTransparentMenuHeader"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/viewLogout"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/no_dp"
+            android:gravity="center"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/margin_15dp"
+                android:fontFamily="@font/roboto_regular"
+                android:text="@string/live_view_menu_logout"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_size_14sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/imageButton"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/imageButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/margin_20dp"
+                android:contentDescription="@string/focus_mobile_app_logo_description"
+                android:src="@drawable/ic_logout"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <ScrollView
+        android:id="@+id/scrollViewMenu"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/no_dp"
+        app:layout_constraintBottom_toTopOf="@+id/constrainLogout"
+        app:layout_constraintTop_toBottomOf="@+id/constrainInformationUser">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/text_view_dashboard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/roboto_regular"
+                android:paddingStart="@dimen/menu_live_view_icon_user_margin"
+                android:paddingEnd="@dimen/no_dp"
+                android:paddingTop="@dimen/menu_live_view_item_navigation_margin"
+                android:paddingBottom="@dimen/menu_live_view_item_navigation_margin"
+                android:text="@string/live_view_menu_item_dashboard"
+                android:textColor="@color/white"
+                android:textSize="@dimen/menu_live_view_text_items_size"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <View
+                android:id="@+id/dividerViewDashboard"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/width_1dp"
+                android:background="@color/whiteTransparentMenuDivider"
+                app:layout_constraintTop_toBottomOf="@id/text_view_dashboard" />
+
+            <TextView
+                android:id="@+id/text_view_snapshots"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/roboto_regular"
+                android:paddingStart="@dimen/menu_live_view_icon_user_margin"
+                android:paddingEnd="@dimen/no_dp"
+                android:paddingTop="@dimen/menu_live_view_item_navigation_margin"
+                android:paddingBottom="@dimen/menu_live_view_item_navigation_margin"
+                android:text="@string/live_view_menu_item_view_snapshots"
+                android:textColor="@color/white"
+                android:textSize="@dimen/menu_live_view_text_items_size"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/dividerViewDashboard" />
+
+            <View
+                android:id="@+id/dividerViewSnapshots"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/width_1dp"
+                android:background="@color/whiteTransparentMenuDivider"
+                app:layout_constraintTop_toBottomOf="@id/text_view_snapshots" />
+
+            <TextView
+                android:id="@+id/text_view_videos"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/roboto_regular"
+                android:paddingStart="@dimen/menu_live_view_icon_user_margin"
+                android:paddingEnd="@dimen/no_dp"
+                android:paddingTop="@dimen/menu_live_view_item_navigation_margin"
+                android:paddingBottom="@dimen/menu_live_view_item_navigation_margin"
+                android:text="@string/live_view_menu_item_view_videos"
+                android:textColor="@color/white"
+                android:textSize="@dimen/menu_live_view_text_items_size"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/dividerViewSnapshots" />
+
+            <View
+                android:id="@+id/dividerViewVideos"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/width_1dp"
+                android:background="@color/whiteTransparentMenuDivider"
+                app:layout_constraintTop_toBottomOf="@id/text_view_videos" />
+
+            <TextView
+                android:visibility="gone"
+                android:id="@+id/text_view_settings"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/roboto_light"
+                android:paddingStart="@dimen/menu_live_view_icon_user_margin"
+                android:paddingEnd="@dimen/no_dp"
+                android:paddingTop="@dimen/menu_live_view_item_navigation_margin"
+                android:paddingBottom="@dimen/menu_live_view_item_navigation_margin"
+                android:text="@string/live_view_menu_item_bodyworn_settings"
+                android:textColor="@color/white"
+                android:textSize="@dimen/menu_live_view_text_items_size"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/dividerViewVideos" />
+
+            <View
+                android:visibility="gone"
+                android:id="@+id/dividerSettings"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/width_1dp"
+                android:background="@color/whiteTransparentMenuDivider"
+                app:layout_constraintTop_toBottomOf="@id/text_view_settings" />
+
+            <TextView
+                android:id="@+id/text_view_notification"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/roboto_regular"
+                android:paddingStart="@dimen/menu_live_view_icon_user_margin"
+                android:paddingEnd="@dimen/no_dp"
+                android:paddingTop="@dimen/menu_live_view_item_navigation_margin"
+                android:paddingBottom="@dimen/menu_live_view_item_navigation_margin"
+                android:text="@string/live_view_menu_item_notification"
+                android:textColor="@color/white"
+                android:textSize="@dimen/menu_live_view_text_items_size"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/dividerSettings" />
+
+            <TextView
+                android:visibility="gone"
+                android:id="@+id/textPendingNotification"
+                android:background="@drawable/background_notification_text"
+                android:layout_width="@dimen/menu_live_view_item_notification_size"
+                android:layout_height="@dimen/menu_live_view_item_notification_size"
+                android:layout_marginStart="@dimen/menu_live_view_item_notification_margin_start"
+                android:gravity="center"
+                android:fontFamily="@font/roboto_bold"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_size_14sp"
+                app:layout_constraintBottom_toBottomOf="@+id/text_view_notification"
+                app:layout_constraintStart_toStartOf="@+id/text_view_notification"
+                app:layout_constraintTop_toBottomOf="@+id/text_view_videos"
+                tools:text="3" />
+
+            <View
+                android:id="@+id/dividerNotifications"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/width_1dp"
+                android:background="@color/whiteTransparentMenuDivider"
+                app:layout_constraintTop_toBottomOf="@id/text_view_notification" />
+
+            <TextView
+                android:id="@+id/text_view_diagnose"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/roboto_regular"
+                android:paddingStart="@dimen/menu_live_view_icon_user_margin"
+                android:paddingEnd="@dimen/no_dp"
+                android:paddingTop="@dimen/menu_live_view_item_navigation_margin"
+                android:paddingBottom="@dimen/menu_live_view_item_navigation_margin"
+                android:text="@string/live_view_menu_item_diagnose"
+                android:textColor="@color/white"
+                android:textSize="@dimen/menu_live_view_text_items_size"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/dividerNotifications" />
+
+            <View
+                android:id="@+id/dividerDiagnose"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/width_1dp"
+                android:background="@color/whiteTransparentMenuDivider"
+                app:layout_constraintTop_toBottomOf="@id/text_view_diagnose" />
+
+            <TextView
+                android:id="@+id/text_view_help"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/roboto_regular"
+                android:paddingStart="@dimen/menu_live_view_icon_user_margin"
+                android:paddingEnd="@dimen/no_dp"
+                android:paddingTop="@dimen/menu_live_view_item_navigation_margin"
+                android:paddingBottom="@dimen/menu_live_view_item_navigation_margin"
+                android:text="@string/live_view_menu_item_help"
+                android:textColor="@color/white"
+                android:textSize="@dimen/menu_live_view_text_items_size"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/dividerDiagnose" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </ScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

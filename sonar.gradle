@@ -14,7 +14,6 @@ sonarqube {
         property "sonar.tests", "src/test/java"
         property "sonar.java.test.binaries", "build/intermediates/classes/debug"
 
-
         property "sonar.exclusions", [fileFilter]
         property "sonar.java.coveragePlugin", "jacoco"
         property "sonar.jacoco.reportPath", "${buildDir}/jacoco/testDebugUnitTest.exec"

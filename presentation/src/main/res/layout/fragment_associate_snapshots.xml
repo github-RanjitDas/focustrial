@@ -31,21 +31,21 @@
         app:layout_constraintStart_toEndOf="@id/buttonFilterAssociateImages"
         app:layout_constraintTop_toTopOf="@id/buttonFilterAssociateImages" />
 
-    <com.safefleet.mobile.commons.widgets.SafeFleetGridButton
+    <com.safefleet.mobile.safefleet_ui.widgets.SafeFleetGridButton
         android:id="@+id/buttonThumbnailListAssociate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/margin_30dp"
-        android:contentDescription="@string/focus_mobile_app_logo"
+        android:contentDescription="@string/focus_mobile_app_logo_description"
         app:layout_constraintEnd_toStartOf="@+id/buttonSimpleListAssociate"
         app:layout_constraintTop_toTopOf="@id/buttonFilterAssociateImages" />
 
-    <com.safefleet.mobile.commons.widgets.SafeFleetListButton
+    <com.safefleet.mobile.safefleet_ui.widgets.SafeFleetListButton
         android:id="@+id/buttonSimpleListAssociate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/margin_20dp"
-        android:contentDescription="@string/focus_mobile_app_logo"
+        android:contentDescription="@string/focus_mobile_app_logo_description"
         android:src="@drawable/ic_list_off"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/buttonFilterAssociateImages" />

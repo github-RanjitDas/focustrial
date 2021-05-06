@@ -1,9 +1,9 @@
 package com.lawmobile.data.datasource.remote.simpleList
 
-import com.safefleet.mobile.avml.cameras.entities.CameraConnectFileResponseWithErrors
-import com.safefleet.mobile.commons.helpers.Result
+import com.safefleet.mobile.external_hardware.cameras.entities.FileResponseWithErrors
+import com.safefleet.mobile.kotlin_commons.helpers.Result
 
 interface SimpleListRemoteDataSource {
-    suspend fun getSnapshotList(): Result<CameraConnectFileResponseWithErrors>
-    suspend fun getVideoList(): Result<CameraConnectFileResponseWithErrors>
+    suspend fun getSnapshotList(): Result<FileResponseWithErrors>
+    suspend fun getVideoList(): Result<FileResponseWithErrors>
 }

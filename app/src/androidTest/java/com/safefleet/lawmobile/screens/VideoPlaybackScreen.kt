@@ -2,40 +2,42 @@ package com.safefleet.lawmobile.screens
 
 import com.safefleet.lawmobile.R
 import com.safefleet.lawmobile.helpers.Alert
+import com.safefleet.lawmobile.helpers.CustomAssertionActions.waitUntil
 import com.safefleet.lawmobile.helpers.ToastMessage
-import com.safefleet.mobile.avml.cameras.entities.CameraConnectVideoMetadata
+import com.safefleet.mobile.external_hardware.cameras.entities.VideoInformation
 import com.schibsted.spain.barista.assertion.BaristaVisibilityAssertions.assertDisplayed
 import com.schibsted.spain.barista.assertion.BaristaVisibilityAssertions.assertNotDisplayed
 import com.schibsted.spain.barista.interaction.BaristaClickInteractions.clickOn
 import com.schibsted.spain.barista.interaction.BaristaEditTextInteractions.writeTo
-import com.schibsted.spain.barista.interaction.BaristaScrollInteractions
+import com.schibsted.spain.barista.interaction.BaristaScrollInteractions.safelyScrollTo
 
 class VideoPlaybackScreen : BaseScreen() {
 
     fun clickOnSave() = clickOn(R.id.saveButtonVideoPlayback)
-    fun clickOnBack() = clickOn(R.id.backArrowFileListAppBar)
-    fun clickOnAccept() = clickOn(R.string.accept)
+
+    fun clickOnBack() = clickOn(R.id.imageButtonBackArrow)
+
     fun clickOnAddSnapshots() = clickOn(R.id.buttonAssociateSnapshots)
 
-    fun selectEvent(data: CameraConnectVideoMetadata) {
+    fun selectEvent(data: VideoInformation) {
         clickOn(R.id.eventValue)
         data.metadata?.event?.name?.let { clickOn(it) }
     }
 
-    private fun selectGender(data: CameraConnectVideoMetadata) {
+    private fun selectGender(data: VideoInformation) {
         clickOn(R.id.genderValue)
         data.metadata?.gender?.let { clickOn(it) }
     }
 
-    private fun selectRace(data: CameraConnectVideoMetadata) {
+    private fun selectRace(data: VideoInformation) {
         clickOn(R.id.raceValue)
         data.metadata?.race?.let { clickOn(it) }
     }
 
-    fun typePartnerId(data: CameraConnectVideoMetadata) =
+    fun typePartnerId(data: VideoInformation) =
         data.officerId?.let { writeTo(R.id.partnerIdValue, it) }
 
-    fun fillAllFields(data: CameraConnectVideoMetadata) {
+    fun fillAllFields(data: VideoInformation) {
         selectEvent(data)
         selectGender(data)
         selectRace(data)
@@ -78,23 +80,25 @@ class VideoPlaybackScreen : BaseScreen() {
     fun isSavedSuccessDisplayed() =
         ToastMessage.isToastDisplayed(R.string.video_metadata_saved_success)
 
-    fun isEventMandatoryDisplayed() =
+    fun isEventMandatoryDisplayed() {
         ToastMessage.isToastDisplayed(R.string.event_mandatory)
+        waitUntil { ToastMessage.isToastNotDisplayed(R.string.event_mandatory) }
+    }
 
     fun isMetadataChangesAlertDisplayed() = Alert.isMetadataChangesDisplayed()
 
     fun isAddSnapshotsButtonDisplayed() {
-        BaristaScrollInteractions.safelyScrollTo(R.id.buttonAssociateSnapshots)
-        assertDisplayed(R.id.buttonAssociateSnapshots)
+        safelyScrollTo(R.id.buttonAssociateSnapshots)
+        waitUntil { assertDisplayed(R.id.buttonAssociateSnapshots) }
     }
 
     fun thereIsNoSnapshotAssociated() {
-        BaristaScrollInteractions.safelyScrollTo(R.id.layoutAssociatedSnapshots)
+        safelyScrollTo(R.id.layoutAssociatedSnapshots)
         assertNotDisplayed(R.id.layoutAssociatedSnapshots)
     }
 
     fun thereAreSnapshotsAssociated() {
-        BaristaScrollInteractions.safelyScrollTo(R.id.layoutAssociatedSnapshots)
+        safelyScrollTo(R.id.layoutAssociatedSnapshots)
         assertDisplayed(R.id.layoutAssociatedSnapshots)
     }
 }

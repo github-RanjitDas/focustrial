@@ -32,19 +32,19 @@
         </activity>
 
         <activity
-            android:name="com.lawmobile.presentation.ui.live.LiveActivity"
+            android:name="com.lawmobile.presentation.ui.live.x1.LiveX1Activity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"
+            tools:ignore="LockedOrientationActivity" />
+
+        <activity
+            android:name="com.lawmobile.presentation.ui.live.x2.LiveX2Activity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
             tools:ignore="LockedOrientationActivity" />
 
         <activity
             android:name="com.lawmobile.presentation.ui.videoPlayback.VideoPlaybackActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar"
-            tools:ignore="LockedOrientationActivity" />
-
-        <activity
-            android:name="com.lawmobile.presentation.ui.fileList.FileListActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
             tools:ignore="LockedOrientationActivity" />
@@ -58,8 +58,37 @@
         <activity
             android:name="com.lawmobile.presentation.ui.helpSection.HelpPageActivity"
             android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Translucent"
+            tools:ignore="LockedOrientationActivity" />
+
+        <activity
+            android:name="com.lawmobile.presentation.ui.notificationList.NotificationListActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
             tools:ignore="LockedOrientationActivity" />
+
+        <activity
+            android:name="com.lawmobile.presentation.ui.bodyWornDiagnosis.BodyWornDiagnosisActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"
+            tools:ignore="LockedOrientationActivity"
+            />
+
+        <activity android:name="com.lawmobile.presentation.ui.fileList.x1.FileListX1Activity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"
+            tools:ignore="LockedOrientationActivity"/>
+
+        <activity android:name="com.lawmobile.presentation.ui.fileList.x2.FileListX2Activity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"
+            tools:ignore="LockedOrientationActivity"/>
+
+        <service
+            android:name="com.lawmobile.presentation.security.IsolatedService"
+            android:enabled="true"
+            android:isolatedProcess="true"
+            android:process=":tmpService" />
 
     </application>
 

@@ -2,9 +2,15 @@ package com.safefleet.lawmobile.tests
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
+import androidx.test.filters.MediumTest
 import com.lawmobile.presentation.ui.login.LoginActivity
 import com.safefleet.lawmobile.R
-import com.safefleet.lawmobile.screens.*
+import com.safefleet.lawmobile.helpers.SmokeTest
+import com.safefleet.lawmobile.screens.FileListScreen
+import com.safefleet.lawmobile.screens.FilterDialogScreen
+import com.safefleet.lawmobile.screens.LiveViewScreen
+import com.safefleet.lawmobile.screens.LoginScreen
+import com.safefleet.lawmobile.screens.VideoPlaybackScreen
 import com.safefleet.lawmobile.testData.CameraFilesData
 import com.safefleet.lawmobile.testData.VideoPlaybackMetadata
 import org.junit.Before
@@ -17,9 +23,7 @@ class VideoListTest : EspressoStartActivityBaseTest<LoginActivity>(LoginActivity
     companion object {
         private val videoList = CameraFilesData.DEFAULT_VIDEO_LIST.value
         private val videosQuantity = videoList.items.size
-
         private val extraVideoList = CameraFilesData.EXTRA_VIDEO_LIST.value
-
         private val defaultMetadata = VideoPlaybackMetadata.DEFAULT_VIDEO_METADATA.value
 
         private val fileListScreen = FileListScreen()
@@ -38,8 +42,12 @@ class VideoListTest : EspressoStartActivityBaseTest<LoginActivity>(LoginActivity
         }
     }
 
+    /**
+     * Test case: https://safefleet.atlassian.net/browse/FMA-575
+     */
+    @MediumTest
     @Test
-    fun verifyNoVideosTaken_FMA_559() {
+    fun verifyNoVideosTaken() {
         setSimpleRecyclerView()
         mockUtils.clearVideosOnX1()
 
@@ -64,8 +72,11 @@ class VideoListTest : EspressoStartActivityBaseTest<LoginActivity>(LoginActivity
         )
     }
 
+    /**
+     * Test case: https://safefleet.atlassian.net/browse/FMA-1179
+     */
     @Test
-    fun verifyCheckboxWhenSnapshotsDontFit_FMA_560() {
+    fun verifyCheckboxWhenSnapshotsDontFit() {
         setSimpleRecyclerView()
         liveViewScreen.openVideoList()
 
@@ -99,8 +110,12 @@ class VideoListTest : EspressoStartActivityBaseTest<LoginActivity>(LoginActivity
         }
     }
 
+    /**
+     * Test case: https://safefleet.atlassian.net/browse/FMA-561
+     */
+    @SmokeTest
     @Test
-    fun verifyCheckboxFunctionality_FMA_561() {
+    fun verifyCheckboxFunctionality() {
         setSimpleRecyclerView()
         liveViewScreen.openVideoList()
 
@@ -134,8 +149,11 @@ class VideoListTest : EspressoStartActivityBaseTest<LoginActivity>(LoginActivity
         }
     }
 
+    /**
+     * Test case: https://safefleet.atlassian.net/browse/FMA-579
+     */
     @Test
-    fun verifyScrollWhenVideosDontFit_FMA_562() {
+    fun verifyScrollWhenVideosDontFit() {
         setSimpleRecyclerView()
         liveViewScreen.openVideoList()
 
@@ -148,8 +166,12 @@ class VideoListTest : EspressoStartActivityBaseTest<LoginActivity>(LoginActivity
         }
     }
 
+    /**
+     * Test case: https://safefleet.atlassian.net/browse/FMA-578
+     */
+    @SmokeTest
     @Test
-    fun verifyUpdatingVideosList_FMA_563() {
+    fun verifyUpdatingVideosList() {
         mockUtils.clearVideosOnX1()
         setSimpleRecyclerView()
         val takenVideos = extraVideoList.items.subList(0, 3)
@@ -157,6 +179,8 @@ class VideoListTest : EspressoStartActivityBaseTest<LoginActivity>(LoginActivity
         with(liveViewScreen) {
             openVideoList()
 
+            fileListScreen.isSelectVideosToAssociateDisplayed()
+            fileListScreen.isVideosListScreenDisplayed()
             fileListScreen.clickOnBack()
 
             isLiveViewDisplayed()
@@ -174,16 +198,22 @@ class VideoListTest : EspressoStartActivityBaseTest<LoginActivity>(LoginActivity
         fileListScreen.areFilesSortedByDate(takenVideos)
     }
 
+    /**
+     * Test case: https://safefleet.atlassian.net/browse/FMA-580
+     */
     @Test
-    fun verifyDisconnectionOpeningVideoList_FMA_566() {
+    fun verifyDisconnectionOpeningVideoList() {
         mockUtils.disconnectCamera()
 
         liveViewScreen.openVideoList()
         liveViewScreen.isDisconnectionAlertDisplayed()
     }
 
+    /**
+     * Test case: https://safefleet.atlassian.net/browse/FMA-580
+     */
     @Test
-    fun verifyDisconnectionGoingBackToLive_FMA_567() {
+    fun verifyDisconnectionGoingBackToLive() {
         liveViewScreen.openVideoList()
 
         mockUtils.disconnectCamera()
@@ -191,8 +221,12 @@ class VideoListTest : EspressoStartActivityBaseTest<LoginActivity>(LoginActivity
         fileListScreen.isDisconnectionAlertDisplayed()
     }
 
+    /**
+     * Test case: https://safefleet.atlassian.net/browse/FMA-1176
+     */
+    @SmokeTest
     @Test
-    fun associateVideoToPartner_FMA_1176() {
+    fun associateVideoToPartner() {
         setSimpleRecyclerView()
         liveViewScreen.openVideoList()
 
@@ -207,8 +241,11 @@ class VideoListTest : EspressoStartActivityBaseTest<LoginActivity>(LoginActivity
         }
     }
 
+    /**
+     * Test case: https://safefleet.atlassian.net/browse/FMA-1283
+     */
     @Test
-    fun filterVideos_FMA_1283() {
+    fun filterVideos() {
         liveViewScreen.openVideoList()
 
         with(fileListScreen) {

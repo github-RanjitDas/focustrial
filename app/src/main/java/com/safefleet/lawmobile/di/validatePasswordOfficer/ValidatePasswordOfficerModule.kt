@@ -3,16 +3,16 @@ package com.safefleet.lawmobile.di.validatePasswordOfficer
 import com.lawmobile.data.datasource.remote.validatePasswordOfficer.ValidatePasswordOfficerRemoteDataSource
 import com.lawmobile.data.datasource.remote.validatePasswordOfficer.ValidatePasswordOfficerRemoteDataSourceImpl
 import com.lawmobile.data.repository.validatePasswordOfficer.ValidatePasswordOfficerRepositoryImpl
+import com.lawmobile.data.utils.CameraServiceFactory
 import com.lawmobile.domain.repository.validatePasswordOfficer.ValidatePasswordOfficerRepository
 import com.lawmobile.domain.usecase.validatePasswordOfficer.ValidatePasswordOfficerUseCase
 import com.lawmobile.domain.usecase.validatePasswordOfficer.ValidatePasswordOfficerUseCaseImpl
-import com.safefleet.mobile.avml.cameras.external.CameraConnectService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.components.ApplicationComponent
+import dagger.hilt.components.SingletonComponent
 
-@InstallIn(ApplicationComponent::class)
+@InstallIn(SingletonComponent::class)
 @Module
 class ValidatePasswordOfficerModule {
 
@@ -20,9 +20,9 @@ class ValidatePasswordOfficerModule {
 
         @Provides
         fun provideValidatePasswordOfficerRemoteDataSource(
-            cameraConnectService: CameraConnectService
+            cameraService: CameraServiceFactory
         ): ValidatePasswordOfficerRemoteDataSource =
-            ValidatePasswordOfficerRemoteDataSourceImpl(cameraConnectService)
+            ValidatePasswordOfficerRemoteDataSourceImpl(cameraService)
 
         @Provides
         fun provideValidatePasswordOfficerRepository(
@@ -35,6 +35,5 @@ class ValidatePasswordOfficerModule {
         @Provides
         fun provideValidatePasswordOfficerUseCase(validatePasswordOfficerRepository: ValidatePasswordOfficerRepository): ValidatePasswordOfficerUseCase =
             ValidatePasswordOfficerUseCaseImpl(validatePasswordOfficerRepository)
-
     }
 }

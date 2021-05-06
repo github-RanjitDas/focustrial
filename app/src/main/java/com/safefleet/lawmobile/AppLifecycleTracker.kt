@@ -16,7 +16,7 @@ class AppLifecycleTracker : Application.ActivityLifecycleCallbacks {
     override fun onActivityStopped(activity: Activity) {
         numStarted--
         if (numStarted == 0) {
-            val  folderDirCache = activity.cacheDir
+            val folderDirCache = activity.cacheDir
             folderDirCache.listFiles()?.forEach {
                 it.delete()
             }
@@ -26,10 +26,19 @@ class AppLifecycleTracker : Application.ActivityLifecycleCallbacks {
         }
     }
 
-    override fun onActivityPaused(activity: Activity) {}
-    override fun onActivityDestroyed(activity: Activity) {}
-    override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) {}
-    override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {}
-    override fun onActivityResumed(activity: Activity) {}
-
+    override fun onActivityPaused(activity: Activity) {
+        // The interface required to implement this method but not necessary to override
+    }
+    override fun onActivityDestroyed(activity: Activity) {
+        // The interface required to implement this method but not necessary to override
+    }
+    override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) {
+        // The interface required to implement this method but not necessary to override
+    }
+    override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {
+        // The interface required to implement this method but not necessary to override
+    }
+    override fun onActivityResumed(activity: Activity) {
+        // The interface required to implement this method but not necessary to override
+    }
 }

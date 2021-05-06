@@ -13,7 +13,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@drawable/background_live_view_buttons"
-            android:contentDescription="@string/button_streaming" />
+            android:contentDescription="@string/button_record_description" />
 
         <ImageView
             android:id="@+id/imageViewCustomRecord"
@@ -23,7 +23,7 @@
             app:layout_constraintBottom_toTopOf="@id/guideline1"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:contentDescription="@string/button_streaming" />
+            android:contentDescription="@string/button_record_description" />
 
         <TextView
             android:id="@+id/textViewButtonRecord"

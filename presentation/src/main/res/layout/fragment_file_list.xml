@@ -4,15 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".ui.fileList.FileListActivity">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <TextView
         android:id="@+id/textViewDateAndTime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/margin_18dp"
-        android:drawableEnd="@drawable/ic_order"
         android:drawablePadding="@dimen/padding_10dp"
         android:text="@string/date_and_time"
         android:textColor="@color/black"
@@ -21,13 +19,12 @@
         android:paddingBottom="@dimen/margin_16dp"
         app:layout_constraintStart_toStartOf="@+id/dividerViewList"
         app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="UseCompatTextViewDrawableXml" />
+        app:drawableEndCompat="@drawable/ic_order" />
 
     <TextView
         android:id="@+id/textViewEvent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:drawableEnd="@drawable/ic_order"
         android:drawablePadding="@dimen/padding_10dp"
         android:text="@string/event"
         android:textColor="@color/black"
@@ -39,7 +36,7 @@
         app:layout_constraintHorizontal_bias="0.55"
         app:layout_constraintStart_toStartOf="@+id/guidelineFileList3"
         app:layout_constraintTop_toTopOf="@+id/textViewDateAndTime"
-        tools:ignore="UseCompatTextViewDrawableXml" />
+        app:drawableEndCompat="@drawable/ic_order" />
 
     <View
         android:id="@+id/dividerViewList"

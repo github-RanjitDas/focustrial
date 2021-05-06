@@ -1,5 +1,5 @@
 node('jenkins-builds-slave') {
-    def slackChannel = '#law-mobile-alerts'    
+    def slackChannel = '#law-mobile-alerts'
 
     try {
         library identifier: "${env.DEFAULT_SHARED_LIBS}",
@@ -11,11 +11,14 @@ node('jenkins-builds-slave') {
                   engineVersion: '2',
                   secretValues: [
                     [vaultKey: 'credential_google_x1', envVar: 'credential_google_x1'],
-                    [vaultKey: 'android_keystore', envVar: 'android_keystore']
-                  ]]
-         ]
+                    [vaultKey: 'android_keystore', envVar: 'android_keystore'],
+                    [vaultKey: 'keystore_alias', envVar: 'KEYSTORE_ALIAS'],
+                    [vaultKey: 'keystore_password', envVar: 'KEYSTORE_PASSWORD'],
+                    [vaultKey: 'firebase_testlab', envVar: 'firebase_testlab']
+                  ]
+        ]]
 
-         def imageDocker = "245255707803.dkr.ecr.us-east-1.amazonaws.com/android-sdk-seon:sdk29-gradle5.6.4-fastlane"
+        def imageDocker = "245255707803.dkr.ecr.us-east-1.amazonaws.com/android-sdk-seon:sdk29-gradle6.0.0-fastlane"
 
         stage('Checkout') {
             logger.stage()
@@ -25,6 +28,7 @@ node('jenkins-builds-slave') {
 
             slackUtils.notifyBuild('STARTED', slackChannel)
         }
+
         stage('Login to AWS') {
             logger.stage()
             timeout(5) {
@@ -33,6 +37,7 @@ node('jenkins-builds-slave') {
         }
 
         docker.image(imageDocker).inside('--user root') {
+
             stage('Clean builds'){
                 logger.stage()
                 timeout(5){
@@ -44,6 +49,13 @@ node('jenkins-builds-slave') {
                 logger.stage()
                 timeout(15) {
                     sh "./gradlew buildDebug --stacktrace"
+                }
+            }
+
+            stage('Kotlin format check') {
+                logger.stage()
+                timeout(5) {
+                    sh "./gradlew ktlint"
                 }
             }
 
@@ -89,10 +101,11 @@ node('jenkins-builds-slave') {
             }
 
             if(env.BRANCH_NAME == 'develop') {
-                stage('Generate APK'){
+                stage('Generate APKs for testing'){
                     logger.stage()
                     timeout(10){
                         sh "./gradlew assembleDebug --stacktrace"
+                        sh "./gradlew assembleDebugAndroidTest --stacktrace"
                     }
                 }
 
@@ -105,6 +118,32 @@ node('jenkins-builds-slave') {
                         }
                     }
                 }
+
+                stage('Sign APKs and run tests on firebase'){
+                    logger.stage()
+                    timeout(60){
+                        def pass = ""
+                        def alias = ""
+
+                        withVault(vaultSecrets: secrets) {
+                            sh """cat > $WORKSPACE/keystore.jks_64 <<  EOL\n$android_keystore\nEOL"""
+                            sh "base64 -d keystore.jks_64 > app/keystore.jks"
+                            sh """cat > $WORKSPACE/firebase_testlab.json_64 <<  EOL\n$firebase_testlab\nEOL"""
+                            sh "base64 -d firebase_testlab.json_64 > firebase_testlab.json"
+                            pass = "${env.KEYSTORE_PASSWORD}"
+                            alias = "${env.KEYSTORE_ALIAS}"
+                        }
+
+                        withEnv(["KEYSTORE_PASSWORD=$pass", "KEYSTORE_ALIAS=$alias"]) {
+                            sh "/home/user/android-sdk-linux/build-tools/28.0.3/apksigner sign --ks app/keystore.jks --ks-pass pass:$pass app/build/outputs/apk/debug/app-debug.apk"
+                            sh "/home/user/android-sdk-linux/build-tools/28.0.3/apksigner sign --ks app/keystore.jks --ks-pass pass:$pass app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk"
+                            sh "./gradlew bundleRelease --stacktrace"
+                            sh "gcloud auth activate-service-account --key-file=firebase_testlab.json"
+                            sh "gcloud config set project fma-analytics"
+                            sh "gcloud firebase test android run --timeout 20m --type instrumentation --app app/build/outputs/apk/debug/app-debug.apk --test app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk --device model=flame,version=29,locale=en,orientation=portrait --use-orchestrator --test-targets \"annotation com.safefleet.lawmobile.helpers.SmokeTest\""
+                        }
+                    }
+                }
             }
 
             if(env.BRANCH_NAME == 'master' || env.BRANCH_NAME.startsWith('release/')){
@@ -114,8 +153,8 @@ node('jenkins-builds-slave') {
                         withVault(vaultSecrets: secrets) {
                             sh """cat > $WORKSPACE/keystore.jks_64 <<  EOL\n$android_keystore\nEOL"""
                             sh "base64 -d keystore.jks_64 > app/keystore.jks"
+                            sh "./gradlew bundleRelease --stacktrace"
                         }
-                        sh "./gradlew bundleRelease --stacktrace"
                     }
                 }
 

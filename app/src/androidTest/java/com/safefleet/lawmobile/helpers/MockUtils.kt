@@ -1,11 +1,12 @@
 package com.safefleet.lawmobile.helpers
 
+import com.lawmobile.domain.enums.CameraType
 import com.lawmobile.presentation.utils.CameraHelper
-import com.safefleet.lawmobile.di.AppModule
 import com.safefleet.lawmobile.di.mocksServiceCameras.CameraConnectServiceX1Mock
 import com.safefleet.lawmobile.testData.CameraFilesData
-import com.safefleet.mobile.avml.cameras.entities.CameraConnectFileResponseWithErrors
-import com.safefleet.mobile.commons.helpers.Result
+import com.safefleet.lawmobile.testData.TestLoginData
+import com.safefleet.mobile.external_hardware.cameras.entities.FileResponseWithErrors
+import com.safefleet.mobile.kotlin_commons.helpers.Result
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkObject
@@ -13,12 +14,18 @@ import io.mockk.unmockkObject
 
 class MockUtils {
 
+    companion object {
+        var wifiEnabled = true
+        var cameraSSID = TestLoginData.SSID_X1.value
+        var bodyWornDiagnosisResult: Result<Boolean> = Result.Success(true)
+    }
+
     fun disconnectCamera() {
         val cameraHelperMock: CameraHelper = mockk {
             every { checkWithAlertIfTheCameraIsConnected() } returns false
         }
 
-        //Assign CameraHelper Mock to CameraHelper object in runtime
+        // Assign CameraHelper Mock to CameraHelper object in runtime
         mockkObject(CameraHelper)
         every { CameraHelper.getInstance() } returns cameraHelperMock
 
@@ -31,7 +38,7 @@ class MockUtils {
     }
 
     fun clearSnapshotsOnX1() {
-        CameraConnectServiceX1Mock.snapshotsList = CameraConnectFileResponseWithErrors()
+        CameraConnectServiceX1Mock.snapshotsList = FileResponseWithErrors()
         CameraConnectServiceX1Mock.takenPhotos = 0
     }
 
@@ -41,7 +48,7 @@ class MockUtils {
     }
 
     fun clearVideosOnX1() {
-        CameraConnectServiceX1Mock.videoList = CameraConnectFileResponseWithErrors()
+        CameraConnectServiceX1Mock.videoList = FileResponseWithErrors()
         CameraConnectServiceX1Mock.takenVideos = 0
     }
 
@@ -52,10 +59,22 @@ class MockUtils {
 
     fun turnWifiOff() {
 //      This function only works when used before launching an app Activity
-        AppModule.wifiEnabled = false
+        wifiEnabled = false
     }
 
     fun turnWifiOn() {
-        AppModule.wifiEnabled = true
+        wifiEnabled = true
+    }
+
+    fun setCameraType(cameraType: CameraType) {
+        if (cameraType == CameraType.X1) {
+            cameraSSID = TestLoginData.SSID_X1.value
+        } else {
+            cameraSSID = TestLoginData.SSID_X2.value
+        }
+    }
+
+    fun setBodyWornDiagnosisResult(result: Result<Boolean>) {
+        bodyWornDiagnosisResult = result
     }
 }

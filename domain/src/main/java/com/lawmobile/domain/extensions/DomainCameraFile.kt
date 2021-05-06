@@ -4,7 +4,7 @@ import com.lawmobile.domain.entities.DomainCameraFile
 
 fun DomainCameraFile.getCreationDate(): String {
     return try {
-        val year = date.substring(0,2) + nameFolder.substring(0, 2)
+        val year = date.substring(0, 2) + nameFolder.substring(0, 2)
         val month = nameFolder.substring(2, 4)
         val day = nameFolder.substring(4, 6)
 

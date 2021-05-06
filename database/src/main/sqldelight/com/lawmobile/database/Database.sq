@@ -1,0 +1,43 @@
+CREATE TABLE IF NOT EXISTS DbCameraEvent (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    eventType TEXT NOT NULL,
+    eventTag TEXT NOT NULL,
+    value TEXT,
+    date TEXT NOT NULL,
+    isRead INTEGER NOT NULL
+);
+
+getAllEvents:
+SELECT *
+FROM DbCameraEvent;
+
+getNotificationEvents:
+SELECT *
+FROM DbCameraEvent
+WHERE eventType = "Notification";
+
+getEventsCount:
+SELECT COUNT(*)
+FROM DbCameraEvent;
+
+getPendingNotificationsCount:
+SELECT COUNT(*)
+FROM DbCameraEvent
+WHERE eventType = "Notification" AND isRead = 0;
+
+saveEvent:
+INSERT INTO DbCameraEvent (name, eventType, eventTag, value, date, isRead)
+VALUES (:name, :eventType, :eventTag, :value, :date, :isRead);
+
+setAllNotificationsAsRead:
+UPDATE DbCameraEvent
+SET isRead = 1
+WHERE eventType = "Notification";
+
+deleteOutdatedEvents:
+DELETE FROM DbCameraEvent
+WHERE date < :date;
+
+clearAllEvents:
+DELETE FROM DbCameraEvent;

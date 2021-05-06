@@ -4,12 +4,12 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
 import com.lawmobile.presentation.ui.login.LoginActivity
 import com.safefleet.lawmobile.R
+import com.safefleet.lawmobile.helpers.SmokeTest
 import com.safefleet.lawmobile.screens.FileListScreen
 import com.safefleet.lawmobile.screens.LiveViewScreen
 import com.safefleet.lawmobile.screens.LoginScreen
 import com.safefleet.lawmobile.screens.VideoPlaybackScreen
 import com.safefleet.lawmobile.testData.VideoPlaybackMetadata
-import com.schibsted.spain.barista.interaction.BaristaSleepInteractions
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -39,8 +39,12 @@ class VideoPlaybackTest : EspressoStartActivityBaseTest<LoginActivity>(LoginActi
         }
     }
 
+    /**
+     * Test case: https://safefleet.atlassian.net/browse/FMA-722
+     */
+    @SmokeTest
     @Test
-    fun verifySaveVideoMetadataSuccess_FMA_722() {
+    fun verifySaveVideoMetadataSuccess() {
         liveViewScreen.openVideoList()
         fileListScreen.clickOnItemInPosition(3)
         with(videoPlaybackScreen) {
@@ -51,9 +55,12 @@ class VideoPlaybackTest : EspressoStartActivityBaseTest<LoginActivity>(LoginActi
         fileListScreen.checkFileEvent(defaultMetadata.metadata?.event?.name)
     }
 
+    /**
+     * Test case: https://safefleet.atlassian.net/browse/FMA-727
+     */
     @LargeTest
     @Test
-    fun verifyEventMandatory_FMA_727() {
+    fun verifyEventMandatory() {
         liveViewScreen.openVideoList()
         fileListScreen.clickOnItemInPosition(3)
         with(videoPlaybackScreen) {
@@ -66,8 +73,11 @@ class VideoPlaybackTest : EspressoStartActivityBaseTest<LoginActivity>(LoginActi
         }
     }
 
+    /**
+     * Test case: https://safefleet.atlassian.net/browse/FMA-728
+     */
     @Test
-    fun verifySaveWhenDisconnectionOnPlayback_FMA_728() {
+    fun verifySaveWhenDisconnectionOnPlayback() {
         liveViewScreen.openVideoList()
         fileListScreen.clickOnItemInPosition(3)
         with(videoPlaybackScreen) {
@@ -75,25 +85,29 @@ class VideoPlaybackTest : EspressoStartActivityBaseTest<LoginActivity>(LoginActi
             mockUtils.disconnectCamera()
             clickOnSave()
             isDisconnectionAlertDisplayed()
-            BaristaSleepInteractions.sleep(1000)
         }
     }
 
+    /**
+     * Test case: https://safefleet.atlassian.net/browse/FMA-729
+     */
     @Test
-    fun verifyCancelWhenDisconnectionOnPlayback_FMA_729() {
+    fun verifyCancelWhenDisconnectionOnPlayback() {
         liveViewScreen.openVideoList()
         fileListScreen.clickOnItemInPosition(3)
         with(videoPlaybackScreen) {
             mockUtils.disconnectCamera()
             clickOnBack()
             isDisconnectionAlertDisplayed()
-            BaristaSleepInteractions.sleep(1000)
         }
     }
 
+    /**
+     * Test case: https://safefleet.atlassian.net/browse/FMA-730
+     */
     @LargeTest
     @Test
-    fun verifySaveMetadataOnPlaybackWhenRecording_FMA_730() {
+    fun verifySaveMetadataOnPlaybackWhenRecording() {
         with(liveViewScreen) {
             startRecording()
             isRecordingInProgress()
@@ -107,14 +121,15 @@ class VideoPlaybackTest : EspressoStartActivityBaseTest<LoginActivity>(LoginActi
             }
             fileListScreen.clickOnBack()
             stopRecording()
-            BaristaSleepInteractions.sleep(1000)
-            isRecordingNotInProgress()
         }
     }
 
+    /**
+     * Test case: https://safefleet.atlassian.net/browse/FMA-725
+     */
     @LargeTest
     @Test
-    fun verifyCancelVideoMetadataOnPlayback_FMA_725() {
+    fun verifyCancelVideoMetadataOnPlayback() {
         liveViewScreen.openVideoList()
         fileListScreen.clickOnItemInPosition(3)
         with(videoPlaybackScreen) {
@@ -129,9 +144,12 @@ class VideoPlaybackTest : EspressoStartActivityBaseTest<LoginActivity>(LoginActi
         fileListScreen.isFileListDisplayed()
     }
 
+    /**
+     * Test case: https://safefleet.atlassian.net/browse/FMA-723
+     */
     @LargeTest
     @Test
-    fun updateVideoMetadataOnPlayback_FMA_723() {
+    fun updateVideoMetadataOnPlayback() {
         liveViewScreen.openVideoList()
         fileListScreen.clickOnItemInPosition(3)
         with(videoPlaybackScreen) {
@@ -147,5 +165,4 @@ class VideoPlaybackTest : EspressoStartActivityBaseTest<LoginActivity>(LoginActi
             fileListScreen.checkFileEvent(extraMetadata.metadata?.event?.name)
         }
     }
-
 }

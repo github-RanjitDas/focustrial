@@ -3,7 +3,7 @@ package com.lawmobile.presentation.ui.snapshotDetail
 import com.lawmobile.domain.entities.DomainCameraFile
 import com.lawmobile.domain.usecase.snapshotDetail.SnapshotDetailUseCase
 import com.lawmobile.presentation.InstantExecutorExtension
-import com.safefleet.mobile.commons.helpers.Result
+import com.safefleet.mobile.kotlin_commons.helpers.Result
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk

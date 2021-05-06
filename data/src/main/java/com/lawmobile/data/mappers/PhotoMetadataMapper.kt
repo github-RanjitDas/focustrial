@@ -2,10 +2,10 @@ package com.lawmobile.data.mappers
 
 import com.lawmobile.domain.entities.DomainMetadata
 import com.lawmobile.domain.entities.DomainPhotoMetadata
-import com.safefleet.mobile.avml.cameras.entities.CameraConnectPhotoMetadata
+import com.safefleet.mobile.external_hardware.cameras.entities.PhotoInformation
 
 object PhotoMetadataMapper {
-    fun cameraToDomain(cameraConnectPhotoMetadata: CameraConnectPhotoMetadata) =
+    fun cameraToDomain(cameraConnectPhotoMetadata: PhotoInformation) =
         cameraConnectPhotoMetadata.run {
             DomainPhotoMetadata(
                 fileName,

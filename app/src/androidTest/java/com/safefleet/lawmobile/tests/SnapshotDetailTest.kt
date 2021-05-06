@@ -4,6 +4,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
 import com.lawmobile.presentation.ui.login.LoginActivity
 import com.safefleet.lawmobile.R
+import com.safefleet.lawmobile.helpers.CustomAssertionActions
 import com.safefleet.lawmobile.screens.FileListScreen
 import com.safefleet.lawmobile.screens.LiveViewScreen
 import com.safefleet.lawmobile.screens.LoginScreen
@@ -32,16 +33,24 @@ class SnapshotDetailTest : EspressoStartActivityBaseTest<LoginActivity>(LoginAct
         fileListScreen.recyclerView = R.id.fileListRecycler
     }
 
+    /**
+     * Test case: https://safefleet.atlassian.net/browse/FMA-835
+     */
     @Test
-    fun openSnapshotDetailDisconnectionX1_FMA_835() {
+    fun openSnapshotDetailDisconnectionX1() {
         liveViewScreen.openSnapshotList()
         mockUtils.disconnectCamera()
         fileListScreen.clickOnItemInPosition(3)
-        fileListScreen.isDisconnectionAlertDisplayed()
+        CustomAssertionActions.waitUntil {
+            fileListScreen.isDisconnectionAlertDisplayed()
+        }
     }
 
+    /**
+     * Test case: https://safefleet.atlassian.net/browse/FMA-836
+     */
     @Test
-    fun backFromSnapshotDetailDisconnectionX1_FMA_836() {
+    fun backFromSnapshotDetailDisconnectionX1() {
         liveViewScreen.openSnapshotList()
         fileListScreen.clickOnItemInPosition(3)
         mockUtils.disconnectCamera()

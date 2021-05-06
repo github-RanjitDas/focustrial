@@ -17,5 +17,4 @@ object ImageFilesPathManager {
     fun getImageIfExist(name: String): ImageWithPathSaved? {
         return filesPathSavedImages.firstOrNull { it.name == name }
     }
-
 }

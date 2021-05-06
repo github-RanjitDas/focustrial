@@ -4,14 +4,15 @@ import com.lawmobile.data.datasource.remote.validatePasswordOfficer.ValidatePass
 import com.lawmobile.data.mappers.UserMapper
 import com.lawmobile.domain.entities.DomainUser
 import com.lawmobile.domain.repository.validatePasswordOfficer.ValidatePasswordOfficerRepository
-import com.safefleet.mobile.commons.helpers.Result
+import com.safefleet.mobile.kotlin_commons.helpers.Result
 
 class ValidatePasswordOfficerRepositoryImpl(
     private val validatePasswordOfficerRemoteDataSource: ValidatePasswordOfficerRemoteDataSource
 ) : ValidatePasswordOfficerRepository {
     override suspend fun getUserInformation(): Result<DomainUser> {
-        return when (val cameraUser = validatePasswordOfficerRemoteDataSource.getUserInformation()
-            ) {
+        return when (
+            val cameraUser = validatePasswordOfficerRemoteDataSource.getUserInformation()
+        ) {
             is Result.Success -> {
                 val user = UserMapper.cameraToDomain(cameraUser.data)
                 Result.Success(user)

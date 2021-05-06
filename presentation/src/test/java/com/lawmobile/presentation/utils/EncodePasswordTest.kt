@@ -1,12 +1,16 @@
 package com.lawmobile.presentation.utils
 
 import android.util.Base64
-import io.mockk.*
+import io.mockk.Runs
+import io.mockk.every
+import io.mockk.just
+import io.mockk.mockk
+import io.mockk.mockkStatic
+import io.mockk.verify
 import org.junit.Assert
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import java.security.MessageDigest
-
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class EncodePasswordTest {
@@ -25,7 +29,6 @@ class EncodePasswordTest {
         val encodePassword = EncodePassword.encodePasswordOfficer(PASSWORD_ENCRYPTED)
         verify { mdDigest.update(PASSWORD_ENCRYPTED.toByteArray()) }
         Assert.assertEquals(PASSWORD_DECRYPTED, encodePassword)
-
     }
 
     @Test

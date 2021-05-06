@@ -1,3 +1,4 @@
+include ':database'
 rootProject.name='LawMobile'
 include ':app'
 include ':data'

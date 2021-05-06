@@ -1,5 +1,18 @@
 # focus-mobile-android-v3
 
+## Pre-commit format verification
+To enable the ktlint check pre-commit make sure to run build before commiting any changes to install it automatically.
+If there are any format issues your commit will fail and show what files have errors in formatting.
+After all files format is correct the commit should succeed.
+
+### Auto format files
+To make ktlint do the format for you, use the Android Studio "Gradle" tab, go to project "Tasks" folder, then go to "formatting" and run the task "ktlintFormat".
+Or write and run the following command in the Android Studio Terminal tab:
+
+    gradlew ktlintFormat
+
+And it will format all the files, but there are some exceptions that cannot be auto-formatted and you have to do it manually.
+
 ## Create mutation and coverage reports for SonarQube
 To ensure the quality of the project you must run the following gradle tasks before create a Pull Request:
 

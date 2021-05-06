@@ -1,22 +1,22 @@
 package com.lawmobile.data.repository.fileList
 
 import com.lawmobile.data.datasource.remote.fileList.FileListRemoteDataSource
-import com.lawmobile.data.entities.FileList
-import com.lawmobile.data.entities.RemoteVideoMetadata
-import com.lawmobile.data.entities.VideoListMetadata
 import com.lawmobile.data.mappers.FileMapper
 import com.lawmobile.data.mappers.PhotoMetadataMapper
 import com.lawmobile.data.mappers.VideoMetadataMapper
 import com.lawmobile.domain.entities.CameraInfo
 import com.lawmobile.domain.entities.DomainCameraFile
 import com.lawmobile.domain.entities.DomainInformationImageMetadata
+import com.lawmobile.domain.entities.FileList
+import com.lawmobile.domain.entities.RemoteVideoMetadata
+import com.lawmobile.domain.entities.VideoListMetadata
 import com.lawmobile.domain.repository.fileList.FileListRepository
-import com.safefleet.mobile.avml.cameras.entities.CameraConnectPhotoMetadata
-import com.safefleet.mobile.avml.cameras.entities.CameraConnectVideoMetadata
-import com.safefleet.mobile.avml.cameras.entities.PhotoMetadata
-import com.safefleet.mobile.avml.cameras.entities.VideoMetadata
-import com.safefleet.mobile.commons.helpers.Result
-import com.safefleet.mobile.commons.helpers.doIfSuccess
+import com.safefleet.mobile.external_hardware.cameras.entities.PhotoInformation
+import com.safefleet.mobile.external_hardware.cameras.entities.PhotoMetadata
+import com.safefleet.mobile.external_hardware.cameras.entities.VideoInformation
+import com.safefleet.mobile.external_hardware.cameras.entities.VideoMetadata
+import com.safefleet.mobile.kotlin_commons.extensions.doIfSuccess
+import com.safefleet.mobile.kotlin_commons.helpers.Result
 import kotlinx.coroutines.delay
 
 class FileListRepositoryImpl(private val fileListRemoteDataSource: FileListRemoteDataSource) :
@@ -30,33 +30,33 @@ class FileListRepositoryImpl(private val fileListRemoteDataSource: FileListRemot
         val errorsInFiles = ArrayList<String>()
 
         cameraConnectFileList.forEach {
-            val cameraConnectVideoMetadata: CameraConnectVideoMetadata?
+            val videoInformation: VideoInformation?
             val remoteVideoMetadata = VideoListMetadata.getVideoMetadata(it.name)?.videoMetadata
 
             if (remoteVideoMetadata?.metadata != null) {
                 remoteVideoMetadata.metadata!!.partnerID = partnerID
                 remoteVideoMetadata.nameFolder = it.nameFolder
-                cameraConnectVideoMetadata = VideoMetadataMapper.domainToCamera(remoteVideoMetadata)
+                videoInformation = VideoMetadataMapper.domainToCamera(remoteVideoMetadata)
             } else {
                 val partnerMetadata = VideoMetadata(partnerID = partnerID)
-                cameraConnectVideoMetadata = CameraConnectVideoMetadata(
+                videoInformation = VideoInformation(
                     fileName = it.name,
                     officerId = CameraInfo.officerId,
                     x1sn = CameraInfo.serialNumber,
-                    path = it.path,
+                    path = remoteVideoMetadata?.path ?: it.path,
                     metadata = partnerMetadata,
                     nameFolder = it.nameFolder
                 )
             }
 
             delay(200)
-            val result = fileListRemoteDataSource.savePartnerIdVideos(cameraConnectVideoMetadata)
+            val result = fileListRemoteDataSource.savePartnerIdVideos(videoInformation)
             if (result is Result.Error) {
                 errorsInFiles.add(it.name)
             } else {
                 VideoListMetadata.saveOrUpdateVideoMetadata(
                     RemoteVideoMetadata(
-                        VideoMetadataMapper.cameraToDomain(cameraConnectVideoMetadata),
+                        VideoMetadataMapper.cameraToDomain(videoInformation),
                         true
                     )
                 )
@@ -71,8 +71,8 @@ class FileListRepositoryImpl(private val fileListRemoteDataSource: FileListRemot
         partnerID: String
     ): Result<Unit> {
         val cameraConnectFileList = FileMapper.domainToCameraList(domainFileList)
-        val itemsFinal = mutableListOf<CameraConnectPhotoMetadata>()
-        val listPhotosSaved = ArrayList<CameraConnectPhotoMetadata>()
+        val itemsFinal = mutableListOf<PhotoInformation>()
+        val listPhotosSaved = ArrayList<PhotoInformation>()
         val resultGetMetadataOfPhotos = fileListRemoteDataSource.getSavedPhotosMetadata()
 
         if (resultGetMetadataOfPhotos is Result.Error) {
@@ -86,7 +86,7 @@ class FileListRepositoryImpl(private val fileListRemoteDataSource: FileListRemot
         cameraConnectFileList.forEach { fileItem ->
             itemsFinal.removeAll { it.fileName == fileItem.name }
             val partnerMetadata = PhotoMetadata(partnerID = partnerID)
-            val cameraPhotoMetadata = CameraConnectPhotoMetadata(
+            val cameraPhotoMetadata = PhotoInformation(
                 fileName = fileItem.name,
                 officerId = CameraInfo.officerId,
                 path = fileItem.path,

@@ -1,34 +1,36 @@
 package com.lawmobile.presentation.ui.login
 
 import android.Manifest
-import android.content.Intent
 import android.graphics.drawable.AnimatedVectorDrawable
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.cardview.widget.CardView
 import androidx.core.view.isVisible
-import androidx.lifecycle.Observer
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.lawmobile.domain.entities.CameraInfo
 import com.lawmobile.presentation.R
+import com.lawmobile.presentation.databinding.ActivityLoginBinding
 import com.lawmobile.presentation.extensions.attachFragmentWithAnimation
+import com.lawmobile.presentation.extensions.getIntentDependsCameraType
 import com.lawmobile.presentation.extensions.isAnimationsEnabled
 import com.lawmobile.presentation.extensions.showErrorSnackBar
 import com.lawmobile.presentation.extensions.verifyForAskingPermission
 import com.lawmobile.presentation.ui.base.BaseActivity
-import com.lawmobile.presentation.ui.live.LiveActivity
+import com.lawmobile.presentation.ui.live.x1.LiveX1Activity
+import com.lawmobile.presentation.ui.live.x2.LiveX2Activity
 import com.lawmobile.presentation.ui.login.pairingPhoneWithCamera.PairingResultFragment
 import com.lawmobile.presentation.ui.login.pairingPhoneWithCamera.StartPairingFragment
 import com.lawmobile.presentation.ui.login.validateOfficerPassword.ValidateOfficerPasswordFragment
 import com.lawmobile.presentation.utils.EspressoIdlingResource
-import kotlinx.android.synthetic.main.activity_login.*
-import kotlinx.android.synthetic.main.bottom_sheet_instructions_connect_camera.*
 
 class LoginActivity : BaseActivity() {
+
+    private lateinit var activityLoginBinding: ActivityLoginBinding
 
     private val loginActivityViewModel: LoginActivityViewModel by viewModels()
     val sheetBehavior: BottomSheetBehavior<CardView> by lazy {
         BottomSheetBehavior.from(
-            bottomSheetInstructions
+            activityLoginBinding.bottomSheetInstructions.bottomSheetInstructions
         )
     }
 
@@ -39,7 +41,7 @@ class LoginActivity : BaseActivity() {
     private val validateSuccessPasswordOfficer: (isSuccess: Boolean) -> Unit = {
         if (it) startLiveViewActivity()
         else {
-            fragmentContainer.showErrorSnackBar(getString(R.string.incorrect_password))
+            activityLoginBinding.fragmentContainer.showErrorSnackBar(getString(R.string.incorrect_password))
             EspressoIdlingResource.decrement()
         }
     }
@@ -49,7 +51,8 @@ class LoginActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_login)
+        activityLoginBinding = ActivityLoginBinding.inflate(layoutInflater)
+        setContentView(activityLoginBinding.root)
         overridePendingTransition(0, R.anim.fade_out)
         configureBottomSheet()
         startAnimation()
@@ -58,41 +61,45 @@ class LoginActivity : BaseActivity() {
     private fun configureBottomSheet() {
         sheetBehavior.isDraggable = false
         sheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
-        buttonDismissInstructions.setOnClickListener {
+        activityLoginBinding.bottomSheetInstructions.buttonDismissInstructions.setOnClickListener {
             sheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
         }
-        buttonCloseInstructions.setOnClickListener {
+        activityLoginBinding.bottomSheetInstructions.buttonCloseInstructions.setOnClickListener {
             sheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
         }
     }
 
     private fun startAnimation() {
         if (isAnimationsEnabled()) {
-            imageViewFMALogoNoAnimation.isVisible = false
-            (imageViewFMALogo.drawable as AnimatedVectorDrawable).start()
+            activityLoginBinding.imageViewFMALogoNoAnimation.isVisible = false
+            (activityLoginBinding.imageViewFMALogo.drawable as AnimatedVectorDrawable).start()
             loginActivityViewModel.waitToFinish(ANIMATION_DURATION)
             loginActivityViewModel.isWaitFinishedLiveData.observe(
-                this,
-                Observer(::showLoginViews)
-            )
+                this
+            ) {
+                it.getContentIfNotHandled()?.run {
+                    showLoginViews(this)
+                }
+            }
         } else {
-            imageViewFMALogoNoAnimation.isVisible = true
-            imageViewFMALogo.isVisible = false
+            activityLoginBinding.imageViewFMALogoNoAnimation.isVisible = true
+            activityLoginBinding.imageViewFMALogo.isVisible = false
             showLoginViews(true)
         }
     }
 
     private fun showLoginViews(isFinished: Boolean) {
         if (isFinished) {
-            imageViewSafeFleetFooterLogo.isVisible = true
+            activityLoginBinding.imageViewSafeFleetFooterLogo.isVisible = true
             showFragmentPairingCamera()
             verifyLocationPermission()
         }
     }
 
     private fun startLiveViewActivity() {
-        val liveActivityIntent = Intent(this, LiveActivity::class.java)
-        startActivity(liveActivityIntent)
+        CameraInfo.isOfficerLogged = true
+        val intent = getIntentDependsCameraType(LiveX1Activity(), LiveX2Activity())
+        startActivity(intent)
         finish()
     }
 
@@ -121,7 +128,7 @@ class LoginActivity : BaseActivity() {
             containerId = R.id.fragmentContainer,
             fragment = ValidateOfficerPasswordFragment.createInstance(validateSuccessPasswordOfficer),
             tag = ValidateOfficerPasswordFragment.TAG,
-            animationIn = R.anim.slide_in_right,
+            animationIn = R.anim.slide_and_fade_in_right,
             animationOut = 0
         )
     }
@@ -135,15 +142,16 @@ class LoginActivity : BaseActivity() {
 
     override fun onStop() {
         super.onStop()
-        imageViewFMALogo.isVisible = false
-        imageViewFMALogoNoAnimation.isVisible = true
-        imageViewSafeFleetFooterLogo.isVisible = true
+        activityLoginBinding.imageViewFMALogo.isVisible = false
+        activityLoginBinding.imageViewFMALogoNoAnimation.isVisible = true
+        activityLoginBinding.imageViewSafeFleetFooterLogo.isVisible = true
     }
 
-    override fun onBackPressed() {}
+    override fun onBackPressed() {
+        // This method is implemented to invalidate the behaviour of back button on the phones
+    }
 
     companion object {
         private const val ANIMATION_DURATION = 2000L
     }
-
 }
