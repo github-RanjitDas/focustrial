@@ -18,6 +18,8 @@ class MockUtils {
         var wifiEnabled = true
         var cameraSSID = TestLoginData.SSID_X1.value
         var bodyWornDiagnosisResult: Result<Boolean> = Result.Success(true)
+        var progressBatteryCamera: Result<Int> = Result.Success(90)
+        var cameraConnectServiceX1Mock = CameraConnectServiceX1Mock()
     }
 
     fun disconnectCamera() {
@@ -76,5 +78,9 @@ class MockUtils {
 
     fun setBodyWornDiagnosisResult(result: Result<Boolean>) {
         bodyWornDiagnosisResult = result
+    }
+
+    fun setBatteryProgressCamera(progress: Int) {
+        progressBatteryCamera = Result.Success(progress)
     }
 }
