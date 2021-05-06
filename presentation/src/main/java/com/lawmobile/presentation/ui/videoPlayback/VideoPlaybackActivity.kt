@@ -20,6 +20,7 @@ import com.lawmobile.domain.entities.DomainCameraFile
 import com.lawmobile.domain.entities.DomainInformationVideo
 import com.lawmobile.domain.entities.DomainMetadata
 import com.lawmobile.domain.entities.DomainVideoMetadata
+import com.lawmobile.domain.entities.MetadataEvent
 import com.lawmobile.domain.extensions.getCreationDate
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.databinding.ActivityVideoPlaybackBinding
@@ -561,7 +562,9 @@ class VideoPlaybackActivity : BaseActivity() {
             val newMetadata = getNewMetadataFromForm().metadata
             val oldMetadata = currentMetadata.metadata
                 ?: return newMetadata?.run {
-                    event != null ||
+                    !event?.id.isNullOrEmpty() ||
+                        !event?.name.isNullOrEmpty() ||
+                        !event?.type.isNullOrEmpty() ||
                         !partnerID.isNullOrEmpty() ||
                         !ticketNumber.isNullOrEmpty() ||
                         !ticketNumber2.isNullOrEmpty() ||
@@ -596,7 +599,7 @@ class VideoPlaybackActivity : BaseActivity() {
                         fromJson.licensePlate != fromForm.licensePlate ||
                         fromJson.gender != fromForm.gender ||
                         fromJson.race != fromForm.race ||
-                        currentMetadata.associatedPhotos != SnapshotsAssociatedByUser.value
+                        currentMetadata.associatedPhotos ?: emptyList() != SnapshotsAssociatedByUser.value
                 } ?: false
             }
         }
@@ -609,7 +612,7 @@ class VideoPlaybackActivity : BaseActivity() {
         val event =
             if (binding.eventValue.selectedItemPosition != 0)
                 CameraInfo.metadataEvents[binding.eventValue.selectedItemPosition - 1]
-            else null
+            else MetadataEvent("", "", "")
 
         if (binding.genderValue.selectedItem != genderList[0]) {
             gender = binding.genderValue.selectedItem.toString()
