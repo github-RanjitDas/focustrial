@@ -13,12 +13,13 @@ import com.safefleet.mobile.external_hardware.cameras.entities.CameraFile
 import com.schibsted.spain.barista.assertion.BaristaImageViewAssertions.assertHasDrawable
 import com.schibsted.spain.barista.assertion.BaristaListAssertions.assertCustomAssertionAtPosition
 import com.schibsted.spain.barista.assertion.BaristaListAssertions.assertDisplayedAtPosition
-import com.schibsted.spain.barista.assertion.BaristaRecyclerViewAssertions
+import com.schibsted.spain.barista.assertion.BaristaRecyclerViewAssertions.assertRecyclerViewItemCount
 import com.schibsted.spain.barista.assertion.BaristaVisibilityAssertions.assertDisplayed
 import com.schibsted.spain.barista.assertion.BaristaVisibilityAssertions.assertNotDisplayed
 import com.schibsted.spain.barista.interaction.BaristaClickInteractions.clickOn
 import com.schibsted.spain.barista.interaction.BaristaEditTextInteractions.writeTo
 import com.schibsted.spain.barista.interaction.BaristaListInteractions
+import com.schibsted.spain.barista.interaction.BaristaListInteractions.clickListItem
 
 class FileListScreen : BaseScreen() {
 
@@ -46,7 +47,7 @@ class FileListScreen : BaseScreen() {
     fun clickOnBack() = clickOn(R.id.imageButtonBackArrow)
 
     fun clickOnItemInPosition(position: Int) =
-        BaristaListInteractions.clickListItem(recyclerView, position)
+        waitUntil { clickListItem(recyclerView, position) }
 
     fun clickOnSelectFilesToAssociate() = clickOn(R.id.buttonSelectToAssociate)
 
@@ -76,7 +77,7 @@ class FileListScreen : BaseScreen() {
     fun checkFileEvent(event: String?) = event?.let { assertDisplayed(it) }
 
     fun matchItemsCount(count: Int) =
-        BaristaRecyclerViewAssertions.assertRecyclerViewItemCount(recyclerView, count)
+        waitUntil { assertRecyclerViewItemCount(recyclerView, count) }
 
     fun areCheckboxesUnselected(startPosition: Int, endPosition: Int) {
         for (position in (startPosition..endPosition)) {
@@ -97,7 +98,7 @@ class FileListScreen : BaseScreen() {
         val sortedFilesList = filesList.sortedByDescending { it.getCreationDate() }
 
         for ((itemCount, file) in sortedFilesList.withIndex()) {
-            isFileDisplayedAtPosition(file.getCreationDate(), itemCount)
+            waitUntil { isFileDisplayedAtPosition(file.getCreationDate(), itemCount) }
         }
     }
 
