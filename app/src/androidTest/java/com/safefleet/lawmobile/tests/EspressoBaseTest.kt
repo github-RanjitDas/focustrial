@@ -5,7 +5,7 @@ import androidx.test.filters.LargeTest
 import androidx.test.filters.Suppress
 import androidx.test.rule.GrantPermissionRule
 import com.lawmobile.domain.enums.CameraType
-import com.safefleet.lawmobile.di.mocksServiceCameras.CameraConnectServiceX1Mock
+import com.safefleet.lawmobile.di.mocksServiceCameras.CameraConnectServiceMock
 import com.safefleet.lawmobile.helpers.MockUtils
 import org.junit.After
 import org.junit.Rule
@@ -31,8 +31,8 @@ open class EspressoBaseTest {
         mockUtils.restoreSnapshotsOnX1()
         mockUtils.restoreVideosOnX1()
         mockUtils.turnWifiOn()
-        CameraConnectServiceX1Mock.takenPhotos = 0
-        CameraConnectServiceX1Mock.takenVideos = 0
+        CameraConnectServiceMock.takenPhotos = 0
+        CameraConnectServiceMock.takenVideos = 0
         mockUtils.setCameraType(CameraType.X1)
     }
 }

@@ -4,7 +4,8 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
 import com.lawmobile.domain.enums.CameraType
 import com.lawmobile.presentation.ui.login.LoginActivity
-import com.safefleet.lawmobile.di.mocksServiceCameras.CameraConnectServiceX1Mock
+import com.safefleet.lawmobile.di.mocksServiceCameras.CameraConnectServiceMock
+import com.safefleet.lawmobile.helpers.CustomAssertionActions.waitUntil
 import com.safefleet.lawmobile.helpers.MockUtils
 import com.safefleet.lawmobile.screens.LoginScreen
 import com.safefleet.lawmobile.screens.NotificationViewScreen
@@ -88,10 +89,13 @@ class SystemNotificationTest : EspressoBaseTest() {
      */
     @Test
     fun verifyCorrectNotificationNumberIsShown() {
-        CameraConnectServiceX1Mock.eventList = CameraEventsData.LOG_EVENT_LIST.value
+        CameraConnectServiceMock.eventList = CameraEventsData.LOG_EVENT_LIST.value
         with(notificationViewScreen) {
             isPendingNotificationDisplayed()
-            isCorrectNumberOfPendingNotificationDisplayed("4")
+            val notificationCount = CameraEventsData.LOG_EVENT_LIST.value.size.toString()
+            waitUntil {
+                isCorrectNumberOfPendingNotificationDisplayed(notificationCount)
+            }
         }
     }
 }
