@@ -7,10 +7,12 @@ import com.lawmobile.presentation.ui.login.LoginActivity
 import com.safefleet.lawmobile.di.mocksServiceCameras.CameraConnectServiceMock
 import com.safefleet.lawmobile.helpers.CustomAssertionActions.waitUntil
 import com.safefleet.lawmobile.helpers.MockUtils
+import com.safefleet.lawmobile.screens.LiveViewScreen
 import com.safefleet.lawmobile.screens.LoginScreen
 import com.safefleet.lawmobile.screens.NotificationViewScreen
 import com.safefleet.lawmobile.testData.CameraEventsData
 import com.safefleet.mobile.external_hardware.cameras.entities.NotificationResponse
+import com.schibsted.spain.barista.interaction.BaristaSleepInteractions.sleep
 import com.schibsted.spain.barista.rule.BaristaRule
 import org.junit.Before
 import org.junit.Rule
@@ -22,6 +24,7 @@ import org.junit.runner.RunWith
 class SystemNotificationTest : EspressoBaseTest() {
 
     private val notificationViewScreen = NotificationViewScreen()
+    private val liveViewScreen = LiveViewScreen()
 
     @get:Rule
     var baristaRule = BaristaRule.create(LoginActivity::class.java)
@@ -82,6 +85,72 @@ class SystemNotificationTest : EspressoBaseTest() {
             isInfoIconDisplayed()
             isLowBatteryNotificationDisplayed()
         }
+    }
+
+    /**
+     * Test case: https://safefleet.atlassian.net/browse/FMA-2143
+     */
+    @Test
+    fun verifyChangeBatteryLevelInText() {
+        var notification = NotificationResponse(
+            "7",
+            "battery_level",
+            "8"
+        )
+        MockUtils.cameraConnectServiceX1Mock.sendPushNotification(notification)
+        sleep(1000)
+        liveViewScreen.isBatteryIndicatorContains("8 %")
+
+        notification = NotificationResponse(
+            "7",
+            "battery_level",
+            "7"
+        )
+        MockUtils.cameraConnectServiceX1Mock.sendPushNotification(notification)
+        sleep(1000)
+        liveViewScreen.isBatteryIndicatorContains("7 %")
+
+        notification = NotificationResponse(
+            "7",
+            "low_battery_warning",
+            "7"
+        )
+
+        MockUtils.cameraConnectServiceX1Mock.sendPushNotification(notification)
+        sleep(1000)
+        notificationViewScreen.clickOnDismissButton()
+        liveViewScreen.isBatteryIndicatorContains("7 Mins")
+
+        notification = NotificationResponse(
+            "7",
+            "low_battery_warning",
+            "6"
+        )
+
+        MockUtils.cameraConnectServiceX1Mock.sendPushNotification(notification)
+        sleep(1000)
+        notificationViewScreen.clickOnDismissButton()
+        liveViewScreen.isBatteryIndicatorContains("6 Mins")
+
+        notification = NotificationResponse(
+            "7",
+            "low_battery_warning",
+            "5"
+        )
+
+        MockUtils.cameraConnectServiceX1Mock.sendPushNotification(notification)
+        sleep(1000)
+        notificationViewScreen.clickOnDismissButton()
+        liveViewScreen.isBatteryIndicatorContains("5 Mins")
+
+        notification = NotificationResponse(
+            "7",
+            "battery_level",
+            "4"
+        )
+        MockUtils.cameraConnectServiceX1Mock.sendPushNotification(notification)
+        sleep(1000)
+        liveViewScreen.isBatteryIndicatorContains("4 Mins")
     }
 
     /**
