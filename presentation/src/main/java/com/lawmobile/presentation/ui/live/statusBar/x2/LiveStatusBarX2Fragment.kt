@@ -148,8 +148,13 @@ class LiveStatusBarX2Fragment : LiveStatusBarBaseFragment() {
         }
     }
 
-    private fun getUsedStoragePercent(information: List<Double>) =
-        (TOTAL_PERCENTAGE - ((information[FREE_STORAGE_POSITION] * TOTAL_PERCENTAGE) / information[TOTAL_STORAGE_POSITION]))
+    private fun getUsedStoragePercent(information: List<Double>): Double {
+        var usedPercent =
+            (TOTAL_PERCENTAGE - ((information[FREE_STORAGE_POSITION] * TOTAL_PERCENTAGE) / information[TOTAL_STORAGE_POSITION]))
+        val usedPercentFloat = usedPercent - usedPercent.toInt()
+        if (usedPercentFloat != 0.0) usedPercent = (usedPercent - usedPercentFloat + 1)
+        return usedPercent
+    }
 
     private fun setColorInStorageLevel(usedPercent: Double) {
         binding.progressStorageLevel.setProgress(usedPercent.toInt())
