@@ -4,6 +4,7 @@ import com.lawmobile.data.mappers.NotificationResponseMapper
 import com.lawmobile.domain.entities.CameraEvent
 import com.lawmobile.domain.utils.ConnectionHelper
 import com.safefleet.mobile.external_hardware.cameras.CameraService
+import com.safefleet.mobile.kotlin_commons.helpers.Result
 
 class ConnectionHelperImpl(cameraServiceFactory: CameraServiceFactory) : ConnectionHelper {
     private val cameraService: CameraService = cameraServiceFactory.create()
@@ -12,5 +13,9 @@ class ConnectionHelperImpl(cameraServiceFactory: CameraServiceFactory) : Connect
         cameraService.arriveNotificationFromCamera = {
             callback.invoke(NotificationResponseMapper.cameraToDomain(it))
         }
+    }
+
+    override suspend fun disconnectCamera(): Result<Unit> {
+        return cameraService.disconnectCamera()
     }
 }
