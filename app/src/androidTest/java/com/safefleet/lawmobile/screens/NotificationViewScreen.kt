@@ -1,5 +1,6 @@
 package com.safefleet.lawmobile.screens
 
+import com.lawmobile.domain.enums.NotificationType
 import com.safefleet.lawmobile.R
 import com.safefleet.lawmobile.helpers.CustomAssertionActions.waitUntil
 import com.schibsted.spain.barista.assertion.BaristaImageViewAssertions.assertHasDrawable
@@ -36,17 +37,17 @@ class NotificationViewScreen : BaseScreen() {
 
     fun isDateDisplayed() = assertDisplayed(R.id.textViewNotificationDate)
 
-    fun isLowBatteryTitleDisplayed() =
-        assertDisplayed(R.id.textViewNotificationTitle, "low_battery_warning")
+    private fun isLowBatteryTitleDisplayed() =
+        assertDisplayed(R.id.textViewNotificationTitle, NotificationType.LOW_BATTERY.title!!)
 
     fun isLowStorageTitleDisplayed() =
-        assertDisplayed(R.id.textViewNotificationTitle, "low_storage_warning")
+        assertDisplayed(R.id.textViewNotificationTitle, NotificationType.LOW_STORAGE.title!!)
 
-    fun isLowBatteryDescriptionDisplayed() =
-        assertDisplayed(R.id.textViewNotificationMessage, R.string.battery_alert_description)
+    private fun isLowBatteryDescriptionDisplayed() =
+        assertDisplayed(R.id.textViewNotificationMessage, NotificationType.LOW_BATTERY.message!!)
 
     fun isLowStorageDescriptionDisplayed() =
-        assertDisplayed(R.id.textViewNotificationMessage, R.string.storage_alert_description)
+        assertDisplayed(R.id.textViewNotificationMessage, NotificationType.LOW_STORAGE.message!!)
 
     fun isDismissButtonDisplayed() =
         assertDisplayed(R.id.buttonDismissNotification, R.string.dismiss)

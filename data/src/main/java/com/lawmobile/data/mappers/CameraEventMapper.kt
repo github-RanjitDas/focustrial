@@ -8,8 +8,7 @@ import com.safefleet.mobile.external_hardware.cameras.entities.LogEvent
 
 object CameraEventMapper {
 
-    fun cameraToDomainList(logEventList: List<LogEvent>) =
-        logEventList.map { cameraToDomain(it) }
+    fun cameraToDomainList(logEventList: List<LogEvent>) = logEventList.map { cameraToDomain(it) }
 
     private fun cameraToDomain(logEvent: LogEvent) =
         logEvent.run {
@@ -35,8 +34,7 @@ object CameraEventMapper {
             )
         }
 
-    fun localToDomainList(events: List<LocalCameraEvent>) =
-        events.map { localToDomain(it) }
+    fun localToDomainList(events: List<LocalCameraEvent>) = events.map { localToDomain(it) }
 
     private fun localToDomain(event: LocalCameraEvent) = event.run {
         CameraEvent(
@@ -49,8 +47,7 @@ object CameraEventMapper {
         )
     }
 
-    fun domainToLocalList(events: List<CameraEvent>) =
-        events.map { domainToLocal(it) }
+    fun domainToLocalList(events: List<CameraEvent>) = events.map { domainToLocal(it) }
 
     fun domainToLocal(event: CameraEvent) = event.run {
         LocalCameraEvent(
