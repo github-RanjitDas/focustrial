@@ -81,7 +81,7 @@ class LiveStatusBarX2Fragment : LiveStatusBarBaseFragment() {
         )
         storageBarColors = SafeFleetLinearProgressBarColors(
             highRangeColor = R.color.red,
-            mediumRangeColor = R.color.red,
+            mediumRangeColor = R.color.lightGreen,
             lowRangeColor = R.color.lightGreen
         )
         highRangeColor = batteryBarColors.highRangeColor
@@ -154,12 +154,12 @@ class LiveStatusBarX2Fragment : LiveStatusBarBaseFragment() {
     private fun setColorInStorageLevel(usedPercent: Double) {
         binding.progressStorageLevel.setProgress(usedPercent.toInt())
         binding.imageViewStorage.apply {
-            if (usedPercent.toInt() in storageBarRanges.lowRange) {
-                backgroundTintList =
-                    ContextCompat.getColorStateList(requireContext(), R.color.greenSuccess)
-            } else {
+            if (usedPercent.toInt() in storageBarRanges.highRange) {
                 backgroundTintList =
                     ContextCompat.getColorStateList(requireContext(), R.color.red)
+            } else {
+                backgroundTintList =
+                    ContextCompat.getColorStateList(requireContext(), R.color.greenSuccess)
                 clearAnimation()
             }
         }
