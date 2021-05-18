@@ -63,6 +63,7 @@ fun Context.createAlertSessionExpired() {
             { restartApp() }, null
         )
     createAlertInformation(alertInformation)
+    CameraHelper.getInstance().disconnectCamera()
 }
 
 fun Context.restartApp() {

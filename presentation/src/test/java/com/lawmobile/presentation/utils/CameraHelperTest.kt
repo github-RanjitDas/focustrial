@@ -1,7 +1,10 @@
 package com.lawmobile.presentation.utils
 
 import com.lawmobile.domain.utils.ConnectionHelper
+import com.safefleet.mobile.kotlin_commons.helpers.Result
 import io.mockk.clearAllMocks
+import io.mockk.coEvery
+import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
 import org.junit.Assert
@@ -39,5 +42,12 @@ class CameraHelperTest {
         every { wifiHelper.getGatewayAddress() } returns ""
         every { connectionHelper.isCameraConnected(any()) } returns false
         Assert.assertFalse(cameraHelper.checkWithAlertIfTheCameraIsConnected())
+    }
+
+    @Test
+    fun testDisconnectCameraFlow() {
+        coEvery { connectionHelper.disconnectCamera() } returns Result.Success(Unit)
+        cameraHelper.disconnectCamera()
+        coVerify { connectionHelper.disconnectCamera() }
     }
 }
