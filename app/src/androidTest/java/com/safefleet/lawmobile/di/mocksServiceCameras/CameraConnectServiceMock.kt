@@ -20,7 +20,7 @@ import com.safefleet.mobile.external_hardware.cameras.entities.VideoMetadata
 import com.safefleet.mobile.kotlin_commons.helpers.Result
 import io.mockk.mockk
 
-class CameraConnectServiceX1Mock : CameraService {
+class CameraConnectServiceMock : CameraService {
 
     override var arriveNotificationFromCamera: ((NotificationResponse) -> Unit)? = null
     override var progressPairingCamera: ((Result<Int>) -> Unit)? = null

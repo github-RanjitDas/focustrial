@@ -59,7 +59,7 @@ class NotificationViewScreen : BaseScreen() {
         isDismissButtonDisplayed()
     }
 
-    fun isPendingNotificationDisplayed() = assertDisplayed(R.id.textPendingNotification)
+    fun isPendingNotificationDisplayed() = assertDisplayed(R.id.buttonNotification)
 
     fun isCorrectNumberOfPendingNotificationDisplayed(pendingNotifications: String) =
         assertContains(pendingNotifications)
