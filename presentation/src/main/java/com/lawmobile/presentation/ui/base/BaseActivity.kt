@@ -84,7 +84,7 @@ open class BaseActivity : AppCompatActivity() {
     private fun manageCameraEvent(cameraEvent: CameraEvent) {
         if (cameraEvent.eventType == EventType.NOTIFICATION) {
             when (cameraEvent.name) {
-                NotificationType.LOW_BATTERY.value -> onLowBattery?.invoke()
+                NotificationType.LOW_BATTERY.value -> onLowBattery?.invoke(cameraEvent.value?.toInt())
                 NotificationType.LOW_STORAGE.value -> onLowStorage?.invoke()
             }
             runOnUiThread { createNotificationDialog(cameraEvent) }
@@ -182,7 +182,7 @@ open class BaseActivity : AppCompatActivity() {
     companion object {
         var onBatteryLevelChanged: ((Int) -> Unit)? = null
         var onStorageLevelChanged: ((Double) -> Unit)? = null
-        var onLowBattery: (() -> Unit)? = null
+        var onLowBattery: ((Int?) -> Unit)? = null
         var onLowStorage: (() -> Unit)? = null
 
         lateinit var lastInteraction: Timestamp
