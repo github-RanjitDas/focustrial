@@ -106,7 +106,7 @@ class LiveViewScreen : BaseScreen() {
         assertDisplayed(R.id.textLiveViewRecording)
     }
 
-    fun isBatteryIndicatorContains(text: String) {
+    fun isTextBatteryIndicatorContained(text: String) {
         waitUntil { assertContains(R.id.textViewBatteryPercent, text) }
     }
 }

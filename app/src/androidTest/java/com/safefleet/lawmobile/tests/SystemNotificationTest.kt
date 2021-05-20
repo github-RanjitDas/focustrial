@@ -6,13 +6,12 @@ import com.lawmobile.domain.enums.CameraType
 import com.lawmobile.presentation.ui.login.LoginActivity
 import com.safefleet.lawmobile.di.mocksServiceCameras.CameraConnectServiceMock
 import com.safefleet.lawmobile.helpers.CustomAssertionActions.waitUntil
-import com.safefleet.lawmobile.helpers.MockUtils
+import com.safefleet.lawmobile.helpers.MockUtils.Companion.cameraConnectServiceX1Mock
 import com.safefleet.lawmobile.screens.LiveViewScreen
 import com.safefleet.lawmobile.screens.LoginScreen
 import com.safefleet.lawmobile.screens.NotificationViewScreen
 import com.safefleet.lawmobile.testData.CameraEventsData
 import com.safefleet.mobile.external_hardware.cameras.entities.NotificationResponse
-import com.schibsted.spain.barista.interaction.BaristaSleepInteractions.sleep
 import com.schibsted.spain.barista.rule.BaristaRule
 import org.junit.Before
 import org.junit.Rule
@@ -48,7 +47,7 @@ class SystemNotificationTest : EspressoBaseTest() {
             "Low battery in your body-worn camera, please charge your body-worn camera"
         )
         mockUtils.setBatteryProgressCamera(8)
-        MockUtils.cameraConnectServiceX1Mock.sendPushNotification(notification)
+        cameraConnectServiceX1Mock.sendPushNotification(notification)
 
         with(notificationViewScreen) {
             isWarningIconDisplayed()
@@ -62,7 +61,7 @@ class SystemNotificationTest : EspressoBaseTest() {
             "err:low_storage_warning",
             "Your body-worn camera reached 95% of its memory capacity"
         )
-        MockUtils.cameraConnectServiceX1Mock.sendPushNotification(notification)
+        cameraConnectServiceX1Mock.sendPushNotification(notification)
 
         with(notificationViewScreen) {
             isErrorIconDisplayed()
@@ -79,7 +78,7 @@ class SystemNotificationTest : EspressoBaseTest() {
             "low_battery_warning",
             "Low battery in your body-worn camera, please charge your body-worn camera"
         )
-        MockUtils.cameraConnectServiceX1Mock.sendPushNotification(notification)
+        cameraConnectServiceX1Mock.sendPushNotification(notification)
 
         with(notificationViewScreen) {
             isInfoIconDisplayed()
@@ -97,18 +96,16 @@ class SystemNotificationTest : EspressoBaseTest() {
             "battery_level",
             "8"
         )
-        MockUtils.cameraConnectServiceX1Mock.sendPushNotification(notification)
-        sleep(1000)
-        liveViewScreen.isBatteryIndicatorContains("8 %")
+        cameraConnectServiceX1Mock.sendPushNotification(notification)
+        liveViewScreen.isTextBatteryIndicatorContained("8 %")
 
         notification = NotificationResponse(
             "7",
             "battery_level",
             "7"
         )
-        MockUtils.cameraConnectServiceX1Mock.sendPushNotification(notification)
-        sleep(1000)
-        liveViewScreen.isBatteryIndicatorContains("7 %")
+        cameraConnectServiceX1Mock.sendPushNotification(notification)
+        liveViewScreen.isTextBatteryIndicatorContained("7 %")
 
         notification = NotificationResponse(
             "7",
@@ -116,10 +113,9 @@ class SystemNotificationTest : EspressoBaseTest() {
             "7"
         )
 
-        MockUtils.cameraConnectServiceX1Mock.sendPushNotification(notification)
-        sleep(1000)
+        cameraConnectServiceX1Mock.sendPushNotification(notification)
         notificationViewScreen.clickOnDismissButton()
-        liveViewScreen.isBatteryIndicatorContains("7 Mins")
+        liveViewScreen.isTextBatteryIndicatorContained("7 Mins")
 
         notification = NotificationResponse(
             "7",
@@ -127,10 +123,9 @@ class SystemNotificationTest : EspressoBaseTest() {
             "6"
         )
 
-        MockUtils.cameraConnectServiceX1Mock.sendPushNotification(notification)
-        sleep(1000)
+        cameraConnectServiceX1Mock.sendPushNotification(notification)
         notificationViewScreen.clickOnDismissButton()
-        liveViewScreen.isBatteryIndicatorContains("6 Mins")
+        liveViewScreen.isTextBatteryIndicatorContained("6 Mins")
 
         notification = NotificationResponse(
             "7",
@@ -138,19 +133,27 @@ class SystemNotificationTest : EspressoBaseTest() {
             "5"
         )
 
-        MockUtils.cameraConnectServiceX1Mock.sendPushNotification(notification)
-        sleep(1000)
+        cameraConnectServiceX1Mock.sendPushNotification(notification)
         notificationViewScreen.clickOnDismissButton()
-        liveViewScreen.isBatteryIndicatorContains("5 Mins")
+        liveViewScreen.isTextBatteryIndicatorContained("5 Mins")
 
         notification = NotificationResponse(
             "7",
             "battery_level",
             "4"
         )
-        MockUtils.cameraConnectServiceX1Mock.sendPushNotification(notification)
-        sleep(1000)
-        liveViewScreen.isBatteryIndicatorContains("4 Mins")
+        cameraConnectServiceX1Mock.sendPushNotification(notification)
+
+        liveViewScreen.isTextBatteryIndicatorContained("4 Mins")
+
+        notification = NotificationResponse(
+            "7",
+            "battery_level",
+            "3"
+        )
+        cameraConnectServiceX1Mock.sendPushNotification(notification)
+
+        liveViewScreen.isTextBatteryIndicatorContained("3 Mins")
     }
 
     /**
