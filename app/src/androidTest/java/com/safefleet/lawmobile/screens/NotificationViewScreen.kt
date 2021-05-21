@@ -43,8 +43,8 @@ class NotificationViewScreen : BaseScreen() {
     fun isLowStorageTitleDisplayed() =
         assertDisplayed(R.id.textViewNotificationTitle, NotificationType.LOW_STORAGE.title!!)
 
-    private fun isLowBatteryDescriptionDisplayed() =
-        assertDisplayed(R.id.textViewNotificationMessage, NotificationType.LOW_BATTERY.message!!)
+    private fun isLowBatteryDescriptionDisplayed(value: String) =
+        assertDisplayed(R.id.textViewNotificationMessage, NotificationType.LOW_BATTERY.getCustomMessage(value)!!)
 
     fun isLowStorageDescriptionDisplayed() =
         assertDisplayed(R.id.textViewNotificationMessage, NotificationType.LOW_STORAGE.message!!)
@@ -52,10 +52,10 @@ class NotificationViewScreen : BaseScreen() {
     fun isDismissButtonDisplayed() =
         assertDisplayed(R.id.buttonDismissNotification, R.string.dismiss)
 
-    fun isLowBatteryNotificationDisplayed() {
+    fun isLowBatteryNotificationDisplayed(value: String) {
         isLowBatteryTitleDisplayed()
         isDateDisplayed()
-        isLowBatteryDescriptionDisplayed()
+        isLowBatteryDescriptionDisplayed(value)
         isDismissButtonDisplayed()
     }
 
