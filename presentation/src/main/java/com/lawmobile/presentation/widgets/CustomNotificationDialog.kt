@@ -57,7 +57,7 @@ class CustomNotificationDialog(
         with(binding.layoutNotificationInformation) {
             val notificationType = NotificationType.getByValue(cameraEvent.name)
             textViewNotificationTitle.text = notificationType.title ?: cameraEvent.name
-            textViewNotificationMessage.text = notificationType.message ?: cameraEvent.value
+            textViewNotificationMessage.text = notificationType.getCustomMessage(cameraEvent.value) ?: cameraEvent.value
             textViewNotificationDate.text = cameraEvent.date
         }
     }

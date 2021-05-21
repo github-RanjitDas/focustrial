@@ -29,10 +29,14 @@ enum class NotificationType(
     LOW_BATTERY(
         "low_battery_warning",
         "Low Battery Warning!",
-        "Your BWC will stop running in 7 minutes. Please charge your BWC"
+        ""
     ) {
         override fun getTypeOfEvent(): EventType {
             return EventType.NOTIFICATION
+        }
+
+        override fun getCustomMessage(value: String?): String {
+            return "Your BWC will stop running in ${value ?: 7} minutes. Please charge your BWC"
         }
     },
     LOW_STORAGE(
@@ -80,6 +84,10 @@ enum class NotificationType(
 
     open fun getTypeOfEvent(): EventType {
         return EventType.NOTIFICATION
+    }
+
+    open fun getCustomMessage(value: String? = null): String? {
+        return message
     }
 
     companion object {

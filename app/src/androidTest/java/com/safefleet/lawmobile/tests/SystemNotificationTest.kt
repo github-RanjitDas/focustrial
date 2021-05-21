@@ -44,14 +44,14 @@ class SystemNotificationTest : EspressoBaseTest() {
         var notification = NotificationResponse(
             "7",
             "warn:low_battery_warning",
-            "Low battery in your body-worn camera, please charge your body-worn camera"
+            "7"
         )
         mockUtils.setBatteryProgressCamera(8)
         cameraConnectServiceX1Mock.sendPushNotification(notification)
 
         with(notificationViewScreen) {
             isWarningIconDisplayed()
-            isLowBatteryNotificationDisplayed()
+            isLowBatteryNotificationDisplayed("7")
 
             clickOnDismissButton()
         }
@@ -59,7 +59,7 @@ class SystemNotificationTest : EspressoBaseTest() {
         notification = NotificationResponse(
             "7",
             "err:low_storage_warning",
-            "Your body-worn camera reached 95% of its memory capacity"
+            "95"
         )
         cameraConnectServiceX1Mock.sendPushNotification(notification)
 
@@ -76,13 +76,13 @@ class SystemNotificationTest : EspressoBaseTest() {
         notification = NotificationResponse(
             "7",
             "low_battery_warning",
-            "Low battery in your body-worn camera, please charge your body-worn camera"
+            "6"
         )
         cameraConnectServiceX1Mock.sendPushNotification(notification)
 
         with(notificationViewScreen) {
             isInfoIconDisplayed()
-            isLowBatteryNotificationDisplayed()
+            isLowBatteryNotificationDisplayed("6")
         }
     }
 
