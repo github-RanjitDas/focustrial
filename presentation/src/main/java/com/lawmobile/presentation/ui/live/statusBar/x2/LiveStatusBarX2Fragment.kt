@@ -157,6 +157,7 @@ class LiveStatusBarX2Fragment : LiveStatusBarBaseFragment() {
     private fun getUsedStoragePercent(information: List<Double>): Double {
         var usedPercent =
             (TOTAL_PERCENTAGE - ((information[FREE_STORAGE_POSITION] * TOTAL_PERCENTAGE) / information[TOTAL_STORAGE_POSITION]))
+        if (usedPercent.toInt() == 0) return 0.0
         val usedPercentFloat = usedPercent - usedPercent.toInt()
         if (usedPercentFloat != 0.0) usedPercent = (usedPercent - usedPercentFloat + 1)
         return usedPercent
