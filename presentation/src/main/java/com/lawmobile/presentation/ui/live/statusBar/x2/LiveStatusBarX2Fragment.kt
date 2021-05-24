@@ -121,6 +121,7 @@ class LiveStatusBarX2Fragment : LiveStatusBarBaseFragment() {
         requireActivity().runOnUiThread {
             wasNotificationArriveForLowBattery = true
             value?.let {
+                if (currentMinutesAfterNotifications == 0) currentMinutesAfterNotifications = value
                 manageBatteryLevel(getPercentLeftAfterNotification(it))
                 currentMinutesAfterNotifications = value
             }
@@ -213,6 +214,7 @@ class LiveStatusBarX2Fragment : LiveStatusBarBaseFragment() {
     override fun setTextInProgressBattery(batteryPercent: Int) {
         if (wasNotificationArriveForLowBattery) {
             setJustTimeInBatteryText(batteryPercent)
+            currentMinutesAfterNotifications = getMinutesLeftAfterNotification(batteryPercent)
             return
         }
         setJustPercentInBatteryText(batteryPercent)
@@ -251,7 +253,7 @@ class LiveStatusBarX2Fragment : LiveStatusBarBaseFragment() {
     companion object {
         val TAG = LiveStatusBarX2Fragment::class.java.simpleName
         private var wasNotificationArriveForLowBattery = false
-        private var currentMinutesAfterNotifications = 7
+        private var currentMinutesAfterNotifications = 0
         private var currentPercentInBattery = 100
     }
 }

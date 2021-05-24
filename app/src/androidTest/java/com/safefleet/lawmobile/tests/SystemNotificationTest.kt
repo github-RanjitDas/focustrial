@@ -114,7 +114,10 @@ class SystemNotificationTest : EspressoBaseTest() {
         )
 
         cameraConnectServiceX1Mock.sendPushNotification(notification)
-        notificationViewScreen.clickOnDismissButton()
+        with(notificationViewScreen) {
+            isLowBatteryNotificationDisplayed("7")
+            clickOnDismissButton()
+        }
         liveViewScreen.isTextBatteryIndicatorContained("7 Mins")
 
         notification = NotificationResponse(
@@ -122,9 +125,11 @@ class SystemNotificationTest : EspressoBaseTest() {
             "low_battery_warning",
             "6"
         )
-
         cameraConnectServiceX1Mock.sendPushNotification(notification)
-        notificationViewScreen.clickOnDismissButton()
+        with(notificationViewScreen) {
+            isLowBatteryNotificationDisplayed("6")
+            clickOnDismissButton()
+        }
         liveViewScreen.isTextBatteryIndicatorContained("6 Mins")
 
         notification = NotificationResponse(
@@ -134,7 +139,11 @@ class SystemNotificationTest : EspressoBaseTest() {
         )
 
         cameraConnectServiceX1Mock.sendPushNotification(notification)
-        notificationViewScreen.clickOnDismissButton()
+        with(notificationViewScreen) {
+            isLowBatteryNotificationDisplayed("5")
+            clickOnDismissButton()
+        }
+
         liveViewScreen.isTextBatteryIndicatorContained("5 Mins")
 
         notification = NotificationResponse(
@@ -143,17 +152,20 @@ class SystemNotificationTest : EspressoBaseTest() {
             "4"
         )
         cameraConnectServiceX1Mock.sendPushNotification(notification)
-
         liveViewScreen.isTextBatteryIndicatorContained("4 Mins")
 
         notification = NotificationResponse(
             "7",
-            "battery_level",
-            "3"
+            "low_battery_warning",
+            "1"
         )
-        cameraConnectServiceX1Mock.sendPushNotification(notification)
 
-        liveViewScreen.isTextBatteryIndicatorContained("3 Mins")
+        cameraConnectServiceX1Mock.sendPushNotification(notification)
+        with(notificationViewScreen) {
+            isLowBatteryNotificationDisplayed("1")
+            clickOnDismissButton()
+        }
+        liveViewScreen.isTextBatteryIndicatorContained("1 Mins")
     }
 
     /**
