@@ -239,11 +239,15 @@ class LiveStatusBarX2Fragment : LiveStatusBarBaseFragment() {
         getMinutesLeftAfterNotification(batteryPercent).toString()
     )
 
-    private fun getMinutesLeftAfterNotification(batteryPercent: Int) =
-        ((batteryPercent * currentMinutesAfterNotifications) / currentPercentInBattery)
+    private fun getMinutesLeftAfterNotification(batteryPercent: Int): Int {
+        return if (currentPercentInBattery == 0) 0
+        else ((batteryPercent * currentMinutesAfterNotifications) / currentPercentInBattery)
+    }
 
-    private fun getPercentLeftAfterNotification(minutes: Int) =
-        ((minutes * currentPercentInBattery) / currentMinutesAfterNotifications)
+    private fun getPercentLeftAfterNotification(minutes: Int): Int {
+        return if (currentMinutesAfterNotifications == 0) 0
+        else ((minutes * currentPercentInBattery) / currentMinutesAfterNotifications)
+    }
 
     override fun onDestroy() {
         super.onDestroy()
