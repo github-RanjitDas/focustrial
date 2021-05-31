@@ -9,7 +9,10 @@ import com.lawmobile.presentation.utils.CameraHelper
 import com.lawmobile.presentation.utils.WifiHelper
 import com.safefleet.lawmobile.helpers.MockUtils
 import com.safefleet.mobile.external_hardware.cameras.CameraService
-import com.safefleet.mobile.external_hardware.cameras.helpers.XCameraHelper
+import com.safefleet.mobile.external_hardware.cameras.utils.CommandHelper
+import com.safefleet.mobile.external_hardware.cameras.utils.FileInformationHelper
+import com.safefleet.mobile.external_hardware.cameras.utils.MetadataHelper
+import com.safefleet.mobile.external_hardware.cameras.utils.NotificationCameraHelper
 import com.safefleet.mobile.kotlin_commons.socket.SocketHelper
 import dagger.Module
 import dagger.Provides
@@ -30,23 +33,50 @@ class CameraServiceModule {
 
         @Provides
         @Singleton
-        fun provideCameraHelperX1(
-            cmdHelper: SocketHelper,
-            dataHelper: SocketHelper
-        ): XCameraHelper =
-            XCameraHelper(Gson(), cmdHelper, dataHelper)
+        fun provideCommandHelper(
+            socketHelper: SocketHelper
+        ): CommandHelper = CommandHelper(Gson(), socketHelper)
+
+        @Provides
+        @Singleton
+        fun provideFileInformationHelper(
+            commandHelper: CommandHelper,
+            dataSocketHelper: SocketHelper
+        ): FileInformationHelper = FileInformationHelper(Gson(), commandHelper, dataSocketHelper)
+
+        @Provides
+        @Singleton
+        fun provideMetadataHelper(
+            fileInformationHelper: FileInformationHelper,
+            commandHelper: CommandHelper
+        ): MetadataHelper = MetadataHelper(Gson(), fileInformationHelper, commandHelper)
+
+        @Provides
+        @Singleton
+        fun provideNotificationHelper(
+            cmdHelper: CommandHelper
+        ): NotificationCameraHelper = NotificationCameraHelper(cmdHelper)
 
         @Provides
         @Singleton
         @Named("x1CameraService")
-        fun provideCameraServiceX1(xCameraHelper: XCameraHelper): CameraService {
+        fun provideCameraServiceX1(
+            fileInformationHelper: FileInformationHelper,
+            commandHelper: CommandHelper,
+            metadataHelper: MetadataHelper
+        ): CameraService {
             return MockUtils.cameraConnectServiceX1Mock
         }
 
         @Provides
         @Singleton
         @Named("x2CameraService")
-        fun provideCameraServiceX2(xCameraHelper: XCameraHelper): CameraService {
+        fun provideCameraServiceX2(
+            notificationCameraHelper: NotificationCameraHelper,
+            fileInformationHelper: FileInformationHelper,
+            commandHelper: CommandHelper,
+            metadataHelper: MetadataHelper
+        ): CameraService {
             return MockUtils.cameraConnectServiceX1Mock
         }
 

@@ -3,7 +3,6 @@ package com.safefleet.lawmobile.tests
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
 import com.lawmobile.presentation.ui.login.LoginActivity
-import com.safefleet.lawmobile.helpers.SmokeTest
 import com.safefleet.lawmobile.screens.FileListScreen
 import com.safefleet.lawmobile.screens.LiveViewScreen
 import com.safefleet.lawmobile.screens.LoginScreen
@@ -31,7 +30,6 @@ class AppNavigationTest : EspressoStartActivityBaseTest<LoginActivity>(LoginActi
     /**
      * Test case: https://safefleet.atlassian.net/browse/FMA-214
      */
-    @SmokeTest
     @Test
     fun verifyLiveViewToggleBehaviorAfterNavigation() {
         with(liveViewScreen) {
@@ -55,7 +53,6 @@ class AppNavigationTest : EspressoStartActivityBaseTest<LoginActivity>(LoginActi
     /**
      * Test case: https://safefleet.atlassian.net/browse/FMA-549
      */
-    @SmokeTest
     @Test
     fun verifyRecordingAfterNavigation() {
         with(liveViewScreen) {
