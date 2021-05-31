@@ -1,4 +1,6 @@
-import dependencies.*
+import dependencies.AppConfig
+import dependencies.Dependencies
+import dependencies.Modules
 
 plugins {
     id 'com.android.application'
@@ -9,8 +11,6 @@ plugins {
     id 'com.google.firebase.crashlytics'
     id 'com.squareup.sqldelight'
 }
-
-apply from: '../ktlint.gradle'
 
 check.dependsOn ktlint
 
@@ -66,75 +66,61 @@ android {
     }
 
     configurations.all {
-        resolutionStrategy.force "com.google.code.findbugs:jsr305:$find_bugs_version"
+        resolutionStrategy.force Dependencies.Google.findBugs
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility AppConfig.jvmTarget
+        targetCompatibility AppConfig.jvmTarget
     }
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation "androidx.appcompat:appcompat:$app_compat_version"
-    implementation "androidx.core:core-ktx:$ktx_version"
-    testImplementation "junit:junit:$junit_version"
+    implementation Dependencies.Kotlin.standardLibrary
+    implementation Dependencies.AppCompat.appCompat
+    implementation Dependencies.AndroidX.coreKTX
 
-    // Mockk
-    androidTestImplementation "io.mockk:mockk-android:$mockk_version"
+    testImplementation Dependencies.JUnit.junit
+    androidTestImplementation Dependencies.Mockk.mockkAndroid
+    androidTestImplementation Dependencies.Espresso.espressoCore
+    androidTestImplementation Dependencies.Espresso.intents
+    androidTestImplementation Dependencies.UIAutomator.uiAutomator
+    androidTestImplementation Dependencies.Espresso.idlingResource
+    androidTestImplementation Dependencies.AndroidX.testRunner
+    androidTestImplementation Dependencies.AndroidX.testRules
+    androidTestImplementation Dependencies.AndroidX.testExtJunit
+    androidTestUtil Dependencies.AndroidX.testOrchestrator
+    kaptAndroidTest Dependencies.Hilt.hiltAndroidCompiler
+    kaptAndroidTest Dependencies.Hilt.hiltCompiler
+    kaptTest Dependencies.Hilt.hiltAndroidCompiler
+    implementation Dependencies.Espresso.idlingResource
 
-    //Espresso
-    androidTestImplementation "androidx.test.espresso:espresso-core:$espresso_version"
-    androidTestImplementation "androidx.test.espresso:espresso-intents:$espresso_version"
-    androidTestImplementation "androidx.test.uiautomator:uiautomator:$ui_automator_version"
-
-    //Espresso Idling Resource
-    androidTestImplementation "androidx.test.espresso:espresso-idling-resource:$espresso_version"
-    implementation "androidx.test.espresso:espresso-idling-resource:$espresso_version"
-
-    //Barista (Library for espresso testing)
-    androidTestImplementation("com.schibsted.spain:barista:$barista_version") {
+    androidTestImplementation(Dependencies.Barista.barista) {
         exclude group: 'org.jetbrains.kotlin'
     }
 
-    //AndroidX test
-    androidTestImplementation "androidx.test:runner:$androidx_test_version"
-    androidTestImplementation "androidx.test:rules:$androidx_test_version"
-    androidTestImplementation "androidx.test.ext:junit:$junit_ext_version"
-    androidTestUtil "androidx.test:orchestrator:1.3.0"
+    implementation Dependencies.VLC.libVLC
+    implementation Dependencies.Google.gson
+    implementation Dependencies.Hilt.hiltAndroid
+    kapt Dependencies.Hilt.hiltAndroidCompiler
 
-    //VLC player
-    implementation "com.github.masterwok:libvlc-android-sdk:$libvlc_android_sdk_version"
-
-    //GSON
-    implementation "com.google.code.gson:gson:$gson_version"
-
-    //Hilt
-    implementation "com.google.dagger:hilt-android:$hilt_version"
-    kapt "com.google.dagger:hilt-android-compiler:$hilt_version"
-    kaptAndroidTest "com.google.dagger:hilt-android-compiler:$hilt_version"
-    kaptTest "com.google.dagger:hilt-android-compiler:$hilt_version"
-    implementation "androidx.hilt:hilt-lifecycle-viewmodel:$hilt_jetpack_version"
-    kapt "androidx.hilt:hilt-compiler:$hilt_jetpack_version"
-    kaptAndroidTest "androidx.hilt:hilt-compiler:$hilt_jetpack_version"
+    implementation Dependencies.Hilt.hiltViewModel
+    kapt Dependencies.Hilt.hiltCompiler
 
     // Import the Firebase BoM
-    debugApi platform("com.google.firebase:firebase-bom:$firebase_bom_version")
-
-    // Firebase analytics and crashlytics
-    debugApi 'com.google.firebase:firebase-analytics-ktx'
-    debugApi "com.google.firebase:firebase-core:$firebase_core_version"
-    debugApi 'com.google.firebase:firebase-crashlytics'
+    debugApi platform(Dependencies.Firebase.bom)
+    debugApi Dependencies.Firebase.analytics
+    debugApi Dependencies.Firebase.core
+    debugApi Dependencies.Firebase.crashlytics
 
     //Base repository
-    implementation 'com.safefleet.mobile:external-hardware:3.0.0@jar'
-    implementation 'com.safefleet.mobile:android-commons:1.2.0@aar'
-    implementation 'com.safefleet.mobile:safefleet-ui:1.2.0@aar'
+    implementation Dependencies.Base.externalHardware
+    implementation Dependencies.Base.androidCommons
+    implementation Dependencies.Base.safeFleetUI
 
-    implementation "com.squareup.sqldelight:android-driver:$sqldelight_version"
-    implementation "com.squareup.sqldelight:sqlite-driver:$sqldelight_version"
+    implementation Dependencies.SqlDelight.androidDriver
+    implementation Dependencies.SqlDelight.sqlDelightDriver
 
     implementation project(path: Modules.presentation)
     implementation project(path: Modules.data)

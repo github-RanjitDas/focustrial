@@ -1,4 +1,4 @@
-apply from: 'exceptions.gradle'
+import dependencies.Exclusions
 
 sonarqube {
     properties {
@@ -14,7 +14,7 @@ sonarqube {
         property "sonar.tests", "src/test/java"
         property "sonar.java.test.binaries", "build/intermediates/classes/debug"
 
-        property "sonar.exclusions", [fileFilter]
+        property "sonar.exclusions", Exclusions.sonarqube
         property "sonar.java.coveragePlugin", "jacoco"
         property "sonar.jacoco.reportPath", "${buildDir}/jacoco/testDebugUnitTest.exec"
         property "sonar.coverage.jacoco.xmlReportPaths", "build/reports/jacoco/testDebugUnitTestCoverage/testDebugUnitTestCoverage.xml"

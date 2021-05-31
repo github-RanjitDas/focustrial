@@ -1,22 +1,29 @@
+import dependencies.AppConfig
+import dependencies.Dependencies
 import dependencies.Modules
+import dependencies.Exclusions
 
 plugins {
-    id 'jacoco'
     id 'java-library'
     id 'kotlin'
     id 'kotlin-kapt'
+    id 'maven'
+    //id 'maven-publish'
 }
 
-apply from: '../jacoco.gradle'
-apply from: '../pitest-exceptions.gradle'
-apply from: '../ktlint.gradle'
-apply plugin: 'info.solidsoft.pitest'
+def artifactId = 'data'
+def groupId = 'com.safefleet.lawmobile'
+def versionVariant = "1.0.0"
+
+if (!"$System.env.VARIANT".contains("RELEASE")) {
+    versionVariant += "-SNAPSHOT"
+}
 
 check.dependsOn ktlint
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_1_8
-    targetCompatibility = JavaVersion.VERSION_1_8
+    sourceCompatibility = AppConfig.jvmTarget
+    targetCompatibility = AppConfig.jvmTarget
 }
 
 task testDebugUnitTest {
@@ -40,29 +47,21 @@ test {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    testImplementation "junit:junit:$junit_version"
+    implementation Dependencies.Kotlin.standardLibrary
 
-    //GSON
-    implementation "com.google.code.gson:gson:$gson_version"
+    testImplementation Dependencies.JUnit.junit
+    testImplementation Dependencies.JUnit5.jupiterApi
+    testRuntimeOnly Dependencies.JUnit5.jupiterEngine
+    testImplementation Dependencies.JUnit5.jupiterParams
+    testImplementation Dependencies.Mockk.mockk
+    testImplementation Dependencies.Coroutines.coroutinesTest
 
-    // Junit5
-    testImplementation "org.junit.jupiter:junit-jupiter-api:$junit5_version"
-    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$junit5_version"
-    testImplementation "org.junit.jupiter:junit-jupiter-params:$junit5_version"
+    api Dependencies.Coroutines.coroutinesAndroid
+    api Dependencies.Coroutines.coroutinesCore
 
-    // Mockk
-    testImplementation "io.mockk:mockk:$mockk_version"
+    implementation Dependencies.Google.gson
 
-    //Kotlin Coroutines
-    api "org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlin_coroutine_android_version"
-    api "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlin_coroutine_core_version"
-
-    //Coroutines-test
-    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutines_test_version"
-
-    //external_hardware
-    implementation 'com.safefleet.mobile:external-hardware:3.0.0@jar'
+    implementation Dependencies.Base.externalHardware
 
     implementation project(path: Modules.domain)
 }
@@ -74,10 +73,49 @@ pitest {
     //noinspection GrFinalVariableAccess,GroovyAccessibility
     targetTests = ["com.lawmobile.data.*"]
     //noinspection GrFinalVariableAccess,GroovyAccessibility
-    excludedClasses = pitestExclusions
+    excludedClasses = Exclusions.pitest
     testPlugin = 'junit5'
     threads = Runtime.getRuntime().availableProcessors()
     outputFormats = ['XML', 'HTML']
     enableDefaultIncrementalAnalysis =  true
     timestampedReports = false
 }
+
+// comment the below code when using maven local
+def nexusRepositoryUrl
+if (!versionVariant.contains("SNAPSHOT")) {
+    nexusRepositoryUrl = "${nexusUrl}/repository/maven-releases/"
+} else {
+    nexusRepositoryUrl = "${nexusUrl}/repository/maven-snapshots/"
+}
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            repository(url: nexusRepositoryUrl) {
+                authentication(userName: nexusUsername, password: nexusPassword)
+                pom.groupId = groupId
+                pom.artifactId = artifactId
+                pom.version = versionVariant
+            }
+        }
+    }
+}
+
+//Uncomment the below code when using maven local
+/*project.afterEvaluate {
+    publishing {
+        publications {
+            mavenJava(MavenPublication) {
+                setGroupId groupId
+                setArtifactId artifactId
+                version versionVariant
+
+                from components.java
+            }
+        }
+    }
+}
+repositories {
+    mavenCentral()
+}*/
