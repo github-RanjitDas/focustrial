@@ -19,6 +19,8 @@ class MockUtils {
         var cameraSSID = TestLoginData.SSID_X1.value
         var bodyWornDiagnosisResult: Result<Boolean> = Result.Success(true)
         var progressBatteryCamera: Result<Int> = Result.Success(90)
+        var totalStorageCamera = 60000000
+        var freeStorageCamera = 50000000
         var cameraConnectServiceX1Mock = CameraConnectServiceMock()
     }
 
@@ -82,5 +84,10 @@ class MockUtils {
 
     fun setBatteryProgressCamera(progress: Int) {
         progressBatteryCamera = Result.Success(progress)
+    }
+
+    fun setStorageProgressCamera(totalStorage: Int, freeStorage: Int) {
+        totalStorageCamera = totalStorage
+        freeStorageCamera = freeStorage
     }
 }

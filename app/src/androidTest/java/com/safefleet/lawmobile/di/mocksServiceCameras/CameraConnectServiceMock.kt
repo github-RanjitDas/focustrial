@@ -201,11 +201,11 @@ class CameraConnectServiceMock : CameraService {
     }
 
     override suspend fun getFreeStorage(): Result<String> {
-        return Result.Success("50000000")
+        return Result.Success(MockUtils.freeStorageCamera.toString())
     }
 
     override suspend fun getTotalStorage(): Result<String> {
-        return Result.Success("60000000")
+        return Result.Success(MockUtils.totalStorageCamera.toString())
     }
 
     fun sendPushNotification(notificationResponse: NotificationResponse) {
