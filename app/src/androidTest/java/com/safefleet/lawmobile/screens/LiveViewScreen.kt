@@ -12,8 +12,12 @@ import com.schibsted.spain.barista.assertion.BaristaVisibilityAssertions.assertD
 import com.schibsted.spain.barista.assertion.BaristaVisibilityAssertions.assertNotDisplayed
 import com.schibsted.spain.barista.assertion.BaristaVisibilityAssertions.assertNotExist
 import com.schibsted.spain.barista.interaction.BaristaClickInteractions.clickOn
+import com.schibsted.spain.barista.interaction.BaristaSleepInteractions.sleep
 
 class LiveViewScreen : BaseScreen() {
+
+    private val mainMenuScreen = MainMenuScreen()
+    private val helPageScreen = HelpPageScreen()
 
     fun switchLiveViewToggle() = clickOn(R.id.buttonSwitchLiveView)
 
@@ -24,6 +28,13 @@ class LiveViewScreen : BaseScreen() {
     fun openVideoList() = clickOn(R.id.buttonVideoList)
 
     fun openHelpPage() = clickOn(R.id.buttonOpenHelpPage)
+
+    fun refreshCameraStatus() {
+        mainMenuScreen.clickOnMainMenu()
+        mainMenuScreen.clickOnViewHelp()
+        sleep(500)
+        helPageScreen.goBack()
+    }
 
     fun takeSnapshot() {
         clickOn(R.id.buttonSnapshot)
@@ -50,17 +61,24 @@ class LiveViewScreen : BaseScreen() {
         assertNotExist(R.id.buttonOpenHelpPage)
     }
 
+    fun isBatteryStatusDisplayed() {
+        assertDisplayed(R.id.imageViewBattery)
+        assertDisplayed(R.id.textViewBatteryPercent)
+        assertDisplayed(R.id.progressBatteryLevel)
+    }
+
+    fun isMemoryStorageStatusDisplayed() {
+        assertDisplayed(R.id.imageViewStorage)
+        assertDisplayed(R.id.textViewStorageLevels)
+        assertDisplayed(R.id.progressStorageLevel)
+    }
+
     fun isLiveViewDisplayed() {
         assertDisplayed(R.id.liveStreamingView)
         assertDisplayed(R.id.toggleFullScreenLiveView)
 
-        assertDisplayed(R.id.imageViewBattery)
-        assertDisplayed(R.id.textViewBatteryPercent)
-        assertDisplayed(R.id.progressBatteryLevel)
-
-        assertDisplayed(R.id.imageViewStorage)
-        assertDisplayed(R.id.textViewStorageLevels)
-        assertDisplayed(R.id.progressStorageLevel)
+        isBatteryStatusDisplayed()
+        isMemoryStorageStatusDisplayed()
 
         assertDisplayed(R.id.buttonSnapshot)
         assertDisplayed(R.string.take_snapshots)
@@ -108,5 +126,17 @@ class LiveViewScreen : BaseScreen() {
 
     fun isTextBatteryIndicatorContained(text: String) {
         waitUntil { assertContains(R.id.textViewBatteryPercent, text) }
+    }
+
+    fun isBatteryIndicatorTextDisplayed(percent: String) {
+        waitUntil {
+            assertContains(R.id.textViewBatteryPercent, "$percent %")
+        }
+    }
+
+    fun isMemoryStorageIndicatorTextDisplayed(percent: String) {
+        waitUntil {
+            assertContains(R.id.textViewStorageLevels, "$percent% used")
+        }
     }
 }

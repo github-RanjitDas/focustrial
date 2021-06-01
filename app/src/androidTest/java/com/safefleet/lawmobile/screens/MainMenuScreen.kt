@@ -22,7 +22,7 @@ class MainMenuScreen : BaseScreen() {
 
     fun clickOnViewDiagnose() = clickOn(R.id.text_view_diagnose)
 
-    fun clickOnViewHelp() = clickOn(R.id.text_view_help)
+    fun clickOnViewHelp() = waitUntil { clickOn(R.id.text_view_help) }
 
     fun clickOnCloseMenu() = clickOn(R.id.closeMenu)
 

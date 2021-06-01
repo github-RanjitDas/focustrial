@@ -7,10 +7,12 @@ import com.schibsted.spain.barista.assertion.BaristaVisibilityAssertions.assertD
 
 class HelpPageScreen : BaseScreen() {
 
-    fun goBack() = pressBack()
+    fun goBack() {
+        waitUntil { pressBack() }
+    }
 
     fun isUserGuideDisplayed() {
         waitUntil { assertDisplayed(R.string.user_guide) }
-        assertDisplayed(R.id.pdfView)
+        waitUntil { assertDisplayed(R.id.pdfView) }
     }
 }
