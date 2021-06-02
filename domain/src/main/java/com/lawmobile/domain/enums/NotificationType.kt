@@ -1,6 +1,10 @@
 package com.lawmobile.domain.enums
 
-enum class NotificationType(val value: String) {
+enum class NotificationType(
+    val value: String,
+    val title: String? = null,
+    val message: String? = null
+) {
 
     BATTERY_LEVEL("battery_level") {
         override fun getTypeOfEvent(): EventType {
@@ -22,12 +26,24 @@ enum class NotificationType(val value: String) {
             return EventType.DIAGNOSIS
         }
     },
-    LOW_BATTERY("low_battery_warning") {
+    LOW_BATTERY(
+        "low_battery_warning",
+        "Low Battery Warning!",
+        ""
+    ) {
         override fun getTypeOfEvent(): EventType {
             return EventType.NOTIFICATION
         }
+
+        override fun getCustomMessage(value: String?): String {
+            return "Your BWC will stop running in ${value ?: 7} minutes. Please charge your BWC"
+        }
     },
-    LOW_STORAGE("low_storage_warning") {
+    LOW_STORAGE(
+        "low_storage_warning",
+        "Low Storage Warning!",
+        "Your BWC is critically low on storage"
+    ) {
         override fun getTypeOfEvent(): EventType {
             return EventType.NOTIFICATION
         }
@@ -42,6 +58,24 @@ enum class NotificationType(val value: String) {
             return EventType.CAMERA
         }
     },
+    GPS_SIGNAL_LOST(
+        "GPS_signal_lost",
+        "GPS Signal Lost!",
+        "Your BWC lost its GPS signal"
+    ) {
+        override fun getTypeOfEvent(): EventType {
+            return EventType.NOTIFICATION
+        }
+    },
+    UNKNOWN_OPERATION(
+        "unknown_operation",
+        "Unknown operation",
+        "An unknown error occurred!"
+    ) {
+        override fun getTypeOfEvent(): EventType {
+            return EventType.NOTIFICATION
+        }
+    },
     DEFAULT("") {
         override fun getTypeOfEvent(): EventType {
             return EventType.CAMERA
@@ -50,6 +84,10 @@ enum class NotificationType(val value: String) {
 
     open fun getTypeOfEvent(): EventType {
         return EventType.NOTIFICATION
+    }
+
+    open fun getCustomMessage(value: String? = null): String? {
+        return message
     }
 
     companion object {
@@ -63,6 +101,8 @@ enum class NotificationType(val value: String) {
                 LOW_STORAGE.value -> LOW_STORAGE
                 VIDEO_RECORD_COMPLETE.value -> VIDEO_RECORD_COMPLETE
                 STARTING_VIDEO_RECORD.value -> STARTING_VIDEO_RECORD
+                GPS_SIGNAL_LOST.value -> GPS_SIGNAL_LOST
+                UNKNOWN_OPERATION.value -> UNKNOWN_OPERATION
                 else -> DEFAULT
             }
         }

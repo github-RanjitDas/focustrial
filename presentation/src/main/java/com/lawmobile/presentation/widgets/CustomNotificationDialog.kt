@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.lawmobile.domain.entities.CameraEvent
 import com.lawmobile.domain.enums.EventTag
+import com.lawmobile.domain.enums.NotificationType
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.databinding.DialogCustomNotificationBinding
 
@@ -54,8 +55,9 @@ class CustomNotificationDialog(
 
     private fun setTextViews() {
         with(binding.layoutNotificationInformation) {
-            textViewNotificationTitle.text = cameraEvent.name
-            textViewNotificationMessage.text = cameraEvent.value
+            val notificationType = NotificationType.getByValue(cameraEvent.name)
+            textViewNotificationTitle.text = notificationType.title ?: cameraEvent.name
+            textViewNotificationMessage.text = notificationType.getCustomMessage(cameraEvent.value) ?: cameraEvent.value
             textViewNotificationDate.text = cameraEvent.date
         }
     }

@@ -7,6 +7,7 @@ import com.safefleet.lawmobile.R
 import com.safefleet.lawmobile.helpers.CustomAssertionActions.waitUntil
 import com.safefleet.lawmobile.helpers.isActivated
 import com.safefleet.lawmobile.helpers.isNotActivated
+import com.schibsted.spain.barista.assertion.BaristaVisibilityAssertions.assertContains
 import com.schibsted.spain.barista.assertion.BaristaVisibilityAssertions.assertDisplayed
 import com.schibsted.spain.barista.assertion.BaristaVisibilityAssertions.assertNotDisplayed
 import com.schibsted.spain.barista.assertion.BaristaVisibilityAssertions.assertNotExist
@@ -103,5 +104,9 @@ class LiveViewScreen : BaseScreen() {
     fun isRecordingInProgress() {
         onView(withId(R.id.buttonRecord)).check(matches(isActivated()))
         assertDisplayed(R.id.textLiveViewRecording)
+    }
+
+    fun isTextBatteryIndicatorContained(text: String) {
+        waitUntil { assertContains(R.id.textViewBatteryPercent, text) }
     }
 }

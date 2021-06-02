@@ -49,7 +49,6 @@ open class LiveStatusBarBaseFragment : BaseFragment() {
 
     fun setSharedObservers() {
         sharedViewModel.catalogInfoLiveData.observe(viewLifecycleOwner, ::setCatalogInfo)
-        sharedViewModel.batteryLevelLiveData.observe(viewLifecycleOwner, ::setBatteryLevel)
     }
 
     fun getCameraStatus(isViewLoaded: Boolean) {
@@ -92,7 +91,7 @@ open class LiveStatusBarBaseFragment : BaseFragment() {
         sharedViewModel.getBatteryLevel()
     }
 
-    private fun setBatteryLevel(result: Event<Result<Int>>) {
+    open fun setBatteryLevel(result: Event<Result<Int>>) {
         result.getContentIfNotHandled()?.run {
             doIfSuccess {
                 manageBatteryLevel(it)
@@ -104,7 +103,7 @@ open class LiveStatusBarBaseFragment : BaseFragment() {
         }
     }
 
-    private fun showBatteryLevelNotAvailable() {
+    fun showBatteryLevelNotAvailable() {
         textViewBattery.text = getString(R.string.not_available)
         progressBarBattery.setProgress(0)
         imageViewBattery.backgroundTintList = ContextCompat.getColorStateList(
@@ -114,7 +113,7 @@ open class LiveStatusBarBaseFragment : BaseFragment() {
         parentLayout.showErrorSnackBar(getString(R.string.battery_level_error))
     }
 
-    fun manageBatteryLevel(batteryPercent: Int) {
+    open fun manageBatteryLevel(batteryPercent: Int) {
         requireActivity().runOnUiThread {
             if (batteryPercent >= 0) {
                 if (batteryPercent == 0 && CameraInfo.cameraType == CameraType.X1) {
@@ -128,7 +127,7 @@ open class LiveStatusBarBaseFragment : BaseFragment() {
         }
     }
 
-    private fun setColorInBattery(batteryPercent: Int) {
+    fun setColorInBattery(batteryPercent: Int) {
         when (batteryPercent) {
             in batteryBarRanges.lowRange -> {
                 imageViewBattery.backgroundTintList =
@@ -157,7 +156,7 @@ open class LiveStatusBarBaseFragment : BaseFragment() {
         }
     }
 
-    private fun setTextInProgressBattery(batteryPercent: Int) {
+    open fun setTextInProgressBattery(batteryPercent: Int) {
         var hoursLeftText =
             ((batteryPercent * BATTERY_TOTAL_HOURS) / TOTAL_PERCENTAGE).toString()
                 .subSequence(0, 3)

@@ -61,6 +61,7 @@ class LiveStatusBarX2Fragment : LiveStatusBarBaseFragment() {
 
     private fun setObservers() {
         sharedViewModel.storageLiveData.observe(viewLifecycleOwner, ::setStorageLevels)
+        sharedViewModel.batteryLevelLiveData.observe(viewLifecycleOwner, ::setBatteryLevel)
     }
 
     private fun configureProgressBars() {
@@ -81,7 +82,7 @@ class LiveStatusBarX2Fragment : LiveStatusBarBaseFragment() {
         )
         storageBarColors = SafeFleetLinearProgressBarColors(
             highRangeColor = R.color.red,
-            mediumRangeColor = R.color.red,
+            mediumRangeColor = R.color.lightGreen,
             lowRangeColor = R.color.lightGreen
         )
         highRangeColor = batteryBarColors.highRangeColor
@@ -116,8 +117,14 @@ class LiveStatusBarX2Fragment : LiveStatusBarBaseFragment() {
         }
     }
 
-    private fun manageLowBattery() {
+    private fun manageLowBattery(value: Int?) {
         requireActivity().runOnUiThread {
+            wasNotificationArriveForLowBattery = true
+            value?.let {
+                if (currentMinutesAfterNotifications == 0) currentMinutesAfterNotifications = value
+                manageBatteryLevel(getPercentLeftAfterNotification(it))
+                currentMinutesAfterNotifications = value
+            }
             imageViewBattery.startAnimationIfEnabled(blinkAnimation)
         }
     }
@@ -148,18 +155,24 @@ class LiveStatusBarX2Fragment : LiveStatusBarBaseFragment() {
         }
     }
 
-    private fun getUsedStoragePercent(information: List<Double>) =
-        (TOTAL_PERCENTAGE - ((information[FREE_STORAGE_POSITION] * TOTAL_PERCENTAGE) / information[TOTAL_STORAGE_POSITION]))
+    private fun getUsedStoragePercent(information: List<Double>): Double {
+        var usedPercent =
+            (TOTAL_PERCENTAGE - ((information[FREE_STORAGE_POSITION] * TOTAL_PERCENTAGE) / information[TOTAL_STORAGE_POSITION]))
+        if (usedPercent.toInt() == 0) return 0.0
+        val usedPercentFloat = usedPercent - usedPercent.toInt()
+        if (usedPercentFloat != 0.0) usedPercent = (usedPercent - usedPercentFloat + 1)
+        return usedPercent
+    }
 
     private fun setColorInStorageLevel(usedPercent: Double) {
         binding.progressStorageLevel.setProgress(usedPercent.toInt())
         binding.imageViewStorage.apply {
-            if (usedPercent.toInt() in storageBarRanges.lowRange) {
-                backgroundTintList =
-                    ContextCompat.getColorStateList(requireContext(), R.color.greenSuccess)
-            } else {
+            if (usedPercent.toInt() in storageBarRanges.highRange) {
                 backgroundTintList =
                     ContextCompat.getColorStateList(requireContext(), R.color.red)
+            } else {
+                backgroundTintList =
+                    ContextCompat.getColorStateList(requireContext(), R.color.greenSuccess)
                 clearAnimation()
             }
         }
@@ -175,6 +188,67 @@ class LiveStatusBarX2Fragment : LiveStatusBarBaseFragment() {
         binding.textViewStorageLevels.text = textToStorage
     }
 
+    override fun setBatteryLevel(result: Event<Result<Int>>) {
+        result.getContentIfNotHandled()?.run {
+            doIfSuccess {
+                manageBatteryLevel(it)
+            }
+            doIfError {
+                showBatteryLevelNotAvailable()
+            }
+            sharedViewModel.getStorageLevels()
+        }
+    }
+
+    override fun manageBatteryLevel(batteryPercent: Int) {
+        requireActivity().runOnUiThread {
+            if (batteryPercent >= 0) {
+                progressBarBattery.setProgress(batteryPercent)
+                setColorInBattery(batteryPercent)
+                setTextInProgressBattery(batteryPercent)
+                currentPercentInBattery = batteryPercent
+            } else showBatteryLevelNotAvailable()
+        }
+    }
+
+    override fun setTextInProgressBattery(batteryPercent: Int) {
+        if (wasNotificationArriveForLowBattery) {
+            setJustTimeInBatteryText(batteryPercent)
+            currentMinutesAfterNotifications = getMinutesLeftAfterNotification(batteryPercent)
+            return
+        }
+        setJustPercentInBatteryText(batteryPercent)
+    }
+
+    private fun setJustPercentInBatteryText(batteryPercent: Int) {
+        val textBatteryPercent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
+            Html.fromHtml(getString(R.string.battery_percent_x2_just_percent, batteryPercent), 0)
+        else getString(R.string.battery_percent_x2_just_percent, batteryPercent)
+        textViewBattery.text = textBatteryPercent
+    }
+
+    private fun setJustTimeInBatteryText(batteryPercent: Int) {
+        val textBatteryPercent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
+            Html.fromHtml(getStringMinutesBatteryLevel(batteryPercent), 0)
+        else getStringMinutesBatteryLevel(batteryPercent)
+        textViewBattery.text = textBatteryPercent
+    }
+
+    private fun getStringMinutesBatteryLevel(batteryPercent: Int) = getString(
+        R.string.battery_percent_x2_just_minutes,
+        getMinutesLeftAfterNotification(batteryPercent).toString()
+    )
+
+    private fun getMinutesLeftAfterNotification(batteryPercent: Int): Int {
+        return if (currentPercentInBattery == 0) 0
+        else ((batteryPercent * currentMinutesAfterNotifications) / currentPercentInBattery)
+    }
+
+    private fun getPercentLeftAfterNotification(minutes: Int): Int {
+        return if (currentMinutesAfterNotifications == 0) 0
+        else ((minutes * currentPercentInBattery) / currentMinutesAfterNotifications)
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         _binding = null
@@ -182,5 +256,8 @@ class LiveStatusBarX2Fragment : LiveStatusBarBaseFragment() {
 
     companion object {
         val TAG = LiveStatusBarX2Fragment::class.java.simpleName
+        private var wasNotificationArriveForLowBattery = false
+        private var currentMinutesAfterNotifications = 0
+        private var currentPercentInBattery = 100
     }
 }

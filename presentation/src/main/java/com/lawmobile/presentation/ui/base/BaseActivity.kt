@@ -84,7 +84,7 @@ open class BaseActivity : AppCompatActivity() {
     private fun manageCameraEvent(cameraEvent: CameraEvent) {
         if (cameraEvent.eventType == EventType.NOTIFICATION) {
             when (cameraEvent.name) {
-                NotificationType.LOW_BATTERY.value -> onLowBattery?.invoke()
+                NotificationType.LOW_BATTERY.value -> onLowBattery?.invoke(cameraEvent.value?.toInt())
                 NotificationType.LOW_STORAGE.value -> onLowStorage?.invoke()
             }
             runOnUiThread { createNotificationDialog(cameraEvent) }
@@ -95,13 +95,17 @@ open class BaseActivity : AppCompatActivity() {
                 }
             }
             NotificationType.STORAGE_REMAIN.value -> {
-                cameraEvent.value?.toDouble()?.let {
-                    onStorageLevelChanged?.invoke(it)
+                cameraEvent.value?.toDouble()?.let { availableStorage ->
+                    onStorageLevelChanged?.invoke(getUsedStorageWithAvailableStorage(availableStorage))
                 }
             }
         }
 
         viewModel.saveNotificationEvent(cameraEvent)
+    }
+
+    private fun getUsedStorageWithAvailableStorage(availableStorage: Double): Double {
+        return PERCENT_TOTAL_STORAGE - availableStorage
     }
 
     private fun setBaseObservers() {
@@ -178,13 +182,14 @@ open class BaseActivity : AppCompatActivity() {
     companion object {
         var onBatteryLevelChanged: ((Int) -> Unit)? = null
         var onStorageLevelChanged: ((Double) -> Unit)? = null
-        var onLowBattery: (() -> Unit)? = null
+        var onLowBattery: ((Int?) -> Unit)? = null
         var onLowStorage: (() -> Unit)? = null
 
         lateinit var lastInteraction: Timestamp
         var isRecordingVideo: Boolean = false
 
         const val PERMISSION_FOR_LOCATION = 100
+        private const val PERCENT_TOTAL_STORAGE = 100
         const val MAX_TIME_SESSION = 300000
     }
 }

@@ -62,6 +62,7 @@ class LiveStatusBarX1Fragment : LiveStatusBarBaseFragment() {
 
     private fun setObservers() {
         sharedViewModel.storageLiveData.observe(viewLifecycleOwner, ::setStorageLevels)
+        sharedViewModel.batteryLevelLiveData.observe(viewLifecycleOwner, ::setBatteryLevel)
     }
 
     private fun setListeners() {

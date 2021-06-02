@@ -2,7 +2,7 @@ package com.safefleet.lawmobile.helpers
 
 import com.lawmobile.domain.enums.CameraType
 import com.lawmobile.presentation.utils.CameraHelper
-import com.safefleet.lawmobile.di.mocksServiceCameras.CameraConnectServiceX1Mock
+import com.safefleet.lawmobile.di.mocksServiceCameras.CameraConnectServiceMock
 import com.safefleet.lawmobile.testData.CameraFilesData
 import com.safefleet.lawmobile.testData.TestLoginData
 import com.safefleet.mobile.external_hardware.cameras.entities.FileResponseWithErrors
@@ -18,6 +18,8 @@ class MockUtils {
         var wifiEnabled = true
         var cameraSSID = TestLoginData.SSID_X1.value
         var bodyWornDiagnosisResult: Result<Boolean> = Result.Success(true)
+        var progressBatteryCamera: Result<Int> = Result.Success(90)
+        var cameraConnectServiceX1Mock = CameraConnectServiceMock()
     }
 
     fun disconnectCamera() {
@@ -29,31 +31,31 @@ class MockUtils {
         mockkObject(CameraHelper)
         every { CameraHelper.getInstance() } returns cameraHelperMock
 
-        CameraConnectServiceX1Mock.result = Result.Error(Exception())
+        CameraConnectServiceMock.result = Result.Error(Exception())
     }
 
     fun restoreCameraConnection() {
         unmockkObject(CameraHelper)
-        CameraConnectServiceX1Mock.result = Result.Success(100)
+        CameraConnectServiceMock.result = Result.Success(100)
     }
 
     fun clearSnapshotsOnX1() {
-        CameraConnectServiceX1Mock.snapshotsList = FileResponseWithErrors()
-        CameraConnectServiceX1Mock.takenPhotos = 0
+        CameraConnectServiceMock.snapshotsList = FileResponseWithErrors()
+        CameraConnectServiceMock.takenPhotos = 0
     }
 
     fun restoreSnapshotsOnX1() {
-        CameraConnectServiceX1Mock.snapshotsList =
+        CameraConnectServiceMock.snapshotsList =
             CameraFilesData.DEFAULT_SNAPSHOT_LIST.value
     }
 
     fun clearVideosOnX1() {
-        CameraConnectServiceX1Mock.videoList = FileResponseWithErrors()
-        CameraConnectServiceX1Mock.takenVideos = 0
+        CameraConnectServiceMock.videoList = FileResponseWithErrors()
+        CameraConnectServiceMock.takenVideos = 0
     }
 
     fun restoreVideosOnX1() {
-        CameraConnectServiceX1Mock.videoList =
+        CameraConnectServiceMock.videoList =
             CameraFilesData.DEFAULT_VIDEO_LIST.value
     }
 
@@ -76,5 +78,9 @@ class MockUtils {
 
     fun setBodyWornDiagnosisResult(result: Result<Boolean>) {
         bodyWornDiagnosisResult = result
+    }
+
+    fun setBatteryProgressCamera(progress: Int) {
+        progressBatteryCamera = Result.Success(progress)
     }
 }

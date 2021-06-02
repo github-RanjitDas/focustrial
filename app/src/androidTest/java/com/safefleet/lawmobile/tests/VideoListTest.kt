@@ -13,6 +13,7 @@ import com.safefleet.lawmobile.screens.LoginScreen
 import com.safefleet.lawmobile.screens.VideoPlaybackScreen
 import com.safefleet.lawmobile.testData.CameraFilesData
 import com.safefleet.lawmobile.testData.VideoPlaybackMetadata
+import com.schibsted.spain.barista.interaction.BaristaSleepInteractions.sleep
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -81,6 +82,7 @@ class VideoListTest : EspressoStartActivityBaseTest<LoginActivity>(LoginActivity
         liveViewScreen.openVideoList()
 
         with(fileListScreen) {
+            sleep(1200)
             clickOnSelectFilesToAssociate()
             areFilesSortedByDate(videoList.items)
 
@@ -120,6 +122,7 @@ class VideoListTest : EspressoStartActivityBaseTest<LoginActivity>(LoginActivity
         liveViewScreen.openVideoList()
 
         with(fileListScreen) {
+            sleep(1200)
             clickOnSelectFilesToAssociate()
             areFilesSortedByDate(videoList.items)
 
@@ -231,6 +234,7 @@ class VideoListTest : EspressoStartActivityBaseTest<LoginActivity>(LoginActivity
         liveViewScreen.openVideoList()
 
         with(fileListScreen) {
+            sleep(1200)
             clickOnSelectFilesToAssociate()
             selectCheckboxOnPosition(1)
             selectCheckboxOnPosition(3)
