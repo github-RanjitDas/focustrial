@@ -14,7 +14,7 @@ import com.schibsted.spain.barista.assertion.BaristaVisibilityAssertions.assertN
 import com.schibsted.spain.barista.interaction.BaristaClickInteractions.clickOn
 import com.schibsted.spain.barista.interaction.BaristaSleepInteractions.sleep
 
-class LiveViewScreen : BaseScreen() {
+open class LiveViewScreen : BaseScreen() {
 
     private val mainMenuScreen = MainMenuScreen()
     private val helPageScreen = HelpPageScreen()
@@ -23,9 +23,9 @@ class LiveViewScreen : BaseScreen() {
 
     fun switchFullScreenMode() = waitUntil { clickOn(R.id.toggleFullScreenLiveView) }
 
-    fun openSnapshotList() = clickOn(R.id.buttonSnapshotList)
+    open fun openSnapshotList() = waitUntil { clickOn(R.id.buttonSnapshotList) }
 
-    fun openVideoList() = clickOn(R.id.buttonVideoList)
+    open fun openVideoList() = waitUntil { clickOn(R.id.buttonVideoList) }
 
     fun openHelpPage() = clickOn(R.id.buttonOpenHelpPage)
 
@@ -36,19 +36,19 @@ class LiveViewScreen : BaseScreen() {
         helPageScreen.goBack()
     }
 
-    fun takeSnapshot() {
-        clickOn(R.id.buttonSnapshot)
-        assertDisplayed(R.string.live_view_take_photo_success)
+    open fun takeSnapshot() {
+        waitUntil { clickOn(R.id.buttonSnapshot) }
+        waitUntil { assertDisplayed(R.string.live_view_take_photo_success) }
         waitUntil { assertNotExist(R.string.live_view_take_photo_success) }
     }
 
-    fun startRecording() {
+    open fun startRecording() {
         isRecordingNotInProgress()
         clickOn(R.id.buttonRecord)
     }
 
-    fun stopRecording() {
-        isRecordingInProgress()
+    open fun stopRecording() {
+        waitUntil { isRecordingInProgress() }
         clickOn(R.id.buttonRecord)
         waitUntil { isRecordingNotInProgress() }
     }
@@ -115,13 +115,13 @@ class LiveViewScreen : BaseScreen() {
     }
 
     fun isRecordingNotInProgress() {
-        onView(withId(R.id.buttonRecord)).check(matches(isNotActivated()))
+        waitUntil { onView(withId(R.id.buttonRecord)).check(matches(isNotActivated())) }
         assertNotDisplayed(R.id.textLiveViewRecording)
     }
 
     fun isRecordingInProgress() {
         onView(withId(R.id.buttonRecord)).check(matches(isActivated()))
-        assertDisplayed(R.id.textLiveViewRecording)
+        waitUntil { assertDisplayed(R.id.textLiveViewRecording) }
     }
 
     fun isTextBatteryIndicatorContained(text: String) {

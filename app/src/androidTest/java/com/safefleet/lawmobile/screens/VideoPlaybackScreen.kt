@@ -21,7 +21,7 @@ class VideoPlaybackScreen : BaseScreen() {
 
     fun selectEvent(data: VideoInformation) {
         clickOn(R.id.eventValue)
-        data.metadata?.event?.name?.let { clickOn(it) }
+        data.metadata?.event?.name?.let { waitUntil { clickOn(it) } }
     }
 
     private fun selectGender(data: VideoInformation) {
@@ -38,9 +38,9 @@ class VideoPlaybackScreen : BaseScreen() {
         data.officerId?.let { writeTo(R.id.partnerIdValue, it) }
 
     fun fillAllFields(data: VideoInformation) {
-        selectEvent(data)
-        selectGender(data)
-        selectRace(data)
+        waitUntil { selectEvent(data) }
+        waitUntil { selectGender(data) }
+        waitUntil { selectRace(data) }
 
         data.officerId?.let { writeTo(R.id.partnerIdValue, it) }
         data.metadata?.run {
@@ -63,7 +63,7 @@ class VideoPlaybackScreen : BaseScreen() {
         assertNotDisplayed(R.id.eventValue, "Select")
         assertNotDisplayed(R.id.genderValue, "Select")
         assertNotDisplayed(R.id.raceValue, "Select")
-        assertNotDisplayed(R.id.partnerIdValue, "")
+        waitUntil { assertNotDisplayed(R.id.partnerIdValue, "") }
         assertNotDisplayed(R.id.ticket2Value, "")
         assertNotDisplayed(R.id.case1Value, "")
         assertNotDisplayed(R.id.case2Value, "")
@@ -100,5 +100,29 @@ class VideoPlaybackScreen : BaseScreen() {
     fun thereAreSnapshotsAssociated() {
         safelyScrollTo(R.id.layoutAssociatedSnapshots)
         assertDisplayed(R.id.layoutAssociatedSnapshots)
+    }
+
+    fun checkIfFieldsAreUpdated(data: VideoInformation) {
+        data.officerId?.let { checkIfFieldIsUpdated(R.id.partnerIdValue, it) }
+
+        data.metadata?.run {
+            ticketNumber?.let { checkIfFieldIsUpdated(R.id.ticket1Value, it) }
+            ticketNumber2?.let { checkIfFieldIsUpdated(R.id.ticket2Value, it) }
+            caseNumber?.let { checkIfFieldIsUpdated(R.id.case1Value, it) }
+            caseNumber2?.let { checkIfFieldIsUpdated(R.id.case2Value, it) }
+            dispatchNumber?.let { checkIfFieldIsUpdated(R.id.dispatch1Value, it) }
+            dispatchNumber2?.let { checkIfFieldIsUpdated(R.id.dispatch2Value, it) }
+            location?.let { checkIfFieldIsUpdated(R.id.locationValue, it) }
+            remarks?.let { checkIfFieldIsUpdated(R.id.notesValue, it) }
+            firstName?.let { checkIfFieldIsUpdated(R.id.firstNameValue, it) }
+            lastName?.let { checkIfFieldIsUpdated(R.id.lastNameValue, it) }
+            driverLicense?.let { checkIfFieldIsUpdated(R.id.driverLicenseValue, it) }
+            licensePlate?.let { checkIfFieldIsUpdated(R.id.licensePlateValue, it) }
+        }
+    }
+
+    private fun checkIfFieldIsUpdated(id: Int, value: String) {
+        safelyScrollTo(id)
+        waitUntil { assertDisplayed(id, value) }
     }
 }

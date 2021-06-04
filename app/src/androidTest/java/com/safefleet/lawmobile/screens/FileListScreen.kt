@@ -2,11 +2,14 @@ package com.safefleet.lawmobile.screens
 
 import androidx.annotation.IdRes
 import androidx.annotation.StringRes
+import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.assertion.ViewAssertions
+import androidx.test.espresso.matcher.ViewMatchers
 import com.lawmobile.data.extensions.getCreationDate
 import com.safefleet.lawmobile.R
 import com.safefleet.lawmobile.helpers.CustomAssertionActions.waitUntil
 import com.safefleet.lawmobile.helpers.CustomCheckboxAction
+import com.safefleet.lawmobile.helpers.RecyclerViewHelper
 import com.safefleet.lawmobile.helpers.isActivated
 import com.safefleet.lawmobile.helpers.isNotActivated
 import com.safefleet.mobile.external_hardware.cameras.entities.CameraFile
@@ -20,8 +23,9 @@ import com.schibsted.spain.barista.interaction.BaristaClickInteractions.clickOn
 import com.schibsted.spain.barista.interaction.BaristaEditTextInteractions.writeTo
 import com.schibsted.spain.barista.interaction.BaristaListInteractions
 import com.schibsted.spain.barista.interaction.BaristaListInteractions.clickListItem
+import org.hamcrest.Matcher
 
-class FileListScreen : BaseScreen() {
+open class FileListScreen : BaseScreen() {
 
     @IdRes
     var recyclerView: Int = R.id.fileListRecycler
@@ -49,16 +53,17 @@ class FileListScreen : BaseScreen() {
     fun clickOnItemInPosition(position: Int) =
         waitUntil { clickListItem(recyclerView, position) }
 
-    fun clickOnSelectFilesToAssociate() = clickOn(R.id.buttonSelectToAssociate)
+    open fun clickOnSelectFilesToAssociate() =
+        waitUntil { clickOn(R.id.buttonSelectToAssociate) }
 
-    fun clickOnAssociateWithAnOfficer() = clickOn(R.string.associate_with_an_officer)
+    fun clickOnAssociateWithAnOfficer() = waitUntil { clickOn(R.string.associate_with_an_officer) }
 
-    fun clickOnButtonAssignToOfficer() = clickOn(R.id.buttonAssignToOfficer)
+    fun clickOnButtonAssignToOfficer() = waitUntil { clickOn(R.id.buttonAssignToOfficer) }
 
     fun clickOnSimpleListButton() = clickOn(R.id.buttonSimpleList)
 
-    fun typeOfficerIdToAssociate(officerId: String) =
-        writeTo(R.id.editTextAssignToOfficer, officerId)
+    open fun typeOfficerIdToAssociate(officerId: String) =
+        waitUntil { writeTo(R.id.editTextAssignToOfficer, officerId) }
 
     fun openFilterDialog() {
         clickOn(R.id.buttonOpenFilters)
@@ -74,7 +79,13 @@ class FileListScreen : BaseScreen() {
         assertHasDrawable(R.id.buttonOpenFilters, R.drawable.ic_filter)
     }
 
+    fun clickOnRetry() = waitUntil { clickOn(R.string.retry) }
+
     fun checkFileEvent(event: String?) = event?.let { assertDisplayed(it) }
+
+    fun reviewItemsCount(matcher: Matcher<Int>) {
+        waitUntil { onView(ViewMatchers.withId(recyclerView)).check(RecyclerViewHelper(matcher)) }
+    }
 
     fun matchItemsCount(count: Int) =
         waitUntil { assertRecyclerViewItemCount(recyclerView, count) }
@@ -164,5 +175,19 @@ class FileListScreen : BaseScreen() {
     fun isSnapshotsListScreenDisplayed() {
         isFilterButtonDisplayed()
         isSnapshotsTitleDisplayed()
+    }
+
+    fun isAssociatePartnerSuccessMessageDisplayed() =
+        waitUntil { assertDisplayed(R.string.file_list_associate_partner_id_success) }
+
+    fun isOfficerAssociatedDisplayed(officer: String) = waitUntil { assertDisplayed(officer) }
+
+    fun isRetryDisplayed(): Boolean {
+        try {
+            waitUntil { assertDisplayed(R.string.retry) }
+        } catch (e: Exception) {
+            return false
+        }
+        return true
     }
 }
