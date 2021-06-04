@@ -21,8 +21,8 @@ class VideoPlaybackTest : EspressoStartActivityBaseTest<LoginActivity>(LoginActi
         private val fileListScreen = FileListScreen()
         private val liveViewScreen = LiveViewScreen()
         private val videoPlaybackScreen = VideoPlaybackScreen()
-        private val defaultMetadata = VideoPlaybackMetadata.DEFAULT_VIDEO_METADATA.value
-        private val extraMetadata = VideoPlaybackMetadata.EXTRA_VIDEO_METADATA.value
+        val defaultMetadata = VideoPlaybackMetadata.DEFAULT_VIDEO_METADATA.value
+        val extraMetadata = VideoPlaybackMetadata.EXTRA_VIDEO_METADATA.value
     }
 
     @Before

@@ -2,6 +2,7 @@ package com.safefleet.lawmobile.screens
 
 import com.safefleet.lawmobile.R
 import com.safefleet.lawmobile.helpers.Alert
+import com.safefleet.lawmobile.helpers.CustomAssertionActions.retry
 import com.safefleet.lawmobile.helpers.CustomAssertionActions.waitUntil
 import com.safefleet.lawmobile.testData.TestLoginData
 import com.schibsted.spain.barista.assertion.BaristaImageViewAssertions.assertHasDrawable
@@ -11,14 +12,14 @@ import com.schibsted.spain.barista.assertion.BaristaVisibilityAssertions.assertN
 import com.schibsted.spain.barista.interaction.BaristaClickInteractions.clickOn
 import com.schibsted.spain.barista.interaction.BaristaEditTextInteractions.writeTo
 
-class LoginScreen : BaseScreen() {
+open class LoginScreen : BaseScreen() {
 
     fun typePassword(officerPassword: String = TestLoginData.OFFICER_PASSWORD.value) =
         writeTo(R.id.editTextOfficerPassword, officerPassword)
 
     fun clickOnGo() = clickOn(R.id.buttonGo)
 
-    fun clickOnLogin() = clickOn(R.id.buttonLogin)
+    fun clickOnLogin() = waitUntil { clickOn(R.id.buttonLogin) }
 
     fun clickOnCameraInstructions() = clickOn(R.id.buttonInstructionsToLinkCamera)
 
@@ -30,15 +31,30 @@ class LoginScreen : BaseScreen() {
         clickOn(R.id.buttonRetry)
     }
 
-    fun login() {
+    open fun login(officerPassword: String = TestLoginData.OFFICER_PASSWORD.value) {
         try {
             clickOnGo()
+            retryLogin()
         } catch (e: Exception) {
             e.printStackTrace()
         }
         isLoginScreenDisplayed()
-        typePassword()
+        typePassword(officerPassword)
         clickOnLogin()
+    }
+
+    fun retryLogin(timeout: Long = 1000) {
+        val isTryAgainDisplayed = isTryAgainDisplayed(timeout)
+        if (isTryAgainDisplayed) retry { retryPairing() }
+    }
+
+    private fun isTryAgainDisplayed(timeout: Long): Boolean {
+        try {
+            waitUntil(timeout) { assertDisplayed(R.string.try_again_button_pairing) }
+        } catch (e: java.lang.Exception) {
+            return false
+        }
+        return true
     }
 
     private fun isLogoDisplayed() = assertDisplayed(R.id.imageViewFMALogoNoAnimation)
@@ -60,8 +76,13 @@ class LoginScreen : BaseScreen() {
     }
 
     fun isPairingSuccessDisplayed() {
-        assertHasDrawable(R.id.imageViewResultPairing, R.drawable.ic_successful_green)
-        assertContains(R.id.textViewResultPairing, R.string.success_connection_to_camera)
+        waitUntil { assertHasDrawable(R.id.imageViewResultPairing, R.drawable.ic_successful_green) }
+        waitUntil {
+            assertContains(
+                R.id.textViewResultPairing,
+                R.string.success_connection_to_camera
+            )
+        }
     }
 
     fun isIncorrectPasswordToastDisplayed() {
@@ -94,7 +115,7 @@ class LoginScreen : BaseScreen() {
     private fun isGoButtonDisplayed() = assertDisplayed(R.id.buttonGo)
 
     fun isPairingScreenDisplayed() {
-        isLogoDisplayed()
+        waitUntil { isLogoDisplayed() }
         isConnectToCameraTextDisplayed()
         isGoButtonDisplayed()
         isInstructionsButtonDisplayed()
@@ -103,8 +124,8 @@ class LoginScreen : BaseScreen() {
 
     fun isLoginScreenDisplayed() {
         waitUntil { assertDisplayed(R.id.buttonLogin) }
-        isLogoDisplayed()
+        waitUntil { isLogoDisplayed() }
         waitUntil { isPasswordTextDisplayed() }
-        isFooterLogoDisplayed()
+        waitUntil { isFooterLogoDisplayed() }
     }
 }

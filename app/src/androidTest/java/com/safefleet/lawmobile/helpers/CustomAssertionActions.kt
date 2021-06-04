@@ -31,6 +31,24 @@ object CustomAssertionActions {
         espressoAssertion()
     }
 
+    fun retry(timeout: Int = 3, espressoAssertion: (() -> Unit)) {
+        var startTime = 0
+        val endTime = startTime + timeout
+
+        do {
+            try {
+                startTime++
+                sleep(1000)
+                espressoAssertion()
+                return
+            } catch (e: Throwable) {
+                e.printStackTrace()
+                sleep(100)
+            }
+        } while (startTime < endTime)
+        espressoAssertion()
+    }
+
     fun customSwipeRight(): ViewAction {
         return GeneralSwipeAction(
             Swipe.FAST,
