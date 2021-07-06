@@ -14,6 +14,7 @@ import com.safefleet.mobile.external_hardware.cameras.entities.FileResponseWithE
 import com.safefleet.mobile.external_hardware.cameras.entities.LogEvent
 import com.safefleet.mobile.external_hardware.cameras.entities.NotificationResponse
 import com.safefleet.mobile.external_hardware.cameras.entities.PhotoInformation
+import com.safefleet.mobile.external_hardware.cameras.entities.SetupConfiguration
 import com.safefleet.mobile.external_hardware.cameras.entities.VideoFileInfo
 import com.safefleet.mobile.external_hardware.cameras.entities.VideoInformation
 import com.safefleet.mobile.external_hardware.cameras.entities.VideoMetadata
@@ -161,6 +162,10 @@ class CameraConnectServiceMock : CameraService {
     }
 
     override suspend fun saveVideoMetadata(videoInformation: VideoInformation): Result<Unit> {
+        return Result.Success(Unit)
+    }
+
+    override suspend fun setSetupConfiguration(setupConfiguration: SetupConfiguration): Result<Unit> {
         return Result.Success(Unit)
     }
 

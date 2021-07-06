@@ -23,7 +23,7 @@ object Dependencies {
 
     object Base {
         const val androidCommons = "com.safefleet.mobile:android-commons:1.2.0-SNAPSHOT@aar"
-        const val externalHardware = "com.safefleet.mobile:external-hardware:4.0.0-SNAPSHOT@jar"
+        const val externalHardware = "com.safefleet.mobile:external-hardware:4.2.3-SNAPSHOT@jar"
         const val kotlinCommons = "com.safefleet.mobile:kotlin-commons:1.1.0-SNAPSHOT@jar"
         const val safeFleetUI = "com.safefleet.mobile:safefleet-ui:1.2.0-SNAPSHOT@aar"
     }
