@@ -121,6 +121,7 @@
     <!-- link_snapshots -->
 
     <!-- Partner Id -->
+    <string name="allowedOfficerIdAssociatedPattern">ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789</string>
     <string name="associate_partner_id_content_description">Associate partner ID</string>
     <string name="file_list_associate_partner_id_success">The partner ID associated successfully</string>
     <string name="file_list_associate_partner_id_error">Partner ID could not be associated</string>
