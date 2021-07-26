@@ -100,6 +100,7 @@
                     <ImageButton
                         android:id="@+id/buttonAspect"
                         style="@style/buttonPlayBackVideo"
+                        android:visibility="gone"
                         android:layout_marginTop="@dimen/margin_5dp"
                         android:layout_marginEnd="@dimen/video_playback_button_aspect_margin_sides"
                         android:contentDescription="@string/aspect_video_playback_description"
