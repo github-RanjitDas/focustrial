@@ -26,7 +26,7 @@
         android:id="@+id/buttonThumbnailList"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_grid_selector"
+        app:imageButton="@drawable/ic_grid_custom_selector"
         android:layout_marginEnd="@dimen/margin_16dp"
         android:contentDescription="@string/focus_mobile_app_logo_description"
         app:layout_constraintBottom_toBottomOf="@+id/buttonSelectToAssociate"
@@ -39,7 +39,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/margin_16dp"
         android:contentDescription="@string/focus_mobile_app_logo_description"
-        android:src="@drawable/ic_list_selector"
+        app:imageButton="@drawable/ic_list_custom_selector"
         app:layout_constraintBottom_toBottomOf="@+id/buttonSelectToAssociate"
         app:layout_constraintEnd_toStartOf="@+id/buttonOpenFilters"
         app:layout_constraintTop_toTopOf="@+id/buttonSelectToAssociate" />
