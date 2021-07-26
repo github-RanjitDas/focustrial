@@ -18,6 +18,7 @@ import com.safefleet.mobile.external_hardware.cameras.entities.SetupConfiguratio
 import com.safefleet.mobile.external_hardware.cameras.entities.VideoFileInfo
 import com.safefleet.mobile.external_hardware.cameras.entities.VideoInformation
 import com.safefleet.mobile.external_hardware.cameras.entities.VideoMetadata
+import com.safefleet.mobile.external_hardware.cameras.enums.CameraType
 import com.safefleet.mobile.kotlin_commons.helpers.Result
 import io.mockk.mockk
 
@@ -53,6 +54,13 @@ class CameraConnectServiceMock : CameraService {
 
     override suspend fun getBodyWornDiagnosis(): Result<Boolean> {
         return bodyWornDiagnosisResult
+    }
+
+    override suspend fun getCameraType(): Result<CameraType> {
+        if (MockUtils.cameraSSID == TestLoginData.SSID_X1.value) {
+            return Result.Success(CameraType.X1)
+        }
+        return Result.Success(CameraType.X2)
     }
 
     override fun getCanReadNotification(): Boolean {
@@ -151,6 +159,10 @@ class CameraConnectServiceMock : CameraService {
 
     override suspend fun loadPairingCamera(hostnameToConnect: String, ipAddressClient: String) {
         progressPairingCamera?.invoke(result)
+    }
+
+    override fun reviewIfArriveNotificationInCMDSocket() {
+        // Just for test
     }
 
     override suspend fun saveAllPhotoMetadata(list: List<PhotoInformation>): Result<Unit> {

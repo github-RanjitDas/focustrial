@@ -1,6 +1,7 @@
 package com.lawmobile.data.utils
 
 import com.lawmobile.domain.entities.CameraInfo
+import com.lawmobile.domain.enums.CameraType
 import com.safefleet.mobile.external_hardware.cameras.x1.X1CameraServiceImpl
 import com.safefleet.mobile.external_hardware.cameras.x2.X2CameraServiceImpl
 import io.mockk.mockk
@@ -16,14 +17,14 @@ class CameraServiceFactoryImplTest {
 
     @Test
     fun testCameraServiceIsX1() {
-        CameraInfo.setCameraType("X571231231")
+        CameraInfo.setCamera(CameraType.X1)
         val cameraX1 = cameraServiceFactoryImpl.create()
         Assert.assertEquals(cameraX1, x1cameraService)
     }
 
     @Test
     fun testCameraServiceIsX2() {
-        CameraInfo.setCameraType("01010101001")
+        CameraInfo.setCamera(CameraType.X2)
         val cameraX1 = cameraServiceFactoryImpl.create()
         Assert.assertEquals(cameraX1, x2cameraService)
     }
