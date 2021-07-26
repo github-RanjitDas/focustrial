@@ -64,6 +64,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/margin_30dp"
                 android:layout_marginTop="@dimen/margin_5dp"
+                android:digits="@string/allowedOfficerIdAssociatedPattern"
+                android:maxLength="20"
                 android:background="@drawable/shape_unchecked_box"
                 android:hint="@string/officer_id_hint"
                 android:padding="@dimen/padding_10dp"

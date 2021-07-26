@@ -270,6 +270,7 @@
                         android:layout_marginTop="@dimen/margin_5dp"
                         android:background="@drawable/shape_unchecked_box"
                         android:inputType="text"
+                        android:digits="@string/allowedOfficerIdAssociatedPattern"
                         android:maxLength="20"
                         android:padding="@dimen/padding_12dp"
                         android:singleLine="true"

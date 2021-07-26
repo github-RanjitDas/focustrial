@@ -162,7 +162,6 @@ class VideoPlaybackActivity : BaseActivity() {
 
     private fun addEditTextFilter() {
         with(binding) {
-            partnerIdValue.filters = getFiltersWithLength(20)
             ticket1Value.filters = getFiltersWithLength(20)
             ticket2Value.filters = getFiltersWithLength(20)
             case1Value.filters = getFiltersWithLength(50)
