@@ -10,6 +10,7 @@
 
     <!-- Login -->
     <dimen name="login_constrain_parent_padding">40dp</dimen>
+    <dimen name="text_size_version_number">8sp</dimen>
 
     <!--  Pairing Phone with Camera -->
     <dimen name="pairing_phone_camera_text_title_margin_top">20dp</dimen>

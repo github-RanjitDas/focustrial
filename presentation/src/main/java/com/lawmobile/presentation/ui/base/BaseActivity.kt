@@ -14,6 +14,7 @@ import com.lawmobile.domain.enums.CameraType
 import com.lawmobile.domain.enums.EventType
 import com.lawmobile.domain.enums.NotificationType
 import com.lawmobile.domain.usecase.events.EventsUseCase
+import com.lawmobile.presentation.BuildConfig
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.entities.NeutralAlertInformation
 import com.lawmobile.presentation.extensions.checkIfSessionIsExpired
@@ -63,6 +64,11 @@ open class BaseActivity : AppCompatActivity() {
         updateLastInteraction()
         setEventsUseCase()
         setEventsListener()
+    }
+
+    fun getApplicationVersionText(): String {
+        return if (BuildConfig.DEBUG) "Version ${BuildConfig.VERSION_NAME}(${BuildConfig.VERSION_CODE})"
+        else "Version ${BuildConfig.VERSION_NAME}"
     }
 
     private fun setEventsUseCase() {

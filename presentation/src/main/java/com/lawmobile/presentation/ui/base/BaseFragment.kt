@@ -22,6 +22,10 @@ open class BaseFragment : Fragment() {
         EspressoIdlingResource.decrement()
     }
 
+    fun getApplicationVersionText(): String {
+        return (activity as BaseActivity).getApplicationVersionText()
+    }
+
     fun isInPortraitMode() =
         resources.configuration.orientation == ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
 
