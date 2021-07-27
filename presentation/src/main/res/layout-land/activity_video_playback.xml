@@ -471,7 +471,7 @@
                 tools:ignore="Autofill,LabelFor" />
 
             <TextView
-                android:id="@+id/remarksTitle"
+                android:id="@+id/notesTitle"
                 android:layout_width="@dimen/no_dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/video_playback_metadata_spacing"
@@ -494,7 +494,7 @@
                 android:singleLine="true"
                 android:textColor="@color/black"
                 android:textSize="@dimen/video_playback_metadata_text_size"
-                app:layout_constraintTop_toBottomOf="@id/remarksTitle"
+                app:layout_constraintTop_toBottomOf="@id/notesTitle"
                 tools:ignore="Autofill,LabelFor" />
 
             <TextView
