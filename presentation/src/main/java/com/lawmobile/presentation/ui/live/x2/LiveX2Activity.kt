@@ -35,6 +35,7 @@ class LiveX2Activity : BaseActivity() {
     private val controlsFragment = LiveControlsX1Fragment()
     private val navigationFragment = LiveNavigationX1Fragment()
     private val menuFragment = MenuFragment()
+    private var isMenuOpen = false
 
     private lateinit var menuInformation: MenuInformation
 
@@ -74,6 +75,7 @@ class LiveX2Activity : BaseActivity() {
             binding.layoutCustomMenu.menuContainer.closeMenuButton(menuInformation)
         }
         appBarFragment.onTapMenuButton = {
+            isMenuOpen = true
             binding.layoutCustomMenu.menuContainer.openMenuButton(menuInformation)
         }
         binding.layoutCustomMenu.shadowOpenMenuView.setOnSwipeRightListener { onCloseMenuButton() }
@@ -83,6 +85,7 @@ class LiveX2Activity : BaseActivity() {
         animateCloseMenuContainer()
         binding.layoutCustomMenu.menuContainer.isVisible = false
         binding.layoutCustomMenu.shadowOpenMenuView.isVisible = false
+        isMenuOpen = false
     }
 
     private fun onCameraOperation(message: String) {
@@ -198,7 +201,8 @@ class LiveX2Activity : BaseActivity() {
     }
 
     override fun onBackPressed() {
-        // This method is implemented to invalidate the behaviour of back button on the phones
+        if (isMenuOpen) onCloseMenuButton()
+        else moveTaskToBack(true)
     }
 
     companion object {
