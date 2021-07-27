@@ -77,13 +77,13 @@ class LiveStatusBarX2Fragment : LiveStatusBarBaseFragment() {
         )
         storageBarRanges = SafeFleetLinearProgressBarRanges(
             highRange = Range(85, 100),
-            mediumRange = Range(70, 84),
-            lowRange = Range(0, 69)
+            mediumRange = Range(15, 84),
+            lowRange = Range(0, 14)
         )
         storageBarColors = SafeFleetLinearProgressBarColors(
-            highRangeColor = R.color.red,
+            highRangeColor = R.color.lightGreen,
             mediumRangeColor = R.color.lightGreen,
-            lowRangeColor = R.color.lightGreen
+            lowRangeColor = R.color.red
         )
         highRangeColor = batteryBarColors.highRangeColor
         binding.progressBatteryLevel.setBehavior(batteryBarRanges, batteryBarColors)
@@ -132,7 +132,7 @@ class LiveStatusBarX2Fragment : LiveStatusBarBaseFragment() {
     private fun setStorageLevels(result: Event<Result<List<Double>>>) {
         result.getContentIfNotHandled()?.run {
             doIfSuccess {
-                manageStorageLevel(getUsedStoragePercent(it))
+                manageStorageLevel(getAvailableStoragePercent(it))
             }
             doIfError {
                 binding.textViewStorageLevels.text = getString(R.string.not_available)
@@ -155,19 +155,19 @@ class LiveStatusBarX2Fragment : LiveStatusBarBaseFragment() {
         }
     }
 
-    private fun getUsedStoragePercent(information: List<Double>): Double {
-        var usedPercent =
-            (TOTAL_PERCENTAGE - ((information[FREE_STORAGE_POSITION] * TOTAL_PERCENTAGE) / information[TOTAL_STORAGE_POSITION]))
-        if (usedPercent.toInt() == 0) return 0.0
-        val usedPercentFloat = usedPercent - usedPercent.toInt()
-        if (usedPercentFloat != 0.0) usedPercent = (usedPercent - usedPercentFloat + 1)
-        return usedPercent
+    private fun getAvailableStoragePercent(information: List<Double>): Double {
+        var availablePercent =
+            (information[FREE_STORAGE_POSITION] * TOTAL_PERCENTAGE) / information[TOTAL_STORAGE_POSITION]
+        if (availablePercent.toInt() == 0) return 0.0
+        val availablePercentFloat = availablePercent - availablePercent.toInt()
+        if (availablePercentFloat != 0.0) availablePercent = (availablePercent - availablePercentFloat + 1)
+        return availablePercent
     }
 
     private fun setColorInStorageLevel(usedPercent: Double) {
         binding.progressStorageLevel.setProgress(usedPercent.toInt())
         binding.imageViewStorage.apply {
-            if (usedPercent.toInt() in storageBarRanges.highRange) {
+            if (usedPercent.toInt() in storageBarRanges.lowRange) {
                 backgroundTintList =
                     ContextCompat.getColorStateList(requireContext(), R.color.red)
             } else {
