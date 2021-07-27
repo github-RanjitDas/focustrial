@@ -481,10 +481,10 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/margin_5dp"
                         android:background="@drawable/shape_unchecked_box"
-                        android:inputType="text"
+                        android:inputType="textMultiLine"
                         android:maxLength="100"
+                        android:minLines="3"
                         android:padding="@dimen/padding_12dp"
-                        android:singleLine="true"
                         android:textSize="@dimen/video_playback_metadata_text_size"
                         app:layout_constraintTop_toBottomOf="@id/remarksTitle"
                         tools:ignore="Autofill,LabelFor" />
