@@ -54,6 +54,7 @@ class MenuFragment : BaseFragment() {
         setObservers()
         setTouchListeners()
         setListeners()
+        binding.versionNumberTextMainMenu.text = getApplicationVersionText()
     }
 
     private fun setCurrentNotificationCount() {

@@ -91,6 +91,8 @@ class LoginActivity : BaseActivity() {
     private fun showLoginViews(isFinished: Boolean) {
         if (isFinished) {
             activityLoginBinding.imageViewSafeFleetFooterLogo.isVisible = true
+            activityLoginBinding.versionNumberTextLogin.isVisible = true
+            activityLoginBinding.versionNumberTextLogin.text = getApplicationVersionText()
             showFragmentPairingCamera()
             verifyLocationPermission()
         }
@@ -145,6 +147,7 @@ class LoginActivity : BaseActivity() {
         activityLoginBinding.imageViewFMALogo.isVisible = false
         activityLoginBinding.imageViewFMALogoNoAnimation.isVisible = true
         activityLoginBinding.imageViewSafeFleetFooterLogo.isVisible = true
+        activityLoginBinding.versionNumberTextLogin.isVisible = true
     }
 
     override fun onBackPressed() {
