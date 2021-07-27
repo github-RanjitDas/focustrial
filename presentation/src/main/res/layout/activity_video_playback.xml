@@ -464,32 +464,6 @@
                         tools:ignore="Autofill,LabelFor" />
 
                     <TextView
-                        android:id="@+id/remarksTitle"
-                        android:layout_width="@dimen/no_dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/video_playback_metadata_spacing"
-                        android:text="@string/playback_notes"
-                        android:textSize="@dimen/video_playback_metadata_text_size"
-                        android:textStyle="bold"
-                        app:layout_constraintLeft_toLeftOf="parent"
-                        app:layout_constraintRight_toLeftOf="@id/guidelinePlayback"
-                        app:layout_constraintTop_toBottomOf="@id/locationValue" />
-
-                    <EditText
-                        android:id="@+id/notesValue"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/margin_5dp"
-                        android:background="@drawable/shape_unchecked_box"
-                        android:inputType="textMultiLine"
-                        android:maxLength="100"
-                        android:minLines="3"
-                        android:padding="@dimen/padding_12dp"
-                        android:textSize="@dimen/video_playback_metadata_text_size"
-                        app:layout_constraintTop_toBottomOf="@id/remarksTitle"
-                        tools:ignore="Autofill,LabelFor" />
-
-                    <TextView
                         android:id="@+id/firstNameTitle"
                         android:layout_width="@dimen/no_dp"
                         android:layout_height="wrap_content"
@@ -499,7 +473,7 @@
                         android:textStyle="bold"
                         app:layout_constraintLeft_toLeftOf="parent"
                         app:layout_constraintRight_toLeftOf="@id/guidelinePlayback"
-                        app:layout_constraintTop_toBottomOf="@id/notesValue" />
+                        app:layout_constraintTop_toBottomOf="@id/locationValue" />
 
                     <EditText
                         android:id="@+id/firstNameValue"
@@ -638,6 +612,32 @@
                         tools:ignore="Autofill,LabelFor" />
 
                     <TextView
+                        android:id="@+id/notesTitle"
+                        android:layout_width="@dimen/no_dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/video_playback_metadata_spacing"
+                        android:text="@string/playback_notes"
+                        android:textSize="@dimen/video_playback_metadata_text_size"
+                        android:textStyle="bold"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintRight_toLeftOf="@id/guidelinePlayback"
+                        app:layout_constraintTop_toBottomOf="@id/licensePlateValue" />
+
+                    <EditText
+                        android:id="@+id/notesValue"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_5dp"
+                        android:background="@drawable/shape_unchecked_box"
+                        android:inputType="textMultiLine"
+                        android:maxLength="100"
+                        android:minLines="3"
+                        android:padding="@dimen/padding_12dp"
+                        android:textSize="@dimen/video_playback_metadata_text_size"
+                        app:layout_constraintTop_toBottomOf="@id/notesTitle"
+                        tools:ignore="Autofill,LabelFor" />
+
+                    <TextView
                         android:id="@+id/associateSnapshotTitle"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -646,7 +646,7 @@
                         android:textSize="@dimen/video_playback_metadata_text_size"
                         android:textStyle="bold"
                         android:visibility="gone"
-                        app:layout_constraintTop_toBottomOf="@+id/licensePlateValue"
+                        app:layout_constraintTop_toBottomOf="@+id/notesValue"
                         tools:ignore="Autofill,LabelFor" />
 
                     <Button
