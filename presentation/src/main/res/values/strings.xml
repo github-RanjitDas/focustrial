@@ -150,7 +150,7 @@
     <string name="battery_percent_x2_just_percent"><![CDATA[<b>%1$d %%</b>]]></string>
     <string name="battery_percent_x2_just_minutes"><![CDATA[ ~ %1$s Mins. left]]></string>
     <string name="storage_level_x1"><![CDATA[Used  &nbsp;&nbsp; -  &nbsp;&nbsp; Free <br/><b>%1$s</b> - <b>%2$s</b>]]></string>
-    <string name="storage_level_x2"><![CDATA[<b>%1$d%%</b> used]]></string>
+    <string name="storage_level_x2"><![CDATA[<b>%1$d%%</b> available]]></string>
     <string name="battery_level_error">Error retrieving battery level</string>
     <string name="storage_level_error">Error retrieving storage level</string>
     <string name="battery_percent_placeholder"><b>100%</b> - 10 hour left</string>
