@@ -25,7 +25,7 @@ object Dependencies {
         const val androidCommons = "com.safefleet.mobile:android-commons:1.2.0-SNAPSHOT@aar"
         const val externalHardware = "com.safefleet.mobile:external-hardware:4.3.5-SNAPSHOT@jar"
         const val kotlinCommons = "com.safefleet.mobile:kotlin-commons:1.1.0-SNAPSHOT@jar"
-        const val safeFleetUI = "com.safefleet.mobile:safefleet-ui:1.4.2-SNAPSHOT@aar"
+        const val safeFleetUI = "com.safefleet.mobile:safefleet-ui:1.4.3-SNAPSHOT@aar"
     }
 
     object ConstraintLayout {
