@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:width="205dp"
-        android:height="205dp"
+    <item android:width="235dp"
+        android:height="235dp"
         android:gravity="center">
         <shape android:shape="oval">
             <solid android:color="@color/backgroundCardView" />
         </shape>
     </item>
 
-    <item android:width="180dp"
-        android:height="180dp"
+    <item android:width="210dp"
+        android:height="210dp"
         android:gravity="center">
         <shape android:shape="oval">
             <solid android:color="@color/blueDiagnosisButton" />
