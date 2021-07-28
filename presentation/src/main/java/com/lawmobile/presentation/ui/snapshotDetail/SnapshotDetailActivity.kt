@@ -40,7 +40,6 @@ class SnapshotDetailActivity : BaseActivity() {
     private val snapshotDetailViewModel: SnapshotDetailViewModel by viewModels()
     private lateinit var file: DomainCameraFile
     private var domainInformationImageMetadata: DomainInformationImageMetadata? = null
-    private var temporalPartnerToShowIfItSaved: String = ""
 
     private val sheetBehavior: BottomSheetBehavior<CardView> by lazy {
         BottomSheetBehavior.from(
@@ -186,7 +185,6 @@ class SnapshotDetailActivity : BaseActivity() {
                     getString(R.string.file_list_associate_partner_id_success)
                 )
                 sheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
-                binding.officerValue.text = temporalPartnerToShowIfItSaved
             }
             doIfError {
                 binding.constraintLayoutDetail.showErrorSnackBar(
@@ -203,9 +201,11 @@ class SnapshotDetailActivity : BaseActivity() {
         binding.bottomSheetPartnerId?.buttonAssignToOfficer?.setOnClickListenerCheckConnection {
             associatePartnerId(binding.bottomSheetPartnerId?.editTextAssignToOfficer?.text.toString())
             hideKeyboard()
+            cleanPartnerIdField()
         }
         binding.bottomSheetPartnerId?.buttonCloseAssignToOfficer?.setOnClickListenerCheckConnection {
             hideKeyboard()
+            cleanPartnerIdField()
             sheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
         }
         sheetBehavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
@@ -225,6 +225,10 @@ class SnapshotDetailActivity : BaseActivity() {
         })
     }
 
+    private fun cleanPartnerIdField() {
+        binding.bottomSheetPartnerId?.editTextAssignToOfficer?.text?.clear()
+    }
+
     private fun showAssignToOfficerBottomSheet() {
         sheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
     }
@@ -236,7 +240,6 @@ class SnapshotDetailActivity : BaseActivity() {
             return
         }
         showLoadingDialog()
-        temporalPartnerToShowIfItSaved = partnerId
         snapshotDetailViewModel.savePartnerId(file, partnerId)
     }
 
