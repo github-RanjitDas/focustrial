@@ -111,9 +111,11 @@ open class FileListBaseActivity : BaseActivity() {
         binding.bottomSheetPartnerId.buttonAssignToOfficer.setOnClickListenerCheckConnection {
             associatePartnerId(binding.bottomSheetPartnerId.editTextAssignToOfficer.text.toString())
             hideKeyboard()
+            cleanPartnerIdField()
         }
         binding.bottomSheetPartnerId.buttonCloseAssignToOfficer.setOnClickListener {
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+            cleanPartnerIdField()
         }
         bottomSheetBehavior.addBottomSheetCallback(object :
                 BottomSheetBehavior.BottomSheetCallback() {
@@ -130,6 +132,10 @@ open class FileListBaseActivity : BaseActivity() {
                     }
                 }
             })
+    }
+
+    private fun cleanPartnerIdField() {
+        binding.bottomSheetPartnerId.editTextAssignToOfficer.text.clear()
     }
 
     private fun associatePartnerId(partnerId: String) {
