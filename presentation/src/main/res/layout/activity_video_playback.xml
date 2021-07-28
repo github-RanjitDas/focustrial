@@ -630,6 +630,7 @@
                         android:layout_marginTop="@dimen/margin_5dp"
                         android:background="@drawable/shape_unchecked_box"
                         android:inputType="textMultiLine"
+                        android:gravity="top"
                         android:maxLength="100"
                         android:minLines="3"
                         android:padding="@dimen/padding_12dp"
