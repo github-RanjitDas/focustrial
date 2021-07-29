@@ -72,6 +72,7 @@ class LiveX2Activity : BaseActivity() {
         controlsFragment.onLiveStreamSwitchClick = ::onLiveStreamSwitchClick
         controlsFragment.onCameraOperationFinished = ::onCameraOperationFinished
         menuFragment.onCloseMenuButton = {
+            isMenuOpen = false
             binding.layoutCustomMenu.menuContainer.closeMenuButton(menuInformation)
         }
         appBarFragment.onTapMenuButton = {
