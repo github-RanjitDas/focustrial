@@ -40,7 +40,7 @@ class SnapshotDetailActivity : BaseActivity() {
     private val snapshotDetailViewModel: SnapshotDetailViewModel by viewModels()
     private lateinit var file: DomainCameraFile
     private var domainInformationImageMetadata: DomainInformationImageMetadata? = null
-    private lateinit var currentAssociatedOfficerId: String
+    private var currentAssociatedOfficerId = getString(R.string.none)
 
     private val sheetBehavior: BottomSheetBehavior<CardView> by lazy {
         BottomSheetBehavior.from(
@@ -151,8 +151,11 @@ class SnapshotDetailActivity : BaseActivity() {
     private fun manageInformationImage(event: Event<Result<DomainInformationImageMetadata>>) {
         event.getContentIfNotHandled()?.run {
             with(this) {
-                doIfSuccess {
-                    domainInformationImageMetadata = it
+                doIfSuccess { domainInformation ->
+                    domainInformationImageMetadata = domainInformation
+                    domainInformation.photoMetadata.officerId?.let {
+                        currentAssociatedOfficerId = it
+                    }
                     setSnapshotMetadata()
                 }
                 doIfError {
@@ -178,17 +181,17 @@ class SnapshotDetailActivity : BaseActivity() {
             getString(R.string.not_available)
     }
 
-    private fun manageSavePartnerId(result: Result<Unit>) {
+    private fun manageSavePartnerId(result: Event<Result<Unit>>) {
         hideLoadingDialog()
-        with(result) {
-            doIfSuccess {
+        with(result.getContentIfNotHandled()) {
+            this?.doIfSuccess {
                 binding.constraintLayoutDetail.showSuccessSnackBar(
                     getString(R.string.file_list_associate_partner_id_success)
                 )
                 sheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
                 setCurrentOfficerAssociatedInView()
             }
-            doIfError {
+            this?.doIfError {
                 binding.constraintLayoutDetail.showErrorSnackBar(
                     getString(
                         R.string.file_list_associate_partner_id_error
