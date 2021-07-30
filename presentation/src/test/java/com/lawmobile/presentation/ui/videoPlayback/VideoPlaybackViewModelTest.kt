@@ -1,18 +1,13 @@
 package com.lawmobile.presentation.ui.videoPlayback
 
-import android.view.SurfaceView
 import com.lawmobile.domain.entities.DomainCameraFile
 import com.lawmobile.domain.usecase.videoPlayback.VideoPlaybackUseCase
 import com.lawmobile.presentation.InstantExecutorExtension
 import com.lawmobile.presentation.utils.VLCMediaPlayer
 import com.safefleet.mobile.kotlin_commons.helpers.Result
-import io.mockk.Runs
 import io.mockk.coEvery
 import io.mockk.coVerify
-import io.mockk.every
-import io.mockk.just
 import io.mockk.mockk
-import io.mockk.verify
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
@@ -66,75 +61,6 @@ class VideoPlaybackViewModelTest {
         }
 
         coVerify { videoPlaybackUseCase.getInformationResourcesVideo(any()) }
-    }
-
-    @Test
-    fun testCreateVLCMediaPlayer() {
-        val surfaceView = mockk<SurfaceView>()
-        every { vlcMediaPlayer.createMediaPlayer(any(), any()) } just Runs
-        videoPlaybackViewModel.createVLCMediaPlayer("", surfaceView)
-        verify { vlcMediaPlayer.createMediaPlayer("", surfaceView) }
-    }
-
-    @Test
-    fun testPlayVLCMediaPlayer() {
-        every { vlcMediaPlayer.playMediaPlayer() } just Runs
-        videoPlaybackViewModel.playMediaPlayer()
-        verify { vlcMediaPlayer.playMediaPlayer() }
-    }
-
-    @Test
-    fun testPauseVLCMediaPlayer() {
-        every { vlcMediaPlayer.pauseMediaPlayer() } just Runs
-        videoPlaybackViewModel.pauseMediaPlayer()
-        verify { vlcMediaPlayer.pauseMediaPlayer() }
-    }
-
-    @Test
-    fun testStopVLCMediaPlayer() {
-        every { vlcMediaPlayer.stopMediaPlayer() } just Runs
-        videoPlaybackViewModel.stopMediaPlayer()
-        verify { vlcMediaPlayer.stopMediaPlayer() }
-    }
-
-    @Test
-    fun testChangeAspectRatio() {
-        every { vlcMediaPlayer.changeAspectRatio() } just Runs
-        videoPlaybackViewModel.changeAspectRatio()
-        verify { vlcMediaPlayer.changeAspectRatio() }
-    }
-
-    @Test
-    fun testIsMediaPlayerPayingTrue() {
-        every { vlcMediaPlayer.isMediaPlayerPlaying() } returns true
-        Assert.assertTrue(videoPlaybackViewModel.isMediaPlayerPlaying())
-    }
-
-    @Test
-    fun testIsMediaPlayerPayingFalse() {
-        every { vlcMediaPlayer.isMediaPlayerPlaying() } returns false
-        Assert.assertFalse(videoPlaybackViewModel.isMediaPlayerPlaying())
-    }
-
-    @Test
-    fun testGetTimeInMillisMediaPlayer() {
-        every { vlcMediaPlayer.getTimeInMillisMediaPlayer() } returns 1000L
-        Assert.assertEquals(1000L, videoPlaybackViewModel.getTimeInMillisMediaPlayer())
-        verify { vlcMediaPlayer.getTimeInMillisMediaPlayer() }
-    }
-
-    @Test
-    fun testSetProgressMediaPlayer() {
-        every { vlcMediaPlayer.setProgressMediaPlayer(any()) } just Runs
-        videoPlaybackViewModel.setProgressMediaPlayer(100F)
-        verify { vlcMediaPlayer.setProgressMediaPlayer(100F) }
-    }
-
-    @Test
-    fun testSetMediaEventListener() {
-        every { vlcMediaPlayer.setMediaEventListener(any()) } just Runs
-        videoPlaybackViewModel.setMediaEventListener(mockk(relaxed = true))
-        verify { vlcMediaPlayer.setMediaEventListener(any()) }
     }
 
     @Test

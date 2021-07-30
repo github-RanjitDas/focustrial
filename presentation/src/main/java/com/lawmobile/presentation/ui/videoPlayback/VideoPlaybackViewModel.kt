@@ -1,6 +1,5 @@
 package com.lawmobile.presentation.ui.videoPlayback
 
-import android.view.SurfaceView
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.viewModelScope
@@ -13,13 +12,12 @@ import com.lawmobile.presentation.utils.VLCMediaPlayer
 import com.safefleet.mobile.kotlin_commons.helpers.Result
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import org.videolan.libvlc.MediaPlayer
 import javax.inject.Inject
 
 @HiltViewModel
 class VideoPlaybackViewModel @Inject constructor(
     private val videoPlaybackUseCase: VideoPlaybackUseCase,
-    private val vlcMediaPlayer: VLCMediaPlayer
+    val mediaPlayer: VLCMediaPlayer
 ) : BaseViewModel() {
 
     private val domainInformationVideoMediator = MediatorLiveData<Result<DomainInformationVideo>>()
@@ -56,38 +54,5 @@ class VideoPlaybackViewModel @Inject constructor(
                 videoPlaybackUseCase.getVideoMetadata(fileName, folderName)
             )
         }
-    }
-
-    fun createVLCMediaPlayer(url: String, view: SurfaceView) {
-        vlcMediaPlayer.createMediaPlayer(url, view)
-    }
-
-    fun playMediaPlayer() {
-        vlcMediaPlayer.playMediaPlayer()
-    }
-
-    fun pauseMediaPlayer() {
-        vlcMediaPlayer.pauseMediaPlayer()
-    }
-
-    fun stopMediaPlayer() {
-        vlcMediaPlayer.stopMediaPlayer()
-    }
-
-    fun changeAspectRatio() {
-        vlcMediaPlayer.changeAspectRatio()
-    }
-
-    fun isMediaPlayerPlaying() = vlcMediaPlayer.isMediaPlayerPlaying()
-
-    fun getTimeInMillisMediaPlayer() =
-        vlcMediaPlayer.getTimeInMillisMediaPlayer()
-
-    fun setProgressMediaPlayer(progress: Float) {
-        vlcMediaPlayer.setProgressMediaPlayer(progress)
-    }
-
-    fun setMediaEventListener(listener: MediaPlayer.EventListener) {
-        vlcMediaPlayer.setMediaEventListener(listener)
     }
 }

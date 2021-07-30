@@ -94,24 +94,11 @@ class AppModule {
         @Singleton
         fun provideVLCMediaPlayer(libVLC: LibVLC, mediaPlayer: MediaPlayer): VLCMediaPlayer =
             mockk(relaxed = true) {
-                every { changeAspectRatio() } returns Unit
-                every { createMediaPlayer(any(), any()) } returns Unit
-                every { setSizeInMediaPlayer(any()) } returns Unit
-                every { playMediaPlayer() } returns Unit
-                every { stopMediaPlayer() } returns Unit
-                every { pauseMediaPlayer() } returns Unit
-                every { setProgressMediaPlayer(any()) } returns Unit
-                every { isMediaPlayerPlaying() } returns false
-                every { getTimeInMillisMediaPlayer() } returns 1000L andThenMany (
-                    listOf(
-                        2000L,
-                        3000L,
-                        4000L,
-                        5000L,
-                        8000L,
-                        10000L
-                    )
-                    )
+                every { create(any(), any()) } returns Unit
+                every { play() } returns Unit
+                every { stop() } returns Unit
+                every { pause() } returns Unit
+                every { isPlaying } returns false
             }
 
         @Provides

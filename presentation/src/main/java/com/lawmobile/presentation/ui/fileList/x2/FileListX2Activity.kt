@@ -13,6 +13,7 @@ import com.lawmobile.presentation.ui.base.menu.MenuFragment
 import com.lawmobile.presentation.ui.fileList.FileListBaseActivity
 import com.lawmobile.presentation.ui.fileList.filterSection.x2.FilterSectionX2Fragment
 import com.lawmobile.presentation.utils.Constants
+import com.lawmobile.presentation.utils.VLCMediaPlayer
 
 class FileListX2Activity : FileListBaseActivity() {
 
@@ -26,12 +27,18 @@ class FileListX2Activity : FileListBaseActivity() {
         setFragmentsDependingOnListType()
         attachFragments()
         setListeners()
-        menuInformation = MenuInformation(this, menuFragment, binding.layoutCustomMenu.shadowOpenMenuView)
+        menuInformation =
+            MenuInformation(this, menuFragment, binding.layoutCustomMenu.shadowOpenMenuView)
     }
 
     override fun onResume() {
         super.onResume()
         filterSectionFragment.isSimpleListActivity(actualFragment == Constants.SIMPLE_FILE_LIST)
+    }
+
+    override fun onRestart() {
+        super.onRestart()
+        VLCMediaPlayer.currentProgress = 0
     }
 
     private fun attachFragments() {
