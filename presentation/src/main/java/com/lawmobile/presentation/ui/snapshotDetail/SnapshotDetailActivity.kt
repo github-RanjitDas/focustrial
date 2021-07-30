@@ -40,6 +40,7 @@ class SnapshotDetailActivity : BaseActivity() {
     private val snapshotDetailViewModel: SnapshotDetailViewModel by viewModels()
     private lateinit var file: DomainCameraFile
     private var domainInformationImageMetadata: DomainInformationImageMetadata? = null
+    private lateinit var currentAssociatedOfficerId: String
 
     private val sheetBehavior: BottomSheetBehavior<CardView> by lazy {
         BottomSheetBehavior.from(
@@ -185,6 +186,7 @@ class SnapshotDetailActivity : BaseActivity() {
                     getString(R.string.file_list_associate_partner_id_success)
                 )
                 sheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+                setCurrentOfficerAssociatedInView()
             }
             doIfError {
                 binding.constraintLayoutDetail.showErrorSnackBar(
@@ -199,7 +201,8 @@ class SnapshotDetailActivity : BaseActivity() {
     private fun configureBottomSheet() {
         sheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
         binding.bottomSheetPartnerId?.buttonAssignToOfficer?.setOnClickListenerCheckConnection {
-            associatePartnerId(binding.bottomSheetPartnerId?.editTextAssignToOfficer?.text.toString())
+            currentAssociatedOfficerId = binding.bottomSheetPartnerId?.editTextAssignToOfficer?.text.toString()
+            associatePartnerId(currentAssociatedOfficerId)
             hideKeyboard()
             cleanPartnerIdField()
         }
@@ -277,6 +280,11 @@ class SnapshotDetailActivity : BaseActivity() {
     private fun setSnapshotMetadata() {
         setOfficerAssociatedInView()
         setVideosAssociatedInView()
+    }
+
+    private fun setCurrentOfficerAssociatedInView() {
+        if (currentAssociatedOfficerId.isEmpty()) binding.officerValue.text = getString(R.string.none)
+        else binding.officerValue.text = currentAssociatedOfficerId
     }
 
     private fun setOfficerAssociatedInView() {
