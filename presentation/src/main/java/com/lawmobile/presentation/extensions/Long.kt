@@ -6,7 +6,7 @@ import java.util.Calendar
 import java.util.concurrent.TimeUnit
 
 @SuppressLint("DefaultLocale")
-fun Long.convertMilliSecondsToString(): String {
+fun Long.milliSecondsToString(): String {
     return java.lang.String.format(
         "%02d:%02d:%02d",
         TimeUnit.MILLISECONDS.toHours(this),
