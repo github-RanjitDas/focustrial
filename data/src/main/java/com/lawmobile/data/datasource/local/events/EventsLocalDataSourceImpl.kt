@@ -14,9 +14,9 @@ class EventsLocalDataSourceImpl(private val cameraEventsDao: CameraEventsDao) :
             Result.Error(e)
         }
 
-    override suspend fun getNotificationEvents(): Result<List<LocalCameraEvent>> =
+    override suspend fun getNotificationEvents(date: String): Result<List<LocalCameraEvent>> =
         try {
-            Result.Success(cameraEventsDao.getNotificationEvents())
+            Result.Success(cameraEventsDao.getNotificationEvents(date))
         } catch (e: Exception) {
             Result.Error(e)
         }

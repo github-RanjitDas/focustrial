@@ -3,15 +3,15 @@ package com.lawmobile.data.repository.events
 import com.lawmobile.data.datasource.local.events.EventsLocalDataSource
 import com.lawmobile.data.datasource.remote.events.EventsRemoteDataSource
 import com.lawmobile.data.mappers.CameraEventMapper
+import com.lawmobile.data.utils.DateHelper
 import com.lawmobile.domain.entities.CameraEvent
+import com.lawmobile.domain.extensions.simpleDateFormat
 import com.lawmobile.domain.repository.events.EventsRepository
 import com.safefleet.mobile.kotlin_commons.extensions.doIfSuccess
 import com.safefleet.mobile.kotlin_commons.helpers.Result
 import com.safefleet.mobile.kotlin_commons.helpers.getResultWithAttempts
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import java.text.SimpleDateFormat
-import java.util.Locale
 
 class EventsRepositoryImpl(
     private val eventsRemoteDataSource: EventsRemoteDataSource,
@@ -23,11 +23,8 @@ class EventsRepositoryImpl(
         eventsLocalDataSource.saveEvent(localEvent)
     }
 
-    override suspend fun deleteOutdatedEvents(date: String): Result<Unit> =
-        eventsLocalDataSource.deleteOutdatedEvents(date)
-
     override suspend fun getCameraEvents(): Result<List<CameraEvent>> = withContext(Dispatchers.IO) {
-        val removeResult = removeOutdatedEventsFromDB()
+        val removeResult = eventsLocalDataSource.deleteOutdatedEvents(DateHelper.getTodayDateAtStartOfTheDay())
         if (removeResult is Result.Error) return@withContext removeResult
 
         val result = getResultWithAttempts(3, 500) {
@@ -40,6 +37,7 @@ class EventsRepositoryImpl(
                     .cameraToDomainList(result.data)
                     .distinct()
                     .toList()
+                    .filter { it.date.simpleDateFormat() >= DateHelper.getTodayDateAtStartOfTheDay() }
                     .let { manageEventsReadStatus(it) }
 
                 val saveResult = saveEventsInLocal(remoteEventList)
@@ -51,17 +49,12 @@ class EventsRepositoryImpl(
         }
     }
 
-    private suspend fun removeOutdatedEventsFromDB(): Result<Unit> {
-        val format = SimpleDateFormat("MM/dd/yyyy", Locale.ENGLISH)
-        val currentDate: String = format.format(System.currentTimeMillis()) + " 00:00:00"
-        return deleteOutdatedEvents(currentDate)
-    }
-
-    override suspend fun getNotificationEvents(): Result<List<CameraEvent>> =
-        when (val result = eventsLocalDataSource.getNotificationEvents()) {
+    override suspend fun getNotificationEvents(): Result<List<CameraEvent>> {
+        return when (val result = eventsLocalDataSource.getNotificationEvents(DateHelper.getTodayDateAtStartOfTheDay())) {
             is Result.Success -> Result.Success(CameraEventMapper.localToDomainList(result.data))
             is Result.Error -> result
         }
+    }
 
     override suspend fun getPendingNotificationsCount(): Result<Int> {
         if (!callOnceGetEventsToPendingNotification) {
@@ -89,7 +82,7 @@ class EventsRepositoryImpl(
             doIfSuccess {
                 eventList.forEach { remoteEvent ->
                     val event = it.firstOrNull { localEvent ->
-                        localEvent.date == remoteEvent.date
+                        localEvent.date == remoteEvent.date.simpleDateFormat()
                     }
                     if (event != null) {
                         remoteEvent.isRead = event.isRead == 1L

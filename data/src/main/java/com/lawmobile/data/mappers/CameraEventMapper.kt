@@ -4,6 +4,7 @@ import com.lawmobile.data.dao.entities.LocalCameraEvent
 import com.lawmobile.domain.entities.CameraEvent
 import com.lawmobile.domain.enums.EventTag
 import com.lawmobile.domain.enums.EventType
+import com.lawmobile.domain.extensions.simpleDateFormat
 import com.safefleet.mobile.external_hardware.cameras.entities.LogEvent
 
 object CameraEventMapper {
@@ -27,7 +28,7 @@ object CameraEventMapper {
             }
             CameraEvent(
                 name = type.split(":").last(),
-                date = date,
+                date = date.simpleDateFormat(),
                 eventType = eventType,
                 eventTag = eventTag,
                 value = value

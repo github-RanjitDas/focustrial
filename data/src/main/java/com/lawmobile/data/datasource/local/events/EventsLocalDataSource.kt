@@ -5,7 +5,7 @@ import com.safefleet.mobile.kotlin_commons.helpers.Result
 
 interface EventsLocalDataSource {
     suspend fun getAllEvents(): Result<List<LocalCameraEvent>>
-    suspend fun getNotificationEvents(): Result<List<LocalCameraEvent>>
+    suspend fun getNotificationEvents(date: String): Result<List<LocalCameraEvent>>
     suspend fun getPendingNotificationsCount(): Result<Int>
     fun getEventsCount(): Int
     suspend fun saveEvent(localEvent: LocalCameraEvent)

@@ -15,7 +15,7 @@ FROM DbCameraEvent;
 getNotificationEvents:
 SELECT *
 FROM DbCameraEvent
-WHERE eventType = "Notification";
+WHERE eventType = "Notification" AND date >= :date;
 
 getEventsCount:
 SELECT COUNT(*)

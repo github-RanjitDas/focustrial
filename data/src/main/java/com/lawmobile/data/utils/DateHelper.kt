@@ -5,6 +5,9 @@ import java.util.Date
 import java.util.Locale
 
 object DateHelper {
+
+    private val format = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH)
+
     fun dateToString(
         date: Date,
         pattern: String = "dd/MM/yyyy",
@@ -12,5 +15,9 @@ object DateHelper {
     ): String {
         val format = SimpleDateFormat(pattern, locale)
         return format.format(date)
+    }
+
+    fun getTodayDateAtStartOfTheDay(): String {
+        return format.format(System.currentTimeMillis()) + " 00:00:00"
     }
 }

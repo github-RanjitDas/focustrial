@@ -9,7 +9,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.lawmobile.domain.entities.CameraInfo
-import com.lawmobile.presentation.databinding.LiveViewAppBarMenuBinding
+import com.lawmobile.presentation.databinding.FragmentAppBarX2Binding
 import com.lawmobile.presentation.extensions.setOnClickListenerCheckConnection
 import com.lawmobile.presentation.ui.base.BaseFragment
 import com.lawmobile.presentation.ui.notificationList.NotificationListActivity
@@ -20,7 +20,7 @@ import kotlinx.coroutines.launch
 
 class AppBarX2Fragment : BaseFragment() {
 
-    private var _binding: LiveViewAppBarMenuBinding? = null
+    private var _binding: FragmentAppBarX2Binding? = null
     private val binding get() = _binding!!
 
     lateinit var onTapMenuButton: () -> Unit
@@ -41,7 +41,7 @@ class AppBarX2Fragment : BaseFragment() {
     ): View {
         callPendingNotification = false
         _binding =
-            LiveViewAppBarMenuBinding.inflate(inflater, container, false)
+            FragmentAppBarX2Binding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -66,7 +66,7 @@ class AppBarX2Fragment : BaseFragment() {
 
     private fun configureView() {
         binding.textViewTitle.text = title
-        binding.imageView.isVisible = isLogoActive
+        binding.imageViewLogo.isVisible = isLogoActive
         binding.constrainAppBarTitle.isVisible = !isLogoActive
         binding.buttonNotification.isVisible = isBellIconActive
     }
@@ -123,7 +123,11 @@ class AppBarX2Fragment : BaseFragment() {
 
     companion object {
         val TAG = AppBarX2Fragment::class.java.simpleName
-        fun createInstance(isLogoActive: Boolean = false, title: String, isBellIconActive: Boolean = true): AppBarX2Fragment {
+        fun createInstance(
+            isLogoActive: Boolean = false,
+            title: String,
+            isBellIconActive: Boolean = true
+        ): AppBarX2Fragment {
             return AppBarX2Fragment().apply {
                 this.isLogoActive = isLogoActive
                 this.title = title
