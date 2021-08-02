@@ -103,27 +103,27 @@ internal class EventsLocalDataSourceImplTest {
 
     @Test
     fun getAllNotificationEventsFlow() {
-        every { cameraEventsDao.getNotificationEvents() } returns mockk()
-        runBlocking { eventsLocalDataSourceImpl.getNotificationEvents() }
-        verify { cameraEventsDao.getNotificationEvents() }
+        every { cameraEventsDao.getNotificationEvents(any()) } returns mockk()
+        runBlocking { eventsLocalDataSourceImpl.getNotificationEvents("") }
+        verify { cameraEventsDao.getNotificationEvents(any()) }
     }
 
     @Test
     fun getAllNotificationEventsSuccess() {
-        every { cameraEventsDao.getNotificationEvents() } returns mockk()
+        every { cameraEventsDao.getNotificationEvents(any()) } returns mockk()
         runBlocking {
             Assert.assertTrue(
-                eventsLocalDataSourceImpl.getNotificationEvents() is Result.Success
+                eventsLocalDataSourceImpl.getNotificationEvents("") is Result.Success
             )
         }
     }
 
     @Test
     fun getAllNotificationEventsError() {
-        every { cameraEventsDao.getNotificationEvents() } throws Exception()
+        every { cameraEventsDao.getNotificationEvents(any()) } throws Exception()
         runBlocking {
             Assert.assertTrue(
-                eventsLocalDataSourceImpl.getNotificationEvents() is Result.Error
+                eventsLocalDataSourceImpl.getNotificationEvents("") is Result.Error
             )
         }
     }

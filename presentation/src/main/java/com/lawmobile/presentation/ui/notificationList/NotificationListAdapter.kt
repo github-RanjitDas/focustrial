@@ -6,8 +6,10 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.lawmobile.domain.entities.CameraEvent
 import com.lawmobile.domain.enums.EventTag
+import com.lawmobile.domain.enums.NotificationType
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.databinding.NotificationListRecyclerItemBinding
+import com.lawmobile.presentation.extensions.setImageDependingOnEventTag
 import com.lawmobile.presentation.extensions.setOnClickListenerCheckConnection
 
 class NotificationListAdapter(
@@ -79,7 +81,8 @@ class NotificationListAdapter(
         }
 
         private fun setTextViews(notification: CameraEvent) {
-            binding.textViewNotification.text = notification.name
+            val notificationType = NotificationType.getByValue(notification.name)
+            binding.textViewNotification.text = notificationType.title ?: notification.name
             binding.textViewNotificationDate.text = notification.date
         }
 
@@ -100,18 +103,8 @@ class NotificationListAdapter(
             binding.textViewNotificationDate.setTypeface(null, Typeface.BOLD)
         }
 
-        private fun setNotificationType(type: EventTag) {
-            when (type) {
-                EventTag.WARNING -> {
-                    binding.imageViewNotificationType.setImageResource(R.drawable.ic_warning_icon)
-                }
-                EventTag.ERROR -> {
-                    binding.imageViewNotificationType.setImageResource(R.drawable.ic_error_icon)
-                }
-                EventTag.INFORMATION -> {
-                    binding.imageViewNotificationType.setImageResource(R.drawable.ic_info_icon)
-                }
-            }
+        private fun setNotificationType(eventTag: EventTag) {
+            binding.imageViewNotificationType.setImageDependingOnEventTag(eventTag)
         }
     }
 }

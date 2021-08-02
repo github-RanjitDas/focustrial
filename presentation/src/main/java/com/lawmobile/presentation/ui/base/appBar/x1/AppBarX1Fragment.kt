@@ -5,15 +5,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
-import com.lawmobile.presentation.databinding.FilterAppBarBinding
+import com.lawmobile.presentation.databinding.FragmentAppBarX1Binding
 import com.lawmobile.presentation.extensions.setClickListenerCheckConnection
 import com.lawmobile.presentation.extensions.setOnClickListenerCheckConnection
 import com.lawmobile.presentation.ui.base.BaseFragment
 
 class AppBarX1Fragment : BaseFragment() {
 
-    private val binding: FilterAppBarBinding get() = _binding!!
-    private var _binding: FilterAppBarBinding? = null
+    private val binding: FragmentAppBarX1Binding get() = _binding!!
+    private var _binding: FragmentAppBarX1Binding? = null
 
     lateinit var onBackPressed: () -> Unit
     lateinit var onTapThumbnail: () -> Unit
@@ -27,7 +27,7 @@ class AppBarX1Fragment : BaseFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FilterAppBarBinding.inflate(inflater, container, false)
+        _binding = FragmentAppBarX1Binding.inflate(inflater, container, false)
         return binding.root
     }
 

@@ -10,13 +10,14 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.snackbar.Snackbar
 import com.lawmobile.domain.entities.CameraEvent
 import com.lawmobile.domain.entities.CameraInfo
-import com.lawmobile.domain.enums.EventTag
+import com.lawmobile.domain.enums.NotificationType
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.databinding.ActivityNotificationListBinding
 import com.lawmobile.presentation.entities.MenuInformation
 import com.lawmobile.presentation.extensions.attachFragment
 import com.lawmobile.presentation.extensions.closeMenuButton
 import com.lawmobile.presentation.extensions.openMenuButton
+import com.lawmobile.presentation.extensions.setImageDependingOnEventTag
 import com.lawmobile.presentation.extensions.showErrorSnackBar
 import com.lawmobile.presentation.ui.base.BaseActivity
 import com.lawmobile.presentation.ui.base.appBar.x2.AppBarX2Fragment
@@ -43,7 +44,8 @@ class NotificationListActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityNotificationListBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        menuInformation = MenuInformation(this, menuFragment, binding.layoutCustomMenu.shadowOpenMenuView)
+        menuInformation =
+            MenuInformation(this, menuFragment, binding.layoutCustomMenu.shadowOpenMenuView)
         setCustomAppBar()
         setListeners()
         setObservers()
@@ -187,16 +189,12 @@ class NotificationListActivity : BaseActivity() {
 
     private fun setNotificationInformation(cameraEvent: CameraEvent) {
         with(binding.bottomSheetNotification.layoutNotificationInformation) {
-            textViewNotificationTitle.text = cameraEvent.name
-            with(imageViewNotificationIcon) {
-                when (cameraEvent.eventTag) {
-                    EventTag.ERROR -> setImageResource(R.drawable.ic_error_icon)
-                    EventTag.WARNING -> setImageResource(R.drawable.ic_warning_icon)
-                    EventTag.INFORMATION -> setImageResource(R.drawable.ic_info_icon)
-                }
-            }
+            val notificationType = NotificationType.getByValue(cameraEvent.name)
+            textViewNotificationTitle.text = notificationType.title ?: cameraEvent.name
+            imageViewNotificationIcon.setImageDependingOnEventTag(cameraEvent.eventTag)
+            textViewNotificationMessage.text =
+                notificationType.getCustomMessage(cameraEvent.value) ?: cameraEvent.value
             textViewNotificationDate.text = cameraEvent.date
-            textViewNotificationMessage.text = cameraEvent.value
         }
     }
 
