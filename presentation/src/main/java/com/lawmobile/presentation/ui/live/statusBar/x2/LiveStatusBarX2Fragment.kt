@@ -156,12 +156,7 @@ class LiveStatusBarX2Fragment : LiveStatusBarBaseFragment() {
     }
 
     private fun getAvailableStoragePercent(information: List<Double>): Double {
-        var availablePercent =
-            (information[FREE_STORAGE_POSITION] * TOTAL_PERCENTAGE) / information[TOTAL_STORAGE_POSITION]
-        if (availablePercent.toInt() == 0) return 0.0
-        val availablePercentFloat = availablePercent - availablePercent.toInt()
-        if (availablePercentFloat != 0.0) availablePercent = (availablePercent - availablePercentFloat + 1)
-        return availablePercent
+        return (information[FREE_STORAGE_POSITION] * TOTAL_PERCENTAGE) / information[TOTAL_STORAGE_POSITION]
     }
 
     private fun setColorInStorageLevel(usedPercent: Double) {
@@ -178,8 +173,9 @@ class LiveStatusBarX2Fragment : LiveStatusBarBaseFragment() {
         }
     }
 
-    private fun setTextStorageLevel(usedPercent: Double) {
-        val usedStorageString = getString(R.string.storage_level_x2, usedPercent.toInt())
+    private fun setTextStorageLevel(availablePercent: Double) {
+        val availablePercentage = if (availablePercent > 99.6) 100 else availablePercent.toInt()
+        val usedStorageString = getString(R.string.storage_level_x2, availablePercentage)
 
         val textToStorage = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             Html.fromHtml(usedStorageString, 0)
