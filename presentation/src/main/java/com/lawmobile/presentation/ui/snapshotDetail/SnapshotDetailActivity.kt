@@ -7,7 +7,6 @@ import android.view.View
 import androidx.activity.viewModels
 import androidx.cardview.widget.CardView
 import androidx.core.view.isVisible
-import androidx.lifecycle.Observer
 import com.bumptech.glide.Glide
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.lawmobile.domain.entities.DomainCameraFile
@@ -40,7 +39,7 @@ class SnapshotDetailActivity : BaseActivity() {
     private val snapshotDetailViewModel: SnapshotDetailViewModel by viewModels()
     private lateinit var file: DomainCameraFile
     private var domainInformationImageMetadata: DomainInformationImageMetadata? = null
-    private var currentAssociatedOfficerId = getString(R.string.none)
+    private lateinit var currentAssociatedOfficerId: String
 
     private val sheetBehavior: BottomSheetBehavior<CardView> by lazy {
         BottomSheetBehavior.from(
@@ -50,13 +49,12 @@ class SnapshotDetailActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding =
-            ActivitySnapshotItemDetailBinding.inflate(layoutInflater)
+        binding = ActivitySnapshotItemDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setAppBar()
         getInformationFromIntent()
         setInformationOfSnapshot()
-        configureObserve()
+        setObservers()
         configureListeners()
         configureBottomSheet()
     }
@@ -85,9 +83,7 @@ class SnapshotDetailActivity : BaseActivity() {
     private fun getInformationFromIntent() {
         val fileIntent =
             intent.getSerializableExtra(Constants.DOMAIN_CAMERA_FILE) as? DomainCameraFile
-        fileIntent?.let {
-            file = it
-        }
+        fileIntent?.let { file = it }
     }
 
     private fun setAppBar() {
@@ -118,13 +114,10 @@ class SnapshotDetailActivity : BaseActivity() {
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
     }
 
-    private fun configureObserve() {
-        snapshotDetailViewModel.imageBytesLiveData.observe(this, Observer(::manageGetBytesImage))
-        snapshotDetailViewModel.informationImageLiveData.observe(
-            this,
-            Observer(::manageInformationImage)
-        )
-        snapshotDetailViewModel.savePartnerIdLiveData.observe(this, Observer(::manageSavePartnerId))
+    private fun setObservers() {
+        snapshotDetailViewModel.imageBytesLiveData.observe(this, ::manageGetBytesImage)
+        snapshotDetailViewModel.informationImageLiveData.observe(this, ::manageInformationImage)
+        snapshotDetailViewModel.savePartnerIdLiveData.observe(this, ::manageSavePartnerId)
     }
 
     private fun manageGetBytesImage(event: Event<Result<ByteArray>>) {
@@ -153,9 +146,6 @@ class SnapshotDetailActivity : BaseActivity() {
             with(this) {
                 doIfSuccess { domainInformation ->
                     domainInformationImageMetadata = domainInformation
-                    domainInformation.photoMetadata.officerId?.let {
-                        currentAssociatedOfficerId = it
-                    }
                     setSnapshotMetadata()
                 }
                 doIfError {
@@ -177,8 +167,7 @@ class SnapshotDetailActivity : BaseActivity() {
 
     private fun showMetadataNotAvailable() {
         binding.officerValue.text = getString(R.string.not_available)
-        binding.videosAssociatedValue.text =
-            getString(R.string.not_available)
+        binding.videosAssociatedValue.text = getString(R.string.not_available)
     }
 
     private fun manageSavePartnerId(result: Event<Result<Unit>>) {
@@ -204,7 +193,8 @@ class SnapshotDetailActivity : BaseActivity() {
     private fun configureBottomSheet() {
         sheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
         binding.bottomSheetPartnerId?.buttonAssignToOfficer?.setOnClickListenerCheckConnection {
-            currentAssociatedOfficerId = binding.bottomSheetPartnerId?.editTextAssignToOfficer?.text.toString()
+            currentAssociatedOfficerId =
+                binding.bottomSheetPartnerId?.editTextAssignToOfficer?.text.toString()
             associatePartnerId(currentAssociatedOfficerId)
             hideKeyboard()
             cleanPartnerIdField()
@@ -240,7 +230,6 @@ class SnapshotDetailActivity : BaseActivity() {
     }
 
     private fun associatePartnerId(partnerId: String) {
-
         if (partnerId.isEmpty()) {
             binding.constraintLayoutDetail.showErrorSnackBar(getString(R.string.valid_partner_id_message))
             return
@@ -286,16 +275,19 @@ class SnapshotDetailActivity : BaseActivity() {
     }
 
     private fun setCurrentOfficerAssociatedInView() {
-        if (currentAssociatedOfficerId.isEmpty()) binding.officerValue.text = getString(R.string.none)
-        else binding.officerValue.text = currentAssociatedOfficerId
+        binding.officerValue.text =
+            if (currentAssociatedOfficerId.isEmpty()) getString(R.string.none)
+            else currentAssociatedOfficerId
     }
 
     private fun setOfficerAssociatedInView() {
         domainInformationImageMetadata?.photoMetadata?.metadata?.partnerID?.let {
-            binding.officerValue.text = it
+            currentAssociatedOfficerId = if (it.isEmpty()) getString(R.string.none) else it
         } ?: run {
-            binding.officerValue.text = getString(R.string.none)
+            currentAssociatedOfficerId = getString(R.string.none)
         }
+
+        binding.officerValue.text = currentAssociatedOfficerId
     }
 
     private fun setVideosAssociatedInView() {
