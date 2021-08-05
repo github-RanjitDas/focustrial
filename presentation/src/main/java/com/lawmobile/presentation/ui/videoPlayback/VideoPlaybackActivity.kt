@@ -473,64 +473,24 @@ class VideoPlaybackActivity : BaseActivity() {
             else ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
     }
 
-    private fun verifyVideoMetadataWasEdited(): Boolean {
+    private fun theMetadataWasEdited(): Boolean {
         if (!isVideoMetadataChangesSaved) {
-            verifyVideoMetadataParameters()
-
             val newMetadata = getNewMetadataFromForm().metadata
-            val oldMetadata = currentMetadata.metadata
-                ?: return newMetadata?.run {
-                    !event?.id.isNullOrEmpty() ||
-                        !event?.name.isNullOrEmpty() ||
-                        !event?.type.isNullOrEmpty() ||
-                        !partnerID.isNullOrEmpty() ||
-                        !ticketNumber.isNullOrEmpty() ||
-                        !ticketNumber2.isNullOrEmpty() ||
-                        !caseNumber.isNullOrEmpty() ||
-                        !dispatchNumber.isNullOrEmpty() ||
-                        !dispatchNumber2.isNullOrEmpty() ||
-                        !location.isNullOrEmpty() ||
-                        !remarks.isNullOrEmpty() ||
-                        !firstName.isNullOrEmpty() ||
-                        !lastName.isNullOrEmpty() ||
-                        !driverLicense.isNullOrEmpty() ||
-                        !licensePlate.isNullOrEmpty() ||
-                        !gender.isNullOrEmpty() ||
-                        !race.isNullOrEmpty()
-                } ?: false
+            val oldMetadata = currentMetadata.metadata?.apply { convertNullParamsToEmpty() }
+                ?: return newMetadata?.hasAnyInformation() ?: false
 
-            return oldMetadata.let { fromJson ->
-                newMetadata?.let { fromForm ->
-                    fromJson.event?.name != fromForm.event?.name ||
-                        fromJson.partnerID != fromForm.partnerID ||
-                        fromJson.ticketNumber != fromForm.ticketNumber ||
-                        fromJson.ticketNumber2 != fromForm.ticketNumber2 ||
-                        fromJson.caseNumber != fromForm.caseNumber ||
-                        fromJson.caseNumber2 != fromForm.caseNumber2 ||
-                        fromJson.dispatchNumber != fromForm.dispatchNumber ||
-                        fromJson.dispatchNumber2 != fromForm.dispatchNumber2 ||
-                        fromJson.location != fromForm.location ||
-                        fromJson.remarks != fromForm.remarks ||
-                        fromJson.firstName != fromForm.firstName ||
-                        fromJson.lastName != fromForm.lastName ||
-                        fromJson.driverLicense != fromForm.driverLicense ||
-                        fromJson.licensePlate != fromForm.licensePlate ||
-                        fromJson.gender != fromForm.gender ||
-                        fromJson.race != fromForm.race ||
-                        currentMetadata.associatedPhotos ?: emptyList() != SnapshotsAssociatedByUser.value
-                } ?: false
-            }
+            return currentMetadata.associatedPhotos ?: emptyList() != SnapshotsAssociatedByUser.value ||
+                newMetadata?.isDifferentFrom(oldMetadata) ?: false
         }
         return false
     }
 
     private fun getNewMetadataFromForm(): DomainVideoMetadata {
-        var gender: String? = null
-        var race: String? = null
-        val event =
-            if (binding.eventValue.selectedItemPosition != 0)
-                CameraInfo.metadataEvents[binding.eventValue.selectedItemPosition - 1]
-            else MetadataEvent("", "", "")
+        var gender = ""
+        var race = ""
+        val event = if (binding.eventValue.selectedItemPosition != 0)
+            CameraInfo.metadataEvents[binding.eventValue.selectedItemPosition - 1]
+        else MetadataEvent("", "", "")
 
         if (binding.genderValue.selectedItem != genderList[0]) {
             gender = binding.genderValue.selectedItem.toString()
@@ -574,26 +534,6 @@ class VideoPlaybackActivity : BaseActivity() {
         )
     }
 
-    private fun verifyVideoMetadataParameters() {
-        currentMetadata.metadata?.apply {
-            partnerID = handleNullParameter(partnerID)
-            ticketNumber = handleNullParameter(ticketNumber)
-            ticketNumber2 = handleNullParameter(ticketNumber2)
-            caseNumber = handleNullParameter(caseNumber)
-            caseNumber2 = handleNullParameter(caseNumber2)
-            dispatchNumber = handleNullParameter(dispatchNumber)
-            dispatchNumber2 = handleNullParameter(dispatchNumber2)
-            location = handleNullParameter(location)
-            remarks = handleNullParameter(remarks)
-            firstName = handleNullParameter(firstName)
-            lastName = handleNullParameter(lastName)
-            driverLicense = handleNullParameter(driverLicense)
-            licensePlate = handleNullParameter(licensePlate)
-        }
-    }
-
-    private fun handleNullParameter(string: String?) = string ?: ""
-
     private fun restartObjectOfCompanion() {
         domainInformationVideo = null
     }
@@ -602,7 +542,7 @@ class VideoPlaybackActivity : BaseActivity() {
         if (isInPortraitMode()) {
             if (bottomSheetBehavior.state == BottomSheetBehavior.STATE_HIDDEN) {
                 viewModel.mediaPlayer.pause()
-                if (verifyVideoMetadataWasEdited()) createAlertDialogUnsavedChanges()
+                if (theMetadataWasEdited()) createAlertDialogUnsavedChanges()
                 else super.onBackPressed()
             } else bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
         } else changeScreenOrientation()

@@ -20,6 +20,7 @@ import com.lawmobile.presentation.ui.fileList.FileListBaseFragment.Companion.che
 import com.lawmobile.presentation.ui.fileList.simpleList.SimpleFileListFragment
 import com.lawmobile.presentation.ui.fileList.thumbnailList.ThumbnailFileListFragment
 import com.lawmobile.presentation.utils.Constants
+import com.lawmobile.presentation.utils.VLCMediaPlayer
 import com.lawmobile.presentation.widgets.CustomFilterDialog
 import com.safefleet.mobile.android_commons.extensions.hideKeyboard
 import com.safefleet.mobile.kotlin_commons.extensions.doIfError
@@ -51,6 +52,11 @@ open class FileListBaseActivity : BaseActivity() {
         setExtras()
         setObservers()
         configureBottomSheet()
+    }
+
+    override fun onRestart() {
+        super.onRestart()
+        VLCMediaPlayer.currentProgress = 0
     }
 
     private fun setExtras() {
