@@ -1,5 +1,6 @@
 node('jenkins-builds-slave') {
     def slackChannel = '#law-mobile-alerts'
+    def slackPSLChannel = '#law-mobile-psl'
     try {
         library identifier: "${env.DEFAULT_SHARED_LIBS}",
                 retriever: modernSCM([$class: 'GitSCMSource', remote: "${env.DEFAULT_SHARED_LIBS_REPO}"])
@@ -191,6 +192,9 @@ node('jenkins-builds-slave') {
         }
     } catch (e) {
         currentBuild.result = 'FAILURE'
+         if(env.BRANCH_NAME == 'develop') {
+            slackUtils.notifyBuild('Failed commit on develop branch', slackPSLChannel)
+         }
         throw e
     } finally {
         stage('Notify') {
