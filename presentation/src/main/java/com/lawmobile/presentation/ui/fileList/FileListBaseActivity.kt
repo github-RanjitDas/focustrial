@@ -39,6 +39,7 @@ open class FileListBaseActivity : BaseActivity() {
     val simpleFileListFragment = SimpleFileListFragment()
     val thumbnailFileListFragment = ThumbnailFileListFragment()
     var onPartnerIdAssociated: (() -> Unit)? = null
+    var isBottomSheetOpen = false
 
     val bottomSheetBehavior: BottomSheetBehavior<CardView> by lazy {
         BottomSheetBehavior.from(binding.bottomSheetPartnerId.bottomSheetPartnerId)
@@ -131,10 +132,15 @@ open class FileListBaseActivity : BaseActivity() {
 
                 override fun onStateChanged(bottomSheet: View, newState: Int) {
                     when (newState) {
-                        BottomSheetBehavior.STATE_HIDDEN ->
-                            binding.shadowFileListView.isVisible =
-                                false
-                        else -> binding.shadowFileListView.isVisible = true
+                        BottomSheetBehavior.STATE_HIDDEN -> {
+                            binding.shadowFileListView.isVisible = false
+                            isBottomSheetOpen = false
+                        }
+
+                        else -> {
+                            binding.shadowFileListView.isVisible = true
+                            isBottomSheetOpen = true
+                        }
                     }
                 }
             })
@@ -236,7 +242,13 @@ open class FileListBaseActivity : BaseActivity() {
     }
 
     override fun onBackPressed() {
-        super.onBackPressed()
-        checkableListInit = false
+        if (isBottomSheetOpen) {
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+            isBottomSheetOpen = false
+            return
+        } else {
+            super.onBackPressed()
+            checkableListInit = false
+        }
     }
 }
