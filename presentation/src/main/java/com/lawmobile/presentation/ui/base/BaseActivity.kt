@@ -172,7 +172,7 @@ open class BaseActivity : AppCompatActivity() {
 
     fun showLoadingDialog() {
         EspressoIdlingResource.increment()
-        loadingDialog = this.createAlertProgress()
+        loadingDialog = createAlertProgress()
         loadingDialog?.show()
     }
 
