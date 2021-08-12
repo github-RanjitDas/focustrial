@@ -43,6 +43,7 @@ class ValidateOfficerPasswordViewModel @Inject constructor(
             response.doIfSuccess {
                 CameraInfo.setCamera(it)
             }
+            CameraHelper.setInstance(cameraHelper)
         }
     }
 }

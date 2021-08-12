@@ -2,11 +2,14 @@ package com.lawmobile.presentation.utils
 
 import com.lawmobile.domain.utils.ConnectionHelper
 import com.safefleet.mobile.kotlin_commons.helpers.Result
+import io.mockk.Runs
 import io.mockk.clearAllMocks
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
+import io.mockk.just
 import io.mockk.mockk
+import io.mockk.verify
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert
 import org.junit.jupiter.api.BeforeEach
@@ -27,8 +30,10 @@ class CameraHelperTest {
 
     @Test
     fun testSetInstance() {
+        every { connectionHelper.reviewIfArriveNotificationInCMDSocket() } just Runs
         CameraHelper.setInstance(cameraHelper)
         Assert.assertEquals(CameraHelper.getInstance(), cameraHelper)
+        verify { connectionHelper.reviewIfArriveNotificationInCMDSocket() }
     }
 
     @Test
