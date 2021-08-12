@@ -16,6 +16,7 @@ class CameraHelper(
 
         fun setInstance(cameraHelper: CameraHelper) {
             this.cameraHelper = cameraHelper
+            this.cameraHelper.connectionHelper.reviewIfArriveNotificationInCMDSocket()
         }
 
         fun getInstance() = cameraHelper

@@ -148,10 +148,10 @@ class LiveStatusBarX2Fragment : LiveStatusBarBaseFragment() {
         CameraInfo.onReadyToGetNotifications?.invoke()
     }
 
-    private fun manageStorageLevel(usedPercent: Double) {
+    private fun manageStorageLevel(availablePercent: Double) {
         requireActivity().runOnUiThread {
-            setColorInStorageLevel(usedPercent)
-            setTextStorageLevel(usedPercent)
+            setColorInStorageLevel(availablePercent)
+            setTextStorageLevel(availablePercent)
         }
     }
 
@@ -159,10 +159,10 @@ class LiveStatusBarX2Fragment : LiveStatusBarBaseFragment() {
         return (information[FREE_STORAGE_POSITION] * TOTAL_PERCENTAGE) / information[TOTAL_STORAGE_POSITION]
     }
 
-    private fun setColorInStorageLevel(usedPercent: Double) {
-        binding.progressStorageLevel.setProgress(usedPercent.toInt())
+    private fun setColorInStorageLevel(availablePercent: Double) {
+        binding.progressStorageLevel.setProgress(availablePercent.toInt())
         binding.imageViewStorage.apply {
-            if (usedPercent.toInt() in storageBarRanges.lowRange) {
+            if (availablePercent.toInt() in storageBarRanges.lowRange) {
                 backgroundTintList =
                     ContextCompat.getColorStateList(requireContext(), R.color.red)
             } else {
