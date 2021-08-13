@@ -3,11 +3,13 @@ package com.lawmobile.data.repository.events
 import com.lawmobile.data.dao.entities.LocalCameraEvent
 import com.lawmobile.data.datasource.local.events.EventsLocalDataSource
 import com.lawmobile.data.datasource.remote.events.EventsRemoteDataSource
+import com.lawmobile.data.utils.DateHelper
 import com.lawmobile.domain.entities.CameraInfo
 import com.lawmobile.domain.enums.EventType
 import com.safefleet.mobile.external_hardware.cameras.entities.LogEvent
 import com.safefleet.mobile.kotlin_commons.helpers.Result
 import io.mockk.Runs
+import io.mockk.clearAllMocks
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
@@ -17,6 +19,7 @@ import io.mockk.mockkObject
 import io.mockk.verify
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
 internal class EventsRepositoryImplTest {
@@ -28,20 +31,25 @@ internal class EventsRepositoryImplTest {
         EventsRepositoryImpl(eventsRemoteDataSource, eventsLocalDataSource)
     }
 
+    @BeforeEach
+    fun clearMocks() {
+        clearAllMocks()
+    }
+
     @Test
     fun getCameraEventsFlowWithEventsInDB() {
         val remoteEvents = Result.Success(
             listOf(
                 LogEvent(
                     name = "Camera",
-                    date = "20/12/2020",
+                    date = DateHelper.getTodayDateAtStartOfTheDay(),
                     type = "warn:Low battery",
                     value = "Charge your camera",
                     additionalInformation = null
                 ),
                 LogEvent(
                     name = "Notification",
-                    date = "20/11/2020",
+                    date = DateHelper.getTodayDateAtStartOfTheDay(),
                     type = "warn:Low battery",
                     value = "Charge your camera",
                     additionalInformation = null
@@ -87,14 +95,14 @@ internal class EventsRepositoryImplTest {
             listOf(
                 LogEvent(
                     name = "Camera",
-                    date = "20/12/2020",
+                    date = DateHelper.getTodayDateAtStartOfTheDay(),
                     type = "warn:Low battery",
                     value = "Charge your camera",
                     additionalInformation = null
                 ),
                 LogEvent(
                     name = "Notification",
-                    date = "20/11/2020",
+                    date = DateHelper.getTodayDateAtStartOfTheDay(),
                     type = "warn:Low battery",
                     value = "Charge your camera",
                     additionalInformation = null
@@ -194,7 +202,7 @@ internal class EventsRepositoryImplTest {
         val notificationList = listOf(
             LogEvent(
                 name = "Notification",
-                date = "20/12/2020",
+                date = DateHelper.getTodayDateAtStartOfTheDay(),
                 type = "warn:Low battery",
                 value = "Charge your camera",
                 additionalInformation = null
@@ -236,7 +244,7 @@ internal class EventsRepositoryImplTest {
                 every { eventType } returns EventType.CAMERA.value
             }
         )
-        coEvery { eventsLocalDataSource.getNotificationEvents() } returns Result.Success(
+        coEvery { eventsLocalDataSource.getNotificationEvents(any()) } returns Result.Success(
             cameraEventList
         )
         runBlocking {

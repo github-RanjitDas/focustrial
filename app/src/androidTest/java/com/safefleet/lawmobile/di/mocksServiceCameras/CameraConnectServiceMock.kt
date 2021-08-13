@@ -14,9 +14,11 @@ import com.safefleet.mobile.external_hardware.cameras.entities.FileResponseWithE
 import com.safefleet.mobile.external_hardware.cameras.entities.LogEvent
 import com.safefleet.mobile.external_hardware.cameras.entities.NotificationResponse
 import com.safefleet.mobile.external_hardware.cameras.entities.PhotoInformation
+import com.safefleet.mobile.external_hardware.cameras.entities.SetupConfiguration
 import com.safefleet.mobile.external_hardware.cameras.entities.VideoFileInfo
 import com.safefleet.mobile.external_hardware.cameras.entities.VideoInformation
 import com.safefleet.mobile.external_hardware.cameras.entities.VideoMetadata
+import com.safefleet.mobile.external_hardware.cameras.enums.CameraType
 import com.safefleet.mobile.kotlin_commons.helpers.Result
 import io.mockk.mockk
 
@@ -52,6 +54,13 @@ class CameraConnectServiceMock : CameraService {
 
     override suspend fun getBodyWornDiagnosis(): Result<Boolean> {
         return bodyWornDiagnosisResult
+    }
+
+    override suspend fun getCameraType(): Result<CameraType> {
+        if (MockUtils.cameraSSID == TestLoginData.SSID_X1.value) {
+            return Result.Success(CameraType.X1)
+        }
+        return Result.Success(CameraType.X2)
     }
 
     override fun getCanReadNotification(): Boolean {
@@ -152,6 +161,10 @@ class CameraConnectServiceMock : CameraService {
         progressPairingCamera?.invoke(result)
     }
 
+    override fun reviewIfArriveNotificationInCMDSocket() {
+        // Just for test
+    }
+
     override suspend fun saveAllPhotoMetadata(list: List<PhotoInformation>): Result<Unit> {
         return Result.Success(Unit)
     }
@@ -161,6 +174,10 @@ class CameraConnectServiceMock : CameraService {
     }
 
     override suspend fun saveVideoMetadata(videoInformation: VideoInformation): Result<Unit> {
+        return Result.Success(Unit)
+    }
+
+    override suspend fun setSetupConfiguration(setupConfiguration: SetupConfiguration): Result<Unit> {
         return Result.Success(Unit)
     }
 
@@ -201,11 +218,11 @@ class CameraConnectServiceMock : CameraService {
     }
 
     override suspend fun getFreeStorage(): Result<String> {
-        return Result.Success("50000000")
+        return Result.Success(MockUtils.freeStorageCamera.toString())
     }
 
     override suspend fun getTotalStorage(): Result<String> {
-        return Result.Success("60000000")
+        return Result.Success(MockUtils.totalStorageCamera.toString())
     }
 
     fun sendPushNotification(notificationResponse: NotificationResponse) {

@@ -7,7 +7,6 @@ import com.lawmobile.domain.entities.DomainCameraFile
 import com.lawmobile.domain.entities.DomainInformationImageMetadata
 import com.lawmobile.domain.usecase.snapshotDetail.SnapshotDetailUseCase
 import com.lawmobile.presentation.extensions.postEventValueWithTimeout
-import com.lawmobile.presentation.extensions.postValueWithTimeout
 import com.lawmobile.presentation.ui.base.BaseViewModel
 import com.safefleet.mobile.kotlin_commons.helpers.Event
 import com.safefleet.mobile.kotlin_commons.helpers.Result
@@ -24,8 +23,8 @@ class SnapshotDetailViewModel @Inject constructor(
     private val imageBytesMediator: MediatorLiveData<Event<Result<ByteArray>>> = MediatorLiveData()
     val imageBytesLiveData: LiveData<Event<Result<ByteArray>>> get() = imageBytesMediator
 
-    private val savePartnerIdMediator: MediatorLiveData<Result<Unit>> = MediatorLiveData()
-    val savePartnerIdLiveData: LiveData<Result<Unit>> get() = savePartnerIdMediator
+    private val savePartnerIdMediator: MediatorLiveData<Event<Result<Unit>>> = MediatorLiveData()
+    val savePartnerIdLiveData: LiveData<Event<Result<Unit>>> get() = savePartnerIdMediator
 
     private val informationVideoMediator: MediatorLiveData<Event<Result<DomainInformationImageMetadata>>> =
         MediatorLiveData()
@@ -45,8 +44,8 @@ class SnapshotDetailViewModel @Inject constructor(
 
     fun savePartnerId(domainCameraFile: DomainCameraFile, partnerId: String) {
         viewModelScope.launch {
-            savePartnerIdMediator.postValueWithTimeout(getLoadingTimeOut()) {
-                snapshotDetailUseCase.savePartnerIdSnapshot(domainCameraFile, partnerId)
+            savePartnerIdMediator.postEventValueWithTimeout(getLoadingTimeOut()) {
+                Event(snapshotDetailUseCase.savePartnerIdSnapshot(domainCameraFile, partnerId))
             }
         }
     }

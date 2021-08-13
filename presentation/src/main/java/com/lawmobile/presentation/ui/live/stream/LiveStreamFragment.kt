@@ -56,11 +56,11 @@ class LiveStreamFragment : BaseFragment() {
 
     private fun setUrlLive() {
         val url = viewModel.getUrlLive()
-        viewModel.createVLCMediaPlayer(url, binding.liveStreamingView)
+        viewModel.mediaPlayer.create(url, binding.liveStreamingView)
     }
 
     private fun startLiveVideoView() {
-        viewModel.startVLCMediaPlayer()
+        viewModel.mediaPlayer.play()
     }
 
     private fun setListeners() {
@@ -80,7 +80,7 @@ class LiveStreamFragment : BaseFragment() {
 
     override fun onStop() {
         super.onStop()
-        viewModel.stopVLCMediaPlayer()
+        viewModel.mediaPlayer.stop()
     }
 
     override fun onDestroy() {

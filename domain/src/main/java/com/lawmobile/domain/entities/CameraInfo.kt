@@ -23,7 +23,7 @@ object CameraInfo {
         currentNotificationCount = 0
     }
 
-    fun setCameraType(serialNumber: String) {
-        cameraType = CameraType.getTypeOfCamera(serialNumber)
+    fun setCamera(cameraType: CameraType) {
+        this.cameraType = cameraType
     }
 }

@@ -4,7 +4,6 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
 import com.lawmobile.presentation.ui.login.LoginActivity
 import com.safefleet.lawmobile.R
-import com.safefleet.lawmobile.helpers.SmokeTest
 import com.safefleet.lawmobile.screens.FileListScreen
 import com.safefleet.lawmobile.screens.LiveViewScreen
 import com.safefleet.lawmobile.screens.LoginScreen
@@ -22,8 +21,8 @@ class VideoPlaybackTest : EspressoStartActivityBaseTest<LoginActivity>(LoginActi
         private val fileListScreen = FileListScreen()
         private val liveViewScreen = LiveViewScreen()
         private val videoPlaybackScreen = VideoPlaybackScreen()
-        private val defaultMetadata = VideoPlaybackMetadata.DEFAULT_VIDEO_METADATA.value
-        private val extraMetadata = VideoPlaybackMetadata.EXTRA_VIDEO_METADATA.value
+        val defaultMetadata = VideoPlaybackMetadata.DEFAULT_VIDEO_METADATA.value
+        val extraMetadata = VideoPlaybackMetadata.EXTRA_VIDEO_METADATA.value
     }
 
     @Before
@@ -42,7 +41,6 @@ class VideoPlaybackTest : EspressoStartActivityBaseTest<LoginActivity>(LoginActi
     /**
      * Test case: https://safefleet.atlassian.net/browse/FMA-722
      */
-    @SmokeTest
     @Test
     fun verifySaveVideoMetadataSuccess() {
         liveViewScreen.openVideoList()

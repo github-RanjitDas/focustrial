@@ -7,7 +7,6 @@ import android.view.View
 import androidx.activity.viewModels
 import androidx.cardview.widget.CardView
 import androidx.core.view.isVisible
-import androidx.lifecycle.Observer
 import com.bumptech.glide.Glide
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.lawmobile.domain.entities.DomainCameraFile
@@ -40,7 +39,7 @@ class SnapshotDetailActivity : BaseActivity() {
     private val snapshotDetailViewModel: SnapshotDetailViewModel by viewModels()
     private lateinit var file: DomainCameraFile
     private var domainInformationImageMetadata: DomainInformationImageMetadata? = null
-    private var temporalPartnerToShowIfItSaved: String = ""
+    private lateinit var currentAssociatedOfficerId: String
 
     private val sheetBehavior: BottomSheetBehavior<CardView> by lazy {
         BottomSheetBehavior.from(
@@ -50,13 +49,12 @@ class SnapshotDetailActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding =
-            ActivitySnapshotItemDetailBinding.inflate(layoutInflater)
+        binding = ActivitySnapshotItemDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setAppBar()
         getInformationFromIntent()
         setInformationOfSnapshot()
-        configureObserve()
+        setObservers()
         configureListeners()
         configureBottomSheet()
     }
@@ -85,9 +83,7 @@ class SnapshotDetailActivity : BaseActivity() {
     private fun getInformationFromIntent() {
         val fileIntent =
             intent.getSerializableExtra(Constants.DOMAIN_CAMERA_FILE) as? DomainCameraFile
-        fileIntent?.let {
-            file = it
-        }
+        fileIntent?.let { file = it }
     }
 
     private fun setAppBar() {
@@ -118,13 +114,10 @@ class SnapshotDetailActivity : BaseActivity() {
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
     }
 
-    private fun configureObserve() {
-        snapshotDetailViewModel.imageBytesLiveData.observe(this, Observer(::manageGetBytesImage))
-        snapshotDetailViewModel.informationImageLiveData.observe(
-            this,
-            Observer(::manageInformationImage)
-        )
-        snapshotDetailViewModel.savePartnerIdLiveData.observe(this, Observer(::manageSavePartnerId))
+    private fun setObservers() {
+        snapshotDetailViewModel.imageBytesLiveData.observe(this, ::manageGetBytesImage)
+        snapshotDetailViewModel.informationImageLiveData.observe(this, ::manageInformationImage)
+        snapshotDetailViewModel.savePartnerIdLiveData.observe(this, ::manageSavePartnerId)
     }
 
     private fun manageGetBytesImage(event: Event<Result<ByteArray>>) {
@@ -151,8 +144,8 @@ class SnapshotDetailActivity : BaseActivity() {
     private fun manageInformationImage(event: Event<Result<DomainInformationImageMetadata>>) {
         event.getContentIfNotHandled()?.run {
             with(this) {
-                doIfSuccess {
-                    domainInformationImageMetadata = it
+                doIfSuccess { domainInformation ->
+                    domainInformationImageMetadata = domainInformation
                     setSnapshotMetadata()
                 }
                 doIfError {
@@ -174,21 +167,20 @@ class SnapshotDetailActivity : BaseActivity() {
 
     private fun showMetadataNotAvailable() {
         binding.officerValue.text = getString(R.string.not_available)
-        binding.videosAssociatedValue.text =
-            getString(R.string.not_available)
+        binding.videosAssociatedValue.text = getString(R.string.not_available)
     }
 
-    private fun manageSavePartnerId(result: Result<Unit>) {
+    private fun manageSavePartnerId(result: Event<Result<Unit>>) {
         hideLoadingDialog()
-        with(result) {
-            doIfSuccess {
+        with(result.getContentIfNotHandled()) {
+            this?.doIfSuccess {
                 binding.constraintLayoutDetail.showSuccessSnackBar(
                     getString(R.string.file_list_associate_partner_id_success)
                 )
                 sheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
-                binding.officerValue.text = temporalPartnerToShowIfItSaved
+                setCurrentOfficerAssociatedInView()
             }
-            doIfError {
+            this?.doIfError {
                 binding.constraintLayoutDetail.showErrorSnackBar(
                     getString(
                         R.string.file_list_associate_partner_id_error
@@ -201,11 +193,15 @@ class SnapshotDetailActivity : BaseActivity() {
     private fun configureBottomSheet() {
         sheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
         binding.bottomSheetPartnerId?.buttonAssignToOfficer?.setOnClickListenerCheckConnection {
-            associatePartnerId(binding.bottomSheetPartnerId?.editTextAssignToOfficer?.text.toString())
+            currentAssociatedOfficerId =
+                binding.bottomSheetPartnerId?.editTextAssignToOfficer?.text.toString()
+            associatePartnerId(currentAssociatedOfficerId)
             hideKeyboard()
+            cleanPartnerIdField()
         }
         binding.bottomSheetPartnerId?.buttonCloseAssignToOfficer?.setOnClickListenerCheckConnection {
             hideKeyboard()
+            cleanPartnerIdField()
             sheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
         }
         sheetBehavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
@@ -225,18 +221,20 @@ class SnapshotDetailActivity : BaseActivity() {
         })
     }
 
+    private fun cleanPartnerIdField() {
+        binding.bottomSheetPartnerId?.editTextAssignToOfficer?.text?.clear()
+    }
+
     private fun showAssignToOfficerBottomSheet() {
         sheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
     }
 
     private fun associatePartnerId(partnerId: String) {
-
         if (partnerId.isEmpty()) {
             binding.constraintLayoutDetail.showErrorSnackBar(getString(R.string.valid_partner_id_message))
             return
         }
         showLoadingDialog()
-        temporalPartnerToShowIfItSaved = partnerId
         snapshotDetailViewModel.savePartnerId(file, partnerId)
     }
 
@@ -276,12 +274,20 @@ class SnapshotDetailActivity : BaseActivity() {
         setVideosAssociatedInView()
     }
 
+    private fun setCurrentOfficerAssociatedInView() {
+        binding.officerValue.text =
+            if (currentAssociatedOfficerId.isEmpty()) getString(R.string.none)
+            else currentAssociatedOfficerId
+    }
+
     private fun setOfficerAssociatedInView() {
         domainInformationImageMetadata?.photoMetadata?.metadata?.partnerID?.let {
-            binding.officerValue.text = it
+            currentAssociatedOfficerId = if (it.isEmpty()) getString(R.string.none) else it
         } ?: run {
-            binding.officerValue.text = getString(R.string.none)
+            currentAssociatedOfficerId = getString(R.string.none)
         }
+
+        binding.officerValue.text = currentAssociatedOfficerId
     }
 
     private fun setVideosAssociatedInView() {

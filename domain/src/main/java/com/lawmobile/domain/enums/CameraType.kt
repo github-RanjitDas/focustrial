@@ -8,7 +8,7 @@ enum class CameraType {
     },
     X2 {
         override fun getPossibleStringsToIdentifySSID(): List<String> {
-            return listOf("FocusX2", "AmbaCam", "01", "X0")
+            return listOf("FocusX2", "AmbaCam", "01", "X0", "X2")
         }
     };
 
@@ -23,12 +23,5 @@ enum class CameraType {
     companion object {
         fun isValidNumberCameraBWC(codeCamera: String): Boolean =
             X1.reviewIfIsThisTypeOfCamera(codeCamera) || X2.reviewIfIsThisTypeOfCamera(codeCamera)
-
-        fun getTypeOfCamera(serialNumber: String): CameraType {
-            if (X1.reviewIfIsThisTypeOfCamera(serialNumber)) {
-                return X1
-            }
-            return X2
-        }
     }
 }

@@ -20,6 +20,7 @@ import com.lawmobile.presentation.ui.fileList.FileListBaseFragment.Companion.che
 import com.lawmobile.presentation.ui.fileList.simpleList.SimpleFileListFragment
 import com.lawmobile.presentation.ui.fileList.thumbnailList.ThumbnailFileListFragment
 import com.lawmobile.presentation.utils.Constants
+import com.lawmobile.presentation.utils.VLCMediaPlayer
 import com.lawmobile.presentation.widgets.CustomFilterDialog
 import com.safefleet.mobile.android_commons.extensions.hideKeyboard
 import com.safefleet.mobile.kotlin_commons.extensions.doIfError
@@ -38,6 +39,7 @@ open class FileListBaseActivity : BaseActivity() {
     val simpleFileListFragment = SimpleFileListFragment()
     val thumbnailFileListFragment = ThumbnailFileListFragment()
     var onPartnerIdAssociated: (() -> Unit)? = null
+    var isBottomSheetOpen = false
 
     val bottomSheetBehavior: BottomSheetBehavior<CardView> by lazy {
         BottomSheetBehavior.from(binding.bottomSheetPartnerId.bottomSheetPartnerId)
@@ -51,6 +53,11 @@ open class FileListBaseActivity : BaseActivity() {
         setExtras()
         setObservers()
         configureBottomSheet()
+    }
+
+    override fun onRestart() {
+        super.onRestart()
+        VLCMediaPlayer.currentProgress = 0
     }
 
     private fun setExtras() {
@@ -111,9 +118,11 @@ open class FileListBaseActivity : BaseActivity() {
         binding.bottomSheetPartnerId.buttonAssignToOfficer.setOnClickListenerCheckConnection {
             associatePartnerId(binding.bottomSheetPartnerId.editTextAssignToOfficer.text.toString())
             hideKeyboard()
+            cleanPartnerIdField()
         }
         binding.bottomSheetPartnerId.buttonCloseAssignToOfficer.setOnClickListener {
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+            cleanPartnerIdField()
         }
         bottomSheetBehavior.addBottomSheetCallback(object :
                 BottomSheetBehavior.BottomSheetCallback() {
@@ -123,13 +132,22 @@ open class FileListBaseActivity : BaseActivity() {
 
                 override fun onStateChanged(bottomSheet: View, newState: Int) {
                     when (newState) {
-                        BottomSheetBehavior.STATE_HIDDEN ->
-                            binding.shadowFileListView.isVisible =
-                                false
-                        else -> binding.shadowFileListView.isVisible = true
+                        BottomSheetBehavior.STATE_HIDDEN -> {
+                            binding.shadowFileListView.isVisible = false
+                            isBottomSheetOpen = false
+                        }
+
+                        else -> {
+                            binding.shadowFileListView.isVisible = true
+                            isBottomSheetOpen = true
+                        }
                     }
                 }
             })
+    }
+
+    private fun cleanPartnerIdField() {
+        binding.bottomSheetPartnerId.editTextAssignToOfficer.text.clear()
     }
 
     private fun associatePartnerId(partnerId: String) {
@@ -224,7 +242,13 @@ open class FileListBaseActivity : BaseActivity() {
     }
 
     override fun onBackPressed() {
-        super.onBackPressed()
-        checkableListInit = false
+        if (isBottomSheetOpen) {
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+            isBottomSheetOpen = false
+            return
+        } else {
+            super.onBackPressed()
+            checkableListInit = false
+        }
     }
 }

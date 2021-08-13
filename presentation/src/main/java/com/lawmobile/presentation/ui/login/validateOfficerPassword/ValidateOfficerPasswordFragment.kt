@@ -57,6 +57,7 @@ class ValidateOfficerPasswordFragment : BaseFragment() {
     }
 
     private fun handleUserInformationResult(result: Result<DomainUser>) {
+        validateOfficerPasswordViewModel.setCameraType()
         when (result) {
             is Result.Success -> {
                 with(result.data) {

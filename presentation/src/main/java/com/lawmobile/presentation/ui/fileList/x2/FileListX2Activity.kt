@@ -26,7 +26,8 @@ class FileListX2Activity : FileListBaseActivity() {
         setFragmentsDependingOnListType()
         attachFragments()
         setListeners()
-        menuInformation = MenuInformation(this, menuFragment, binding.layoutCustomMenu.shadowOpenMenuView)
+        menuInformation =
+            MenuInformation(this, menuFragment, binding.layoutCustomMenu.shadowOpenMenuView)
     }
 
     override fun onResume() {

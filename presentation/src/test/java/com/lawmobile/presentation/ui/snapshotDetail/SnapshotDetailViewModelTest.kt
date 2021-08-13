@@ -74,7 +74,7 @@ class SnapshotDetailViewModelTest {
 
         runBlocking {
             snapshotDetailViewModel.savePartnerId(mockk(relaxed = true), "partnerId")
-            val valueLiveData = snapshotDetailViewModel.savePartnerIdLiveData.value
+            val valueLiveData = snapshotDetailViewModel.savePartnerIdLiveData.value?.getContent()
             Assert.assertTrue(valueLiveData is Result.Success)
         }
 
@@ -91,7 +91,7 @@ class SnapshotDetailViewModelTest {
         } returns Result.Error(mockk())
         runBlocking {
             snapshotDetailViewModel.savePartnerId(mockk(relaxed = true), "partnerId")
-            val valueLiveData = snapshotDetailViewModel.savePartnerIdLiveData.value
+            val valueLiveData = snapshotDetailViewModel.savePartnerIdLiveData.value?.getContent()
             Assert.assertTrue(valueLiveData is Result.Error)
         }
     }

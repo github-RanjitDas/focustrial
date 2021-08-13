@@ -1,17 +1,14 @@
-import dependencies.*
+import dependencies.AppConfig
+import dependencies.Dependencies
+import dependencies.Modules
+import dependencies.Exclusions
 
 plugins {
     id 'com.android.library'
     id 'kotlin-android'
     id 'kotlin-kapt'
-    id 'jacoco'
     id 'dagger.hilt.android.plugin'
-    id 'pl.droidsonroids.pitest'
 }
-
-apply from: '../jacoco.gradle'
-apply from: '../pitest-exceptions.gradle'
-apply from: '../ktlint.gradle'
 
 check.dependsOn ktlint
 
@@ -77,65 +74,42 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation "androidx.appcompat:appcompat:$app_compat_version"
-    implementation "androidx.core:core-ktx:$ktx_version"
-    implementation "androidx.constraintlayout:constraintlayout:$constrain_layout_version"
-    testImplementation "junit:junit:$junit_version"
-    androidTestImplementation "androidx.test.espresso:espresso-core:$espresso_version"
+    implementation Dependencies.Kotlin.standardLibrary
 
-    //Espresso Idling Resource
-    androidTestImplementation "androidx.test.espresso:espresso-idling-resource:$espresso_version"
-    implementation "androidx.test.espresso:espresso-idling-resource:$espresso_version"
+    testImplementation Dependencies.JUnit.junit
+    androidTestImplementation Dependencies.Espresso.espressoCore
+    androidTestImplementation Dependencies.Espresso.idlingResource
+    implementation Dependencies.Espresso.idlingResource
+    testImplementation Dependencies.JUnit5.jupiterApi
+    testRuntimeOnly Dependencies.JUnit5.jupiterEngine
+    testImplementation Dependencies.JUnit5.jupiterParams
+    testImplementation Dependencies.Mockk.mockk
+    testImplementation Dependencies.Coroutines.coroutinesTest
+    kaptTest Dependencies.Hilt.hiltAndroidCompiler
 
-    //Material
-    api "com.google.android.material:material:$android_material_version"
+    api Dependencies.Material.material
+    api Dependencies.Lifecycle.extensions
+    api Dependencies.Lifecycle.viewModel
 
-    // ViewModel and LiveData
-    api "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"
-    api "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
+    implementation Dependencies.Lottie.lottie
+    implementation Dependencies.AppCompat.appCompat
+    implementation Dependencies.AndroidX.coreKTX
+    implementation Dependencies.ConstraintLayout.constraintLayout
+    implementation Dependencies.VLC.libVLC
+    implementation Dependencies.RecyclerView.recyclerView
+    implementation Dependencies.PDF.pdfViewer
+    implementation Dependencies.Hilt.hiltAndroid
+    kapt Dependencies.Hilt.hiltAndroidCompiler
+    kapt Dependencies.Hilt.hiltCompiler
+    implementation Dependencies.Fragment.extensions
+    implementation Dependencies.Hilt.hiltViewModel
+    implementation Dependencies.Glide.glide
 
-    // Lottie
-    implementation "com.airbnb.android:lottie:$lottieVersion"
+    api Dependencies.Coroutines.coroutinesAndroid
+    api Dependencies.Coroutines.coroutinesCore
 
-    // Junit5
-    testImplementation "org.junit.jupiter:junit-jupiter-api:$junit5_version"
-    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$junit5_version"
-    testImplementation "org.junit.jupiter:junit-jupiter-params:$junit5_version"
-
-    //VLC player
-    implementation "com.github.masterwok:libvlc-android-sdk:$libvlc_android_sdk_version"
-
-    // Mock
-    testImplementation "io.mockk:mockk:$mockk_version"
-
-    //Recycler
-    implementation "androidx.recyclerview:recyclerview:$recycker_version"
-
-    //Kotlin Coroutines
-    api "org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlin_coroutine_android_version"
-    api "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlin_coroutine_core_version"
-
-    //Coroutines-test
-    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutines_test_version"
-
-    // PDF Viewer
-    implementation "com.github.barteksc:android-pdf-viewer:$pdf_viewer_version"
-
-    //Hilt
-    implementation "com.google.dagger:hilt-android:$hilt_version"
-    kapt "com.google.dagger:hilt-android-compiler:$hilt_version"
-    kapt "androidx.hilt:hilt-compiler:$hilt_jetpack_version"
-    implementation "androidx.fragment:fragment-ktx:$fragment_ktx_version"
-    implementation "androidx.hilt:hilt-lifecycle-viewmodel:$hilt_jetpack_version"
-    kaptTest "com.google.dagger:hilt-android-compiler:$hilt_version"
-
-    //Glide
-    implementation "com.github.bumptech.glide:glide:$glide_version"
-
-    //Base repository
-    implementation 'com.safefleet.mobile:android-commons:1.2.0@aar'
-    implementation 'com.safefleet.mobile:safefleet-ui:1.2.0@aar'
+    implementation Dependencies.Base.androidCommons
+    implementation Dependencies.Base.safeFleetUI
 
     implementation project(path: Modules.domain)
 }
@@ -147,7 +121,7 @@ pitest {
     //noinspection GrFinalVariableAccess,GroovyAccessibility
     targetTests = ["com.lawmobile.presentation.*"]
     //noinspection GrFinalVariableAccess,GroovyAccessibility
-    excludedClasses = pitestExclusions
+    excludedClasses = Exclusions.pitest
     testPlugin = 'junit5'
     threads = Runtime.getRuntime().availableProcessors()
     outputFormats = ["HTML", "XML"]

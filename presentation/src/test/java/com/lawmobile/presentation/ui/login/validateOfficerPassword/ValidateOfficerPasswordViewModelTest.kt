@@ -1,11 +1,15 @@
 package com.lawmobile.presentation.ui.login.validateOfficerPassword
 
+import com.lawmobile.domain.entities.CameraInfo
 import com.lawmobile.domain.entities.DomainUser
+import com.lawmobile.domain.enums.CameraType
+import com.lawmobile.domain.usecase.typeOfCamera.TypeOfCameraUseCase
 import com.lawmobile.domain.usecase.validatePasswordOfficer.ValidatePasswordOfficerUseCase
 import com.lawmobile.presentation.InstantExecutorExtension
 import com.lawmobile.presentation.utils.CameraHelper
 import com.safefleet.mobile.kotlin_commons.helpers.Result
 import io.mockk.Runs
+import io.mockk.clearMocks
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
@@ -28,16 +32,18 @@ class ValidateOfficerPasswordViewModelTest {
 
     //region mocks
     private val validatePasswordOfficerUseCase: ValidatePasswordOfficerUseCase = mockk()
+    private val typeOfCameraUseCase: TypeOfCameraUseCase = mockk()
     private val cameraHelper: CameraHelper = mockk()
 
     //endregion
     private val passwordViewModel: ValidateOfficerPasswordViewModel by lazy {
-        ValidateOfficerPasswordViewModel(validatePasswordOfficerUseCase, cameraHelper)
+        ValidateOfficerPasswordViewModel(validatePasswordOfficerUseCase, typeOfCameraUseCase, cameraHelper)
     }
 
     @ExperimentalCoroutinesApi
     @BeforeEach
     fun setUp() {
+        clearMocks()
         Dispatchers.setMain(Dispatchers.Unconfined)
     }
 
@@ -65,6 +71,41 @@ class ValidateOfficerPasswordViewModelTest {
         )
         passwordViewModel.getUserInformation()
         Assert.assertTrue(passwordViewModel.domainUserLiveData.value is Result.Error)
+    }
+
+    @Test
+    fun testSetCameraTypeFlow() {
+        coEvery { typeOfCameraUseCase.getTypeOfCamera() } returns Result.Success(CameraType.X2)
+        passwordViewModel.setCameraType()
+        coVerify { typeOfCameraUseCase.getTypeOfCamera() }
+    }
+
+    @Test
+    fun testSetCameraTypeFlowSuccessCameraTypeX2() {
+        mockkObject(CameraInfo)
+        every { CameraInfo.setCamera(any()) } just Runs
+        coEvery { typeOfCameraUseCase.getTypeOfCamera() } returns Result.Success(CameraType.X2)
+        passwordViewModel.setCameraType()
+        coVerify { typeOfCameraUseCase.getTypeOfCamera() }
+        verify { CameraInfo.setCamera(CameraType.X2) }
+    }
+
+    @Test
+    fun testSetCameraTypeFlowSuccessCameraTypeX1() {
+        mockkObject(CameraInfo)
+        every { CameraInfo.setCamera(any()) } just Runs
+        coEvery { typeOfCameraUseCase.getTypeOfCamera() } returns Result.Success(CameraType.X1)
+        passwordViewModel.setCameraType()
+        coVerify { typeOfCameraUseCase.getTypeOfCamera() }
+        verify { CameraInfo.setCamera(CameraType.X1) }
+    }
+
+    @Test
+    fun testSetCameraTypeError() {
+        mockkObject(CameraInfo)
+        coEvery { typeOfCameraUseCase.getTypeOfCamera() } returns Result.Error(Exception(""))
+        passwordViewModel.setCameraType()
+        Assert.assertEquals(CameraInfo.cameraType, CameraType.X1)
     }
 
     @Test

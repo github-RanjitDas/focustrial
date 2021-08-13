@@ -1,6 +1,5 @@
 package com.lawmobile.presentation.ui.live.stream
 
-import android.view.SurfaceView
 import com.lawmobile.domain.usecase.liveStreaming.LiveStreamingUseCase
 import com.lawmobile.presentation.InstantExecutorExtension
 import com.lawmobile.presentation.utils.VLCMediaPlayer
@@ -22,10 +21,9 @@ import org.junit.jupiter.api.extension.ExtendWith
 internal class LiveStreamViewModelTest {
 
     private val vlcMediaPlayer: VLCMediaPlayer = mockk {
-        every { createMediaPlayer(any(), any()) } just Runs
-        every { setSizeInMediaPlayer(any()) } just Runs
-        every { playMediaPlayer() } just Runs
-        every { stopMediaPlayer() } just Runs
+        every { create(any(), any()) } just Runs
+        every { play() } just Runs
+        every { stop() } just Runs
     }
 
     private val liveStreamingUseCase: LiveStreamingUseCase = mockk {
@@ -46,24 +44,5 @@ internal class LiveStreamViewModelTest {
     fun testGetUrlForLiveStreamVerifyFlow() {
         liveStreamViewModel.getUrlLive()
         verify { liveStreamingUseCase.getUrlForLiveStream() }
-    }
-
-    @Test
-    fun testCreateVLCMediaPlayerVerifyFlow() {
-        val surfaceView = mockk<SurfaceView>()
-        liveStreamViewModel.createVLCMediaPlayer("", surfaceView)
-        verify { liveStreamViewModel.createVLCMediaPlayer(any(), any()) }
-    }
-
-    @Test
-    fun testStartVLCMediaPlayerVerifyFlow() {
-        liveStreamViewModel.startVLCMediaPlayer()
-        verify { liveStreamViewModel.startVLCMediaPlayer() }
-    }
-
-    @Test
-    fun testStopVLCMediaPlayerVerifyFlow() {
-        liveStreamViewModel.stopVLCMediaPlayer()
-        verify { liveStreamViewModel.stopVLCMediaPlayer() }
     }
 }

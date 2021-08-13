@@ -1,10 +1,8 @@
 node('jenkins-builds-slave') {
     def slackChannel = '#law-mobile-alerts'
-
     try {
         library identifier: "${env.DEFAULT_SHARED_LIBS}",
                 retriever: modernSCM([$class: 'GitSCMSource', remote: "${env.DEFAULT_SHARED_LIBS_REPO}"])
-
         pipelineProps.defaultBuildMultibranchProperties()
         def secrets = [[
                   path: "/secret-dev/safefleet1",
@@ -17,55 +15,45 @@ node('jenkins-builds-slave') {
                     [vaultKey: 'firebase_testlab', envVar: 'firebase_testlab']
                   ]
         ]]
-
         def imageDocker = "245255707803.dkr.ecr.us-east-1.amazonaws.com/android-sdk-seon:sdk29-gradle6.0.0-fastlane"
-
         stage('Checkout') {
             logger.stage()
             timeout(10) {
                 checkout scm
             }
-
             slackUtils.notifyBuild('STARTED', slackChannel)
         }
-
         stage('Login to AWS') {
             logger.stage()
             timeout(5) {
                  awsUtils.loginToAWS()
             }
         }
-
         docker.image(imageDocker).inside('--user root') {
-
             stage('Clean builds'){
                 logger.stage()
                 timeout(5){
                     sh "./gradlew clean"
                 }
             }
-
-            stage('Build project'){
-                logger.stage()
-                timeout(15) {
-                    sh "./gradlew buildDebug --stacktrace"
-                }
-            }
-
             stage('Kotlin format check') {
                 logger.stage()
                 timeout(5) {
                     sh "./gradlew ktlint"
                 }
             }
-
+            stage('Build project'){
+                logger.stage()
+                timeout(15) {
+                    sh "./gradlew buildDebug --stacktrace"
+                }
+            }
             stage('Unit Tests') {
                 logger.stage()
                 timeout(7) {
                     sh "./gradlew testDebugUnitTestCoverage --stacktrace"
                 }
             }
-
             if(env.BRANCH_NAME != 'develop' && env.BRANCH_NAME != 'master'){
                 stage('Copy Mutation results from last successful pipeline') {
                     logger.stage()
@@ -78,7 +66,6 @@ node('jenkins-builds-slave') {
                     }
                 }
             }
-
             stage('Mutation Tests') {
                 logger.stage()
                 timeout(20) {
@@ -89,7 +76,6 @@ node('jenkins-builds-slave') {
                     sh "./merge_mutation_reports.sh"
                 }
             }
-
             stage('Sonar Quality') {
                 logger.stage()
                 timeout(15) {
@@ -99,7 +85,6 @@ node('jenkins-builds-slave') {
                     waitForQualityGate abortPipeline: true
                 }
             }
-
             if(env.BRANCH_NAME == 'develop') {
                 stage('Generate APKs for testing'){
                     logger.stage()
@@ -108,7 +93,6 @@ node('jenkins-builds-slave') {
                         sh "./gradlew assembleDebugAndroidTest --stacktrace"
                     }
                 }
-
                 stage('Archive APK'){
                     logger.stage()
                     timeout(10){
@@ -118,13 +102,18 @@ node('jenkins-builds-slave') {
                         }
                     }
                 }
-
+                stage('Upload libraries'){
+                    timeout(5){
+                        withEnv(["VARIANT=SNAPSHOT"]) {
+                            sh "./gradlew uploadArchives"
+                        }
+                    }
+                }
                 stage('Sign APKs and run tests on firebase'){
                     logger.stage()
                     timeout(60){
                         def pass = ""
                         def alias = ""
-
                         withVault(vaultSecrets: secrets) {
                             sh """cat > $WORKSPACE/keystore.jks_64 <<  EOL\n$android_keystore\nEOL"""
                             sh "base64 -d keystore.jks_64 > app/keystore.jks"
@@ -133,7 +122,6 @@ node('jenkins-builds-slave') {
                             pass = "${env.KEYSTORE_PASSWORD}"
                             alias = "${env.KEYSTORE_ALIAS}"
                         }
-
                         withEnv(["KEYSTORE_PASSWORD=$pass", "KEYSTORE_ALIAS=$alias"]) {
                             sh "/home/user/android-sdk-linux/build-tools/28.0.3/apksigner sign --ks app/keystore.jks --ks-pass pass:$pass app/build/outputs/apk/debug/app-debug.apk"
                             sh "/home/user/android-sdk-linux/build-tools/28.0.3/apksigner sign --ks app/keystore.jks --ks-pass pass:$pass app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk"
@@ -145,7 +133,6 @@ node('jenkins-builds-slave') {
                     }
                 }
             }
-
             if(env.BRANCH_NAME == 'master' || env.BRANCH_NAME.startsWith('release/')){
                 stage('Generate AAB'){
                     logger.stage()
@@ -157,7 +144,6 @@ node('jenkins-builds-slave') {
                         }
                     }
                 }
-
                 if (env.BRANCH_NAME.startsWith('release/')){
                     stage('Update to play store internal'){
                         logger.stage()
@@ -170,8 +156,14 @@ node('jenkins-builds-slave') {
                             }
                         }
                     }
+                    stage('Clean credentials Google'){
+                        logger.stage()
+                        timeout(10){
+                            sh "rm $WORKSPACE/credentials.json_64"
+                            sh "rm $WORKSPACE/app/credentials.json"
+                        }
+                    }
                 }
-
                 stage('Archive AAB'){
                     logger.stage()
                     timeout(10){
@@ -181,14 +173,18 @@ node('jenkins-builds-slave') {
                         }
                     }
                 }
-
-                stage('Clean credentials'){
+                stage('Upload libraries'){
+                    timeout(5){
+                        withEnv(["VARIANT=RELEASE"]) {
+                            sh "./gradlew uploadArchives"
+                        }
+                    }
+                }
+                stage('Clean credentials Keystore'){
                     logger.stage()
                     timeout(10){
                         sh "rm $WORKSPACE/keystore.jks_64"
                         sh "rm $WORKSPACE/app/keystore.jks"
-                        sh "rm $WORKSPACE/credentials.json_64"
-                        sh "rm $WORKSPACE/app/credentials.json"
                     }
                 }
             }
@@ -200,7 +196,6 @@ node('jenkins-builds-slave') {
         stage('Notify') {
             slackUtils.notifyBuild(currentBuild.result, slackChannel)
         }
-
         stage('Clean Up') {
             cleanWs()
         }

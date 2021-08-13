@@ -1,17 +1,26 @@
+import dependencies.AppConfig
+import dependencies.Dependencies
 import dependencies.Modules
+import dependencies.Exclusions
 
 plugins {
-    id 'jacoco'
     id 'java-library'
     id 'kotlin'
     id 'kotlin-kapt'
     id 'com.squareup.sqldelight'
+    id 'maven'
+    //id 'maven-publish'
 }
 
-apply from: '../jacoco.gradle'
-apply from: '../pitest-exceptions.gradle'
-apply from: '../ktlint.gradle'
-apply plugin: 'info.solidsoft.pitest'
+def artifactId = 'database'
+def groupId = 'com.safefleet.lawmobile'
+def versionVariant = "1.0.0"
+
+if (!"$System.env.VARIANT".contains("RELEASE")) {
+    versionVariant += "-SNAPSHOT"
+}
+
+check.dependsOn ktlint
 
 sqldelight {
     Database {
@@ -38,24 +47,20 @@ test {
     }
 }
 
-
 java {
-    sourceCompatibility = JavaVersion.VERSION_1_8
-    targetCompatibility = JavaVersion.VERSION_1_8
+    sourceCompatibility = AppConfig.jvmTarget
+    targetCompatibility = AppConfig.jvmTarget
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    testImplementation "junit:junit:$junit_version"
+    implementation Dependencies.Kotlin.standardLibrary
 
-    // Junit5
-    testImplementation "org.junit.jupiter:junit-jupiter-api:$junit5_version"
-    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$junit5_version"
-    testImplementation "org.junit.jupiter:junit-jupiter-params:$junit5_version"
-
-    // Mockk
-    testImplementation "io.mockk:mockk:$mockk_version"
+    testImplementation Dependencies.JUnit.junit
+    testImplementation Dependencies.JUnit5.jupiterApi
+    testRuntimeOnly Dependencies.JUnit5.jupiterEngine
+    testImplementation Dependencies.JUnit5.jupiterParams
+    testImplementation Dependencies.Mockk.mockk
 
     implementation project(path: Modules.data)
 }
@@ -67,10 +72,49 @@ pitest {
     //noinspection GrFinalVariableAccess,GroovyAccessibility
     targetTests = ["com.lawmobile.database.*"]
     //noinspection GrFinalVariableAccess,GroovyAccessibility
-    excludedClasses = pitestExclusions
+    excludedClasses = Exclusions.pitest
     testPlugin = 'junit5'
     threads = Runtime.getRuntime().availableProcessors()
     outputFormats = ['XML', 'HTML']
     enableDefaultIncrementalAnalysis =  true
     timestampedReports = false
 }
+
+// comment the below code when using maven local
+def nexusRepositoryUrl
+if (!versionVariant.contains("SNAPSHOT")) {
+    nexusRepositoryUrl = "${nexusUrl}/repository/maven-releases/"
+} else {
+    nexusRepositoryUrl = "${nexusUrl}/repository/maven-snapshots/"
+}
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            repository(url: nexusRepositoryUrl) {
+                authentication(userName: nexusUsername, password: nexusPassword)
+                pom.groupId = groupId
+                pom.artifactId = artifactId
+                pom.version = versionVariant
+            }
+        }
+    }
+}
+
+//Uncomment the below code when using maven local
+/*project.afterEvaluate {
+    publishing {
+        publications {
+            mavenJava(MavenPublication) {
+                setGroupId groupId
+                setArtifactId artifactId
+                version versionVariant
+
+                from components.java
+            }
+        }
+    }
+}
+repositories {
+    mavenCentral()
+}*/

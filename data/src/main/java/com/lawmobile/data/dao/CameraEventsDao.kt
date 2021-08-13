@@ -4,7 +4,7 @@ import com.lawmobile.data.dao.entities.LocalCameraEvent
 
 interface CameraEventsDao {
     fun getAllEvents(): List<LocalCameraEvent>
-    fun getNotificationEvents(): List<LocalCameraEvent>
+    fun getNotificationEvents(date: String): List<LocalCameraEvent>
     fun getEventsCount(): Int
     fun getPendingNotificationsCount(): Int
     fun saveEvent(event: LocalCameraEvent)

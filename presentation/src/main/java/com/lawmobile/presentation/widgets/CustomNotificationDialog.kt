@@ -6,10 +6,10 @@ import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
 import com.lawmobile.domain.entities.CameraEvent
-import com.lawmobile.domain.enums.EventTag
 import com.lawmobile.domain.enums.NotificationType
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.databinding.DialogCustomNotificationBinding
+import com.lawmobile.presentation.extensions.setImageDependingOnEventTag
 
 class CustomNotificationDialog(
     context: Context,
@@ -40,24 +40,16 @@ class CustomNotificationDialog(
     }
 
     private fun setNotificationIcon() {
-        when (cameraEvent.eventTag) {
-            EventTag.ERROR -> {
-                binding.layoutNotificationInformation.imageViewNotificationIcon.setImageResource(R.drawable.ic_error_icon)
-            }
-            EventTag.WARNING -> {
-                binding.layoutNotificationInformation.imageViewNotificationIcon.setImageResource(R.drawable.ic_warning_icon)
-            }
-            EventTag.INFORMATION -> {
-                binding.layoutNotificationInformation.imageViewNotificationIcon.setImageResource(R.drawable.ic_info_icon)
-            }
-        }
+        binding.layoutNotificationInformation.imageViewNotificationIcon
+            .setImageDependingOnEventTag(cameraEvent.eventTag)
     }
 
     private fun setTextViews() {
         with(binding.layoutNotificationInformation) {
             val notificationType = NotificationType.getByValue(cameraEvent.name)
             textViewNotificationTitle.text = notificationType.title ?: cameraEvent.name
-            textViewNotificationMessage.text = notificationType.getCustomMessage(cameraEvent.value) ?: cameraEvent.value
+            textViewNotificationMessage.text =
+                notificationType.getCustomMessage(cameraEvent.value) ?: cameraEvent.value
             textViewNotificationDate.text = cameraEvent.date
         }
     }

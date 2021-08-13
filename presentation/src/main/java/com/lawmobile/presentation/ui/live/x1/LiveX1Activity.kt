@@ -167,7 +167,7 @@ class LiveX1Activity : BaseActivity() {
     }
 
     override fun onBackPressed() {
-        // This method is implemented to invalidate the behaviour of back button on the phones
+        moveTaskToBack(true)
     }
 
     companion object {

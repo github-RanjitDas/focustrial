@@ -14,6 +14,7 @@ import com.lawmobile.domain.enums.CameraType
 import com.lawmobile.domain.enums.EventType
 import com.lawmobile.domain.enums.NotificationType
 import com.lawmobile.domain.usecase.events.EventsUseCase
+import com.lawmobile.presentation.BuildConfig
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.entities.NeutralAlertInformation
 import com.lawmobile.presentation.extensions.checkIfSessionIsExpired
@@ -65,6 +66,11 @@ open class BaseActivity : AppCompatActivity() {
         setEventsListener()
     }
 
+    fun getApplicationVersionText(): String {
+        return if (BuildConfig.DEBUG) "Version ${BuildConfig.VERSION_NAME}(${BuildConfig.VERSION_CODE})"
+        else "Version ${BuildConfig.VERSION_NAME}"
+    }
+
     private fun setEventsUseCase() {
         viewModel.setEventsUseCase(eventsUseCase)
     }
@@ -96,16 +102,12 @@ open class BaseActivity : AppCompatActivity() {
             }
             NotificationType.STORAGE_REMAIN.value -> {
                 cameraEvent.value?.toDouble()?.let { availableStorage ->
-                    onStorageLevelChanged?.invoke(getUsedStorageWithAvailableStorage(availableStorage))
+                    onStorageLevelChanged?.invoke(availableStorage)
                 }
             }
         }
 
         viewModel.saveNotificationEvent(cameraEvent)
-    }
-
-    private fun getUsedStorageWithAvailableStorage(availableStorage: Double): Double {
-        return PERCENT_TOTAL_STORAGE - availableStorage
     }
 
     private fun setBaseObservers() {
@@ -166,7 +168,7 @@ open class BaseActivity : AppCompatActivity() {
 
     fun showLoadingDialog() {
         EspressoIdlingResource.increment()
-        loadingDialog = this.createAlertProgress()
+        loadingDialog = createAlertProgress()
         loadingDialog?.show()
     }
 
@@ -189,7 +191,6 @@ open class BaseActivity : AppCompatActivity() {
         var isRecordingVideo: Boolean = false
 
         const val PERMISSION_FOR_LOCATION = 100
-        private const val PERCENT_TOTAL_STORAGE = 100
         const val MAX_TIME_SESSION = 300000
     }
 }

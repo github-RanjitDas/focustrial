@@ -7,18 +7,22 @@
 
     <Button
         android:id="@+id/buttonSelectToAssociate"
-        android:layout_width="wrap_content"
+        android:layout_width="@dimen/no_dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/margin_20dp"
         android:layout_marginTop="@dimen/margin_top_associate_snapshots_button"
+        android:layout_marginEnd="@dimen/margin_20dp"
         android:background="@drawable/border_rounded_blue"
         android:drawableStart="@drawable/selector_associate_snapshots"
         android:drawablePadding="@dimen/padding_10dp"
+        android:ellipsize="end"
+        android:maxLines="2"
         android:paddingHorizontal="@dimen/padding_horizontal_buttons"
         android:text="@string/select_snapshots_to_associate"
         android:textAllCaps="false"
         android:textColor="@color/lightBlue"
         android:textSize="@dimen/text_size_14sp"
+        app:layout_constraintEnd_toStartOf="@+id/textViewSelectedItems"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -26,11 +30,11 @@
         android:id="@+id/textViewSelectedItems"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/margin_20dp"
-        android:text="@string/items_selected"
         android:textSize="@dimen/text_size_16sp"
         android:textStyle="bold"
         android:visibility="invisible"
+        android:layout_marginEnd="@dimen/margin_20dp"
+        app:layout_constraintEnd_toStartOf="@id/buttonOpenFilters"
         app:layout_constraintBottom_toBottomOf="@id/buttonSelectToAssociate"
         app:layout_constraintStart_toEndOf="@id/buttonSelectToAssociate"
         app:layout_constraintTop_toTopOf="@id/buttonSelectToAssociate" />

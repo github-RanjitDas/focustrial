@@ -10,6 +10,8 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 open class BaseFragment : Fragment() {
 
+    private var loadingDialog: AlertDialog? = null
+
     fun showLoadingDialog() {
         EspressoIdlingResource.increment()
         loadingDialog = (activity as BaseActivity).createAlertProgress()
@@ -22,10 +24,10 @@ open class BaseFragment : Fragment() {
         EspressoIdlingResource.decrement()
     }
 
+    fun getApplicationVersionText(): String {
+        return (activity as BaseActivity).getApplicationVersionText()
+    }
+
     fun isInPortraitMode() =
         resources.configuration.orientation == ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-
-    companion object {
-        private var loadingDialog: AlertDialog? = null
-    }
 }

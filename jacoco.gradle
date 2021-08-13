@@ -1,4 +1,4 @@
-apply from: '../exceptions.gradle'
+import dependencies.Exclusions
 
 task testDebugUnitTestCoverage(type: JacocoReport) {
     group = 'Reporting'
@@ -11,11 +11,11 @@ task testDebugUnitTestCoverage(type: JacocoReport) {
     dependsOn ":database:testDebugUnitTest"
 
     classDirectories.from = files([
-            fileTree(dir: "$buildDir/tmp/kotlin-classes/debug", exclude: fileFilter),
-            fileTree(dir: "$project.rootDir/presentation/build/intermediates/javac/debug", exclude: fileFilter),
-            fileTree(dir: "$project.rootDir/domain/build/classes", exclude: fileFilter),
-            fileTree(dir: "$project.rootDir/data/build/classes", exclude: fileFilter),
-            fileTree(dir: "$project.rootDir/database/build/classes", exclude: fileFilter)
+            fileTree(dir: "$buildDir/tmp/kotlin-classes/debug", exclude: Exclusions.sonarqube),
+            fileTree(dir: "$project.rootDir/presentation/build/intermediates/javac/debug", exclude: Exclusions.sonarqube),
+            fileTree(dir: "$project.rootDir/domain/build/classes", exclude: Exclusions.sonarqube),
+            fileTree(dir: "$project.rootDir/data/build/classes", exclude: Exclusions.sonarqube),
+            fileTree(dir: "$project.rootDir/database/build/classes", exclude: Exclusions.sonarqube)
     ])
 
     def coverageSourceDirs = [

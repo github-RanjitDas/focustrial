@@ -81,7 +81,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/video_playback_text_view_player_time_margin_sides"
                 android:fontFamily="@font/jura_medium"
-                android:text="@string/video_default_time"
+                tools:text="@string/video_default_time"
                 android:textColor="@color/white"
                 android:textSize="@dimen/text_p2"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -101,6 +101,7 @@
             <ImageButton
                 android:id="@+id/buttonAspect"
                 style="@style/buttonPlayBackVideo"
+                android:visibility="gone"
                 android:layout_marginEnd="@dimen/video_playback_button_aspect_margin_sides"
                 android:contentDescription="@string/aspect_video_playback_description"
                 android:src="@drawable/ic_media_aspect"
@@ -114,7 +115,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/video_playback_text_view_player_length_margin_sides"
                 android:fontFamily="@font/jura_medium"
-                android:text="@string/video_default_time"
+                tools:text="@string/video_default_time"
                 android:textColor="@color/white"
                 android:textSize="@dimen/text_p2"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -470,7 +471,7 @@
                 tools:ignore="Autofill,LabelFor" />
 
             <TextView
-                android:id="@+id/remarksTitle"
+                android:id="@+id/notesTitle"
                 android:layout_width="@dimen/no_dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/video_playback_metadata_spacing"
@@ -493,7 +494,7 @@
                 android:singleLine="true"
                 android:textColor="@color/black"
                 android:textSize="@dimen/video_playback_metadata_text_size"
-                app:layout_constraintTop_toBottomOf="@id/remarksTitle"
+                app:layout_constraintTop_toBottomOf="@id/notesTitle"
                 tools:ignore="Autofill,LabelFor" />
 
             <TextView

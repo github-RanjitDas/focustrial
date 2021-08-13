@@ -6,6 +6,7 @@ import com.safefleet.lawmobile.di.helpSection.HelpPageComponent
 import com.safefleet.lawmobile.di.liveStreaming.LiveStreamingComponent
 import com.safefleet.lawmobile.di.login.LoginComponent
 import com.safefleet.lawmobile.di.snapshotDetail.SnapshotDetailComponent
+import com.safefleet.lawmobile.di.typeOfCamera.TypeOfCameraComponent
 import com.safefleet.lawmobile.di.videoPlayback.VideoPlaybackComponent
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -20,7 +21,8 @@ import dagger.hilt.components.SingletonComponent
         LoginComponent::class,
         SnapshotDetailComponent::class,
         VideoPlaybackComponent::class,
-        BodyWornDiagnosisComponent::class
+        BodyWornDiagnosisComponent::class,
+        TypeOfCameraComponent::class
     ]
 )
 class AppActivitySubComponent

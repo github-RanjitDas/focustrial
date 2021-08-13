@@ -1,0 +1,13 @@
+ext {
+    firebase_crashlytics_version = '2.4.1'
+    google_services_version = '4.3.4'
+    hilt_version = '2.33-beta'
+    jacoco_version = '0.8.6'
+    kotlin_version = '1.4.32'
+    pitest_android_plugin_version = '0.2.5'
+    pitest_plugin_version = '1.4.7'
+    pitest_junit5_plugin_version = "0.9" //pitest run fails for versions higher than 0.9
+    sonarqube_version = '2.7.1'
+    sqldelight_version = '1.4.4'
+    tools_gradle_version = "4.0.2" // newer versions reduce the coverage, presentation tests
+}
