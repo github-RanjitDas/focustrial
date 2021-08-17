@@ -28,15 +28,12 @@ class SnapshotDetailRemoteDataSourceImplTest {
     fun testGetImageBytesSuccess() {
         val cameraFile: CameraFile = mockk()
         val byte = ByteArray(1)
-        coEvery { cameraService.getImageBytes(cameraFile) } returns Result.Success(
-            byte
-        )
+
+        coEvery { cameraService.getImageBytes(cameraFile) } returns Result.Success(byte)
         runBlocking {
-            val result =
-                snapshotDetailRemoteDataSourceImpl.getImageBytes(cameraFile)
+            val result = snapshotDetailRemoteDataSourceImpl.getImageBytes(cameraFile)
             Assert.assertTrue(result is Result.Success)
         }
-
         coVerify { cameraService.getImageBytes(cameraFile) }
     }
 
@@ -45,11 +42,9 @@ class SnapshotDetailRemoteDataSourceImplTest {
         val connectFile: CameraFile = mockk()
         coEvery { cameraService.getImageBytes(connectFile) } returns Result.Error(mockk())
         runBlocking {
-            val result =
-                snapshotDetailRemoteDataSourceImpl.getImageBytes(connectFile)
+            val result = snapshotDetailRemoteDataSourceImpl.getImageBytes(connectFile)
             Assert.assertTrue(result is Result.Error)
         }
-
         coVerify { cameraService.getImageBytes(connectFile) }
     }
 
@@ -60,9 +55,7 @@ class SnapshotDetailRemoteDataSourceImplTest {
             val result = snapshotDetailRemoteDataSourceImpl.savePartnerIdSnapshot(mockk())
             Assert.assertTrue(result is Result.Success)
         }
-        coVerify {
-            cameraService.savePhotoMetadata(any())
-        }
+        coVerify { cameraService.savePhotoMetadata(any()) }
     }
 
     @Test
@@ -72,47 +65,7 @@ class SnapshotDetailRemoteDataSourceImplTest {
             val result = snapshotDetailRemoteDataSourceImpl.getInformationOfPhoto(mockk())
             Assert.assertTrue(result is Result.Success)
         }
-
-        coVerify {
-            cameraService.getPhotoMetadata(any())
-        }
-    }
-
-    @Test
-    fun testGetVideoList() {
-        coEvery { cameraService.getListOfVideos() } returns Result.Success(mockk())
-        runBlocking {
-            val result = snapshotDetailRemoteDataSourceImpl.getVideoList()
-            Assert.assertTrue(result is Result.Success)
-        }
-
-        coVerify {
-            cameraService.getListOfVideos()
-        }
-    }
-
-    @Test
-    fun testGetMetadataOfVideo() {
-        coEvery {
-            cameraService.getVideoMetadata(
-                any(),
-                any()
-            )
-        } returns Result.Success(mockk())
-        runBlocking {
-            val cameraFile = CameraFile(
-                "name",
-                "",
-                "",
-                "folder"
-            )
-            val result = snapshotDetailRemoteDataSourceImpl.getMetadataOfVideo(cameraFile)
-            Assert.assertTrue(result is Result.Success)
-        }
-
-        coVerify {
-            cameraService.getVideoMetadata("name", "folder")
-        }
+        coVerify { cameraService.getPhotoMetadata(any()) }
     }
 
     @Test

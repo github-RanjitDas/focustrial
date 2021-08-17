@@ -12,8 +12,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 
-class SimpleListRemoteDataSourceImpl(cameraServiceFactory: CameraServiceFactory) :
-    SimpleListRemoteDataSource {
+class SimpleListRemoteDataSourceImpl(
+    cameraServiceFactory: CameraServiceFactory
+) : SimpleListRemoteDataSource {
 
     private var cameraConnectService = cameraServiceFactory.create()
 
@@ -22,28 +23,22 @@ class SimpleListRemoteDataSourceImpl(cameraServiceFactory: CameraServiceFactory)
 
     override suspend fun getVideoList(): Result<FileResponseWithErrors> {
         val response = withContext(Dispatchers.IO) { cameraConnectService.getListOfVideos() }
-        if (response is Result.Success) {
-            getMetadataForVideoList(response.data.items)
-        }
+        if (response is Result.Success) getMetadataForVideoList(response.data.items)
         return response
     }
 
     private suspend fun getMetadataForVideoList(videos: List<CameraFile>) {
         videos.forEach {
-            val metadata = VideoListMetadata.getVideoMetadata(it.name)
-            if (metadata == null) {
+            VideoListMetadata.getVideoMetadata(it.name) ?: run {
                 delay(100)
-                val videoMetadataResponse =
-                    getResultWithAttempts(GET_METADATA_ATTEMPTS) {
-                        cameraConnectService.getVideoMetadata(it.name, it.nameFolder)
-                    }
+                val videoMetadataResponse = getResultWithAttempts(GET_METADATA_ATTEMPTS) {
+                    cameraConnectService.getVideoMetadata(it.name, it.nameFolder)
+                }
                 if (videoMetadataResponse is Result.Success) {
-                    VideoListMetadata.saveOrUpdateVideoMetadata(
-                        RemoteVideoMetadata(
-                            VideoMetadataMapper.cameraToDomain(videoMetadataResponse.data),
-                            false
-                        )
-                    )
+                    val domainMetadata =
+                        VideoMetadataMapper.cameraToDomain(videoMetadataResponse.data)
+                    val remoteMetadata = RemoteVideoMetadata(domainMetadata, false)
+                    VideoListMetadata.saveOrUpdateVideoMetadata(remoteMetadata)
                 }
             }
         }

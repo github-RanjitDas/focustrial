@@ -169,9 +169,7 @@ class VideoPlaybackActivity : BaseActivity() {
     }
 
     private fun verifyEventEmpty() {
-        if (CameraInfo.metadataEvents.isEmpty()) {
-            showErrorInEvents()
-        }
+        if (CameraInfo.metadataEvents.isEmpty()) showErrorInEvents()
     }
 
     private fun setCatalogLists() {

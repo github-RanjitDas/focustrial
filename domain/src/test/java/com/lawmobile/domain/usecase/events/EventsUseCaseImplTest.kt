@@ -33,17 +33,13 @@ internal class EventsUseCaseImplTest {
     @Test
     fun getCameraEventsSuccess() {
         coEvery { eventsRepository.getCameraEvents() } returns Result.Success(mockk())
-        runBlocking {
-            Assert.assertTrue(eventsUseCaseImpl.getCameraEvents() is Result.Success)
-        }
+        runBlocking { Assert.assertTrue(eventsUseCaseImpl.getCameraEvents() is Result.Success) }
     }
 
     @Test
     fun getCameraEventsError() {
         coEvery { eventsRepository.getCameraEvents() } returns Result.Error(mockk())
-        runBlocking {
-            Assert.assertTrue(eventsUseCaseImpl.getCameraEvents() is Result.Error)
-        }
+        runBlocking { Assert.assertTrue(eventsUseCaseImpl.getCameraEvents() is Result.Error) }
     }
 
     @Test
@@ -56,20 +52,13 @@ internal class EventsUseCaseImplTest {
     @Test
     fun getAllNotificationEventsResult() {
         val notificationList = listOf<CameraEvent>(
-            mockk {
-                every { eventType } returns EventType.NOTIFICATION
-            },
-            mockk {
-                every { eventType } returns EventType.NOTIFICATION
-            }
+            mockk { every { eventType } returns EventType.NOTIFICATION },
+            mockk { every { eventType } returns EventType.NOTIFICATION }
         )
         coEvery { eventsRepository.getNotificationEvents() } returns Result.Success(notificationList)
         runBlocking {
             val result = eventsUseCaseImpl.getNotificationEvents() as Result.Success
-            Assert.assertEquals(
-                notificationList,
-                result.data
-            )
+            Assert.assertEquals(notificationList, result.data)
         }
     }
 
@@ -110,9 +99,7 @@ internal class EventsUseCaseImplTest {
     fun getPendingNotificationsCountSuccess() {
         coEvery { eventsRepository.getPendingNotificationsCount() } returns Result.Success(1)
         runBlocking {
-            Assert.assertTrue(
-                eventsUseCaseImpl.getPendingNotificationsCount() is Result.Success
-            )
+            Assert.assertTrue(eventsUseCaseImpl.getPendingNotificationsCount() is Result.Success)
         }
     }
 
@@ -120,9 +107,7 @@ internal class EventsUseCaseImplTest {
     fun getPendingNotificationsCountError() {
         coEvery { eventsRepository.getPendingNotificationsCount() } returns Result.Error(mockk())
         runBlocking {
-            Assert.assertTrue(
-                eventsUseCaseImpl.getPendingNotificationsCount() is Result.Error
-            )
+            Assert.assertTrue(eventsUseCaseImpl.getPendingNotificationsCount() is Result.Error)
         }
     }
 

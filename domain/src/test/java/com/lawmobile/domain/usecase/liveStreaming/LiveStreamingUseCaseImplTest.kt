@@ -44,9 +44,7 @@ class LiveStreamingUseCaseImplTest {
     @Test
     fun testStartRecordVideoFlow() {
         coEvery { liveStreamingRepository.startRecordVideo() } returns Result.Success(Unit)
-        runBlocking {
-            liveStreamingUseCaseImpl.startRecordVideo()
-        }
+        runBlocking { liveStreamingUseCaseImpl.startRecordVideo() }
         coVerify { liveStreamingRepository.startRecordVideo() }
     }
 
@@ -54,26 +52,20 @@ class LiveStreamingUseCaseImplTest {
     fun testStartRecordVideoSuccess() {
         val result = Result.Success(Unit)
         coEvery { liveStreamingRepository.startRecordVideo() } returns result
-        runBlocking {
-            Assert.assertEquals(liveStreamingUseCaseImpl.startRecordVideo(), result)
-        }
+        runBlocking { Assert.assertEquals(liveStreamingUseCaseImpl.startRecordVideo(), result) }
     }
 
     @Test
     fun testStartRecordVideoFailed() {
         val result = Result.Error(Exception("Message"))
         coEvery { liveStreamingRepository.startRecordVideo() } returns result
-        runBlocking {
-            Assert.assertEquals(liveStreamingUseCaseImpl.startRecordVideo(), result)
-        }
+        runBlocking { Assert.assertEquals(liveStreamingUseCaseImpl.startRecordVideo(), result) }
     }
 
     @Test
     fun testStopRecordVideoFlow() {
         coEvery { liveStreamingRepository.stopRecordVideo() } returns Result.Success(Unit)
-        runBlocking {
-            liveStreamingUseCaseImpl.stopRecordVideo()
-        }
+        runBlocking { liveStreamingUseCaseImpl.stopRecordVideo() }
         coVerify { liveStreamingRepository.stopRecordVideo() }
     }
 
@@ -81,27 +73,20 @@ class LiveStreamingUseCaseImplTest {
     fun testStopRecordVideoSuccess() {
         val result = Result.Success(Unit)
         coEvery { liveStreamingRepository.stopRecordVideo() } returns result
-        runBlocking {
-            Assert.assertEquals(liveStreamingUseCaseImpl.stopRecordVideo(), result)
-        }
+        runBlocking { Assert.assertEquals(liveStreamingUseCaseImpl.stopRecordVideo(), result) }
     }
 
     @Test
     fun testStopRecordVideoFailed() {
         val result = Result.Error(Exception("Message"))
         coEvery { liveStreamingRepository.stopRecordVideo() } returns result
-        runBlocking {
-            Assert.assertEquals(liveStreamingUseCaseImpl.stopRecordVideo(), result)
-        }
+        runBlocking { Assert.assertEquals(liveStreamingUseCaseImpl.stopRecordVideo(), result) }
     }
 
     @Test
     fun testTakePhotoFlow() {
         coEvery { liveStreamingRepository.takePhoto() } returns Result.Success(Unit)
-        runBlocking {
-            liveStreamingUseCaseImpl.takePhoto()
-        }
-
+        runBlocking { liveStreamingUseCaseImpl.takePhoto() }
         coEvery { liveStreamingRepository.takePhoto() }
     }
 
@@ -109,18 +94,14 @@ class LiveStreamingUseCaseImplTest {
     fun testTakePhotoSuccess() {
         val result = Result.Success(Unit)
         coEvery { liveStreamingRepository.takePhoto() } returns result
-        runBlocking {
-            Assert.assertEquals(liveStreamingUseCaseImpl.takePhoto(), result)
-        }
+        runBlocking { Assert.assertEquals(liveStreamingUseCaseImpl.takePhoto(), result) }
     }
 
     @Test
     fun testTakePhotoFailed() {
         val result = Result.Error(Exception(""))
         coEvery { liveStreamingRepository.takePhoto() } returns result
-        runBlocking {
-            Assert.assertEquals(liveStreamingUseCaseImpl.takePhoto(), result)
-        }
+        runBlocking { Assert.assertEquals(liveStreamingUseCaseImpl.takePhoto(), result) }
     }
 
     @Test
@@ -135,9 +116,7 @@ class LiveStreamingUseCaseImplTest {
 
     @Test
     fun testGetCatalogInfoError() {
-        coEvery { liveStreamingRepository.getCatalogInfo() } returns Result.Error(
-            mockk()
-        )
+        coEvery { liveStreamingRepository.getCatalogInfo() } returns Result.Error(mockk())
         runBlocking {
             val result = liveStreamingUseCaseImpl.getCatalogInfo()
             Assert.assertTrue(result is Result.Error)

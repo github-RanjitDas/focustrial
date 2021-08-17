@@ -155,7 +155,7 @@
     <string name="storage_level_error">Error retrieving storage level</string>
     <string name="battery_percent_placeholder"><b>100%</b> - 10 hour left</string>
     <string name="storage_level_placeholder_x1">Used \  - \  Free\n <b>272 MB</b> - <b>57.7GB</b></string>
-    <string name="storage_level_placeholder_x2"><b>0%</b> used</string>
+    <string name="storage_level_placeholder_x2"><b>100%</b> available</string>
     <string name="app_bar_name_default">James</string>
     <string name="app_bar_last_name_default">Mendez</string>
     <string name="_1">1.</string>

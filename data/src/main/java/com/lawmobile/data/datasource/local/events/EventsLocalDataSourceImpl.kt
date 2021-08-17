@@ -21,7 +21,7 @@ class EventsLocalDataSourceImpl(private val cameraEventsDao: CameraEventsDao) :
             Result.Error(e)
         }
 
-    override fun getEventsCount() =
+    override suspend fun getEventsCount() =
         try {
             cameraEventsDao.getEventsCount()
         } catch (e: Exception) {

@@ -19,8 +19,9 @@ import com.safefleet.mobile.kotlin_commons.extensions.doIfSuccess
 import com.safefleet.mobile.kotlin_commons.helpers.Result
 import kotlinx.coroutines.delay
 
-class FileListRepositoryImpl(private val fileListRemoteDataSource: FileListRemoteDataSource) :
-    FileListRepository {
+class FileListRepositoryImpl(
+    private val fileListRemoteDataSource: FileListRemoteDataSource
+) : FileListRepository {
 
     override suspend fun savePartnerIdVideos(
         domainFileList: List<DomainCameraFile>,
@@ -75,9 +76,7 @@ class FileListRepositoryImpl(private val fileListRemoteDataSource: FileListRemot
         val listPhotosSaved = ArrayList<PhotoInformation>()
         val resultGetMetadataOfPhotos = fileListRemoteDataSource.getSavedPhotosMetadata()
 
-        if (resultGetMetadataOfPhotos is Result.Error) {
-            return resultGetMetadataOfPhotos
-        }
+        if (resultGetMetadataOfPhotos is Result.Error) return resultGetMetadataOfPhotos
 
         listPhotosSaved.addAll((resultGetMetadataOfPhotos as Result.Success).data)
         itemsFinal.addAll(listPhotosSaved)

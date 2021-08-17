@@ -8,13 +8,14 @@ import io.mockk.coVerify
 import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.TestCoroutineDispatcher
 import kotlinx.coroutines.test.setMain
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.api.extension.ExtendWith
 
+@ExperimentalCoroutinesApi
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @ExtendWith(InstantExecutorExtension::class)
 internal class LiveAppBarX1ViewModelTest {
@@ -25,16 +26,17 @@ internal class LiveAppBarX1ViewModelTest {
         LiveAppBarX1ViewModel(liveStreamingUseCase)
     }
 
-    @ExperimentalCoroutinesApi
+    private val dispatcher = TestCoroutineDispatcher()
+
     @BeforeEach
     fun setUp() {
-        Dispatchers.setMain(Dispatchers.Unconfined)
+        Dispatchers.setMain(dispatcher)
     }
 
     @Test
     fun disconnectCameraFlow() {
         coEvery { liveStreamingUseCase.disconnectCamera() } returns Result.Success(Unit)
-        runBlocking { liveAppBarX1ViewModel.disconnectCamera() }
+        liveAppBarX1ViewModel.disconnectCamera()
         coVerify { liveStreamingUseCase.disconnectCamera() }
     }
 }

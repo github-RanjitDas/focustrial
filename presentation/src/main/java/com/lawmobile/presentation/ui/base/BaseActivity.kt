@@ -102,16 +102,12 @@ open class BaseActivity : AppCompatActivity() {
             }
             NotificationType.STORAGE_REMAIN.value -> {
                 cameraEvent.value?.toDouble()?.let { availableStorage ->
-                    onStorageLevelChanged?.invoke(getUsedStorageWithAvailableStorage(availableStorage))
+                    onStorageLevelChanged?.invoke(availableStorage)
                 }
             }
         }
 
         viewModel.saveNotificationEvent(cameraEvent)
-    }
-
-    private fun getUsedStorageWithAvailableStorage(availableStorage: Double): Double {
-        return PERCENT_TOTAL_STORAGE - availableStorage
     }
 
     private fun setBaseObservers() {
@@ -172,7 +168,7 @@ open class BaseActivity : AppCompatActivity() {
 
     fun showLoadingDialog() {
         EspressoIdlingResource.increment()
-        loadingDialog = this.createAlertProgress()
+        loadingDialog = createAlertProgress()
         loadingDialog?.show()
     }
 
@@ -195,7 +191,6 @@ open class BaseActivity : AppCompatActivity() {
         var isRecordingVideo: Boolean = false
 
         const val PERMISSION_FOR_LOCATION = 100
-        private const val PERCENT_TOTAL_STORAGE = 100
         const val MAX_TIME_SESSION = 300000
     }
 }

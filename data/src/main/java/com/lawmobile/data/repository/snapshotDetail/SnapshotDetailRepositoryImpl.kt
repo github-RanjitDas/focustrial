@@ -15,8 +15,9 @@ import com.safefleet.mobile.kotlin_commons.extensions.doIfSuccess
 import com.safefleet.mobile.kotlin_commons.helpers.Result
 import kotlinx.coroutines.delay
 
-class SnapshotDetailRepositoryImpl(private val snapshotDetailRemoteDataSource: SnapshotDetailRemoteDataSource) :
-    SnapshotDetailRepository {
+class SnapshotDetailRepositoryImpl(
+    private val snapshotDetailRemoteDataSource: SnapshotDetailRemoteDataSource
+) : SnapshotDetailRepository {
 
     override suspend fun getImageBytes(domainCameraFile: DomainCameraFile): Result<ByteArray> {
         val cameraConnectFile = FileMapper.domainToCamera(domainCameraFile)
@@ -31,8 +32,7 @@ class SnapshotDetailRepositoryImpl(private val snapshotDetailRemoteDataSource: S
         val errorsInFiles = mutableListOf<String>()
 
         when (
-            val resultGetMetadataOfPhotos =
-                snapshotDetailRemoteDataSource.getSavedPhotosMetadata()
+            val resultGetMetadataOfPhotos = snapshotDetailRemoteDataSource.getSavedPhotosMetadata()
         ) {
             is Result.Success -> photoMetadataList.addAll(resultGetMetadataOfPhotos.data)
             is Result.Error -> return resultGetMetadataOfPhotos

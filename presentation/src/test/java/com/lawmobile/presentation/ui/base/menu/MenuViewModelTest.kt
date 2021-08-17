@@ -7,12 +7,18 @@ import com.safefleet.mobile.kotlin_commons.helpers.Result
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.TestCoroutineDispatcher
+import kotlinx.coroutines.test.runBlockingTest
+import kotlinx.coroutines.test.setMain
 import org.junit.Assert
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.api.extension.ExtendWith
 
+@ExperimentalCoroutinesApi
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @ExtendWith(InstantExecutorExtension::class)
 class MenuViewModelTest {
@@ -27,43 +33,40 @@ class MenuViewModelTest {
         )
     }
 
+    private val dispatcher = TestCoroutineDispatcher()
+
+    @BeforeEach
+    fun setUp() {
+        Dispatchers.setMain(dispatcher)
+    }
+
     @Test
-    fun testFlowDisconnectCameraFlow() {
+    fun testFlowDisconnectCameraFlow() = runBlockingTest {
         coEvery { liveStreamingUseCase.disconnectCamera() } returns Result.Success(Unit)
-        runBlocking { menuViewModel.disconnectCamera() }
+        menuViewModel.disconnectCamera()
         coVerify { liveStreamingUseCase.disconnectCamera() }
     }
 
     @Test
-    fun getPendingNotificationsCountFlow() {
+    fun getPendingNotificationsCountFlow() = runBlockingTest {
         coEvery { eventsUseCase.getPendingNotificationsCount() } returns Result.Success(1)
-        runBlocking { menuViewModel.getPendingNotificationsCount() }
+        menuViewModel.getPendingNotificationsCount()
         coVerify { eventsUseCase.getPendingNotificationsCount() }
     }
 
     @Test
-    fun getPendingNotificationsCountSuccess() {
+    fun getPendingNotificationsCountSuccess() = runBlockingTest {
         val result = Result.Success(1)
         coEvery { eventsUseCase.getPendingNotificationsCount() } returns result
         menuViewModel.getPendingNotificationsCount()
-        runBlocking {
-            Assert.assertEquals(
-                result,
-                menuViewModel.pendingNotificationsCountResult.value
-            )
-        }
+        Assert.assertEquals(result, menuViewModel.pendingNotificationsCountResult.value)
     }
 
     @Test
-    fun getPendingNotificationsCountError() {
+    fun getPendingNotificationsCountError() = runBlockingTest {
         val result = Result.Success(1)
         coEvery { eventsUseCase.getPendingNotificationsCount() } returns result
         menuViewModel.getPendingNotificationsCount()
-        runBlocking {
-            Assert.assertEquals(
-                result,
-                menuViewModel.pendingNotificationsCountResult.value
-            )
-        }
+        Assert.assertEquals(result, menuViewModel.pendingNotificationsCountResult.value)
     }
 }

@@ -160,6 +160,7 @@ class VLCMediaPlayer(private val libVLC: LibVLC, private val mediaPlayer: MediaP
                 MediaPlayer.Event.MediaChanged -> onMediaChanged()
                 MediaPlayer.Event.TimeChanged -> onTimeChanged()
                 MediaPlayer.Event.Playing -> onPlaying()
+                MediaPlayer.Event.EndReached -> onEndReached()
             }
         }
     }
@@ -190,20 +191,26 @@ class VLCMediaPlayer(private val libVLC: LibVLC, private val mediaPlayer: MediaP
     }
 
     private fun validateEndReached() {
-        if (currentProgress == TOTAL_PROGRESS && isPlaying) {
-            controls?.progressTextView?.text = controls?.durationTextView?.text
-            isPlayingCallback?.invoke(false)
-            controls?.playButton?.setImageResource(R.drawable.ic_media_play)
-            controls?.aspectRatioButton?.isClickable = false
-            mediaPlayer.stop()
-            currentProgress = 0
-            isEndReached = true
-        }
+        if (currentProgress == TOTAL_PROGRESS && isPlaying) onEndReached()
+    }
+
+    private fun onEndReached() {
+        controls?.progressTextView?.text = controls?.durationTextView?.text
+        controls?.progressBar?.progress = TOTAL_PROGRESS
+        isPlayingCallback?.invoke(false)
+        controls?.playButton?.setImageResource(R.drawable.ic_media_play)
+        controls?.aspectRatioButton?.isClickable = false
+        mediaPlayer.stop()
+        currentProgress = 0
+        isEndReached = true
     }
 
     private fun updateProgressBar() {
-        val progress =
-            ((mediaPlayer.time.toDouble() / (currentDuration).toDouble()) * TOTAL_PROGRESS).roundToInt()
+        val progress = try {
+            ((mediaPlayer.time.toDouble() / currentDuration.toDouble()) * TOTAL_PROGRESS).roundToInt()
+        } catch (e: Exception) {
+            0
+        }
 
         controls?.progressBar?.progress?.let {
             if (progress > it) controls?.progressBar?.progress = progress

@@ -44,7 +44,6 @@ class ValidatePasswordOfficerRemoteDataSourceImplTest {
         runBlocking {
             val responseError =
                 validatePasswordOfficerRemoteDataSourceImpl.getUserInformation() as Result.Error
-
             Assert.assertEquals(responseError.exception.message, ERROR_IN_INFORMATION_USER)
         }
     }
