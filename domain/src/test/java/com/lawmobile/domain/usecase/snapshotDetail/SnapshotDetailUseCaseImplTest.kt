@@ -25,11 +25,9 @@ class SnapshotDetailUseCaseImplTest {
             byte
         )
         runBlocking {
-            val result =
-                snapshotDetailUseCaseImpl.getImageBytes(domainCameraFile)
+            val result = snapshotDetailUseCaseImpl.getImageBytes(domainCameraFile)
             Assert.assertTrue(result is Result.Success)
         }
-
         coVerify { snapshotDetailRepository.getImageBytes(domainCameraFile) }
     }
 
@@ -40,11 +38,9 @@ class SnapshotDetailUseCaseImplTest {
             mockk()
         )
         runBlocking {
-            val result =
-                snapshotDetailUseCaseImpl.getImageBytes(domainCameraFile)
+            val result = snapshotDetailUseCaseImpl.getImageBytes(domainCameraFile)
             Assert.assertTrue(result is Result.Error)
         }
-
         coVerify { snapshotDetailRepository.getImageBytes(domainCameraFile) }
     }
 
@@ -60,9 +56,7 @@ class SnapshotDetailUseCaseImplTest {
             val result = snapshotDetailUseCaseImpl.savePartnerIdSnapshot(mockk(), "partnerId")
             Assert.assertTrue(result is Result.Success)
         }
-        coVerify {
-            snapshotDetailRepository.saveSnapshotPartnerId(any(), "partnerId")
-        }
+        coVerify { snapshotDetailRepository.saveSnapshotPartnerId(any(), "partnerId") }
     }
 
     @Test
@@ -74,9 +68,6 @@ class SnapshotDetailUseCaseImplTest {
             val result = snapshotDetailUseCaseImpl.getInformationOfPhoto(mockk())
             Assert.assertTrue(result is Result.Success)
         }
-
-        coVerify {
-            snapshotDetailRepository.getInformationOfPhoto(any())
-        }
+        coVerify { snapshotDetailRepository.getInformationOfPhoto(any()) }
     }
 }

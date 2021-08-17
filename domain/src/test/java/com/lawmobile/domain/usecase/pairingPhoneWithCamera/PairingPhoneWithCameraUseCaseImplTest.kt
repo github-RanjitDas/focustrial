@@ -20,9 +20,7 @@ class PairingPhoneWithCameraUseCaseImplTest {
     }
 
     private val useCase: PairingPhoneWithCameraUseCaseImpl by lazy {
-        PairingPhoneWithCameraUseCaseImpl(
-            pairingPhoneWithCameraRepository
-        )
+        PairingPhoneWithCameraUseCaseImpl(pairingPhoneWithCameraRepository)
     }
 
     @Test
@@ -38,7 +36,9 @@ class PairingPhoneWithCameraUseCaseImplTest {
 
     @Test
     fun testIsPossibleTheConnection() {
-        coEvery { pairingPhoneWithCameraRepository.isPossibleTheConnection(any()) } returns Result.Success(Unit)
+        coEvery { pairingPhoneWithCameraRepository.isPossibleTheConnection(any()) } returns Result.Success(
+            Unit
+        )
         runBlocking { useCase.isPossibleTheConnection("10.10.10.4") }
         coVerify { pairingPhoneWithCameraRepository.isPossibleTheConnection("10.10.10.4") }
     }

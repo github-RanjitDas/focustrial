@@ -21,9 +21,7 @@ internal class SimpleListUseCaseImplTest {
     @Test
     fun testGetSnapshotListFlow() {
         coEvery { simpleListRepository.getSnapshotList() } returns Result.Success(mockk())
-        runBlocking {
-            simpleListUseCaseImpl.getSnapshotList()
-        }
+        runBlocking { simpleListUseCaseImpl.getSnapshotList() }
         coVerify { simpleListRepository.getSnapshotList() }
     }
 
@@ -32,26 +30,20 @@ internal class SimpleListUseCaseImplTest {
         val domainInformation: DomainInformationFileResponse = mockk()
         val result = Result.Success(domainInformation)
         coEvery { simpleListRepository.getSnapshotList() } returns result
-        runBlocking {
-            Assert.assertEquals(simpleListUseCaseImpl.getSnapshotList(), result)
-        }
+        runBlocking { Assert.assertEquals(simpleListUseCaseImpl.getSnapshotList(), result) }
     }
 
     @Test
     fun testGetSnapshotListFailed() {
         val result = Result.Error(mockk())
         coEvery { simpleListRepository.getSnapshotList() } returns result
-        runBlocking {
-            Assert.assertEquals(simpleListUseCaseImpl.getSnapshotList(), result)
-        }
+        runBlocking { Assert.assertEquals(simpleListUseCaseImpl.getSnapshotList(), result) }
     }
 
     @Test
     fun testGetVideoListFlow() {
         coEvery { simpleListRepository.getVideoList() } returns Result.Success(mockk())
-        runBlocking {
-            simpleListUseCaseImpl.getVideoList()
-        }
+        runBlocking { simpleListUseCaseImpl.getVideoList() }
         coVerify { simpleListRepository.getVideoList() }
     }
 
@@ -60,17 +52,13 @@ internal class SimpleListUseCaseImplTest {
         val domainInformation: DomainInformationFileResponse = mockk()
         val result = Result.Success(domainInformation)
         coEvery { simpleListRepository.getVideoList() } returns result
-        runBlocking {
-            Assert.assertEquals(simpleListUseCaseImpl.getVideoList(), result)
-        }
+        runBlocking { Assert.assertEquals(simpleListUseCaseImpl.getVideoList(), result) }
     }
 
     @Test
     fun testGetVideoListFailed() {
         val result = Result.Error(mockk())
         coEvery { simpleListRepository.getVideoList() } returns result
-        runBlocking {
-            Assert.assertEquals(simpleListUseCaseImpl.getVideoList(), result)
-        }
+        runBlocking { Assert.assertEquals(simpleListUseCaseImpl.getVideoList(), result) }
     }
 }

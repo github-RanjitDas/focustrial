@@ -14,7 +14,7 @@ import dagger.hilt.components.SingletonComponent
 
 @InstallIn(SingletonComponent::class)
 @Module
-abstract class VideoPlaybackModule {
+class VideoPlaybackModule {
 
     companion object {
 

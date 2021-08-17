@@ -22,9 +22,7 @@ internal class TypeOfCameraRemoteDataSourceImplTest {
     }
 
     private val typeOfCameraRemoteDataSourceImpl by lazy {
-        TypeOfCameraRemoteDataSourceImpl(
-            cameraServiceFactory
-        )
+        TypeOfCameraRemoteDataSourceImpl(cameraServiceFactory)
     }
 
     @BeforeEach
@@ -36,9 +34,7 @@ internal class TypeOfCameraRemoteDataSourceImplTest {
     @Test
     fun testGetTypeOfCameraFlow() {
         coEvery { cameraService.getCameraType() } returns Result.Success(CameraType.X2)
-        runBlocking {
-            typeOfCameraRemoteDataSourceImpl.getTypeOfCamera()
-        }
+        runBlocking { typeOfCameraRemoteDataSourceImpl.getTypeOfCamera() }
         coVerify { cameraService.getCameraType() }
     }
 

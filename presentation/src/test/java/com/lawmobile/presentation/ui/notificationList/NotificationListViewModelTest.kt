@@ -11,11 +11,17 @@ import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.TestCoroutineDispatcher
+import kotlinx.coroutines.test.setMain
 import org.junit.Assert
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.api.extension.ExtendWith
 
+@ExperimentalCoroutinesApi
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @ExtendWith(InstantExecutorExtension::class)
 internal class NotificationListViewModelTest {
@@ -26,6 +32,13 @@ internal class NotificationListViewModelTest {
         NotificationListViewModel(eventsUseCase)
     }
 
+    private val dispatcher = TestCoroutineDispatcher()
+
+    @BeforeEach
+    fun setUp() {
+        Dispatchers.setMain(dispatcher)
+    }
+
     @Test
     fun getNotificationListSuccess() {
         val result = Result.Success(
@@ -33,10 +46,7 @@ internal class NotificationListViewModelTest {
         )
         coEvery { eventsUseCase.getNotificationEvents() } returns result
         notificationListViewModel.getNotificationEvents()
-        Assert.assertEquals(
-            result,
-            notificationListViewModel.notificationEventsResult.value
-        )
+        Assert.assertEquals(result, notificationListViewModel.notificationEventsResult.value)
     }
 
     @Test
@@ -44,10 +54,7 @@ internal class NotificationListViewModelTest {
         val result = Result.Error(mockk())
         coEvery { eventsUseCase.getNotificationEvents() } returns result
         notificationListViewModel.getNotificationEvents()
-        Assert.assertEquals(
-            result,
-            notificationListViewModel.notificationEventsResult.value
-        )
+        Assert.assertEquals(result, notificationListViewModel.notificationEventsResult.value)
     }
 
     @Test
@@ -75,17 +82,13 @@ internal class NotificationListViewModelTest {
     fun getCameraEventsSuccess() {
         coEvery { eventsUseCase.getCameraEvents() } returns Result.Success(mockk())
         notificationListViewModel.getCameraEvents()
-        Assert.assertTrue(
-            notificationListViewModel.cameraEventsResult.value is Result.Success
-        )
+        Assert.assertTrue(notificationListViewModel.cameraEventsResult.value is Result.Success)
     }
 
     @Test
     fun getCameraEventsError() {
         coEvery { eventsUseCase.getCameraEvents() } returns Result.Error(mockk())
         notificationListViewModel.getCameraEvents()
-        Assert.assertTrue(
-            notificationListViewModel.cameraEventsResult.value is Result.Error
-        )
+        Assert.assertTrue(notificationListViewModel.cameraEventsResult.value is Result.Error)
     }
 }
