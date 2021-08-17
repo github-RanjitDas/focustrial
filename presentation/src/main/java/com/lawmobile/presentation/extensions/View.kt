@@ -69,7 +69,7 @@ fun SafeFleetClickable.setCheckedListenerCheckConnection(callback: (View) -> Uni
 
 fun View.showErrorSnackBar(
     message: String,
-    duration: Int = Snackbar.LENGTH_SHORT,
+    duration: Int = 7000,
     onRetryClick: ((View) -> Unit)? = null
 ) {
     SafeFleetSnackBar.make(

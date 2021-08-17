@@ -6,14 +6,14 @@ data class DomainMetadata(
     var dispatchNumber: String? = null,
     var dispatchNumber2: String? = null,
     var driverLicense: String? = null,
-    val event: MetadataEvent? = null,
+    var event: MetadataEvent? = null,
     var firstName: String? = null,
-    val gender: String? = null,
+    var gender: String? = null,
     var lastName: String? = null,
     var licensePlate: String? = null,
     var location: String? = null,
     var partnerID: String? = null,
-    val race: String? = null,
+    var race: String? = null,
     var remarks: String? = null,
     var ticketNumber: String? = null,
     var ticketNumber2: String? = null
@@ -58,6 +58,10 @@ data class DomainMetadata(
     }
 
     fun convertNullParamsToEmpty() {
+        event = handleNullEvent(event)
+        event?.id = handleNullParameter(event?.id)
+        event?.name = handleNullParameter(event?.name)
+        event?.type = handleNullParameter(event?.type)
         partnerID = handleNullParameter(partnerID)
         ticketNumber = handleNullParameter(ticketNumber)
         ticketNumber2 = handleNullParameter(ticketNumber2)
@@ -71,7 +75,11 @@ data class DomainMetadata(
         lastName = handleNullParameter(lastName)
         driverLicense = handleNullParameter(driverLicense)
         licensePlate = handleNullParameter(licensePlate)
+        gender = handleNullParameter(gender)
+        race = handleNullParameter(race)
     }
+
+    private fun handleNullEvent(event: MetadataEvent?) = event ?: MetadataEvent("", "", "")
 
     private fun handleNullParameter(string: String?) = string ?: ""
 }
