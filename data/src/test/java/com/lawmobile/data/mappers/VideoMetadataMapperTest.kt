@@ -1,10 +1,10 @@
 package com.lawmobile.data.mappers
 
 import com.lawmobile.domain.entities.CameraInfo
-import com.lawmobile.domain.entities.DomainPhotoAssociated
+import com.lawmobile.domain.entities.DomainAssociatedFile
 import com.lawmobile.domain.entities.DomainVideoMetadata
 import com.lawmobile.domain.enums.CameraType
-import com.safefleet.mobile.external_hardware.cameras.entities.PhotoAssociated
+import com.safefleet.mobile.external_hardware.cameras.entities.AssociatedFile
 import com.safefleet.mobile.external_hardware.cameras.entities.VideoInformation
 import io.mockk.every
 import io.mockk.mockk
@@ -17,10 +17,10 @@ internal class VideoMetadataMapperTest {
     @Test
     fun cameraToDomain() {
         val videoInformation: VideoInformation = mockk(relaxed = true) {
-            every { photos } returns listOf(
-                PhotoAssociated("3", ""),
-                PhotoAssociated("1", ""),
-                PhotoAssociated("5", ""),
+            every { associatedFiles } returns listOf(
+                AssociatedFile("3", ""),
+                AssociatedFile("1", ""),
+                AssociatedFile("5", ""),
             )
         }
         val domainVideoMetadata = VideoMetadataMapper.cameraToDomain(videoInformation)
@@ -32,9 +32,9 @@ internal class VideoMetadataMapperTest {
                 assertTrue(it.officerId == officerId)
                 assertTrue(it.path == path)
                 assertTrue(it.serialNumber == x1sn)
-                it.associatedPhotos?.forEachIndexed { index, photo ->
-                    assertTrue(photo.name == photos?.get(index)?.name)
-                    assertTrue(photo.date == photos?.get(index)?.date)
+                it.associatedFiles?.forEachIndexed { index, photo ->
+                    assertTrue(photo.name == associatedFiles?.get(index)?.name)
+                    assertTrue(photo.date == associatedFiles?.get(index)?.date)
                 }
             }
         }
@@ -45,10 +45,10 @@ internal class VideoMetadataMapperTest {
         mockkObject(CameraInfo)
         CameraInfo.cameraType = CameraType.X1
         val domainVideoMetadata: DomainVideoMetadata = mockk(relaxed = true) {
-            every { associatedPhotos } returns listOf(
-                DomainPhotoAssociated("", "3"),
-                DomainPhotoAssociated("", "1"),
-                DomainPhotoAssociated("", "5"),
+            every { associatedFiles } returns listOf(
+                DomainAssociatedFile("", "3"),
+                DomainAssociatedFile("", "1"),
+                DomainAssociatedFile("", "5"),
             )
         }
         val cameraConnectVideoMetadata = VideoMetadataMapper.domainToCamera(domainVideoMetadata)
@@ -60,9 +60,9 @@ internal class VideoMetadataMapperTest {
                 assertTrue(it.officerId == officerId)
                 assertTrue(it.path == path)
                 assertTrue(it.serialNumber == x1sn)
-                it.associatedPhotos?.forEachIndexed { index, photo ->
-                    assertTrue(photo.name == photos?.get(index)?.name)
-                    assertTrue(photo.date == photos?.get(index)?.date)
+                it.associatedFiles?.forEachIndexed { index, photo ->
+                    assertTrue(photo.name == associatedFiles?.get(index)?.name)
+                    assertTrue(photo.date == associatedFiles?.get(index)?.date)
                 }
             }
         }
@@ -73,10 +73,10 @@ internal class VideoMetadataMapperTest {
         mockkObject(CameraInfo)
         CameraInfo.cameraType = CameraType.X2
         val domainVideoMetadata: DomainVideoMetadata = mockk(relaxed = true) {
-            every { associatedPhotos } returns listOf(
-                DomainPhotoAssociated("", "3"),
-                DomainPhotoAssociated("", "1"),
-                DomainPhotoAssociated("", "5"),
+            every { associatedFiles } returns listOf(
+                DomainAssociatedFile("", "3"),
+                DomainAssociatedFile("", "1"),
+                DomainAssociatedFile("", "5"),
             )
         }
         val cameraConnectVideoMetadata = VideoMetadataMapper.domainToCamera(domainVideoMetadata)
@@ -88,9 +88,9 @@ internal class VideoMetadataMapperTest {
                 assertTrue(it.officerId == officerId)
                 assertTrue(it.path == path)
                 assertTrue(it.serialNumber == x2sn)
-                it.associatedPhotos?.forEachIndexed { index, photo ->
-                    assertTrue(photo.name == photos?.get(index)?.name)
-                    assertTrue(photo.date == photos?.get(index)?.date)
+                it.associatedFiles?.forEachIndexed { index, photo ->
+                    assertTrue(photo.name == associatedFiles?.get(index)?.name)
+                    assertTrue(photo.date == associatedFiles?.get(index)?.date)
                 }
             }
         }

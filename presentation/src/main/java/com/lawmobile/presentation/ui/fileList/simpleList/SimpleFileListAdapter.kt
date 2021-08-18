@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.lawmobile.domain.entities.DomainInformationFile
 import com.lawmobile.domain.extensions.getCreationDate
 import com.lawmobile.presentation.R
-import com.lawmobile.presentation.entities.SnapshotsAssociatedByUser
+import com.lawmobile.presentation.entities.FilesAssociatedByUser
 import com.lawmobile.presentation.extensions.setCheckedListenerCheckConnection
 import com.lawmobile.presentation.extensions.setOnClickListenerCheckConnection
 import com.lawmobile.presentation.ui.fileList.FileListBaseFragment
@@ -154,7 +154,7 @@ class SimpleFileListAdapter(
 
         private fun selectItemFromTheList(remoteCameraFile: DomainInformationFile) {
             if (FileListBaseFragment.checkableListInit) {
-                SnapshotsAssociatedByUser.updateAssociatedSnapshots(remoteCameraFile.domainCameraFile)
+                FilesAssociatedByUser.updateAssociatedSnapshots(remoteCameraFile.domainCameraFile)
             }
             onCheckedFile(remoteCameraFile, checkboxSimpleListItem.isActivated)
         }
