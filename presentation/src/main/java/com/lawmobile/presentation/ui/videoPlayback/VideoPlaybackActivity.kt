@@ -21,8 +21,8 @@ import com.lawmobile.domain.entities.MetadataEvent
 import com.lawmobile.domain.extensions.getCreationDate
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.databinding.ActivityVideoPlaybackBinding
+import com.lawmobile.presentation.entities.FilesAssociatedByUser
 import com.lawmobile.presentation.entities.MediaPlayerControls
-import com.lawmobile.presentation.entities.SnapshotsAssociatedByUser
 import com.lawmobile.presentation.extensions.attachFragment
 import com.lawmobile.presentation.extensions.createAlertDialogUnsavedChanges
 import com.lawmobile.presentation.extensions.detachFragment
@@ -98,7 +98,7 @@ class VideoPlaybackActivity : BaseActivity() {
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
 
         binding.bottomSheetAssociate?.buttonCloseAssociateSnapshots?.setOnClickListener {
-            SnapshotsAssociatedByUser.temporal.addAll(SnapshotsAssociatedByUser.value)
+            FilesAssociatedByUser.temporal.addAll(FilesAssociatedByUser.value)
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
         }
 
@@ -325,13 +325,12 @@ class VideoPlaybackActivity : BaseActivity() {
             }
         }
 
-        videoMetadata.associatedPhotos?.let {
-            SnapshotsAssociatedByUser.setTemporalValue(it as MutableList)
-            SnapshotsAssociatedByUser.setFinalValue(it)
+        videoMetadata.associatedFiles?.let {
+            FilesAssociatedByUser.setTemporalValue(it as MutableList)
+            FilesAssociatedByUser.setFinalValue(it)
             associateSnapshotsFragment.setSnapshotsAssociatedFromMetadata(it)
         }
 
-        showSnapshotsAssociated()
         hideLoadingDialog()
     }
 
@@ -347,8 +346,8 @@ class VideoPlaybackActivity : BaseActivity() {
 
     private fun handleAssociateSnapshots() {
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
-        associateSnapshotsFragment.setSnapshotsAssociatedFromMetadata(SnapshotsAssociatedByUser.temporal)
-        SnapshotsAssociatedByUser.setFinalValue(SnapshotsAssociatedByUser.temporal)
+        associateSnapshotsFragment.setSnapshotsAssociatedFromMetadata(FilesAssociatedByUser.temporal)
+        FilesAssociatedByUser.setFinalValue(FilesAssociatedByUser.temporal)
         showSnapshotsAssociated()
         binding.layoutVideoPlayback.showSuccessSnackBar(getString(R.string.snapshots_added_success))
     }
@@ -356,8 +355,8 @@ class VideoPlaybackActivity : BaseActivity() {
     private fun showSnapshotsAssociated() {
         binding.layoutAssociatedSnapshots.removeAllViews()
         binding.layoutAssociatedSnapshots.isVisible =
-            !SnapshotsAssociatedByUser.value.isNullOrEmpty()
-        SnapshotsAssociatedByUser.value.forEach {
+            !FilesAssociatedByUser.value.isNullOrEmpty()
+        FilesAssociatedByUser.value.forEach {
             binding.layoutAssociatedSnapshots.childCount.let { position ->
                 createTagInPosition(position, it.date)
             }
@@ -378,13 +377,13 @@ class VideoPlaybackActivity : BaseActivity() {
     }
 
     private fun removeAssociatedSnapshot(date: String) {
-        val index = SnapshotsAssociatedByUser.value.indexOfFirst {
+        val index = FilesAssociatedByUser.value.indexOfFirst {
             it.date == date
         }
         if (index >= 0) {
-            SnapshotsAssociatedByUser.value.removeAt(index)
-            SnapshotsAssociatedByUser.setTemporalValue(SnapshotsAssociatedByUser.value)
-            associateSnapshotsFragment.setSnapshotsAssociatedFromMetadata(SnapshotsAssociatedByUser.value)
+            FilesAssociatedByUser.value.removeAt(index)
+            FilesAssociatedByUser.setTemporalValue(FilesAssociatedByUser.value)
+            associateSnapshotsFragment.setSnapshotsAssociatedFromMetadata(FilesAssociatedByUser.value)
         }
     }
 
@@ -396,7 +395,7 @@ class VideoPlaybackActivity : BaseActivity() {
             AssociateSnapshotsFragment.TAG
         )
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
-        SnapshotsAssociatedByUser.setTemporalValue(SnapshotsAssociatedByUser.value)
+        FilesAssociatedByUser.setTemporalValue(FilesAssociatedByUser.value)
     }
 
     private fun saveVideoMetadataInCamera() {
@@ -477,7 +476,7 @@ class VideoPlaybackActivity : BaseActivity() {
             val oldMetadata = currentMetadata.metadata?.apply { convertNullParamsToEmpty() }
                 ?: return newMetadata?.hasAnyInformation() ?: false
 
-            return currentMetadata.associatedPhotos ?: emptyList() != SnapshotsAssociatedByUser.value ||
+            return currentMetadata.associatedFiles ?: emptyList() != FilesAssociatedByUser.value ||
                 newMetadata?.isDifferentFrom(oldMetadata) ?: false
         }
         return false
@@ -521,7 +520,7 @@ class VideoPlaybackActivity : BaseActivity() {
             nameFolder = currentVideo?.nameFolder,
             officerId = CameraInfo.officerId,
             path = currentMetadata.path ?: currentVideo?.path,
-            associatedPhotos = SnapshotsAssociatedByUser.value,
+            associatedFiles = FilesAssociatedByUser.value,
             serialNumber = CameraInfo.serialNumber,
             endTime = currentMetadata.endTime,
             gmtOffset = currentMetadata.gmtOffset,
@@ -548,7 +547,7 @@ class VideoPlaybackActivity : BaseActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        SnapshotsAssociatedByUser.cleanList()
+        FilesAssociatedByUser.cleanList()
     }
 
     companion object {

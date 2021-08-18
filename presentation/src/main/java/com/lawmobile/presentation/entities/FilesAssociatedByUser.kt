@@ -1,24 +1,24 @@
 package com.lawmobile.presentation.entities
 
+import com.lawmobile.domain.entities.DomainAssociatedFile
 import com.lawmobile.domain.entities.DomainCameraFile
 import com.lawmobile.domain.entities.DomainInformationForList
-import com.lawmobile.domain.entities.DomainPhotoAssociated
 import com.lawmobile.domain.extensions.getCreationDate
 
-object SnapshotsAssociatedByUser {
+object FilesAssociatedByUser {
 
-    var value = mutableListOf<DomainPhotoAssociated>()
+    var value = mutableListOf<DomainAssociatedFile>()
         private set
 
-    var temporal = mutableListOf<DomainPhotoAssociated>()
+    var temporal = mutableListOf<DomainAssociatedFile>()
         private set
 
-    fun setFinalValue(mutableList: MutableList<DomainPhotoAssociated>) {
+    fun setFinalValue(mutableList: MutableList<DomainAssociatedFile>) {
         value = mutableListOf()
         value.addAll(mutableList)
     }
 
-    fun setTemporalValue(mutableList: MutableList<DomainPhotoAssociated>) {
+    fun setTemporalValue(mutableList: MutableList<DomainAssociatedFile>) {
         temporal = mutableListOf()
         temporal.addAll(mutableList)
     }
@@ -27,7 +27,7 @@ object SnapshotsAssociatedByUser {
         with(imageFile) {
             val result = temporal.find { it.name == name }
             if (result == null) {
-                temporal.add(DomainPhotoAssociated(name = name, date = getCreationDate()))
+                temporal.add(DomainAssociatedFile(name = name, date = getCreationDate()))
             } else {
                 temporal.remove(result)
             }

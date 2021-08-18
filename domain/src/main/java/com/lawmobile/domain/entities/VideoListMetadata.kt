@@ -25,7 +25,7 @@ object VideoListMetadata {
 
     fun getVideosWithPhotosAssociated(domainCameraFile: DomainCameraFile) =
         metadataList.map { it.videoMetadata }.filter {
-            it.associatedPhotos?.find { photo ->
+            it.associatedFiles?.find { photo ->
                 photo.name == domainCameraFile.name
             } != null
         }
