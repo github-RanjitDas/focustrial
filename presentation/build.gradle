@@ -36,6 +36,16 @@ android {
             debuggable true
         }
 
+        qaTest {
+            testCoverageEnabled true
+            debuggable true
+        }
+
+        staging {
+            testCoverageEnabled true
+            debuggable true
+        }
+
         release {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
