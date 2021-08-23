@@ -11,8 +11,9 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class BodyWornDiagnosisViewModel @Inject constructor(private val bodyWornDiagnosisUseCase: BodyWornDiagnosisUseCase) :
-    BaseViewModel() {
+class BodyWornDiagnosisViewModel @Inject constructor(
+    private val bodyWornDiagnosisUseCase: BodyWornDiagnosisUseCase
+) : BaseViewModel() {
 
     private val diagnosisCameraMediator: MediatorLiveData<Result<Boolean>> = MediatorLiveData()
     val diagnosisCameraLiveData: LiveData<Result<Boolean>> get() = diagnosisCameraMediator

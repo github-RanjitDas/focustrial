@@ -10,6 +10,7 @@ plugins {
     id 'com.google.gms.google-services'
     id 'com.google.firebase.crashlytics'
     id 'com.squareup.sqldelight'
+    id 'com.google.firebase.appdistribution'
 }
 
 check.dependsOn ktlint
@@ -44,12 +45,47 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.release
         }
+
+        staging {
+            testCoverageEnabled true
+            debuggable true
+            minifyEnabled false
+            shrinkResources false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            firebaseAppDistribution {
+                artifactType="APK"
+                appId="1:189561416446:android:6fa7154eae0824aef813af"
+                serviceCredentialsFile="app/src/staging/fma-distribution.json"
+                groups="Perficient"
+            }
+        }
+
+        qaTest {
+            testCoverageEnabled true
+            debuggable true
+            minifyEnabled false
+            shrinkResources false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            firebaseAppDistribution {
+                artifactType="APK"
+                appId="1:608657564588:android:364a8d74bf5e16030e1009"
+                serviceCredentialsFile="app/src/qaTest/fma-distribution.json"
+                groups="Perficient"
+            }
+        }
+
         debug {
             testCoverageEnabled true
             debuggable true
             minifyEnabled false
             shrinkResources false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            firebaseAppDistribution {
+                artifactType="APK"
+                appId="1:287818701608:android:269f4522720e50b5ed8e1d"
+                serviceCredentialsFile="app/src/debug/fma-distribution.json"
+                groups="Perficient"
+            }
         }
     }
 
@@ -109,10 +145,10 @@ dependencies {
     kapt Dependencies.Hilt.hiltCompiler
 
     // Import the Firebase BoM
-    debugApi platform(Dependencies.Firebase.bom)
-    debugApi Dependencies.Firebase.analytics
-    debugApi Dependencies.Firebase.core
-    debugApi Dependencies.Firebase.crashlytics
+    implementation platform(Dependencies.Firebase.bom)
+    implementation Dependencies.Firebase.analytics
+    implementation Dependencies.Firebase.core
+    implementation Dependencies.Firebase.crashlytics
 
     //Base repository
     implementation Dependencies.Base.externalHardware

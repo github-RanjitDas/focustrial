@@ -31,9 +31,7 @@ internal class EventsLocalDataSourceImplTest {
     fun getAllEventsSuccess() {
         every { cameraEventsDao.getAllEvents() } returns mockk()
         runBlocking {
-            Assert.assertTrue(
-                eventsLocalDataSourceImpl.getAllEvents() is Result.Success
-            )
+            Assert.assertTrue(eventsLocalDataSourceImpl.getAllEvents() is Result.Success)
         }
     }
 
@@ -41,9 +39,7 @@ internal class EventsLocalDataSourceImplTest {
     fun getAllEventsError() {
         every { cameraEventsDao.getAllEvents() } throws Exception()
         runBlocking {
-            Assert.assertTrue(
-                eventsLocalDataSourceImpl.getAllEvents() is Result.Error
-            )
+            Assert.assertTrue(eventsLocalDataSourceImpl.getAllEvents() is Result.Error)
         }
     }
 
@@ -53,10 +49,7 @@ internal class EventsLocalDataSourceImplTest {
         every { cameraEventsDao.getAllEvents() } returns events
         runBlocking {
             val result = eventsLocalDataSourceImpl.getAllEvents() as Result.Success
-            Assert.assertEquals(
-                events,
-                result.data
-            )
+            Assert.assertEquals(events, result.data)
         }
     }
 
@@ -179,23 +172,13 @@ internal class EventsLocalDataSourceImplTest {
     @Test
     fun getEventsCountSuccess() {
         every { cameraEventsDao.getEventsCount() } returns 1
-        runBlocking {
-            Assert.assertEquals(
-                1,
-                eventsLocalDataSourceImpl.getEventsCount()
-            )
-        }
+        runBlocking { Assert.assertEquals(1, eventsLocalDataSourceImpl.getEventsCount()) }
     }
 
     @Test
     fun getEventsCountError() {
         every { cameraEventsDao.getEventsCount() } throws Exception()
-        runBlocking {
-            Assert.assertEquals(
-                0,
-                eventsLocalDataSourceImpl.getEventsCount()
-            )
-        }
+        runBlocking { Assert.assertEquals(0, eventsLocalDataSourceImpl.getEventsCount()) }
     }
 
     @Test

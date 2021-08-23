@@ -9,16 +9,22 @@ import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.TestCoroutineDispatcher
+import kotlinx.coroutines.test.runBlockingTest
+import kotlinx.coroutines.test.setMain
 import org.junit.Assert
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 
+@ExperimentalCoroutinesApi
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class LiveStreamingRepositoryImplTest {
 
     private val liveStreamingRemoteDataSource: LiveStreamingRemoteDataSource = mockk()
+    private val dispatcher = TestCoroutineDispatcher()
 
     private val liveStreamingRepositoryImpl: LiveStreamingRepositoryImpl by lazy {
         LiveStreamingRepositoryImpl(liveStreamingRemoteDataSource)
@@ -26,6 +32,7 @@ class LiveStreamingRepositoryImplTest {
 
     @BeforeEach
     fun setUp() {
+        Dispatchers.setMain(dispatcher)
         clearAllMocks()
     }
 
@@ -51,154 +58,137 @@ class LiveStreamingRepositoryImplTest {
     }
 
     @Test
-    fun testStartRecordVideoFlow() {
+    fun testStartRecordVideoFlow() = dispatcher.runBlockingTest {
         coEvery { liveStreamingRemoteDataSource.startRecordVideo() } returns Result.Success(Unit)
-        runBlocking {
-            liveStreamingRepositoryImpl.startRecordVideo()
-        }
+        liveStreamingRepositoryImpl.startRecordVideo()
+        dispatcher.advanceTimeBy(RECORD_OPERATION_TIME)
         coVerify { liveStreamingRemoteDataSource.startRecordVideo() }
     }
 
     @Test
-    fun testStartRecordVideoSuccess() {
-        val result = Result.Success(Unit)
-        coEvery { liveStreamingRemoteDataSource.startRecordVideo() } returns result
-        runBlocking {
-            Assert.assertEquals(liveStreamingRepositoryImpl.startRecordVideo(), result)
-        }
+    fun testStartRecordVideoSuccess() = dispatcher.runBlockingTest {
+        val expectedResult = Result.Success(Unit)
+        coEvery { liveStreamingRemoteDataSource.startRecordVideo() } returns expectedResult
+        val actualResult = liveStreamingRepositoryImpl.startRecordVideo()
+        dispatcher.advanceTimeBy(RECORD_OPERATION_TIME)
+        Assert.assertEquals(expectedResult, actualResult)
     }
 
     @Test
-    fun testStartRecordVideoFailed() {
-        val result = Result.Error(Exception("Message"))
-        coEvery { liveStreamingRemoteDataSource.startRecordVideo() } returns result
-        runBlocking {
-            Assert.assertEquals(liveStreamingRepositoryImpl.startRecordVideo(), result)
-        }
+    fun testStartRecordVideoFailed() = dispatcher.runBlockingTest {
+        val expectedResult = Result.Error(Exception("Message"))
+        coEvery { liveStreamingRemoteDataSource.startRecordVideo() } returns expectedResult
+        val actualResult = liveStreamingRepositoryImpl.startRecordVideo()
+        dispatcher.advanceTimeBy(RECORD_OPERATION_TIME)
+        Assert.assertEquals(expectedResult, actualResult)
     }
 
     @Test
-    fun testStopRecordVideoFlow() {
+    fun testStopRecordVideoFlow() = dispatcher.runBlockingTest {
         coEvery { liveStreamingRemoteDataSource.stopRecordVideo() } returns Result.Success(Unit)
-        runBlocking {
-            liveStreamingRepositoryImpl.stopRecordVideo()
-        }
+        liveStreamingRepositoryImpl.stopRecordVideo()
+        dispatcher.advanceTimeBy(RECORD_OPERATION_TIME)
         coVerify { liveStreamingRemoteDataSource.stopRecordVideo() }
     }
 
     @Test
-    fun testStopRecordVideoSuccess() {
-        val result = Result.Success(Unit)
-        coEvery { liveStreamingRemoteDataSource.stopRecordVideo() } returns result
+    fun testStopRecordVideoSuccess() = dispatcher.runBlockingTest {
+        val expectedResult = Result.Success(Unit)
+        coEvery { liveStreamingRemoteDataSource.stopRecordVideo() } returns expectedResult
         FileList.videoList = listOf(mockk(relaxed = true))
-        runBlocking {
-            Assert.assertEquals(liveStreamingRepositoryImpl.stopRecordVideo(), result)
-            Assert.assertTrue(FileList.videoList.isEmpty())
-        }
+        val actualResult = liveStreamingRepositoryImpl.stopRecordVideo()
+        dispatcher.advanceTimeBy(RECORD_OPERATION_TIME)
+        Assert.assertEquals(expectedResult, actualResult)
+        Assert.assertTrue(FileList.videoList.isEmpty())
     }
 
     @Test
-    fun testStopRecordVideoFailed() {
-        val result = Result.Error(Exception("Message"))
-        coEvery { liveStreamingRemoteDataSource.stopRecordVideo() } returns result
-        runBlocking {
-            Assert.assertEquals(liveStreamingRepositoryImpl.stopRecordVideo(), result)
-        }
+    fun testStopRecordVideoFailed() = dispatcher.runBlockingTest {
+        val expectedResult = Result.Error(Exception("Message"))
+        coEvery { liveStreamingRemoteDataSource.stopRecordVideo() } returns expectedResult
+        val actualResult = liveStreamingRepositoryImpl.stopRecordVideo()
+        dispatcher.advanceTimeBy(RECORD_OPERATION_TIME)
+        Assert.assertEquals(expectedResult, actualResult)
     }
 
     @Test
-    fun testTakePhotoFlow() {
+    fun testTakePhotoFlow() = runBlockingTest {
         coEvery { liveStreamingRemoteDataSource.takePhoto() } returns Result.Success(Unit)
-        runBlocking {
-            liveStreamingRepositoryImpl.takePhoto()
-        }
-
-        coEvery { liveStreamingRemoteDataSource.takePhoto() }
+        liveStreamingRepositoryImpl.takePhoto()
+        coVerify { liveStreamingRemoteDataSource.takePhoto() }
     }
 
     @Test
-    fun testTakePhotoSuccess() {
+    fun testTakePhotoSuccess() = runBlockingTest {
         val result = Result.Success(Unit)
         coEvery { liveStreamingRemoteDataSource.takePhoto() } returns result
         FileList.imageList = listOf(mockk(relaxed = true))
-        runBlocking {
-            Assert.assertEquals(liveStreamingRepositoryImpl.takePhoto(), result)
-            Assert.assertTrue(FileList.imageList.isEmpty())
-        }
+        Assert.assertEquals(liveStreamingRepositoryImpl.takePhoto(), result)
+        Assert.assertTrue(FileList.imageList.isEmpty())
     }
 
     @Test
-    fun testTakePhotoFailed() {
+    fun testTakePhotoFailed() = runBlockingTest {
         val result = Result.Error(Exception(""))
         coEvery { liveStreamingRemoteDataSource.takePhoto() } returns result
-        runBlocking {
-            Assert.assertEquals(liveStreamingRepositoryImpl.takePhoto(), result)
-        }
+        Assert.assertEquals(liveStreamingRepositoryImpl.takePhoto(), result)
     }
 
     @Test
-    fun testGetCatalogInfoSuccess() {
-        coEvery { liveStreamingRemoteDataSource.getCatalogInfo() } returns
-            Result.Success(listOf(mockk(relaxed = true)))
+    fun testGetCatalogInfoSuccess() = runBlockingTest {
+        coEvery {
+            liveStreamingRemoteDataSource.getCatalogInfo()
+        } returns Result.Success(listOf(mockk(relaxed = true)))
 
-        runBlocking {
-            val result = liveStreamingRepositoryImpl.getCatalogInfo()
-            Assert.assertTrue(result is Result.Success)
-        }
+        val result = liveStreamingRepositoryImpl.getCatalogInfo()
+        Assert.assertTrue(result is Result.Success)
 
         coVerify { liveStreamingRemoteDataSource.getCatalogInfo() }
     }
 
     @Test
-    fun testGetCatalogInfoError() {
-        coEvery { liveStreamingRemoteDataSource.getCatalogInfo() } returns
-            Result.Error(mockk())
-
-        runBlocking {
-            val result = liveStreamingRepositoryImpl.getCatalogInfo()
-            Assert.assertTrue(result is Result.Error)
-        }
-
+    fun testGetCatalogInfoError() = runBlockingTest {
+        coEvery { liveStreamingRemoteDataSource.getCatalogInfo() } returns Result.Error(mockk())
+        val result = liveStreamingRepositoryImpl.getCatalogInfo()
+        Assert.assertTrue(result is Result.Error)
         coVerify { liveStreamingRemoteDataSource.getCatalogInfo() }
     }
 
     @Test
-    fun testGetBatteryLevel() {
+    fun testGetBatteryLevel() = runBlockingTest {
         val result = Result.Success(10)
         coEvery { liveStreamingRemoteDataSource.getBatteryLevel() } returns result
-        runBlocking {
-            val response = liveStreamingRepositoryImpl.getBatteryLevel()
-            Assert.assertEquals(response, result)
-        }
+        val response = liveStreamingRepositoryImpl.getBatteryLevel()
+        Assert.assertEquals(response, result)
         coVerify { liveStreamingRemoteDataSource.getBatteryLevel() }
     }
 
     @Test
-    fun testGetFreeStorage() {
+    fun testGetFreeStorage() = runBlockingTest {
         val result = Result.Success("10000")
         coEvery { liveStreamingRemoteDataSource.getFreeStorage() } returns result
-        runBlocking {
-            val response = liveStreamingRepositoryImpl.getFreeStorage()
-            Assert.assertEquals(response, result)
-        }
+        val response = liveStreamingRepositoryImpl.getFreeStorage()
+        Assert.assertEquals(response, result)
         coVerify { liveStreamingRemoteDataSource.getFreeStorage() }
     }
 
     @Test
-    fun testGetTotalStorage() {
+    fun testGetTotalStorage() = runBlockingTest {
         val result = Result.Success("10000")
         coEvery { liveStreamingRemoteDataSource.getTotalStorage() } returns result
-        runBlocking {
-            val response = liveStreamingRepositoryImpl.getTotalStorage()
-            Assert.assertEquals(response, result)
-        }
+        val response = liveStreamingRepositoryImpl.getTotalStorage()
+        Assert.assertEquals(response, result)
         coVerify { liveStreamingRemoteDataSource.getTotalStorage() }
     }
 
     @Test
-    fun disconnectCameraFlow() {
+    fun disconnectCameraFlow() = runBlockingTest {
         coEvery { liveStreamingRemoteDataSource.disconnectCamera() } returns Result.Success(Unit)
-        runBlocking { liveStreamingRepositoryImpl.disconnectCamera() }
+        liveStreamingRepositoryImpl.disconnectCamera()
         coVerify { liveStreamingRemoteDataSource.disconnectCamera() }
+    }
+
+    companion object {
+        private const val RECORD_OPERATION_TIME = 1001L
     }
 }

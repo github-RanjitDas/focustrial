@@ -12,8 +12,9 @@ import com.lawmobile.domain.entities.VideoListMetadata
 import com.lawmobile.domain.repository.videoPlayback.VideoPlaybackRepository
 import com.safefleet.mobile.kotlin_commons.helpers.Result
 
-class VideoPlaybackRepositoryImpl(private val videoPlaybackRemoteDataSource: VideoPlaybackRemoteDataSource) :
-    VideoPlaybackRepository {
+class VideoPlaybackRepositoryImpl(
+    private val videoPlaybackRemoteDataSource: VideoPlaybackRemoteDataSource
+) : VideoPlaybackRepository {
 
     override suspend fun getInformationResourcesVideo(domainCameraFile: DomainCameraFile): Result<DomainInformationVideo> {
         val cameraConnectFile = FileMapper.domainToCamera(domainCameraFile)

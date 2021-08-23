@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "608657564588",
+    "project_id": "fma-test-b75fa",
+    "storage_bucket": "fma-test-b75fa.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:608657564588:android:364a8d74bf5e16030e1009",
+        "android_client_info": {
+          "package_name": "com.cobantch.focusx1"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "608657564588-efgnlihl7vgjct9dr37dmtj291t70hd8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB9KAq0MHx51UxywZZ3fTiglHSUzd9PImU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "608657564588-efgnlihl7vgjct9dr37dmtj291t70hd8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

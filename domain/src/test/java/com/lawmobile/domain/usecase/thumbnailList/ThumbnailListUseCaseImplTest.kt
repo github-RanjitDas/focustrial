@@ -47,6 +47,7 @@ internal class ThumbnailListUseCaseImplTest {
     fun testGetImagesByteListSuccess() {
         val domainCameraFile =
             DomainCameraFile("1010202000", "10-10-2020 12:00:00", "", "1010202000")
+
         coEvery { thumbnailListRepository.getImageBytes(domainCameraFile) } returns Result.Success(
             mockk()
         )
@@ -61,6 +62,7 @@ internal class ThumbnailListUseCaseImplTest {
     fun testGetImagesByteListError() {
         val domainCameraFile =
             DomainCameraFile("1010202000", "10-10-2020 12:00:00", "", "1010202000")
+
         coEvery { thumbnailListRepository.getImageBytes(domainCameraFile) } returns Result.Error(
             mockk()
         )

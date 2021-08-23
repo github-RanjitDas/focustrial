@@ -12,7 +12,8 @@ import io.mockk.mockk
 import io.mockk.mockkObject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.TestCoroutineDispatcher
+import kotlinx.coroutines.test.runBlockingTest
 import kotlinx.coroutines.test.setMain
 import org.junit.Assert
 import org.junit.jupiter.api.BeforeEach
@@ -20,23 +21,27 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.api.extension.ExtendWith
 
+@ExperimentalCoroutinesApi
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @ExtendWith(InstantExecutorExtension::class)
 internal class SimpleListViewModelTest {
     private val simpleListUseCase: SimpleListUseCase = mockk()
-    private var simpleListViewModel: SimpleListViewModel = SimpleListViewModel(simpleListUseCase)
+    private val simpleListViewModel: SimpleListViewModel by lazy {
+        SimpleListViewModel(simpleListUseCase)
+    }
+
+    private val dispatcher = TestCoroutineDispatcher()
 
     @ExperimentalCoroutinesApi
     @BeforeEach
     fun setUp() {
-        simpleListViewModel = SimpleListViewModel(simpleListUseCase)
-        Dispatchers.setMain(Dispatchers.Unconfined)
+        Dispatchers.setMain(dispatcher)
         mockkObject(BaseViewModel)
         every { BaseViewModel.getLoadingTimeOut() } returns 1000
     }
 
     @Test
-    fun testGetSnapshotListSuccess() {
+    fun testGetSnapshotListSuccess() = runBlockingTest {
         val domainInformationFileResponse: DomainInformationFileResponse = mockk()
         val result = Result.Success(domainInformationFileResponse)
         coEvery { simpleListUseCase.getSnapshotList() } returns result
@@ -46,7 +51,7 @@ internal class SimpleListViewModelTest {
     }
 
     @Test
-    fun testGetSnapshotListError() {
+    fun testGetSnapshotListError() = runBlockingTest {
         val result = Result.Error(mockk())
         coEvery { simpleListUseCase.getSnapshotList() } returns result
         simpleListViewModel.getSnapshotList()
@@ -55,20 +60,18 @@ internal class SimpleListViewModelTest {
     }
 
     @Test
-    fun testGetSnapshotListErrorTimeOut() {
+    fun testGetSnapshotListErrorTimeOut() = runBlockingTest {
         mockkObject(BaseViewModel)
         every { BaseViewModel.getLoadingTimeOut() } returns 0
         val domainInformationFileResponse: DomainInformationFileResponse = mockk()
         val result = Result.Success(domainInformationFileResponse)
         coEvery { simpleListUseCase.getSnapshotList() } returns result
-        runBlocking {
-            simpleListViewModel.getSnapshotList()
-            Assert.assertTrue(simpleListViewModel.fileListLiveData.value is Result.Error)
-        }
+        simpleListViewModel.getSnapshotList()
+        Assert.assertTrue(simpleListViewModel.fileListLiveData.value is Result.Error)
     }
 
     @Test
-    fun testGetVideoListSuccess() {
+    fun testGetVideoListSuccess() = runBlockingTest {
         val domainInformationFileResponse: DomainInformationFileResponse = mockk()
         val result = Result.Success(domainInformationFileResponse)
         coEvery { simpleListUseCase.getVideoList() } returns result
@@ -78,7 +81,7 @@ internal class SimpleListViewModelTest {
     }
 
     @Test
-    fun testGetVideoListError() {
+    fun testGetVideoListError() = runBlockingTest {
         val result = Result.Error(mockk())
         coEvery { simpleListUseCase.getVideoList() } returns result
         simpleListViewModel.getVideoList()
@@ -87,15 +90,13 @@ internal class SimpleListViewModelTest {
     }
 
     @Test
-    fun testGetVideoListErrorTimeout() {
+    fun testGetVideoListErrorTimeout() = runBlockingTest {
         mockkObject(BaseViewModel)
         every { BaseViewModel.getLoadingTimeOut() } returns 0
         val domainInformationFileResponse: DomainInformationFileResponse = mockk()
         val result = Result.Success(domainInformationFileResponse)
         coEvery { simpleListUseCase.getVideoList() } returns result
-        runBlocking {
-            simpleListViewModel.getVideoList()
-            Assert.assertTrue(simpleListViewModel.fileListLiveData.value is Result.Error)
-        }
+        simpleListViewModel.getVideoList()
+        Assert.assertTrue(simpleListViewModel.fileListLiveData.value is Result.Error)
     }
 }

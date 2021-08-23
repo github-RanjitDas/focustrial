@@ -25,6 +25,7 @@ buildscript {
         classpath "com.google.gms:google-services:$google_services_version"
         classpath "com.google.firebase:firebase-crashlytics-gradle:$firebase_crashlytics_version"
         classpath "com.squareup.sqldelight:gradle-plugin:$sqldelight_version"
+        classpath "com.google.firebase:firebase-appdistribution-gradle:$firebase_app_distribution_version"
     }
 }
 
