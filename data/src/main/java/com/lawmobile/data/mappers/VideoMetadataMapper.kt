@@ -1,13 +1,13 @@
 package com.lawmobile.data.mappers
 
 import com.lawmobile.domain.entities.CameraInfo
+import com.lawmobile.domain.entities.DomainAssociatedFile
 import com.lawmobile.domain.entities.DomainHashVideo
 import com.lawmobile.domain.entities.DomainMetadata
-import com.lawmobile.domain.entities.DomainPhotoAssociated
 import com.lawmobile.domain.entities.DomainVideoMetadata
 import com.lawmobile.domain.enums.CameraType
+import com.safefleet.mobile.external_hardware.cameras.entities.AssociatedFile
 import com.safefleet.mobile.external_hardware.cameras.entities.HashMetadataFile
-import com.safefleet.mobile.external_hardware.cameras.entities.PhotoAssociated
 import com.safefleet.mobile.external_hardware.cameras.entities.VideoInformation
 import com.safefleet.mobile.external_hardware.cameras.entities.VideoMetadata
 
@@ -21,7 +21,7 @@ object VideoMetadataMapper {
                 nameFolder = nameFolder,
                 officerId = officerId,
                 path = path,
-                associatedPhotos = cameraPhotosAssociatedToDomain(photos),
+                associatedFiles = cameraPhotosAssociatedToDomain(associatedFiles),
                 serialNumber = serialNumber,
                 endTime = endTime,
                 gmtOffset = gmtOffset,
@@ -42,7 +42,7 @@ object VideoMetadataMapper {
                 nameFolder = nameFolder,
                 x1sn = null,
                 metadata = domainVideoMetadataToRemote(metadata),
-                photos = domainToCameraAssociatedPhotos(associatedPhotos),
+                associatedFiles = domainToCameraAssociatedPhotos(associatedFiles),
                 endTime = endTime,
                 gmtOffset = gmtOffset,
                 hash = domainHashToRemote(hash),
@@ -59,8 +59,8 @@ object VideoMetadataMapper {
         return videoInformation
     }
 
-    private fun cameraPhotosAssociatedToDomain(photos: List<PhotoAssociated>?) =
-        photos?.map { DomainPhotoAssociated(it.date, it.name) }
+    private fun cameraPhotosAssociatedToDomain(photos: List<AssociatedFile>?) =
+        photos?.map { DomainAssociatedFile(it.date, it.name) }
 
     private fun cameraVideoMetadataToDomain(metadata: VideoMetadata?) =
         metadata?.run {
@@ -84,8 +84,8 @@ object VideoMetadataMapper {
             )
         }
 
-    private fun domainToCameraAssociatedPhotos(associatedPhotos: List<DomainPhotoAssociated>?) =
-        associatedPhotos?.map { PhotoAssociated(it.name, it.date) }
+    private fun domainToCameraAssociatedPhotos(associatedFiles: List<DomainAssociatedFile>?) =
+        associatedFiles?.map { AssociatedFile(it.name, it.date) }
 
     private fun domainVideoMetadataToRemote(metadata: DomainMetadata?) =
         metadata?.run {

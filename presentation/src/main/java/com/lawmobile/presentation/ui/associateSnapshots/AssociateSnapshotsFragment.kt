@@ -6,11 +6,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
+import com.lawmobile.domain.entities.DomainAssociatedFile
 import com.lawmobile.domain.entities.DomainInformationForList
-import com.lawmobile.domain.entities.DomainPhotoAssociated
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.databinding.FragmentAssociateSnapshotsBinding
-import com.lawmobile.presentation.entities.SnapshotsAssociatedByUser
+import com.lawmobile.presentation.entities.FilesAssociatedByUser
 import com.lawmobile.presentation.extensions.attachFragment
 import com.lawmobile.presentation.extensions.createFilterDialog
 import com.lawmobile.presentation.extensions.setClickListenerCheckConnection
@@ -34,7 +34,7 @@ class AssociateSnapshotsFragment : BaseFragment() {
     private var simpleFileListFragment = SimpleFileListFragment()
     private var thumbnailFileListFragment = ThumbnailFileListFragment()
     private lateinit var actualFragment: String
-    private var snapshotsAssociatedFromMetadata: MutableList<DomainPhotoAssociated>? = null
+    private var associatedFilesFromMetadata: MutableList<DomainAssociatedFile>? = null
     var onAssociateSnapshots: (() -> Unit)? = null
     private var filterDialog: CustomFilterDialog? = null
 
@@ -63,9 +63,9 @@ class AssociateSnapshotsFragment : BaseFragment() {
             Bundle().apply { putString(FILE_LIST_TYPE, SNAPSHOT_LIST) }
     }
 
-    fun setSnapshotsAssociatedFromMetadata(list: MutableList<DomainPhotoAssociated>) {
-        snapshotsAssociatedFromMetadata = mutableListOf()
-        snapshotsAssociatedFromMetadata?.addAll(list)
+    fun setSnapshotsAssociatedFromMetadata(list: MutableList<DomainAssociatedFile>) {
+        associatedFilesFromMetadata = mutableListOf()
+        associatedFilesFromMetadata?.addAll(list)
     }
 
     private fun setListeners() {
@@ -100,9 +100,9 @@ class AssociateSnapshotsFragment : BaseFragment() {
     }
 
     private fun areSnapshotsSelected(): Boolean {
-        return if (snapshotsAssociatedFromMetadata.isNullOrEmpty())
-            SnapshotsAssociatedByUser.temporal.isNotEmpty()
-        else snapshotsAssociatedFromMetadata != SnapshotsAssociatedByUser.temporal
+        return if (associatedFilesFromMetadata.isNullOrEmpty())
+            FilesAssociatedByUser.temporal.isNotEmpty()
+        else associatedFilesFromMetadata != FilesAssociatedByUser.temporal
     }
 
     private fun showFilterDialog() {

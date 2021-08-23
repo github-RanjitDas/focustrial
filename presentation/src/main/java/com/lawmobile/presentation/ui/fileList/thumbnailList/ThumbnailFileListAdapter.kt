@@ -12,7 +12,7 @@ import com.bumptech.glide.Glide
 import com.lawmobile.domain.entities.DomainInformationImage
 import com.lawmobile.domain.extensions.getCreationDate
 import com.lawmobile.presentation.R
-import com.lawmobile.presentation.entities.SnapshotsAssociatedByUser
+import com.lawmobile.presentation.entities.FilesAssociatedByUser
 import com.lawmobile.presentation.extensions.imageHasCorrectFormat
 import com.lawmobile.presentation.extensions.setOnClickListenerCheckConnection
 import com.lawmobile.presentation.ui.fileList.FileListBaseFragment
@@ -185,7 +185,7 @@ class ThumbnailFileListAdapter(
                 fileList.indexOfFirst { it.domainCameraFile.name == thumbnailFile.domainCameraFile.name }
             fileList[index].isSelected = isChecked
             if (FileListBaseFragment.checkableListInit) {
-                SnapshotsAssociatedByUser.updateAssociatedSnapshots(thumbnailFile.domainCameraFile)
+                FilesAssociatedByUser.updateAssociatedSnapshots(thumbnailFile.domainCameraFile)
             }
             onImageCheck?.invoke(isAnyFileChecked(), selectedItemsSize())
         }

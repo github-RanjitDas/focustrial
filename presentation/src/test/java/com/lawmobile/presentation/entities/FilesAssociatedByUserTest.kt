@@ -1,20 +1,20 @@
 package com.lawmobile.presentation.entities
 
+import com.lawmobile.domain.entities.DomainAssociatedFile
 import com.lawmobile.domain.entities.DomainCameraFile
 import com.lawmobile.domain.entities.DomainInformationFile
 import com.lawmobile.domain.entities.DomainInformationImage
-import com.lawmobile.domain.entities.DomainPhotoAssociated
 import io.mockk.every
 import io.mockk.mockk
 import org.junit.jupiter.api.Test
 
-internal class SnapshotsAssociatedByUserTest {
+internal class FilesAssociatedByUserTest {
 
     @Test
     fun setOrGetValue() {
-        val newList = mutableListOf<DomainPhotoAssociated>()
-        SnapshotsAssociatedByUser.setFinalValue(newList)
-        assert(newList == SnapshotsAssociatedByUser.value)
+        val newList = mutableListOf<DomainAssociatedFile>()
+        FilesAssociatedByUser.setFinalValue(newList)
+        assert(newList == FilesAssociatedByUser.value)
     }
 
     @Test
@@ -23,10 +23,10 @@ internal class SnapshotsAssociatedByUserTest {
             every { name } returns "4567890"
             every { nameFolder } returns "4567890123"
         }
-        val photoList = mutableListOf(DomainPhotoAssociated("123", "123"))
-        SnapshotsAssociatedByUser.setTemporalValue(photoList)
-        SnapshotsAssociatedByUser.updateAssociatedSnapshots(domainCameraFile)
-        assert(SnapshotsAssociatedByUser.temporal.size == 2)
+        val photoList = mutableListOf(DomainAssociatedFile("123", "123"))
+        FilesAssociatedByUser.setTemporalValue(photoList)
+        FilesAssociatedByUser.updateAssociatedSnapshots(domainCameraFile)
+        assert(FilesAssociatedByUser.temporal.size == 2)
     }
 
     @Test
@@ -35,10 +35,10 @@ internal class SnapshotsAssociatedByUserTest {
             every { name } returns "123"
             every { date } returns "123"
         }
-        val photoList = mutableListOf(DomainPhotoAssociated("123", "123"))
-        SnapshotsAssociatedByUser.setTemporalValue(photoList)
-        SnapshotsAssociatedByUser.updateAssociatedSnapshots(domainCameraFile)
-        assert(SnapshotsAssociatedByUser.temporal.size == 0)
+        val photoList = mutableListOf(DomainAssociatedFile("123", "123"))
+        FilesAssociatedByUser.setTemporalValue(photoList)
+        FilesAssociatedByUser.updateAssociatedSnapshots(domainCameraFile)
+        assert(FilesAssociatedByUser.temporal.size == 0)
     }
 
     @Test
@@ -56,11 +56,11 @@ internal class SnapshotsAssociatedByUserTest {
                     }
                 )
             )
-        SnapshotsAssociatedByUser.setTemporalValue(
-            mutableListOf(DomainPhotoAssociated("123", "123"))
+        FilesAssociatedByUser.setTemporalValue(
+            mutableListOf(DomainAssociatedFile("123", "123"))
         )
         val associatedList =
-            SnapshotsAssociatedByUser
+            FilesAssociatedByUser
                 .getListOfImagesAssociatedToVideo(domainInformationImageList).find { it.isSelected }
         assert(associatedList != null)
     }
@@ -80,19 +80,19 @@ internal class SnapshotsAssociatedByUserTest {
                     }
                 )
             )
-        SnapshotsAssociatedByUser.setTemporalValue(
-            mutableListOf(DomainPhotoAssociated("123", "123"))
+        FilesAssociatedByUser.setTemporalValue(
+            mutableListOf(DomainAssociatedFile("123", "123"))
         )
         val associatedList =
-            SnapshotsAssociatedByUser
+            FilesAssociatedByUser
                 .getListOfImagesAssociatedToVideo(domainInformationImageList).find { it.isSelected }
         assert(associatedList != null)
     }
 
     @Test
     fun cleanList() {
-        SnapshotsAssociatedByUser.setFinalValue(mutableListOf(mockk(), mockk()))
-        SnapshotsAssociatedByUser.cleanList()
-        assert(SnapshotsAssociatedByUser.value.size == 0)
+        FilesAssociatedByUser.setFinalValue(mutableListOf(mockk(), mockk()))
+        FilesAssociatedByUser.cleanList()
+        assert(FilesAssociatedByUser.value.size == 0)
     }
 }
