@@ -5,7 +5,7 @@ import androidx.annotation.StringRes
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.matcher.ViewMatchers
-import com.lawmobile.data.extensions.getCreationDate
+import com.lawmobile.data.extensions.getDateDependingOnNameLength
 import com.safefleet.lawmobile.R
 import com.safefleet.lawmobile.helpers.CustomAssertionActions.waitUntil
 import com.safefleet.lawmobile.helpers.CustomCheckboxAction
@@ -106,10 +106,10 @@ open class FileListScreen : BaseScreen() {
     }
 
     fun areFilesSortedByDate(filesList: List<CameraFile>) {
-        val sortedFilesList = filesList.sortedByDescending { it.getCreationDate() }
+        val sortedFilesList = filesList.sortedByDescending { it.getDateDependingOnNameLength() }
 
         for ((itemCount, file) in sortedFilesList.withIndex()) {
-            waitUntil { isFileDisplayedAtPosition(file.getCreationDate(), itemCount) }
+            waitUntil { isFileDisplayedAtPosition(file.getDateDependingOnNameLength(), itemCount) }
         }
     }
 
