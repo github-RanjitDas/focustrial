@@ -1,6 +1,6 @@
 package com.lawmobile.data.mappers
 
-import com.lawmobile.data.extensions.getCreationDate
+import com.lawmobile.data.extensions.getDateDependingOnNameLength
 import com.safefleet.mobile.external_hardware.cameras.entities.CameraFile
 import com.safefleet.mobile.external_hardware.cameras.entities.FileResponseWithErrors
 import io.mockk.every
@@ -24,7 +24,8 @@ internal class FileResponseMapperTest {
             domainResponse.let { response ->
                 assertTrue(
                     response.items.map { it.domainCameraFile.date }
-                        == items.sortedByDescending { it.getCreationDate() }.map { it.date }
+                        == items.sortedByDescending { it.getDateDependingOnNameLength() }
+                            .map { it.date }
                 )
                 assertTrue(response.errors == errors)
             }

@@ -9,7 +9,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.lawmobile.domain.entities.DomainInformationFile
-import com.lawmobile.domain.extensions.getCreationDate
+import com.lawmobile.domain.extensions.getDateDependingOnNameLength
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.entities.FilesAssociatedByUser
 import com.lawmobile.presentation.extensions.setCheckedListenerCheckConnection
@@ -59,11 +59,12 @@ class SimpleFileListAdapter(
 
     fun sortByDateAndTime() {
         if (isSortedAscendingByDateAndTime) {
-            fileList = fileList.sortedBy { it.domainCameraFile.getCreationDate() } as MutableList
+            fileList =
+                fileList.sortedBy { it.domainCameraFile.getDateDependingOnNameLength() } as MutableList
             isSortedAscendingByDateAndTime = false
         } else {
             fileList =
-                fileList.sortedByDescending { it.domainCameraFile.getCreationDate() } as MutableList
+                fileList.sortedByDescending { it.domainCameraFile.getDateDependingOnNameLength() } as MutableList
             isSortedAscendingByDateAndTime = true
         }
     }
@@ -110,8 +111,8 @@ class SimpleFileListAdapter(
             with(remoteCameraFile) {
                 dateSimpleListItem.text =
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
-                        Html.fromHtml(domainCameraFile.getCreationDate(), 0)
-                    else domainCameraFile.getCreationDate()
+                        Html.fromHtml(domainCameraFile.getDateDependingOnNameLength(), 0)
+                    else domainCameraFile.getDateDependingOnNameLength()
                 eventSimpleListItem.text =
                     domainVideoMetadata?.metadata?.event?.name ?: ""
             }

@@ -3,7 +3,7 @@ package com.lawmobile.presentation.entities
 import com.lawmobile.domain.entities.DomainAssociatedFile
 import com.lawmobile.domain.entities.DomainCameraFile
 import com.lawmobile.domain.entities.DomainInformationForList
-import com.lawmobile.domain.extensions.getCreationDate
+import com.lawmobile.domain.extensions.getDateDependingOnNameLength
 
 object FilesAssociatedByUser {
 
@@ -27,7 +27,12 @@ object FilesAssociatedByUser {
         with(imageFile) {
             val result = temporal.find { it.name == name }
             if (result == null) {
-                temporal.add(DomainAssociatedFile(name = name, date = getCreationDate()))
+                temporal.add(
+                    DomainAssociatedFile(
+                        name = name,
+                        date = getDateDependingOnNameLength()
+                    )
+                )
             } else {
                 temporal.remove(result)
             }

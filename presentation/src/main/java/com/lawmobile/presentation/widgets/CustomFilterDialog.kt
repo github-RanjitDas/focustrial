@@ -10,7 +10,7 @@ import androidx.core.view.isVisible
 import com.lawmobile.domain.entities.CameraInfo
 import com.lawmobile.domain.entities.DomainInformationFile
 import com.lawmobile.domain.entities.DomainInformationForList
-import com.lawmobile.domain.extensions.getCreationDate
+import com.lawmobile.domain.extensions.getDateDependingOnNameLength
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.databinding.FileListFilterDialogBinding
 import com.lawmobile.presentation.extensions.ifIsNotEmptyLet
@@ -178,7 +178,7 @@ class CustomFilterDialog constructor(
             currentFilters[START_DATE_POSITION].ifIsNotEmptyLet { startDate ->
                 val dateWithoutHour = startDate.split(" ")[0]
                 filteringList =
-                    filteringList.filter { it.domainCameraFile.getCreationDate() >= startDate } as MutableList
+                    filteringList.filter { it.domainCameraFile.getDateDependingOnNameLength() >= startDate } as MutableList
 
                 if (currentFilters[END_DATE_POSITION].isEmpty())
                     createTagInPosition(
@@ -191,7 +191,7 @@ class CustomFilterDialog constructor(
             currentFilters[END_DATE_POSITION].ifIsNotEmptyLet { endDate ->
                 val dateWithoutHour = endDate.split(" ")[0]
                 filteringList =
-                    filteringList.filter { it.domainCameraFile.getCreationDate() <= endDate } as MutableList
+                    filteringList.filter { it.domainCameraFile.getDateDependingOnNameLength() <= endDate } as MutableList
 
                 if (currentFilters[START_DATE_POSITION].isEmpty())
                     createTagInPosition(
