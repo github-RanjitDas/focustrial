@@ -17,9 +17,9 @@ import com.lawmobile.domain.entities.DomainInformationFileResponse
 import com.lawmobile.domain.entities.DomainInformationImage
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.databinding.FragmentFileListBinding
+import com.lawmobile.presentation.entities.FilesAssociatedByUser
 import com.lawmobile.presentation.entities.ImageFilesPathManager
 import com.lawmobile.presentation.entities.ImageWithPathSaved
-import com.lawmobile.presentation.entities.SnapshotsAssociatedByUser
 import com.lawmobile.presentation.extensions.getPathFromTemporalFile
 import com.lawmobile.presentation.extensions.showErrorSnackBar
 import com.lawmobile.presentation.extensions.verifySessionBeforeAction
@@ -76,7 +76,7 @@ class ThumbnailFileListFragment : FileListBaseFragment() {
     private fun setAssociatedRecyclerView() {
         thumbnailFileListAdapter?.run {
             fileList.let { completeList ->
-                fileList = SnapshotsAssociatedByUser
+                fileList = FilesAssociatedByUser
                     .getListOfImagesAssociatedToVideo(completeList)
                     .filterIsInstance<DomainInformationImage>() as MutableList
             }
@@ -269,7 +269,7 @@ class ThumbnailFileListFragment : FileListBaseFragment() {
         val isImageInAdapter = thumbnailFileListAdapter?.isImageInAdapter(image)
         if (isImageInAdapter != null && isImageInAdapter) {
             image.isSelected =
-                SnapshotsAssociatedByUser.isImageAssociated(image.domainCameraFile.name)
+                FilesAssociatedByUser.isImageAssociated(image.domainCameraFile.name)
             thumbnailFileListAdapter?.addItemToList(image)
             isLoading = false
             loadNewImage()
