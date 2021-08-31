@@ -21,7 +21,7 @@
         tools:ignore="Instantiatable">
 
         <activity
-            android:name="com.lawmobile.presentation.ui.login.LoginActivity"
+            android:name="com.lawmobile.presentation.ui.splash.SplashActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
             tools:ignore="LockedOrientationActivity">
@@ -30,6 +30,18 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name="com.lawmobile.presentation.ui.selectCamera.SelectCameraActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"
+            tools:ignore="LockedOrientationActivity"/>
+
+        <activity
+            android:name="com.lawmobile.presentation.ui.login.LoginActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"
+            tools:ignore="LockedOrientationActivity"/>
 
         <activity
             android:name="com.lawmobile.presentation.ui.live.x1.LiveX1Activity"
@@ -71,8 +83,7 @@
             android:name="com.lawmobile.presentation.ui.bodyWornDiagnosis.BodyWornDiagnosisActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
-            tools:ignore="LockedOrientationActivity"
-            />
+            tools:ignore="LockedOrientationActivity" />
 
         <activity android:name="com.lawmobile.presentation.ui.fileList.x1.FileListX1Activity"
             android:screenOrientation="portrait"
