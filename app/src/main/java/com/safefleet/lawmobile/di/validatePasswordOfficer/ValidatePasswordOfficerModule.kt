@@ -28,9 +28,7 @@ class ValidatePasswordOfficerModule {
         fun provideValidatePasswordOfficerRepository(
             validatePasswordOfficerRemoteDataSource: ValidatePasswordOfficerRemoteDataSource
         ): ValidatePasswordOfficerRepository =
-            ValidatePasswordOfficerRepositoryImpl(
-                validatePasswordOfficerRemoteDataSource
-            )
+            ValidatePasswordOfficerRepositoryImpl(validatePasswordOfficerRemoteDataSource)
 
         @Provides
         fun provideValidatePasswordOfficerUseCase(validatePasswordOfficerRepository: ValidatePasswordOfficerRepository): ValidatePasswordOfficerUseCase =

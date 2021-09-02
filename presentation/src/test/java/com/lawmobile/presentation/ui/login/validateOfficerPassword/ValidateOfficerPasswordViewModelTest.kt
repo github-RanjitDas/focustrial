@@ -19,6 +19,7 @@ import io.mockk.mockkObject
 import io.mockk.verify
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.TestCoroutineDispatcher
 import kotlinx.coroutines.test.setMain
 import org.junit.Assert
 import org.junit.jupiter.api.BeforeEach
@@ -26,6 +27,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.api.extension.ExtendWith
 
+@ExperimentalCoroutinesApi
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @ExtendWith(InstantExecutorExtension::class)
 class ValidateOfficerPasswordViewModelTest {
@@ -40,11 +42,12 @@ class ValidateOfficerPasswordViewModelTest {
         ValidateOfficerPasswordViewModel(validatePasswordOfficerUseCase, typeOfCameraUseCase, cameraHelper)
     }
 
-    @ExperimentalCoroutinesApi
+    private val dispatcher = TestCoroutineDispatcher()
+
     @BeforeEach
     fun setUp() {
         clearMocks()
-        Dispatchers.setMain(Dispatchers.Unconfined)
+        Dispatchers.setMain(dispatcher)
     }
 
     @Test

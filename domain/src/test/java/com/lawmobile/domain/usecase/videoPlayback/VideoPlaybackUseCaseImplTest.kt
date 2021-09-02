@@ -15,9 +15,7 @@ import org.junit.jupiter.api.TestInstance
 class VideoPlaybackUseCaseImplTest {
 
     private val videoPlaybackRepository: VideoPlaybackRepository = mockk()
-    private val videoPlaybackUseCaseImpl by lazy {
-        VideoPlaybackUseCaseImpl(videoPlaybackRepository)
-    }
+    private val videoPlaybackUseCaseImpl by lazy { VideoPlaybackUseCaseImpl(videoPlaybackRepository) }
 
     @Test
     fun testGetInformationResourcesVideoSuccess() {
@@ -41,8 +39,7 @@ class VideoPlaybackUseCaseImplTest {
             mockk()
         )
         runBlocking {
-            val result =
-                videoPlaybackUseCaseImpl.getInformationResourcesVideo(domainCameraFile)
+            val result = videoPlaybackUseCaseImpl.getInformationResourcesVideo(domainCameraFile)
             Assert.assertTrue(result is Result.Error)
         }
 
@@ -55,8 +52,7 @@ class VideoPlaybackUseCaseImplTest {
             mockk()
         )
         runBlocking {
-            val result =
-                videoPlaybackUseCaseImpl.getVideoMetadata("", "")
+            val result = videoPlaybackUseCaseImpl.getVideoMetadata("", "")
             Assert.assertTrue(result is Result.Success)
         }
         coVerify { videoPlaybackRepository.getVideoMetadata(any(), any()) }
@@ -68,8 +64,7 @@ class VideoPlaybackUseCaseImplTest {
             mockk()
         )
         runBlocking {
-            val result =
-                videoPlaybackUseCaseImpl.getVideoMetadata("", "")
+            val result = videoPlaybackUseCaseImpl.getVideoMetadata("", "")
             Assert.assertTrue(result is Result.Error)
         }
         coVerify { videoPlaybackRepository.getVideoMetadata(any(), any()) }
@@ -81,8 +76,7 @@ class VideoPlaybackUseCaseImplTest {
             mockk()
         )
         runBlocking {
-            val result =
-                videoPlaybackUseCaseImpl.saveVideoMetadata(mockk())
+            val result = videoPlaybackUseCaseImpl.saveVideoMetadata(mockk())
             Assert.assertTrue(result is Result.Success)
         }
         coVerify { videoPlaybackRepository.saveVideoMetadata(any()) }
@@ -94,8 +88,7 @@ class VideoPlaybackUseCaseImplTest {
             mockk()
         )
         runBlocking {
-            val result =
-                videoPlaybackUseCaseImpl.saveVideoMetadata(mockk())
+            val result = videoPlaybackUseCaseImpl.saveVideoMetadata(mockk())
             Assert.assertTrue(result is Result.Error)
         }
         coVerify { videoPlaybackRepository.saveVideoMetadata(any()) }

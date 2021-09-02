@@ -15,15 +15,20 @@ import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkObject
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.TestCoroutineDispatcher
+import kotlinx.coroutines.test.runBlockingTest
+import kotlinx.coroutines.test.setMain
 import org.junit.Assert
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
+@ExperimentalCoroutinesApi
 internal class FileListRepositoryImplTest {
 
     private val fileListRemoteDataSource: FileListRemoteDataSource = mockk()
+    private val dispatcher = TestCoroutineDispatcher()
 
     private val fileListRepositoryImpl: FileListRepositoryImpl by lazy {
         FileListRepositoryImpl(fileListRemoteDataSource)
@@ -31,27 +36,27 @@ internal class FileListRepositoryImplTest {
 
     @BeforeEach
     fun setup() {
+        Dispatchers.setMain(dispatcher)
         clearAllMocks()
     }
 
     @Test
-    fun testSavePartnerIdVideosFlow() {
+    fun testSavePartnerIdVideosFlow() = dispatcher.runBlockingTest {
         val domainCameraFile = DomainCameraFile("", "", "", "")
         val remoteVideoMetadata = RemoteVideoMetadata(DomainVideoMetadata(""), false)
         mockkObject(VideoListMetadata)
+
         every { VideoListMetadata.getVideoMetadata(any()) } returns remoteVideoMetadata
         every { VideoListMetadata.saveOrUpdateVideoMetadata(any()) } returns Unit
         coEvery { fileListRemoteDataSource.savePartnerIdVideos(any()) } returns Result.Success(Unit)
 
-        runBlocking {
-            fileListRepositoryImpl.savePartnerIdVideos(listOf(domainCameraFile), "")
-        }
+        fileListRepositoryImpl.savePartnerIdVideos(listOf(domainCameraFile), "")
 
         coVerify { fileListRemoteDataSource.savePartnerIdVideos(any()) }
     }
 
     @Test
-    fun testSavePartnerIdVideosSuccess() {
+    fun testSavePartnerIdVideosSuccess() = dispatcher.runBlockingTest {
         val result = Result.Success(Unit)
         val domainCameraFile = DomainCameraFile("", "", "", "1")
         val domainVideoMetadata = DomainVideoMetadata(
@@ -67,39 +72,34 @@ internal class FileListRepositoryImplTest {
         VideoListMetadata.metadataList = mutableListOf(remoteVideoMetadata)
         coEvery { fileListRemoteDataSource.savePartnerIdVideos(any()) } returns result
 
-        runBlocking {
-            Assert.assertEquals(
-                fileListRepositoryImpl.savePartnerIdVideos(listOf(domainCameraFile), "1234"),
-                result
-            )
-            Assert.assertEquals(1, VideoListMetadata.metadataList.size)
-        }
+        Assert.assertEquals(
+            fileListRepositoryImpl.savePartnerIdVideos(listOf(domainCameraFile), "1234"),
+            result
+        )
+        Assert.assertEquals(1, VideoListMetadata.metadataList.size)
 
         coVerify {
-            delay(100)
             VideoListMetadata.getIndexVideoMetadata(domainCameraFile.name)
             fileListRemoteDataSource.savePartnerIdVideos(any())
         }
     }
 
     @Test
-    fun testSavePartnerIdVideosSuccessNull() {
+    fun testSavePartnerIdVideosSuccessNull() = dispatcher.runBlockingTest {
         val result = Result.Success(Unit)
         val domainCameraFile = DomainCameraFile("", "", "", "")
         VideoListMetadata.metadataList = mutableListOf()
 
         coEvery { fileListRemoteDataSource.savePartnerIdVideos(any()) } returns result
 
-        runBlocking {
-            Assert.assertEquals(
-                fileListRepositoryImpl.savePartnerIdVideos(
-                    listOf(domainCameraFile),
-                    "1234"
-                ),
-                result
-            )
-            Assert.assertEquals(1, VideoListMetadata.metadataList.size)
-        }
+        Assert.assertEquals(
+            fileListRepositoryImpl.savePartnerIdVideos(
+                listOf(domainCameraFile),
+                "1234"
+            ),
+            result
+        )
+        Assert.assertEquals(1, VideoListMetadata.metadataList.size)
 
         val resultMetadata = VideoInformation(
             "",
@@ -114,92 +114,80 @@ internal class FileListRepositoryImplTest {
     }
 
     @Test
-    fun testSavePartnerIdVideosFailed() {
+    fun testSavePartnerIdVideosFailed() = dispatcher.runBlockingTest {
         val domainCameraFile: DomainCameraFile = mockk(relaxed = true)
 
         mockkObject(VideoListMetadata)
         every { VideoListMetadata.getVideoMetadata(any()) } returns null
         coEvery { fileListRemoteDataSource.savePartnerIdVideos(any()) } returns Result.Error(mockk())
 
-        runBlocking {
-            Assert.assertTrue(
-                fileListRepositoryImpl.savePartnerIdVideos(
-                    listOf(domainCameraFile),
-                    ""
-                ) is Result.Error
-            )
-        }
+        val result = fileListRepositoryImpl.savePartnerIdVideos(listOf(domainCameraFile), "")
+        Assert.assertTrue(result is Result.Error)
     }
 
     @Test
-    fun testSavePartnerIdSnapshotsFlow() {
+    fun testSavePartnerIdSnapshotsFlow() = dispatcher.runBlockingTest {
         val domainCameraFile: DomainCameraFile = mockk(relaxed = true)
 
-        coEvery { fileListRemoteDataSource.savePartnerIdInAllSnapshots(any()) } returns Result.Success(
-            Unit
-        )
-        coEvery { fileListRemoteDataSource.getSavedPhotosMetadata() } returns Result.Success(
-            emptyList()
-        )
-        coEvery { fileListRemoteDataSource.savePartnerIdSnapshot(any()) } returns Result.Success(
-            Unit
-        )
-        runBlocking {
-            fileListRepositoryImpl.savePartnerIdSnapshot(listOf(domainCameraFile), "")
-        }
+        coEvery {
+            fileListRemoteDataSource.savePartnerIdInAllSnapshots(any())
+        } returns Result.Success(Unit)
+
+        coEvery {
+            fileListRemoteDataSource.getSavedPhotosMetadata()
+        } returns Result.Success(emptyList())
+
+        coEvery {
+            fileListRemoteDataSource.savePartnerIdSnapshot(any())
+        } returns Result.Success(Unit)
+
+        fileListRepositoryImpl.savePartnerIdSnapshot(listOf(domainCameraFile), "")
+
         coVerify { fileListRemoteDataSource.savePartnerIdInAllSnapshots(any()) }
     }
 
     @Test
-    fun testSavePartnerIdSnapshotSuccess() {
+    fun testSavePartnerIdSnapshotSuccess() = dispatcher.runBlockingTest {
         val result = Result.Success(Unit)
         val domainCameraFile: DomainCameraFile = mockk(relaxed = true)
 
         coEvery { fileListRemoteDataSource.savePartnerIdInAllSnapshots(any()) } returns result
-        coEvery { fileListRemoteDataSource.savePartnerIdSnapshot(any()) } returns Result.Success(
-            Unit
+
+        coEvery {
+            fileListRemoteDataSource.savePartnerIdSnapshot(any())
+        } returns Result.Success(Unit)
+
+        coEvery {
+            fileListRemoteDataSource.getSavedPhotosMetadata()
+        } returns Result.Success(emptyList())
+
+        Assert.assertEquals(
+            fileListRepositoryImpl.savePartnerIdSnapshot(listOf(domainCameraFile), ""),
+            result
         )
-        coEvery { fileListRemoteDataSource.getSavedPhotosMetadata() } returns Result.Success(
-            emptyList()
-        )
-        runBlocking {
-            Assert.assertEquals(
-                fileListRepositoryImpl.savePartnerIdSnapshot(
-                    listOf(
-                        domainCameraFile
-                    ),
-                    ""
-                ),
-                result
-            )
-        }
 
         coVerify {
-            delay(100)
             fileListRemoteDataSource.savePartnerIdInAllSnapshots(any())
         }
     }
 
     @Test
-    fun testSavePartnerIdSnapshotFailed() {
+    fun testSavePartnerIdSnapshotFailed() = dispatcher.runBlockingTest {
         val domainCameraFile: DomainCameraFile = mockk(relaxed = true)
 
-        coEvery { fileListRemoteDataSource.savePartnerIdInAllSnapshots(any()) } returns Result.Error(
-            mockk()
-        )
-        coEvery { fileListRemoteDataSource.savePartnerIdSnapshot(any()) } returns Result.Success(
-            Unit
-        )
-        coEvery { fileListRemoteDataSource.getSavedPhotosMetadata() } returns Result.Success(
-            emptyList()
-        )
-        runBlocking {
-            Assert.assertTrue(
-                fileListRepositoryImpl.savePartnerIdSnapshot(
-                    listOf(domainCameraFile),
-                    ""
-                ) is Result.Error
-            )
-        }
+        coEvery {
+            fileListRemoteDataSource.savePartnerIdInAllSnapshots(any())
+        } returns Result.Error(mockk())
+
+        coEvery {
+            fileListRemoteDataSource.savePartnerIdSnapshot(any())
+        } returns Result.Success(Unit)
+
+        coEvery {
+            fileListRemoteDataSource.getSavedPhotosMetadata()
+        } returns Result.Success(emptyList())
+
+        val result = fileListRepositoryImpl.savePartnerIdSnapshot(listOf(domainCameraFile), "")
+        Assert.assertTrue(result is Result.Error)
     }
 }

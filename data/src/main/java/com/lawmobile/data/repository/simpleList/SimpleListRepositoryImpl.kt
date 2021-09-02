@@ -9,8 +9,9 @@ import com.lawmobile.domain.entities.VideoListMetadata
 import com.lawmobile.domain.repository.simpleList.SimpleListRepository
 import com.safefleet.mobile.kotlin_commons.helpers.Result
 
-class SimpleListRepositoryImpl(private val simpleListRemoteDataSource: SimpleListRemoteDataSource) :
-    SimpleListRepository {
+class SimpleListRepositoryImpl(
+    private val simpleListRemoteDataSource: SimpleListRemoteDataSource
+) : SimpleListRepository {
 
     override suspend fun getSnapshotList(): Result<DomainInformationFileResponse> =
         when (val response = simpleListRemoteDataSource.getSnapshotList()) {

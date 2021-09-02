@@ -8,8 +8,8 @@ import io.mockk.coVerify
 import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.TestCoroutineDispatcher
+import kotlinx.coroutines.test.runBlockingTest
 import kotlinx.coroutines.test.setMain
 import org.junit.Assert
 import org.junit.jupiter.api.BeforeEach
@@ -17,6 +17,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.api.extension.ExtendWith
 
+@ExperimentalCoroutinesApi
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @ExtendWith(InstantExecutorExtension::class)
 internal class LiveStatusBarBaseViewModelTest {
@@ -27,66 +28,59 @@ internal class LiveStatusBarBaseViewModelTest {
         LiveStatusBarBaseViewModel(liveStreamingUseCase)
     }
 
-    @ExperimentalCoroutinesApi
+    private val dispatcher = TestCoroutineDispatcher()
+
     @BeforeEach
     fun setUp() {
-        Dispatchers.setMain(Dispatchers.Unconfined)
+        Dispatchers.setMain(dispatcher)
     }
 
     @Test
-    fun testGetCatalogInfoSuccess() {
-        coEvery { liveStreamingUseCase.getCatalogInfo() } returns Result.Success(
-            mockk()
-        )
-        runBlocking {
-            liveStatusBarBaseViewModel.getMetadataEvents()
-            Assert.assertTrue(liveStatusBarBaseViewModel.catalogInfoLiveData.value is Result.Success)
-        }
+    fun testGetCatalogInfoSuccess() = runBlockingTest {
+        coEvery { liveStreamingUseCase.getCatalogInfo() } returns Result.Success(mockk())
+        liveStatusBarBaseViewModel.getMetadataEvents()
+        Assert.assertTrue(liveStatusBarBaseViewModel.catalogInfoLiveData.value is Result.Success)
         coVerify { liveStreamingUseCase.getCatalogInfo() }
     }
 
     @Test
-    fun testGetCatalogInfoError() {
+    fun testGetCatalogInfoError() = dispatcher.runBlockingTest {
         coEvery { liveStreamingUseCase.getCatalogInfo() } returns Result.Error(mockk())
-        runBlocking {
-            liveStatusBarBaseViewModel.getMetadataEvents()
-            delay(1500)
-            Assert.assertTrue(liveStatusBarBaseViewModel.catalogInfoLiveData.value is Result.Error)
-        }
+        liveStatusBarBaseViewModel.getMetadataEvents()
+        dispatcher.advanceTimeBy(1500)
+        Assert.assertTrue(liveStatusBarBaseViewModel.catalogInfoLiveData.value is Result.Error)
         coVerify { liveStreamingUseCase.getCatalogInfo() }
     }
 
     @Test
-    fun getBatteryLevelSuccess() {
+    fun getBatteryLevelSuccess() = runBlockingTest {
         val result = Result.Success(23)
         coEvery { liveStreamingUseCase.getBatteryLevel() } returns result
-        runBlocking {
-            liveStatusBarBaseViewModel.getBatteryLevel()
-            Assert.assertEquals(
-                liveStatusBarBaseViewModel.batteryLevelLiveData.value?.getContent(),
-                result
-            )
-        }
+
+        liveStatusBarBaseViewModel.getBatteryLevel()
+        Assert.assertEquals(
+            liveStatusBarBaseViewModel.batteryLevelLiveData.value?.getContent(), result
+        )
+
         coVerify { liveStreamingUseCase.getBatteryLevel() }
     }
 
     @Test
-    fun getBatteryLevelError() {
+    fun getBatteryLevelError() = dispatcher.runBlockingTest {
         val result = Result.Error(mockk())
         coEvery { liveStreamingUseCase.getBatteryLevel() } returns result
-        runBlocking {
-            liveStatusBarBaseViewModel.getBatteryLevel()
-            delay(1500)
-            Assert.assertEquals(
-                liveStatusBarBaseViewModel.batteryLevelLiveData.value?.getContent(),
-                result
-            )
-        }
+
+        liveStatusBarBaseViewModel.getBatteryLevel()
+        dispatcher.advanceTimeBy(1500)
+
+        Assert.assertEquals(
+            liveStatusBarBaseViewModel.batteryLevelLiveData.value?.getContent(), result
+        )
         coVerify { liveStreamingUseCase.getBatteryLevel() }
     }
 
     @Test
-    fun getStorageLevelsSuccess() {
+    fun getStorageLevelsSuccess() = dispatcher.runBlockingTest {
         val freeStorage = 63456789
         val totalStorage = 67456789
         val scaleByte = 1024
@@ -96,15 +90,14 @@ internal class LiveStatusBarBaseViewModelTest {
         coEvery { liveStreamingUseCase.getFreeStorage() } returns Result.Success(freeStorage.toString())
         coEvery { liveStreamingUseCase.getTotalStorage() } returns Result.Success(totalStorage.toString())
 
-        runBlocking {
-            liveStatusBarBaseViewModel.getStorageLevels()
-            delay(500)
-            val storage =
-                (liveStatusBarBaseViewModel.storageLiveData.value?.getContent() as Result.Success<List<Double>>).data
-            Assert.assertEquals(storage[0].toInt(), freeStorage / scaleByte)
-            Assert.assertEquals(storage[1].toInt(), usedStorage.toInt())
-            Assert.assertEquals(storage[2].toInt(), totalStorage / scaleByte)
-        }
+        liveStatusBarBaseViewModel.getStorageLevels()
+        dispatcher.advanceTimeBy(500)
+        val storage =
+            (liveStatusBarBaseViewModel.storageLiveData.value?.getContent() as Result.Success<List<Double>>).data
+        Assert.assertEquals(storage[0].toInt(), freeStorage / scaleByte)
+        Assert.assertEquals(storage[1].toInt(), usedStorage.toInt())
+        Assert.assertEquals(storage[2].toInt(), totalStorage / scaleByte)
+
         coVerify {
             liveStreamingUseCase.getFreeStorage()
             liveStreamingUseCase.getTotalStorage()
@@ -112,29 +105,29 @@ internal class LiveStatusBarBaseViewModelTest {
     }
 
     @Test
-    fun getStorageLevelsFreeStorageError() {
+    fun getStorageLevelsFreeStorageError() = dispatcher.runBlockingTest {
         val result = Result.Error(mockk())
         coEvery { liveStreamingUseCase.getFreeStorage() } returns result
-        runBlocking {
-            liveStatusBarBaseViewModel.getStorageLevels()
-            delay(2000)
-            Assert.assertEquals(liveStatusBarBaseViewModel.storageLiveData.value?.getContent(), result)
-        }
+
+        liveStatusBarBaseViewModel.getStorageLevels()
+        dispatcher.advanceTimeBy(2000)
+        Assert.assertEquals(liveStatusBarBaseViewModel.storageLiveData.value?.getContent(), result)
+
         coVerify {
             liveStreamingUseCase.getFreeStorage()
         }
     }
 
     @Test
-    fun getStorageLevelsTotalStorageError() {
+    fun getStorageLevelsTotalStorageError() = dispatcher.runBlockingTest {
         val result = Result.Error(mockk())
         coEvery { liveStreamingUseCase.getFreeStorage() } returns Result.Success("63456789")
         coEvery { liveStreamingUseCase.getTotalStorage() } returns result
-        runBlocking {
-            liveStatusBarBaseViewModel.getStorageLevels()
-            delay(2000)
-            Assert.assertEquals(liveStatusBarBaseViewModel.storageLiveData.value?.getContent(), result)
-        }
+
+        liveStatusBarBaseViewModel.getStorageLevels()
+        dispatcher.advanceTimeBy(2000)
+        Assert.assertEquals(liveStatusBarBaseViewModel.storageLiveData.value?.getContent(), result)
+
         coVerify {
             liveStreamingUseCase.getFreeStorage()
             liveStreamingUseCase.getTotalStorage()

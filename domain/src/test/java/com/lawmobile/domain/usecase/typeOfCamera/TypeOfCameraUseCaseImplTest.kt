@@ -25,9 +25,7 @@ internal class TypeOfCameraUseCaseImplTest {
     @Test
     fun testGetTypeOfCameraFlow() {
         coEvery { typeOfCameraRepository.getTypeOfCamera() } returns Result.Success(CameraType.X2)
-        runBlocking {
-            typeOfCameraUseCase.getTypeOfCamera()
-        }
+        runBlocking { typeOfCameraUseCase.getTypeOfCamera() }
         coVerify { typeOfCameraRepository.getTypeOfCamera() }
     }
 

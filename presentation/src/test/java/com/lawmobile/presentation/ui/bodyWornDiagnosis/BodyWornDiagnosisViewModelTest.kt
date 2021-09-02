@@ -8,7 +8,8 @@ import io.mockk.coVerify
 import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.TestCoroutineDispatcher
+import kotlinx.coroutines.test.runBlockingTest
 import kotlinx.coroutines.test.setMain
 import org.junit.Assert
 import org.junit.jupiter.api.BeforeEach
@@ -16,6 +17,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.api.extension.ExtendWith
 
+@ExperimentalCoroutinesApi
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @ExtendWith(InstantExecutorExtension::class)
 internal class BodyWornDiagnosisViewModelTest {
@@ -25,48 +27,37 @@ internal class BodyWornDiagnosisViewModelTest {
         BodyWornDiagnosisViewModel(useCaseDiagnosis)
     }
 
-    @ExperimentalCoroutinesApi
+    private val dispatcher = TestCoroutineDispatcher()
+
     @BeforeEach
     fun setUp() {
-        Dispatchers.setMain(Dispatchers.Unconfined)
+        Dispatchers.setMain(dispatcher)
     }
 
     @Test
-    fun testIsDiagnosisResponseTrue() {
+    fun testIsDiagnosisResponseTrue() = runBlockingTest {
         coEvery { useCaseDiagnosis.isDiagnosisSuccess() } returns Result.Success(true)
-
-        runBlocking {
-            viewModel.getDiagnosis()
-            val response = viewModel.diagnosisCameraLiveData.value
-            Assert.assertEquals(response, Result.Success(true))
-        }
-
+        viewModel.getDiagnosis()
+        val response = viewModel.diagnosisCameraLiveData.value
+        Assert.assertEquals(response, Result.Success(true))
         coVerify { useCaseDiagnosis.isDiagnosisSuccess() }
     }
 
     @Test
-    fun testIsDiagnosisResponseFalse() {
+    fun testIsDiagnosisResponseFalse() = runBlockingTest {
         coEvery { useCaseDiagnosis.isDiagnosisSuccess() } returns Result.Success(false)
-
-        runBlocking {
-            viewModel.getDiagnosis()
-            val response = viewModel.diagnosisCameraLiveData.value
-            Assert.assertEquals(response, Result.Success(false))
-        }
-
+        viewModel.getDiagnosis()
+        val response = viewModel.diagnosisCameraLiveData.value
+        Assert.assertEquals(response, Result.Success(false))
         coVerify { useCaseDiagnosis.isDiagnosisSuccess() }
     }
 
     @Test
-    fun testIsDiagnosisError() {
+    fun testIsDiagnosisError() = runBlockingTest {
         coEvery { useCaseDiagnosis.isDiagnosisSuccess() } returns Result.Error(Exception(""))
-
-        runBlocking {
-            viewModel.getDiagnosis()
-            val response = viewModel.diagnosisCameraLiveData.value
-            Assert.assertTrue(response is Result.Error)
-        }
-
+        viewModel.getDiagnosis()
+        val response = viewModel.diagnosisCameraLiveData.value
+        Assert.assertTrue(response is Result.Error)
         coVerify { useCaseDiagnosis.isDiagnosisSuccess() }
     }
 }

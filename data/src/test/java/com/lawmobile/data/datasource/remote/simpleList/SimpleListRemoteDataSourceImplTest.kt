@@ -28,9 +28,7 @@ internal class SimpleListRemoteDataSourceImplTest {
     @Test
     fun testGetSnapshotListFlow() {
         coEvery { cameraService.getListOfImages() } returns Result.Success(mockk())
-        runBlocking {
-            simpleListRemoteDataSourceImpl.getSnapshotList()
-        }
+        runBlocking { simpleListRemoteDataSourceImpl.getSnapshotList() }
         coVerify { cameraService.getListOfImages() }
     }
 
@@ -66,14 +64,10 @@ internal class SimpleListRemoteDataSourceImplTest {
 
         VideoListMetadata.metadataList = mutableListOf()
         coEvery {
-            cameraService.getVideoMetadata(
-                any(),
-                any()
-            )
+            cameraService.getVideoMetadata(any(), any())
         } returns Result.Success(mockk(relaxed = true))
-        runBlocking {
-            simpleListRemoteDataSourceImpl.getVideoList()
-        }
+
+        runBlocking { simpleListRemoteDataSourceImpl.getVideoList() }
         coVerify {
             cameraService.getListOfVideos()
             cameraService.getVideoMetadata(any(), any())
@@ -89,11 +83,9 @@ internal class SimpleListRemoteDataSourceImplTest {
         val result = Result.Success(cameraResponse)
         coEvery { cameraService.getListOfVideos() } returns result
         coEvery {
-            cameraService.getVideoMetadata(
-                any(),
-                any()
-            )
+            cameraService.getVideoMetadata(any(), any())
         } returns Result.Success(mockk(relaxed = true))
+
         runBlocking {
             Assert.assertEquals(simpleListRemoteDataSourceImpl.getVideoList(), result)
         }

@@ -24,9 +24,7 @@ class FileListTest {
 
     @Test
     fun testUpdateItemInListImageMetadataNewValue() {
-        val item = DomainInformationImageMetadata(
-            DomainPhotoMetadata("filename.PNG")
-        )
+        val item = DomainInformationImageMetadata(DomainPhotoMetadata("filename.PNG"))
         FileList.updateItemInImageMetadataList(item)
         val itemFind = FileList.getMetadataOfImageInList("filename.PNG")
         Assert.assertEquals(itemFind, item)
@@ -34,9 +32,7 @@ class FileListTest {
 
     @Test
     fun testUpdateItemInListImageMetadataValueChange() {
-        val item = DomainInformationImageMetadata(
-            DomainPhotoMetadata("filename.PNG")
-        )
+        val item = DomainInformationImageMetadata(DomainPhotoMetadata("filename.PNG"))
         FileList.updateItemInImageMetadataList(item)
 
         val itemChange = DomainInformationImageMetadata(
@@ -49,9 +45,7 @@ class FileListTest {
 
     @Test
     fun testUpdateItemInListImageMetadataSaveTwoItems() {
-        val item = DomainInformationImageMetadata(
-            DomainPhotoMetadata("filename.PNG")
-        )
+        val item = DomainInformationImageMetadata(DomainPhotoMetadata("filename.PNG"))
         FileList.updateItemInImageMetadataList(item)
 
         val itemTwo = DomainInformationImageMetadata(

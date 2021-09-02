@@ -1,18 +1,14 @@
 package com.lawmobile.presentation.ui.login
 
 import android.Manifest
-import android.graphics.drawable.AnimatedVectorDrawable
 import android.os.Bundle
-import androidx.activity.viewModels
 import androidx.cardview.widget.CardView
-import androidx.core.view.isVisible
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.lawmobile.domain.entities.CameraInfo
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.databinding.ActivityLoginBinding
 import com.lawmobile.presentation.extensions.attachFragmentWithAnimation
 import com.lawmobile.presentation.extensions.getIntentDependsCameraType
-import com.lawmobile.presentation.extensions.isAnimationsEnabled
 import com.lawmobile.presentation.extensions.showErrorSnackBar
 import com.lawmobile.presentation.extensions.verifyForAskingPermission
 import com.lawmobile.presentation.ui.base.BaseActivity
@@ -27,7 +23,6 @@ class LoginActivity : BaseActivity() {
 
     private lateinit var activityLoginBinding: ActivityLoginBinding
 
-    private val loginActivityViewModel: LoginActivityViewModel by viewModels()
     val sheetBehavior: BottomSheetBehavior<CardView> by lazy {
         BottomSheetBehavior.from(
             activityLoginBinding.bottomSheetInstructions.bottomSheetInstructions
@@ -38,6 +33,7 @@ class LoginActivity : BaseActivity() {
         if (it) showValidateOfficerPasswordFragment()
         else showFragmentPairingCamera()
     }
+
     private val validateSuccessPasswordOfficer: (isSuccess: Boolean) -> Unit = {
         if (it) startLiveViewActivity()
         else {
@@ -45,6 +41,7 @@ class LoginActivity : BaseActivity() {
             EspressoIdlingResource.decrement()
         }
     }
+
     private val validateRequirements: (isSuccess: Boolean) -> Unit = {
         if (it) showPairingResultFragment()
     }
@@ -53,9 +50,8 @@ class LoginActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         activityLoginBinding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(activityLoginBinding.root)
-        overridePendingTransition(0, R.anim.fade_out)
         configureBottomSheet()
-        startAnimation()
+        setLoginViews()
     }
 
     private fun configureBottomSheet() {
@@ -69,33 +65,10 @@ class LoginActivity : BaseActivity() {
         }
     }
 
-    private fun startAnimation() {
-        if (isAnimationsEnabled()) {
-            activityLoginBinding.imageViewFMALogoNoAnimation.isVisible = false
-            (activityLoginBinding.imageViewFMALogo.drawable as AnimatedVectorDrawable).start()
-            loginActivityViewModel.waitToFinish(ANIMATION_DURATION)
-            loginActivityViewModel.isWaitFinishedLiveData.observe(
-                this
-            ) {
-                it.getContentIfNotHandled()?.run {
-                    showLoginViews(this)
-                }
-            }
-        } else {
-            activityLoginBinding.imageViewFMALogoNoAnimation.isVisible = true
-            activityLoginBinding.imageViewFMALogo.isVisible = false
-            showLoginViews(true)
-        }
-    }
-
-    private fun showLoginViews(isFinished: Boolean) {
-        if (isFinished) {
-            activityLoginBinding.imageViewSafeFleetFooterLogo.isVisible = true
-            activityLoginBinding.versionNumberTextLogin.isVisible = true
-            activityLoginBinding.versionNumberTextLogin.text = getApplicationVersionText()
-            showFragmentPairingCamera()
-            verifyLocationPermission()
-        }
+    private fun setLoginViews() {
+        activityLoginBinding.versionNumberTextLogin.text = getApplicationVersionText()
+        showFragmentPairingCamera()
+        verifyLocationPermission()
     }
 
     private fun startLiveViewActivity() {
@@ -142,19 +115,7 @@ class LoginActivity : BaseActivity() {
         )
     }
 
-    override fun onStop() {
-        super.onStop()
-        activityLoginBinding.imageViewFMALogo.isVisible = false
-        activityLoginBinding.imageViewFMALogoNoAnimation.isVisible = true
-        activityLoginBinding.imageViewSafeFleetFooterLogo.isVisible = true
-        activityLoginBinding.versionNumberTextLogin.isVisible = true
-    }
-
     override fun onBackPressed() {
         // This method is implemented to invalidate the behaviour of back button on the phones
-    }
-
-    companion object {
-        private const val ANIMATION_DURATION = 2000L
     }
 }

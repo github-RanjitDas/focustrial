@@ -4,8 +4,9 @@ import com.lawmobile.data.datasource.remote.pairingPhoneWithCamera.PairingPhoneW
 import com.lawmobile.domain.repository.pairingPhoneWithCamera.PairingPhoneWithCameraRepository
 import com.safefleet.mobile.kotlin_commons.helpers.Result
 
-class PairingPhoneWithCameraRepositoryImpl(private val pairingPhoneWithCameraRemoteDataSource: PairingPhoneWithCameraRemoteDataSource) :
-    PairingPhoneWithCameraRepository {
+class PairingPhoneWithCameraRepositoryImpl(
+    private val pairingPhoneWithCameraRemoteDataSource: PairingPhoneWithCameraRemoteDataSource
+) : PairingPhoneWithCameraRepository {
 
     override suspend fun loadPairingCamera(
         hostnameToConnect: String,
@@ -19,9 +20,8 @@ class PairingPhoneWithCameraRepositoryImpl(private val pairingPhoneWithCameraRem
         )
     }
 
-    override suspend fun isPossibleTheConnection(hostnameToConnect: String): Result<Unit> {
-        return pairingPhoneWithCameraRemoteDataSource.isPossibleTheConnection(hostnameToConnect)
-    }
+    override suspend fun isPossibleTheConnection(hostnameToConnect: String): Result<Unit> =
+        pairingPhoneWithCameraRemoteDataSource.isPossibleTheConnection(hostnameToConnect)
 
     override fun cleanCacheFiles() {
         pairingPhoneWithCameraRemoteDataSource.cleanCacheFiles()

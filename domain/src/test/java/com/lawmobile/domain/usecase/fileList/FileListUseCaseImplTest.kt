@@ -22,9 +22,7 @@ internal class FileListUseCaseImplTest {
         coEvery { fileListRepository.savePartnerIdVideos(any(), any()) } returns Result.Success(
             mockk()
         )
-        runBlocking {
-            fileListUseCaseImpl.savePartnerIdVideos(listOf(mockk()), "")
-        }
+        runBlocking { fileListUseCaseImpl.savePartnerIdVideos(listOf(mockk()), "") }
         coVerify { fileListRepository.savePartnerIdVideos(any(), any()) }
     }
 
@@ -57,9 +55,7 @@ internal class FileListUseCaseImplTest {
         coEvery { fileListRepository.savePartnerIdSnapshot(any(), any()) } returns Result.Success(
             mockk()
         )
-        runBlocking {
-            fileListUseCaseImpl.savePartnerIdSnapshot(listOf(mockk()), "")
-        }
+        runBlocking { fileListUseCaseImpl.savePartnerIdSnapshot(listOf(mockk()), "") }
         coVerify { fileListRepository.savePartnerIdSnapshot(any(), any()) }
     }
 

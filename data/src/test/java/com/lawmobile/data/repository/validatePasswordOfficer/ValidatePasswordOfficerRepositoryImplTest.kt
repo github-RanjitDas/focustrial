@@ -7,55 +7,59 @@ import com.safefleet.mobile.kotlin_commons.helpers.Result
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.TestCoroutineDispatcher
+import kotlinx.coroutines.test.runBlockingTest
+import kotlinx.coroutines.test.setMain
 import org.junit.Assert
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 
+@ExperimentalCoroutinesApi
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class ValidatePasswordOfficerRepositoryImplTest {
 
-    private val validatePasswordOfficerRemoteDataSource: ValidatePasswordOfficerRemoteDataSource =
-        mockk {
-        }
+    private val validatePasswordRemoteDataSource: ValidatePasswordOfficerRemoteDataSource = mockk()
+    private val dispatcher = TestCoroutineDispatcher()
 
-    private val validatePasswordOfficerRepositoryImpl by lazy {
-        ValidatePasswordOfficerRepositoryImpl(
-            validatePasswordOfficerRemoteDataSource
-        )
+    private val validatePasswordRepositoryImpl by lazy {
+        ValidatePasswordOfficerRepositoryImpl(validatePasswordRemoteDataSource)
+    }
+
+    @BeforeEach
+    fun setup() {
+        Dispatchers.setMain(dispatcher)
     }
 
     @Test
-    fun testGetInformationUserSuccess() {
+    fun testGetInformationUserSuccess() = runBlockingTest {
         val cameraUser = CameraUser("", "", "")
-        coEvery { validatePasswordOfficerRemoteDataSource.getUserInformation() } returns Result.Success(
-            cameraUser
+        coEvery {
+            validatePasswordRemoteDataSource.getUserInformation()
+        } returns Result.Success(cameraUser)
+        Assert.assertEquals(
+            validatePasswordRepositoryImpl.getUserInformation(),
+            Result.Success(DomainUser("", "", ""))
         )
-        runBlocking {
-            Assert.assertEquals(
-                validatePasswordOfficerRepositoryImpl.getUserInformation(),
-                Result.Success(DomainUser("", "", ""))
-            )
-        }
     }
 
     @Test
-    fun testGetInformationUserError() {
-        coEvery { validatePasswordOfficerRemoteDataSource.getUserInformation() } returns Result.Error(
-            Exception("Error")
-        )
-        runBlocking {
-            val error = validatePasswordOfficerRepositoryImpl.getUserInformation() as Result.Error
-            Assert.assertEquals(error.exception.message, "Error")
-        }
+    fun testGetInformationUserError() = runBlockingTest {
+        coEvery {
+            validatePasswordRemoteDataSource.getUserInformation()
+        } returns Result.Error(Exception("Error"))
+        val error = validatePasswordRepositoryImpl.getUserInformation() as Result.Error
+        Assert.assertEquals(error.exception.message, "Error")
     }
 
     @Test
-    fun testGetInformationUserFlow() {
-        coEvery { validatePasswordOfficerRemoteDataSource.getUserInformation() } returns Result.Error(
-            Exception()
-        )
-        runBlocking { validatePasswordOfficerRepositoryImpl.getUserInformation() }
-        coVerify { validatePasswordOfficerRemoteDataSource.getUserInformation() }
+    fun testGetInformationUserFlow() = runBlockingTest {
+        coEvery {
+            validatePasswordRemoteDataSource.getUserInformation()
+        } returns Result.Error(Exception())
+        validatePasswordRepositoryImpl.getUserInformation()
+        coVerify { validatePasswordRemoteDataSource.getUserInformation() }
     }
 }
