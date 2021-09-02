@@ -250,7 +250,7 @@
     <string name="body_worn_result_failed_description">There are one or more issues with the Body-worn Camera hardware that will prevent it from working properly!\n\nPlease contact your administrator and report this issue</string>
     <string name="no_notifications_found">No notifications found</string>
     <string name="notification_list_error">Unable to get notification list, please retry or checkout BWC</string>
-    <string name="choose_camera_type">Please turn on your camera, check your camera display and choose the one that matches</string>
+    <string name="choose_camera_type">Please turn on your BWC, check the display and choose the one that matches</string>
     <string name="camera_display_image_description">Camera display image</string>
     <string name="x1">X1</string>
     <string name="x2">X2</string>
@@ -258,5 +258,6 @@
     <string name="x2_camera_button_description">X2 camera button</string>
     <string name="continue_text">Continue</string>
     <string name="or">or</string>
+    <string name="display">Display</string>
 
 </resources>

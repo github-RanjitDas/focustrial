@@ -30,19 +30,36 @@ class SelectCameraActivity : BaseActivity() {
     private fun ActivitySelectCameraBinding.buttonX2Listener() {
         buttonX2Camera.setOnClickListener {
             it.isActivated = !it.isActivated
-            buttonContinue.isEnabled = it.isActivated
-            buttonContinue.isActivated = it.isActivated
             buttonX1Camera.isActivated = false
+            setTextColorDependingOnState()
+            enableButtonContinue(it.isActivated)
         }
     }
 
     private fun ActivitySelectCameraBinding.buttonX1Listener() {
         buttonX1Camera.setOnClickListener {
             it.isActivated = !it.isActivated
-            buttonContinue.isEnabled = it.isActivated
-            buttonContinue.isActivated = it.isActivated
             buttonX2Camera.isActivated = false
+            setTextColorDependingOnState()
+            enableButtonContinue(it.isActivated)
         }
+    }
+
+    private fun ActivitySelectCameraBinding.setTextColorDependingOnState() {
+        val textColorX1 = getTextColorDependingOnState(buttonX1Camera.isActivated)
+        textViewX1.setTextColor(textColorX1)
+        val textColorX2 = getTextColorDependingOnState(buttonX2Camera.isActivated)
+        textViewX2.setTextColor(textColorX2)
+    }
+
+    private fun getTextColorDependingOnState(isActivated: Boolean): Int {
+        return if (isActivated) resources.getColor(R.color.white, null)
+        else resources.getColor(R.color.darkGrey, null)
+    }
+
+    private fun ActivitySelectCameraBinding.enableButtonContinue(isActivated: Boolean) {
+        buttonContinue.isEnabled = isActivated
+        buttonContinue.isActivated = isActivated
     }
 
     private fun ActivitySelectCameraBinding.buttonContinueListener() {
