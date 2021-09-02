@@ -12,7 +12,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.lawmobile.domain.entities.CameraInfo
 import com.lawmobile.domain.entities.DomainInformationFile
 import com.lawmobile.domain.entities.DomainInformationFileResponse
-import com.lawmobile.domain.extensions.getCreationDate
+import com.lawmobile.domain.extensions.getDateDependingOnNameLength
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.databinding.FragmentFileListBinding
 import com.lawmobile.presentation.entities.FilesAssociatedByUser
@@ -188,7 +188,7 @@ class SimpleFileListFragment : FileListBaseFragment() {
             ).apply {
                 showCheckBoxes = checkableListInit
                 fileList =
-                    listItems.sortedByDescending { it.domainCameraFile.getCreationDate() } as MutableList
+                    listItems.sortedByDescending { it.domainCameraFile.getDateDependingOnNameLength() } as MutableList
                 fileListBackup = fileList
             }
         if (checkableListInit) setAssociatedRecyclerView()

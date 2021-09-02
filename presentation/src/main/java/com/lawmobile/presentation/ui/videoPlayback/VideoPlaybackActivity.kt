@@ -18,7 +18,7 @@ import com.lawmobile.domain.entities.DomainInformationVideo
 import com.lawmobile.domain.entities.DomainMetadata
 import com.lawmobile.domain.entities.DomainVideoMetadata
 import com.lawmobile.domain.entities.MetadataEvent
-import com.lawmobile.domain.extensions.getCreationDate
+import com.lawmobile.domain.extensions.getDateDependingOnNameLength
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.databinding.ActivityVideoPlaybackBinding
 import com.lawmobile.presentation.entities.FilesAssociatedByUser
@@ -431,7 +431,7 @@ class VideoPlaybackActivity : BaseActivity() {
     private fun setVideoInformation() {
         with(binding) {
             videoNameValue.text = currentVideo?.name
-            startTimeValue.text = currentVideo?.getCreationDate()
+            startTimeValue.text = currentVideo?.getDateDependingOnNameLength()
             val durationText = domainInformationVideo?.duration?.toLong()?.times(1000)
                 ?.milliSecondsToString()
             durationValue.text = durationText
