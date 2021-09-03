@@ -34,6 +34,7 @@ object Exclusions {
         "**/*Application.**",
         "**/res/**",
         "**/entities/**",
+        "**/helpers/**",
         "**/enums/**",
         "**/security/**",
         "**/models/**",
@@ -53,6 +54,7 @@ object Exclusions {
         "**/LiveActivityBaseViewModel.**",
         "**/CameraEventsManager.**",
         "**/DateHelper.**",
+        "**/SimpleNetworkManager.**",
         "**/EspressoIdlingResource.**"
     )
     val pitest = mutableSetOf(

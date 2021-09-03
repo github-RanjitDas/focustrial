@@ -3,9 +3,9 @@ package com.lawmobile.data.repository.events
 import com.lawmobile.data.dao.entities.LocalCameraEvent
 import com.lawmobile.data.datasource.local.events.EventsLocalDataSource
 import com.lawmobile.data.datasource.remote.events.EventsRemoteDataSource
-import com.lawmobile.data.utils.DateHelper
 import com.lawmobile.domain.entities.CameraInfo
 import com.lawmobile.domain.enums.EventType
+import com.lawmobile.domain.utils.DateHelper
 import com.safefleet.mobile.external_hardware.cameras.entities.LogEvent
 import com.safefleet.mobile.kotlin_commons.helpers.Result
 import io.mockk.Runs

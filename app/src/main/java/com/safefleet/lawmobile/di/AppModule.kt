@@ -9,6 +9,7 @@ import android.net.wifi.WifiManager
 import com.google.gson.Gson
 import com.lawmobile.database.Database
 import com.lawmobile.presentation.utils.MobileDataStatus
+import com.lawmobile.presentation.utils.SimpleNetworkManager
 import com.lawmobile.presentation.utils.VLCMediaPlayer
 import com.lawmobile.presentation.utils.WifiHelper
 import com.lawmobile.presentation.utils.WifiStatus
@@ -19,6 +20,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.Dispatchers
 import org.videolan.libvlc.LibVLC
 import org.videolan.libvlc.MediaPlayer
 import javax.inject.Singleton
@@ -27,6 +29,14 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 class AppModule {
     companion object {
+
+        @Provides
+        @Singleton
+        fun provideBackgroundDispatcher() = Dispatchers.IO
+
+        @Provides
+        @Singleton
+        fun provideSimpleNetworkManager() = SimpleNetworkManager()
 
         @Provides
         @Singleton

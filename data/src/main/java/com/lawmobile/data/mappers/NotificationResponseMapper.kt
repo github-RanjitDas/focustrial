@@ -1,9 +1,9 @@
 package com.lawmobile.data.mappers
 
-import com.lawmobile.data.utils.DateHelper.dateToString
 import com.lawmobile.domain.entities.CameraEvent
 import com.lawmobile.domain.enums.EventTag
 import com.lawmobile.domain.enums.NotificationType
+import com.lawmobile.domain.utils.DateHelper.dateToString
 import com.safefleet.mobile.external_hardware.cameras.entities.NotificationResponse
 import java.util.Date
 

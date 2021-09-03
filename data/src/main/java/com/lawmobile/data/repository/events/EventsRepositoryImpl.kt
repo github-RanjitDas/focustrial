@@ -3,10 +3,10 @@ package com.lawmobile.data.repository.events
 import com.lawmobile.data.datasource.local.events.EventsLocalDataSource
 import com.lawmobile.data.datasource.remote.events.EventsRemoteDataSource
 import com.lawmobile.data.mappers.CameraEventMapper
-import com.lawmobile.data.utils.DateHelper
 import com.lawmobile.domain.entities.CameraEvent
 import com.lawmobile.domain.extensions.simpleDateFormat
 import com.lawmobile.domain.repository.events.EventsRepository
+import com.lawmobile.domain.utils.DateHelper
 import com.safefleet.mobile.kotlin_commons.extensions.doIfSuccess
 import com.safefleet.mobile.kotlin_commons.helpers.Result
 import com.safefleet.mobile.kotlin_commons.helpers.getResultWithAttempts

@@ -75,5 +75,6 @@ class SelectCameraActivity : BaseActivity() {
         CameraInfo.cameraType = if (buttonX2Camera.isActivated) CameraType.X2 else CameraType.X1
         val loginActivityIntent = Intent(this@SelectCameraActivity, LoginActivity::class.java)
         startActivity(loginActivityIntent)
+        finish()
     }
 }

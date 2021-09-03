@@ -29,14 +29,13 @@ class CustomNotificationDialog(
         val view = findViewById<View>(android.R.id.content) as ViewGroup
         binding = DialogCustomNotificationBinding.inflate(layoutInflater, view)
         setTextViews()
-        setButtonText()
+        setButtonText(context.getString(R.string.dismiss))
         setNotificationIcon()
         setListeners()
     }
 
-    private fun setButtonText() {
-        binding.layoutNotificationInformation.buttonDismissNotification.text =
-            context.getString(R.string.dismiss)
+    fun setButtonText(text: String) {
+        binding.layoutNotificationInformation.buttonDismissNotification.text = text
     }
 
     private fun setNotificationIcon() {
