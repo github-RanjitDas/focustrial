@@ -1,4 +1,4 @@
-package com.lawmobile.domain.utils
+package com.lawmobile.domain.helpers
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

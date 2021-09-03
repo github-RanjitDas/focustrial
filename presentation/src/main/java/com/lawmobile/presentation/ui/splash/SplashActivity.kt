@@ -4,7 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.animation.AlphaAnimation
 import android.view.animation.LinearInterpolator
-import com.lawmobile.domain.utils.runWithDelay
+import com.lawmobile.domain.helpers.runWithDelay
 import com.lawmobile.presentation.databinding.ActivitySplashBinding
 import com.lawmobile.presentation.extensions.isAnimationsEnabled
 import com.lawmobile.presentation.ui.base.BaseActivity

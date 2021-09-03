@@ -16,6 +16,7 @@ import com.lawmobile.presentation.ui.live.x1.LiveX1Activity
 import com.lawmobile.presentation.ui.live.x2.LiveX2Activity
 import com.lawmobile.presentation.ui.login.pairingPhoneWithCamera.PairingResultFragment
 import com.lawmobile.presentation.ui.login.pairingPhoneWithCamera.StartPairingFragment
+import com.lawmobile.presentation.ui.login.validateOfficerId.ValidateOfficerIdFragment
 import com.lawmobile.presentation.ui.login.validateOfficerPassword.ValidateOfficerPasswordFragment
 import com.lawmobile.presentation.utils.EspressoIdlingResource
 
@@ -29,12 +30,17 @@ class LoginActivity : BaseActivity() {
         )
     }
 
-    private val connectionSuccess: (isSuccess: Boolean) -> Unit = {
-        if (it) showValidateOfficerPasswordFragment()
-        else showFragmentPairingCamera()
+    private val onExistingOfficerId: (Boolean) -> Unit = {
+        if (it) // go to SSO web view
+            else showStartPairingFragment()
     }
 
-    private val validateSuccessPasswordOfficer: (isSuccess: Boolean) -> Unit = {
+    private val onConnectionSuccess: (Boolean) -> Unit = {
+        if (it) showValidateOfficerPasswordFragment()
+        else showStartPairingFragment()
+    }
+
+    private val onValidOfficerPassword: (Boolean) -> Unit = {
         if (it) startLiveViewActivity()
         else {
             activityLoginBinding.fragmentContainer.showErrorSnackBar(getString(R.string.incorrect_password))
@@ -42,7 +48,7 @@ class LoginActivity : BaseActivity() {
         }
     }
 
-    private val validateRequirements: (isSuccess: Boolean) -> Unit = {
+    private val onValidRequirements: (isSuccess: Boolean) -> Unit = {
         if (it) showPairingResultFragment()
     }
 
@@ -67,7 +73,7 @@ class LoginActivity : BaseActivity() {
 
     private fun setLoginViews() {
         activityLoginBinding.versionNumberTextLogin.text = getApplicationVersionText()
-        showFragmentPairingCamera()
+        showValidateOfficerIdFragment()
         verifyLocationPermission()
     }
 
@@ -78,10 +84,20 @@ class LoginActivity : BaseActivity() {
         finish()
     }
 
-    private fun showFragmentPairingCamera() {
+    private fun showValidateOfficerIdFragment() {
         supportFragmentManager.attachFragmentWithAnimation(
             containerId = R.id.fragmentContainer,
-            fragment = StartPairingFragment.createInstance(validateRequirements),
+            fragment = ValidateOfficerIdFragment.createInstance(onExistingOfficerId),
+            tag = ValidateOfficerIdFragment.TAG,
+            animationIn = R.anim.bottom_to_top_anim,
+            animationOut = android.R.anim.fade_out
+        )
+    }
+
+    private fun showStartPairingFragment() {
+        supportFragmentManager.attachFragmentWithAnimation(
+            containerId = R.id.fragmentContainer,
+            fragment = StartPairingFragment.createInstance(onValidRequirements),
             tag = StartPairingFragment.TAG,
             animationIn = R.anim.bottom_to_top_anim,
             animationOut = android.R.anim.fade_out
@@ -91,7 +107,7 @@ class LoginActivity : BaseActivity() {
     private fun showPairingResultFragment() {
         supportFragmentManager.attachFragmentWithAnimation(
             containerId = R.id.fragmentContainer,
-            fragment = PairingResultFragment.createInstance(connectionSuccess),
+            fragment = PairingResultFragment.createInstance(onConnectionSuccess),
             tag = PairingResultFragment.TAG,
             animationIn = android.R.anim.fade_in,
             animationOut = android.R.anim.fade_out
@@ -101,7 +117,7 @@ class LoginActivity : BaseActivity() {
     private fun showValidateOfficerPasswordFragment() {
         supportFragmentManager.attachFragmentWithAnimation(
             containerId = R.id.fragmentContainer,
-            fragment = ValidateOfficerPasswordFragment.createInstance(validateSuccessPasswordOfficer),
+            fragment = ValidateOfficerPasswordFragment.createInstance(onValidOfficerPassword),
             tag = ValidateOfficerPasswordFragment.TAG,
             animationIn = R.anim.slide_and_fade_in_right,
             animationOut = 0
