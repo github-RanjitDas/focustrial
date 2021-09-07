@@ -102,6 +102,14 @@ object Dependencies {
         const val gradlePlugin = "org.jetbrains.kotlin:kotlin-gradle-plugin:$VERSION"
     }
 
+    object Ktor {
+        private const val VERSION = "1.6.2"
+        const val clientCore = "io.ktor:ktor-client-core:$VERSION"
+        const val clientAndroid = "io.ktor:ktor-client-android:$VERSION"
+        const val clientSerialization = "io.ktor:ktor-client-serialization:$VERSION"
+        const val clientMock = "io.ktor:ktor-client-mock:$VERSION"
+    }
+
     object Lifecycle {
         private const val VERSION = "2.2.0"
         const val extensions = "androidx.lifecycle:lifecycle-extensions:$VERSION"

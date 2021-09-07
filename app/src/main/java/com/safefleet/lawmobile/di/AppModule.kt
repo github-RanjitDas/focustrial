@@ -7,6 +7,7 @@ import android.net.ConnectivityManager
 import android.net.wifi.WifiConfiguration
 import android.net.wifi.WifiManager
 import com.google.gson.Gson
+import com.lawmobile.data.dto.interceptors.FakeHttpClient
 import com.lawmobile.database.Database
 import com.lawmobile.presentation.utils.MobileDataStatus
 import com.lawmobile.presentation.utils.SimpleNetworkManager
@@ -20,15 +21,21 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import io.ktor.client.HttpClient
 import kotlinx.coroutines.Dispatchers
 import org.videolan.libvlc.LibVLC
 import org.videolan.libvlc.MediaPlayer
+import javax.inject.Named
 import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
 class AppModule {
     companion object {
+
+        @Provides
+        @Named("fakeHttpClient")
+        fun provideHttpClient(): HttpClient = FakeHttpClient.create()
 
         @Provides
         @Singleton

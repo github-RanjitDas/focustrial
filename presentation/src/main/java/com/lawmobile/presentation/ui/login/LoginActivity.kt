@@ -2,6 +2,7 @@ package com.lawmobile.presentation.ui.login
 
 import android.Manifest
 import android.os.Bundle
+import android.widget.Toast
 import androidx.cardview.widget.CardView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.lawmobile.domain.entities.CameraInfo
@@ -10,6 +11,7 @@ import com.lawmobile.presentation.databinding.ActivityLoginBinding
 import com.lawmobile.presentation.extensions.attachFragmentWithAnimation
 import com.lawmobile.presentation.extensions.getIntentDependsCameraType
 import com.lawmobile.presentation.extensions.showErrorSnackBar
+import com.lawmobile.presentation.extensions.showToast
 import com.lawmobile.presentation.extensions.verifyForAskingPermission
 import com.lawmobile.presentation.ui.base.BaseActivity
 import com.lawmobile.presentation.ui.live.x1.LiveX1Activity
@@ -31,8 +33,11 @@ class LoginActivity : BaseActivity() {
     }
 
     private val onExistingOfficerId: (Boolean) -> Unit = {
-        if (it) // go to SSO web view
-            else showStartPairingFragment()
+        if (it) showToast(
+            "The user exists",
+            Toast.LENGTH_LONG
+        ) // Replace this with navigation to SSO login page
+        else showStartPairingFragment()
     }
 
     private val onConnectionSuccess: (Boolean) -> Unit = {

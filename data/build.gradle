@@ -7,6 +7,7 @@ plugins {
     id 'java-library'
     id 'kotlin'
     id 'kotlin-kapt'
+    id 'org.jetbrains.kotlin.plugin.serialization' version '1.5.20'
     id 'maven'
     //id 'maven-publish'
 }
@@ -20,6 +21,12 @@ if (!"$System.env.VARIANT".contains("RELEASE")) {
 }
 
 check.dependsOn ktlint
+
+tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
+    kotlinOptions {
+        jvmTarget = AppConfig.jvmTarget.toString()
+    }
+}
 
 java {
     sourceCompatibility = AppConfig.jvmTarget
@@ -60,6 +67,10 @@ dependencies {
     api Dependencies.Coroutines.coroutinesCore
 
     implementation Dependencies.Google.gson
+
+    implementation Dependencies.Ktor.clientCore
+    implementation Dependencies.Ktor.clientSerialization
+    implementation Dependencies.Ktor.clientMock
 
     implementation Dependencies.Base.externalHardware
 
