@@ -55,6 +55,7 @@ object Exclusions {
         "**/CameraEventsManager.**",
         "**/DateHelper.**",
         "**/SimpleNetworkManager.**",
+        "**/FakeHttpClient.**",
         "**/EspressoIdlingResource.**"
     )
     val pitest = mutableSetOf(
@@ -104,6 +105,7 @@ object Exclusions {
         "com.lawmobile.presentation.utils.MobileDataStatus*",
         "com.lawmobile.presentation.utils.OnSwipeTouchListener*",
         "com.lawmobile.presentation.utils.CameraEventsManager*",
-        "com.lawmobile.presentation.utils.CameraHelperTest*"
+        "com.lawmobile.presentation.utils.CameraHelperTest*",
+        "com.lawmobile.data.dto.api.ValidateOfficerIdApiImpl*"
     )
 }

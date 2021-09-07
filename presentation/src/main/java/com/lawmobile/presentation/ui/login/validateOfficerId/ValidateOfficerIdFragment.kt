@@ -62,14 +62,10 @@ class ValidateOfficerIdFragment : BaseFragment() {
         )
     }
 
-    private fun manageValidateOfficerIdResult(result: Result<Unit>) {
+    private fun manageValidateOfficerIdResult(result: Result<Boolean>) {
         with(result) {
-            doIfSuccess {
-                onExistingOfficerId(true)
-            }
-            doIfError {
-                onExistingOfficerId(false)
-            }
+            doIfSuccess { onExistingOfficerId(it) }
+            doIfError { onExistingOfficerId(false) }
         }
     }
 
