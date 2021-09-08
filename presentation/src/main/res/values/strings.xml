@@ -263,4 +263,14 @@
     <string name="change_camera_type">Change camera type</string>
     <string name="go_to_on_boarding_cards">Go to on-boarding cards</string>
 
+    <!-- Body Worn Setting -->
+    <string name="body_worn_settings_title">Body-worn Settings</string>
+    <string name="body_worn_settings_covert_mode">Covert Mode</string>
+    <string name="body_worn_settings_bluetooth">Bluetooth</string>
+    <string name="body_worn_settings_gps">GPS</string>
+    <string name="body_worn_settings_audio">Audio</string>
+    <string name="body_worn_settings_signal">Signal</string>
+    <string name="body_worn_settings_error_in_get_settings">Error in get settings, please try again</string>
+    <string name="body_worn_settings_error_in_change_settings">Error in change setting, please try again</string>
+
 </resources>

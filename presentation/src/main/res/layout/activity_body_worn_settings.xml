@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context=".ui.bodyWornSettings.BodyWornSettingsActivity">
+
+    <include
+        android:id="@+id/layoutCustomAppBar"
+        layout="@layout/custom_app_bar_title_and_close"/>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:id="@+id/rootContent"
+        android:layout_height="@dimen/no_dp"
+        android:layout_marginTop="@dimen/height_app_bar_body_worn_diagnosis"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0"
+        tools:layout_editor_absoluteX="27dp">
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideIcons"
+            android:layout_width="@dimen/width_1dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.15" />
+
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideNames"
+            android:layout_width="@dimen/width_1dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.30" />
+
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideSwitch"
+            android:layout_width="@dimen/width_1dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.85" />
+
+        <ImageView
+            android:id="@+id/imageViewCovertMode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_covert_mode"
+            app:layout_constraintStart_toStartOf="@+id/guideIcons"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="@dimen/body_worn_settings_margin_top_content"
+            tools:ignore="ContentDescription" />
+
+        <TextView
+            android:id="@+id/textViewCovertMode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/roboto_regular"
+            android:text="@string/body_worn_settings_covert_mode"
+            android:textColor="@color/darkGrey"
+            android:textSize="@dimen/text_size_16sp"
+            app:layout_constraintBottom_toBottomOf="@+id/imageViewCovertMode"
+            app:layout_constraintStart_toStartOf="@+id/guideNames"
+            app:layout_constraintTop_toTopOf="@+id/imageViewCovertMode" />
+
+        <com.safefleet.mobile.safefleet_ui.widgets.SafeFleetSwitch
+            android:id="@+id/switchCovertMode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="@+id/textViewCovertMode"
+            app:layout_constraintEnd_toStartOf="@+id/guideSwitch"
+            app:layout_constraintTop_toTopOf="@+id/textViewCovertMode" />
+
+
+        <ImageView
+            android:id="@+id/imageViewBluetooth"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_bluetooth"
+            app:layout_constraintStart_toStartOf="@+id/guideIcons"
+            android:layout_marginTop="@dimen/body_worn_settings_margin_top_content"
+            app:layout_constraintTop_toBottomOf="@+id/imageViewCovertMode"
+            tools:ignore="ContentDescription" />
+
+        <TextView
+            android:id="@+id/textViewBluetooth"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/roboto_regular"
+            android:text="@string/body_worn_settings_bluetooth"
+            android:textColor="@color/darkGrey"
+            android:textSize="@dimen/text_size_16sp"
+            app:layout_constraintBottom_toBottomOf="@+id/imageViewBluetooth"
+            app:layout_constraintStart_toStartOf="@+id/guideNames"
+            app:layout_constraintTop_toTopOf="@+id/imageViewBluetooth" />
+
+        <com.safefleet.mobile.safefleet_ui.widgets.SafeFleetSwitch
+            android:id="@+id/switchBluetooth"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="@+id/textViewBluetooth"
+            app:layout_constraintEnd_toStartOf="@+id/guideSwitch"
+            app:layout_constraintTop_toTopOf="@+id/textViewBluetooth" />
+
+        <ImageView
+            android:id="@+id/imageViewGPS"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_gps"
+            app:layout_constraintStart_toStartOf="@+id/guideIcons"
+            android:layout_marginTop="@dimen/body_worn_settings_margin_top_content"
+            app:layout_constraintTop_toBottomOf="@+id/imageViewBluetooth"
+            tools:ignore="ContentDescription" />
+
+        <TextView
+            android:id="@+id/textViewGPS"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/roboto_regular"
+            android:text="@string/body_worn_settings_gps"
+            android:textColor="@color/darkGrey"
+            android:textSize="@dimen/text_size_16sp"
+            app:layout_constraintBottom_toBottomOf="@+id/imageViewGPS"
+            app:layout_constraintStart_toStartOf="@+id/guideNames"
+            app:layout_constraintTop_toTopOf="@+id/imageViewGPS" />
+
+        <com.safefleet.mobile.safefleet_ui.widgets.SafeFleetSwitch
+            android:id="@+id/switchGPS"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="@+id/textViewGPS"
+            app:layout_constraintEnd_toStartOf="@+id/guideSwitch"
+            app:layout_constraintTop_toTopOf="@+id/textViewGPS" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
