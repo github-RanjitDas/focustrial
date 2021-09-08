@@ -95,6 +95,11 @@
             android:theme="@style/AppTheme.NoActionBar"
             tools:ignore="LockedOrientationActivity"/>
 
+        <activity android:name="com.lawmobile.presentation.ui.bodyWornSettings.BodyWornSettingsActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"
+            tools:ignore="LockedOrientationActivity"/>
+
         <service
             android:name="com.lawmobile.presentation.security.IsolatedService"
             android:enabled="true"

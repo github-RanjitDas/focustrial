@@ -19,6 +19,7 @@ import com.lawmobile.presentation.extensions.setOnTouchListenerCheckConnection
 import com.lawmobile.presentation.ui.base.BaseActivity
 import com.lawmobile.presentation.ui.base.BaseFragment
 import com.lawmobile.presentation.ui.bodyWornDiagnosis.BodyWornDiagnosisActivity
+import com.lawmobile.presentation.ui.bodyWornSettings.BodyWornSettingsActivity
 import com.lawmobile.presentation.ui.fileList.x1.FileListX1Activity
 import com.lawmobile.presentation.ui.fileList.x2.FileListX2Activity
 import com.lawmobile.presentation.ui.helpSection.HelpPageActivity
@@ -129,6 +130,14 @@ class MenuFragment : BaseFragment() {
             { onCloseMenuButton() }
         )
 
+        binding.textViewSettings.setOnTouchListenerCheckConnection(
+            {
+                startBodyWornSettings()
+                onCloseMenuButton
+            },
+            { onCloseMenuButton() }
+        )
+
         binding.textViewDiagnose.setOnTouchListenerCheckConnection(
             {
                 startBodyWornDiagnosisActivity()
@@ -195,6 +204,10 @@ class MenuFragment : BaseFragment() {
         isOfficerLogged = false
         startActivity(Intent(requireActivity(), LoginActivity::class.java))
         requireActivity().finish()
+    }
+
+    private fun startBodyWornSettings() {
+        startActivity(Intent(requireContext(), BodyWornSettingsActivity::class.java))
     }
 
     fun openMenu() {
