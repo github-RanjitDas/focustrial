@@ -22,7 +22,7 @@ class PairingResultFragment : BaseFragment() {
     private val binding get() = _binding!!
 
     private val pairingViewModel: PairingViewModel by viewModels()
-    lateinit var connectionSuccess: (isSuccess: Boolean) -> Unit
+    lateinit var onConnectionSuccessful: () -> Unit
     private lateinit var animation: Animation
 
     override fun onCreateView(
@@ -99,7 +99,7 @@ class PairingResultFragment : BaseFragment() {
             viewLifecycleOwner
         ) {
             it.getContentIfNotHandled()?.run {
-                if (this) connectionSuccess(true)
+                if (this) onConnectionSuccessful()
             }
         }
     }
@@ -152,7 +152,7 @@ class PairingResultFragment : BaseFragment() {
         private const val PERCENT_TOTAL_CONNECTION_CAMERA = 100
         private const val ANIMATION_DURATION = 1200L
 
-        fun createInstance(connectionSuccess: (isSuccess: Boolean) -> Unit): PairingResultFragment =
-            PairingResultFragment().apply { this.connectionSuccess = connectionSuccess }
+        fun createInstance(onConnectionSuccess: () -> Unit): PairingResultFragment =
+            PairingResultFragment().apply { this.onConnectionSuccessful = onConnectionSuccess }
     }
 }

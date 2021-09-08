@@ -6,6 +6,7 @@ import android.widget.Toast
 import androidx.cardview.widget.CardView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.lawmobile.domain.entities.CameraInfo
+import com.lawmobile.domain.enums.CameraType
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.databinding.ActivityLoginBinding
 import com.lawmobile.presentation.extensions.attachFragmentWithAnimation
@@ -17,12 +18,14 @@ import com.lawmobile.presentation.ui.base.BaseActivity
 import com.lawmobile.presentation.ui.live.x1.LiveX1Activity
 import com.lawmobile.presentation.ui.live.x2.LiveX2Activity
 import com.lawmobile.presentation.ui.login.pairingPhoneWithCamera.PairingResultFragment
-import com.lawmobile.presentation.ui.login.pairingPhoneWithCamera.StartPairingFragment
+import com.lawmobile.presentation.ui.login.pairingPhoneWithCamera.x1.StartPairingX1Fragment
+import com.lawmobile.presentation.ui.login.pairingPhoneWithCamera.x2.StartPairingX2Fragment
+import com.lawmobile.presentation.ui.login.pairingPhoneWithCamera.x2.StartPairingX2FragmentListener
 import com.lawmobile.presentation.ui.login.validateOfficerId.ValidateOfficerIdFragment
 import com.lawmobile.presentation.ui.login.validateOfficerPassword.ValidateOfficerPasswordFragment
 import com.lawmobile.presentation.utils.EspressoIdlingResource
 
-class LoginActivity : BaseActivity() {
+class LoginActivity : BaseActivity(), StartPairingX2FragmentListener {
 
     private lateinit var activityLoginBinding: ActivityLoginBinding
 
@@ -32,17 +35,12 @@ class LoginActivity : BaseActivity() {
         )
     }
 
-    private val onExistingOfficerId: (Boolean) -> Unit = {
-        if (it) showToast(
+    private val onExistingOfficerId: (Boolean, String) -> Unit = { exist, officerId ->
+        if (exist) showToast(
             "The user exists",
             Toast.LENGTH_LONG
         ) // Replace this with navigation to SSO login page
-        else showStartPairingFragment()
-    }
-
-    private val onConnectionSuccess: (Boolean) -> Unit = {
-        if (it) showValidateOfficerPasswordFragment()
-        else showStartPairingFragment()
+        else showStartPairingFragment(officerId)
     }
 
     private val onValidOfficerPassword: (Boolean) -> Unit = {
@@ -53,9 +51,8 @@ class LoginActivity : BaseActivity() {
         }
     }
 
-    private val onValidRequirements: (isSuccess: Boolean) -> Unit = {
-        if (it) showPairingResultFragment()
-    }
+    private val onConnectionSuccessful: () -> Unit = ::showValidateOfficerPasswordFragment
+    private val onValidX1Requirements: () -> Unit = ::showPairingResultFragment
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -78,8 +75,13 @@ class LoginActivity : BaseActivity() {
 
     private fun setLoginViews() {
         activityLoginBinding.versionNumberTextLogin.text = getApplicationVersionText()
-        showValidateOfficerIdFragment()
+        showFragmentDependingOnCameraType()
         verifyLocationPermission()
+    }
+
+    private fun showFragmentDependingOnCameraType() {
+        if (CameraInfo.cameraType == CameraType.X1) showStartPairingFragment()
+        else showValidateOfficerIdFragment()
     }
 
     private fun startLiveViewActivity() {
@@ -89,30 +91,43 @@ class LoginActivity : BaseActivity() {
         finish()
     }
 
-    private fun showValidateOfficerIdFragment() {
+    private fun showValidateOfficerIdFragment(officerId: String = "") {
         supportFragmentManager.attachFragmentWithAnimation(
             containerId = R.id.fragmentContainer,
-            fragment = ValidateOfficerIdFragment.createInstance(onExistingOfficerId),
+            fragment = ValidateOfficerIdFragment.createInstance(onExistingOfficerId, officerId),
             tag = ValidateOfficerIdFragment.TAG,
-            animationIn = R.anim.bottom_to_top_anim,
+            animationIn = android.R.anim.fade_in,
             animationOut = android.R.anim.fade_out
         )
     }
 
-    private fun showStartPairingFragment() {
+    private fun showStartPairingFragment(officerId: String = "") {
+        this.officerId = officerId
+        val startPairingFragment = getStartPairingFragmentDependingOnCameraType()
+        val fragmentTag = getFragmentTagDependingOnCameraType()
+
         supportFragmentManager.attachFragmentWithAnimation(
             containerId = R.id.fragmentContainer,
-            fragment = StartPairingFragment.createInstance(onValidRequirements),
-            tag = StartPairingFragment.TAG,
-            animationIn = R.anim.bottom_to_top_anim,
+            fragment = startPairingFragment,
+            tag = fragmentTag,
+            animationIn = android.R.anim.fade_in,
             animationOut = android.R.anim.fade_out
         )
     }
+
+    private fun getFragmentTagDependingOnCameraType() =
+        if (CameraInfo.cameraType == CameraType.X1) StartPairingX1Fragment.TAG
+        else StartPairingX2Fragment.TAG
+
+    private fun getStartPairingFragmentDependingOnCameraType() =
+        if (CameraInfo.cameraType == CameraType.X1)
+            StartPairingX1Fragment.createInstance(onValidX1Requirements)
+        else StartPairingX2Fragment.createInstance(this)
 
     private fun showPairingResultFragment() {
         supportFragmentManager.attachFragmentWithAnimation(
             containerId = R.id.fragmentContainer,
-            fragment = PairingResultFragment.createInstance(onConnectionSuccess),
+            fragment = PairingResultFragment.createInstance(onConnectionSuccessful),
             tag = PairingResultFragment.TAG,
             animationIn = android.R.anim.fade_in,
             animationOut = android.R.anim.fade_out
@@ -135,6 +150,12 @@ class LoginActivity : BaseActivity() {
             PERMISSION_FOR_LOCATION
         )
     }
+
+    override var officerId: String = ""
+
+    override fun onValidRequirements() = showPairingResultFragment()
+
+    override fun onEditOfficerId(officerId: String) = showValidateOfficerIdFragment(officerId)
 
     override fun onBackPressed() {
         // This method is implemented to invalidate the behaviour of back button on the phones

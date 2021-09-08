@@ -12,6 +12,7 @@
     <color name="blackTransparent">#AD000000</color>
     <color name="blue">#177ECD</color>
     <color name="whiteTransparent">#52FFFFFF</color>
+    <color name="whiteTransparentButton">#B3FFFFFF</color>
     <color name="whiteTransparentShadow">#CDFFFFFF</color>
     <color name="red">#E4002B</color>
     <color name="lightBlue">#4E8AC9</color>

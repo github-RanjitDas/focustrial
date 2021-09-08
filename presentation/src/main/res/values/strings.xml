@@ -262,6 +262,11 @@
     <string name="officer_id">Officer ID</string>
     <string name="change_camera_type">Change camera type</string>
     <string name="go_to_on_boarding_cards">Go to on-boarding cards</string>
+    <string name="sign_in_with_email">Sign in with Email</string>
+    <string name="connect">Connect</string>
+    <string name="device_password">Device Password</string>
+    <string name="edit_officer_id_description">edit officer id</string>
+    <string name="incorrect_credentials">The Officer ID or the Device Password are incorrect, please verify your credentials</string>
 
     <!-- Body Worn Setting -->
     <string name="body_worn_settings_title">Body-worn Settings</string>

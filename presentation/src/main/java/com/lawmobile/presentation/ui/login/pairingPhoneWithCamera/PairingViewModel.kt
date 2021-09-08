@@ -55,6 +55,16 @@ class PairingViewModel @Inject constructor(
         }
     }
 
+    fun suggestWiFiNetwork(
+        networkName: String,
+        networkPassword: String,
+        connectionCallback: (connected: Boolean) -> Unit
+    ) {
+        viewModelScope.launch {
+            wifiHelper.suggestWiFiNetwork(networkName, networkPassword, connectionCallback)
+        }
+    }
+
     fun resetProgress() {
         cameraPairingProgress?.invoke(Result.Success(0))
     }

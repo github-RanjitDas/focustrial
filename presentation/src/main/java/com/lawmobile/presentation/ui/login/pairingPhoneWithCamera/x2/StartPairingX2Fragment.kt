@@ -1,4 +1,4 @@
-package com.lawmobile.presentation.ui.login.pairingPhoneWithCamera
+package com.lawmobile.presentation.ui.login.pairingPhoneWithCamera.x2
 
 import android.Manifest
 import android.content.ComponentName
@@ -14,12 +14,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.lawmobile.domain.enums.CameraType
 import com.lawmobile.presentation.R
-import com.lawmobile.presentation.databinding.FragmentStartPairingBinding
+import com.lawmobile.presentation.databinding.FragmentStartPairingX2Binding
 import com.lawmobile.presentation.entities.AlertInformation
 import com.lawmobile.presentation.extensions.createAlertInformation
 import com.lawmobile.presentation.extensions.isPermissionGranted
@@ -29,17 +28,20 @@ import com.lawmobile.presentation.security.IsolatedService
 import com.lawmobile.presentation.ui.base.BaseActivity
 import com.lawmobile.presentation.ui.base.BaseFragment
 import com.lawmobile.presentation.ui.login.LoginActivity
+import com.lawmobile.presentation.ui.login.pairingPhoneWithCamera.PairingViewModel
+import com.lawmobile.presentation.ui.login.pairingPhoneWithCamera.x1.StartPairingX1Fragment
+import com.safefleet.mobile.android_commons.extensions.hideKeyboard
 import com.safefleet.mobile.kotlin_commons.extensions.doIfError
 import com.safefleet.mobile.kotlin_commons.extensions.doIfSuccess
 import com.safefleet.mobile.kotlin_commons.helpers.Result
 
-class StartPairingFragment : BaseFragment() {
-
-    private var _binding: FragmentStartPairingBinding? = null
+class StartPairingX2Fragment : BaseFragment() {
+    private var _binding: FragmentStartPairingX2Binding? = null
     private val binding get() = _binding!!
 
     private val pairingViewModel: PairingViewModel by viewModels()
-    lateinit var validateRequirements: (isSuccess: Boolean) -> Unit
+
+    lateinit var fragmentListener: StartPairingX2FragmentListener
 
     private lateinit var serviceBinder: IIsolatedService
     private var isServiceBounded = false
@@ -50,14 +52,15 @@ class StartPairingFragment : BaseFragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding =
-            FragmentStartPairingBinding.inflate(inflater, container, false)
+            FragmentStartPairingX2Binding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setObservers()
-        setListeners()
+        binding.setOfficerId()
+        binding.setListeners()
+        pairingViewModel.setObservers()
         pairingViewModel.cleanCacheFiles()
     }
 
@@ -71,23 +74,45 @@ class StartPairingFragment : BaseFragment() {
         )
     }
 
-    private fun setListeners() {
-        binding.buttonGo.setOnClickListener {
-            if (!verifyMagiskInPhone()) {
-                verifyPermissionsToStartPairing()
-            }
-        }
+    private fun FragmentStartPairingX2Binding.setOfficerId() {
+        editTextOfficerId.setText(fragmentListener.officerId)
+    }
 
-        binding.buttonInstructionsToLinkCamera.setOnClickListener {
-            showBottomSheet()
+    private fun FragmentStartPairingX2Binding.setListeners() {
+        editTextDevicePasswordListener()
+        buttonConnectListener()
+        instructionsToLinkListener()
+        buttonEditOfficerIdListener()
+    }
+
+    private fun FragmentStartPairingX2Binding.editTextDevicePasswordListener() {
+        editTextDevicePassword.addTextChangedListener {
+            buttonConnect.isEnabled = it.toString().isNotEmpty()
+            buttonConnect.isActivated = it.toString().isNotEmpty()
         }
     }
 
-    private fun setObservers() {
-        pairingViewModel.validateConnectionLiveData.observe(
-            viewLifecycleOwner,
-            Observer(::manageIsPossibleConnection)
-        )
+    private fun FragmentStartPairingX2Binding.buttonEditOfficerIdListener() {
+        buttonEditOfficerId.setOnClickListener {
+            fragmentListener.onEditOfficerId(editTextOfficerId.text.toString())
+        }
+    }
+
+    private fun FragmentStartPairingX2Binding.instructionsToLinkListener() {
+        textViewInstructionsToLinkCamera.setOnClickListener { showBottomSheet() }
+    }
+
+    private fun FragmentStartPairingX2Binding.buttonConnectListener() {
+        buttonConnect.isEnabled = false
+        buttonConnect.isActivated = false
+        buttonConnect.setOnClickListener {
+            (activity as AppCompatActivity).hideKeyboard()
+            if (!verifyMagiskInPhone()) verifyPermissionsToStartPairing()
+        }
+    }
+
+    private fun PairingViewModel.setObservers() {
+        validateConnectionLiveData.observe(viewLifecycleOwner, ::manageIsPossibleConnection)
     }
 
     private fun showBottomSheet() {
@@ -96,10 +121,8 @@ class StartPairingFragment : BaseFragment() {
 
     private fun verifyPermissionsToStartPairing() {
         if (arePermissionsGranted()) {
-            if (isGPSActive()) startPairingResultFragment() else showAlertToGPSEnable()
-        } else {
-            showAlertToNavigateToPermissions()
-        }
+            if (isGPSActive()) startPairingProcess() else showAlertToGPSEnable()
+        } else showAlertToNavigateToPermissions()
     }
 
     private fun arePermissionsGranted() =
@@ -118,17 +141,20 @@ class StartPairingFragment : BaseFragment() {
         return gpsEnable
     }
 
-    private fun startPairingResultFragment() {
+    private fun startPairingProcess() {
         if (!pairingViewModel.isWifiEnable()) {
             createAlertToNavigateWifiSettings()
-            return
+        } else binding.suggestBWCNetwork()
+    }
+
+    private fun FragmentStartPairingX2Binding.suggestBWCNetwork() {
+        val networkName = editTextOfficerId.text.toString()
+        val passwordName = editTextDevicePassword.text.toString()
+
+        pairingViewModel.suggestWiFiNetwork(networkName, passwordName) { isConnected ->
+            if (isConnected) fragmentListener.onValidRequirements()
+            else layoutStartPairing.showErrorSnackBar(getString(R.string.incorrect_credentials))
         }
-        val serialNumberCamera = pairingViewModel.getNetworkName()
-        if (!CameraType.isValidNumberCameraBWC(serialNumberCamera)) {
-            pairingViewModel.isPossibleConnection()
-            return
-        }
-        validateRequirements(true)
     }
 
     private fun showAlertToNavigateToPermissions() {
@@ -161,7 +187,7 @@ class StartPairingFragment : BaseFragment() {
 
     private fun manageIsPossibleConnection(result: Result<Unit>) {
         with(result) {
-            doIfSuccess { validateRequirements(true) }
+            doIfSuccess { fragmentListener.onValidRequirements() }
             doIfError {
                 binding.layoutStartPairing.showErrorSnackBar(getString(R.string.verify_camera_wifi))
             }
@@ -213,8 +239,12 @@ class StartPairingFragment : BaseFragment() {
     }
 
     companion object {
-        val TAG = StartPairingFragment::class.java.simpleName
-        fun createInstance(connectionSuccess: (isSuccess: Boolean) -> Unit): StartPairingFragment =
-            StartPairingFragment().apply { this.validateRequirements = connectionSuccess }
+        val TAG = StartPairingX1Fragment::class.java.simpleName
+        fun createInstance(
+            fragmentListener: StartPairingX2FragmentListener,
+        ): StartPairingX2Fragment =
+            StartPairingX2Fragment().apply {
+                this.fragmentListener = fragmentListener
+            }
     }
 }
