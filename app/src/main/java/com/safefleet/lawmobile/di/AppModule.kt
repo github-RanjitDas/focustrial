@@ -72,8 +72,10 @@ class AppModule {
 
         @Provides
         @Singleton
-        fun provideWifiHelper(wifiManager: WifiManager): WifiHelper =
-            WifiHelper(wifiManager)
+        fun provideWifiHelper(
+            wifiManager: WifiManager,
+            connectivityManager: ConnectivityManager
+        ): WifiHelper = WifiHelper(wifiManager, connectivityManager)
 
         @Provides
         @Singleton

@@ -137,7 +137,6 @@
     <dimen name="margin_20dp">20dp</dimen>
     <dimen name="margin_30dp">30dp</dimen>
     <dimen name="margin_18dp">18dp</dimen>
-    <dimen name="margin_3dp">3dp</dimen>
     <dimen name="margin_5dp">5dp</dimen>
     <dimen name="text_size_12sp">12sp</dimen>
     <dimen name="padding_5dp">5dp</dimen>
@@ -170,26 +169,21 @@
 
 
     <!--Custom notification -->
-    <dimen name="custom_notification_padding_card">15dp</dimen>
     <dimen name="custom_notification_card_elevation">5dp</dimen>
     <dimen name="custom_notification_card_corner_radius">5dp</dimen>
     <dimen name="custom_notification_margin_close_button">15dp</dimen>
     <dimen name="custom_notification_size_close_button">17dp</dimen>
-    <dimen name="custom_notification_padding_top_information">35dp</dimen>
     <dimen name="custom_notification_size_image_type">35dp</dimen>
-    <dimen name="custom_notification_margin_start_title_and_date">20dp</dimen>
     <dimen name="custom_notification_size_text_tile">18sp</dimen>
     <dimen name="custom_notification_size_text_date">12sp</dimen>
     <dimen name="custom_notification_size_text_description">16sp</dimen>
     <dimen name="custom_notification_margin_top_date">7dp</dimen>
     <dimen name="custom_notification_margin_top_description">30dp</dimen>
-    <dimen name="custom_notification_margin_sides_description">55dp</dimen>
 
     <!-- Body Worn Diagnosis -->
     <dimen name="body_worn_diagnosis_button_text_size">42sp</dimen>
     <dimen name="body_worn_diagnosis_margin_top_loading_text">25dp</dimen>
     <dimen name="body_worn_diagnosis_size_icon_result">50dp</dimen>
-    <dimen name="body_worn_diagnosis_margin_texts">20dp</dimen>
     <dimen name="corner_main_menu">7dp</dimen>
     <dimen name="battery_level_height_x2">15dp</dimen>
     <dimen name="storage_level_height_x2">15dp</dimen>

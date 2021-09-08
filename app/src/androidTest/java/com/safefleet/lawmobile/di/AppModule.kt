@@ -77,7 +77,10 @@ class AppModule {
             context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 
         @Provides
-        fun provideWifiHelper(wifiManager: WifiManager): WifiHelper = mockk {
+        fun provideWifiHelper(
+            wifiManager: WifiManager,
+            connectivityManager: ConnectivityManager
+        ): WifiHelper = mockk {
             every { getGatewayAddress() } returns "192.168.42.1"
             every { getIpAddress() } returns "192.168.42.2"
             every { isEqualsValueWithSSID(TestLoginData.SSID_X1.value) } returns true

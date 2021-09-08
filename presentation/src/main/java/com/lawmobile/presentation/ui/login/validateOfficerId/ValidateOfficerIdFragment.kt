@@ -5,6 +5,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.viewModels
 import com.lawmobile.domain.entities.NoInternetEvent
 import com.lawmobile.presentation.R
@@ -12,6 +14,7 @@ import com.lawmobile.presentation.databinding.FragmentValidateOfficerIdBinding
 import com.lawmobile.presentation.extensions.createNotificationDialog
 import com.lawmobile.presentation.ui.base.BaseFragment
 import com.lawmobile.presentation.ui.selectCamera.SelectCameraActivity
+import com.safefleet.mobile.android_commons.extensions.hideKeyboard
 import com.safefleet.mobile.kotlin_commons.extensions.doIfError
 import com.safefleet.mobile.kotlin_commons.extensions.doIfSuccess
 import com.safefleet.mobile.kotlin_commons.helpers.Result
@@ -23,7 +26,8 @@ class ValidateOfficerIdFragment : BaseFragment() {
     private var _binding: FragmentValidateOfficerIdBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var onExistingOfficerId: (Boolean) -> Unit
+    private lateinit var onExistingOfficerId: (Boolean, String) -> Unit
+    private lateinit var officerId: String
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -37,8 +41,13 @@ class ValidateOfficerIdFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         verifyInternetConnection()
-        setObservers()
+        viewModel.setObservers()
+        binding.setOfficerId()
         binding.setListeners()
+    }
+
+    private fun FragmentValidateOfficerIdBinding.setOfficerId() {
+        editTextOfficerId.setText(officerId)
     }
 
     private fun verifyInternetConnection() {
@@ -55,30 +64,34 @@ class ValidateOfficerIdFragment : BaseFragment() {
         }
     }
 
-    private fun setObservers() {
-        viewModel.validateOfficerIdResult.observe(
-            viewLifecycleOwner,
-            ::manageValidateOfficerIdResult
-        )
+    private fun ValidateOfficerIdViewModel.setObservers() {
+        validateOfficerIdResult.observe(viewLifecycleOwner, ::manageValidateOfficerIdResult)
     }
 
     private fun manageValidateOfficerIdResult(result: Result<Boolean>) {
+        val officerId = binding.editTextOfficerId.text.toString()
         with(result) {
-            doIfSuccess { onExistingOfficerId(it) }
-            doIfError { onExistingOfficerId(false) }
+            doIfSuccess { onExistingOfficerId(it, officerId) }
+            doIfError { onExistingOfficerId(false, officerId) }
         }
     }
 
     private fun FragmentValidateOfficerIdBinding.setListeners() {
+        editTextOfficerIdListener()
         buttonContinueListener()
         changeCameraListener()
         onBoardingCardsListener()
     }
 
-    private fun FragmentValidateOfficerIdBinding.onBoardingCardsListener() {
-        textViewOnBoardingCards.setOnClickListener {
-            goToOnBoardingCards()
+    private fun FragmentValidateOfficerIdBinding.editTextOfficerIdListener() {
+        editTextOfficerId.addTextChangedListener {
+            buttonContinue.isEnabled = it.toString().isNotEmpty()
+            buttonContinue.isActivated = it.toString().isNotEmpty()
         }
+    }
+
+    private fun FragmentValidateOfficerIdBinding.onBoardingCardsListener() {
+        textViewOnBoardingCards.setOnClickListener { goToOnBoardingCards() }
     }
 
     private fun goToOnBoardingCards() {
@@ -86,16 +99,19 @@ class ValidateOfficerIdFragment : BaseFragment() {
     }
 
     private fun FragmentValidateOfficerIdBinding.changeCameraListener() {
-        textViewChangeCamera.setOnClickListener {
-            goToSelectCamera()
-        }
+        textViewChangeCamera.setOnClickListener { goToSelectCamera() }
     }
 
     private fun FragmentValidateOfficerIdBinding.buttonContinueListener() {
-        buttonContinue.setOnClickListener {
-            val officerId = editTextOfficerId.text.toString()
-            viewModel.validateOfficerId(officerId)
-        }
+        buttonContinue.isEnabled = officerId.isNotEmpty()
+        buttonContinue.isActivated = officerId.isNotEmpty()
+        buttonContinue.setOnClickListener { validateOfficerId() }
+    }
+
+    private fun FragmentValidateOfficerIdBinding.validateOfficerId() {
+        (activity as AppCompatActivity).hideKeyboard()
+        val officerId = editTextOfficerId.text.toString()
+        viewModel.validateOfficerId(officerId)
     }
 
     private fun goToSelectCamera() {
@@ -112,9 +128,12 @@ class ValidateOfficerIdFragment : BaseFragment() {
     companion object {
         val TAG = ValidateOfficerIdFragment::class.java.simpleName
 
-        fun createInstance(onExistingOfficerId: (Boolean) -> Unit) =
-            ValidateOfficerIdFragment().apply {
-                this.onExistingOfficerId = onExistingOfficerId
-            }
+        fun createInstance(
+            onExistingOfficerId: (Boolean, String) -> Unit,
+            officerId: String
+        ) = ValidateOfficerIdFragment().apply {
+            this.officerId = officerId
+            this.onExistingOfficerId = onExistingOfficerId
+        }
     }
 }

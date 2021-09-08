@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/layoutStartPairing"
     android:layout_width="match_parent"
+    android:background="@drawable/background_blue"
     android:layout_height="match_parent">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -55,6 +56,21 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/buttonGo"
             tools:ignore="NotSibling" />
+
+        <TextView
+            android:id="@+id/textViewChangeCamera"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/change_camera_type"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_h5"
+            android:layout_marginTop="@dimen/margin_20dp"
+            android:clickable="true"
+            android:gravity="center"
+            app:layout_constraintTop_toBottomOf="@id/buttonInstructionsToLinkCamera"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:focusable="true" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

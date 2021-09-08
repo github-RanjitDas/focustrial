@@ -13,6 +13,7 @@ import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
 import io.mockk.runs
+import io.mockk.verify
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
@@ -154,5 +155,12 @@ class PairingViewModelTest {
     fun testCleanCacheFiles() {
         every { viewModel.cleanCacheFiles() } just runs
         viewModel.cleanCacheFiles()
+    }
+
+    @Test
+    fun suggestWiFiNetwork() {
+        every { wifiHelper.suggestWiFiNetwork(any(), any(), any()) } returns Unit
+        viewModel.suggestWiFiNetwork("", "") {}
+        verify { wifiHelper.suggestWiFiNetwork(any(), any(), any()) }
     }
 }

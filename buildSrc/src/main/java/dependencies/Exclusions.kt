@@ -47,15 +47,18 @@ object Exclusions {
         "**/*WifiStatus.**",
         "**/root/**",
         "**/databinding.**",
+
         "**/database.**",
-        //Temporal empty file that is decreasing the coverage
-        "**/LoginActivityViewModel.**",
+        "**/FakeHttpClient.**",
+        "**/WifiHelper.**",
+        "**/SimpleNetworkManager.**",
         "**/OnSwipeTouchListener.**",
         "**/LiveActivityBaseViewModel.**",
         "**/CameraEventsManager.**",
         "**/DateHelper.**",
-        "**/SimpleNetworkManager.**",
-        "**/FakeHttpClient.**",
+
+        //Temporal empty file that is decreasing the coverage
+        "**/LoginActivityViewModel.**",
         "**/EspressoIdlingResource.**"
     )
     val pitest = mutableSetOf(
