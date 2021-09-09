@@ -34,13 +34,10 @@ object Dependencies {
     }
 
     object Coroutines {
-        private const val CORE_VERSION = "1.3.9"
-        private const val ANDROID_VERSION = "1.3.5"
-        private const val TEST_VERSION = "1.3.5"
-        const val coroutinesAndroid =
-            "org.jetbrains.kotlinx:kotlinx-coroutines-android:$ANDROID_VERSION"
-        const val coroutinesCore = "org.jetbrains.kotlinx:kotlinx-coroutines-core:$CORE_VERSION"
-        const val coroutinesTest = "org.jetbrains.kotlinx:kotlinx-coroutines-test:$TEST_VERSION"
+        private const val VERSION = "1.5.2"
+        const val coroutinesAndroid = "org.jetbrains.kotlinx:kotlinx-coroutines-android:$VERSION"
+        const val coroutinesCore = "org.jetbrains.kotlinx:kotlinx-coroutines-core:$VERSION"
+        const val coroutinesTest = "org.jetbrains.kotlinx:kotlinx-coroutines-test:$VERSION"
     }
 
     object Espresso {
@@ -103,7 +100,7 @@ object Dependencies {
     }
 
     object Ktor {
-        private const val VERSION = "1.6.2"
+        private const val VERSION = "1.6.3"
         const val clientCore = "io.ktor:ktor-client-core:$VERSION"
         const val clientAndroid = "io.ktor:ktor-client-android:$VERSION"
         const val clientSerialization = "io.ktor:ktor-client-serialization:$VERSION"
