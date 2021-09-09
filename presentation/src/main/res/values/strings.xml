@@ -18,6 +18,13 @@
     <string name="storage_alert_title">Low memory capacity</string>
     <string name="storage_alert_description">Your body-worn camera reached 95% of its memory capacity</string>
 
+    <!-- Onboarding -->
+    <string name="skip_intro">Skip</string>
+    <string name="description_card_1">Please, &lt;b&gt;turn on &lt;/b&gt; the BWC hotspot</string>
+    <string name="description_card_2">Please Enter your OfficerId and tap in the &lt;b&gt;Continue&lt;/b&gt; Button.</string>
+    <string name="description_card_3">If you are in this screen, please enter your email and password and tap in the &lt;b&gt;Login&lt;/b&gt; button</string>
+    <string name="description_card_4">If you are in this screen, please enter your device password and tap in the &lt;b&gt;Connect&lt;/b&gt; button.</string>
+
     <!-- Login -->
     <string name="please_enable_permission">Please enable permission from settings</string>
     <string name="please_enable_permission_location">Required location permission for pairing the camera</string>
@@ -277,5 +284,6 @@
     <string name="body_worn_settings_signal">Signal</string>
     <string name="body_worn_settings_error_in_get_settings">Error in get settings, please try again</string>
     <string name="body_worn_settings_error_in_change_settings">Error in change setting, please try again</string>
+    <string name="start_now">Start Now</string>
 
 </resources>

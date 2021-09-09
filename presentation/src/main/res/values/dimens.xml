@@ -194,4 +194,5 @@
 
     <!-- Body Worn Settings -->
     <dimen name="body_worn_settings_margin_top_content">45dp</dimen>
+    <dimen name="margin_12dp">12dp</dimen>
 </resources>

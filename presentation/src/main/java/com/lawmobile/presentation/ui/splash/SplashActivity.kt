@@ -4,14 +4,15 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.animation.AlphaAnimation
 import android.view.animation.LinearInterpolator
+import androidx.activity.viewModels
 import com.lawmobile.domain.helpers.runWithDelay
 import com.lawmobile.presentation.databinding.ActivitySplashBinding
 import com.lawmobile.presentation.extensions.isAnimationsEnabled
 import com.lawmobile.presentation.ui.base.BaseActivity
-import com.lawmobile.presentation.ui.selectCamera.SelectCameraActivity
 
 class SplashActivity : BaseActivity() {
 
+    private val viewModel: SplashViewModel by viewModels()
     private lateinit var binding: ActivitySplashBinding
 
     private val fadeAnimation = AlphaAnimation(0f, 1f).apply {
@@ -25,6 +26,14 @@ class SplashActivity : BaseActivity() {
         binding = ActivitySplashBinding.inflate(layoutInflater)
         setContentView(binding.root)
         binding.startAnimation()
+        viewModel.setObserver()
+    }
+
+    private fun SplashViewModel.setObserver() {
+        nextActivityResult.observe(this@SplashActivity) {
+            val selectCameraIntent = Intent(baseContext, it)
+            startActivity(selectCameraIntent)
+        }
     }
 
     private fun ActivitySplashBinding.startAnimation() {
@@ -39,8 +48,7 @@ class SplashActivity : BaseActivity() {
 
     private fun goToSelectCamera() {
         runWithDelay(ANIMATION_START_OFFSET + ANIMATION_DURATION) {
-            val selectCameraIntent = Intent(this, SelectCameraActivity::class.java)
-            startActivity(selectCameraIntent)
+            viewModel.getNextActivity()
         }
     }
 

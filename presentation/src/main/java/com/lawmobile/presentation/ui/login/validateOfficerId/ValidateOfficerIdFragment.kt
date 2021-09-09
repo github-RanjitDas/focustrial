@@ -13,6 +13,7 @@ import com.lawmobile.presentation.R
 import com.lawmobile.presentation.databinding.FragmentValidateOfficerIdBinding
 import com.lawmobile.presentation.extensions.createNotificationDialog
 import com.lawmobile.presentation.ui.base.BaseFragment
+import com.lawmobile.presentation.ui.onBoardingCards.OnBoardingCardsActivity
 import com.lawmobile.presentation.ui.selectCamera.SelectCameraActivity
 import com.safefleet.mobile.android_commons.extensions.hideKeyboard
 import com.safefleet.mobile.kotlin_commons.extensions.doIfError
@@ -95,11 +96,13 @@ class ValidateOfficerIdFragment : BaseFragment() {
     }
 
     private fun goToOnBoardingCards() {
-        // pending to implement
+        val onBoardingCardsIntent = Intent(context, OnBoardingCardsActivity::class.java)
+        activity?.startActivity(onBoardingCardsIntent)
+        activity?.finish()
     }
 
     private fun FragmentValidateOfficerIdBinding.changeCameraListener() {
-        textViewChangeCamera.setOnClickListener { goToSelectCamera() }
+        buttonChangeCamera.setOnClickListener { goToSelectCamera() }
     }
 
     private fun FragmentValidateOfficerIdBinding.buttonContinueListener() {

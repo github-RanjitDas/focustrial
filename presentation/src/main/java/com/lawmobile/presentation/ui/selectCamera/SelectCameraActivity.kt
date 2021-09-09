@@ -2,12 +2,18 @@ package com.lawmobile.presentation.ui.selectCamera
 
 import android.content.Intent
 import android.os.Bundle
+import androidx.datastore.preferences.core.edit
+import androidx.lifecycle.lifecycleScope
 import com.lawmobile.domain.entities.CameraInfo
 import com.lawmobile.domain.enums.CameraType
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.databinding.ActivitySelectCameraBinding
+import com.lawmobile.presentation.extensions.dataStore
 import com.lawmobile.presentation.ui.base.BaseActivity
 import com.lawmobile.presentation.ui.login.LoginActivity
+import com.lawmobile.presentation.ui.onBoardingCards.OnBoardingCardsActivity
+import com.lawmobile.presentation.utils.Constants
+import kotlinx.coroutines.launch
 
 class SelectCameraActivity : BaseActivity() {
 
@@ -66,15 +72,30 @@ class SelectCameraActivity : BaseActivity() {
         buttonContinue.isEnabled = false
         buttonContinue.setOnClickListener {
             if (buttonX1Camera.isActivated || buttonX2Camera.isActivated) {
-                goToOnBoardingCards()
+                goToNextActivity()
             }
         }
     }
 
-    private fun ActivitySelectCameraBinding.goToOnBoardingCards() {
-        CameraInfo.cameraType = if (buttonX2Camera.isActivated) CameraType.X2 else CameraType.X1
-        val loginActivityIntent = Intent(this@SelectCameraActivity, LoginActivity::class.java)
-        startActivity(loginActivityIntent)
+    private fun ActivitySelectCameraBinding.goToNextActivity() {
+        setCameraTypePreference()
+        val activity = getActivityDependingOnCameraType()
+        val onBoardingCardsActivityIntent = Intent(applicationContext, activity)
+        startActivity(onBoardingCardsActivityIntent)
         finish()
+    }
+
+    private fun ActivitySelectCameraBinding.getActivityDependingOnCameraType() =
+        if (buttonX2Camera.isActivated) OnBoardingCardsActivity::class.java
+        else LoginActivity::class.java
+
+    private fun ActivitySelectCameraBinding.setCameraTypePreference() {
+        CameraInfo.cameraType = if (buttonX2Camera.isActivated) CameraType.X2 else CameraType.X1
+        lifecycleScope.launch {
+            baseContext.dataStore.edit { settings ->
+                settings[Constants.CAMERA_TYPE] =
+                    if (buttonX2Camera.isActivated) CameraType.X2.name else CameraType.X1.name
+            }
+        }
     }
 }

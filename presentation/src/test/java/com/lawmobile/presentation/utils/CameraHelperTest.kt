@@ -10,22 +10,30 @@ import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
 import io.mockk.verify
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.TestCoroutineDispatcher
+import kotlinx.coroutines.test.runBlockingTest
+import kotlinx.coroutines.test.setMain
 import org.junit.Assert
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 
+@ExperimentalCoroutinesApi
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class CameraHelperTest {
 
     private val wifiHelper: WifiHelper = mockk()
     private val connectionHelper: ConnectionHelper = mockk()
-    private val cameraHelper = CameraHelper(connectionHelper, wifiHelper)
+    private val dispatcher = TestCoroutineDispatcher()
+
+    private val cameraHelper = CameraHelper(connectionHelper, wifiHelper, dispatcher)
 
     @BeforeEach
     fun setUp() {
         clearAllMocks()
+        Dispatchers.setMain(dispatcher)
     }
 
     @Test
@@ -51,9 +59,9 @@ class CameraHelperTest {
     }
 
     @Test
-    fun testDisconnectCameraFlow() {
+    fun testDisconnectCameraFlow() = runBlockingTest {
         coEvery { connectionHelper.disconnectCamera() } returns Result.Success(Unit)
-        runBlocking { cameraHelper.disconnectCamera() }
+        cameraHelper.disconnectCamera()
         coVerify { connectionHelper.disconnectCamera() }
     }
 }

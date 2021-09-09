@@ -56,6 +56,7 @@ object Exclusions {
         "**/LiveActivityBaseViewModel.**",
         "**/CameraEventsManager.**",
         "**/DateHelper.**",
+        "**/SplashViewModel.**",
 
         //Temporal empty file that is decreasing the coverage
         "**/LoginActivityViewModel.**",
@@ -108,7 +109,7 @@ object Exclusions {
         "com.lawmobile.presentation.utils.MobileDataStatus*",
         "com.lawmobile.presentation.utils.OnSwipeTouchListener*",
         "com.lawmobile.presentation.utils.CameraEventsManager*",
-        "com.lawmobile.presentation.utils.CameraHelperTest*",
-        "com.lawmobile.data.dto.api.ValidateOfficerIdApiImpl*"
+        "com.lawmobile.data.dto.api.ValidateOfficerIdApiImpl*",
+        "com.lawmobile.presentation.ui.splash.SplashViewModel*"
     )
 }

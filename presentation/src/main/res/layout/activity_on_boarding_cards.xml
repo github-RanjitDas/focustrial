@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context=".ui.onBoardingCards.OnBoardingCardsActivity">
+
+    <TextView
+        android:id="@+id/textViewSkip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_30dp"
+        android:layout_marginTop="@dimen/margin_30dp"
+        android:text="@string/skip_intro"
+        android:textColor="@color/FMABlue"
+        android:textSize="@dimen/text_size_20sp"
+        app:layout_constraintTop_toBottomOf="@id/bottomGuideline"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/buttonStartNow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/margin_30dp"
+        android:paddingHorizontal="@dimen/padding_30dp"
+        android:text="@string/start_now"
+        android:textAllCaps="false"
+        android:textColor="@color/FMABlue"
+        android:layout_marginTop="@dimen/margin_20dp"
+        android:visibility="gone"
+        android:textSize="@dimen/text_size_20sp"
+        android:background="@drawable/shape_blue_border_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/bottomGuideline" />
+
+    <View
+        android:id="@+id/viewDivider"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/size_1dp"
+        android:background="@android:color/darker_gray"
+        app:layout_constraintTop_toTopOf="@id/bottomGuideline"/>
+
+    <LinearLayout
+        android:id="@+id/indicatorContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/margin_30dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@id/bottomGuideline" />
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/introSliderViewPager"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginBottom="@dimen/margin_12dp"
+        android:overScrollMode="never"
+        app:layout_constraintBottom_toTopOf="@id/indicatorContainer"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/bottomGuideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintGuide_percent="0.86"
+        android:orientation="horizontal"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

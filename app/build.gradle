@@ -172,6 +172,8 @@ dependencies {
     implementation Dependencies.Ktor.clientSerialization
     implementation Dependencies.Ktor.clientMock
 
+    implementation Dependencies.DataStore.preferences
+
     implementation project(path: Modules.presentation)
     implementation project(path: Modules.data)
     implementation project(path: Modules.domain)
