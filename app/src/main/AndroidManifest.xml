@@ -43,6 +43,12 @@
             tools:ignore="LockedOrientationActivity" />
 
         <activity
+            android:name="com.lawmobile.presentation.ui.onBoardingCards.OnBoardingCardsActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"
+            tools:ignore="LockedOrientationActivity"/>
+
+        <activity
             android:name="com.lawmobile.presentation.ui.login.LoginActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"

@@ -78,7 +78,7 @@ class StartPairingX1Fragment : BaseFragment() {
     }
 
     private fun FragmentStartPairingX1Binding.changeCameraListener() {
-        textViewChangeCamera.setOnClickListener { goToSelectCamera() }
+        buttonChangeCamera.setOnClickListener { goToSelectCamera() }
     }
 
     private fun FragmentStartPairingX1Binding.buttonInstructionsListener() {

@@ -6,9 +6,12 @@ import android.content.Context
 import android.net.ConnectivityManager
 import android.net.wifi.WifiConfiguration
 import android.net.wifi.WifiManager
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
 import com.google.gson.Gson
 import com.lawmobile.data.dto.interceptors.FakeHttpClient
 import com.lawmobile.database.Database
+import com.lawmobile.presentation.extensions.dataStore
 import com.lawmobile.presentation.utils.MobileDataStatus
 import com.lawmobile.presentation.utils.SimpleNetworkManager
 import com.lawmobile.presentation.utils.VLCMediaPlayer
@@ -36,8 +39,12 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 class AppModule {
-
     companion object {
+
+        @Provides
+        fun providePreferencesDataStore(
+            @ApplicationContext context: Context
+        ): DataStore<Preferences> = context.dataStore
 
         @Provides
         @Named("fakeHttpClient")

@@ -58,7 +58,7 @@
         app:layout_constraintTop_toBottomOf="@id/midGuideline" />
 
     <TextView
-        android:id="@+id/textViewChangeCamera"
+        android:id="@+id/buttonChangeCamera"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/change_camera_type"

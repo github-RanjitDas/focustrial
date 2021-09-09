@@ -121,6 +121,8 @@ dependencies {
     implementation Dependencies.Base.androidCommons
     implementation Dependencies.Base.safeFleetUI
 
+    implementation Dependencies.DataStore.preferences
+
     implementation project(path: Modules.domain)
 }
 

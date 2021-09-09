@@ -40,6 +40,10 @@ object Dependencies {
         const val coroutinesTest = "org.jetbrains.kotlinx:kotlinx-coroutines-test:$VERSION"
     }
 
+    object DataStore {
+        const val preferences = "androidx.datastore:datastore-preferences:1.0.0"
+    }
+
     object Espresso {
         private const val VERSION = "3.3.0"
         const val espressoCore = "androidx.test.espresso:espresso-core:$VERSION"

@@ -7,6 +7,9 @@ import android.provider.Settings
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.preferencesDataStore
 import com.lawmobile.domain.entities.CameraEvent
 import com.lawmobile.domain.entities.CameraInfo
 import com.lawmobile.domain.enums.CameraType
@@ -18,6 +21,8 @@ import com.lawmobile.presentation.utils.CameraHelper
 import com.lawmobile.presentation.widgets.CustomNotificationDialog
 import com.safefleet.mobile.safefleet_ui.widgets.SafeFleetConfirmationDialog
 import kotlin.system.exitProcess
+
+val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
 
 fun Context.createAlertInformation(alertInformation: AlertInformation) {
     val builder = AlertDialog.Builder(this)
