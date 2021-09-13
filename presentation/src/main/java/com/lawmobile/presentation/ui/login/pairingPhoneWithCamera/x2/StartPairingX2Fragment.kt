@@ -17,10 +17,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.viewModels
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.lawmobile.domain.entities.customEvents.WrongCredentialsEvent
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.databinding.FragmentStartPairingX2Binding
 import com.lawmobile.presentation.entities.AlertInformation
 import com.lawmobile.presentation.extensions.createAlertInformation
+import com.lawmobile.presentation.extensions.createNotificationDialog
 import com.lawmobile.presentation.extensions.isPermissionGranted
 import com.lawmobile.presentation.extensions.showErrorSnackBar
 import com.lawmobile.presentation.security.IIsolatedService
@@ -153,8 +155,14 @@ class StartPairingX2Fragment : BaseFragment() {
 
         pairingViewModel.suggestWiFiNetwork(networkName, passwordName) { isConnected ->
             if (isConnected) fragmentListener.onValidRequirements()
-            else layoutStartPairing.showErrorSnackBar(getString(R.string.incorrect_credentials))
+            else showWrongCredentialsNotification()
         }
+    }
+
+    private fun showWrongCredentialsNotification() {
+        val cameraEvent = WrongCredentialsEvent.event
+        context?.createNotificationDialog(cameraEvent)
+            ?.setButtonText(resources.getString(R.string.OK))
     }
 
     private fun showAlertToNavigateToPermissions() {

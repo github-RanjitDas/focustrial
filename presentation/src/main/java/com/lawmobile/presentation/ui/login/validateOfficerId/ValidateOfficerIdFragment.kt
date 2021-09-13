@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.viewModels
-import com.lawmobile.domain.entities.NoInternetEvent
+import com.lawmobile.domain.entities.customEvents.InternetErrorEvent
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.databinding.FragmentValidateOfficerIdBinding
 import com.lawmobile.presentation.extensions.createNotificationDialog
@@ -59,7 +59,7 @@ class ValidateOfficerIdFragment : BaseFragment() {
 
     private fun showNoInternetConnectionDialog() {
         activity?.runOnUiThread {
-            val cameraEvent = NoInternetEvent.event
+            val cameraEvent = InternetErrorEvent.event
             context?.createNotificationDialog(cameraEvent)
                 ?.setButtonText(resources.getString(R.string.OK))
         }

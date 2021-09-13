@@ -273,7 +273,6 @@
     <string name="connect">Connect</string>
     <string name="device_password">Device Password</string>
     <string name="edit_officer_id_description">edit officer id</string>
-    <string name="incorrect_credentials">The Officer ID or the Device Password are incorrect, please verify your credentials</string>
 
     <!-- Body Worn Setting -->
     <string name="body_worn_settings_title">Body-worn Settings</string>
