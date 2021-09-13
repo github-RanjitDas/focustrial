@@ -5,6 +5,7 @@ import android.content.Context
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import com.lawmobile.domain.entities.CameraEvent
 import com.lawmobile.domain.enums.NotificationType
 import com.lawmobile.presentation.R
@@ -49,6 +50,7 @@ class CustomNotificationDialog(
             textViewNotificationTitle.text = notificationType.title ?: cameraEvent.name
             textViewNotificationMessage.text =
                 notificationType.getCustomMessage(cameraEvent.value) ?: cameraEvent.value
+            textViewNotificationDate.isVisible = cameraEvent.date.isNotEmpty()
             textViewNotificationDate.text = cameraEvent.date
         }
     }

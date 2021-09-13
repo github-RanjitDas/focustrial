@@ -24,17 +24,28 @@ object FakeHttpClient {
     private fun HttpClientConfig<MockEngineConfig>.configureMockEngine() {
         engine {
             addHandler { request ->
+                val requestUrl = request.url.toString()
+                val officerIdParam = request.url.parameters[OFFICER_ID]
                 when {
-                    isValidateOfficerIdApiRequest(request.url.toString()) ->
-                        respond(VALIDATE_USER_JSON, HttpStatusCode.OK, responseHeaders)
-                    else -> error("Unhandled ${request.url}")
+                    isValidateOfficerIdApiRequest(requestUrl) -> {
+                        val jsonResponse =
+                            if (isValidUser(officerIdParam)) VALID_USER_JSON else INVALID_USER_JSON
+                        respond(jsonResponse, HttpStatusCode.OK, responseHeaders)
+                    }
+                    else -> error("Unhandled $requestUrl")
                 }
             }
         }
     }
 
-    private fun isValidateOfficerIdApiRequest(request: String) =
-        request.contains("validateOfficerId")
+    private fun isValidUser(officerIdParam: String?) = officerIdParam == VALID_USER
 
-    private const val VALIDATE_USER_JSON = """{"isValidUser": false}"""
+    private fun isValidateOfficerIdApiRequest(request: String) =
+        request.contains(VALIDATE_OFFICER_ID_URL)
+
+    private const val OFFICER_ID = "OfficerId"
+    private const val VALIDATE_OFFICER_ID_URL = "validateOfficerId"
+    private const val VALID_USER = "LuchoQA"
+    private const val INVALID_USER_JSON = """{"isValidUser": false}"""
+    private const val VALID_USER_JSON = """{"isValidUser": true}"""
 }

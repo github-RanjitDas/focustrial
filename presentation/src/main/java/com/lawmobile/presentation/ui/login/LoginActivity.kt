@@ -37,7 +37,7 @@ class LoginActivity : BaseActivity(), StartPairingX2FragmentListener {
 
     private val onExistingOfficerId: (Boolean, String) -> Unit = { exist, officerId ->
         if (exist) showToast(
-            "The user exists",
+            "The officer has a SSO user",
             Toast.LENGTH_LONG
         ) // Replace this with navigation to SSO login page
         else showStartPairingFragment(officerId)

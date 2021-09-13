@@ -7,7 +7,6 @@ import java.util.Locale
 object DateHelper {
 
     private val format = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH)
-    private val formatWithHour = SimpleDateFormat("yyyy-MM-dd / hh:mm:ss", Locale.ENGLISH)
 
     fun dateToString(
         date: Date,
@@ -20,9 +19,5 @@ object DateHelper {
 
     fun getTodayDateAtStartOfTheDay(): String {
         return format.format(System.currentTimeMillis()) + " 00:00:00"
-    }
-
-    fun getCurrentDateWithHour(): String {
-        return formatWithHour.format(System.currentTimeMillis())
     }
 }

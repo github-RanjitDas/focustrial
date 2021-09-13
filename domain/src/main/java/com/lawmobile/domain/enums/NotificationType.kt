@@ -1,6 +1,7 @@
 package com.lawmobile.domain.enums
 
-import com.lawmobile.domain.entities.NoInternetEvent
+import com.lawmobile.domain.entities.customEvents.InternetErrorEvent
+import com.lawmobile.domain.entities.customEvents.WrongCredentialsEvent
 
 enum class NotificationType(
     val value: String,
@@ -70,9 +71,14 @@ enum class NotificationType(
         }
     },
     INTERNET_CONNECTION_ISSUES(
-        NoInternetEvent.value,
-        NoInternetEvent.title,
-        NoInternetEvent.message
+        InternetErrorEvent.value,
+        InternetErrorEvent.title,
+        InternetErrorEvent.message
+    ),
+    HOTSPOT_CONNECTION_ISSUES(
+        WrongCredentialsEvent.value,
+        WrongCredentialsEvent.title,
+        WrongCredentialsEvent.message
     ),
     UNKNOWN_OPERATION(
         "unknown_operation",
@@ -110,6 +116,7 @@ enum class NotificationType(
                 STARTING_VIDEO_RECORD.value -> STARTING_VIDEO_RECORD
                 GPS_SIGNAL_LOST.value -> GPS_SIGNAL_LOST
                 INTERNET_CONNECTION_ISSUES.value -> INTERNET_CONNECTION_ISSUES
+                HOTSPOT_CONNECTION_ISSUES.value -> HOTSPOT_CONNECTION_ISSUES
                 UNKNOWN_OPERATION.value -> UNKNOWN_OPERATION
                 else -> DEFAULT
             }
