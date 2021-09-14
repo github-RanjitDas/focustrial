@@ -44,6 +44,9 @@ class SimpleListRemoteDataSourceImpl(
         }
     }
 
+    override suspend fun getAudioList(): Result<FileResponseWithErrors> =
+        cameraConnectService.getListOfAudios()
+
     companion object {
         private const val GET_METADATA_ATTEMPTS = 5
     }

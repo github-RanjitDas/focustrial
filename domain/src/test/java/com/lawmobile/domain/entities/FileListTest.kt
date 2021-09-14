@@ -10,7 +10,7 @@ class FileListTest {
     fun testChangeListOfImages() {
         val domainInformationFile: DomainInformationFile = mockk(relaxed = true)
         val list: List<DomainInformationFile> = listOf(domainInformationFile, domainInformationFile)
-        FileList.changeImageList(list)
+        FileList.imageList = list
         Assert.assertEquals(list, FileList.imageList)
     }
 
@@ -18,7 +18,7 @@ class FileListTest {
     fun testChangeListOfVideos() {
         val domainInformationFile: DomainInformationFile = mockk(relaxed = true)
         val list: List<DomainInformationFile> = listOf(domainInformationFile, domainInformationFile)
-        FileList.changeVideoList(list)
+        FileList.videoList = list
         Assert.assertEquals(list, FileList.videoList)
     }
 

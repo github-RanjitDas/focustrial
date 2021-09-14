@@ -3,15 +3,8 @@ package com.lawmobile.domain.entities
 object FileList {
     var videoList = emptyList<DomainInformationFile>()
     var imageList = emptyList<DomainInformationFile>()
+    var audioList = emptyList<DomainInformationFile>()
     var imageMetadataList = ArrayList<DomainInformationImageMetadata>()
-
-    fun changeImageList(newListOfImages: List<DomainInformationFile>) {
-        imageList = newListOfImages
-    }
-
-    fun changeVideoList(newListOfVideos: List<DomainInformationFile>) {
-        videoList = newListOfVideos
-    }
 
     fun updateItemInImageMetadataList(item: DomainInformationImageMetadata) {
         val index = imageMetadataList.indexOfFirst {

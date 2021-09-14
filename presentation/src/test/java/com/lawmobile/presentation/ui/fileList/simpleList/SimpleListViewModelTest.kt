@@ -41,62 +41,92 @@ internal class SimpleListViewModelTest {
     }
 
     @Test
-    fun testGetSnapshotListSuccess() = runBlockingTest {
+    fun getSnapshotListSuccess() = runBlockingTest {
         val domainInformationFileResponse: DomainInformationFileResponse = mockk()
         val result = Result.Success(domainInformationFileResponse)
         coEvery { simpleListUseCase.getSnapshotList() } returns result
         simpleListViewModel.getSnapshotList()
-        Assert.assertEquals(simpleListViewModel.fileListLiveData.value, result)
+        Assert.assertEquals(simpleListViewModel.fileListResult.value, result)
         coVerify { simpleListUseCase.getSnapshotList() }
     }
 
     @Test
-    fun testGetSnapshotListError() = runBlockingTest {
+    fun getSnapshotListError() = runBlockingTest {
         val result = Result.Error(mockk())
         coEvery { simpleListUseCase.getSnapshotList() } returns result
         simpleListViewModel.getSnapshotList()
-        Assert.assertEquals(simpleListViewModel.fileListLiveData.value, result)
+        Assert.assertEquals(simpleListViewModel.fileListResult.value, result)
         coVerify { simpleListUseCase.getSnapshotList() }
     }
 
     @Test
-    fun testGetSnapshotListErrorTimeOut() = runBlockingTest {
+    fun getSnapshotListErrorTimeOut() = runBlockingTest {
         mockkObject(BaseViewModel)
         every { BaseViewModel.getLoadingTimeOut() } returns 0
         val domainInformationFileResponse: DomainInformationFileResponse = mockk()
         val result = Result.Success(domainInformationFileResponse)
         coEvery { simpleListUseCase.getSnapshotList() } returns result
         simpleListViewModel.getSnapshotList()
-        Assert.assertTrue(simpleListViewModel.fileListLiveData.value is Result.Error)
+        Assert.assertTrue(simpleListViewModel.fileListResult.value is Result.Error)
     }
 
     @Test
-    fun testGetVideoListSuccess() = runBlockingTest {
+    fun getVideoListSuccess() = runBlockingTest {
         val domainInformationFileResponse: DomainInformationFileResponse = mockk()
         val result = Result.Success(domainInformationFileResponse)
         coEvery { simpleListUseCase.getVideoList() } returns result
         simpleListViewModel.getVideoList()
-        Assert.assertEquals(simpleListViewModel.fileListLiveData.value, result)
+        Assert.assertEquals(simpleListViewModel.fileListResult.value, result)
         coVerify { simpleListUseCase.getVideoList() }
     }
 
     @Test
-    fun testGetVideoListError() = runBlockingTest {
+    fun getVideoListError() = runBlockingTest {
         val result = Result.Error(mockk())
         coEvery { simpleListUseCase.getVideoList() } returns result
         simpleListViewModel.getVideoList()
-        Assert.assertEquals(simpleListViewModel.fileListLiveData.value, result)
+        Assert.assertEquals(simpleListViewModel.fileListResult.value, result)
         coVerify { simpleListUseCase.getVideoList() }
     }
 
     @Test
-    fun testGetVideoListErrorTimeout() = runBlockingTest {
+    fun getVideoListErrorTimeout() = runBlockingTest {
         mockkObject(BaseViewModel)
         every { BaseViewModel.getLoadingTimeOut() } returns 0
         val domainInformationFileResponse: DomainInformationFileResponse = mockk()
         val result = Result.Success(domainInformationFileResponse)
         coEvery { simpleListUseCase.getVideoList() } returns result
         simpleListViewModel.getVideoList()
-        Assert.assertTrue(simpleListViewModel.fileListLiveData.value is Result.Error)
+        Assert.assertTrue(simpleListViewModel.fileListResult.value is Result.Error)
+    }
+
+    @Test
+    fun getAudioListSuccess() {
+        val domainInformationFileResponse: DomainInformationFileResponse = mockk()
+        val result = Result.Success(domainInformationFileResponse)
+        coEvery { simpleListUseCase.getAudioList() } returns result
+        simpleListViewModel.getAudioList()
+        Assert.assertEquals(simpleListViewModel.fileListResult.value, result)
+        coVerify { simpleListUseCase.getAudioList() }
+    }
+
+    @Test
+    fun getAudioListError() = runBlockingTest {
+        val result = Result.Error(mockk())
+        coEvery { simpleListUseCase.getAudioList() } returns result
+        simpleListViewModel.getAudioList()
+        Assert.assertEquals(simpleListViewModel.fileListResult.value, result)
+        coVerify { simpleListUseCase.getAudioList() }
+    }
+
+    @Test
+    fun getAudioListErrorTimeOut() = runBlockingTest {
+        mockkObject(BaseViewModel)
+        every { BaseViewModel.getLoadingTimeOut() } returns 0
+        val domainInformationFileResponse: DomainInformationFileResponse = mockk()
+        val result = Result.Success(domainInformationFileResponse)
+        coEvery { simpleListUseCase.getAudioList() } returns result
+        simpleListViewModel.getAudioList()
+        Assert.assertTrue(simpleListViewModel.fileListResult.value is Result.Error)
     }
 }

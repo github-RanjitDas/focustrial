@@ -52,8 +52,8 @@ open class OnSwipeTouchListener(context: Context?) : OnTouchListener {
                     }
                     result = true
                 }
-            } catch (exception: Exception) {
-                exception.printStackTrace()
+            } catch (e: Exception) {
+                e.printStackTrace()
             }
             return result
         }

@@ -11,4 +11,7 @@ class SimpleListUseCaseImpl(private val simpleListRepository: SimpleListReposito
 
     override suspend fun getVideoList(): Result<DomainInformationFileResponse> =
         simpleListRepository.getVideoList()
+
+    override suspend fun getAudioList(): Result<DomainInformationFileResponse> =
+        simpleListRepository.getAudioList()
 }

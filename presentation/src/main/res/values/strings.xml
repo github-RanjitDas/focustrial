@@ -74,6 +74,7 @@
     <string name="file_list_event_default">Event</string>
     <string name="no_images_found">No snapshots found</string>
     <string name="no_videos_found">No videos found</string>
+    <string name="no_audios_found">No audios found</string>
     <string name="getting_files_error">Getting files error</string>
     <string name="getting_files_error_description">The system failed to retrieve all the requested files, please try again</string>
 
@@ -181,6 +182,7 @@
     <string name="close_instructions_description">close instructions</string>
     <string name="snapshots_title">Snapshots</string>
     <string name="videos_title">Videos</string>
+    <string name="audios_title">Audios</string>
     <string name="associate_with_an_officer">Associate with an officer</string>
     <string name="select_snapshots_to_associate">Select snapshots to associate</string>
     <string name="select">Select</string>
@@ -211,6 +213,7 @@
     <string name="items_selected" tools:ignore="PluralsCandidate">%1$d Selected</string>
     <string name="no_snapshots_filter">No snapshots match to these criteria</string>
     <string name="no_videos_filter">No videos match to these criteria</string>
+    <string name="no_audios_filter">No audios match to these criteria</string>
     <string name="not_available">Not available</string>
     <string name="user_guide">User Guide</string>
     <string name="image_error_thumbnail">this thumbnail did not load correctly</string>
@@ -284,5 +287,6 @@
     <string name="body_worn_settings_error_in_get_settings">Error in get settings, please try again</string>
     <string name="body_worn_settings_error_in_change_settings">Error in change setting, please try again</string>
     <string name="start_now">Start Now</string>
+    <string name="view_audio_list">View Audio List</string>
 
 </resources>

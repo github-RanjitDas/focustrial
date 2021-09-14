@@ -21,7 +21,7 @@ class SimpleListRepositoryImpl(
                     domainInformationFileResponse.items = FileList.imageList as MutableList
                     Result.Success(domainInformationFileResponse)
                 } else {
-                    FileList.changeImageList(domainInformationFileResponse.items)
+                    FileList.imageList = domainInformationFileResponse.items
                     Result.Success(domainInformationFileResponse)
                 }
             }
@@ -52,10 +52,25 @@ class SimpleListRepositoryImpl(
                     return Result.Success(domainInformationFileResponse)
                 }
 
-                FileList.changeVideoList(domainInformationFileResponse.items)
+                FileList.videoList = domainInformationFileResponse.items
                 return Result.Success(domainInformationFileResponse)
             }
             is Result.Error -> response
         }
     }
+
+    override suspend fun getAudioList(): Result<DomainInformationFileResponse> =
+        when (val response = simpleListRemoteDataSource.getAudioList()) {
+            is Result.Success -> {
+                val domainInformationFileResponse = FileResponseMapper.cameraToDomain(response.data)
+                if (domainInformationFileResponse.items.size < FileList.audioList.size) {
+                    domainInformationFileResponse.items = FileList.audioList as MutableList
+                    Result.Success(domainInformationFileResponse)
+                } else {
+                    FileList.audioList = domainInformationFileResponse.items
+                    Result.Success(domainInformationFileResponse)
+                }
+            }
+            is Result.Error -> response
+        }
 }

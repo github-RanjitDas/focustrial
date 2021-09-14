@@ -20,6 +20,7 @@ import com.lawmobile.presentation.extensions.setOnClickListenerCheckConnection
 import com.lawmobile.presentation.extensions.showErrorSnackBar
 import com.lawmobile.presentation.extensions.verifySessionBeforeAction
 import com.lawmobile.presentation.ui.fileList.FileListBaseFragment
+import com.lawmobile.presentation.utils.Constants.AUDIO_LIST
 import com.lawmobile.presentation.utils.Constants.FILE_LIST_TYPE
 import com.lawmobile.presentation.utils.Constants.SNAPSHOT_LIST
 import com.lawmobile.presentation.utils.Constants.VIDEO_LIST
@@ -65,6 +66,10 @@ class SimpleFileListFragment : FileListBaseFragment() {
             SNAPSHOT_LIST -> {
                 binding.textViewEvent.isVisible = false
                 simpleListViewModel.getSnapshotList()
+            }
+            AUDIO_LIST -> {
+                binding.textViewEvent.isVisible = false
+                simpleListViewModel.getAudioList()
             }
         }
     }
@@ -123,7 +128,7 @@ class SimpleFileListFragment : FileListBaseFragment() {
     }
 
     private fun setObservers() {
-        simpleListViewModel.fileListLiveData.observe(
+        simpleListViewModel.fileListResult.observe(
             viewLifecycleOwner,
             Observer(::handleFileListResult)
         )

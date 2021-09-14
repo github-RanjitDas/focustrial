@@ -24,13 +24,13 @@ class LiveStreamingRepositoryImpl(
     override suspend fun stopRecordVideo(): Result<Unit> {
         delay(RECORD_OPERATION_TIME)
         val result = liveRemoteDataSource.stopRecordVideo()
-        if (result is Result.Success) FileList.changeVideoList(emptyList())
+        if (result is Result.Success) FileList.videoList = emptyList()
         return result
     }
 
     override suspend fun takePhoto(): Result<Unit> {
         val result = liveRemoteDataSource.takePhoto()
-        if (result is Result.Success) FileList.changeImageList(emptyList())
+        if (result is Result.Success) FileList.imageList = emptyList()
         return result
     }
 

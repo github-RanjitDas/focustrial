@@ -37,7 +37,7 @@ class ThumbnailListRepositoryImpl(
                     domainInformationFileResponse.items = FileList.imageList as MutableList
                     Result.Success(domainInformationFileResponse)
                 } else {
-                    FileList.changeImageList(domainInformationFileResponse.items)
+                    FileList.imageList = domainInformationFileResponse.items
                     Result.Success(domainInformationFileResponse)
                 }
             }

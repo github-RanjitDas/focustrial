@@ -38,6 +38,7 @@ class CameraConnectServiceMock : CameraService {
     companion object {
         var snapshotsList = CameraFilesData.DEFAULT_SNAPSHOT_LIST.value
         var videoList = CameraFilesData.DEFAULT_VIDEO_LIST.value
+        var audioList = CameraFilesData.DEFAULT_AUDIO_LIST.value
         var takenPhotos = 0
         var takenVideos = 0
         var result: Result<Int> = Result.Success(100)
@@ -75,6 +76,11 @@ class CameraConnectServiceMock : CameraService {
         return Result.Success(VideoFileInfo(0, 1000, 100, "", "10", 10, "", ""))
     }
 
+    override suspend fun getListOfAudios(): Result<FileResponseWithErrors> {
+        FileList.audioList = emptyList()
+        return Result.Success(audioList)
+    }
+
     override suspend fun getListOfImages(): Result<FileResponseWithErrors> {
         FileList.imageList = emptyList()
         return Result.Success(snapshotsList)
@@ -91,14 +97,6 @@ class CameraConnectServiceMock : CameraService {
 
     override suspend fun getMetadataOfPhotos(): Result<List<PhotoInformation>> {
         return Result.Success(emptyList())
-    }
-
-    override suspend fun getNumberOfSnapshots(): Result<String> {
-        return Result.Success("10")
-    }
-
-    override suspend fun getNumberOfVideos(): Result<String> {
-        return Result.Success("10")
     }
 
     override suspend fun getPhotoMetadata(cameraFile: CameraFile): Result<PhotoInformation> {

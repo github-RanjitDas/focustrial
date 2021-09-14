@@ -16,13 +16,12 @@ import javax.inject.Inject
 class SimpleListViewModel @Inject constructor(private val simpleListUseCase: SimpleListUseCase) :
     BaseViewModel() {
 
-    private val fileListMediator: MediatorLiveData<Result<DomainInformationFileResponse>> =
-        MediatorLiveData()
-    val fileListLiveData: LiveData<Result<DomainInformationFileResponse>> get() = fileListMediator
+    private val _fileListResult = MediatorLiveData<Result<DomainInformationFileResponse>>()
+    val fileListResult: LiveData<Result<DomainInformationFileResponse>> get() = _fileListResult
 
     fun getSnapshotList() {
         viewModelScope.launch {
-            fileListMediator.postValueWithTimeout(getLoadingTimeOut()) {
+            _fileListResult.postValueWithTimeout(getLoadingTimeOut()) {
                 simpleListUseCase.getSnapshotList()
             }
         }
@@ -30,8 +29,16 @@ class SimpleListViewModel @Inject constructor(private val simpleListUseCase: Sim
 
     fun getVideoList() {
         viewModelScope.launch {
-            fileListMediator.postValueWithTimeout(getLoadingTimeOut()) {
+            _fileListResult.postValueWithTimeout(getLoadingTimeOut()) {
                 simpleListUseCase.getVideoList()
+            }
+        }
+    }
+
+    fun getAudioList() {
+        viewModelScope.launch {
+            _fileListResult.postValueWithTimeout(getLoadingTimeOut()) {
+                simpleListUseCase.getAudioList()
             }
         }
     }
