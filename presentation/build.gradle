@@ -79,6 +79,11 @@ android {
         jvmTarget = AppConfig.jvmTarget
     }
 
+    compileOptions {
+        sourceCompatibility AppConfig.jvmTarget
+        targetCompatibility AppConfig.jvmTarget
+    }
+
     ndkVersion "21.0.6113669"
 }
 
