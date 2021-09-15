@@ -44,7 +44,7 @@ class FileListX2Activity : FileListBaseActivity() {
 
     private fun attachListTypeFragment() {
         when (listType) {
-            Constants.VIDEO_LIST -> {
+            Constants.VIDEO_LIST, Constants.AUDIO_LIST -> {
                 filterSectionFragment.isSimpleListActivity(true)
                 attachSimpleFileListFragment()
             }
@@ -105,6 +105,11 @@ class FileListX2Activity : FileListBaseActivity() {
             Constants.VIDEO_LIST -> {
                 appBarFragment =
                     AppBarX2Fragment.createInstance(false, getString(R.string.videos_title))
+                filterSectionFragment = FilterSectionX2Fragment.createInstance(false)
+            }
+            Constants.AUDIO_LIST -> {
+                appBarFragment =
+                    AppBarX2Fragment.createInstance(false, getString(R.string.audios_title))
                 filterSectionFragment = FilterSectionX2Fragment.createInstance(false)
             }
         }

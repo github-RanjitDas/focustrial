@@ -122,6 +122,14 @@ class MenuFragment : BaseFragment() {
             { onCloseMenuButton() }
         )
 
+        binding.textViewAudios.setOnTouchListenerCheckConnection(
+            {
+                startFileListActivity(Constants.AUDIO_LIST)
+                onCloseMenuButton()
+            },
+            { onCloseMenuButton() }
+        )
+
         binding.textViewNotification.setOnTouchListenerCheckConnection(
             {
                 startNotificationListActivity()

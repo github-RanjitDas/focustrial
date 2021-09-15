@@ -184,6 +184,10 @@ open class FileListBaseActivity : BaseActivity() {
                 Constants.VIDEO_LIST -> {
                     fileListViewModel.associatePartnerIdToVideoList(it, partnerId)
                 }
+                Constants.AUDIO_LIST -> {
+                    hideLoadingDialog()
+                    resetButtonAssociate()
+                } // pending to implement associate partner id
             }
         }
     }
@@ -235,6 +239,7 @@ open class FileListBaseActivity : BaseActivity() {
             when (listType) {
                 Constants.VIDEO_LIST -> filterDialog?.isEventSpinnerFilterVisible(true)
                 Constants.SNAPSHOT_LIST -> filterDialog?.isEventSpinnerFilterVisible(false)
+                Constants.AUDIO_LIST -> filterDialog?.isEventSpinnerFilterVisible(false)
             }
             simpleFileListFragment.filter = this
             thumbnailFileListFragment.filter = this
