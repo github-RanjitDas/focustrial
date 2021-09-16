@@ -18,6 +18,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.CoroutineDispatcher
 import java.net.Socket
 import javax.inject.Named
 import javax.inject.Singleton
@@ -25,7 +26,6 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 class CameraServiceModule {
-
     companion object {
 
         @Provides
@@ -98,7 +98,8 @@ class CameraServiceModule {
         @Singleton
         fun provideCameraHelper(
             connectionHelper: ConnectionHelper,
-            wifiHelper: WifiHelper
-        ): CameraHelper = CameraHelper(connectionHelper, wifiHelper)
+            wifiHelper: WifiHelper,
+            backgroundDispatcher: CoroutineDispatcher
+        ): CameraHelper = CameraHelper(connectionHelper, wifiHelper, backgroundDispatcher)
     }
 }

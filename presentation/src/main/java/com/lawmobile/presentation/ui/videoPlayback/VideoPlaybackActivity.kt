@@ -521,13 +521,15 @@ class VideoPlaybackActivity : BaseActivity() {
             officerId = CameraInfo.officerId,
             path = currentMetadata.path ?: currentVideo?.path,
             associatedFiles = FilesAssociatedByUser.value,
+            annotations = currentMetadata.annotations,
             serialNumber = CameraInfo.serialNumber,
             endTime = currentMetadata.endTime,
             gmtOffset = currentMetadata.gmtOffset,
             hash = currentMetadata.hash,
             preEvent = currentMetadata.preEvent,
             startTime = currentMetadata.startTime,
-            videoSpecs = currentMetadata.videoSpecs
+            videoSpecs = currentMetadata.videoSpecs,
+            trigger = currentMetadata.trigger
         )
     }
 
