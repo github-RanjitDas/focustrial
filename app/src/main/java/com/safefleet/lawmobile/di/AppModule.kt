@@ -19,6 +19,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.Dispatchers
 import org.videolan.libvlc.LibVLC
 import org.videolan.libvlc.MediaPlayer
 import javax.inject.Singleton
@@ -27,6 +28,10 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 class AppModule {
     companion object {
+
+        @Provides
+        @Singleton
+        fun provideBackgroundDispatcher() = Dispatchers.IO
 
         @Provides
         @Singleton

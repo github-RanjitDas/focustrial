@@ -27,9 +27,7 @@ class CameraConnectServiceMock : CameraService {
     override var arriveNotificationFromCamera: ((NotificationResponse) -> Unit)? = null
     override var progressPairingCamera: ((Result<Int>) -> Unit)? = null
 
-    override fun cleanCacheFiles() {
-        // It is not required to return anything
-    }
+    override fun cleanCacheFiles() = Unit
 
     override suspend fun deleteFile(fileName: String): Result<Unit> {
         return Result.Success(Unit)
@@ -85,20 +83,16 @@ class CameraConnectServiceMock : CameraService {
         return Result.Success(videoList)
     }
 
+    override suspend fun getListOfAudios(): Result<FileResponseWithErrors> {
+        throw NotImplementedError()
+    }
+
     override suspend fun getLogEvents(): Result<List<LogEvent>> {
         return Result.Success(eventList)
     }
 
     override suspend fun getMetadataOfPhotos(): Result<List<PhotoInformation>> {
         return Result.Success(emptyList())
-    }
-
-    override suspend fun getNumberOfSnapshots(): Result<String> {
-        return Result.Success("10")
-    }
-
-    override suspend fun getNumberOfVideos(): Result<String> {
-        return Result.Success("10")
     }
 
     override suspend fun getPhotoMetadata(cameraFile: CameraFile): Result<PhotoInformation> {
@@ -161,9 +155,7 @@ class CameraConnectServiceMock : CameraService {
         progressPairingCamera?.invoke(result)
     }
 
-    override fun reviewIfArriveNotificationInCMDSocket() {
-        // Just for test
-    }
+    override fun reviewIfArriveNotificationInCMDSocket() = Unit
 
     override suspend fun saveAllPhotoMetadata(list: List<PhotoInformation>): Result<Unit> {
         return Result.Success(Unit)
