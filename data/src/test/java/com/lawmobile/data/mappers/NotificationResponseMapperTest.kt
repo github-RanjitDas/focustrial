@@ -1,5 +1,6 @@
 package com.lawmobile.data.mappers
 
+import com.lawmobile.data.mappers.impl.NotificationResponseMapper.toDomain
 import com.lawmobile.domain.entities.CameraEvent
 import com.lawmobile.domain.enums.EventTag
 import com.lawmobile.domain.enums.EventType
@@ -17,7 +18,7 @@ class NotificationResponseMapperTest {
         mockkObject(DateHelper)
         every { DateHelper.dateToString(any(), any(), any()) } returns "07/22/2020"
         val cameraNotification = NotificationResponse("7", "low_storage_warning", "value")
-        val response = NotificationResponseMapper.cameraToDomain(cameraNotification)
+        val response = cameraNotification.toDomain()
         Assert.assertEquals(
             response,
             CameraEvent(
@@ -36,7 +37,7 @@ class NotificationResponseMapperTest {
         mockkObject(DateHelper)
         every { DateHelper.dateToString(any(), any(), any()) } returns "07/22/2020"
         val cameraNotification = NotificationResponse("7", "new_event", "value")
-        val response = NotificationResponseMapper.cameraToDomain(cameraNotification)
+        val response = cameraNotification.toDomain()
         Assert.assertEquals(
             response,
             CameraEvent(

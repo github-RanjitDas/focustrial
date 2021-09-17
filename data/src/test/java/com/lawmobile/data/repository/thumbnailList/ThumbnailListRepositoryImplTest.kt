@@ -1,7 +1,7 @@
 package com.lawmobile.data.repository.thumbnailList
 
 import com.lawmobile.data.datasource.remote.thumbnailList.ThumbnailListRemoteDataSource
-import com.lawmobile.data.mappers.FileMapper
+import com.lawmobile.data.mappers.impl.FileMapper.toDomain
 import com.lawmobile.domain.entities.DomainInformationFile
 import com.lawmobile.domain.entities.FileList
 import com.safefleet.mobile.external_hardware.cameras.entities.CameraFile
@@ -44,7 +44,7 @@ internal class ThumbnailListRepositoryImplTest {
         FileList.imageList = listOf(mockk(relaxed = true), mockk(relaxed = true))
 
         coEvery { thumbnailListRemoteDataSource.getImageBytes(any()) } returns Result.Success("Hola".toByteArray())
-        linkSnapshotsRepositoryImpl.getImageBytes(FileMapper.cameraToDomain(cameraFile))
+        linkSnapshotsRepositoryImpl.getImageBytes(cameraFile.toDomain())
         coVerify { thumbnailListRemoteDataSource.getImageBytes(any()) }
     }
 
@@ -53,14 +53,14 @@ internal class ThumbnailListRepositoryImplTest {
         val cameraFile =
             CameraFile("1010202000", "10-10-2020 12:00:00", "", "1010202000")
         val domainInformationFile =
-            DomainInformationFile(FileMapper.cameraToDomain(cameraFile))
+            DomainInformationFile(cameraFile.toDomain())
         FileList.imageList = listOf(domainInformationFile, domainInformationFile)
 
         coEvery { thumbnailListRemoteDataSource.getImageBytes(any()) } returns
             Result.Error(mockk())
 
         val result =
-            linkSnapshotsRepositoryImpl.getImageBytes(FileMapper.cameraToDomain(cameraFile))
+            linkSnapshotsRepositoryImpl.getImageBytes(cameraFile.toDomain())
         Assert.assertTrue(result is Result.Error)
     }
 
@@ -81,7 +81,7 @@ internal class ThumbnailListRepositoryImplTest {
             Result.Success("Hola".toByteArray())
 
         val result =
-            linkSnapshotsRepositoryImpl.getImageBytes(FileMapper.cameraToDomain(cameraFile))
+            linkSnapshotsRepositoryImpl.getImageBytes(cameraFile.toDomain())
         Assert.assertTrue(result is Result.Success)
     }
 
@@ -103,7 +103,7 @@ internal class ThumbnailListRepositoryImplTest {
         val cameraFile =
             CameraFile("1010202000", "10-10-2020 12:00:00", "", "1010202000")
         val domainInformationFile =
-            DomainInformationFile(FileMapper.cameraToDomain(cameraFile))
+            DomainInformationFile(cameraFile.toDomain())
         FileList.imageList = listOf(domainInformationFile, domainInformationFile)
         val cameraConnectFileResponseWithErrors = FileResponseWithErrors().apply {
             items.addAll(listOf(cameraFile, cameraFile, cameraFile))
@@ -120,7 +120,7 @@ internal class ThumbnailListRepositoryImplTest {
         val cameraFile =
             CameraFile("1010202000", "10-10-2020 12:00:00", "", "1010202000")
         val domainInformationFile =
-            DomainInformationFile(FileMapper.cameraToDomain(cameraFile))
+            DomainInformationFile(cameraFile.toDomain())
 
         FileList.imageList = listOf(
             domainInformationFile,

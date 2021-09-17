@@ -1,7 +1,8 @@
 package com.lawmobile.data.repository.videoPlayback
 
 import com.lawmobile.data.datasource.remote.videoPlayback.VideoPlaybackRemoteDataSource
-import com.lawmobile.data.mappers.VideoInformationMapper
+import com.lawmobile.data.mappers.impl.VideoInformationMapper
+import com.lawmobile.data.mappers.impl.VideoInformationMapper.toDomain
 import com.lawmobile.data.repository.videoPlayback.VideoPlaybackRepositoryImpl.Companion.ERROR_TO_GET_VIDEO
 import com.lawmobile.domain.entities.DomainCameraFile
 import com.lawmobile.domain.entities.DomainInformationVideo
@@ -62,7 +63,7 @@ class VideoPlaybackRepositoryImplTest {
     @Test
     fun testGetInformationResourcesVideoSuccessMapperFailed() = runBlockingTest {
         mockkObject(VideoInformationMapper)
-        every { VideoInformationMapper.cameraToDomain(any()) } throws Exception()
+        every { any<VideoFileInfo>().toDomain() } throws Exception()
 
         val domainCameraFile: DomainCameraFile = mockk(relaxed = true)
         val cameraConnectVideoInformationVideo = VideoFileInfo(1, 1, 1, "", "", 1, "", "")

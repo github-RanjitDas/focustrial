@@ -1,9 +1,10 @@
 package com.lawmobile.data.repository.fileList
 
 import com.lawmobile.data.datasource.remote.fileList.FileListRemoteDataSource
-import com.lawmobile.data.mappers.FileMapper
-import com.lawmobile.data.mappers.PhotoMetadataMapper
-import com.lawmobile.data.mappers.VideoMetadataMapper
+import com.lawmobile.data.mappers.impl.FileMapper.toCameraList
+import com.lawmobile.data.mappers.impl.PhotoMetadataMapper.toDomain
+import com.lawmobile.data.mappers.impl.VideoMetadataMapper.toCamera
+import com.lawmobile.data.mappers.impl.VideoMetadataMapper.toDomain
 import com.lawmobile.domain.entities.CameraInfo
 import com.lawmobile.domain.entities.DomainCameraFile
 import com.lawmobile.domain.entities.DomainInformationImageMetadata
@@ -27,7 +28,7 @@ class FileListRepositoryImpl(
         domainFileList: List<DomainCameraFile>,
         partnerID: String
     ): Result<Unit> {
-        val cameraConnectFileList = FileMapper.domainToCameraList(domainFileList)
+        val cameraConnectFileList = domainFileList.toCameraList()
         val errorsInFiles = ArrayList<String>()
 
         cameraConnectFileList.forEach {
@@ -37,7 +38,7 @@ class FileListRepositoryImpl(
             if (remoteVideoMetadata?.metadata != null) {
                 remoteVideoMetadata.metadata!!.partnerID = partnerID
                 remoteVideoMetadata.nameFolder = it.nameFolder
-                videoInformation = VideoMetadataMapper.domainToCamera(remoteVideoMetadata)
+                videoInformation = remoteVideoMetadata.toCamera()
             } else {
                 val partnerMetadata = VideoMetadata(partnerID = partnerID)
                 videoInformation = VideoInformation(
@@ -56,10 +57,7 @@ class FileListRepositoryImpl(
                 errorsInFiles.add(it.name)
             } else {
                 VideoListMetadata.saveOrUpdateVideoMetadata(
-                    RemoteVideoMetadata(
-                        VideoMetadataMapper.cameraToDomain(videoInformation),
-                        true
-                    )
+                    RemoteVideoMetadata(videoInformation.toDomain(), true)
                 )
             }
         }
@@ -71,7 +69,7 @@ class FileListRepositoryImpl(
         domainFileList: List<DomainCameraFile>,
         partnerID: String
     ): Result<Unit> {
-        val cameraConnectFileList = FileMapper.domainToCameraList(domainFileList)
+        val cameraConnectFileList = domainFileList.toCameraList()
         val itemsFinal = mutableListOf<PhotoInformation>()
         val listPhotosSaved = ArrayList<PhotoInformation>()
         val resultGetMetadataOfPhotos = fileListRemoteDataSource.getSavedPhotosMetadata()
@@ -106,7 +104,7 @@ class FileListRepositoryImpl(
             } else {
                 val item = FileList.getMetadataOfImageInList(fileItem.name)
                 val newItemPhoto = DomainInformationImageMetadata(
-                    PhotoMetadataMapper.cameraToDomain(cameraPhotoMetadata),
+                    cameraPhotoMetadata.toDomain(),
                     item?.videosAssociated
                 )
                 FileList.updateItemInImageMetadataList(newItemPhoto)

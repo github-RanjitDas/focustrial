@@ -1,5 +1,8 @@
 package com.lawmobile.data.mappers
 
+import com.lawmobile.data.mappers.impl.CatalogMapper.toCamera
+import com.lawmobile.data.mappers.impl.CatalogMapper.toDomain
+import com.lawmobile.data.mappers.impl.CatalogMapper.toDomainList
 import com.lawmobile.domain.entities.MetadataEvent
 import com.safefleet.mobile.external_hardware.cameras.entities.CameraCatalog
 import io.mockk.mockk
@@ -13,7 +16,7 @@ internal class CatalogMapperTest {
     fun cameraToDomainList() {
         val cameraCatalogList =
             listOf<CameraCatalog>(mockk(relaxed = true), mockk(relaxed = true))
-        val domainCatalogList = CatalogMapper.cameraToDomainList(cameraCatalogList)
+        val domainCatalogList = cameraCatalogList.toDomainList()
         with(cameraCatalogList) {
             domainCatalogList.forEachIndexed { index, it ->
                 assertTrue(it.id == get(index).id)
@@ -28,19 +31,19 @@ internal class CatalogMapperTest {
     @Test
     fun cameraToDomainListEmpty() {
         val cameraCatalogList = emptyList<CameraCatalog>()
-        val domainCatalogList = CatalogMapper.cameraToDomainList(cameraCatalogList)
+        val domainCatalogList = cameraCatalogList.toDomainList()
         assertTrue(domainCatalogList.isEmpty())
     }
 
     @Test
     fun cameraToDomain() {
         val cameraConnectCatalog: CameraCatalog = mockk(relaxed = true)
-        val domainCatalog = CatalogMapper.cameraToDomain(cameraConnectCatalog)
+        val domainCatalog = cameraConnectCatalog.toDomain()
         with(cameraConnectCatalog) {
             domainCatalog.let {
-                assertTrue(it?.id == id)
-                assertTrue(it?.name == name)
-                assertTrue(it?.type == type)
+                assertTrue(it.id == id)
+                assertTrue(it.name == name)
+                assertTrue(it.type == type)
             }
         }
     }
@@ -48,7 +51,7 @@ internal class CatalogMapperTest {
     @Test
     fun domainToCamera() {
         val metadataEvent: MetadataEvent = mockk(relaxed = true)
-        val cameraConnectCatalog = CatalogMapper.domainToCamera(metadataEvent)
+        val cameraConnectCatalog = metadataEvent.toCamera()
         with(metadataEvent) {
             cameraConnectCatalog.let {
                 assertTrue(it?.id == id)

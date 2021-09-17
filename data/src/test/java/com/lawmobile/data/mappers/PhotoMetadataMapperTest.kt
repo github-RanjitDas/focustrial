@@ -1,5 +1,6 @@
 package com.lawmobile.data.mappers
 
+import com.lawmobile.data.mappers.impl.PhotoMetadataMapper.toDomain
 import com.safefleet.mobile.external_hardware.cameras.entities.PhotoInformation
 import io.mockk.mockk
 import org.junit.jupiter.api.Assertions.assertTrue
@@ -10,7 +11,7 @@ internal class PhotoMetadataMapperTest {
     @Test
     fun cameraToDomain() {
         val photoInformation: PhotoInformation = mockk(relaxed = true)
-        val domainPhotoMetadata = PhotoMetadataMapper.cameraToDomain(photoInformation)
+        val domainPhotoMetadata = photoInformation.toDomain()
         with(photoInformation) {
             domainPhotoMetadata.let {
                 assertTrue(it.fileName == fileName)

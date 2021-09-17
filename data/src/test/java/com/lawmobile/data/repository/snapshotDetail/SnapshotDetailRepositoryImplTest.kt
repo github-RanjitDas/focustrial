@@ -1,7 +1,7 @@
 package com.lawmobile.data.repository.snapshotDetail
 
 import com.lawmobile.data.datasource.remote.snapshotDetail.SnapshotDetailRemoteDataSource
-import com.lawmobile.data.mappers.FileMapper
+import com.lawmobile.data.mappers.impl.FileMapper.toDomain
 import com.lawmobile.domain.entities.FileList
 import com.safefleet.mobile.external_hardware.cameras.entities.CameraFile
 import com.safefleet.mobile.external_hardware.cameras.entities.PhotoInformation
@@ -42,7 +42,7 @@ class SnapshotDetailRepositoryImplTest {
             Result.Success(byte)
 
         val result = snapshotDetailRepositoryImpl.getImageBytes(
-            FileMapper.cameraToDomain(cameraConnectFile)
+            cameraConnectFile.toDomain()
         ) as Result.Success
         Assert.assertEquals(result.data, byte)
 
@@ -57,7 +57,7 @@ class SnapshotDetailRepositoryImplTest {
             Result.Error(Exception(""))
 
         val result = snapshotDetailRepositoryImpl.getImageBytes(
-            FileMapper.cameraToDomain(cameraConnectFile)
+            cameraConnectFile.toDomain()
         )
         Assert.assertTrue(result is Result.Error)
 
@@ -78,7 +78,7 @@ class SnapshotDetailRepositoryImplTest {
         FileList.imageMetadataList = ArrayList()
 
         snapshotDetailRepositoryImpl.saveSnapshotPartnerId(
-            FileMapper.cameraToDomain(cameraConnectFile),
+            cameraConnectFile.toDomain(),
             "partnerId"
         )
 
@@ -101,7 +101,7 @@ class SnapshotDetailRepositoryImplTest {
             Result.Success(Unit)
 
         val response = snapshotDetailRepositoryImpl.saveSnapshotPartnerId(
-            FileMapper.cameraToDomain(cameraConnectFile),
+            cameraConnectFile.toDomain(),
             "partnerId"
         )
 
@@ -122,7 +122,7 @@ class SnapshotDetailRepositoryImplTest {
             Result.Success(Unit)
 
         val response = snapshotDetailRepositoryImpl.saveSnapshotPartnerId(
-            FileMapper.cameraToDomain(cameraConnectFile),
+            cameraConnectFile.toDomain(),
             "partnerId"
         )
         Assert.assertTrue(response is Result.Error)
@@ -137,7 +137,7 @@ class SnapshotDetailRepositoryImplTest {
         val cameraConnectFile = CameraFile("name", "date", "path", "nameFol")
 
         val response = snapshotDetailRepositoryImpl.getInformationOfPhoto(
-            FileMapper.cameraToDomain(cameraConnectFile)
+            cameraConnectFile.toDomain()
         )
         Assert.assertTrue(response is Result.Error)
     }
@@ -151,9 +151,7 @@ class SnapshotDetailRepositoryImplTest {
         )
         val cameraSend = CameraFile("name", "date", "path", "nameFol")
 
-        val response = snapshotDetailRepositoryImpl.getInformationOfPhoto(
-            FileMapper.cameraToDomain(cameraSend)
-        )
+        val response = snapshotDetailRepositoryImpl.getInformationOfPhoto(cameraSend.toDomain())
         Assert.assertTrue(response is Result.Success)
     }
 
@@ -168,7 +166,7 @@ class SnapshotDetailRepositoryImplTest {
 
         runBlocking {
             val response = snapshotDetailRepositoryImpl.getInformationOfPhoto(
-                FileMapper.cameraToDomain(cameraConnectFile)
+                cameraConnectFile.toDomain()
             )
             Assert.assertTrue(response is Result.Error)
         }
@@ -193,7 +191,7 @@ class SnapshotDetailRepositoryImplTest {
 
         runBlocking {
             val response = snapshotDetailRepositoryImpl.getInformationOfPhoto(
-                FileMapper.cameraToDomain(cameraSend)
+                cameraSend.toDomain()
             )
             Assert.assertTrue(response is Result.Error)
         }

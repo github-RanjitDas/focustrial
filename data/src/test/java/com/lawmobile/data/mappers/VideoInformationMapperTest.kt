@@ -1,5 +1,6 @@
 package com.lawmobile.data.mappers
 
+import com.lawmobile.data.mappers.impl.VideoInformationMapper.toDomain
 import com.safefleet.mobile.external_hardware.cameras.entities.VideoFileInfo
 import io.mockk.mockk
 import org.junit.jupiter.api.Assertions.assertTrue
@@ -10,7 +11,7 @@ internal class VideoInformationMapperTest {
     @Test
     fun cameraToDomain() {
         val cameraConnectVideoInfo: VideoFileInfo = mockk(relaxed = true)
-        val domainInformationVideo = VideoInformationMapper.cameraToDomain(cameraConnectVideoInfo)
+        val domainInformationVideo = cameraConnectVideoInfo.toDomain()
         with(cameraConnectVideoInfo) {
             domainInformationVideo.let {
                 assertTrue(it.date == date)
