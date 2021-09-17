@@ -1,9 +1,10 @@
 package com.lawmobile.data.repository.videoPlayback
 
 import com.lawmobile.data.datasource.remote.videoPlayback.VideoPlaybackRemoteDataSource
-import com.lawmobile.data.mappers.FileMapper
-import com.lawmobile.data.mappers.VideoInformationMapper
-import com.lawmobile.data.mappers.VideoMetadataMapper
+import com.lawmobile.data.mappers.impl.FileMapper.toCamera
+import com.lawmobile.data.mappers.impl.VideoInformationMapper.toDomain
+import com.lawmobile.data.mappers.impl.VideoMetadataMapper.toCamera
+import com.lawmobile.data.mappers.impl.VideoMetadataMapper.toDomain
 import com.lawmobile.domain.entities.DomainCameraFile
 import com.lawmobile.domain.entities.DomainInformationVideo
 import com.lawmobile.domain.entities.DomainVideoMetadata
@@ -17,14 +18,14 @@ class VideoPlaybackRepositoryImpl(
 ) : VideoPlaybackRepository {
 
     override suspend fun getInformationResourcesVideo(domainCameraFile: DomainCameraFile): Result<DomainInformationVideo> {
-        val cameraConnectFile = FileMapper.domainToCamera(domainCameraFile)
+        val cameraConnectFile = domainCameraFile.toCamera()
         return when (
             val response =
                 videoPlaybackRemoteDataSource.getInformationResourcesVideo(cameraConnectFile)
         ) {
             is Result.Success -> {
                 return try {
-                    Result.Success(VideoInformationMapper.cameraToDomain(response.data))
+                    Result.Success(response.data.toDomain())
                 } catch (e: Exception) {
                     Result.Error(Exception(ERROR_TO_GET_VIDEO))
                 }
@@ -34,7 +35,7 @@ class VideoPlaybackRepositoryImpl(
     }
 
     override suspend fun saveVideoMetadata(domainVideoMetadata: DomainVideoMetadata): Result<Unit> {
-        val cameraConnectVideoMetadata = VideoMetadataMapper.domainToCamera(domainVideoMetadata)
+        val cameraConnectVideoMetadata = domainVideoMetadata.toCamera()
         val result = videoPlaybackRemoteDataSource.saveVideoMetadata(cameraConnectVideoMetadata)
         if (result is Result.Success) {
             val metadata = RemoteVideoMetadata(domainVideoMetadata, true)
@@ -56,10 +57,10 @@ class VideoPlaybackRepositoryImpl(
                     videoPlaybackRemoteDataSource.getVideoMetadata(fileName, folderName)
             ) {
                 is Result.Success -> {
-                    val domainVideoMetadata = VideoMetadataMapper.cameraToDomain(result.data)
+                    val domainVideoMetadata = result.data.toDomain()
                     val metadata = RemoteVideoMetadata(domainVideoMetadata, false)
                     VideoListMetadata.saveOrUpdateVideoMetadata(metadata)
-                    Result.Success(VideoMetadataMapper.cameraToDomain(result.data))
+                    Result.Success(result.data.toDomain())
                 }
                 is Result.Error -> result
             }

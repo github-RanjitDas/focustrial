@@ -1,5 +1,8 @@
 package com.lawmobile.data.mappers
 
+import com.lawmobile.data.mappers.impl.FileMapper.toCamera
+import com.lawmobile.data.mappers.impl.FileMapper.toCameraList
+import com.lawmobile.data.mappers.impl.FileMapper.toDomain
 import com.lawmobile.domain.entities.DomainCameraFile
 import com.safefleet.mobile.external_hardware.cameras.entities.CameraFile
 import io.mockk.mockk
@@ -11,7 +14,7 @@ internal class FileMapperTest {
     @Test
     fun domainToCameraList() {
         val domainCameraList = listOf(mockk<DomainCameraFile>(relaxed = true))
-        val cameraConnectList = FileMapper.domainToCameraList(domainCameraList)
+        val cameraConnectList = domainCameraList.toCameraList()
         domainCameraList.forEachIndexed { index, it ->
             with(cameraConnectList[index]) {
                 assertTrue(it.name == name)
@@ -25,7 +28,7 @@ internal class FileMapperTest {
     @Test
     fun cameraToDomain() {
         val cameraConnectFile: CameraFile = mockk(relaxed = true)
-        val domainCameraFile = FileMapper.cameraToDomain(cameraConnectFile)
+        val domainCameraFile = cameraConnectFile.toDomain()
         with(cameraConnectFile) {
             domainCameraFile.let {
                 assertTrue(it.name == name)
@@ -39,7 +42,7 @@ internal class FileMapperTest {
     @Test
     fun domainToCamera() {
         val domainCameraFile: DomainCameraFile = mockk(relaxed = true)
-        val cameraConnectFile = FileMapper.domainToCamera(domainCameraFile)
+        val cameraConnectFile = domainCameraFile.toCamera()
         with(domainCameraFile) {
             cameraConnectFile.let {
                 assertTrue(it.name == name)

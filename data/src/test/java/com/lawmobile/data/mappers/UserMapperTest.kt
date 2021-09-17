@@ -1,5 +1,6 @@
 package com.lawmobile.data.mappers
 
+import com.lawmobile.data.mappers.impl.UserMapper.toDomain
 import com.safefleet.mobile.external_hardware.cameras.entities.CameraUser
 import io.mockk.mockk
 import org.junit.jupiter.api.Assertions.assertTrue
@@ -12,7 +13,7 @@ class UserMapperTest {
     @Test
     fun cameraToDomain() {
         val cameraConnectUserResponse = mockk<CameraUser>(relaxed = true)
-        val domainUserResponse = UserMapper.cameraToDomain(cameraConnectUserResponse)
+        val domainUserResponse = cameraConnectUserResponse.toDomain()
         with(cameraConnectUserResponse) {
             domainUserResponse.let {
                 assertTrue(it.id == officerId)

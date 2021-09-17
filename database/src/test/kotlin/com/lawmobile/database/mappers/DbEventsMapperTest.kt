@@ -1,6 +1,8 @@
 package com.lawmobile.database.mappers
 
 import com.lawmobile.database.DbCameraEvent
+import com.lawmobile.database.mappers.DbEventsMapper.toLocal
+import com.lawmobile.database.mappers.DbEventsMapper.toLocalList
 import org.junit.Assert
 import org.junit.jupiter.api.Test
 
@@ -28,7 +30,7 @@ internal class DbEventsMapperTest {
                 0
             )
         )
-        val localEvents = DbEventsMapper.dbToLocalList(dbEvents)
+        val localEvents = dbEvents.toLocalList()
         localEvents.forEachIndexed { index, it ->
             with(dbEvents[index]) {
                 Assert.assertEquals(date, it.date)
@@ -53,7 +55,7 @@ internal class DbEventsMapperTest {
             "20/12/20",
             1
         )
-        val localEvent = DbEventsMapper.dbToLocal(dbEvent)
+        val localEvent = dbEvent.toLocal()
         dbEvent.let {
             with(localEvent) {
                 Assert.assertEquals(date, it.date)

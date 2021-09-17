@@ -1,6 +1,6 @@
 package com.lawmobile.data.datasource.remote.simpleList
 
-import com.lawmobile.data.mappers.VideoMetadataMapper
+import com.lawmobile.data.mappers.impl.VideoMetadataMapper.toDomain
 import com.lawmobile.data.utils.CameraServiceFactory
 import com.lawmobile.domain.entities.RemoteVideoMetadata
 import com.lawmobile.domain.entities.VideoListMetadata
@@ -35,8 +35,7 @@ class SimpleListRemoteDataSourceImpl(
                     cameraConnectService.getVideoMetadata(it.name, it.nameFolder)
                 }
                 if (videoMetadataResponse is Result.Success) {
-                    val domainMetadata =
-                        VideoMetadataMapper.cameraToDomain(videoMetadataResponse.data)
+                    val domainMetadata = videoMetadataResponse.data.toDomain()
                     val remoteMetadata = RemoteVideoMetadata(domainMetadata, false)
                     VideoListMetadata.saveOrUpdateVideoMetadata(remoteMetadata)
                 }

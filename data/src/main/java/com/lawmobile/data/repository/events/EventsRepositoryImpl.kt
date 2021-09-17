@@ -2,7 +2,9 @@ package com.lawmobile.data.repository.events
 
 import com.lawmobile.data.datasource.local.events.EventsLocalDataSource
 import com.lawmobile.data.datasource.remote.events.EventsRemoteDataSource
-import com.lawmobile.data.mappers.CameraEventMapper
+import com.lawmobile.data.mappers.impl.CameraEventMapper.toDomainList
+import com.lawmobile.data.mappers.impl.CameraEventMapper.toLocal
+import com.lawmobile.data.mappers.impl.CameraEventMapper.toLocalList
 import com.lawmobile.domain.entities.CameraEvent
 import com.lawmobile.domain.extensions.simpleDateFormat
 import com.lawmobile.domain.repository.events.EventsRepository
@@ -17,7 +19,7 @@ class EventsRepositoryImpl(
 ) : EventsRepository {
 
     override suspend fun saveEvent(cameraEvent: CameraEvent) {
-        val localEvent = CameraEventMapper.domainToLocal(cameraEvent)
+        val localEvent = cameraEvent.toLocal()
         eventsLocalDataSource.saveEvent(localEvent)
     }
 
@@ -32,8 +34,8 @@ class EventsRepositoryImpl(
 
         return when (result) {
             is Result.Success -> {
-                val remoteEventList = CameraEventMapper
-                    .cameraToDomainList(result.data)
+                val remoteEventList = result.data
+                    .toDomainList()
                     .distinct()
                     .toList()
                     .filter { it.date.simpleDateFormat() >= DateHelper.getTodayDateAtStartOfTheDay() }
@@ -50,7 +52,7 @@ class EventsRepositoryImpl(
 
     override suspend fun getNotificationEvents(): Result<List<CameraEvent>> {
         return when (val result = eventsLocalDataSource.getNotificationEvents(DateHelper.getTodayDateAtStartOfTheDay())) {
-            is Result.Success -> Result.Success(CameraEventMapper.localToDomainList(result.data))
+            is Result.Success -> Result.Success(result.data.toDomainList())
             is Result.Error -> result
         }
     }
@@ -106,7 +108,7 @@ class EventsRepositoryImpl(
     private suspend fun databaseEventsAreNotEmpty() = eventsLocalDataSource.getEventsCount() != 0
 
     private suspend fun saveEventsResult(remoteEventList: List<CameraEvent>): Result<Unit> {
-        val localEventList = CameraEventMapper.domainToLocalList(remoteEventList)
+        val localEventList = remoteEventList.toLocalList()
         return when (val result = eventsLocalDataSource.saveAllEvents(localEventList)) {
             is Result.Success -> Result.Success(Unit)
             is Result.Error -> result

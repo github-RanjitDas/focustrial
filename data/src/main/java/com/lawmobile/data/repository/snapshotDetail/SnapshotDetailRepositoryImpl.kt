@@ -1,8 +1,8 @@
 package com.lawmobile.data.repository.snapshotDetail
 
 import com.lawmobile.data.datasource.remote.snapshotDetail.SnapshotDetailRemoteDataSource
-import com.lawmobile.data.mappers.FileMapper
-import com.lawmobile.data.mappers.PhotoMetadataMapper
+import com.lawmobile.data.mappers.impl.FileMapper.toCamera
+import com.lawmobile.data.mappers.impl.PhotoMetadataMapper.toDomain
 import com.lawmobile.domain.entities.CameraInfo
 import com.lawmobile.domain.entities.DomainCameraFile
 import com.lawmobile.domain.entities.DomainInformationImageMetadata
@@ -20,7 +20,7 @@ class SnapshotDetailRepositoryImpl(
 ) : SnapshotDetailRepository {
 
     override suspend fun getImageBytes(domainCameraFile: DomainCameraFile): Result<ByteArray> {
-        val cameraConnectFile = FileMapper.domainToCamera(domainCameraFile)
+        val cameraConnectFile = domainCameraFile.toCamera()
         return snapshotDetailRemoteDataSource.getImageBytes(cameraConnectFile)
     }
 
@@ -56,8 +56,7 @@ class SnapshotDetailRepositoryImpl(
         with(snapshotDetailRemoteDataSource.savePartnerIdSnapshot(cameraPhotoMetadata)) {
             doIfSuccess {
                 val item = FileList.getMetadataOfImageInList(domainCameraFile.name)
-                val domainPhotoMetadata =
-                    PhotoMetadataMapper.cameraToDomain(cameraPhotoMetadata)
+                val domainPhotoMetadata = cameraPhotoMetadata.toDomain()
                 val newItemPhoto =
                     DomainInformationImageMetadata(domainPhotoMetadata, item?.videosAssociated)
                 FileList.updateItemInImageMetadataList(newItemPhoto)
@@ -83,11 +82,11 @@ class SnapshotDetailRepositoryImpl(
         val item = FileList.getMetadataOfImageInList(domainCameraFile.name)
         if (!thereIsErrorInMetadataVideo && item != null) return Result.Success(item)
 
-        val cameraConnectFile = FileMapper.domainToCamera(domainCameraFile)
+        val cameraConnectFile = domainCameraFile.toCamera()
 
         with(snapshotDetailRemoteDataSource.getInformationOfPhoto(cameraConnectFile)) {
             doIfSuccess {
-                val domainPhotoMetadata = PhotoMetadataMapper.cameraToDomain(it)
+                val domainPhotoMetadata = it.toDomain()
                 val domainInformationImage =
                     DomainInformationImageMetadata(domainPhotoMetadata, emptyList())
 

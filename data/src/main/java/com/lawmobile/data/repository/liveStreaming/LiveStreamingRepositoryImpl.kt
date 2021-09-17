@@ -1,7 +1,7 @@
 package com.lawmobile.data.repository.liveStreaming
 
 import com.lawmobile.data.datasource.remote.liveStreaming.LiveStreamingRemoteDataSource
-import com.lawmobile.data.mappers.CatalogMapper
+import com.lawmobile.data.mappers.impl.CatalogMapper.toDomainList
 import com.lawmobile.domain.entities.FileList
 import com.lawmobile.domain.entities.MetadataEvent
 import com.lawmobile.domain.repository.liveStreaming.LiveStreamingRepository
@@ -36,7 +36,7 @@ class LiveStreamingRepositoryImpl(
 
     override suspend fun getCatalogInfo(): Result<List<MetadataEvent>> {
         return when (val result = liveRemoteDataSource.getCatalogInfo()) {
-            is Result.Success -> Result.Success(CatalogMapper.cameraToDomainList(result.data))
+            is Result.Success -> Result.Success(result.data.toDomainList())
             is Result.Error -> result
         }
     }

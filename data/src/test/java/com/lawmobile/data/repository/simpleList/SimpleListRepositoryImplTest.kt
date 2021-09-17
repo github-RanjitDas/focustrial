@@ -1,7 +1,7 @@
 package com.lawmobile.data.repository.simpleList
 
 import com.lawmobile.data.datasource.remote.simpleList.SimpleListRemoteDataSource
-import com.lawmobile.data.mappers.FileMapper
+import com.lawmobile.data.mappers.impl.FileMapper.toDomain
 import com.lawmobile.domain.entities.DomainInformationFile
 import com.lawmobile.domain.entities.DomainInformationFileResponse
 import com.lawmobile.domain.entities.FileList
@@ -65,7 +65,7 @@ internal class SimpleListRepositoryImplTest {
             items.addAll(mutableListOf(cameraFile))
         }
         val listDomain =
-            mutableListOf(DomainInformationFile(FileMapper.cameraToDomain(cameraFile), null))
+            mutableListOf(DomainInformationFile(cameraFile.toDomain(), null))
         val domainInformationFileResponse =
             DomainInformationFileResponse(listDomain, mutableListOf())
 
@@ -91,8 +91,8 @@ internal class SimpleListRepositoryImplTest {
         )
 
         FileList.imageList = listOf(
-            DomainInformationFile(FileMapper.cameraToDomain(cameraFile), null),
-            DomainInformationFile(FileMapper.cameraToDomain(cameraFile), null)
+            DomainInformationFile(cameraFile.toDomain(), null),
+            DomainInformationFile(cameraFile.toDomain(), null)
         )
         val imageList = FileList.imageList as MutableList
         val domainInformationFileResponse =
@@ -112,8 +112,8 @@ internal class SimpleListRepositoryImplTest {
         val cameraResponse = FileResponseWithErrors()
         cameraResponse.items.addAll(arrayListOf(cameraConnectFile, cameraConnectFile))
         val listImages = listOf(
-            DomainInformationFile(FileMapper.cameraToDomain(cameraConnectFile), null),
-            DomainInformationFile(FileMapper.cameraToDomain(cameraConnectFile), null)
+            DomainInformationFile(cameraConnectFile.toDomain(), null),
+            DomainInformationFile(cameraConnectFile.toDomain(), null)
         )
 
         coEvery {
@@ -155,7 +155,7 @@ internal class SimpleListRepositoryImplTest {
         val cameraResponse = FileResponseWithErrors()
         cameraResponse.items.addAll(arrayListOf(cameraConnectFile))
         val listDomain = mutableListOf(
-            DomainInformationFile(FileMapper.cameraToDomain(cameraConnectFile), null)
+            DomainInformationFile(cameraConnectFile.toDomain(), null)
         )
         val domainInformationFileResponse =
             DomainInformationFileResponse(listDomain, mutableListOf())
@@ -182,7 +182,7 @@ internal class SimpleListRepositoryImplTest {
         coEvery { simpleListRemoteDataSource.getVideoList() } returns Result.Success(cameraResponse)
 
         FileList.videoList = listOf(
-            DomainInformationFile(FileMapper.cameraToDomain(cameraConnectFile), null)
+            DomainInformationFile(cameraConnectFile.toDomain(), null)
         )
         val videoList = FileList.videoList as MutableList
         val domainInformationFileResponse =
@@ -208,8 +208,8 @@ internal class SimpleListRepositoryImplTest {
 
         coEvery { simpleListRemoteDataSource.getVideoList() } returns Result.Success(cameraResponse)
         val listOfVideos = listOf(
-            DomainInformationFile(FileMapper.cameraToDomain(cameraConnectFile), null),
-            DomainInformationFile(FileMapper.cameraToDomain(cameraConnectFile), null)
+            DomainInformationFile(cameraConnectFile.toDomain(), null),
+            DomainInformationFile(cameraConnectFile.toDomain(), null)
         )
         FileList.videoList = listOfVideos
 
@@ -248,7 +248,7 @@ internal class SimpleListRepositoryImplTest {
             items.addAll(mutableListOf(cameraFile))
         }
         val listDomain =
-            mutableListOf(DomainInformationFile(FileMapper.cameraToDomain(cameraFile), null))
+            mutableListOf(DomainInformationFile(cameraFile.toDomain(), null))
         val domainInformationFileResponse =
             DomainInformationFileResponse(listDomain, mutableListOf())
 
@@ -274,8 +274,8 @@ internal class SimpleListRepositoryImplTest {
         )
 
         FileList.audioList = listOf(
-            DomainInformationFile(FileMapper.cameraToDomain(cameraFile), null),
-            DomainInformationFile(FileMapper.cameraToDomain(cameraFile), null)
+            DomainInformationFile(cameraFile.toDomain(), null),
+            DomainInformationFile(cameraFile.toDomain(), null)
         )
         val imageList = FileList.audioList as MutableList
         val domainInformationFileResponse =
@@ -295,8 +295,8 @@ internal class SimpleListRepositoryImplTest {
         val cameraResponse = FileResponseWithErrors()
         cameraResponse.items.addAll(arrayListOf(cameraConnectFile, cameraConnectFile))
         val listImages = listOf(
-            DomainInformationFile(FileMapper.cameraToDomain(cameraConnectFile), null),
-            DomainInformationFile(FileMapper.cameraToDomain(cameraConnectFile), null)
+            DomainInformationFile(cameraConnectFile.toDomain(), null),
+            DomainInformationFile(cameraConnectFile.toDomain(), null)
         )
 
         coEvery {
