@@ -59,9 +59,7 @@ class SimpleFileListFragment : FileListBaseFragment() {
     private fun getFileList() {
         showLoadingDialog()
         when (listType) {
-            VIDEO_LIST -> {
-                simpleListViewModel.getVideoList()
-            }
+            VIDEO_LIST -> simpleListViewModel.getVideoList()
             SNAPSHOT_LIST -> {
                 binding.textViewEvent.isVisible = false
                 simpleListViewModel.getSnapshotList()
