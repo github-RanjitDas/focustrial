@@ -45,7 +45,7 @@ internal class BaseViewModelTest {
 
     @Test
     fun getLoadingTimeout() {
-        val timeout = 20000L
+        val timeout = 70000L
         Assert.assertEquals(
             timeout,
             BaseViewModel.getLoadingTimeOut()
