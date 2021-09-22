@@ -32,7 +32,7 @@ open class FileListBaseActivity : BaseActivity() {
     lateinit var binding: ActivityFileListBinding
     private val fileListViewModel: FileListViewModel by viewModels()
 
-    lateinit var actualFragment: String
+    var actualFragment: String = ""
     var listType: String? = null
     var filterDialog: CustomFilterDialog? = null
 
@@ -91,8 +91,8 @@ open class FileListBaseActivity : BaseActivity() {
     }
 
     fun attachSimpleFileListFragment() {
-        actualFragment = Constants.SIMPLE_FILE_LIST
         resetButtonAssociate()
+        actualFragment = Constants.SIMPLE_FILE_LIST
         supportFragmentManager.attachFragment(
             R.id.fragmentListHolder,
             simpleFileListFragment,
@@ -101,8 +101,8 @@ open class FileListBaseActivity : BaseActivity() {
     }
 
     fun attachThumbnailListFragment() {
-        actualFragment = Constants.THUMBNAIL_FILE_LIST
         resetButtonAssociate()
+        actualFragment = Constants.THUMBNAIL_FILE_LIST
         supportFragmentManager.attachFragment(
             R.id.fragmentListHolder,
             thumbnailFileListFragment,
