@@ -1,6 +1,7 @@
 package com.lawmobile.presentation.extensions
 
 import androidx.lifecycle.MediatorLiveData
+import com.lawmobile.domain.enums.RequestError
 import com.safefleet.mobile.kotlin_commons.helpers.Event
 import com.safefleet.mobile.kotlin_commons.helpers.Result
 import kotlinx.coroutines.CoroutineScope
@@ -16,7 +17,7 @@ suspend fun <T : Any> MediatorLiveData<Result<T>>.postValueWithTimeout(
             mediator.postValue(value.invoke(this))
         }
     } catch (e: Exception) {
-        postValue(Result.Error(e))
+        postValue(Result.Error(RequestError.TIMEOUT.getException()))
     }
 }
 
