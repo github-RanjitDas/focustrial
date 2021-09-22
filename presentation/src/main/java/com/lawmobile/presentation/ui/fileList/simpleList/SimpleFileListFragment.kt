@@ -12,6 +12,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.lawmobile.domain.entities.CameraInfo
 import com.lawmobile.domain.entities.DomainInformationFile
 import com.lawmobile.domain.entities.DomainInformationFileResponse
+import com.lawmobile.domain.enums.RequestError
 import com.lawmobile.domain.extensions.getDateDependingOnNameLength
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.databinding.FragmentFileListBinding
@@ -147,8 +148,10 @@ class SimpleFileListFragment : FileListBaseFragment() {
                 }
             }
             doIfError {
+                val errorMessage =
+                    RequestError.getErrorMessage(getString(R.string.file_list_failed_load_files), it)
                 binding.fileListLayout.showErrorSnackBar(
-                    getString(R.string.file_list_failed_load_files),
+                    errorMessage,
                     Snackbar.LENGTH_INDEFINITE
                 ) {
                     context?.verifySessionBeforeAction { getFileList() }

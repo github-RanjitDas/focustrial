@@ -228,7 +228,7 @@ internal class SimpleListRepositoryImplTest {
         val result = Result.Error(mockk())
         coEvery { simpleListRemoteDataSource.getVideoList() } returns result
         runBlocking {
-            Assert.assertEquals(simpleListRepositoryImpl.getVideoList(), result)
+            Assert.assertTrue(simpleListRepositoryImpl.getVideoList() is Result.Error)
         }
     }
 }
