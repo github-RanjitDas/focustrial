@@ -43,7 +43,7 @@ class StartPairingX2Fragment : BaseFragment() {
 
     private val pairingViewModel: PairingViewModel by viewModels()
 
-    lateinit var fragmentListener: StartPairingX2FragmentListener
+    private lateinit var fragmentListener: StartPairingX2FragmentListener
 
     private lateinit var serviceBinder: IIsolatedService
     private var isServiceBounded = false
@@ -225,9 +225,7 @@ class StartPairingX2Fragment : BaseFragment() {
                 e.printStackTrace()
                 false
             }
-        } else {
-            false
-        }
+        } else false
     }
 
     private val mIsolatedServiceConnection: ServiceConnection = object : ServiceConnection {

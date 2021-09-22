@@ -1,12 +1,12 @@
 package com.safefleet.lawmobile.di.validatePasswordOfficer
 
-import com.lawmobile.data.datasource.remote.validatePasswordOfficer.ValidatePasswordOfficerRemoteDataSource
-import com.lawmobile.data.datasource.remote.validatePasswordOfficer.ValidatePasswordOfficerRemoteDataSourceImpl
-import com.lawmobile.data.repository.validatePasswordOfficer.ValidatePasswordOfficerRepositoryImpl
+import com.lawmobile.data.datasource.remote.validateOfficerPassword.ValidateOfficerPasswordRemoteDataSource
+import com.lawmobile.data.datasource.remote.validateOfficerPassword.ValidateOfficerPasswordRemoteDataSourceImpl
+import com.lawmobile.data.repository.validateOfficerPassword.ValidateOfficerPasswordRepositoryImpl
 import com.lawmobile.data.utils.CameraServiceFactory
-import com.lawmobile.domain.repository.validatePasswordOfficer.ValidatePasswordOfficerRepository
-import com.lawmobile.domain.usecase.validatePasswordOfficer.ValidatePasswordOfficerUseCase
-import com.lawmobile.domain.usecase.validatePasswordOfficer.ValidatePasswordOfficerUseCaseImpl
+import com.lawmobile.domain.repository.validateOfficerPassword.ValidateOfficerPasswordRepository
+import com.lawmobile.domain.usecase.validateOfficerPassword.ValidateOfficerPasswordUseCase
+import com.lawmobile.domain.usecase.validateOfficerPassword.ValidateOfficerPasswordUseCaseImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -21,19 +21,19 @@ class ValidatePasswordOfficerModule {
         @Provides
         fun provideValidatePasswordOfficerRemoteDataSource(
             cameraService: CameraServiceFactory
-        ): ValidatePasswordOfficerRemoteDataSource =
-            ValidatePasswordOfficerRemoteDataSourceImpl(cameraService)
+        ): ValidateOfficerPasswordRemoteDataSource =
+            ValidateOfficerPasswordRemoteDataSourceImpl(cameraService)
 
         @Provides
         fun provideValidatePasswordOfficerRepository(
-            validatePasswordOfficerRemoteDataSource: ValidatePasswordOfficerRemoteDataSource
-        ): ValidatePasswordOfficerRepository =
-            ValidatePasswordOfficerRepositoryImpl(validatePasswordOfficerRemoteDataSource)
+            validateOfficerPasswordRemoteDataSource: ValidateOfficerPasswordRemoteDataSource
+        ): ValidateOfficerPasswordRepository =
+            ValidateOfficerPasswordRepositoryImpl(validateOfficerPasswordRemoteDataSource)
 
         @Provides
         fun provideValidatePasswordOfficerUseCase(
-            validatePasswordOfficerRepository: ValidatePasswordOfficerRepository
-        ): ValidatePasswordOfficerUseCase =
-            ValidatePasswordOfficerUseCaseImpl(validatePasswordOfficerRepository)
+            validateOfficerPasswordRepository: ValidateOfficerPasswordRepository
+        ): ValidateOfficerPasswordUseCase =
+            ValidateOfficerPasswordUseCaseImpl(validateOfficerPasswordRepository)
     }
 }

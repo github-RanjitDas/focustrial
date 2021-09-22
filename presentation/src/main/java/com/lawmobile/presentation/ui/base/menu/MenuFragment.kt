@@ -9,7 +9,6 @@ import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import com.lawmobile.domain.entities.CameraInfo
-import com.lawmobile.domain.entities.CameraInfo.isOfficerLogged
 import com.lawmobile.presentation.databinding.FragmentLiveMenuX2Binding
 import com.lawmobile.presentation.extensions.createAlertConfirmAppExit
 import com.lawmobile.presentation.extensions.getIntentDependsCameraType
@@ -163,7 +162,7 @@ class MenuFragment : BaseFragment() {
         )
 
         binding.viewLogout.setOnClickListenerCheckConnection {
-            requireActivity().createAlertConfirmAppExit(::logoutApplication)
+            activity?.createAlertConfirmAppExit(::logoutApplication)
             onCloseMenuButton()
         }
 
@@ -176,7 +175,7 @@ class MenuFragment : BaseFragment() {
         isInMainScreen = true
         if (activity is LiveX2Activity) return
         val intent =
-            requireActivity().getIntentDependsCameraType(LiveX1Activity(), LiveX2Activity())
+            activity?.getIntentDependsCameraType(LiveX1Activity(), LiveX2Activity())
         startActivity(intent)
     }
 
@@ -185,37 +184,37 @@ class MenuFragment : BaseFragment() {
         currentListView = fileType
         (activity as BaseActivity).updateLiveOrPlaybackActive(false)
         val fileListIntent =
-            requireActivity().getIntentDependsCameraType(FileListX1Activity(), FileListX2Activity())
-        fileListIntent.putExtra(Constants.FILE_LIST_SELECTOR, fileType)
+            activity?.getIntentDependsCameraType(FileListX1Activity(), FileListX2Activity())
+        fileListIntent?.putExtra(Constants.FILE_LIST_SELECTOR, fileType)
         startActivity(fileListIntent)
-        if (!isInMainScreen) requireActivity().finish()
+        if (!isInMainScreen) activity?.finish()
         isInMainScreen = false
     }
 
     private fun startNotificationListActivity() {
         if (activity is NotificationListActivity) return
-        startActivity(Intent(requireContext(), NotificationListActivity::class.java))
-        if (!isInMainScreen) requireActivity().finish()
+        startActivity(Intent(context, NotificationListActivity::class.java))
+        if (!isInMainScreen) activity?.finish()
         isInMainScreen = false
     }
 
     private fun startBodyWornDiagnosisActivity() {
-        startActivity(Intent(requireContext(), BodyWornDiagnosisActivity::class.java))
+        startActivity(Intent(context, BodyWornDiagnosisActivity::class.java))
     }
 
     private fun startHelpActivity() {
-        startActivity(Intent(requireActivity(), HelpPageActivity::class.java))
+        startActivity(Intent(activity, HelpPageActivity::class.java))
     }
 
     private fun logoutApplication() {
+        CameraInfo.cleanInfo()
         menuViewModel.disconnectCamera()
-        isOfficerLogged = false
-        startActivity(Intent(requireActivity(), LoginActivity::class.java))
-        requireActivity().finish()
+        startActivity(Intent(activity, LoginActivity::class.java))
+        activity?.finish()
     }
 
     private fun startBodyWornSettings() {
-        startActivity(Intent(requireContext(), BodyWornSettingsActivity::class.java))
+        startActivity(Intent(context, BodyWornSettingsActivity::class.java))
     }
 
     fun openMenu() {

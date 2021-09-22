@@ -1,12 +1,9 @@
 package com.lawmobile.presentation.ui.login.validateOfficerPassword
 
 import com.lawmobile.domain.entities.CameraInfo
-import com.lawmobile.domain.entities.DomainUser
 import com.lawmobile.domain.enums.CameraType
 import com.lawmobile.domain.usecase.typeOfCamera.TypeOfCameraUseCase
-import com.lawmobile.domain.usecase.validatePasswordOfficer.ValidatePasswordOfficerUseCase
 import com.lawmobile.presentation.InstantExecutorExtension
-import com.lawmobile.presentation.utils.CameraHelper
 import com.safefleet.mobile.kotlin_commons.helpers.Result
 import io.mockk.Runs
 import io.mockk.clearMocks
@@ -32,14 +29,10 @@ import org.junit.jupiter.api.extension.ExtendWith
 @ExtendWith(InstantExecutorExtension::class)
 class ValidateOfficerPasswordViewModelTest {
 
-    //region mocks
-    private val validatePasswordOfficerUseCase: ValidatePasswordOfficerUseCase = mockk()
     private val typeOfCameraUseCase: TypeOfCameraUseCase = mockk()
-    private val cameraHelper: CameraHelper = mockk()
 
-    //endregion
     private val passwordViewModel: ValidateOfficerPasswordViewModel by lazy {
-        ValidateOfficerPasswordViewModel(validatePasswordOfficerUseCase, typeOfCameraUseCase, cameraHelper)
+        ValidateOfficerPasswordViewModel(typeOfCameraUseCase)
     }
 
     private val dispatcher = TestCoroutineDispatcher()
@@ -48,32 +41,6 @@ class ValidateOfficerPasswordViewModelTest {
     fun setUp() {
         clearMocks()
         Dispatchers.setMain(dispatcher)
-    }
-
-    @Test
-    fun testGetInformationUserFlow() {
-        coEvery { validatePasswordOfficerUseCase.getUserInformation() } returns Result.Success(
-            DomainUser("1", "", "")
-        )
-        passwordViewModel.getUserInformation()
-        coVerify { validatePasswordOfficerUseCase.getUserInformation() }
-    }
-
-    @Test
-    fun testGetInformationUserSuccess() {
-        val result = Result.Success(DomainUser("1", "", ""))
-        coEvery { validatePasswordOfficerUseCase.getUserInformation() } returns result
-        passwordViewModel.getUserInformation()
-        Assert.assertEquals(passwordViewModel.domainUserLiveData.value, result)
-    }
-
-    @Test
-    fun testGetInformationUserError() {
-        coEvery { validatePasswordOfficerUseCase.getUserInformation() } returns Result.Error(
-            Exception("Error")
-        )
-        passwordViewModel.getUserInformation()
-        Assert.assertTrue(passwordViewModel.domainUserLiveData.value is Result.Error)
     }
 
     @Test
@@ -109,14 +76,5 @@ class ValidateOfficerPasswordViewModelTest {
         coEvery { typeOfCameraUseCase.getTypeOfCamera() } returns Result.Error(Exception(""))
         passwordViewModel.setCameraType()
         Assert.assertEquals(CameraInfo.cameraType, CameraType.X1)
-    }
-
-    @Test
-    fun testCreateSingletonCameraHelper() {
-        mockkObject(CameraHelper)
-        every { CameraHelper.setInstance(any()) } just Runs
-
-        passwordViewModel.createSingletonCameraHelper()
-        verify { CameraHelper.setInstance(cameraHelper) }
     }
 }

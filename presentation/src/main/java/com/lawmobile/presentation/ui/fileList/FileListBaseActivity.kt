@@ -5,7 +5,6 @@ import android.view.View
 import androidx.activity.viewModels
 import androidx.cardview.widget.CardView
 import androidx.core.view.isVisible
-import androidx.lifecycle.Observer
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.lawmobile.domain.entities.DomainCameraFile
 import com.lawmobile.domain.entities.DomainInformationForList
@@ -68,8 +67,8 @@ open class FileListBaseActivity : BaseActivity() {
     }
 
     fun setObservers() {
-        fileListViewModel.snapshotPartnerIdLiveData.observe(this, Observer(::handlePartnerIdResult))
-        fileListViewModel.videoPartnerIdLiveData.observe(this, Observer(::handlePartnerIdResult))
+        fileListViewModel.snapshotPartnerIdLiveData.observe(this, ::handlePartnerIdResult)
+        fileListViewModel.videoPartnerIdLiveData.observe(this, ::handlePartnerIdResult)
     }
 
     fun activateButtonAssociate() {
