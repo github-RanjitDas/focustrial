@@ -1,6 +1,7 @@
 package com.lawmobile.domain.usecase.validatePasswordOfficer
 
-import com.lawmobile.domain.repository.validatePasswordOfficer.ValidatePasswordOfficerRepository
+import com.lawmobile.domain.repository.validateOfficerPassword.ValidateOfficerPasswordRepository
+import com.lawmobile.domain.usecase.validateOfficerPassword.ValidateOfficerPasswordUseCaseImpl
 import com.safefleet.mobile.kotlin_commons.helpers.Result
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -10,13 +11,13 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class ValidatePasswordOfficerUseCaseImplTest {
+class ValidateOfficerPasswordUseCaseImplTest {
 
-    private val validatePasswordOfficerRepository: ValidatePasswordOfficerRepository = mockk {
+    private val validateOfficerPasswordRepository: ValidateOfficerPasswordRepository = mockk {
         coEvery { getUserInformation() } returns Result.Error(Exception(""))
     }
     private val validatePasswordOfficerUseCaseImpl by lazy {
-        ValidatePasswordOfficerUseCaseImpl(validatePasswordOfficerRepository)
+        ValidateOfficerPasswordUseCaseImpl(validateOfficerPasswordRepository)
     }
 
     @Test
@@ -24,6 +25,6 @@ class ValidatePasswordOfficerUseCaseImplTest {
         runBlocking {
             validatePasswordOfficerUseCaseImpl.getUserInformation()
         }
-        coVerify { validatePasswordOfficerRepository.getUserInformation() }
+        coVerify { validateOfficerPasswordRepository.getUserInformation() }
     }
 }

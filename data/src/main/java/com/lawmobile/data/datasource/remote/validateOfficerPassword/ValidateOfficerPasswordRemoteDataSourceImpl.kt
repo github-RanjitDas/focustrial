@@ -1,11 +1,11 @@
-package com.lawmobile.data.datasource.remote.validatePasswordOfficer
+package com.lawmobile.data.datasource.remote.validateOfficerPassword
 
 import com.lawmobile.data.utils.CameraServiceFactory
 import com.safefleet.mobile.external_hardware.cameras.entities.CameraUser
 import com.safefleet.mobile.kotlin_commons.helpers.Result
 
-class ValidatePasswordOfficerRemoteDataSourceImpl(cameraServiceFactory: CameraServiceFactory) :
-    ValidatePasswordOfficerRemoteDataSource {
+class ValidateOfficerPasswordRemoteDataSourceImpl(cameraServiceFactory: CameraServiceFactory) :
+    ValidateOfficerPasswordRemoteDataSource {
 
     private var cameraService = cameraServiceFactory.create()
 
@@ -13,11 +13,11 @@ class ValidatePasswordOfficerRemoteDataSourceImpl(cameraServiceFactory: CameraSe
         return try {
             cameraService.getUserResponse()
         } catch (e: Exception) {
-            Result.Error(Exception(ERROR_IN_INFORMATION_USER))
+            Result.Error(Exception(USER_INFORMATION_ERROR))
         }
     }
 
     companion object {
-        const val ERROR_IN_INFORMATION_USER = "Error getting information of user"
+        const val USER_INFORMATION_ERROR = "Error getting user information"
     }
 }

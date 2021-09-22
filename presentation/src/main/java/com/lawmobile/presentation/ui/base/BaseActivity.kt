@@ -47,6 +47,9 @@ open class BaseActivity : AppCompatActivity() {
     @Inject
     lateinit var eventsUseCase: EventsUseCase
 
+    @Inject
+    lateinit var cameraHelper: CameraHelper
+
     private var isLiveVideoOrPlaybackActive: Boolean = false
     var isNetworkAlertShowing = MutableLiveData<Boolean>()
     private var isWifiAlertShowing = false
@@ -58,12 +61,17 @@ open class BaseActivity : AppCompatActivity() {
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         super.onCreate(savedInstanceState)
 
+        setCameraHelper()
         verifyDeviceIsNotRooted()
         setBaseObservers()
         createNetworkDialogs()
         updateLastInteraction()
         setEventsUseCase()
         setEventsListener()
+    }
+
+    private fun setCameraHelper() {
+        CameraHelper.setInstance(cameraHelper)
     }
 
     fun getApplicationVersionText(): String {
@@ -84,7 +92,7 @@ open class BaseActivity : AppCompatActivity() {
 
     private fun setEventsListener() {
         if (isOfficerLogged && CameraInfo.cameraType == CameraType.X2)
-            CameraHelper.getInstance().onCameraEvent(::manageCameraEvent)
+            cameraHelper.onCameraEvent(::manageCameraEvent)
     }
 
     private fun manageCameraEvent(cameraEvent: CameraEvent) {

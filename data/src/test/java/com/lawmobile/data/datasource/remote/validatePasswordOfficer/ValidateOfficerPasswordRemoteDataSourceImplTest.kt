@@ -1,6 +1,7 @@
 package com.lawmobile.data.datasource.remote.validatePasswordOfficer
 
-import com.lawmobile.data.datasource.remote.validatePasswordOfficer.ValidatePasswordOfficerRemoteDataSourceImpl.Companion.ERROR_IN_INFORMATION_USER
+import com.lawmobile.data.datasource.remote.validateOfficerPassword.ValidateOfficerPasswordRemoteDataSourceImpl
+import com.lawmobile.data.datasource.remote.validateOfficerPassword.ValidateOfficerPasswordRemoteDataSourceImpl.Companion.USER_INFORMATION_ERROR
 import com.lawmobile.data.utils.CameraServiceFactory
 import com.safefleet.mobile.external_hardware.cameras.CameraService
 import com.safefleet.mobile.external_hardware.cameras.entities.CameraUser
@@ -15,7 +16,7 @@ import org.junit.jupiter.api.TestInstance
 import java.lang.Exception
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class ValidatePasswordOfficerRemoteDataSourceImplTest {
+class ValidateOfficerPasswordRemoteDataSourceImplTest {
 
     private val connectCameraUserResult = Result.Success(CameraUser("", "", ""))
     private val cameraService: CameraService = mockk()
@@ -24,7 +25,7 @@ class ValidatePasswordOfficerRemoteDataSourceImplTest {
     }
 
     private val validatePasswordOfficerRemoteDataSourceImpl by lazy {
-        ValidatePasswordOfficerRemoteDataSourceImpl(cameraServiceFactory)
+        ValidateOfficerPasswordRemoteDataSourceImpl(cameraServiceFactory)
     }
 
     @Test
@@ -44,7 +45,7 @@ class ValidatePasswordOfficerRemoteDataSourceImplTest {
         runBlocking {
             val responseError =
                 validatePasswordOfficerRemoteDataSourceImpl.getUserInformation() as Result.Error
-            Assert.assertEquals(responseError.exception.message, ERROR_IN_INFORMATION_USER)
+            Assert.assertEquals(responseError.exception.message, USER_INFORMATION_ERROR)
         }
     }
 }

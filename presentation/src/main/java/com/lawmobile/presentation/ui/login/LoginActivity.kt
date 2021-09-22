@@ -3,9 +3,12 @@ package com.lawmobile.presentation.ui.login
 import android.Manifest
 import android.os.Bundle
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.cardview.widget.CardView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.snackbar.Snackbar
 import com.lawmobile.domain.entities.CameraInfo
+import com.lawmobile.domain.entities.DomainUser
 import com.lawmobile.domain.enums.CameraType
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.databinding.ActivityLoginBinding
@@ -14,6 +17,7 @@ import com.lawmobile.presentation.extensions.getIntentDependsCameraType
 import com.lawmobile.presentation.extensions.showErrorSnackBar
 import com.lawmobile.presentation.extensions.showToast
 import com.lawmobile.presentation.extensions.verifyForAskingPermission
+import com.lawmobile.presentation.extensions.verifySessionBeforeAction
 import com.lawmobile.presentation.ui.base.BaseActivity
 import com.lawmobile.presentation.ui.live.x1.LiveX1Activity
 import com.lawmobile.presentation.ui.live.x2.LiveX2Activity
@@ -23,41 +27,33 @@ import com.lawmobile.presentation.ui.login.pairingPhoneWithCamera.x2.StartPairin
 import com.lawmobile.presentation.ui.login.pairingPhoneWithCamera.x2.StartPairingX2FragmentListener
 import com.lawmobile.presentation.ui.login.validateOfficerId.ValidateOfficerIdFragment
 import com.lawmobile.presentation.ui.login.validateOfficerPassword.ValidateOfficerPasswordFragment
+import com.lawmobile.presentation.ui.login.validateOfficerPassword.ValidateOfficerPasswordFragmentListener
 import com.lawmobile.presentation.utils.EspressoIdlingResource
+import com.safefleet.mobile.android_commons.extensions.hideKeyboard
+import com.safefleet.mobile.kotlin_commons.extensions.doIfError
+import com.safefleet.mobile.kotlin_commons.extensions.doIfSuccess
+import com.safefleet.mobile.kotlin_commons.helpers.Result
 
-class LoginActivity : BaseActivity(), StartPairingX2FragmentListener {
+class LoginActivity :
+    BaseActivity(),
+    StartPairingX2FragmentListener,
+    ValidateOfficerPasswordFragmentListener {
 
-    private lateinit var activityLoginBinding: ActivityLoginBinding
+    private val viewModel: LoginActivityViewModel by viewModels()
+    private lateinit var binding: ActivityLoginBinding
+    override var domainUser: DomainUser? = null
+    override var officerId: String = ""
 
     val sheetBehavior: BottomSheetBehavior<CardView> by lazy {
         BottomSheetBehavior.from(
-            activityLoginBinding.bottomSheetInstructions.bottomSheetInstructions
+            binding.bottomSheetInstructions.bottomSheetInstructions
         )
     }
 
-    private val onExistingOfficerId: (Boolean, String) -> Unit = { exist, officerId ->
-        if (exist) showToast(
-            "The officer has a SSO user",
-            Toast.LENGTH_LONG
-        ) // Replace this with navigation to SSO login page
-        else showStartPairingFragment(officerId)
-    }
-
-    private val onValidOfficerPassword: (Boolean) -> Unit = {
-        if (it) startLiveViewActivity()
-        else {
-            activityLoginBinding.fragmentContainer.showErrorSnackBar(getString(R.string.incorrect_password))
-            EspressoIdlingResource.decrement()
-        }
-    }
-
-    private val onConnectionSuccessful: () -> Unit = ::showValidateOfficerPasswordFragment
-    private val onValidX1Requirements: () -> Unit = ::showPairingResultFragment
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        activityLoginBinding = ActivityLoginBinding.inflate(layoutInflater)
-        setContentView(activityLoginBinding.root)
+        binding = ActivityLoginBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         configureBottomSheet()
         setLoginViews()
     }
@@ -65,16 +61,16 @@ class LoginActivity : BaseActivity(), StartPairingX2FragmentListener {
     private fun configureBottomSheet() {
         sheetBehavior.isDraggable = false
         sheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
-        activityLoginBinding.bottomSheetInstructions.buttonDismissInstructions.setOnClickListener {
+        binding.bottomSheetInstructions.buttonDismissInstructions.setOnClickListener {
             sheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
         }
-        activityLoginBinding.bottomSheetInstructions.buttonCloseInstructions.setOnClickListener {
+        binding.bottomSheetInstructions.buttonCloseInstructions.setOnClickListener {
             sheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
         }
     }
 
     private fun setLoginViews() {
-        activityLoginBinding.versionNumberTextLogin.text = getApplicationVersionText()
+        binding.versionNumberTextLogin.text = getApplicationVersionText()
         showFragmentDependingOnCameraType()
         verifyLocationPermission()
     }
@@ -94,7 +90,7 @@ class LoginActivity : BaseActivity(), StartPairingX2FragmentListener {
     private fun showValidateOfficerIdFragment(officerId: String = "") {
         supportFragmentManager.attachFragmentWithAnimation(
             containerId = R.id.fragmentContainer,
-            fragment = ValidateOfficerIdFragment.createInstance(onExistingOfficerId, officerId),
+            fragment = ValidateOfficerIdFragment.createInstance(::onExistingOfficerId, officerId),
             tag = ValidateOfficerIdFragment.TAG,
             animationIn = android.R.anim.fade_in,
             animationOut = android.R.anim.fade_out
@@ -121,13 +117,13 @@ class LoginActivity : BaseActivity(), StartPairingX2FragmentListener {
 
     private fun getStartPairingFragmentDependingOnCameraType() =
         if (CameraInfo.cameraType == CameraType.X1)
-            StartPairingX1Fragment.createInstance(onValidX1Requirements)
+            StartPairingX1Fragment.createInstance(::onValidRequirements)
         else StartPairingX2Fragment.createInstance(this)
 
     private fun showPairingResultFragment() {
         supportFragmentManager.attachFragmentWithAnimation(
             containerId = R.id.fragmentContainer,
-            fragment = PairingResultFragment.createInstance(onConnectionSuccessful),
+            fragment = PairingResultFragment.createInstance(::onConnectionSuccessful),
             tag = PairingResultFragment.TAG,
             animationIn = android.R.anim.fade_in,
             animationOut = android.R.anim.fade_out
@@ -137,7 +133,7 @@ class LoginActivity : BaseActivity(), StartPairingX2FragmentListener {
     private fun showValidateOfficerPasswordFragment() {
         supportFragmentManager.attachFragmentWithAnimation(
             containerId = R.id.fragmentContainer,
-            fragment = ValidateOfficerPasswordFragment.createInstance(onValidOfficerPassword),
+            fragment = ValidateOfficerPasswordFragment.createInstance(this),
             tag = ValidateOfficerPasswordFragment.TAG,
             animationIn = R.anim.slide_and_fade_in_right,
             animationOut = 0
@@ -151,11 +147,61 @@ class LoginActivity : BaseActivity(), StartPairingX2FragmentListener {
         )
     }
 
-    override var officerId: String = ""
+    private fun getUserInformation() {
+        viewModel.userInformationResult.observe(this, ::handleUserInformationResult)
+        viewModel.getUserInformation()
+    }
+
+    private fun handleUserInformationResult(result: Result<DomainUser>) {
+        with(result) {
+            doIfSuccess {
+                CameraInfo.officerName = it.name
+                CameraInfo.officerId = it.id
+                when (CameraInfo.cameraType) {
+                    CameraType.X1 -> domainUser = it
+                    CameraType.X2 -> startLiveViewActivity()
+                }
+            }
+            doIfError { showUserInformationError() }
+        }
+    }
+
+    private fun showUserInformationError() {
+        hideKeyboard()
+        binding.root.showErrorSnackBar(
+            getString(R.string.error_getting_officer_information),
+            Snackbar.LENGTH_INDEFINITE
+        ) {
+            verifySessionBeforeAction { viewModel.getUserInformation() }
+        }
+    }
 
     override fun onValidRequirements() = showPairingResultFragment()
 
     override fun onEditOfficerId(officerId: String) = showValidateOfficerIdFragment(officerId)
+
+    override fun onPasswordValidationResult(isValid: Boolean) {
+        if (isValid) startLiveViewActivity()
+        else {
+            binding.root.showErrorSnackBar(getString(R.string.incorrect_password))
+            EspressoIdlingResource.decrement()
+        }
+    }
+
+    override fun onEmptyUserInformation() = showUserInformationError()
+
+    private fun onExistingOfficerId(exist: Boolean, officerId: String) {
+        if (exist) showToast(
+            "The officer has a SSO user",
+            Toast.LENGTH_LONG
+        ) // Replace this with navigation to SSO login page
+        else showStartPairingFragment(officerId)
+    }
+
+    private fun onConnectionSuccessful() {
+        getUserInformation()
+        if (CameraInfo.cameraType == CameraType.X1) showValidateOfficerPasswordFragment()
+    }
 
     override fun onBackPressed() {
         // This method is implemented to invalidate the behaviour of back button on the phones

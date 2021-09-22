@@ -1,6 +1,7 @@
 package com.lawmobile.data.repository.validatePasswordOfficer
 
-import com.lawmobile.data.datasource.remote.validatePasswordOfficer.ValidatePasswordOfficerRemoteDataSource
+import com.lawmobile.data.datasource.remote.validateOfficerPassword.ValidateOfficerPasswordRemoteDataSource
+import com.lawmobile.data.repository.validateOfficerPassword.ValidateOfficerPasswordRepositoryImpl
 import com.lawmobile.domain.entities.DomainUser
 import com.safefleet.mobile.external_hardware.cameras.entities.CameraUser
 import com.safefleet.mobile.kotlin_commons.helpers.Result
@@ -19,13 +20,13 @@ import org.junit.jupiter.api.TestInstance
 
 @ExperimentalCoroutinesApi
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class ValidatePasswordOfficerRepositoryImplTest {
+class ValidateOfficerPasswordRepositoryImplTest {
 
-    private val validatePasswordRemoteDataSource: ValidatePasswordOfficerRemoteDataSource = mockk()
+    private val validatePasswordRemoteDataSource: ValidateOfficerPasswordRemoteDataSource = mockk()
     private val dispatcher = TestCoroutineDispatcher()
 
     private val validatePasswordRepositoryImpl by lazy {
-        ValidatePasswordOfficerRepositoryImpl(validatePasswordRemoteDataSource)
+        ValidateOfficerPasswordRepositoryImpl(validatePasswordRemoteDataSource)
     }
 
     @BeforeEach
