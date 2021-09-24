@@ -13,7 +13,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class BodyWornSettingsViewModel @Inject constructor(
+open class BodyWornSettingsViewModel @Inject constructor(
     private val bodyWornSettingsUseCase: BodyWornSettingsUseCase
 ) : BaseViewModel() {
 

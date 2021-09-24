@@ -3,6 +3,7 @@ package com.lawmobile.presentation.ui.live.x1
 import android.os.Bundle
 import android.view.animation.AnimationUtils
 import androidx.activity.viewModels
+import androidx.constraintlayout.widget.ConstraintLayout
 import com.lawmobile.domain.entities.CameraInfo
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.databinding.ActivityLiveViewBinding
@@ -32,6 +33,7 @@ class LiveX1Activity : BaseActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityLiveViewBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        changeGuideLine()
         overridePendingTransition(0, 0)
         activitySetup()
     }
@@ -45,6 +47,23 @@ class LiveX1Activity : BaseActivity() {
             animateContainer()
             setListeners()
         }
+    }
+
+    private fun changeGuideLine() {
+        val paramsGuideLineTopLiveStream: ConstraintLayout.LayoutParams =
+            binding.guidelineTopStream2.layoutParams as ConstraintLayout.LayoutParams
+        paramsGuideLineTopLiveStream.guidePercent = 0.215f
+        binding.guidelineTopStream2.layoutParams = paramsGuideLineTopLiveStream
+
+        val paramsGuideLineBottomLiveStream: ConstraintLayout.LayoutParams =
+            binding.guidelineBottomLiveStream.layoutParams as ConstraintLayout.LayoutParams
+        paramsGuideLineBottomLiveStream.guidePercent = 0.526f
+        binding.guidelineBottomLiveStream.layoutParams = paramsGuideLineBottomLiveStream
+
+        val paramsGuideLineTopStatusBar: ConstraintLayout.LayoutParams =
+            binding.guidelineTopStatusBar.layoutParams as ConstraintLayout.LayoutParams
+        paramsGuideLineTopStatusBar.guidePercent = 0.10f
+        binding.guidelineTopStatusBar.layoutParams = paramsGuideLineTopStatusBar
     }
 
     override fun onResume() {
