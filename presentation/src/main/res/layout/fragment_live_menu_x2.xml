@@ -217,7 +217,6 @@
                 android:text="@string/view_audio_list"
                 android:textColor="@color/white"
                 android:textSize="@dimen/menu_live_view_text_items_size"
-                android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/dividerViewVideos" />
@@ -227,7 +226,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/width_1dp"
                 android:background="@color/whiteTransparentMenuDivider"
-                android:visibility="gone"
                 app:layout_constraintTop_toBottomOf="@id/text_view_audios" />
 
             <TextView

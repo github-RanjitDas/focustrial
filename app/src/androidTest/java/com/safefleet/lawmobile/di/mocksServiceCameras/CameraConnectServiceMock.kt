@@ -7,6 +7,7 @@ import com.safefleet.lawmobile.testData.CameraEventsData
 import com.safefleet.lawmobile.testData.CameraFilesData
 import com.safefleet.lawmobile.testData.TestLoginData
 import com.safefleet.mobile.external_hardware.cameras.CameraService
+import com.safefleet.mobile.external_hardware.cameras.entities.AudioInformation
 import com.safefleet.mobile.external_hardware.cameras.entities.CameraCatalog
 import com.safefleet.mobile.external_hardware.cameras.entities.CameraFile
 import com.safefleet.mobile.external_hardware.cameras.entities.CameraUser
@@ -225,5 +226,17 @@ class CameraConnectServiceMock : CameraService {
 
     fun sendPushNotification(notificationResponse: NotificationResponse) {
         arriveNotificationFromCamera?.invoke(notificationResponse)
+    }
+
+    override suspend fun getAudioBytes(cameraFile: CameraFile): Result<ByteArray> {
+        return Result.Error(mockk())
+    }
+
+    override suspend fun getAudioMetadata(cameraFile: CameraFile): Result<AudioInformation> {
+        return Result.Error(mockk())
+    }
+
+    override suspend fun saveAudioMetadata(audioInformation: AudioInformation): Result<Unit> {
+        return Result.Success(Unit)
     }
 }

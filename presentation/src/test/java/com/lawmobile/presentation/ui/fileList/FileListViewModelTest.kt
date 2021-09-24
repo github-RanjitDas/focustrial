@@ -39,7 +39,7 @@ class FileListViewModelTest {
         val result = Result.Success(Unit)
         coEvery { fileListUseCase.savePartnerIdVideos(any(), any()) } returns result
         fileListViewModel.associatePartnerIdToVideoList(listOf(mockk()), "")
-        Assert.assertEquals(result, fileListViewModel.videoPartnerIdLiveData.value)
+        Assert.assertEquals(result, fileListViewModel.associatePartnerIdResult.value)
         coVerify { fileListUseCase.savePartnerIdVideos(any(), any()) }
     }
 
@@ -48,7 +48,7 @@ class FileListViewModelTest {
         val result = Result.Error(mockk())
         coEvery { fileListUseCase.savePartnerIdVideos(any(), any()) } returns result
         fileListViewModel.associatePartnerIdToVideoList(listOf(mockk()), "")
-        Assert.assertEquals(fileListViewModel.videoPartnerIdLiveData.value, result)
+        Assert.assertEquals(fileListViewModel.associatePartnerIdResult.value, result)
         coVerify { fileListUseCase.savePartnerIdVideos(any(), any()) }
     }
 
@@ -57,7 +57,7 @@ class FileListViewModelTest {
         val result = Result.Success(Unit)
         coEvery { fileListUseCase.savePartnerIdSnapshot(any(), any()) } returns result
         fileListViewModel.associatePartnerIdToSnapshotList(listOf(mockk()), "")
-        Assert.assertEquals(fileListViewModel.snapshotPartnerIdLiveData.value, result)
+        Assert.assertEquals(fileListViewModel.associatePartnerIdResult.value, result)
         coVerify { fileListUseCase.savePartnerIdSnapshot(any(), any()) }
     }
 
@@ -66,7 +66,25 @@ class FileListViewModelTest {
         val result = Result.Error(mockk())
         coEvery { fileListUseCase.savePartnerIdSnapshot(any(), any()) } returns result
         fileListViewModel.associatePartnerIdToSnapshotList(listOf(mockk()), "")
-        Assert.assertEquals(fileListViewModel.snapshotPartnerIdLiveData.value, result)
+        Assert.assertEquals(fileListViewModel.associatePartnerIdResult.value, result)
         coVerify { fileListUseCase.savePartnerIdSnapshot(any(), any()) }
+    }
+
+    @Test
+    fun testAssociatePartnerIdToAudiosListSuccess() {
+        val result = Result.Success(Unit)
+        coEvery { fileListUseCase.savePartnerIdAudios(any(), any()) } returns result
+        fileListViewModel.associatePartnerIdToAudioList(listOf(mockk()), "")
+        Assert.assertEquals(fileListViewModel.associatePartnerIdResult.value, result)
+        coVerify { fileListUseCase.savePartnerIdAudios(any(), any()) }
+    }
+
+    @Test
+    fun testAssociatePartnerIdToAudiosListError() {
+        val result = Result.Error(mockk())
+        coEvery { fileListUseCase.savePartnerIdAudios(any(), any()) } returns result
+        fileListViewModel.associatePartnerIdToAudioList(listOf(mockk()), "")
+        Assert.assertEquals(fileListViewModel.associatePartnerIdResult.value, result)
+        coVerify { fileListUseCase.savePartnerIdAudios(any(), any()) }
     }
 }
