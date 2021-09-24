@@ -60,6 +60,24 @@ internal class FileListRemoteDataSourceImplTest {
     }
 
     @Test
+    fun testSavePartnerIdSnapshotSuccess() {
+        coEvery { cameraService.savePhotoMetadata(any()) } returns Result.Success(Unit)
+        runBlocking {
+            val result = fileListRemoteDataSourceImpl.savePartnerIdSnapshot(mockk())
+            Assert.assertTrue(result is Result.Success)
+        }
+    }
+
+    @Test
+    fun testSavePartnerIdSnapshotError() {
+        coEvery { cameraService.savePhotoMetadata(any()) } returns Result.Error(Exception())
+        runBlocking {
+            val result = fileListRemoteDataSourceImpl.savePartnerIdSnapshot(mockk())
+            Assert.assertTrue(result is Result.Error)
+        }
+    }
+
+    @Test
     fun testGetSavedPhotosMetadataFlow() {
         coEvery { cameraService.getMetadataOfPhotos() } returns Result.Success(mockk(relaxed = true))
         runBlocking {
@@ -97,7 +115,7 @@ internal class FileListRemoteDataSourceImplTest {
     }
 
     @Test
-    fun testSavePartnerIdSnapshotSuccess() {
+    fun testSavePartnerIdAllSnapshotsSuccess() {
         val result = Result.Success(Unit)
         coEvery { cameraService.saveAllPhotoMetadata(any()) } returns result
         runBlocking {
@@ -109,7 +127,7 @@ internal class FileListRemoteDataSourceImplTest {
     }
 
     @Test
-    fun testSavePartnerIdSnapshotFailed() {
+    fun testSavePartnerIdAllSnapshotsFailed() {
         val result = Result.Error(mockk())
         coEvery { cameraService.saveAllPhotoMetadata(any()) } returns result
         runBlocking {
@@ -117,6 +135,33 @@ internal class FileListRemoteDataSourceImplTest {
                 result,
                 fileListRemoteDataSourceImpl.savePartnerIdInAllSnapshots(mockk())
             )
+        }
+    }
+
+    @Test
+    fun testSavePartnerIdAudiosFlow() {
+        coEvery { cameraService.saveAudioMetadata(any()) } returns Result.Success(Unit)
+        runBlocking {
+            fileListRemoteDataSourceImpl.savePartnerIdAudios(mockk())
+        }
+        coVerify { cameraService.saveAudioMetadata(any()) }
+    }
+
+    @Test
+    fun testSavePartnerIdAudiosSuccess() {
+        coEvery { cameraService.saveAudioMetadata(any()) } returns Result.Success(Unit)
+        runBlocking {
+            val result = fileListRemoteDataSourceImpl.savePartnerIdAudios(mockk())
+            Assert.assertTrue(result is Result.Success)
+        }
+    }
+
+    @Test
+    fun testSavePartnerIdAudiosError() {
+        coEvery { cameraService.saveAudioMetadata(any()) } returns Result.Error(Exception())
+        runBlocking {
+            val result = fileListRemoteDataSourceImpl.savePartnerIdAudios(mockk())
+            Assert.assertTrue(result is Result.Error)
         }
     }
 }

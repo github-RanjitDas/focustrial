@@ -82,4 +82,37 @@ internal class FileListUseCaseImplTest {
             )
         }
     }
+
+    @Test
+    fun testSavePartnerIdAudiosFlow() {
+        coEvery { fileListRepository.savePartnerIdAudios(any(), any()) } returns Result.Success(
+            mockk()
+        )
+        runBlocking { fileListUseCaseImpl.savePartnerIdAudios(listOf(mockk()), "") }
+        coVerify { fileListRepository.savePartnerIdAudios(any(), any()) }
+    }
+
+    @Test
+    fun testSavePartnerIdAudiosSuccess() {
+        val result = Result.Success(Unit)
+        coEvery { fileListRepository.savePartnerIdAudios(any(), any()) } returns result
+        runBlocking {
+            Assert.assertEquals(
+                fileListUseCaseImpl.savePartnerIdAudios(listOf(mockk()), ""),
+                result
+            )
+        }
+    }
+
+    @Test
+    fun testSavePartnerIdAudiosFailed() {
+        val result = Result.Error(mockk())
+        coEvery { fileListRepository.savePartnerIdAudios(any(), any()) } returns result
+        runBlocking {
+            Assert.assertEquals(
+                fileListUseCaseImpl.savePartnerIdAudios(listOf(mockk()), ""),
+                result
+            )
+        }
+    }
 }

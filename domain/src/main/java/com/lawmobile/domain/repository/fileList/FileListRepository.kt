@@ -13,4 +13,9 @@ interface FileListRepository {
         domainFileList: List<DomainCameraFile>,
         partnerID: String
     ): Result<Unit>
+
+    suspend fun savePartnerIdAudios(
+        domainFileList: List<DomainCameraFile>,
+        partnerID: String
+    ): Result<Unit>
 }

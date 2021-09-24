@@ -15,20 +15,15 @@ import javax.inject.Inject
 class FileListViewModel @Inject constructor(private val fileListUseCase: FileListUseCase) :
     BaseViewModel() {
 
-    private val videoPartnerIdMediator: MediatorLiveData<Result<Unit>> =
-        MediatorLiveData()
-    val videoPartnerIdLiveData: LiveData<Result<Unit>> get() = videoPartnerIdMediator
-
-    private val snapshotPartnerIdMediator: MediatorLiveData<Result<Unit>> =
-        MediatorLiveData()
-    val snapshotPartnerIdLiveData: LiveData<Result<Unit>> get() = snapshotPartnerIdMediator
+    private val _associatePartnerIdResult: MediatorLiveData<Result<Unit>> = MediatorLiveData()
+    val associatePartnerIdResult: LiveData<Result<Unit>> get() = _associatePartnerIdResult
 
     fun associatePartnerIdToVideoList(
         domainCameraFileList: List<DomainCameraFile>,
         partnerId: String
     ) {
         viewModelScope.launch {
-            videoPartnerIdMediator.postValue(
+            _associatePartnerIdResult.postValue(
                 fileListUseCase.savePartnerIdVideos(
                     domainCameraFileList,
                     partnerId
@@ -42,8 +37,22 @@ class FileListViewModel @Inject constructor(private val fileListUseCase: FileLis
         partnerId: String
     ) {
         viewModelScope.launch {
-            snapshotPartnerIdMediator.postValue(
+            _associatePartnerIdResult.postValue(
                 fileListUseCase.savePartnerIdSnapshot(
+                    domainCameraFileList,
+                    partnerId
+                )
+            )
+        }
+    }
+
+    fun associatePartnerIdToAudioList(
+        domainCameraFileList: List<DomainCameraFile>,
+        partnerId: String
+    ) {
+        viewModelScope.launch {
+            _associatePartnerIdResult.postValue(
+                fileListUseCase.savePartnerIdAudios(
                     domainCameraFileList,
                     partnerId
                 )

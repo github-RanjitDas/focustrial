@@ -36,7 +36,7 @@ import javax.inject.Inject
 @AndroidEntryPoint
 open class BaseActivity : AppCompatActivity() {
 
-    private val viewModel: BaseViewModel by viewModels()
+    private val baseViewModel: BaseViewModel by viewModels()
 
     @Inject
     lateinit var mobileDataStatus: MobileDataStatus
@@ -80,7 +80,7 @@ open class BaseActivity : AppCompatActivity() {
     }
 
     private fun setEventsUseCase() {
-        viewModel.setEventsUseCase(eventsUseCase)
+        baseViewModel.setEventsUseCase(eventsUseCase)
     }
 
     private fun verifyDeviceIsNotRooted() {
@@ -115,7 +115,7 @@ open class BaseActivity : AppCompatActivity() {
             }
         }
 
-        viewModel.saveNotificationEvent(cameraEvent)
+        baseViewModel.saveNotificationEvent(cameraEvent)
     }
 
     private fun setBaseObservers() {

@@ -14,4 +14,9 @@ class FileListUseCaseImpl(private val fileListRepository: FileListRepository) : 
         domainFileList: List<DomainCameraFile>,
         partnerID: String
     ): Result<Unit> = fileListRepository.savePartnerIdSnapshot(domainFileList, partnerID)
+
+    override suspend fun savePartnerIdAudios(
+        domainFileList: List<DomainCameraFile>,
+        partnerID: String
+    ): Result<Unit> = fileListRepository.savePartnerIdAudios(domainFileList, partnerID)
 }

@@ -55,7 +55,7 @@ class SnapshotDetailRepositoryImpl(
 
         with(snapshotDetailRemoteDataSource.savePartnerIdSnapshot(cameraPhotoMetadata)) {
             doIfSuccess {
-                val item = FileList.getMetadataOfImageInList(domainCameraFile.name)
+                val item = FileList.findAndGetImageMetadata(domainCameraFile.name)
                 val domainPhotoMetadata = cameraPhotoMetadata.toDomain()
                 val newItemPhoto =
                     DomainInformationImageMetadata(domainPhotoMetadata, item?.videosAssociated)
@@ -79,7 +79,7 @@ class SnapshotDetailRepositoryImpl(
     }
 
     override suspend fun getInformationOfPhoto(domainCameraFile: DomainCameraFile): Result<DomainInformationImageMetadata> {
-        val item = FileList.getMetadataOfImageInList(domainCameraFile.name)
+        val item = FileList.findAndGetImageMetadata(domainCameraFile.name)
         if (!thereIsErrorInMetadataVideo && item != null) return Result.Success(item)
 
         val cameraConnectFile = domainCameraFile.toCamera()

@@ -190,4 +190,44 @@ internal class FileListRepositoryImplTest {
         val result = fileListRepositoryImpl.savePartnerIdSnapshot(listOf(domainCameraFile), "")
         Assert.assertTrue(result is Result.Error)
     }
+
+    @Test
+    fun testSavePartnerIdAudiosFlow() = dispatcher.runBlockingTest {
+        val domainCameraFile: DomainCameraFile = mockk(relaxed = true)
+
+        coEvery {
+            fileListRemoteDataSource.savePartnerIdAudios(any())
+        } returns Result.Success(Unit)
+
+        fileListRepositoryImpl.savePartnerIdAudios(listOf(domainCameraFile), "")
+
+        coVerify { fileListRemoteDataSource.savePartnerIdAudios(any()) }
+    }
+
+    @Test
+    fun testSavePartnerIdAudiosSuccess() = dispatcher.runBlockingTest {
+        val result = Result.Success(Unit)
+        val domainCameraFile: DomainCameraFile = mockk(relaxed = true)
+
+        coEvery {
+            fileListRemoteDataSource.savePartnerIdAudios(any())
+        } returns Result.Success(Unit)
+
+        Assert.assertEquals(
+            fileListRepositoryImpl.savePartnerIdAudios(listOf(domainCameraFile), ""),
+            result
+        )
+    }
+
+    @Test
+    fun testSavePartnerIdAudiosFailed() = dispatcher.runBlockingTest {
+        val domainCameraFile: DomainCameraFile = mockk(relaxed = true)
+
+        coEvery {
+            fileListRemoteDataSource.savePartnerIdAudios(any())
+        } returns Result.Error(Exception())
+
+        val result = fileListRepositoryImpl.savePartnerIdAudios(listOf(domainCameraFile), "")
+        Assert.assertTrue(result is Result.Error)
+    }
 }
