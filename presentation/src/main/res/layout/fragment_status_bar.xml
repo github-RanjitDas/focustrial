@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:visibility="gone"
+        android:id="@+id/constraintShowStatusBar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintLayoutStatus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/backgroundCardView"
+            android:padding="@dimen/padding_14dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/textTitleStatusBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/roboto_regular"
+                android:text="@string/body_worn_status_title"
+                android:textColor="@color/textDarkAccent"
+                android:textSize="@dimen/text_size_14sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageButton
+                android:id="@+id/imageButtonGPS"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/no_dp"
+                android:background="@color/transparent"
+                android:contentDescription="@string/body_worn_status_change_status_gps"
+                android:src="@drawable/selector_status_gps"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageButton
+                android:id="@+id/imageButtonBluetooth"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/body_worn_status_margin_sides_items"
+                android:layout_marginEnd="@dimen/body_worn_status_margin_sides_items"
+                android:background="@color/transparent"
+                android:contentDescription="@string/body_worn_status_change_status_bluetooth"
+                android:src="@drawable/selector_status_bluetooth"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/imageButtonGPS"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageButton
+                android:id="@+id/imageButtonCovertMode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/body_worn_status_margin_sides_items"
+                android:layout_marginEnd="@dimen/body_worn_status_margin_sides_items"
+                android:background="@color/transparent"
+                android:contentDescription="@string/body_worn_status_change_status_covert_mode"
+                android:src="@drawable/selector_status_covert_mode"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/imageButtonBluetooth"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <ImageButton
+            android:id="@+id/imageButtonArrowShow"
+            android:foregroundGravity="top"
+            android:layout_width="@dimen/body_worn_status_bar_size_arrow"
+            android:layout_height="@dimen/body_worn_status_bar_size_arrow"
+            android:rotation="180"
+            android:tint="@color/lightBlue"
+            android:src="@drawable/ic_arrow_down"
+            android:background="@color/transparent"
+            android:contentDescription="@string/body_worn_status_hide_or_show_status_bar"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/constraintLayoutStatus" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintHideStatusBar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <View
+            android:id="@+id/viewHideRectangle"
+            android:background="@color/backgroundCardView"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/body_worn_status_bar_height_line"
+            />
+
+        <ImageView
+            android:layout_width="@dimen/body_worn_status_bar_width_arrow"
+            android:layout_height="@dimen/body_worn_status_bar_height_arrow"
+            android:background="@color/transparent"
+            android:contentDescription="@string/body_worn_status_hide_or_show_status_bar"
+            android:src="@drawable/shape_semi_circle_grey"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageButton
+            android:id="@+id/imageButtonArrowHide"
+            android:layout_width="@dimen/body_worn_status_bar_width_arrow"
+            android:layout_height="@dimen/size_25dp"
+            android:background="@color/transparent"
+            android:contentDescription="@string/body_worn_status_hide_or_show_status_bar"
+            android:src="@drawable/ic_arrow_down"
+            android:tint="@color/lightBlue"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

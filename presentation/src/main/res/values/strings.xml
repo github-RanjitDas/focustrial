@@ -277,7 +277,8 @@
     <string name="device_password">Device Password</string>
     <string name="edit_officer_id_description">edit officer id</string>
 
-    <!-- Body Worn Setting -->
+    <!-- Body Worn Setting and Status-->
+    <string name="body_worn_status_title">Body-worn Status</string>
     <string name="body_worn_settings_title">Body-worn Settings</string>
     <string name="body_worn_settings_covert_mode">Covert Mode</string>
     <string name="body_worn_settings_bluetooth">Bluetooth</string>
@@ -288,5 +289,9 @@
     <string name="body_worn_settings_error_in_change_settings">Error in change setting, please try again</string>
     <string name="start_now">Start Now</string>
     <string name="view_audio_list">View Audio List</string>
+    <string name="body_worn_status_change_status_covert_mode">Change status Covert mode</string>
+    <string name="body_worn_status_change_status_bluetooth">Change status Bluetooth</string>
+    <string name="body_worn_status_change_status_gps">Change status GPS</string>
+    <string name="body_worn_status_hide_or_show_status_bar">Hide or Show Status Bar</string>
 
 </resources>

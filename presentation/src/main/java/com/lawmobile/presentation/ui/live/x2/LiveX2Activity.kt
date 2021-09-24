@@ -3,6 +3,7 @@ package com.lawmobile.presentation.ui.live.x2
 import android.os.Bundle
 import android.view.animation.AnimationUtils
 import androidx.activity.viewModels
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isVisible
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.databinding.ActivityLiveViewBinding
@@ -15,6 +16,7 @@ import com.lawmobile.presentation.ui.base.BaseActivity
 import com.lawmobile.presentation.ui.base.appBar.x2.AppBarX2Fragment
 import com.lawmobile.presentation.ui.base.menu.MenuFragment
 import com.lawmobile.presentation.ui.base.menu.MenuFragment.Companion.isInMainScreen
+import com.lawmobile.presentation.ui.base.statusBar.StatusBarSettingsFragment
 import com.lawmobile.presentation.ui.live.LiveActivityBaseViewModel
 import com.lawmobile.presentation.ui.live.controls.x1.LiveControlsX1Fragment
 import com.lawmobile.presentation.ui.live.navigation.x1.LiveNavigationX1Fragment
@@ -35,6 +37,9 @@ class LiveX2Activity : BaseActivity() {
     private val controlsFragment = LiveControlsX1Fragment()
     private val navigationFragment = LiveNavigationX1Fragment()
     private val menuFragment = MenuFragment()
+    private val statusBarSettingsFragment = StatusBarSettingsFragment.createInstance {
+        changeSizeGuideLineDependsStatusBarSettings(it)
+    }
     private var isMenuOpen = false
 
     private lateinit var menuInformation: MenuInformation
@@ -57,7 +62,25 @@ class LiveX2Activity : BaseActivity() {
             animateAppBar()
             animateContainer()
             setListeners()
+            changeSizeGuideLineDependsStatusBarSettings(false)
         }
+    }
+
+    private fun changeSizeGuideLineDependsStatusBarSettings(isVisible: Boolean) {
+        val paramsGuideLineTopLiveStream: ConstraintLayout.LayoutParams =
+            binding.guidelineTopStream2.layoutParams as ConstraintLayout.LayoutParams
+        paramsGuideLineTopLiveStream.guidePercent = if (isVisible) 0.270f else 0.200f
+        binding.guidelineTopStream2.layoutParams = paramsGuideLineTopLiveStream
+
+        val paramsGuideLineBottomLiveStream: ConstraintLayout.LayoutParams =
+            binding.guidelineBottomLiveStream.layoutParams as ConstraintLayout.LayoutParams
+        paramsGuideLineBottomLiveStream.guidePercent = if (isVisible) 0.575f else 0.510f
+        binding.guidelineBottomLiveStream.layoutParams = paramsGuideLineBottomLiveStream
+
+        val paramsGuideLineTopStatusBar: ConstraintLayout.LayoutParams =
+            binding.guidelineTopStatusBar.layoutParams as ConstraintLayout.LayoutParams
+        paramsGuideLineTopStatusBar.guidePercent = if (isVisible) 0.20f else 0.11f
+        binding.guidelineTopStatusBar.layoutParams = paramsGuideLineTopStatusBar
     }
 
     override fun onResume() {
@@ -151,6 +174,7 @@ class LiveX2Activity : BaseActivity() {
         setControlsFragment()
         setNavigationFragment()
         setMenuFragment()
+        setStatusBarSettingsFragment()
     }
 
     private fun setMenuFragment() {
@@ -190,6 +214,14 @@ class LiveX2Activity : BaseActivity() {
             containerId = R.id.statusBarContainer,
             fragment = statusBarFragment,
             tag = LiveStatusBarX1Fragment.TAG
+        )
+    }
+
+    private fun setStatusBarSettingsFragment() {
+        supportFragmentManager.attachFragment(
+            containerId = R.id.statusBarSetting,
+            fragment = statusBarSettingsFragment,
+            tag = StatusBarSettingsFragment.TAG
         )
     }
 
