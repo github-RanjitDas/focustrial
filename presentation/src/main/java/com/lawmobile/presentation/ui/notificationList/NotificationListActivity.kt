@@ -22,6 +22,7 @@ import com.lawmobile.presentation.extensions.showErrorSnackBar
 import com.lawmobile.presentation.ui.base.BaseActivity
 import com.lawmobile.presentation.ui.base.appBar.x2.AppBarX2Fragment
 import com.lawmobile.presentation.ui.base.menu.MenuFragment
+import com.lawmobile.presentation.ui.base.statusBar.StatusBarSettingsFragment
 import com.safefleet.mobile.kotlin_commons.extensions.doIfError
 import com.safefleet.mobile.kotlin_commons.extensions.doIfSuccess
 import com.safefleet.mobile.kotlin_commons.helpers.Result
@@ -35,6 +36,7 @@ class NotificationListActivity : BaseActivity() {
     private lateinit var appBarFragment: AppBarX2Fragment
     private lateinit var binding: ActivityNotificationListBinding
     private lateinit var notificationListAdapter: NotificationListAdapter
+    private val statusBarSettingsFragment = StatusBarSettingsFragment.createInstance()
 
     private val bottomSheetBehavior: BottomSheetBehavior<CardView> by lazy {
         BottomSheetBehavior.from(binding.bottomSheetNotification.bottomSheetNotification)
@@ -63,6 +65,7 @@ class NotificationListActivity : BaseActivity() {
     private fun attachFragments() {
         attachMenuFragment()
         attachAppBarFragment()
+        attachStatusBarSettingsFragment()
     }
 
     private fun setObservers() {
@@ -90,6 +93,7 @@ class NotificationListActivity : BaseActivity() {
                 }
             }
         }
+        CameraInfo.onReadyToGetStatusBar?.invoke()
     }
 
     private fun manageNotificationEventsResult(result: Result<List<CameraEvent>>) {
@@ -216,6 +220,14 @@ class NotificationListActivity : BaseActivity() {
             containerId = R.id.menuContainer,
             fragment = menuFragment,
             tag = MenuFragment.TAG
+        )
+    }
+
+    private fun attachStatusBarSettingsFragment() {
+        supportFragmentManager.attachFragment(
+            containerId = R.id.statusBarFragment,
+            fragment = statusBarSettingsFragment,
+            tag = StatusBarSettingsFragment.TAG
         )
     }
 

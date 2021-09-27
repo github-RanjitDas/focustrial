@@ -28,7 +28,7 @@ class StatusBarSettingsFragment : BaseFragment() {
     private val settingsViewModel: StatusBarSettingsViewModel by viewModels()
     private var currentSettingChanged: TypesOfBodyWornSettings = TypesOfBodyWornSettings.CovertMode
 
-    lateinit var onChangeVisibility: (isVisible: Boolean) -> Unit
+    private var onChangeVisibility: ((isVisible: Boolean) -> Unit)? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -105,7 +105,7 @@ class StatusBarSettingsFragment : BaseFragment() {
     }
 
     private fun isShowCompleteStatusBar(isShow: Boolean) {
-        onChangeVisibility.invoke(isShow)
+        onChangeVisibility?.invoke(isShow)
         binding.constraintShowStatusBar.isVisible = isShow
         binding.constraintHideStatusBar.isVisible = !isShow
         if (isShow) {
@@ -176,7 +176,7 @@ class StatusBarSettingsFragment : BaseFragment() {
 
     companion object {
         val TAG = StatusBarSettingsFragment::class.java.simpleName
-        fun createInstance(onChangeVisibility: (isVisible: Boolean) -> Unit): StatusBarSettingsFragment {
+        fun createInstance(onChangeVisibility: ((isVisible: Boolean) -> Unit)? = null): StatusBarSettingsFragment {
             return StatusBarSettingsFragment().apply {
                 this.onChangeVisibility = onChangeVisibility
             }
