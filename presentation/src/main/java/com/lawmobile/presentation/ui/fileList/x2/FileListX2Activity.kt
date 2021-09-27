@@ -10,6 +10,7 @@ import com.lawmobile.presentation.extensions.openMenuButton
 import com.lawmobile.presentation.extensions.setOnClickListenerCheckConnection
 import com.lawmobile.presentation.ui.base.appBar.x2.AppBarX2Fragment
 import com.lawmobile.presentation.ui.base.menu.MenuFragment
+import com.lawmobile.presentation.ui.base.statusBar.StatusBarSettingsFragment
 import com.lawmobile.presentation.ui.fileList.FileListBaseActivity
 import com.lawmobile.presentation.ui.fileList.filterSection.x2.FilterSectionX2Fragment
 import com.lawmobile.presentation.utils.Constants
@@ -20,6 +21,8 @@ class FileListX2Activity : FileListBaseActivity() {
     private lateinit var menuInformation: MenuInformation
     private lateinit var appBarFragment: AppBarX2Fragment
     private lateinit var filterSectionFragment: FilterSectionX2Fragment
+
+    private val statusBarSettingsFragment = StatusBarSettingsFragment.createInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,6 +41,7 @@ class FileListX2Activity : FileListBaseActivity() {
     private fun attachFragments() {
         attachAppBarFragment()
         attachFilterSectionFragment()
+        attachStatusBarSettingsFragment()
         attachListTypeFragment()
         attachMenuFragment()
     }
@@ -136,6 +140,14 @@ class FileListX2Activity : FileListBaseActivity() {
             containerId = R.id.selectedSectionItems,
             fragment = filterSectionFragment,
             tag = FilterSectionX2Fragment.TAG
+        )
+    }
+
+    private fun attachStatusBarSettingsFragment() {
+        supportFragmentManager.attachFragment(
+            containerId = R.id.statusBarFragment,
+            fragment = statusBarSettingsFragment,
+            tag = StatusBarSettingsFragment.TAG
         )
     }
 
