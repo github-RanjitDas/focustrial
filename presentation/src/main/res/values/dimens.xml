@@ -195,6 +195,7 @@
     <!-- Body Worn Settings -->
     <dimen name="body_worn_settings_margin_top_content">45dp</dimen>
     <dimen name="margin_12dp">12dp</dimen>
+    <dimen name="padding_audio_icon_background">70dp</dimen>
     <dimen name="body_worn_status_margin_sides_items">35dp</dimen>
     <dimen name="body_worn_status_bar_size_arrow">40dp</dimen>
     <dimen name="body_worn_status_bar_height_line">5dp</dimen>

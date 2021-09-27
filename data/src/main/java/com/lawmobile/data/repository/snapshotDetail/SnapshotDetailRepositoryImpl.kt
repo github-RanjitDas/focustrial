@@ -80,7 +80,7 @@ class SnapshotDetailRepositoryImpl(
 
     override suspend fun getInformationOfPhoto(domainCameraFile: DomainCameraFile): Result<DomainInformationImageMetadata> {
         val item = FileList.findAndGetImageMetadata(domainCameraFile.name)
-        if (!thereIsErrorInMetadataVideo && item != null) return Result.Success(item)
+        if (item != null) return Result.Success(item)
 
         val cameraConnectFile = domainCameraFile.toCamera()
 
@@ -96,9 +96,5 @@ class SnapshotDetailRepositoryImpl(
         }
 
         return Result.Error(Exception("Was not possible get information from the camera"))
-    }
-
-    companion object {
-        private var thereIsErrorInMetadataVideo = false
     }
 }

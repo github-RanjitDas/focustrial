@@ -1,59 +1,51 @@
-package com.lawmobile.presentation.ui.snapshotDetail
+package com.lawmobile.presentation.ui.audioDetail
 
-import android.content.pm.ActivityInfo
-import android.content.res.Configuration
 import android.os.Bundle
 import android.view.View
 import androidx.activity.viewModels
 import androidx.cardview.widget.CardView
 import androidx.core.view.isVisible
-import com.bumptech.glide.Glide
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.lawmobile.domain.entities.DomainCameraFile
-import com.lawmobile.domain.entities.DomainInformationImageMetadata
+import com.lawmobile.domain.entities.DomainInformationAudioMetadata
 import com.lawmobile.domain.extensions.getDateDependingOnNameLength
 import com.lawmobile.presentation.R
-import com.lawmobile.presentation.databinding.ActivitySnapshotItemDetailBinding
-import com.lawmobile.presentation.entities.ImageFilesPathManager
-import com.lawmobile.presentation.entities.ImageWithPathSaved
+import com.lawmobile.presentation.databinding.ActivityAudioItemDetailBinding
 import com.lawmobile.presentation.extensions.getPathFromTemporalFile
-import com.lawmobile.presentation.extensions.imageHasCorrectFormat
 import com.lawmobile.presentation.extensions.setOnClickListenerCheckConnection
 import com.lawmobile.presentation.extensions.showErrorSnackBar
 import com.lawmobile.presentation.extensions.showSuccessSnackBar
 import com.lawmobile.presentation.extensions.verifySessionBeforeAction
 import com.lawmobile.presentation.ui.base.BaseActivity
-import com.lawmobile.presentation.ui.fileList.thumbnailList.ThumbnailFileListFragment.Companion.PATH_ERROR_IN_PHOTO
 import com.lawmobile.presentation.utils.Constants
 import com.safefleet.mobile.android_commons.extensions.hideKeyboard
 import com.safefleet.mobile.kotlin_commons.extensions.doIfError
 import com.safefleet.mobile.kotlin_commons.extensions.doIfSuccess
 import com.safefleet.mobile.kotlin_commons.helpers.Event
 import com.safefleet.mobile.kotlin_commons.helpers.Result
-import java.io.File
 
-class SnapshotDetailActivity : BaseActivity() {
+class AudioDetailActivity : BaseActivity() {
 
-    private lateinit var binding: ActivitySnapshotItemDetailBinding
+    private lateinit var binding: ActivityAudioItemDetailBinding
 
-    private val snapshotDetailViewModel: SnapshotDetailViewModel by viewModels()
+    private val audioDetailViewModel: AudioDetailViewModel by viewModels()
     private lateinit var file: DomainCameraFile
-    private var domainInformationImageMetadata: DomainInformationImageMetadata? = null
+    private var domainAudioInformation: DomainInformationAudioMetadata? = null
     private lateinit var currentAssociatedOfficerId: String
 
     private val sheetBehavior: BottomSheetBehavior<CardView> by lazy {
         BottomSheetBehavior.from(
-            binding.bottomSheetPartnerId!!.bottomSheetPartnerId
+            binding.bottomSheetPartnerId.bottomSheetPartnerId
         )
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivitySnapshotItemDetailBinding.inflate(layoutInflater)
+        binding = ActivityAudioItemDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setAppBar()
         getInformationFromIntent()
-        setInformationOfSnapshot()
+        setInformationOfAudio()
         setObservers()
         configureListeners()
         configureBottomSheet()
@@ -62,22 +54,13 @@ class SnapshotDetailActivity : BaseActivity() {
     override fun onResume() {
         super.onResume()
         restartVisibility()
-        getSnapshotBytes()
+        getAudioBytes()
         hideKeyboard()
     }
 
-    private fun getSnapshotBytes() {
+    private fun getAudioBytes() {
         showLoadingDialog()
-        val fileSaved = ImageFilesPathManager.getImageIfExist(file.name)
-        fileSaved?.let {
-            if (it.absolutePath != PATH_ERROR_IN_PHOTO && File(it.absolutePath).exists()) {
-                setImageWithPath(it.absolutePath)
-                snapshotDetailViewModel.getInformationImageMetadata(file)
-                return
-            }
-        }
-
-        snapshotDetailViewModel.getImageBytes(file)
+        audioDetailViewModel.getAudioBytes(file)
     }
 
     private fun getInformationFromIntent() {
@@ -87,40 +70,29 @@ class SnapshotDetailActivity : BaseActivity() {
     }
 
     private fun setAppBar() {
-        binding.layoutCustomAppBar?.textViewTitle?.text =
-            getString(R.string.snapshot_item_detail_title)
-        binding.layoutCustomAppBar?.buttonSimpleList?.isVisible = false
-        binding.layoutCustomAppBar?.buttonThumbnailList?.isVisible =
-            false
+        binding.layoutCustomAppBar.textViewTitle.text = getString(R.string.audio_item_detail_title)
+        binding.layoutCustomAppBar.buttonSimpleList.isVisible = false
+        binding.layoutCustomAppBar.buttonThumbnailList.isVisible = false
     }
 
     private fun configureListeners() {
         binding.buttonAssociatePartnerIdList.setOnClickListenerCheckConnection {
             showAssignToOfficerBottomSheet()
         }
-        binding.layoutCustomAppBar?.imageButtonBackArrow?.setOnClickListenerCheckConnection { onBackPressed() }
-        binding.buttonFullScreen.setOnClickListenerCheckConnection { changeOrientationInView() }
+        binding.layoutCustomAppBar.imageButtonBackArrow.setOnClickListenerCheckConnection { onBackPressed() }
         binding.imageReload.setOnClickListenerCheckConnection {
             showLoadingDialog()
-            snapshotDetailViewModel.getImageBytes(file)
+            audioDetailViewModel.getAudioBytes(file)
         }
-    }
-
-    private fun changeOrientationInView() {
-        if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
-            requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
-            return
-        }
-        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
     }
 
     private fun setObservers() {
-        snapshotDetailViewModel.imageBytesLiveData.observe(this, ::manageGetBytesImage)
-        snapshotDetailViewModel.informationImageLiveData.observe(this, ::manageInformationImage)
-        snapshotDetailViewModel.savePartnerIdLiveData.observe(this, ::manageSavePartnerId)
+        audioDetailViewModel.audioBytesLiveData.observe(this, ::manageGetBytesAudio)
+        audioDetailViewModel.informationAudioLiveData.observe(this, ::manageInformationAudio)
+        audioDetailViewModel.savePartnerIdLiveData.observe(this, ::manageSavePartnerId)
     }
 
-    private fun manageGetBytesImage(event: Event<Result<ByteArray>>) {
+    private fun manageGetBytesAudio(event: Event<Result<ByteArray>>) {
         event.getContentIfNotHandled()?.run {
             with(this) {
                 doIfSuccess {
@@ -128,7 +100,7 @@ class SnapshotDetailActivity : BaseActivity() {
                         context = applicationContext,
                         name = file.name
                     )
-                    setImageWithPath(path)
+                    // pending to use the audio bytes
                 }
                 doIfError {
                     binding.imageReload.isVisible = true
@@ -136,27 +108,27 @@ class SnapshotDetailActivity : BaseActivity() {
             }
         }
 
-        if (domainInformationImageMetadata == null)
-            snapshotDetailViewModel.getInformationImageMetadata(file)
+        if (domainAudioInformation == null)
+            audioDetailViewModel.getInformationAudioMetadata(file)
         else hideLoadingDialog()
     }
 
-    private fun manageInformationImage(event: Event<Result<DomainInformationImageMetadata>>) {
+    private fun manageInformationAudio(event: Event<Result<DomainInformationAudioMetadata>>) {
         event.getContentIfNotHandled()?.run {
             with(this) {
                 doIfSuccess { domainInformation ->
-                    domainInformationImageMetadata = domainInformation
-                    setSnapshotMetadata()
+                    domainAudioInformation = domainInformation
+                    setAudioMetadata()
                 }
                 doIfError {
                     showMetadataNotAvailable()
                     binding.constraintLayoutDetail.showErrorSnackBar(
-                        getString(R.string.snapshot_detail_metadata_error),
-                        SNAPSHOT_DETAIL_ERROR_ANIMATION_DURATION
+                        getString(R.string.audio_detail_metadata_error),
+                        AUDIO_DETAIL_ERROR_ANIMATION_DURATION
                     ) {
-                        this@SnapshotDetailActivity.verifySessionBeforeAction {
+                        this@AudioDetailActivity.verifySessionBeforeAction {
                             showLoadingDialog()
-                            snapshotDetailViewModel.getInformationImageMetadata(file)
+                            audioDetailViewModel.getInformationAudioMetadata(file)
                         }
                     }
                 }
@@ -192,14 +164,14 @@ class SnapshotDetailActivity : BaseActivity() {
 
     private fun configureBottomSheet() {
         sheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
-        binding.bottomSheetPartnerId?.buttonAssignToOfficer?.setOnClickListenerCheckConnection {
+        binding.bottomSheetPartnerId.buttonAssignToOfficer.setOnClickListenerCheckConnection {
             currentAssociatedOfficerId =
-                binding.bottomSheetPartnerId?.editTextAssignToOfficer?.text.toString()
+                binding.bottomSheetPartnerId.editTextAssignToOfficer.text.toString()
             associatePartnerId(currentAssociatedOfficerId)
             hideKeyboard()
             cleanPartnerIdField()
         }
-        binding.bottomSheetPartnerId?.buttonCloseAssignToOfficer?.setOnClickListenerCheckConnection {
+        binding.bottomSheetPartnerId.buttonCloseAssignToOfficer.setOnClickListenerCheckConnection {
             hideKeyboard()
             cleanPartnerIdField()
             sheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
@@ -222,7 +194,7 @@ class SnapshotDetailActivity : BaseActivity() {
     }
 
     private fun cleanPartnerIdField() {
-        binding.bottomSheetPartnerId?.editTextAssignToOfficer?.text?.clear()
+        binding.bottomSheetPartnerId.editTextAssignToOfficer.text?.clear()
     }
 
     private fun showAssignToOfficerBottomSheet() {
@@ -235,41 +207,15 @@ class SnapshotDetailActivity : BaseActivity() {
             return
         }
         showLoadingDialog()
-        snapshotDetailViewModel.savePartnerId(file, partnerId)
+        audioDetailViewModel.savePartnerId(file, partnerId)
     }
 
-    private fun setImageWithPath(path: String) {
-        if (path.imageHasCorrectFormat()) {
-            try {
-                ImageFilesPathManager.saveImageWithPath(ImageWithPathSaved(file.name, path))
-                Glide.with(this).load(File(path))
-                    .into(binding.photoItemDetailHolder)
-                binding.imageReload.isVisible = false
-            } catch (e: Exception) {
-                binding.imageFailed!!.isVisible = true
-                showFailedLoadImageError()
-            }
-        } else {
-            binding.imageFailed!!.isVisible = true
-            showFailedLoadImageError()
-        }
-    }
-
-    private fun showFailedLoadImageError() {
-        binding.constraintLayoutDetail.showErrorSnackBar(
-            getString(R.string.snapshot_detail_load_failed),
-            SNAPSHOT_DETAIL_ERROR_ANIMATION_DURATION
-        ) {
-            this.verifySessionBeforeAction { snapshotDetailViewModel.getImageBytes(file) }
-        }
-    }
-
-    private fun setInformationOfSnapshot() {
-        binding.photoNameValue.text = file.name
+    private fun setInformationOfAudio() {
+        binding.audioNameValue.text = file.name
         binding.dateTimeValue.text = file.date
     }
 
-    private fun setSnapshotMetadata() {
+    private fun setAudioMetadata() {
         setOfficerAssociatedInView()
         setVideosAssociatedInView()
     }
@@ -281,7 +227,7 @@ class SnapshotDetailActivity : BaseActivity() {
     }
 
     private fun setOfficerAssociatedInView() {
-        domainInformationImageMetadata?.photoMetadata?.metadata?.partnerID?.let {
+        domainAudioInformation?.audioMetadata?.metadata?.partnerID?.let {
             currentAssociatedOfficerId = if (it.isEmpty()) getString(R.string.none) else it
         } ?: run {
             currentAssociatedOfficerId = getString(R.string.none)
@@ -291,7 +237,7 @@ class SnapshotDetailActivity : BaseActivity() {
     }
 
     private fun setVideosAssociatedInView() {
-        domainInformationImageMetadata?.videosAssociated?.let {
+        domainAudioInformation?.videosAssociated?.let {
             if (it.isNotEmpty()) {
                 var textInVideos = ""
                 for (position in it.indices) {
@@ -307,21 +253,12 @@ class SnapshotDetailActivity : BaseActivity() {
         binding.videosAssociatedValue.text = getString(R.string.none)
     }
 
-    override fun onBackPressed() {
-        if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            changeOrientationInView()
-        } else {
-            super.onBackPressed()
-        }
-    }
-
     private fun restartVisibility() {
         binding.photoItemDetailHolder.isVisible = true
         binding.imageReload.isVisible = false
-        binding.imageFailed!!.isVisible = false
     }
 
     companion object {
-        private const val SNAPSHOT_DETAIL_ERROR_ANIMATION_DURATION = 7000
+        private const val AUDIO_DETAIL_ERROR_ANIMATION_DURATION = 7000
     }
 }

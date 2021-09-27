@@ -50,6 +50,7 @@
     <string name="live_view_menu_item_dashboard">Dashboard</string>
     <string name="live_view_menu_item_view_snapshots">View Snapshots</string>
     <string name="live_view_menu_item_view_videos">View Videos</string>
+    <string name="live_view_menu_item_view_audios">View Audio List</string>
     <string name="live_view_menu_item_bodyworn_settings">Body-worn Settings</string>
     <string name="live_view_menu_item_notification">Notifications</string>
     <string name="live_view_menu_item_diagnose">Body-worn Diagnosis</string>
@@ -126,6 +127,13 @@
     <string name="playback_video_name">Name</string>
     <string name="default_text">DEFAULT TEXT</string>
     <string name="snapshot_detail_metadata_error">Unable to get snapshot information, please try again.</string>
+    <!-- link_snapshots -->
+
+    <!-- Audio detail -->
+    <string name="audio_item_detail_title">Audio Detail</string>
+    <string name="audio_detail_load_failed">Unable to open audio, please go back or try again.</string>
+    <string name="audio_detail_metadata_error">Unable to get audio information, please try again.</string>
+
     <!-- link_snapshots -->
 
     <!-- Partner Id -->

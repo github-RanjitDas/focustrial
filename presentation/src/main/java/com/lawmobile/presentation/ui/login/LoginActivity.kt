@@ -76,7 +76,8 @@ class LoginActivity :
     }
 
     private fun showFragmentDependingOnCameraType() {
-        if (CameraInfo.cameraType == CameraType.X1) showStartPairingFragment()
+        if (CameraInfo.cameraType == CameraType.X1)
+            showStartPairingFragment()
         else showValidateOfficerIdFragment()
     }
 
