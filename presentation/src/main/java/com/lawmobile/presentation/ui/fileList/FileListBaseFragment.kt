@@ -9,6 +9,7 @@ import com.lawmobile.domain.entities.CameraInfo
 import com.lawmobile.domain.entities.DomainCameraFile
 import com.lawmobile.domain.entities.DomainInformationForList
 import com.lawmobile.presentation.R
+import com.lawmobile.presentation.ui.audioDetail.AudioDetailActivity
 import com.lawmobile.presentation.ui.base.BaseFragment
 import com.lawmobile.presentation.ui.snapshotDetail.SnapshotDetailActivity
 import com.lawmobile.presentation.ui.videoPlayback.VideoPlaybackActivity
@@ -64,10 +65,7 @@ open class FileListBaseFragment : BaseFragment() {
             when (listType) {
                 SNAPSHOT_LIST -> fileListIntent.setClass(it, SnapshotDetailActivity::class.java)
                 VIDEO_LIST -> fileListIntent.setClass(it, VideoPlaybackActivity::class.java)
-                AUDIO_LIST -> {
-                    hideLoadingDialog()
-                    return
-                } // pending to implement audio detail activity
+                AUDIO_LIST -> fileListIntent.setClass(it, AudioDetailActivity::class.java)
                 else -> throw Exception("List type not supported")
             }
         }

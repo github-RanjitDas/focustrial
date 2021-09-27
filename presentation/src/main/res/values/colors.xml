@@ -26,6 +26,7 @@
     <color name="blueTransparent">#330068AF</color>
     <color name="greyNotificationAction">#5B616A</color>
     <color name="blueDiagnosisButton">#184C89</color>
+    <color name="blueBackgroundAudioButton">#4DD7DEEA</color>
     <color name="textDarkAccent">#231F20</color>
 
 </resources>
