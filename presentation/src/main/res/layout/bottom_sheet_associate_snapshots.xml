@@ -17,7 +17,7 @@
             android:background="@drawable/background_bottom_sheet">
 
             <TextView
-                android:id="@+id/textViewAssociateSnapshots"
+                android:id="@+id/textViewAssociateFiles"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
@@ -28,30 +28,30 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <ImageButton
-                android:id="@+id/buttonCloseAssociateSnapshots"
+                android:id="@+id/buttonCloseAssociateFiles"
                 android:layout_width="@dimen/button_close_instructions_size"
                 android:layout_height="@dimen/button_close_instructions_size"
                 android:layout_marginEnd="@dimen/button_close_instructions_margin_end"
                 android:background="@color/transparent"
                 android:contentDescription="@string/close_instructions_description"
                 android:src="@drawable/ic_close"
-                app:layout_constraintBottom_toBottomOf="@id/textViewAssociateSnapshots"
+                app:layout_constraintBottom_toBottomOf="@id/textViewAssociateFiles"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@id/textViewAssociateSnapshots" />
+                app:layout_constraintTop_toTopOf="@id/textViewAssociateFiles" />
 
             <View
-                android:id="@+id/dividerAssociateSnapshots"
+                android:id="@+id/dividerAssociateFiles"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/instructions_divider_size"
                 android:background="@color/grey"
-                app:layout_constraintTop_toBottomOf="@id/textViewAssociateSnapshots" />
+                app:layout_constraintTop_toBottomOf="@id/textViewAssociateFiles" />
 
             <FrameLayout
                 android:id="@+id/fragmentAssociateHolder"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/no_dp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/dividerAssociateSnapshots"/>
+                app:layout_constraintTop_toBottomOf="@id/dividerAssociateFiles"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.text.InputFilter
 import android.view.View
 import android.widget.ArrayAdapter
-import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.cardview.widget.CardView
 import androidx.core.view.isVisible
@@ -18,6 +17,8 @@ import com.lawmobile.domain.entities.DomainInformationVideo
 import com.lawmobile.domain.entities.DomainMetadata
 import com.lawmobile.domain.entities.DomainVideoMetadata
 import com.lawmobile.domain.entities.MetadataEvent
+import com.lawmobile.domain.enums.CameraType
+import com.lawmobile.domain.enums.MediaType
 import com.lawmobile.domain.extensions.getDateDependingOnNameLength
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.databinding.ActivityVideoPlaybackBinding
@@ -31,9 +32,12 @@ import com.lawmobile.presentation.extensions.setOnClickListenerCheckConnection
 import com.lawmobile.presentation.extensions.showErrorSnackBar
 import com.lawmobile.presentation.extensions.showSuccessSnackBar
 import com.lawmobile.presentation.extensions.showToast
-import com.lawmobile.presentation.ui.associateSnapshots.AssociateSnapshotsFragment
+import com.lawmobile.presentation.ui.associateFiles.AssociateFilesFragment
 import com.lawmobile.presentation.ui.base.BaseActivity
+import com.lawmobile.presentation.utils.Constants.AUDIO_LIST
 import com.lawmobile.presentation.utils.Constants.DOMAIN_CAMERA_FILE
+import com.lawmobile.presentation.utils.Constants.FILE_LIST_TYPE
+import com.lawmobile.presentation.utils.Constants.SNAPSHOT_LIST
 import com.safefleet.mobile.android_commons.extensions.hideKeyboard
 import com.safefleet.mobile.kotlin_commons.extensions.doIfError
 import com.safefleet.mobile.kotlin_commons.extensions.doIfSuccess
@@ -43,8 +47,8 @@ import com.safefleet.mobile.safefleet_ui.widgets.SafeFleetFilterTag
 class VideoPlaybackActivity : BaseActivity() {
 
     private lateinit var binding: ActivityVideoPlaybackBinding
-
     private val viewModel: VideoPlaybackViewModel by viewModels()
+
     private val eventList = mutableListOf<String>()
     private val raceList = mutableListOf<String>()
     private val genderList = mutableListOf<String>()
@@ -53,7 +57,7 @@ class VideoPlaybackActivity : BaseActivity() {
     private var isVideoMetadataChangesSaved = false
     private lateinit var currentMetadata: DomainVideoMetadata
 
-    private var associateSnapshotsFragment = AssociateSnapshotsFragment()
+    private var associateFilesFragment = AssociateFilesFragment()
     private val bottomSheetBehavior: BottomSheetBehavior<CardView> by lazy {
         BottomSheetBehavior.from(binding.bottomSheetAssociate!!.bottomSheetAssociate)
     }
@@ -63,9 +67,9 @@ class VideoPlaybackActivity : BaseActivity() {
         binding = ActivityVideoPlaybackBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        setViews()
+        binding.setViews()
         setObservers()
-        setListeners()
+        binding.setListeners()
 
         verifyIfSelectedVideoWasChanged()
 
@@ -79,7 +83,7 @@ class VideoPlaybackActivity : BaseActivity() {
         getVideoMetadata()
     }
 
-    private fun setViews() {
+    private fun ActivityVideoPlaybackBinding.setViews() {
         setAppBar()
         showLoadingDialog()
         configureBottomSheet()
@@ -93,11 +97,11 @@ class VideoPlaybackActivity : BaseActivity() {
         verifyEventEmpty()
     }
 
-    private fun configureBottomSheet() {
+    private fun ActivityVideoPlaybackBinding.configureBottomSheet() {
         bottomSheetBehavior.isDraggable = false
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
 
-        binding.bottomSheetAssociate?.buttonCloseAssociateSnapshots?.setOnClickListener {
+        bottomSheetAssociate?.buttonCloseAssociateFiles?.setOnClickListener {
             FilesAssociatedByUser.temporal.addAll(FilesAssociatedByUser.value)
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
         }
@@ -111,40 +115,38 @@ class VideoPlaybackActivity : BaseActivity() {
                 override fun onStateChanged(bottomSheet: View, newState: Int) {
                     when (newState) {
                         BottomSheetBehavior.STATE_HIDDEN -> {
-                            binding.shadowPlaybackView.isVisible = false
-                            binding.bottomSheetAssociate?.fragmentAssociateHolder?.id?.let {
+                            shadowPlaybackView.isVisible = false
+                            bottomSheetAssociate?.fragmentAssociateHolder?.id?.let {
                                 supportFragmentManager.detachFragment(it)
                             }
                         }
-                        else -> binding.shadowPlaybackView.isVisible = true
+                        else -> shadowPlaybackView.isVisible = true
                     }
                 }
             })
     }
 
-    private fun setAppBar() {
-        binding.layoutCustomAppBar?.run {
+    private fun ActivityVideoPlaybackBinding.setAppBar() {
+        layoutCustomAppBar?.run {
             textViewTitle.text = getString(R.string.video_detail)
             buttonSimpleList.isVisible = false
             buttonThumbnailList.isVisible = false
         }
     }
 
-    private fun addEditTextFilter() {
-        with(binding) {
-            ticket1Value.filters = getFiltersWithLength(20)
-            ticket2Value.filters = getFiltersWithLength(20)
-            case1Value.filters = getFiltersWithLength(50)
-            case2Value.filters = getFiltersWithLength(50)
-            dispatch1Value.filters = getFiltersWithLength(30)
-            dispatch2Value.filters = getFiltersWithLength(30)
-            locationValue.filters = getFiltersWithLength(30)
-            notesValue.filters = getFiltersWithLength(100)
-            firstNameValue.filters = getFiltersWithLength(30)
-            lastNameValue.filters = getFiltersWithLength(30)
-            driverLicenseValue.filters = getFiltersWithLength(30)
-            licensePlateValue.filters = getFiltersWithLength(30)
-        }
+    private fun ActivityVideoPlaybackBinding.addEditTextFilter() {
+        ticket1Value.filters = getFiltersWithLength(20)
+        ticket2Value.filters = getFiltersWithLength(20)
+        case1Value.filters = getFiltersWithLength(50)
+        case2Value.filters = getFiltersWithLength(50)
+        dispatch1Value.filters = getFiltersWithLength(30)
+        dispatch2Value.filters = getFiltersWithLength(30)
+        locationValue.filters = getFiltersWithLength(30)
+        notesValue.filters = getFiltersWithLength(100)
+        firstNameValue.filters = getFiltersWithLength(30)
+        lastNameValue.filters = getFiltersWithLength(30)
+        driverLicenseValue.filters = getFiltersWithLength(30)
+        licensePlateValue.filters = getFiltersWithLength(30)
     }
 
     private fun getFiltersWithLength(length: Int): Array<InputFilter> {
@@ -172,20 +174,18 @@ class VideoPlaybackActivity : BaseActivity() {
         if (CameraInfo.metadataEvents.isEmpty()) showErrorInEvents()
     }
 
-    private fun setCatalogLists() {
+    private fun ActivityVideoPlaybackBinding.setCatalogLists() {
         eventList.add(getString(R.string.select))
         eventList.addAll(CameraInfo.metadataEvents.map { it.name })
         raceList.addAll(resources.getStringArray(R.array.race_spinner))
         genderList.addAll(resources.getStringArray(R.array.gender_spinner))
 
-        with(binding) {
-            eventValue.adapter =
-                ArrayAdapter(this@VideoPlaybackActivity, R.layout.spinner_item, eventList)
-            raceValue.adapter =
-                ArrayAdapter(this@VideoPlaybackActivity, R.layout.spinner_item, raceList)
-            genderValue.adapter =
-                ArrayAdapter(this@VideoPlaybackActivity, R.layout.spinner_item, genderList)
-        }
+        eventValue.adapter =
+            ArrayAdapter(this@VideoPlaybackActivity, R.layout.spinner_item, eventList)
+        raceValue.adapter =
+            ArrayAdapter(this@VideoPlaybackActivity, R.layout.spinner_item, raceList)
+        genderValue.adapter =
+            ArrayAdapter(this@VideoPlaybackActivity, R.layout.spinner_item, genderList)
     }
 
     private fun showErrorInEvents() {
@@ -204,37 +204,69 @@ class VideoPlaybackActivity : BaseActivity() {
         }
     }
 
-    private fun setListeners() {
-        with(binding) {
-            buttonFullScreen.setOnClickListenerCheckConnection {
-                changeScreenOrientation()
-            }
-            saveButtonVideoPlayback.setOnClickListenerCheckConnection {
-                saveVideoMetadataInCamera()
-            }
-            layoutCustomAppBar?.imageButtonBackArrow?.setOnClickListenerCheckConnection {
-                onBackPressed()
-            }
-            buttonAssociateSnapshots.setOnClickListenerCheckConnection {
-                showAssociateSnapshotsBottomSheet()
-            }
-        }
+    private fun ActivityVideoPlaybackBinding.setListeners() {
+        buttonFullScreenListener()
+        saveButtonListener()
+        arrowBackListener()
+        buttonAssociateSnapshotsListener()
+        buttonAssociateAudiosListener()
+        associateFilesListener()
+        mediaPlayerListener()
+        scrollListener()
+    }
 
-        associateSnapshotsFragment.onAssociateSnapshots = ::handleAssociateSnapshots
-
+    private fun mediaPlayerListener() {
         viewModel.mediaPlayer.isPlayingCallback = {
             if (viewModel.mediaPlayer.isEndReached) updateLastInteraction()
             updateLiveOrPlaybackActive(it)
         }
-
-        stopVideoWhenScrolling()
     }
 
-    private fun stopVideoWhenScrolling() {
-        binding.scrollLayoutMetadata.viewTreeObserver.addOnScrollChangedListener {
+    private fun ActivityVideoPlaybackBinding.associateFilesListener() {
+        associateFilesFragment.onAssociateFiles = {
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+            associateFilesFragment.setFilesAssociatedFromMetadata(FilesAssociatedByUser.temporal)
+            FilesAssociatedByUser.setFinalValue(FilesAssociatedByUser.temporal)
+            showAssociatedFiles()
+            layoutVideoPlayback.showSuccessSnackBar(getString(R.string.snapshots_added_success))
+        }
+    }
+
+    private fun ActivityVideoPlaybackBinding.buttonAssociateAudiosListener() {
+        buttonAssociateAudios?.setOnClickListenerCheckConnection {
+            showFragmentAssociateFilesOfType(AUDIO_LIST)
+        }
+    }
+
+    private fun ActivityVideoPlaybackBinding.buttonAssociateSnapshotsListener() {
+        buttonAssociateSnapshots.setOnClickListenerCheckConnection {
+            showFragmentAssociateFilesOfType(SNAPSHOT_LIST)
+        }
+    }
+
+    private fun ActivityVideoPlaybackBinding.arrowBackListener() {
+        layoutCustomAppBar?.imageButtonBackArrow?.setOnClickListenerCheckConnection {
+            onBackPressed()
+        }
+    }
+
+    private fun ActivityVideoPlaybackBinding.saveButtonListener() {
+        saveButtonVideoPlayback.setOnClickListenerCheckConnection {
+            saveVideoMetadataInCamera()
+        }
+    }
+
+    private fun ActivityVideoPlaybackBinding.buttonFullScreenListener() {
+        buttonFullScreen.setOnClickListenerCheckConnection {
+            changeScreenOrientation()
+        }
+    }
+
+    private fun ActivityVideoPlaybackBinding.scrollListener() {
+        scrollLayoutMetadata.viewTreeObserver.addOnScrollChangedListener {
             val scrollBounds = Rect()
-            binding.scrollLayoutMetadata.getHitRect(scrollBounds)
-            if (!binding.fakeSurfaceVideoPlayback.getLocalVisibleRect(
+            scrollLayoutMetadata.getHitRect(scrollBounds)
+            if (!fakeSurfaceVideoPlayback.getLocalVisibleRect(
                     scrollBounds
                 ) && viewModel.mediaPlayer.isPlaying
             ) {
@@ -248,18 +280,14 @@ class VideoPlaybackActivity : BaseActivity() {
     }
 
     private fun manageSaveVideoMetadataResult(result: Result<Unit>) {
-        when (result) {
-            is Result.Success -> {
-                this.showToast(
-                    getString(R.string.video_metadata_saved_success),
-                    Toast.LENGTH_SHORT
-                )
+        with(result) {
+            doIfSuccess {
+                showToast(getString(R.string.video_metadata_saved_success))
                 onBackPressed()
             }
-            is Result.Error -> this.showToast(
-                getString(R.string.video_metadata_save_error),
-                Toast.LENGTH_SHORT
-            )
+            doIfError {
+                showToast(getString(R.string.video_metadata_save_error))
+            }
         }
         hideLoadingDialog()
     }
@@ -272,10 +300,7 @@ class VideoPlaybackActivity : BaseActivity() {
                 CameraInfo.areNewChanges = true
             }
             doIfError {
-                this@VideoPlaybackActivity.showToast(
-                    getString(R.string.get_video_metadata_error),
-                    Toast.LENGTH_SHORT
-                )
+                showToast(getString(R.string.get_video_metadata_error))
                 finish()
             }
         }
@@ -293,10 +318,7 @@ class VideoPlaybackActivity : BaseActivity() {
                     currentAttempts += 1
                     currentVideo?.let(viewModel::getInformationOfVideo)
                 } else {
-                    baseContext.showToast(
-                        getString(R.string.error_get_information_metadata),
-                        Toast.LENGTH_SHORT
-                    )
+                    showToast(getString(R.string.error_get_information_metadata))
                     finish()
                 }
             }
@@ -328,9 +350,10 @@ class VideoPlaybackActivity : BaseActivity() {
         videoMetadata.associatedFiles?.let {
             FilesAssociatedByUser.setTemporalValue(it as MutableList)
             FilesAssociatedByUser.setFinalValue(it)
-            associateSnapshotsFragment.setSnapshotsAssociatedFromMetadata(it)
+            associateFilesFragment.setFilesAssociatedFromMetadata(it)
         }
 
+        binding.showAssociatedFiles()
         hideLoadingDialog()
     }
 
@@ -344,64 +367,93 @@ class VideoPlaybackActivity : BaseActivity() {
         if (videoWasChanged) restartObjectOfCompanion()
     }
 
-    private fun handleAssociateSnapshots() {
-        bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
-        associateSnapshotsFragment.setSnapshotsAssociatedFromMetadata(FilesAssociatedByUser.temporal)
-        FilesAssociatedByUser.setFinalValue(FilesAssociatedByUser.temporal)
-        showSnapshotsAssociated()
-        binding.layoutVideoPlayback.showSuccessSnackBar(getString(R.string.snapshots_added_success))
+    private fun ActivityVideoPlaybackBinding.showAssociatedFiles() {
+        showAssociatedSnapshots()
+        if (CameraInfo.cameraType == CameraType.X2) showAssociatedAudios()
     }
 
-    private fun showSnapshotsAssociated() {
-        binding.layoutAssociatedSnapshots.removeAllViews()
-        binding.layoutAssociatedSnapshots.isVisible =
-            !FilesAssociatedByUser.value.isNullOrEmpty()
-        FilesAssociatedByUser.value.forEach {
-            binding.layoutAssociatedSnapshots.childCount.let { position ->
-                createTagInPosition(position, it.date)
+    private fun ActivityVideoPlaybackBinding.showAssociatedSnapshots() {
+        layoutAssociatedSnapshots.removeAllViews()
+        val associatedSnapshots =
+            FilesAssociatedByUser.value.filter { it.name.contains(MediaType.JPG.name) }
+        layoutAssociatedSnapshots.isVisible = associatedSnapshots.isNullOrEmpty().not()
+        associatedSnapshots.forEach {
+            createSnapshotTagInPosition(layoutAssociatedSnapshots.childCount, it.date)
+        }
+    }
+
+    private fun ActivityVideoPlaybackBinding.showAssociatedAudios() {
+        layoutAssociatedAudios?.removeAllViews()
+        val associatedAudios =
+            FilesAssociatedByUser.value.filter { it.name.contains(MediaType.WAV.name) }
+        layoutAssociatedAudios?.isVisible = associatedAudios.isNullOrEmpty().not()
+        associatedAudios.forEach {
+            layoutAssociatedAudios?.childCount?.let { position ->
+                createAudioTagInPosition(position, it.date)
             }
         }
     }
 
-    private fun createTagInPosition(position: Int, text: String) {
-        binding.layoutAssociatedSnapshots.addView(
-            SafeFleetFilterTag(this, null, 0).apply {
-                tagText = text
-                onClicked = {
-                    removeAssociatedSnapshot(text)
-                    showSnapshotsAssociated()
-                }
-            },
-            position
-        )
+    private fun ActivityVideoPlaybackBinding.createSnapshotTagInPosition(
+        position: Int,
+        text: String
+    ) = layoutAssociatedSnapshots.addView(createFilterTag(text), position)
+
+    private fun ActivityVideoPlaybackBinding.createAudioTagInPosition(
+        position: Int,
+        text: String
+    ) = layoutAssociatedAudios?.addView(createFilterTag(text), position)
+
+    private fun ActivityVideoPlaybackBinding.createFilterTag(text: String) =
+        SafeFleetFilterTag(baseContext, null, 0).apply {
+            tagText = text
+            onClicked = { onTagRemoved(text) }
+        }
+
+    private fun ActivityVideoPlaybackBinding.onTagRemoved(text: String) {
+        removeAssociatedFile(text)
+        showAssociatedFiles()
     }
 
-    private fun removeAssociatedSnapshot(date: String) {
-        val index = FilesAssociatedByUser.value.indexOfFirst {
-            it.date == date
-        }
+    private fun removeAssociatedFile(date: String) {
+        val index = FilesAssociatedByUser.value.indexOfFirst { it.date == date }
         if (index >= 0) {
             FilesAssociatedByUser.value.removeAt(index)
             FilesAssociatedByUser.setTemporalValue(FilesAssociatedByUser.value)
-            associateSnapshotsFragment.setSnapshotsAssociatedFromMetadata(FilesAssociatedByUser.value)
+            associateFilesFragment.setFilesAssociatedFromMetadata(FilesAssociatedByUser.value)
         }
     }
 
-    private fun showAssociateSnapshotsBottomSheet() {
+    private fun ActivityVideoPlaybackBinding.showFragmentAssociateFilesOfType(listType: String) {
         viewModel.mediaPlayer.pause()
+
+        associateFilesFragment.arguments = Bundle().apply {
+            putString(FILE_LIST_TYPE, listType)
+        }
+
         supportFragmentManager.attachFragment(
             R.id.fragmentAssociateHolder,
-            associateSnapshotsFragment,
-            AssociateSnapshotsFragment.TAG
+            associateFilesFragment,
+            AssociateFilesFragment.TAG
         )
+
+        setBottomSheetTitle(listType)
+
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
         FilesAssociatedByUser.setTemporalValue(FilesAssociatedByUser.value)
     }
 
-    private fun saveVideoMetadataInCamera() {
+    private fun ActivityVideoPlaybackBinding.setBottomSheetTitle(listType: String) {
+        bottomSheetAssociate?.textViewAssociateFiles?.text = when (listType) {
+            SNAPSHOT_LIST -> getString(R.string.associate_snapshots_to_video)
+            else -> getString(R.string.associate_audios_to_video)
+        }
+    }
+
+    private fun ActivityVideoPlaybackBinding.saveVideoMetadataInCamera() {
         hideKeyboard()
-        if (binding.eventValue.selectedItem == eventList[0]) {
-            binding.layoutVideoPlayback.showErrorSnackBar(getString(R.string.event_mandatory))
+        if (eventValue.selectedItem == eventList[0]) {
+            layoutVideoPlayback.showErrorSnackBar(getString(R.string.event_mandatory))
             return
         }
         CameraInfo.areNewChanges = true
@@ -440,26 +492,22 @@ class VideoPlaybackActivity : BaseActivity() {
 
     private fun createVideoPlayer(domainInformationVideo: DomainInformationVideo) {
         viewModel.mediaPlayer.apply {
-            setControls(
-                getMediaPlayerControls(),
-                getVideoDurationMillis(domainInformationVideo),
-                lifecycle
-            )
-            create(
-                domainInformationVideo.urlVideo,
-                binding.surfaceVideoPlayback
-            )
+            val controls = binding.getMediaPlayerControls()
+            val duration = getVideoDurationMillis(domainInformationVideo)
+            setControls(controls, duration, lifecycle)
+            create(domainInformationVideo.urlVideo, binding.surfaceVideoPlayback)
             if (!isEndReached && !isPaused) play()
         }
     }
 
-    private fun getMediaPlayerControls() = MediaPlayerControls(
-        binding.buttonPlay,
-        binding.textViewPlayerTime,
-        binding.textViewPlayerDuration,
-        binding.seekProgressVideo,
-        binding.buttonAspect
-    )
+    private fun ActivityVideoPlaybackBinding.getMediaPlayerControls() =
+        MediaPlayerControls(
+            buttonPlay,
+            textViewPlayerTime,
+            textViewPlayerDuration,
+            seekProgressVideo,
+            buttonAspect
+        )
 
     private fun getVideoDurationMillis(domainInformationVideo: DomainInformationVideo) =
         domainInformationVideo.duration.toLong().times(1000)

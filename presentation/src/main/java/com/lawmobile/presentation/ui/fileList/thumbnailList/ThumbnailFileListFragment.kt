@@ -54,8 +54,7 @@ class ThumbnailFileListFragment : FileListBaseFragment() {
         savedInstanceState: Bundle?
     ): View {
         setObservers()
-        _binding =
-            FragmentFileListBinding.inflate(inflater, container, false)
+        _binding = FragmentFileListBinding.inflate(inflater, container, false)
         return binding.root
     }
 

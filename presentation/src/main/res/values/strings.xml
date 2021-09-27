@@ -143,6 +143,7 @@
     <string name="file_list_associate_partner_id_error">Partner ID could not be associated</string>
     <string name="associate_partner_to_file_button_description">Associate partner to file button</string>
     <string name="button_link_snapshots_description">button link snapshots</string>
+    <string name="button_link_audios_description">button link audios</string>
     <string name="valid_partner_id_message">You must enter a valid Partner ID</string>
     <string name="mobile_data_status_title">Mobile Data</string>
     <string name="mobile_data_status_message">Please disable Mobile Data on your device in order to connect the BWC with the Focus Mobile App</string>
@@ -203,7 +204,7 @@
     <string name="select_videos_to_associate">Select videos to associate</string>
     <string name="button_help">\?</string>
     <string name="add_snapshots">Add snapshots</string>
-    <string name="associate_image_to_video">Associate snapshots to video</string>
+    <string name="add_audios">Add audios</string>
     <string name="video_detail">Video Detail</string>
     <string name="time_divider"> / </string>
     <string name="title_placeholder">Title</string>
@@ -215,7 +216,7 @@
     <string name="error_get_information_metadata">Unable to get video information, please try again</string>
     <string name="error_getting_officer_information">Unable to open officer information, please retry or checkout BWC</string>
     <string name="associate_snapshots_to_video">Associate snapshots to video</string>
-    <string name="associate_images">Associate snapshots</string>
+    <string name="associate_snapshots">Associate snapshots</string>
     <string name="no_new_photo_selected_message">Not selected any new photos</string>
     <string name="snapshots_added_success">Snapshots added successfully</string>
     <string name="items_selected" tools:ignore="PluralsCandidate">%1$d Selected</string>
@@ -301,5 +302,7 @@
     <string name="body_worn_status_change_status_bluetooth">Change status Bluetooth</string>
     <string name="body_worn_status_change_status_gps">Change status GPS</string>
     <string name="body_worn_status_hide_or_show_status_bar">Hide or Show Status Bar</string>
+    <string name="associate_audios_to_video">Associate audios to video</string>
+    <string name="associate_audios">Associate audios</string>
 
 </resources>

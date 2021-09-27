@@ -13,8 +13,9 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class SimpleListViewModel @Inject constructor(private val simpleListUseCase: SimpleListUseCase) :
-    BaseViewModel() {
+class SimpleListViewModel @Inject constructor(
+    private val simpleListUseCase: SimpleListUseCase
+) : BaseViewModel() {
 
     private val _fileListResult = MediatorLiveData<Result<DomainInformationFileResponse>>()
     val fileListResult: LiveData<Result<DomainInformationFileResponse>> get() = _fileListResult

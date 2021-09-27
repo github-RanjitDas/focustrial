@@ -44,17 +44,20 @@ class SimpleFileListFragment : FileListBaseFragment() {
         savedInstanceState: Bundle?
     ): View {
         setObservers()
-        _binding =
-            FragmentFileListBinding.inflate(inflater, container, false)
+        _binding = FragmentFileListBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setListeners()
-        listType = arguments?.getString(FILE_LIST_TYPE)
+        setListType()
         isLoadedOnCreate = true
         getFileList()
+    }
+
+    private fun setListType() {
+        listType = arguments?.getString(FILE_LIST_TYPE)
     }
 
     private fun getFileList() {
