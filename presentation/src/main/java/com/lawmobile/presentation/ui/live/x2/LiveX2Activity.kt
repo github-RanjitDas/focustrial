@@ -3,7 +3,6 @@ package com.lawmobile.presentation.ui.live.x2
 import android.os.Bundle
 import android.view.animation.AnimationUtils
 import androidx.activity.viewModels
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isVisible
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.databinding.ActivityLiveViewBinding
@@ -37,9 +36,7 @@ class LiveX2Activity : BaseActivity() {
     private val controlsFragment = LiveControlsX1Fragment()
     private val navigationFragment = LiveNavigationX1Fragment()
     private val menuFragment = MenuFragment()
-    private val statusBarSettingsFragment = StatusBarSettingsFragment.createInstance {
-        changeSizeGuideLineDependsStatusBarSettings(it)
-    }
+    private val statusBarSettingsFragment = StatusBarSettingsFragment.createInstance()
     private var isMenuOpen = false
 
     private lateinit var menuInformation: MenuInformation
@@ -62,25 +59,7 @@ class LiveX2Activity : BaseActivity() {
             animateAppBar()
             animateContainer()
             setListeners()
-            changeSizeGuideLineDependsStatusBarSettings(false)
         }
-    }
-
-    private fun changeSizeGuideLineDependsStatusBarSettings(isVisible: Boolean) {
-        val paramsGuideLineTopLiveStream: ConstraintLayout.LayoutParams =
-            binding.guidelineTopStream2.layoutParams as ConstraintLayout.LayoutParams
-        paramsGuideLineTopLiveStream.guidePercent = if (isVisible) 0.270f else 0.200f
-        binding.guidelineTopStream2.layoutParams = paramsGuideLineTopLiveStream
-
-        val paramsGuideLineBottomLiveStream: ConstraintLayout.LayoutParams =
-            binding.guidelineBottomLiveStream.layoutParams as ConstraintLayout.LayoutParams
-        paramsGuideLineBottomLiveStream.guidePercent = if (isVisible) 0.575f else 0.510f
-        binding.guidelineBottomLiveStream.layoutParams = paramsGuideLineBottomLiveStream
-
-        val paramsGuideLineTopStatusBar: ConstraintLayout.LayoutParams =
-            binding.guidelineTopStatusBar.layoutParams as ConstraintLayout.LayoutParams
-        paramsGuideLineTopStatusBar.guidePercent = if (isVisible) 0.20f else 0.11f
-        binding.guidelineTopStatusBar.layoutParams = paramsGuideLineTopStatusBar
     }
 
     override fun onResume() {

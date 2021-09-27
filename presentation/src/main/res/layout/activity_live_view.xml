@@ -15,21 +15,18 @@
         android:id="@+id/statusBarSetting"
         android:layout_width="match_parent"
         android:layout_height="@dimen/no_dp"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineTopStatusBar"
         app:layout_constraintTop_toBottomOf="@id/appBarContainer" />
 
     <FrameLayout
         android:id="@+id/statusBarContainer"
         android:layout_width="match_parent"
         android:layout_height="@dimen/no_dp"
-        app:layout_constraintBottom_toBottomOf="@id/guidelineTopStream2"
         app:layout_constraintTop_toBottomOf="@id/statusBarSetting" />
 
     <FrameLayout
         android:id="@+id/streamContainer"
         android:layout_width="match_parent"
         android:layout_height="@dimen/no_dp"
-        app:layout_constraintBottom_toBottomOf="@id/guidelineBottomLiveStream"
         app:layout_constraintTop_toBottomOf="@id/statusBarContainer" />
 
     <FrameLayout
@@ -47,35 +44,13 @@
         app:layout_constraintTop_toBottomOf="@id/controlsContainer" />
 
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guidelineTopStatusBar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintGuide_percent="0.10"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="parent" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guidelineTopStream2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintGuide_percent="0.240"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="parent" />
-
-    <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineBottomLiveStream"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintGuide_percent="0.551"
+        app:layout_constraintGuide_percent="0.560"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

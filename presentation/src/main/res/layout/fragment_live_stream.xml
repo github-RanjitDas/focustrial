@@ -60,7 +60,7 @@
         android:padding="@dimen/toggle_full_screen_padding"
         android:scaleType="centerCrop"
         android:src="@drawable/ic_full_size"
-        app:layout_constraintBottom_toBottomOf="@+id/liveStreamingView"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
