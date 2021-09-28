@@ -11,9 +11,9 @@ import androidx.fragment.app.activityViewModels
 import com.lawmobile.domain.entities.CameraInfo
 import com.lawmobile.domain.entities.MetadataEvent
 import com.lawmobile.domain.enums.CameraType
+import com.lawmobile.domain.enums.CatalogTypes
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.entities.AlertInformation
-import com.lawmobile.presentation.enums.CatalogTypes
 import com.lawmobile.presentation.extensions.createAlertInformation
 import com.lawmobile.presentation.extensions.showErrorSnackBar
 import com.lawmobile.presentation.extensions.verifySessionBeforeAction

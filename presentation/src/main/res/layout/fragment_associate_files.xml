@@ -6,7 +6,7 @@
     android:layout_height="match_parent">
 
     <ImageButton
-        android:id="@+id/buttonFilterAssociateImages"
+        android:id="@+id/buttonFilterFiles"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/margin_20dp"
@@ -27,9 +27,9 @@
         android:textSize="@dimen/text_size_16sp"
         android:textStyle="bold"
         android:visibility="invisible"
-        app:layout_constraintBottom_toBottomOf="@id/buttonFilterAssociateImages"
-        app:layout_constraintStart_toEndOf="@id/buttonFilterAssociateImages"
-        app:layout_constraintTop_toTopOf="@id/buttonFilterAssociateImages" />
+        app:layout_constraintBottom_toBottomOf="@id/buttonFilterFiles"
+        app:layout_constraintStart_toEndOf="@id/buttonFilterFiles"
+        app:layout_constraintTop_toTopOf="@id/buttonFilterFiles" />
 
     <com.safefleet.mobile.safefleet_ui.widgets.SafeFleetGridButton
         android:id="@+id/buttonThumbnailListAssociate"
@@ -38,7 +38,7 @@
         android:layout_marginEnd="@dimen/margin_30dp"
         android:contentDescription="@string/focus_mobile_app_logo_description"
         app:layout_constraintEnd_toStartOf="@+id/buttonSimpleListAssociate"
-        app:layout_constraintTop_toTopOf="@id/buttonFilterAssociateImages" />
+        app:layout_constraintTop_toTopOf="@id/buttonFilterFiles" />
 
     <com.safefleet.mobile.safefleet_ui.widgets.SafeFleetListButton
         android:id="@+id/buttonSimpleListAssociate"
@@ -48,7 +48,7 @@
         android:contentDescription="@string/focus_mobile_app_logo_description"
         android:src="@drawable/ic_list_off"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/buttonFilterAssociateImages" />
+        app:layout_constraintTop_toTopOf="@id/buttonFilterFiles" />
 
     <ScrollView
         android:id="@+id/scrollFilterAssociateTags"
@@ -58,7 +58,7 @@
         android:layout_marginTop="@dimen/margin_11dp"
         android:orientation="horizontal"
         android:visibility="gone"
-        app:layout_constraintTop_toBottomOf="@id/buttonSimpleListAssociate">
+        app:layout_constraintTop_toBottomOf="@id/buttonFilterFiles">
 
         <HorizontalScrollView
             android:layout_width="wrap_content"
@@ -76,13 +76,13 @@
     </ScrollView>
 
     <Button
-        android:id="@+id/buttonAssociateImages"
+        android:id="@+id/buttonAssociateFiles"
         android:layout_width="@dimen/no_dp"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/button_dismiss_instructions_spacing"
         android:layout_marginVertical="@dimen/margin_26dp"
         android:background="@drawable/background_button_blue"
-        android:text="@string/associate_images"
+        android:text="@string/associate_snapshots"
         android:textAllCaps="false"
         android:textColor="@color/white"
         android:textSize="@dimen/text_size_20sp"
@@ -96,7 +96,7 @@
         android:layout_height="@dimen/no_dp"
         android:layout_marginTop="@dimen/margin_13dp"
         android:layout_marginBottom="@dimen/margin_26dp"
-        app:layout_constraintBottom_toTopOf="@id/buttonAssociateImages"
+        app:layout_constraintBottom_toTopOf="@id/buttonAssociateFiles"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/scrollFilterAssociateTags" />

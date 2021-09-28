@@ -50,31 +50,36 @@ class CustomRecordButton @JvmOverloads constructor(
     private fun changeButtonState() {
         val density = resources.displayMetrics.density
         with(buttonCustomRecord) {
-            if (isActivated) {
-                setBackgroundResource(R.drawable.background_recording_active)
-                buttonIcon.setImageResource(R.drawable.ic_record_active)
-                buttonText.text = context.getString(R.string.stop)
-                buttonText.setTextColor(context.getColor(R.color.red))
-
-                setPadding(
-                    (density * 51 + 0.5f).toInt(),
-                    (density * 33).toInt(),
-                    (density * 51 + 0.5f).toInt(),
-                    (density * 50).toInt()
-                )
-            } else {
-                setBackgroundResource(R.drawable.background_live_view_buttons)
-                buttonIcon.setImageResource(R.drawable.ic_video)
-                buttonText.text = context.getString(R.string.record_video)
-                buttonText.setTextColor(context.getColor(R.color.white))
-
-                setPadding(
-                    (density * 51 + 0.5f).toInt(),
-                    (density * 39).toInt(),
-                    (density * 51 + 0.5f).toInt(),
-                    (density * 59).toInt()
-                )
-            }
+            if (isActivated) showActiveState(density)
+            else showInactiveState(density)
         }
+    }
+
+    private fun showInactiveState(density: Float) {
+        setBackgroundResource(R.drawable.background_live_view_buttons)
+        buttonIcon.setImageResource(R.drawable.ic_video)
+        buttonText.text = context.getString(R.string.record_video)
+        buttonText.setTextColor(context.getColor(R.color.white))
+
+        setPadding(
+            (density * 51 + 0.5f).toInt(),
+            (density * 39).toInt(),
+            (density * 51 + 0.5f).toInt(),
+            (density * 59).toInt()
+        )
+    }
+
+    private fun showActiveState(density: Float) {
+        setBackgroundResource(R.drawable.background_recording_active)
+        buttonIcon.setImageResource(R.drawable.ic_record_active)
+        buttonText.text = context.getString(R.string.stop)
+        buttonText.setTextColor(context.getColor(R.color.red))
+
+        setPadding(
+            (density * 51 + 0.5f).toInt(),
+            (density * 33).toInt(),
+            (density * 51 + 0.5f).toInt(),
+            (density * 50).toInt()
+        )
     }
 }

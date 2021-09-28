@@ -14,22 +14,22 @@ class AssociateSnapshotsScreen : BaseScreen() {
     }
 
     fun clickOnAssociateSnapshots() {
-        clickOn(R.id.buttonAssociateImages)
+        clickOn(R.id.buttonAssociateFiles)
     }
 
     fun isAssociateScreenButtonsDisplayed() {
         assertDisplayed(R.id.buttonThumbnailListAssociate)
         assertDisplayed(R.id.buttonSimpleListAssociate)
-        assertDisplayed(R.id.buttonFilterAssociateImages)
+        assertDisplayed(R.id.buttonFilterFiles)
         isFilterNotActive()
     }
 
     fun clickOnClose() {
-        clickOn(R.id.buttonCloseAssociateSnapshots)
+        clickOn(R.id.buttonCloseAssociateFiles)
     }
 
     fun clickOnFilter() {
-        clickOn(R.id.buttonFilterAssociateImages)
+        clickOn(R.id.buttonFilterFiles)
     }
 
     fun isSnapshotsAddedSuccessDisplayed() {
@@ -45,7 +45,7 @@ class AssociateSnapshotsScreen : BaseScreen() {
     fun isFilterActive() {
         assertDisplayed(R.id.scrollFilterAssociateTags)
         BaristaImageViewAssertions.assertHasDrawable(
-            R.id.buttonFilterAssociateImages,
+            R.id.buttonFilterFiles,
             R.drawable.ic_filter
         )
     }
@@ -53,7 +53,7 @@ class AssociateSnapshotsScreen : BaseScreen() {
     private fun isFilterNotActive() {
         BaristaVisibilityAssertions.assertNotDisplayed(R.id.scrollFilterAssociateTags)
         BaristaImageViewAssertions.assertHasDrawable(
-            R.id.buttonFilterAssociateImages,
+            R.id.buttonFilterFiles,
             R.drawable.ic_filter_white
         )
     }
