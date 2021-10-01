@@ -44,7 +44,7 @@ class AudioDetailViewModelTest {
         coEvery { audioDetailUseCase.getAudioBytes(any()) } returns Result.Success(byte)
 
         audioDetailViewModel.getAudioBytes(domainCameraFile)
-        val response = audioDetailViewModel.audioBytesLiveData.value?.getContent()
+        val response = audioDetailViewModel.audioBytesResult.value
         Assert.assertTrue(response is Result.Success)
 
         coVerify { audioDetailUseCase.getAudioBytes(any()) }
@@ -58,7 +58,7 @@ class AudioDetailViewModelTest {
 
         audioDetailViewModel.getAudioBytes(domainCameraFile)
         dispatcher.advanceTimeBy(1000)
-        val response = audioDetailViewModel.audioBytesLiveData.value?.getContent()
+        val response = audioDetailViewModel.audioBytesResult.value
         Assert.assertTrue(response is Result.Error)
 
         coVerify { audioDetailUseCase.getAudioBytes(any()) }
@@ -71,7 +71,7 @@ class AudioDetailViewModelTest {
         } returns Result.Success(Unit)
 
         audioDetailViewModel.savePartnerId(mockk(relaxed = true), "partnerId")
-        val valueLiveData = audioDetailViewModel.savePartnerIdLiveData.value?.getContent()
+        val valueLiveData = audioDetailViewModel.savePartnerIdResult.value
         Assert.assertTrue(valueLiveData is Result.Success)
 
         coVerify { audioDetailUseCase.savePartnerIdAudio(any(), any()) }
@@ -84,7 +84,7 @@ class AudioDetailViewModelTest {
         } returns Result.Error(mockk())
 
         audioDetailViewModel.savePartnerId(mockk(relaxed = true), "partnerId")
-        val valueLiveData = audioDetailViewModel.savePartnerIdLiveData.value?.getContent()
+        val valueLiveData = audioDetailViewModel.savePartnerIdResult.value
         Assert.assertTrue(valueLiveData is Result.Error)
     }
 
@@ -94,8 +94,8 @@ class AudioDetailViewModelTest {
             audioDetailUseCase.getInformationOfAudio(any())
         } returns Result.Success(mockk(relaxed = true))
 
-        audioDetailViewModel.getInformationAudioMetadata(mockk())
-        val valueLiveData = audioDetailViewModel.informationAudioLiveData.value?.getContent()
+        audioDetailViewModel.getAudioInformation(mockk())
+        val valueLiveData = audioDetailViewModel.audioInformationResult.value
         Assert.assertTrue(valueLiveData is Result.Success)
 
         coVerify { audioDetailUseCase.getInformationOfAudio(any()) }
@@ -104,9 +104,33 @@ class AudioDetailViewModelTest {
     @Test
     fun testGetInformationAudioMetadataError() = runBlockingTest {
         coEvery { audioDetailUseCase.getInformationOfAudio(any()) } returns Result.Error(mockk())
-        audioDetailViewModel.getInformationAudioMetadata(mockk())
+        audioDetailViewModel.getAudioInformation(mockk())
         dispatcher.advanceTimeBy(5100)
-        val valueLiveData = audioDetailViewModel.informationAudioLiveData.value?.getContent()
+        val valueLiveData = audioDetailViewModel.audioInformationResult.value
         Assert.assertTrue(valueLiveData is Result.Error)
+    }
+
+    @Test
+    fun testGetAssociatedVideosSuccess() {
+        coEvery {
+            audioDetailUseCase.getAssociatedVideos(any())
+        } returns Result.Success(mockk(relaxed = true))
+
+        audioDetailViewModel.getAssociatedVideos(mockk())
+        val valueLiveData = audioDetailViewModel.associatedVideosResult.value
+
+        Assert.assertTrue(valueLiveData is Result.Success)
+        coVerify { audioDetailUseCase.getAssociatedVideos(any()) }
+    }
+
+    @Test
+    fun testGetAssociatedVideosError() {
+        coEvery { audioDetailUseCase.getAssociatedVideos(any()) } returns Result.Error(Exception())
+
+        audioDetailViewModel.getAssociatedVideos(mockk())
+        val valueLiveData = audioDetailViewModel.associatedVideosResult.value
+
+        Assert.assertTrue(valueLiveData is Result.Error)
+        coVerify { audioDetailUseCase.getAssociatedVideos(any()) }
     }
 }

@@ -60,7 +60,7 @@ class AudioDetailUseCaseImplTest {
     }
 
     @Test
-    fun testGetInformationOfAudio() {
+    fun testGetInformationOfAudioSuccess() {
         coEvery { audioDetailRepository.getInformationOfAudio(any()) } returns Result.Success(
             mockk()
         )
@@ -69,5 +69,37 @@ class AudioDetailUseCaseImplTest {
             Assert.assertTrue(result is Result.Success)
         }
         coVerify { audioDetailRepository.getInformationOfAudio(any()) }
+    }
+
+    @Test
+    fun testGetInformationOfAudioError() {
+        coEvery {
+            audioDetailRepository.getInformationOfAudio(any())
+        } returns Result.Error(Exception())
+        runBlocking {
+            val result = audioDetailUseCaseImpl.getInformationOfAudio(mockk())
+            Assert.assertTrue(result is Result.Error)
+        }
+        coVerify { audioDetailRepository.getInformationOfAudio(any()) }
+    }
+
+    @Test
+    fun testGetAssociatedVideosSuccess() {
+        coEvery { audioDetailRepository.getAssociatedVideos(any()) } returns Result.Success(mockk())
+        runBlocking {
+            val result = audioDetailUseCaseImpl.getAssociatedVideos(mockk())
+            Assert.assertTrue(result is Result.Success)
+        }
+        coVerify { audioDetailRepository.getAssociatedVideos(any()) }
+    }
+
+    @Test
+    fun testGetAssociatedVideosError() {
+        coEvery { audioDetailRepository.getAssociatedVideos(any()) } returns Result.Error(Exception())
+        runBlocking {
+            val result = audioDetailUseCaseImpl.getAssociatedVideos(mockk())
+            Assert.assertTrue(result is Result.Error)
+        }
+        coVerify { audioDetailRepository.getAssociatedVideos(any()) }
     }
 }

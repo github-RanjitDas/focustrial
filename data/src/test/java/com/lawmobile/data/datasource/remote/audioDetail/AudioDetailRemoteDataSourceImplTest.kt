@@ -59,12 +59,42 @@ class AudioDetailRemoteDataSourceImplTest {
     }
 
     @Test
-    fun testGetInformationOfAudio() {
+    fun testGetInformationOfAudioSuccess() {
         coEvery { cameraService.getAudioMetadata(any()) } returns Result.Success(mockk())
         runBlocking {
             val result = audioDetailRemoteDataSourceImpl.getInformationOfAudio(mockk())
             Assert.assertTrue(result is Result.Success)
         }
         coVerify { cameraService.getAudioMetadata(any()) }
+    }
+
+    @Test
+    fun testGetInformationOfAudioError() {
+        coEvery { cameraService.getAudioMetadata(any()) } returns Result.Error(Exception())
+        runBlocking {
+            val result = audioDetailRemoteDataSourceImpl.getInformationOfAudio(mockk())
+            Assert.assertTrue(result is Result.Error)
+        }
+        coVerify { cameraService.getAudioMetadata(any()) }
+    }
+
+    @Test
+    fun testGetAssociatedVideosSuccess() {
+        coEvery { cameraService.getAssociatedVideos(any()) } returns Result.Success(mockk())
+        runBlocking {
+            val result = audioDetailRemoteDataSourceImpl.getAssociatedVideos(mockk())
+            Assert.assertTrue(result is Result.Success)
+        }
+        coVerify { cameraService.getAssociatedVideos(any()) }
+    }
+
+    @Test
+    fun testGetAssociatedVideosError() {
+        coEvery { cameraService.getAssociatedVideos(any()) } returns Result.Error(Exception())
+        runBlocking {
+            val result = audioDetailRemoteDataSourceImpl.getAssociatedVideos(mockk())
+            Assert.assertTrue(result is Result.Error)
+        }
+        coVerify { cameraService.getAssociatedVideos(any()) }
     }
 }

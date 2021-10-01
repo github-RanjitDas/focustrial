@@ -11,4 +11,5 @@ object FileMapper :
     override fun CameraFile.toDomain() = DomainCameraFile(date, name, nameFolder, path)
     override fun DomainCameraFile.toCamera() = CameraFile(name, date, path, nameFolder)
     fun List<DomainCameraFile>.toCameraList(): List<CameraFile> = map { it.toCamera() }
+    fun List<CameraFile>.toDomainList(): List<DomainCameraFile> = map { it.toDomain() }
 }

@@ -28,63 +28,86 @@ class SnapshotDetailRepositoryImpl(
         domainCameraFile: DomainCameraFile,
         partnerId: String
     ): Result<Unit> {
-        val photoMetadataList = mutableListOf<PhotoInformation>()
-        val errorsInFiles = mutableListOf<String>()
-
-        when (
-            val resultGetMetadataOfPhotos = snapshotDetailRemoteDataSource.getSavedPhotosMetadata()
-        ) {
-            is Result.Success -> photoMetadataList.addAll(resultGetMetadataOfPhotos.data)
-            is Result.Error -> return resultGetMetadataOfPhotos
+        return try {
+            val errorsInFiles = mutableListOf<String>()
+            val cameraSnapshotMetadata = buildPhotoInformation(domainCameraFile, partnerId)
+            savePartnerIdOnSnapshotMetadata(cameraSnapshotMetadata, errorsInFiles)
+            val photoMetadataList = getAllSnapshotInformation(cameraSnapshotMetadata)
+            Result.Success(updateAllSnapshotMetadata(photoMetadataList, errorsInFiles))
+        } catch (e: Exception) {
+            Result.Error(e)
         }
-
-        val partnerMetadata = PhotoMetadata(partnerID = partnerId)
-        val cameraPhotoMetadata = PhotoInformation(
-            fileName = domainCameraFile.name,
-            officerId = CameraInfo.officerId,
-            path = domainCameraFile.path,
-            x1sn = CameraInfo.serialNumber,
-            metadata = partnerMetadata,
-            nameFolder = domainCameraFile.nameFolder
-        )
-
-        delay(150)
-
-        photoMetadataList.removeAll { it.fileName == domainCameraFile.name }
-        photoMetadataList.add(cameraPhotoMetadata)
-
-        with(snapshotDetailRemoteDataSource.savePartnerIdSnapshot(cameraPhotoMetadata)) {
-            doIfSuccess {
-                val item = FileList.findAndGetImageMetadata(domainCameraFile.name)
-                val domainPhotoMetadata = cameraPhotoMetadata.toDomain()
-                val newItemPhoto =
-                    DomainInformationImageMetadata(domainPhotoMetadata, item?.videosAssociated)
-                FileList.updateItemInImageMetadataList(newItemPhoto)
-            }
-            doIfError {
-                errorsInFiles.add(cameraPhotoMetadata.fileName)
-            }
-        }
-
-        delay(300)
-
-        with(snapshotDetailRemoteDataSource.savePartnerIdInAllSnapshots(photoMetadataList)) {
-            doIfSuccess {
-                return if (errorsInFiles.isEmpty()) Result.Success(Unit)
-                else Result.Error(Exception("Partner ID could not be associated to: $errorsInFiles"))
-            }
-        }
-
-        return Result.Error(Exception("Partner ID could not be associated"))
     }
+
+    private suspend fun updateAllSnapshotMetadata(
+        photoMetadataList: MutableList<PhotoInformation>,
+        errorsInFiles: MutableList<String>
+    ) {
+        snapshotDetailRemoteDataSource.savePartnerIdInAllSnapshots(photoMetadataList).run {
+            doIfSuccess {
+                if (errorsInFiles.isEmpty()) return
+                else throw Exception("Partner ID could not be associated to: $errorsInFiles")
+            }
+            doIfError { throw Exception("Partner ID could not be associated") }
+        }
+    }
+
+    private suspend fun savePartnerIdOnSnapshotMetadata(
+        cameraPhotoMetadata: PhotoInformation,
+        errorsInFiles: MutableList<String>
+    ) {
+        snapshotDetailRemoteDataSource.savePartnerIdSnapshot(cameraPhotoMetadata).run {
+            doIfSuccess { updateSnapshotMetadataInCache(cameraPhotoMetadata) }
+            doIfError { errorsInFiles.add(cameraPhotoMetadata.fileName) }
+        }
+
+        delay(SAVE_SNAPSHOT_METADATA_DELAY)
+    }
+
+    private fun updateSnapshotMetadataInCache(
+        cameraPhotoMetadata: PhotoInformation
+    ) {
+        val videosAssociated =
+            FileList.findAndGetImageMetadata(cameraPhotoMetadata.fileName)?.videosAssociated
+        val domainPhotoMetadata = cameraPhotoMetadata.toDomain()
+        val newItemPhoto = DomainInformationImageMetadata(domainPhotoMetadata, videosAssociated)
+        FileList.updateItemInImageMetadataList(newItemPhoto)
+    }
+
+    private suspend fun getAllSnapshotInformation(cameraPhotoMetadata: PhotoInformation): MutableList<PhotoInformation> {
+        val photoMetadataList = mutableListOf<PhotoInformation>()
+
+        snapshotDetailRemoteDataSource.getSavedPhotosMetadata().run {
+            doIfSuccess { photoMetadataList.addAll(it) }
+            doIfError { throw it }
+        }
+
+        delay(GET_ALL_SNAPSHOT_METADATA_DELAY)
+
+        photoMetadataList.removeAll { it.fileName == cameraPhotoMetadata.fileName }
+        photoMetadataList.add(cameraPhotoMetadata)
+        return photoMetadataList
+    }
+
+    private fun buildPhotoInformation(
+        domainCameraFile: DomainCameraFile,
+        partnerId: String
+    ) = PhotoInformation(
+        fileName = domainCameraFile.name,
+        officerId = CameraInfo.officerId,
+        path = domainCameraFile.path,
+        x1sn = CameraInfo.serialNumber,
+        metadata = PhotoMetadata(partnerId),
+        nameFolder = domainCameraFile.nameFolder
+    )
 
     override suspend fun getInformationOfPhoto(domainCameraFile: DomainCameraFile): Result<DomainInformationImageMetadata> {
         val item = FileList.findAndGetImageMetadata(domainCameraFile.name)
         if (item != null) return Result.Success(item)
 
-        val cameraConnectFile = domainCameraFile.toCamera()
+        val cameraFile = domainCameraFile.toCamera()
 
-        with(snapshotDetailRemoteDataSource.getInformationOfPhoto(cameraConnectFile)) {
+        snapshotDetailRemoteDataSource.getInformationOfPhoto(cameraFile).run {
             doIfSuccess {
                 val domainPhotoMetadata = it.toDomain()
                 val domainInformationImage =
@@ -96,5 +119,10 @@ class SnapshotDetailRepositoryImpl(
         }
 
         return Result.Error(Exception("Was not possible get information from the camera"))
+    }
+
+    companion object {
+        private const val SAVE_SNAPSHOT_METADATA_DELAY = 300L
+        private const val GET_ALL_SNAPSHOT_METADATA_DELAY = 150L
     }
 }

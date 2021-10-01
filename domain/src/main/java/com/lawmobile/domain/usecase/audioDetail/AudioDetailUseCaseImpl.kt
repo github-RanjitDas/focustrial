@@ -15,4 +15,7 @@ class AudioDetailUseCaseImpl(private val audioDetailRepository: AudioDetailRepos
 
     override suspend fun getInformationOfAudio(domainCameraFile: DomainCameraFile) =
         audioDetailRepository.getInformationOfAudio(domainCameraFile)
+
+    override suspend fun getAssociatedVideos(domainCameraFile: DomainCameraFile) =
+        audioDetailRepository.getAssociatedVideos(domainCameraFile)
 }

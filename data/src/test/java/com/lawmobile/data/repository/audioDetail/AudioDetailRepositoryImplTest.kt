@@ -139,4 +139,26 @@ class AudioDetailRepositoryImplTest {
         val response = audioDetailRepositoryImpl.getInformationOfAudio(cameraSend.toDomain())
         Assert.assertTrue(response is Result.Success)
     }
+
+    @Test
+    fun testGetAssociatedVideosSuccess() = runBlockingTest {
+        val cameraFile = CameraFile("name", "date", "path", "nameFol")
+        coEvery {
+            audioDetailRemoteDataSource.getAssociatedVideos(any())
+        } returns Result.Success(listOf(cameraFile))
+        val result = audioDetailRepositoryImpl.getAssociatedVideos(cameraFile.toDomain())
+        Assert.assertTrue(result is Result.Success)
+        coVerify { audioDetailRemoteDataSource.getAssociatedVideos(any()) }
+    }
+
+    @Test
+    fun testGetAssociatedVideosError() = runBlockingTest {
+        val cameraFile = CameraFile("name", "date", "path", "nameFol")
+        coEvery {
+            audioDetailRemoteDataSource.getAssociatedVideos(any())
+        } returns Result.Error(Exception())
+        val result = audioDetailRepositoryImpl.getAssociatedVideos(cameraFile.toDomain())
+        Assert.assertTrue(result is Result.Error)
+        coVerify { audioDetailRemoteDataSource.getAssociatedVideos(any()) }
+    }
 }
