@@ -10,7 +10,7 @@ import com.lawmobile.domain.entities.DomainCameraFile
 import com.lawmobile.domain.entities.DomainInformationAudioMetadata
 import com.lawmobile.domain.extensions.getDateDependingOnNameLength
 import com.lawmobile.presentation.R
-import com.lawmobile.presentation.databinding.ActivityAudioItemDetailBinding
+import com.lawmobile.presentation.databinding.ActivityAudioDetailBinding
 import com.lawmobile.presentation.extensions.getPathFromTemporalFile
 import com.lawmobile.presentation.extensions.setOnClickListenerCheckConnection
 import com.lawmobile.presentation.extensions.showErrorSnackBar
@@ -21,27 +21,24 @@ import com.lawmobile.presentation.utils.Constants
 import com.safefleet.mobile.android_commons.extensions.hideKeyboard
 import com.safefleet.mobile.kotlin_commons.extensions.doIfError
 import com.safefleet.mobile.kotlin_commons.extensions.doIfSuccess
-import com.safefleet.mobile.kotlin_commons.helpers.Event
 import com.safefleet.mobile.kotlin_commons.helpers.Result
 
 class AudioDetailActivity : BaseActivity() {
 
-    private lateinit var binding: ActivityAudioItemDetailBinding
+    private lateinit var binding: ActivityAudioDetailBinding
 
     private val audioDetailViewModel: AudioDetailViewModel by viewModels()
-    private lateinit var file: DomainCameraFile
+    private lateinit var audioFile: DomainCameraFile
     private var domainAudioInformation: DomainInformationAudioMetadata? = null
     private lateinit var currentAssociatedOfficerId: String
 
     private val sheetBehavior: BottomSheetBehavior<CardView> by lazy {
-        BottomSheetBehavior.from(
-            binding.bottomSheetPartnerId.bottomSheetPartnerId
-        )
+        BottomSheetBehavior.from(binding.bottomSheetPartnerId.bottomSheetPartnerId)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityAudioItemDetailBinding.inflate(layoutInflater)
+        binding = ActivityAudioDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setAppBar()
         getInformationFromIntent()
@@ -60,13 +57,13 @@ class AudioDetailActivity : BaseActivity() {
 
     private fun getAudioBytes() {
         showLoadingDialog()
-        audioDetailViewModel.getAudioBytes(file)
+        audioDetailViewModel.getAudioBytes(audioFile)
     }
 
     private fun getInformationFromIntent() {
         val fileIntent =
             intent.getSerializableExtra(Constants.DOMAIN_CAMERA_FILE) as? DomainCameraFile
-        fileIntent?.let { file = it }
+        fileIntent?.let { audioFile = it }
     }
 
     private fun setAppBar() {
@@ -82,77 +79,98 @@ class AudioDetailActivity : BaseActivity() {
         binding.layoutCustomAppBar.imageButtonBackArrow.setOnClickListenerCheckConnection { onBackPressed() }
         binding.imageReload.setOnClickListenerCheckConnection {
             showLoadingDialog()
-            audioDetailViewModel.getAudioBytes(file)
+            audioDetailViewModel.getAudioBytes(audioFile)
         }
     }
 
     private fun setObservers() {
-        audioDetailViewModel.audioBytesLiveData.observe(this, ::manageGetBytesAudio)
-        audioDetailViewModel.informationAudioLiveData.observe(this, ::manageInformationAudio)
-        audioDetailViewModel.savePartnerIdLiveData.observe(this, ::manageSavePartnerId)
+        audioDetailViewModel.audioBytesResult.observe(this, ::manageGetBytesAudio)
+        audioDetailViewModel.audioInformationResult.observe(this, ::manageAudioInformation)
+        audioDetailViewModel.savePartnerIdResult.observe(this, ::manageSavePartnerId)
+        audioDetailViewModel.associatedVideosResult.observe(this, ::manageAssociatedVideos)
     }
 
-    private fun manageGetBytesAudio(event: Event<Result<ByteArray>>) {
-        event.getContentIfNotHandled()?.run {
-            with(this) {
-                doIfSuccess {
-                    val path = it.getPathFromTemporalFile(
-                        context = applicationContext,
-                        name = file.name
-                    )
-                    // pending to use the audio bytes
-                }
-                doIfError {
-                    binding.imageReload.isVisible = true
-                }
-            }
-        }
-
-        if (domainAudioInformation == null)
-            audioDetailViewModel.getInformationAudioMetadata(file)
-        else hideLoadingDialog()
-    }
-
-    private fun manageInformationAudio(event: Event<Result<DomainInformationAudioMetadata>>) {
-        event.getContentIfNotHandled()?.run {
-            with(this) {
-                doIfSuccess { domainInformation ->
-                    domainAudioInformation = domainInformation
-                    setAudioMetadata()
-                }
-                doIfError {
-                    showMetadataNotAvailable()
-                    binding.constraintLayoutDetail.showErrorSnackBar(
-                        getString(R.string.audio_detail_metadata_error),
-                        AUDIO_DETAIL_ERROR_ANIMATION_DURATION
-                    ) {
-                        this@AudioDetailActivity.verifySessionBeforeAction {
-                            showLoadingDialog()
-                            audioDetailViewModel.getInformationAudioMetadata(file)
-                        }
+    private fun manageAssociatedVideos(result: Result<List<DomainCameraFile>>) {
+        with(result) {
+            doIfSuccess {
+                if (it.isNotEmpty()) {
+                    var textInVideos = ""
+                    it.forEachIndexed { position, domainCameraFile ->
+                        textInVideos += domainCameraFile.getDateDependingOnNameLength()
+                        if (position != it.lastIndex) textInVideos += "\n"
                     }
-                }
+
+                    binding.videosAssociatedValue.text = textInVideos
+                } else binding.videosAssociatedValue.text = getString(R.string.none)
+            }
+            doIfError {
+                binding.videosAssociatedValue.text = getString(R.string.not_available)
+                showInformationError { audioDetailViewModel.getAssociatedVideos(audioFile) }
             }
             hideLoadingDialog()
         }
     }
 
-    private fun showMetadataNotAvailable() {
+    private fun manageGetBytesAudio(result: Result<ByteArray>) {
+        with(result) {
+            doIfSuccess {
+                val path = it.getPathFromTemporalFile(
+                    context = applicationContext,
+                    name = audioFile.name
+                )
+                // pending to use the audio bytes
+            }
+            doIfError {
+                binding.imageReload.isVisible = true
+            }
+        }
+
+        if (domainAudioInformation == null) audioDetailViewModel.getAudioInformation(audioFile)
+        else hideLoadingDialog()
+    }
+
+    private fun manageAudioInformation(result: Result<DomainInformationAudioMetadata>) {
+        with(result) {
+            doIfSuccess { domainInformation ->
+                domainAudioInformation = domainInformation
+                setAudioMetadata()
+                audioDetailViewModel.getAssociatedVideos(audioFile)
+            }
+            doIfError {
+                showInformationNotAvailable()
+                showInformationError { audioDetailViewModel.getAudioInformation(audioFile) }
+            }
+        }
+    }
+
+    private fun showInformationError(callback: () -> Unit) {
+        binding.constraintLayoutDetail.showErrorSnackBar(
+            getString(R.string.audio_detail_metadata_error),
+            AUDIO_DETAIL_ERROR_ANIMATION_DURATION
+        ) {
+            this@AudioDetailActivity.verifySessionBeforeAction {
+                showLoadingDialog()
+                callback()
+            }
+        }
+    }
+
+    private fun showInformationNotAvailable() {
         binding.officerValue.text = getString(R.string.not_available)
         binding.videosAssociatedValue.text = getString(R.string.not_available)
     }
 
-    private fun manageSavePartnerId(result: Event<Result<Unit>>) {
+    private fun manageSavePartnerId(result: Result<Unit>) {
         hideLoadingDialog()
-        with(result.getContentIfNotHandled()) {
-            this?.doIfSuccess {
+        with(result) {
+            doIfSuccess {
                 binding.constraintLayoutDetail.showSuccessSnackBar(
                     getString(R.string.file_list_associate_partner_id_success)
                 )
                 sheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
                 setCurrentOfficerAssociatedInView()
             }
-            this?.doIfError {
+            doIfError {
                 binding.constraintLayoutDetail.showErrorSnackBar(
                     getString(
                         R.string.file_list_associate_partner_id_error
@@ -207,17 +225,17 @@ class AudioDetailActivity : BaseActivity() {
             return
         }
         showLoadingDialog()
-        audioDetailViewModel.savePartnerId(file, partnerId)
+        audioDetailViewModel.savePartnerId(audioFile, partnerId)
     }
 
     private fun setInformationOfAudio() {
-        binding.audioNameValue.text = file.name
-        binding.dateTimeValue.text = file.date
+        binding.audioNameValue.text = audioFile.name
+        binding.dateTimeValue.text = audioFile.date
     }
 
     private fun setAudioMetadata() {
         setOfficerAssociatedInView()
-        setVideosAssociatedInView()
+        // setVideosAssociatedInView()
     }
 
     private fun setCurrentOfficerAssociatedInView() {

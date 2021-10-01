@@ -44,7 +44,7 @@ class SnapshotDetailViewModelTest {
         coEvery { snapshotDetailUseCase.getImageBytes(any()) } returns Result.Success(byte)
 
         snapshotDetailViewModel.getImageBytes(domainCameraFile)
-        val response = snapshotDetailViewModel.imageBytesLiveData.value?.getContent()
+        val response = snapshotDetailViewModel.imageBytesResult.value?.getContent()
         Assert.assertTrue(response is Result.Success)
 
         coVerify { snapshotDetailUseCase.getImageBytes(any()) }
@@ -58,7 +58,7 @@ class SnapshotDetailViewModelTest {
 
         snapshotDetailViewModel.getImageBytes(domainCameraFile)
         dispatcher.advanceTimeBy(1000)
-        val response = snapshotDetailViewModel.imageBytesLiveData.value?.getContent()
+        val response = snapshotDetailViewModel.imageBytesResult.value?.getContent()
         Assert.assertTrue(response is Result.Error)
 
         coVerify { snapshotDetailUseCase.getImageBytes(any()) }
@@ -71,7 +71,7 @@ class SnapshotDetailViewModelTest {
         } returns Result.Success(Unit)
 
         snapshotDetailViewModel.savePartnerId(mockk(relaxed = true), "partnerId")
-        val valueLiveData = snapshotDetailViewModel.savePartnerIdLiveData.value?.getContent()
+        val valueLiveData = snapshotDetailViewModel.savePartnerIdResult.value?.getContent()
         Assert.assertTrue(valueLiveData is Result.Success)
 
         coVerify { snapshotDetailUseCase.savePartnerIdSnapshot(any(), any()) }
@@ -84,7 +84,7 @@ class SnapshotDetailViewModelTest {
         } returns Result.Error(mockk())
 
         snapshotDetailViewModel.savePartnerId(mockk(relaxed = true), "partnerId")
-        val valueLiveData = snapshotDetailViewModel.savePartnerIdLiveData.value?.getContent()
+        val valueLiveData = snapshotDetailViewModel.savePartnerIdResult.value?.getContent()
         Assert.assertTrue(valueLiveData is Result.Error)
     }
 
@@ -94,8 +94,8 @@ class SnapshotDetailViewModelTest {
             snapshotDetailUseCase.getInformationOfPhoto(any())
         } returns Result.Success(mockk(relaxed = true))
 
-        snapshotDetailViewModel.getInformationImageMetadata(mockk())
-        val valueLiveData = snapshotDetailViewModel.informationImageLiveData.value?.getContent()
+        snapshotDetailViewModel.getSnapshotInformation(mockk())
+        val valueLiveData = snapshotDetailViewModel.snapshotInformationResult.value?.getContent()
         Assert.assertTrue(valueLiveData is Result.Success)
 
         coVerify { snapshotDetailUseCase.getInformationOfPhoto(any()) }
@@ -104,9 +104,9 @@ class SnapshotDetailViewModelTest {
     @Test
     fun testGetInformationImageMetadataError() = runBlockingTest {
         coEvery { snapshotDetailUseCase.getInformationOfPhoto(any()) } returns Result.Error(mockk())
-        snapshotDetailViewModel.getInformationImageMetadata(mockk())
+        snapshotDetailViewModel.getSnapshotInformation(mockk())
         dispatcher.advanceTimeBy(5100)
-        val valueLiveData = snapshotDetailViewModel.informationImageLiveData.value?.getContent()
+        val valueLiveData = snapshotDetailViewModel.snapshotInformationResult.value?.getContent()
         Assert.assertTrue(valueLiveData is Result.Error)
     }
 }

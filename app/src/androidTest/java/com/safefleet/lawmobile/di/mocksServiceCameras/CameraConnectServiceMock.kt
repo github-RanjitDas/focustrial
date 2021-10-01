@@ -239,4 +239,8 @@ class CameraConnectServiceMock : CameraService {
     override suspend fun saveAudioMetadata(audioInformation: AudioInformation): Result<Unit> {
         return Result.Success(Unit)
     }
+
+    override suspend fun getAssociatedVideos(cameraFile: CameraFile): Result<List<CameraFile>> {
+        return Result.Success(listOf(cameraFile))
+    }
 }

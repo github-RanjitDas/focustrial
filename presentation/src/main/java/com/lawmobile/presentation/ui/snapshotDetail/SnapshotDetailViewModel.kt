@@ -19,20 +19,20 @@ import javax.inject.Inject
 class SnapshotDetailViewModel @Inject constructor(
     private val snapshotDetailUseCase: SnapshotDetailUseCase
 ) : BaseViewModel() {
+    private val _imageBytesResult = MediatorLiveData<Event<Result<ByteArray>>>()
+    val imageBytesResult: LiveData<Event<Result<ByteArray>>> get() = _imageBytesResult
 
-    private val imageBytesMediator: MediatorLiveData<Event<Result<ByteArray>>> = MediatorLiveData()
-    val imageBytesLiveData: LiveData<Event<Result<ByteArray>>> get() = imageBytesMediator
+    private val _savePartnerIdResult: MediatorLiveData<Event<Result<Unit>>> = MediatorLiveData()
+    val savePartnerIdResult: LiveData<Event<Result<Unit>>> get() = _savePartnerIdResult
 
-    private val savePartnerIdMediator: MediatorLiveData<Event<Result<Unit>>> = MediatorLiveData()
-    val savePartnerIdLiveData: LiveData<Event<Result<Unit>>> get() = savePartnerIdMediator
-
-    private val informationVideoMediator: MediatorLiveData<Event<Result<DomainInformationImageMetadata>>> =
-        MediatorLiveData()
-    val informationImageLiveData: LiveData<Event<Result<DomainInformationImageMetadata>>> get() = informationVideoMediator
+    private val _snapshotInformationResult =
+        MediatorLiveData<Event<Result<DomainInformationImageMetadata>>>()
+    val snapshotInformationResult: LiveData<Event<Result<DomainInformationImageMetadata>>>
+        get() = _snapshotInformationResult
 
     fun getImageBytes(domainCameraFile: DomainCameraFile) {
         viewModelScope.launch {
-            imageBytesMediator.postEventValueWithTimeout(getLoadingTimeOut()) {
+            _imageBytesResult.postEventValueWithTimeout(getLoadingTimeOut()) {
                 Event(
                     getResultWithAttempts(ATTEMPTS_TO_GET_BYTES) {
                         snapshotDetailUseCase.getImageBytes(domainCameraFile)
@@ -44,15 +44,15 @@ class SnapshotDetailViewModel @Inject constructor(
 
     fun savePartnerId(domainCameraFile: DomainCameraFile, partnerId: String) {
         viewModelScope.launch {
-            savePartnerIdMediator.postEventValueWithTimeout(getLoadingTimeOut()) {
+            _savePartnerIdResult.postEventValueWithTimeout(getLoadingTimeOut()) {
                 Event(snapshotDetailUseCase.savePartnerIdSnapshot(domainCameraFile, partnerId))
             }
         }
     }
 
-    fun getInformationImageMetadata(domainCameraFile: DomainCameraFile) {
+    fun getSnapshotInformation(domainCameraFile: DomainCameraFile) {
         viewModelScope.launch {
-            informationVideoMediator.postEventValueWithTimeout(getLoadingTimeOut()) {
+            _snapshotInformationResult.postEventValueWithTimeout(getLoadingTimeOut()) {
                 Event(
                     getResultWithAttempts(ATTEMPTS_TO_GET_INFORMATION, DELAY_BETWEEN_ATTEMPTS) {
                         snapshotDetailUseCase.getInformationOfPhoto(domainCameraFile)

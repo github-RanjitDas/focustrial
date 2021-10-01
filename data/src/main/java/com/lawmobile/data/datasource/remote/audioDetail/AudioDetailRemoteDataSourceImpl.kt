@@ -18,4 +18,7 @@ class AudioDetailRemoteDataSourceImpl(cameraServiceFactory: CameraServiceFactory
 
     override suspend fun getInformationOfAudio(cameraFile: CameraFile): Result<AudioInformation> =
         cameraService.getAudioMetadata(cameraFile)
+
+    override suspend fun getAssociatedVideos(cameraFile: CameraFile): Result<List<CameraFile>> =
+        cameraService.getAssociatedVideos(cameraFile)
 }

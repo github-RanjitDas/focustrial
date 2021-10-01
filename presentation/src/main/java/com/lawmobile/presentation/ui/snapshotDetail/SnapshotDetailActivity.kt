@@ -13,7 +13,7 @@ import com.lawmobile.domain.entities.DomainCameraFile
 import com.lawmobile.domain.entities.DomainInformationImageMetadata
 import com.lawmobile.domain.extensions.getDateDependingOnNameLength
 import com.lawmobile.presentation.R
-import com.lawmobile.presentation.databinding.ActivitySnapshotItemDetailBinding
+import com.lawmobile.presentation.databinding.ActivitySnapshotDetailBinding
 import com.lawmobile.presentation.entities.ImageFilesPathManager
 import com.lawmobile.presentation.entities.ImageWithPathSaved
 import com.lawmobile.presentation.extensions.getPathFromTemporalFile
@@ -34,7 +34,7 @@ import java.io.File
 
 class SnapshotDetailActivity : BaseActivity() {
 
-    private lateinit var binding: ActivitySnapshotItemDetailBinding
+    private lateinit var binding: ActivitySnapshotDetailBinding
 
     private val snapshotDetailViewModel: SnapshotDetailViewModel by viewModels()
     private lateinit var file: DomainCameraFile
@@ -49,7 +49,7 @@ class SnapshotDetailActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivitySnapshotItemDetailBinding.inflate(layoutInflater)
+        binding = ActivitySnapshotDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setAppBar()
         getInformationFromIntent()
@@ -72,7 +72,7 @@ class SnapshotDetailActivity : BaseActivity() {
         fileSaved?.let {
             if (it.absolutePath != PATH_ERROR_IN_PHOTO && File(it.absolutePath).exists()) {
                 setImageWithPath(it.absolutePath)
-                snapshotDetailViewModel.getInformationImageMetadata(file)
+                snapshotDetailViewModel.getSnapshotInformation(file)
                 return
             }
         }
@@ -115,9 +115,9 @@ class SnapshotDetailActivity : BaseActivity() {
     }
 
     private fun setObservers() {
-        snapshotDetailViewModel.imageBytesLiveData.observe(this, ::manageGetBytesImage)
-        snapshotDetailViewModel.informationImageLiveData.observe(this, ::manageInformationImage)
-        snapshotDetailViewModel.savePartnerIdLiveData.observe(this, ::manageSavePartnerId)
+        snapshotDetailViewModel.imageBytesResult.observe(this, ::manageGetBytesImage)
+        snapshotDetailViewModel.snapshotInformationResult.observe(this, ::manageSnapshotInformation)
+        snapshotDetailViewModel.savePartnerIdResult.observe(this, ::manageSavePartnerId)
     }
 
     private fun manageGetBytesImage(event: Event<Result<ByteArray>>) {
@@ -137,32 +137,30 @@ class SnapshotDetailActivity : BaseActivity() {
         }
 
         if (domainInformationImageMetadata == null)
-            snapshotDetailViewModel.getInformationImageMetadata(file)
+            snapshotDetailViewModel.getSnapshotInformation(file)
         else hideLoadingDialog()
     }
 
-    private fun manageInformationImage(event: Event<Result<DomainInformationImageMetadata>>) {
+    private fun manageSnapshotInformation(event: Event<Result<DomainInformationImageMetadata>>) {
         event.getContentIfNotHandled()?.run {
-            with(this) {
-                doIfSuccess { domainInformation ->
-                    domainInformationImageMetadata = domainInformation
-                    setSnapshotMetadata()
-                }
-                doIfError {
-                    showMetadataNotAvailable()
-                    binding.constraintLayoutDetail.showErrorSnackBar(
-                        getString(R.string.snapshot_detail_metadata_error),
-                        SNAPSHOT_DETAIL_ERROR_ANIMATION_DURATION
-                    ) {
-                        this@SnapshotDetailActivity.verifySessionBeforeAction {
-                            showLoadingDialog()
-                            snapshotDetailViewModel.getInformationImageMetadata(file)
-                        }
+            doIfSuccess {
+                domainInformationImageMetadata = it
+                setSnapshotMetadata()
+            }
+            doIfError {
+                showMetadataNotAvailable()
+                binding.constraintLayoutDetail.showErrorSnackBar(
+                    getString(R.string.snapshot_detail_metadata_error),
+                    SNAPSHOT_DETAIL_ERROR_ANIMATION_DURATION
+                ) {
+                    this@SnapshotDetailActivity.verifySessionBeforeAction {
+                        showLoadingDialog()
+                        snapshotDetailViewModel.getSnapshotInformation(file)
                     }
                 }
             }
-            hideLoadingDialog()
         }
+        hideLoadingDialog()
     }
 
     private fun showMetadataNotAvailable() {
@@ -172,19 +170,17 @@ class SnapshotDetailActivity : BaseActivity() {
 
     private fun manageSavePartnerId(result: Event<Result<Unit>>) {
         hideLoadingDialog()
-        with(result.getContentIfNotHandled()) {
-            this?.doIfSuccess {
+        result.getContentIfNotHandled()?.run {
+            doIfSuccess {
                 binding.constraintLayoutDetail.showSuccessSnackBar(
                     getString(R.string.file_list_associate_partner_id_success)
                 )
                 sheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
                 setCurrentOfficerAssociatedInView()
             }
-            this?.doIfError {
+            doIfError {
                 binding.constraintLayoutDetail.showErrorSnackBar(
-                    getString(
-                        R.string.file_list_associate_partner_id_error
-                    )
+                    getString(R.string.file_list_associate_partner_id_error)
                 )
             }
         }
@@ -246,11 +242,11 @@ class SnapshotDetailActivity : BaseActivity() {
                     .into(binding.photoItemDetailHolder)
                 binding.imageReload.isVisible = false
             } catch (e: Exception) {
-                binding.imageFailed!!.isVisible = true
+                binding.imageFailed?.isVisible = true
                 showFailedLoadImageError()
             }
         } else {
-            binding.imageFailed!!.isVisible = true
+            binding.imageFailed?.isVisible = true
             showFailedLoadImageError()
         }
     }
@@ -318,7 +314,7 @@ class SnapshotDetailActivity : BaseActivity() {
     private fun restartVisibility() {
         binding.photoItemDetailHolder.isVisible = true
         binding.imageReload.isVisible = false
-        binding.imageFailed!!.isVisible = false
+        binding.imageFailed?.isVisible = false
     }
 
     companion object {

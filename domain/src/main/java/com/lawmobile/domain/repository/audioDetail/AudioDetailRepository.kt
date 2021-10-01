@@ -7,10 +7,10 @@ import com.safefleet.mobile.kotlin_commons.helpers.Result
 
 interface AudioDetailRepository : BaseRepository {
     suspend fun getAudioBytes(domainCameraFile: DomainCameraFile): Result<ByteArray>
+    suspend fun getInformationOfAudio(domainCameraFile: DomainCameraFile): Result<DomainInformationAudioMetadata>
+    suspend fun getAssociatedVideos(domainCameraFile: DomainCameraFile): Result<List<DomainCameraFile>>
     suspend fun saveAudioPartnerId(
         domainCameraFile: DomainCameraFile,
         partnerId: String
     ): Result<Unit>
-
-    suspend fun getInformationOfAudio(domainCameraFile: DomainCameraFile): Result<DomainInformationAudioMetadata>
 }

@@ -6,9 +6,8 @@ import androidx.lifecycle.viewModelScope
 import com.lawmobile.domain.entities.DomainCameraFile
 import com.lawmobile.domain.entities.DomainInformationAudioMetadata
 import com.lawmobile.domain.usecase.audioDetail.AudioDetailUseCase
-import com.lawmobile.presentation.extensions.postEventValueWithTimeout
+import com.lawmobile.presentation.extensions.postValueWithTimeout
 import com.lawmobile.presentation.ui.base.BaseViewModel
-import com.safefleet.mobile.kotlin_commons.helpers.Event
 import com.safefleet.mobile.kotlin_commons.helpers.Result
 import com.safefleet.mobile.kotlin_commons.helpers.getResultWithAttempts
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -20,44 +19,50 @@ class AudioDetailViewModel @Inject constructor(
     private val audioDetailUseCase: AudioDetailUseCase
 ) : BaseViewModel() {
 
-    private val audioBytesMediator: MediatorLiveData<Event<Result<ByteArray>>> = MediatorLiveData()
-    val audioBytesLiveData: LiveData<Event<Result<ByteArray>>> get() = audioBytesMediator
+    private val _audioBytesResult: MediatorLiveData<Result<ByteArray>> = MediatorLiveData()
+    val audioBytesResult: LiveData<Result<ByteArray>> get() = _audioBytesResult
 
-    private val savePartnerIdMediator: MediatorLiveData<Event<Result<Unit>>> = MediatorLiveData()
-    val savePartnerIdLiveData: LiveData<Event<Result<Unit>>> get() = savePartnerIdMediator
+    private val _savePartnerIdResult: MediatorLiveData<Result<Unit>> = MediatorLiveData()
+    val savePartnerIdResult: LiveData<Result<Unit>> get() = _savePartnerIdResult
 
-    private val informationVideoMediator: MediatorLiveData<Event<Result<DomainInformationAudioMetadata>>> =
-        MediatorLiveData()
-    val informationAudioLiveData: LiveData<Event<Result<DomainInformationAudioMetadata>>> get() = informationVideoMediator
+    private val _audioInformationResult = MediatorLiveData<Result<DomainInformationAudioMetadata>>()
+    val audioInformationResult: LiveData<Result<DomainInformationAudioMetadata>> get() = _audioInformationResult
+
+    private val _associatedVideosResult = MediatorLiveData<Result<List<DomainCameraFile>>>()
+    val associatedVideosResult: LiveData<Result<List<DomainCameraFile>>> get() = _associatedVideosResult
 
     fun getAudioBytes(domainCameraFile: DomainCameraFile) {
         viewModelScope.launch {
-            audioBytesMediator.postEventValueWithTimeout(getLoadingTimeOut()) {
-                Event(
-                    getResultWithAttempts(ATTEMPTS_TO_GET_BYTES) {
-                        audioDetailUseCase.getAudioBytes(domainCameraFile)
-                    }
-                )
+            _audioBytesResult.postValueWithTimeout(getLoadingTimeOut()) {
+                getResultWithAttempts(ATTEMPTS_TO_GET_BYTES) {
+                    audioDetailUseCase.getAudioBytes(domainCameraFile)
+                }
             }
         }
     }
 
     fun savePartnerId(domainCameraFile: DomainCameraFile, partnerId: String) {
         viewModelScope.launch {
-            savePartnerIdMediator.postEventValueWithTimeout(getLoadingTimeOut()) {
-                Event(audioDetailUseCase.savePartnerIdAudio(domainCameraFile, partnerId))
+            _savePartnerIdResult.postValueWithTimeout(getLoadingTimeOut()) {
+                audioDetailUseCase.savePartnerIdAudio(domainCameraFile, partnerId)
             }
         }
     }
 
-    fun getInformationAudioMetadata(domainCameraFile: DomainCameraFile) {
+    fun getAudioInformation(domainCameraFile: DomainCameraFile) {
         viewModelScope.launch {
-            informationVideoMediator.postEventValueWithTimeout(getLoadingTimeOut()) {
-                Event(
-                    getResultWithAttempts(ATTEMPTS_TO_GET_INFORMATION, DELAY_BETWEEN_ATTEMPTS) {
-                        audioDetailUseCase.getInformationOfAudio(domainCameraFile)
-                    }
-                )
+            _audioInformationResult.postValueWithTimeout(getLoadingTimeOut()) {
+                getResultWithAttempts(ATTEMPTS_TO_GET_INFORMATION, DELAY_BETWEEN_ATTEMPTS) {
+                    audioDetailUseCase.getInformationOfAudio(domainCameraFile)
+                }
+            }
+        }
+    }
+
+    fun getAssociatedVideos(domainCameraFile: DomainCameraFile) {
+        viewModelScope.launch {
+            _associatedVideosResult.postValueWithTimeout(getLoadingTimeOut()) {
+                audioDetailUseCase.getAssociatedVideos(domainCameraFile)
             }
         }
     }
