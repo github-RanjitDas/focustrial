@@ -38,7 +38,7 @@ open class BaseViewModel @Inject constructor() : ViewModel() {
 
     companion object {
         private lateinit var eventsUseCase: EventsUseCase
-        private const val LOADING_TIMEOUT = 20000L
+        private const val LOADING_TIMEOUT = 70000L
         fun getLoadingTimeOut() = LOADING_TIMEOUT
     }
 }

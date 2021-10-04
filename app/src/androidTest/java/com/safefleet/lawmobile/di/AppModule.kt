@@ -60,6 +60,10 @@ class AppModule {
 
         @Provides
         @Singleton
+        fun provideBackgroundDispatcher() = Dispatchers.IO
+
+        @Provides
+        @Singleton
         fun provideSqlDriver(@ApplicationContext context: Context): SqlDriver =
             AndroidSqliteDriver(
                 schema = Database.Schema,
