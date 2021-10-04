@@ -64,6 +64,7 @@
     <string name="button_record_description">Button Record</string>
     <string name="take_snapshots">Take Snapshots</string>
     <string name="record_video">Record Video</string>
+    <string name="record_audio">Record Audio</string>
     <string name="snapshot_list_description">Snapshot List</string>
     <string name="view_snapshots">View Snapshots</string>
     <string name="video_list_description">Video List</string>
@@ -149,6 +150,7 @@
     <string name="mobile_data_status_message">Please disable Mobile Data on your device in order to connect the BWC with the Focus Mobile App</string>
     <string name="verify_camera_wifi">Please verify the WIFI connection between the BWC and Focus Mobile App</string>
     <string name="error_saving_video">Error checking video saved in camera, please wait and try again</string>
+    <string name="error_saving_audio">Error checking audio saved in camera, please wait and try again</string>
     <string name="go">GO</string>
     <string name="login">Login</string>
     <string name="success_connection_to_camera">You have successfully connected to the camera</string>
@@ -158,8 +160,10 @@
     <string name="camera_status">Camera status</string>
     <string name="memory_level">memory level</string>
     <string name="battery_level">battery level</string>
-    <string name="recording">Recording</string>
+    <string name="video_recording">Video Recording</string>
+    <string name="audio_recording">Audio Recording</string>
     <string name="stop">Stop</string>
+    <string name="stop_audio">Stop Record Audio</string>
     <string name="taking_snapshot">Taking snapshot</string>
     <string name="starting_recording">Starting recording</string>
     <string name="stopping_recording">Stopping recording</string>

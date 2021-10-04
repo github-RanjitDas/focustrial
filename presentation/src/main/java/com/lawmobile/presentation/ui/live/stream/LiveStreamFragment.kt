@@ -10,7 +10,9 @@ import androidx.fragment.app.activityViewModels
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.databinding.FragmentLiveStreamBinding
 import com.lawmobile.presentation.extensions.setOnClickListenerCheckConnection
+import com.lawmobile.presentation.extensions.startAnimationIfEnabled
 import com.lawmobile.presentation.ui.base.BaseFragment
+import com.safefleet.mobile.safefleet_ui.animations.Animations
 
 class LiveStreamFragment : BaseFragment() {
 
@@ -54,6 +56,17 @@ class LiveStreamFragment : BaseFragment() {
         binding.toggleFullScreenLiveView.isClickable = isVisible
     }
 
+    fun showRecordingAudio(isVisible: Boolean) {
+        binding.imageAudio?.isVisible = isVisible
+        binding.imageBackgroundDisable?.isVisible = isVisible
+        if (isVisible) {
+            val animation = Animations.createBlinkAnimation(BLINK_ANIMATION_DURATION)
+            binding.imageAudio?.startAnimationIfEnabled(animation)
+        } else {
+            binding.imageAudio?.clearAnimation()
+        }
+    }
+
     private fun setUrlLive() {
         val url = viewModel.getUrlLive()
         viewModel.mediaPlayer.create(url, binding.liveStreamingView)
@@ -90,5 +103,6 @@ class LiveStreamFragment : BaseFragment() {
 
     companion object {
         val TAG = LiveStreamFragment::class.java.simpleName
+        private const val BLINK_ANIMATION_DURATION = 1000L
     }
 }

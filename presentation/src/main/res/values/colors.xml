@@ -14,6 +14,7 @@
     <color name="whiteTransparent">#52FFFFFF</color>
     <color name="whiteTransparentButton">#B3FFFFFF</color>
     <color name="whiteTransparentShadow">#CDFFFFFF</color>
+    <color name="whiteBackgroundShadow">#E6FFFFFF</color>
     <color name="red">#E4002B</color>
     <color name="lightBlue">#4E8AC9</color>
     <color name="darkBlue">#0068AF</color>
@@ -26,7 +27,7 @@
     <color name="blueTransparent">#330068AF</color>
     <color name="greyNotificationAction">#5B616A</color>
     <color name="blueDiagnosisButton">#184C89</color>
-    <color name="blueBackgroundAudioButton">#4DD7DEEA</color>
+    <color name="grayBackgroundAudio">#4DD7DEEA</color>
     <color name="textDarkAccent">#231F20</color>
 
 </resources>

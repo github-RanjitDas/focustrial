@@ -6,10 +6,11 @@ import android.view.View
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.view.isVisible
 import com.lawmobile.presentation.R
 import com.safefleet.mobile.safefleet_ui.widgets.SafeFleetClickable
 
-class CustomRecordButton @JvmOverloads constructor(
+class CustomAudioButton @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
@@ -17,26 +18,28 @@ class CustomRecordButton @JvmOverloads constructor(
 
     private var buttonText: TextView
     private var buttonIcon: ImageView
-    private var buttonCustomRecord: ImageButton
+    private var buttonCustomAudio: ImageButton
+    private var disableView: View
 
     init {
-        View.inflate(context, R.layout.button_custom_record, this)
-        buttonText = findViewById(R.id.textViewButtonRecord)
-        buttonIcon = findViewById(R.id.imageViewCustomRecord)
-        buttonCustomRecord = findViewById(R.id.buttonCustomRecord)
+        View.inflate(context, R.layout.button_custom_audio, this)
+        buttonText = findViewById(R.id.textViewButtonAudio)
+        buttonIcon = findViewById(R.id.imageViewCustomAudio)
+        buttonCustomAudio = findViewById(R.id.buttonCustomAudio)
+        disableView = findViewById(R.id.viewDisableButton)
 
         setOnClickListener(this)
-        buttonCustomRecord.setOnClickListener(this)
+        buttonCustomAudio.setOnClickListener(this)
         buttonText.setOnClickListener(this)
         buttonIcon.setOnClickListener(this)
     }
 
     override fun isActivated(): Boolean {
-        return buttonCustomRecord.isActivated
+        return buttonCustomAudio.isActivated
     }
 
     override fun setActivated(activated: Boolean) {
-        buttonCustomRecord.isActivated = activated
+        buttonCustomAudio.isActivated = activated
         changeButtonState()
     }
 
@@ -47,33 +50,22 @@ class CustomRecordButton @JvmOverloads constructor(
         changeButtonState()
     }
 
+    fun setEnabledState(enable: Boolean) {
+        disableView.isVisible = !enable
+    }
+
     private fun changeButtonState() {
-        val density = resources.displayMetrics.density
-        with(buttonCustomRecord) {
+        with(buttonCustomAudio) {
             if (isActivated) {
                 setBackgroundResource(R.drawable.background_recording_active)
                 buttonIcon.setImageResource(R.drawable.ic_record_active)
-                buttonText.text = context.getString(R.string.stop)
+                buttonText.text = context.getString(R.string.stop_audio)
                 buttonText.setTextColor(context.getColor(R.color.red))
-
-                setPadding(
-                    (density * 51 + 0.5f).toInt(),
-                    (density * 33).toInt(),
-                    (density * 51 + 0.5f).toInt(),
-                    (density * 50).toInt()
-                )
             } else {
                 setBackgroundResource(R.drawable.background_live_view_buttons)
-                buttonIcon.setImageResource(R.drawable.ic_video)
-                buttonText.text = context.getString(R.string.record_video)
+                buttonIcon.setImageResource(R.drawable.ic_audio_white)
+                buttonText.text = context.getString(R.string.record_audio)
                 buttonText.setTextColor(context.getColor(R.color.white))
-
-                setPadding(
-                    (density * 51 + 0.5f).toInt(),
-                    (density * 39).toInt(),
-                    (density * 51 + 0.5f).toInt(),
-                    (density * 59).toInt()
-                )
             }
         }
     }
