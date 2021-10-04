@@ -2,7 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/layoutLiveControls"
+    android:id="@+id/layoutLiveControlsX2"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <TextView
@@ -67,7 +67,7 @@
         android:layout_marginVertical="@dimen/live_view_buttons_margin_vertical"
         android:layout_marginHorizontal="@dimen/live_view_buttons_margin_horizontal"
         android:contentDescription="@string/button_snapshot"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/guidelineMidHorizontal_bottom"
         app:layout_constraintEnd_toStartOf="@+id/guidelineMidVertical_controls"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/guidelineMidHorizontal_controls" />
@@ -79,10 +79,21 @@
         android:layout_marginVertical="@dimen/live_view_buttons_margin_vertical"
         android:layout_marginHorizontal="@dimen/live_view_buttons_margin_horizontal"
         android:contentDescription="@string/button_record_description"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/guidelineMidHorizontal_bottom"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/guidelineMidVertical_controls"
         app:layout_constraintTop_toTopOf="@+id/guidelineMidHorizontal_controls" />
+
+    <com.lawmobile.presentation.widgets.CustomAudioButton
+        android:id="@+id/buttonAudio"
+        android:layout_width="@dimen/no_dp"
+        android:layout_height="@dimen/no_dp"
+        android:layout_marginHorizontal= "@dimen/margin_20dp"
+        android:contentDescription="@string/button_record_description"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guidelineMidHorizontal_bottom" />
 
     <View
         android:id="@+id/viewDisableButtons"
@@ -114,6 +125,17 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintGuide_percent="0.20"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineMidHorizontal_bottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintGuide_percent="0.8"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

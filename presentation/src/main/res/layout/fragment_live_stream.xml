@@ -63,4 +63,22 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
+    <ImageView
+        android:id="@+id/imageBackgroundDisable"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:padding="@dimen/padding_audio_icon_background"
+        android:visibility="gone"
+        android:background="@color/whiteBackgroundShadow"
+        android:contentDescription="@string/snapshot_item_detail_photo_content_description" />
+
+    <ImageView
+        android:id="@+id/imageAudio"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:padding="@dimen/padding_audio_icon_background"
+        android:src="@drawable/ic_audio"
+        android:visibility="gone"
+        android:contentDescription="@string/snapshot_item_detail_photo_content_description" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

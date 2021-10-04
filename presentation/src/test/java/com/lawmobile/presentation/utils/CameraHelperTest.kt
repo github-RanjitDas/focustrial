@@ -64,4 +64,11 @@ class CameraHelperTest {
         cameraHelper.disconnectCamera()
         coVerify { connectionHelper.disconnectCamera() }
     }
+
+    @Test
+    fun testOnCameraEventFlow() = runBlockingTest {
+        coEvery { connectionHelper.onCameraEvent(any()) } returns Unit
+        cameraHelper.onCameraEvent {}
+        coVerify { connectionHelper.onCameraEvent(any()) }
+    }
 }

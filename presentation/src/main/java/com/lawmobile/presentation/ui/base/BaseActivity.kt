@@ -197,6 +197,7 @@ open class BaseActivity : AppCompatActivity() {
 
         lateinit var lastInteraction: Timestamp
         var isRecordingVideo: Boolean = false
+        var isRecordingAudio: Boolean = false
 
         const val PERMISSION_FOR_LOCATION = 100
         const val MAX_TIME_SESSION = 300000
