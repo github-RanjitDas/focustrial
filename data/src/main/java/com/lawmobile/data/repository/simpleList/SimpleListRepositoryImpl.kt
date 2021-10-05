@@ -6,6 +6,7 @@ import com.lawmobile.domain.entities.DomainInformationFile
 import com.lawmobile.domain.entities.DomainInformationFileResponse
 import com.lawmobile.domain.entities.FileList
 import com.lawmobile.domain.entities.VideoListMetadata
+import com.lawmobile.domain.enums.RequestError
 import com.lawmobile.domain.repository.simpleList.SimpleListRepository
 import com.safefleet.mobile.kotlin_commons.helpers.Result
 
@@ -54,7 +55,7 @@ class SimpleListRepositoryImpl(
                 FileList.videoList = domainInformationFileResponse.items
                 return Result.Success(domainInformationFileResponse)
             }
-            is Result.Error -> response
+            is Result.Error -> Result.Error(RequestError.GET_LIST.getException())
         }
     }
 

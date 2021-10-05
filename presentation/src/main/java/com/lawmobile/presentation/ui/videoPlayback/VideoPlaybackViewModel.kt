@@ -11,6 +11,7 @@ import com.lawmobile.presentation.ui.base.BaseViewModel
 import com.lawmobile.presentation.utils.VLCMediaPlayer
 import com.safefleet.mobile.kotlin_commons.helpers.Result
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -34,6 +35,7 @@ class VideoPlaybackViewModel @Inject constructor(
 
     fun getInformationOfVideo(domainCameraFile: DomainCameraFile) {
         viewModelScope.launch {
+            delay(DELAY_ON_VIDEO_INFORMATION)
             domainInformationVideoMediator.postValue(
                 videoPlaybackUseCase.getInformationResourcesVideo(domainCameraFile)
             )
@@ -54,5 +56,9 @@ class VideoPlaybackViewModel @Inject constructor(
                 videoPlaybackUseCase.getVideoMetadata(fileName, folderName)
             )
         }
+    }
+
+    companion object {
+        private const val DELAY_ON_VIDEO_INFORMATION = 250L
     }
 }

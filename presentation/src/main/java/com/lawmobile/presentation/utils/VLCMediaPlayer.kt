@@ -6,6 +6,7 @@ import android.view.SurfaceView
 import android.widget.SeekBar
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
+import com.lawmobile.domain.helpers.runWithDelay
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.entities.MediaPlayerControls
 import com.lawmobile.presentation.extensions.milliSecondsToString
@@ -179,9 +180,11 @@ class VLCMediaPlayer(private val libVLC: LibVLC, private val mediaPlayer: MediaP
     }
 
     private fun onEncounteredError() {
-        encounteredError = true
-        releaseMedia()
-        setMedia(currentUrl)
+        runWithDelay(DELAY_ON_ERROR) {
+            encounteredError = true
+            releaseMedia()
+            setMedia(currentUrl)
+        }
     }
 
     private fun onTimeChanged() {
@@ -323,5 +326,7 @@ class VLCMediaPlayer(private val libVLC: LibVLC, private val mediaPlayer: MediaP
         const val ASPECT_RATIO_4_3 = "4:3"
         const val ASPECT_RATIO_16_9 = "16:9"
         const val ASPECT_RATIO_21_9 = "21:9"
+
+        private const val DELAY_ON_ERROR = 500L
     }
 }

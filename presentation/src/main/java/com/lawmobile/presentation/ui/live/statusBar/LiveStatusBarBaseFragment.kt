@@ -114,7 +114,7 @@ open class LiveStatusBarBaseFragment : BaseFragment() {
     }
 
     open fun manageBatteryLevel(batteryPercent: Int) {
-        requireActivity().runOnUiThread {
+        activity?.runOnUiThread {
             if (batteryPercent >= 0) {
                 if (batteryPercent == 0 && CameraInfo.cameraType == CameraType.X1) {
                     showBatteryLevelNotAvailable()
