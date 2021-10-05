@@ -18,7 +18,9 @@ import com.lawmobile.presentation.ui.base.menu.MenuFragment.Companion.isInMainSc
 import com.lawmobile.presentation.ui.base.statusBar.StatusBarSettingsFragment
 import com.lawmobile.presentation.ui.live.LiveActivityBaseViewModel
 import com.lawmobile.presentation.ui.live.controls.x1.LiveControlsX1Fragment
+import com.lawmobile.presentation.ui.live.controls.x2.LiveControlsX2Fragment
 import com.lawmobile.presentation.ui.live.navigation.x1.LiveNavigationX1Fragment
+import com.lawmobile.presentation.ui.live.navigation.x2.LiveNavigationX2Fragment
 import com.lawmobile.presentation.ui.live.statusBar.x1.LiveStatusBarX1Fragment
 import com.lawmobile.presentation.ui.live.statusBar.x2.LiveStatusBarX2Fragment
 import com.lawmobile.presentation.ui.live.stream.LiveStreamFragment
@@ -33,8 +35,8 @@ class LiveX2Activity : BaseActivity() {
     private val appBarFragment = AppBarX2Fragment.createInstance(true, "")
     private val statusBarFragment = LiveStatusBarX2Fragment()
     private val streamFragment = LiveStreamFragment()
-    private val controlsFragment = LiveControlsX1Fragment()
-    private val navigationFragment = LiveNavigationX1Fragment()
+    private val controlsFragment = LiveControlsX2Fragment()
+    private val navigationFragment = LiveNavigationX2Fragment()
     private val menuFragment = MenuFragment()
     private val statusBarSettingsFragment = StatusBarSettingsFragment.createInstance()
     private var isMenuOpen = false
@@ -95,11 +97,15 @@ class LiveX2Activity : BaseActivity() {
         EspressoIdlingResource.increment()
         onLiveStreamSwitchClick(true)
         streamFragment.showLoadingState(message)
+        setStreamFragment()
     }
 
-    private fun onCameraOperationFinished() {
+    private fun onCameraOperationFinished(isAudio: Boolean) {
         streamFragment.hideLoadingState()
+        streamFragment.showRecordingAudio(isAudio)
+        streamFragment.setStreamVisibility(!isAudio)
         EspressoIdlingResource.decrement()
+        setStreamFragment()
     }
 
     private fun onLiveStreamSwitchClick(isActive: Boolean) {
@@ -198,7 +204,7 @@ class LiveX2Activity : BaseActivity() {
 
     private fun setStatusBarSettingsFragment() {
         supportFragmentManager.attachFragment(
-            containerId = R.id.statusBarSetting,
+            containerId = R.id.settingsBarContainer,
             fragment = statusBarSettingsFragment,
             tag = StatusBarSettingsFragment.TAG
         )

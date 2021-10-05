@@ -90,10 +90,6 @@ class CameraConnectServiceMock : CameraService {
         return Result.Success(videoList)
     }
 
-    override suspend fun getListOfAudios(): Result<FileResponseWithErrors> {
-        throw NotImplementedError()
-    }
-
     override suspend fun getLogEvents(): Result<List<LogEvent>> {
         return Result.Success(eventList)
     }

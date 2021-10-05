@@ -48,7 +48,7 @@
             android:padding="@dimen/padding_audio_icon_background"
             android:src="@drawable/ic_audio"
             android:layout_marginTop="@dimen/live_view_app_bar_height"
-            android:background="@color/blueBackgroundAudioButton"
+            android:background="@color/grayBackgroundAudio"
             android:contentDescription="@string/snapshot_item_detail_photo_content_description"
             app:layout_constraintBottom_toBottomOf="@+id/photoItemDetailHolder"
             app:layout_constraintEnd_toEndOf="parent"

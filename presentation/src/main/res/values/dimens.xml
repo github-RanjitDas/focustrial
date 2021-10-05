@@ -54,6 +54,8 @@
     <dimen name="app_bar_last_name_padding_horizontal">17.5dp</dimen>
     <dimen name="live_view_divider_height">0.5dp</dimen>
     <dimen name="live_view_size_pending_notification">19dp</dimen>
+    <dimen name="live_view_min_height_stream">250dp</dimen>
+    <dimen name="live_view_max_height_buttons">300dp</dimen>
 
     <!-- Menu Live View -->
     <dimen name="menu_live_view_icon_user_margin">35dp</dimen>

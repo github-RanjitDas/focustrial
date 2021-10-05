@@ -34,7 +34,7 @@ class NotificationListActivity : BaseActivity() {
     private lateinit var appBarFragment: AppBarX2Fragment
     private lateinit var binding: ActivityNotificationListBinding
     private lateinit var notificationListAdapter: NotificationListAdapter
-    private val statusBarSettingsFragment = StatusBarSettingsFragment.createInstance()
+    private val statusBarSettingsFragment = StatusBarSettingsFragment()
 
     private val bottomSheetBehavior: BottomSheetBehavior<CardView> by lazy {
         BottomSheetBehavior.from(binding.bottomSheetNotification.bottomSheetNotification)

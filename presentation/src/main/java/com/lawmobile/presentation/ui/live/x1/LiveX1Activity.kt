@@ -55,7 +55,7 @@ class LiveX1Activity : BaseActivity() {
     private fun setListeners() {
         controlsFragment.onCameraOperation = ::onCameraOperation
         controlsFragment.onLiveStreamSwitchClick = ::onLiveStreamSwitchClick
-        controlsFragment.onCameraOperationFinished = ::onCameraOperationFinished
+        controlsFragment.onCameraOperationFinished = { onCameraOperationFinished() }
     }
 
     private fun onCameraOperation(message: String) {

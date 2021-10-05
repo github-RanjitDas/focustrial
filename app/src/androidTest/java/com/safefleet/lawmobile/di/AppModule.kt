@@ -52,10 +52,6 @@ class AppModule {
 
         @Provides
         @Singleton
-        fun provideBackgroundDispatcher() = Dispatchers.IO
-
-        @Provides
-        @Singleton
         fun provideSimpleNetworkManager() = SimpleNetworkManager()
 
         @Provides

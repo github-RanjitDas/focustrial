@@ -46,6 +46,7 @@ class VideoPlaybackViewModelTest {
             Result.Success(mockk())
 
         videoPlaybackViewModel.getInformationOfVideo(domainCameraFile)
+        dispatcher.advanceTimeBy(250)
         Assert.assertTrue(videoPlaybackViewModel.domainInformationVideoLiveData.value is Result.Success)
 
         coVerify { videoPlaybackUseCase.getInformationResourcesVideo(any()) }
@@ -58,6 +59,7 @@ class VideoPlaybackViewModelTest {
             Result.Error(mockk())
 
         videoPlaybackViewModel.getInformationOfVideo(domainCameraFile)
+        dispatcher.advanceTimeBy(250)
         Assert.assertTrue(videoPlaybackViewModel.domainInformationVideoLiveData.value is Result.Error)
 
         coVerify { videoPlaybackUseCase.getInformationResourcesVideo(any()) }

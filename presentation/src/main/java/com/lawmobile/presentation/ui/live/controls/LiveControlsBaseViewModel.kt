@@ -25,6 +25,13 @@ class LiveControlsBaseViewModel @Inject constructor(
     private val resultStopVideoMediator: MediatorLiveData<Event<Result<Unit>>> = MediatorLiveData()
     val resultStopVideoLiveData: LiveData<Event<Result<Unit>>> get() = resultStopVideoMediator
 
+    private val resultRecordAudioMediator: MediatorLiveData<Event<Result<Unit>>> =
+        MediatorLiveData()
+    val resultRecordAudioLiveData: LiveData<Event<Result<Unit>>> get() = resultRecordAudioMediator
+
+    private val resultStopAudioMediator: MediatorLiveData<Event<Result<Unit>>> = MediatorLiveData()
+    val resultStopAudioLiveData: LiveData<Event<Result<Unit>>> get() = resultStopAudioMediator
+
     private val resultTakePhotoMediatorLiveData = MediatorLiveData<Event<Result<Unit>>>()
     val resultTakePhotoLiveData: LiveData<Event<Result<Unit>>> get() = resultTakePhotoMediatorLiveData
 
@@ -47,6 +54,18 @@ class LiveControlsBaseViewModel @Inject constructor(
     fun stopRecordVideo() {
         viewModelScope.launch {
             resultStopVideoMediator.postValue(Event(liveStreamingUseCase.stopRecordVideo()))
+        }
+    }
+
+    fun startRecordAudio() {
+        viewModelScope.launch {
+            resultRecordAudioMediator.postValue(Event(Result.Success(Unit)))
+        }
+    }
+
+    fun stopRecordAudio() {
+        viewModelScope.launch {
+            resultStopAudioMediator.postValue(Event(Result.Success(Unit)))
         }
     }
 }
