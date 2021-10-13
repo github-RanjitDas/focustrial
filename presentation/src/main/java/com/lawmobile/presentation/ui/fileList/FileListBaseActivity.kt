@@ -5,8 +5,8 @@ import android.view.View
 import androidx.activity.viewModels
 import androidx.cardview.widget.CardView
 import androidx.core.view.isVisible
-import androidx.lifecycle.Observer
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.snackbar.Snackbar
 import com.lawmobile.domain.entities.DomainCameraFile
 import com.lawmobile.domain.entities.DomainInformationForList
 import com.lawmobile.presentation.R
@@ -32,7 +32,7 @@ open class FileListBaseActivity : BaseActivity() {
     lateinit var binding: ActivityFileListBinding
     private val fileListViewModel: FileListViewModel by viewModels()
 
-    lateinit var actualFragment: String
+    var actualFragment: String = ""
     var listType: String? = null
     var filterDialog: CustomFilterDialog? = null
 
@@ -49,10 +49,15 @@ open class FileListBaseActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityFileListBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        listType = intent.extras?.getString(Constants.FILE_LIST_SELECTOR)
+
+        setListType()
         setExtras()
-        setObservers()
-        configureBottomSheet()
+        fileListViewModel.setObservers()
+        binding.configureBottomSheet()
+    }
+
+    private fun setListType() {
+        listType = intent.extras?.getString(Constants.FILE_LIST_SELECTOR)
     }
 
     override fun onRestart() {
@@ -67,9 +72,9 @@ open class FileListBaseActivity : BaseActivity() {
             Bundle().apply { putString(Constants.FILE_LIST_TYPE, listType) }
     }
 
-    fun setObservers() {
-        fileListViewModel.snapshotPartnerIdLiveData.observe(this, Observer(::handlePartnerIdResult))
-        fileListViewModel.videoPartnerIdLiveData.observe(this, Observer(::handlePartnerIdResult))
+    fun FileListViewModel.setObservers() {
+        snapshotPartnerIdLiveData.observe(this@FileListBaseActivity, ::handlePartnerIdResult)
+        videoPartnerIdLiveData.observe(this@FileListBaseActivity, ::handlePartnerIdResult)
     }
 
     fun activateButtonAssociate() {
@@ -86,8 +91,8 @@ open class FileListBaseActivity : BaseActivity() {
     }
 
     fun attachSimpleFileListFragment() {
-        actualFragment = Constants.SIMPLE_FILE_LIST
         resetButtonAssociate()
+        actualFragment = Constants.SIMPLE_FILE_LIST
         supportFragmentManager.attachFragment(
             R.id.fragmentListHolder,
             simpleFileListFragment,
@@ -96,8 +101,8 @@ open class FileListBaseActivity : BaseActivity() {
     }
 
     fun attachThumbnailListFragment() {
-        actualFragment = Constants.THUMBNAIL_FILE_LIST
         resetButtonAssociate()
+        actualFragment = Constants.THUMBNAIL_FILE_LIST
         supportFragmentManager.attachFragment(
             R.id.fragmentListHolder,
             thumbnailFileListFragment,
@@ -113,14 +118,14 @@ open class FileListBaseActivity : BaseActivity() {
         binding.buttonAssociatePartnerIdList.isVisible = false
     }
 
-    private fun configureBottomSheet() {
+    private fun ActivityFileListBinding.configureBottomSheet() {
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
-        binding.bottomSheetPartnerId.buttonAssignToOfficer.setOnClickListenerCheckConnection {
-            associatePartnerId(binding.bottomSheetPartnerId.editTextAssignToOfficer.text.toString())
+        bottomSheetPartnerId.buttonAssignToOfficer.setOnClickListenerCheckConnection {
+            associatePartnerId(bottomSheetPartnerId.editTextAssignToOfficer.text.toString())
             hideKeyboard()
             cleanPartnerIdField()
         }
-        binding.bottomSheetPartnerId.buttonCloseAssignToOfficer.setOnClickListener {
+        bottomSheetPartnerId.buttonCloseAssignToOfficer.setOnClickListener {
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
             cleanPartnerIdField()
         }
@@ -133,12 +138,12 @@ open class FileListBaseActivity : BaseActivity() {
                 override fun onStateChanged(bottomSheet: View, newState: Int) {
                     when (newState) {
                         BottomSheetBehavior.STATE_HIDDEN -> {
-                            binding.shadowFileListView.isVisible = false
+                            shadowFileListView.isVisible = false
                             isBottomSheetOpen = false
                         }
 
                         else -> {
-                            binding.shadowFileListView.isVisible = true
+                            shadowFileListView.isVisible = true
                             isBottomSheetOpen = true
                         }
                     }
@@ -146,17 +151,17 @@ open class FileListBaseActivity : BaseActivity() {
             })
     }
 
-    private fun cleanPartnerIdField() {
-        binding.bottomSheetPartnerId.editTextAssignToOfficer.text.clear()
+    private fun ActivityFileListBinding.cleanPartnerIdField() {
+        bottomSheetPartnerId.editTextAssignToOfficer.text.clear()
     }
 
-    private fun associatePartnerId(partnerId: String) {
+    private fun ActivityFileListBinding.associatePartnerId(partnerId: String) {
         if (partnerId.isEmpty()) {
-            binding.constraintLayoutFileList.showErrorSnackBar(getString(R.string.valid_partner_id_message))
+            root.showErrorSnackBar(getString(R.string.valid_partner_id_message))
             return
         }
         showLoadingDialog()
-        associateItemsSelected(getListSelectedToAssociatePartnerId(), partnerId)
+        associateSelectedItems(getListSelectedToAssociatePartnerId(), partnerId)
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
     }
 
@@ -172,18 +177,16 @@ open class FileListBaseActivity : BaseActivity() {
         }
     }
 
-    private fun associateItemsSelected(
+    private fun associateSelectedItems(
         listSelected: List<DomainCameraFile>?,
         partnerId: String
     ) {
         listSelected?.let {
             when (listType) {
-                Constants.SNAPSHOT_LIST -> {
+                Constants.SNAPSHOT_LIST ->
                     fileListViewModel.associatePartnerIdToSnapshotList(it, partnerId)
-                }
-                Constants.VIDEO_LIST -> {
+                Constants.VIDEO_LIST ->
                     fileListViewModel.associatePartnerIdToVideoList(it, partnerId)
-                }
             }
         }
     }
@@ -198,13 +201,14 @@ open class FileListBaseActivity : BaseActivity() {
     private fun handlePartnerIdResult(result: Result<Unit>) {
         with(result) {
             doIfSuccess {
-                binding.constraintLayoutFileList.showSuccessSnackBar(getString(R.string.file_list_associate_partner_id_success))
+                binding.root.showSuccessSnackBar(getString(R.string.file_list_associate_partner_id_success))
                 resetButtonAssociate()
                 onPartnerIdAssociated?.invoke()
             }
             doIfError {
-                binding.constraintLayoutFileList.showErrorSnackBar(
-                    it.message ?: getString(R.string.file_list_associate_partner_id_error)
+                binding.root.showErrorSnackBar(
+                    it.message ?: getString(R.string.file_list_associate_partner_id_error),
+                    Snackbar.LENGTH_INDEFINITE
                 )
             }
         }

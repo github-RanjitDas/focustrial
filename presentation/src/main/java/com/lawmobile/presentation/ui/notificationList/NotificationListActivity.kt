@@ -7,7 +7,6 @@ import androidx.cardview.widget.CardView
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.android.material.snackbar.Snackbar
 import com.lawmobile.domain.entities.CameraEvent
 import com.lawmobile.domain.entities.CameraInfo
 import com.lawmobile.domain.enums.NotificationType
@@ -18,7 +17,6 @@ import com.lawmobile.presentation.extensions.attachFragment
 import com.lawmobile.presentation.extensions.closeMenuButton
 import com.lawmobile.presentation.extensions.openMenuButton
 import com.lawmobile.presentation.extensions.setImageDependingOnEventTag
-import com.lawmobile.presentation.extensions.showErrorSnackBar
 import com.lawmobile.presentation.ui.base.BaseActivity
 import com.lawmobile.presentation.ui.base.appBar.x2.AppBarX2Fragment
 import com.lawmobile.presentation.ui.base.menu.MenuFragment
@@ -82,12 +80,7 @@ class NotificationListActivity : BaseActivity() {
             }
             doIfError {
                 hideLoadingDialog()
-                binding.root.showErrorSnackBar(
-                    getString(R.string.notification_list_error),
-                    Snackbar.LENGTH_INDEFINITE
-                ) {
-                    viewModel.getCameraEvents()
-                }
+                binding.textViewEmptyList.isVisible = true
             }
         }
     }
@@ -98,12 +91,7 @@ class NotificationListActivity : BaseActivity() {
                 notificationListAdapter.notificationList = it as MutableList
             }
             doIfError {
-                binding.root.showErrorSnackBar(
-                    getString(R.string.notification_list_error),
-                    Snackbar.LENGTH_INDEFINITE
-                ) {
-                    viewModel.getNotificationEvents()
-                }
+                binding.textViewEmptyList.isVisible = true
             }
         }
         hideLoadingDialog()

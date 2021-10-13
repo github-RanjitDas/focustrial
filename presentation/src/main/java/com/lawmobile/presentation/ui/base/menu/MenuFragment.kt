@@ -9,7 +9,6 @@ import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import com.lawmobile.domain.entities.CameraInfo
-import com.lawmobile.domain.entities.CameraInfo.isOfficerLogged
 import com.lawmobile.presentation.databinding.FragmentLiveMenuX2Binding
 import com.lawmobile.presentation.extensions.createAlertConfirmAppExit
 import com.lawmobile.presentation.extensions.getIntentDependsCameraType
@@ -192,7 +191,7 @@ class MenuFragment : BaseFragment() {
 
     private fun logoutApplication() {
         menuViewModel.disconnectCamera()
-        isOfficerLogged = false
+        CameraInfo.cleanInfo()
         startActivity(Intent(requireActivity(), LoginActivity::class.java))
         requireActivity().finish()
     }

@@ -1,11 +1,13 @@
 package com.lawmobile.data.mappers
 
 import com.lawmobile.domain.entities.CameraInfo
+import com.lawmobile.domain.entities.DomainAnnotations
 import com.lawmobile.domain.entities.DomainAssociatedFile
 import com.lawmobile.domain.entities.DomainHashVideo
 import com.lawmobile.domain.entities.DomainMetadata
 import com.lawmobile.domain.entities.DomainVideoMetadata
 import com.lawmobile.domain.enums.CameraType
+import com.safefleet.mobile.external_hardware.cameras.entities.Annotation
 import com.safefleet.mobile.external_hardware.cameras.entities.AssociatedFile
 import com.safefleet.mobile.external_hardware.cameras.entities.HashMetadataFile
 import com.safefleet.mobile.external_hardware.cameras.entities.VideoInformation
@@ -22,16 +24,21 @@ object VideoMetadataMapper {
                 officerId = officerId,
                 path = path,
                 associatedFiles = cameraPhotosAssociatedToDomain(associatedFiles),
+                annotations = cameraAnnotationsToDomain(annotations),
                 serialNumber = serialNumber,
                 endTime = endTime,
                 gmtOffset = gmtOffset,
                 hash = hashRemoteToDomain(hash),
                 preEvent = preEvent,
                 startTime = startTime,
-                videoSpecs = videoSpecs
+                videoSpecs = videoSpecs,
+                trigger = trigger
             )
         }
     }
+
+    private fun cameraAnnotationsToDomain(annotations: List<Annotation>?) =
+        annotations?.map { DomainAnnotations(it.type, it.timestamp) }
 
     fun domainToCamera(domainVideoMetadata: DomainVideoMetadata): VideoInformation {
         val videoInformation = domainVideoMetadata.run {
@@ -43,13 +50,15 @@ object VideoMetadataMapper {
                 x1sn = null,
                 metadata = domainVideoMetadataToRemote(metadata),
                 associatedFiles = domainToCameraAssociatedPhotos(associatedFiles),
+                annotations = domainToCameraAnnotations(annotations),
                 endTime = endTime,
                 gmtOffset = gmtOffset,
                 hash = domainHashToRemote(hash),
                 preEvent = preEvent,
                 startTime = startTime,
                 videoSpecs = videoSpecs,
-                x2sn = null
+                x2sn = null,
+                trigger = trigger
             )
         }
         when (CameraInfo.cameraType) {
@@ -58,6 +67,9 @@ object VideoMetadataMapper {
         }
         return videoInformation
     }
+
+    private fun domainToCameraAnnotations(annotations: List<DomainAnnotations>?) =
+        annotations?.map { Annotation(it.type, it.timestamp) }
 
     private fun cameraPhotosAssociatedToDomain(photos: List<AssociatedFile>?) =
         photos?.map { DomainAssociatedFile(it.date, it.name) }
@@ -109,15 +121,9 @@ object VideoMetadataMapper {
             )
         }
 
-    private fun domainHashToRemote(hashDomain: DomainHashVideo?): HashMetadataFile? {
-        hashDomain?.let {
-            return HashMetadataFile(hashDomain.function, hashDomain.sums)
-        } ?: return null
-    }
+    private fun domainHashToRemote(hashDomain: DomainHashVideo?): HashMetadataFile? =
+        hashDomain?.run { HashMetadataFile(function, sums) }
 
-    private fun hashRemoteToDomain(hash: HashMetadataFile?): DomainHashVideo? {
-        hash?.let {
-            return DomainHashVideo(hash.function, hash.sums)
-        } ?: return null
-    }
+    private fun hashRemoteToDomain(hash: HashMetadataFile?): DomainHashVideo? =
+        hash?.run { DomainHashVideo(function, sums) }
 }

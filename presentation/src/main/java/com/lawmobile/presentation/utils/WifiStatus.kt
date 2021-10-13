@@ -12,7 +12,7 @@ class WifiStatus @Inject constructor(private val connectivityManager: Connectivi
 
     private val networkCallback = object : ConnectivityManager.NetworkCallback() {
         override fun onLost(network: Network?) {
-            if (CameraInfo.officerName.isNotEmpty()) {
+            if (CameraInfo.isOfficerLogged) {
                 postValue(false)
             }
         }

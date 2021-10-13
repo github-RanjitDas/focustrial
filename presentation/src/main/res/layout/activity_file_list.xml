@@ -28,7 +28,7 @@
             android:id="@+id/fragmentListHolder"
             android:layout_width="@dimen/no_dp"
             android:layout_height="@dimen/no_dp"
-            android:layout_marginTop="@dimen/margin_15dp"
+            android:layout_marginVertical="@dimen/margin_15dp"
             app:layout_constraintBottom_toTopOf="@+id/buttonAssociatePartnerIdList"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -50,12 +50,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
-        <include
-            android:id="@+id/layoutCustomMenu"
-            layout="@layout/custom_frame_menu"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <View
@@ -72,5 +66,11 @@
     <include
         android:id="@+id/bottomSheetPartnerId"
         layout="@layout/bottom_sheet_assign_to_officer" />
+
+    <include
+        android:id="@+id/layoutCustomMenu"
+        layout="@layout/custom_frame_menu"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

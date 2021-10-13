@@ -101,7 +101,6 @@ object Exclusions {
         "com.lawmobile.data.mappers.FileResponseMapper*",
         "com.lawmobile.presentation.utils.MobileDataStatus*",
         "com.lawmobile.presentation.utils.OnSwipeTouchListener*",
-        "com.lawmobile.presentation.utils.CameraEventsManager*",
-        "com.lawmobile.presentation.utils.CameraHelperTest*"
+        "com.lawmobile.presentation.utils.CameraEventsManager*"
     )
 }

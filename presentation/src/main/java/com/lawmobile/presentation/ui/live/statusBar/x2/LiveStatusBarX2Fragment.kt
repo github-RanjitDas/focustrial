@@ -197,7 +197,7 @@ class LiveStatusBarX2Fragment : LiveStatusBarBaseFragment() {
     }
 
     override fun manageBatteryLevel(batteryPercent: Int) {
-        requireActivity().runOnUiThread {
+        activity?.runOnUiThread {
             if (batteryPercent >= 0) {
                 progressBarBattery.setProgress(batteryPercent)
                 setColorInBattery(batteryPercent)
