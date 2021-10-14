@@ -64,15 +64,12 @@ class PairingResultFragment : BaseFragment() {
 
     private fun startConnectionToHotspotCamera() {
         showLoadingProgress()
-        saveSerialNumberIfItIsCorrect()
         verifyConnectionWithTheCamera()
     }
 
-    private fun saveSerialNumberIfItIsCorrect() {
+    private fun saveSerialNumber() {
         val serialNumberCamera = pairingViewModel.getNetworkName()
-        if (CameraType.isValidNumberCameraBWC(serialNumberCamera)) {
-            CameraInfo.serialNumber = serialNumberCamera.replace("X", "")
-        }
+        CameraInfo.serialNumber = serialNumberCamera.replace("X", "")
     }
 
     private fun verifyConnectionWithTheCamera() {
@@ -89,6 +86,7 @@ class PairingResultFragment : BaseFragment() {
         val percent = "$progress%"
         binding.textViewProgressConnection.text = percent
         if (progress == PERCENT_TOTAL_CONNECTION_CAMERA) {
+            saveSerialNumber()
             showSuccessResult()
         }
     }
