@@ -8,9 +8,9 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import com.lawmobile.domain.entities.DomainAssociatedFile
 import com.lawmobile.domain.entities.DomainInformationForList
+import com.lawmobile.domain.entities.FilesAssociatedByUser
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.databinding.FragmentAssociateFilesBinding
-import com.lawmobile.presentation.entities.FilesAssociatedByUser
 import com.lawmobile.presentation.extensions.attachFragment
 import com.lawmobile.presentation.extensions.createFilterDialog
 import com.lawmobile.presentation.extensions.setClickListenerCheckConnection
