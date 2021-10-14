@@ -15,5 +15,7 @@ data class DomainVideoMetadata(
     var preEvent: String? = null,
     var startTime: String? = null,
     var videoSpecs: String? = null,
-    val trigger: String? = null
+    val trigger: String? = null,
+    val x1sn: String? = null,
+    val x2sn: String? = null
 )

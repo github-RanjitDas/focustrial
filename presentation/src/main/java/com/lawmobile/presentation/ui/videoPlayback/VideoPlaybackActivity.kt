@@ -529,7 +529,9 @@ class VideoPlaybackActivity : BaseActivity() {
             preEvent = currentMetadata.preEvent,
             startTime = currentMetadata.startTime,
             videoSpecs = currentMetadata.videoSpecs,
-            trigger = currentMetadata.trigger
+            trigger = currentMetadata.trigger,
+            x2sn = currentMetadata.x2sn,
+            x1sn = currentMetadata.x1sn
         )
     }
 
