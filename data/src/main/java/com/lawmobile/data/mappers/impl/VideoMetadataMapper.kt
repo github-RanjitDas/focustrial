@@ -34,7 +34,10 @@ object VideoMetadataMapper :
             hash = hash?.toDomain(),
             preEvent = preEvent,
             startTime = startTime,
-            videoSpecs = videoSpecs
+            videoSpecs = videoSpecs,
+            trigger = trigger,
+            x2sn = x2sn,
+            x1sn = x1sn
         )
     }
 
@@ -53,12 +56,17 @@ object VideoMetadataMapper :
             preEvent = preEvent,
             startTime = startTime,
             videoSpecs = videoSpecs,
-            x2sn = null
+            x2sn = x2sn,
+            trigger = trigger
         )
 
         when (CameraInfo.cameraType) {
-            CameraType.X1 -> videoInformation.x1sn = serialNumber
-            CameraType.X2 -> videoInformation.x2sn = serialNumber
+            CameraType.X1 -> {
+                if (videoInformation.x1sn.isNullOrEmpty()) videoInformation.x1sn = serialNumber
+            }
+            CameraType.X2 -> {
+                if (videoInformation.x2sn.isNullOrEmpty()) videoInformation.x2sn = serialNumber
+            }
         }
 
         return videoInformation
