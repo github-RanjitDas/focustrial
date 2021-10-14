@@ -1,9 +1,5 @@
-package com.lawmobile.presentation.entities
+package com.lawmobile.domain.entities
 
-import com.lawmobile.domain.entities.DomainAssociatedFile
-import com.lawmobile.domain.entities.DomainCameraFile
-import com.lawmobile.domain.entities.DomainInformationFile
-import com.lawmobile.domain.entities.DomainInformationImage
 import io.mockk.every
 import io.mockk.mockk
 import org.junit.jupiter.api.Test

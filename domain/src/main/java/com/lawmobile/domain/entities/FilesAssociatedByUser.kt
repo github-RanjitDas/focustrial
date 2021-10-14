@@ -1,8 +1,5 @@
-package com.lawmobile.presentation.entities
+package com.lawmobile.domain.entities
 
-import com.lawmobile.domain.entities.DomainAssociatedFile
-import com.lawmobile.domain.entities.DomainCameraFile
-import com.lawmobile.domain.entities.DomainInformationForList
 import com.lawmobile.domain.extensions.getDateDependingOnNameLength
 
 object FilesAssociatedByUser {

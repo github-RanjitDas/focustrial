@@ -16,13 +16,13 @@ import com.lawmobile.domain.entities.DomainCameraFile
 import com.lawmobile.domain.entities.DomainInformationVideo
 import com.lawmobile.domain.entities.DomainMetadata
 import com.lawmobile.domain.entities.DomainVideoMetadata
+import com.lawmobile.domain.entities.FilesAssociatedByUser
 import com.lawmobile.domain.entities.MetadataEvent
 import com.lawmobile.domain.enums.CameraType
 import com.lawmobile.domain.enums.MediaType
 import com.lawmobile.domain.extensions.getDateDependingOnNameLength
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.databinding.ActivityVideoPlaybackBinding
-import com.lawmobile.presentation.entities.FilesAssociatedByUser
 import com.lawmobile.presentation.entities.MediaPlayerControls
 import com.lawmobile.presentation.extensions.attachFragment
 import com.lawmobile.presentation.extensions.createAlertDialogUnsavedChanges

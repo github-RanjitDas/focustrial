@@ -12,11 +12,11 @@ import com.google.android.material.snackbar.Snackbar
 import com.lawmobile.domain.entities.CameraInfo
 import com.lawmobile.domain.entities.DomainInformationFile
 import com.lawmobile.domain.entities.DomainInformationFileResponse
+import com.lawmobile.domain.entities.FilesAssociatedByUser
 import com.lawmobile.domain.enums.RequestError
 import com.lawmobile.domain.extensions.getDateDependingOnNameLength
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.databinding.FragmentFileListBinding
-import com.lawmobile.presentation.entities.FilesAssociatedByUser
 import com.lawmobile.presentation.extensions.setOnClickListenerCheckConnection
 import com.lawmobile.presentation.extensions.showErrorSnackBar
 import com.lawmobile.presentation.extensions.verifySessionBeforeAction
