@@ -156,7 +156,7 @@ object Dependencies {
     }
 
     object VLC {
-        private const val VERSION = "3.0.13"
-        const val libVLC = "com.github.masterwok:libvlc-android-sdk:$VERSION"
+        private const val VERSION = "3.4.3"
+        const val libVLC = "org.videolan.android:libvlc-all:$VERSION"
     }
 }
