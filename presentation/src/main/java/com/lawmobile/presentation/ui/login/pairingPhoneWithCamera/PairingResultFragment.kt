@@ -10,7 +10,6 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import com.lawmobile.domain.entities.CameraInfo
-import com.lawmobile.domain.enums.CameraType
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.databinding.FragmentPairingResultBinding
 import com.lawmobile.presentation.ui.base.BaseFragment
