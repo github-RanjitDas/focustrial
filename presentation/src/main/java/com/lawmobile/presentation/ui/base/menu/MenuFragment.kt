@@ -140,7 +140,7 @@ class MenuFragment : BaseFragment() {
         binding.textViewSettings.setOnTouchListenerCheckConnection(
             {
                 startBodyWornSettings()
-                onCloseMenuButton
+                onCloseMenuButton()
             },
             { onCloseMenuButton() }
         )
