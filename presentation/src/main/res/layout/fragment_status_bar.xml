@@ -19,7 +19,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/backgroundCardView"
-            android:padding="@dimen/padding_14dp"
+            android:paddingVertical="@dimen/padding_11dp"
+            android:paddingHorizontal="@dimen/padding_14dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
@@ -78,7 +79,8 @@
         <ImageButton
             android:id="@+id/imageButtonArrowShow"
             android:foregroundGravity="top"
-            android:layout_width="@dimen/body_worn_status_bar_size_arrow"
+            android:layout_width="@dimen/padding_50dp"
+            android:paddingBottom="@dimen/margin_5dp"
             android:layout_height="@dimen/body_worn_status_bar_size_arrow"
             android:rotation="180"
             android:tint="@color/lightBlue"
@@ -107,8 +109,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/body_worn_status_bar_height_line"
-            />
+            android:layout_height="@dimen/body_worn_status_bar_height_line" />
 
         <ImageView
             android:layout_width="@dimen/body_worn_status_bar_width_arrow"

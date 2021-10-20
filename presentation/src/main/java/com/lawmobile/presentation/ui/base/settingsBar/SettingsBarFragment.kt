@@ -1,4 +1,4 @@
-package com.lawmobile.presentation.ui.base.statusBar
+package com.lawmobile.presentation.ui.base.settingsBar
 
 import android.annotation.SuppressLint
 import android.os.Bundle
@@ -21,11 +21,11 @@ import com.safefleet.mobile.kotlin_commons.extensions.doIfError
 import com.safefleet.mobile.kotlin_commons.extensions.doIfSuccess
 import com.safefleet.mobile.kotlin_commons.helpers.Result
 
-class StatusBarSettingsFragment : BaseFragment() {
+class SettingsBarFragment : BaseFragment() {
 
     private var _binding: FragmentStatusBarBinding? = null
     private val binding: FragmentStatusBarBinding get() = _binding!!
-    private val settingsViewModel: StatusBarSettingsViewModel by viewModels()
+    private val settingsBarViewModel: SettingsBarViewModel by viewModels()
     private var currentSettingChanged: TypesOfBodyWornSettings = TypesOfBodyWornSettings.CovertMode
 
     override fun onCreateView(
@@ -48,15 +48,15 @@ class StatusBarSettingsFragment : BaseFragment() {
     }
 
     private fun getSettingsInformation() {
-        settingsViewModel.getBodyWornSettings()
+        settingsBarViewModel.getBodyWornSettings()
     }
 
     private fun setObservers() {
-        settingsViewModel.bodyWornSettingsLiveData.observe(
+        settingsBarViewModel.bodyWornSettingsLiveData.observe(
             requireActivity(),
             ::manageResultBodyWornSettings
         )
-        settingsViewModel.changeStatusSettingLiveData.observe(
+        settingsBarViewModel.changeStatusSettingLiveData.observe(
             requireActivity(),
             ::resultChangeStatusSetting
         )
@@ -153,7 +153,7 @@ class StatusBarSettingsFragment : BaseFragment() {
         isEnable: Boolean
     ) {
         currentSettingChanged = typesOfBodyWornSettings
-        settingsViewModel.changeBodyWornSetting(typesOfBodyWornSettings, isEnable)
+        settingsBarViewModel.changeBodyWornSetting(typesOfBodyWornSettings, isEnable)
     }
 
     private fun returnStatusForErrorInChange() {
@@ -172,9 +172,9 @@ class StatusBarSettingsFragment : BaseFragment() {
     }
 
     companion object {
-        val TAG = StatusBarSettingsFragment::class.java.simpleName
-        fun createInstance(): StatusBarSettingsFragment {
-            return StatusBarSettingsFragment()
+        val TAG = SettingsBarFragment::class.java.simpleName
+        fun createInstance(): SettingsBarFragment {
+            return SettingsBarFragment()
         }
     }
 }
