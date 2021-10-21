@@ -7,7 +7,7 @@
 
     <!--Alerts -->
     <string name="the_camera_was_disconnected">Camera disconnected</string>
-    <string name="the_camera_was_disconnected_description">Your BWC was disconnected from Focus Mobile App, please close the App and reconnect</string>
+    <string name="the_camera_was_disconnected_description">Your Body-Camera was disconnected from Focus Mobile App, please tap in OK and reconnect again.</string>
     <string name="loading_wait">Loading…</string>
     <string name="connection_finished">Connection Finished</string>
     <string name="connection_finished_description">After 5 minutes without interaction the BWC disconnects</string>
