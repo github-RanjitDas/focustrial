@@ -56,7 +56,13 @@ fun Context.createAlertInformation(alertInformation: AlertInformation) {
 fun Context.createAlertErrorConnection() {
     val title = R.string.the_camera_was_disconnected
     val message = R.string.the_camera_was_disconnected_description
-    val alertInformation = AlertInformation(title, message, null, null)
+    val alertInformation = AlertInformation(
+        title, message,
+        {
+            exitProcess(0)
+        },
+        null
+    )
 
     this.createAlertInformation(alertInformation)
 }
@@ -184,7 +190,10 @@ fun Context.createNotificationDialog(cameraEvent: CameraEvent) =
         show()
     }
 
-fun Context.getIntentDependsCameraType(activityForX1: BaseActivity, activityForX2: BaseActivity): Intent {
+fun Context.getIntentDependsCameraType(
+    activityForX1: BaseActivity,
+    activityForX2: BaseActivity
+): Intent {
     return when (CameraInfo.cameraType) {
         CameraType.X1 -> Intent(this, activityForX1::class.java)
         CameraType.X2 -> Intent(this, activityForX2::class.java)
