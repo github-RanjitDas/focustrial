@@ -20,7 +20,7 @@ import com.lawmobile.presentation.extensions.setImageDependingOnEventTag
 import com.lawmobile.presentation.ui.base.BaseActivity
 import com.lawmobile.presentation.ui.base.appBar.x2.AppBarX2Fragment
 import com.lawmobile.presentation.ui.base.menu.MenuFragment
-import com.lawmobile.presentation.ui.base.statusBar.StatusBarSettingsFragment
+import com.lawmobile.presentation.ui.base.settingsBar.SettingsBarFragment
 import com.safefleet.mobile.kotlin_commons.extensions.doIfError
 import com.safefleet.mobile.kotlin_commons.extensions.doIfSuccess
 import com.safefleet.mobile.kotlin_commons.helpers.Result
@@ -34,7 +34,7 @@ class NotificationListActivity : BaseActivity() {
     private lateinit var appBarFragment: AppBarX2Fragment
     private lateinit var binding: ActivityNotificationListBinding
     private lateinit var notificationListAdapter: NotificationListAdapter
-    private val statusBarSettingsFragment = StatusBarSettingsFragment()
+    private val statusBarSettingsFragment = SettingsBarFragment()
 
     private val bottomSheetBehavior: BottomSheetBehavior<CardView> by lazy {
         BottomSheetBehavior.from(binding.bottomSheetNotification.bottomSheetNotification)
@@ -215,7 +215,7 @@ class NotificationListActivity : BaseActivity() {
         supportFragmentManager.attachFragment(
             containerId = R.id.statusBarFragment,
             fragment = statusBarSettingsFragment,
-            tag = StatusBarSettingsFragment.TAG
+            tag = SettingsBarFragment.TAG
         )
     }
 

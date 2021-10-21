@@ -15,7 +15,7 @@
         android:id="@+id/settingsBarContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/appBarContainer" />
+        app:layout_constraintTop_toBottomOf="@id/appBarContainer"/>
 
     <FrameLayout
         android:id="@+id/statusBarContainer"
@@ -26,16 +26,14 @@
     <FrameLayout
         android:id="@+id/streamContainer"
         android:layout_width="match_parent"
-        android:minHeight="@dimen/live_view_min_height_stream"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/live_stream_height"
         app:layout_constraintTop_toBottomOf="@id/statusBarContainer" />
 
     <FrameLayout
         android:id="@+id/controlsContainer"
         android:layout_width="match_parent"
         android:layout_height="@dimen/no_dp"
-        app:layout_constraintHeight_max="@dimen/live_view_max_height_buttons"
-        app:layout_constraintBottom_toBottomOf="@id/guidelineBottom2"
+        app:layout_constraintBottom_toBottomOf="@id/guidelineBottom"
         app:layout_constraintTop_toBottomOf="@id/streamContainer" />
 
     <FrameLayout
@@ -43,18 +41,14 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/no_dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/controlsContainer" />
+        app:layout_constraintTop_toBottomOf="@id/guidelineBottom" />
 
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guidelineBottom2"
+        android:id="@+id/guidelineBottom"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintGuide_percent="0.91"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintGuide_percent="0.90" />
 
     <include
         android:id="@+id/layoutCustomMenu"

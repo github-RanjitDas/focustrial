@@ -1,4 +1,4 @@
-package com.lawmobile.presentation.ui.base.statusBar
+package com.lawmobile.presentation.ui.base.settingsBar
 
 import com.lawmobile.domain.enums.TypesOfBodyWornSettings
 import com.lawmobile.domain.usecase.bodyWornSettings.BodyWornSettingsUseCase
@@ -20,11 +20,11 @@ import org.junit.jupiter.api.extension.ExtendWith
 @ExperimentalCoroutinesApi
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @ExtendWith(InstantExecutorExtension::class)
-class StatusBarSettingsViewModelTest {
+class SettingsBarViewModelTest {
 
     private val useCaseSettings: BodyWornSettingsUseCase = mockk()
     private val viewModel by lazy {
-        StatusBarSettingsViewModel(useCaseSettings)
+        SettingsBarViewModel(useCaseSettings)
     }
 
     private val dispatcher = TestCoroutineDispatcher()
