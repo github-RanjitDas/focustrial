@@ -65,6 +65,10 @@ android {
         }
     }
 
+    packagingOptions {
+        pickFirst '**/*.so'
+    }
+
     externalNativeBuild {
         cmake {
             path "CMakeLists.txt"
