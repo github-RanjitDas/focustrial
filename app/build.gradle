@@ -28,6 +28,10 @@ android {
         consumerProguardFiles 'consumer-rules.pro'
     }
 
+    packagingOptions {
+        pickFirst '**/*.so'
+    }
+
     signingConfigs {
         release {
             storeFile file(RELEASE_STORE_FILE)
