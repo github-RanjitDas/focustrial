@@ -42,7 +42,7 @@ class SettingsBarFragment : BaseFragment() {
         setObservers()
         setListenersForOpenOrCloseStatusBar()
         setListenersForChangeTheStatus()
-        CameraInfo.onReadyToGetStatusBar = {
+        CameraInfo.onReadyToGetSettings = {
             getSettingsInformation()
         }
     }
