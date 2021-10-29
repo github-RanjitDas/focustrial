@@ -89,7 +89,7 @@ class AppBarX2Fragment : BaseFragment() {
                 callPendingNotification = true
                 getPendingNotifications()
             } else {
-                CameraInfo.onReadyToGetStatusBar?.invoke()
+                CameraInfo.onReadyToGetSettings?.invoke()
             }
         }
     }
@@ -113,7 +113,7 @@ class AppBarX2Fragment : BaseFragment() {
             CameraInfo.currentNotificationCount = it
             setCurrentNotificationCount()
         }
-        CameraInfo.onReadyToGetStatusBar?.invoke()
+        CameraInfo.onReadyToGetSettings?.invoke()
     }
 
     override fun onDestroy() {

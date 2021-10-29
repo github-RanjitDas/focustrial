@@ -12,7 +12,7 @@ object CameraInfo {
     var areNewChanges = false
     var currentNotificationCount = 0
     var onReadyToGetNotifications: (() -> Unit)? = null
-    var onReadyToGetStatusBar: (() -> Unit)? = null
+    var onReadyToGetSettings: (() -> Unit)? = null
 
     fun cleanInfo() {
         metadataEvents = mutableListOf()
