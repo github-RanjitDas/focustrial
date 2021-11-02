@@ -3,6 +3,7 @@ package com.lawmobile.presentation.ui.base
 import com.lawmobile.domain.usecase.events.EventsUseCase
 import com.lawmobile.presentation.InstantExecutorExtension
 import io.mockk.Runs
+import io.mockk.clearAllMocks
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.just
@@ -31,6 +32,7 @@ internal class BaseViewModelTest {
 
     @BeforeEach
     fun setUp() {
+        clearAllMocks()
         Dispatchers.setMain(dispatcher)
     }
 
