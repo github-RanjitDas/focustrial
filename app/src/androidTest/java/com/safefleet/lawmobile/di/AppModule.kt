@@ -13,13 +13,14 @@ import com.lawmobile.data.dto.interceptors.FakeHttpClient
 import com.lawmobile.database.Database
 import com.lawmobile.presentation.extensions.dataStore
 import com.lawmobile.presentation.utils.MobileDataStatus
-import com.lawmobile.presentation.utils.SimpleNetworkManager
 import com.lawmobile.presentation.utils.VLCMediaPlayer
 import com.lawmobile.presentation.utils.WifiHelper
 import com.lawmobile.presentation.utils.WifiStatus
 import com.safefleet.lawmobile.helpers.MockUtils.Companion.cameraSSID
 import com.safefleet.lawmobile.helpers.MockUtils.Companion.wifiEnabled
 import com.safefleet.lawmobile.testData.TestLoginData
+import com.safefleet.mobile.android_commons.helpers.network_manager.ListenableNetworkManager
+import com.safefleet.mobile.android_commons.helpers.network_manager.SimpleNetworkManager
 import com.squareup.sqldelight.android.AndroidSqliteDriver
 import com.squareup.sqldelight.db.SqlDriver
 import dagger.Module
@@ -52,7 +53,7 @@ class AppModule {
 
         @Provides
         @Singleton
-        fun provideSimpleNetworkManager() = SimpleNetworkManager()
+        fun provideSimpleNetworkManager(): ListenableNetworkManager = SimpleNetworkManager()
 
         @Provides
         @Singleton
