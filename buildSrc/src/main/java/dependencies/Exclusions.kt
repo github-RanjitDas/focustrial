@@ -57,6 +57,7 @@ object Exclusions {
         "**/CameraEventsManager.**",
         "**/DateHelper.**",
         "**/SplashViewModel.**",
+        "**/AuthStateManagerFactoryImpl.**",
 
         //Temporal empty file that is decreasing the coverage
         "**/LoginActivityViewModel.**",

@@ -53,8 +53,7 @@ class StartPairingX2Fragment : BaseFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding =
-            FragmentStartPairingX2Binding.inflate(inflater, container, false)
+        _binding = FragmentStartPairingX2Binding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -161,8 +160,7 @@ class StartPairingX2Fragment : BaseFragment() {
 
     private fun showWrongCredentialsNotification() {
         val cameraEvent = WrongCredentialsEvent.event
-        context?.createNotificationDialog(cameraEvent)
-            ?.setButtonText(resources.getString(R.string.OK))
+        context?.createNotificationDialog(cameraEvent)?.setButtonText(resources.getString(R.string.OK))
     }
 
     private fun showAlertToNavigateToPermissions() {
