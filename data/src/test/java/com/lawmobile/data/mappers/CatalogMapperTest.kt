@@ -54,9 +54,9 @@ internal class CatalogMapperTest {
         val cameraConnectCatalog = metadataEvent.toCamera()
         with(metadataEvent) {
             cameraConnectCatalog.let {
-                assertTrue(it?.id == id)
-                assertTrue(it?.name == name)
-                assertTrue(it?.type == type)
+                assertTrue(it.id == id)
+                assertTrue(it.name == name)
+                assertTrue(it.type == type)
             }
         }
     }

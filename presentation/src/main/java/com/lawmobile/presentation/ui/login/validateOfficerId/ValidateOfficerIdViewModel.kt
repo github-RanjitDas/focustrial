@@ -18,6 +18,7 @@ class ValidateOfficerIdViewModel @Inject constructor(
     private val simpleNetworkManager: ListenableNetworkManager,
     private val backgroundDispatcher: CoroutineDispatcher
 ) : BaseViewModel() {
+
     val validateOfficerIdResult: LiveData<Result<Boolean>> get() = _validateOfficerIdResult
     private val _validateOfficerIdResult = MutableLiveData<Result<Boolean>>()
 

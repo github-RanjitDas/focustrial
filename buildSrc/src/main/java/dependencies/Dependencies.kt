@@ -16,6 +16,11 @@ object Dependencies {
         const val appCompat = "androidx.appcompat:appcompat:$VERSION"
     }
 
+    object Auth0 {
+        private const val VERSION = "2.0.0"
+        const val jwtDecode = "com.auth0.android:jwtdecode:$VERSION"
+    }
+
     object Barista {
         private const val VERSION = "3.6.0"
         const val barista = "com.schibsted.spain:barista:$VERSION"
@@ -26,6 +31,7 @@ object Dependencies {
         const val externalHardware = "com.safefleet.mobile:external-hardware:5.12.7-SNAPSHOT@jar"
         const val kotlinCommons = "com.safefleet.mobile:kotlin-commons:1.4.0-SNAPSHOT@jar"
         const val safeFleetUI = "com.safefleet.mobile:safefleet-ui:1.4.3-SNAPSHOT@aar"
+        const val authentication = "com.safefleet.mobile:authentication:2.5.3-SNAPSHOT@aar"
     }
 
     object ConstraintLayout {
@@ -131,6 +137,11 @@ object Dependencies {
         private const val VERSION = "1.9"
         const val mockk = "io.mockk:mockk:$VERSION"
         const val mockkAndroid = "io.mockk:mockk-android:$VERSION"
+    }
+
+    object OpenId {
+        private const val VERSION = "0.7.1"
+        const val appAuth = "net.openid:appauth:$VERSION"
     }
 
     object PDF {

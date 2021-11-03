@@ -308,5 +308,10 @@
     <string name="body_worn_status_hide_or_show_status_bar">Hide or Show Status Bar</string>
     <string name="associate_audios_to_video">Associate audios to video</string>
     <string name="associate_audios">Associate audios</string>
+    <string name="return_to_regular_login"><u>Return to Regular Login</u></string>
+    <string name="auth_request_error">Something went wrong building the authorization request, please try again</string>
+    <string name="sso_auth_error">Error authorizing against SSO</string>
+    <string name="auth_token_error">Error retrieving authorization token %1$s</string>
+
 
 </resources>

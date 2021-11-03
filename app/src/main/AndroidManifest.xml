@@ -25,6 +25,17 @@
         android:theme="@style/AppTheme"
         tools:ignore="Instantiatable">
 
+        <activity android:name="net.openid.appauth.RedirectUriReceiverActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data
+                    android:host="callback"
+                    android:scheme="focus-mobile" />
+            </intent-filter>
+        </activity>
+
         <activity
             android:name="com.lawmobile.presentation.ui.splash.SplashActivity"
             android:screenOrientation="portrait"
@@ -116,6 +127,11 @@
             tools:ignore="LockedOrientationActivity" />
 
         <activity android:name="com.lawmobile.presentation.ui.bodyWornSettings.BodyWornSettingsActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"
+            tools:ignore="LockedOrientationActivity"/>
+
+        <activity android:name="com.lawmobile.presentation.ui.sso.SSOActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
             tools:ignore="LockedOrientationActivity"/>

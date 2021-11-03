@@ -1,8 +1,9 @@
 package com.lawmobile.presentation.ui.login
 
 import android.Manifest
+import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
-import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.cardview.widget.CardView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -28,11 +29,16 @@ import com.lawmobile.presentation.ui.login.pairingPhoneWithCamera.x2.StartPairin
 import com.lawmobile.presentation.ui.login.validateOfficerId.ValidateOfficerIdFragment
 import com.lawmobile.presentation.ui.login.validateOfficerPassword.ValidateOfficerPasswordFragment
 import com.lawmobile.presentation.ui.login.validateOfficerPassword.ValidateOfficerPasswordFragmentListener
+import com.lawmobile.presentation.ui.sso.SSOActivity
 import com.lawmobile.presentation.utils.EspressoIdlingResource
 import com.safefleet.mobile.android_commons.extensions.hideKeyboard
 import com.safefleet.mobile.kotlin_commons.extensions.doIfError
 import com.safefleet.mobile.kotlin_commons.extensions.doIfSuccess
 import com.safefleet.mobile.kotlin_commons.helpers.Result
+import net.openid.appauth.AuthorizationException
+import net.openid.appauth.AuthorizationRequest
+import net.openid.appauth.AuthorizationResponse
+import net.openid.appauth.TokenResponse
 
 class LoginActivity :
     BaseActivity(),
@@ -43,6 +49,7 @@ class LoginActivity :
     private lateinit var binding: ActivityLoginBinding
     override var domainUser: DomainUser? = null
     override var officerId: String = ""
+    private lateinit var authRequest: AuthorizationRequest
 
     val sheetBehavior: BottomSheetBehavior<CardView> by lazy {
         BottomSheetBehavior.from(
@@ -56,6 +63,25 @@ class LoginActivity :
         setContentView(binding.root)
         configureBottomSheet()
         setLoginViews()
+        viewModel.setObservers()
+    }
+
+    private fun LoginActivityViewModel.setObservers() {
+        authRequestResult.observe(this@LoginActivity, ::manageAuthRequestResult)
+        userInformationResult.observe(this@LoginActivity, ::handleUserInformationResult)
+    }
+
+    private fun manageAuthRequestResult(result: Result<AuthorizationRequest>) {
+        with(result) {
+            doIfSuccess {
+                goToSsoLogin(it)
+            }
+            doIfError {
+                showToast(getString(R.string.auth_request_error))
+                finish()
+            }
+        }
+        hideLoadingDialog()
     }
 
     private fun configureBottomSheet() {
@@ -148,11 +174,6 @@ class LoginActivity :
         )
     }
 
-    private fun getUserInformation() {
-        viewModel.userInformationResult.observe(this, ::handleUserInformationResult)
-        viewModel.getUserInformation()
-    }
-
     private fun handleUserInformationResult(result: Result<DomainUser>) {
         with(result) {
             doIfSuccess {
@@ -192,15 +213,58 @@ class LoginActivity :
     override fun onEmptyUserInformation() = showUserInformationError()
 
     private fun onExistingOfficerId(exist: Boolean, officerId: String) {
-        if (exist) showToast(
-            "The officer has a SSO user",
-            Toast.LENGTH_LONG
-        ) // Replace this with navigation to SSO login page
+        if (exist) getAuthRequest()
         else showStartPairingFragment(officerId)
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (!viewModel.isUserAuthorized() && data != null) {
+            val response = buildAuthorizationResponse(data)
+            val exception = getAuthorizationException(data)
+
+            when {
+                response.authorizationCode != null -> viewModel.authenticateToGetToken(
+                    response,
+                    ::onIdTokenResponse
+                )
+                exception != null -> showToast(getString(R.string.sso_auth_error))
+            }
+        }
+    }
+
+    private fun getAuthorizationException(data: Intent?) =
+        AuthorizationException.fromIntent(data)
+
+    private fun buildAuthorizationResponse(data: Intent) =
+        AuthorizationResponse.Builder(authRequest).fromUri(data.data!!).build()
+
+    private fun onIdTokenResponse(response: Result<TokenResponse>) {
+        with(response) {
+            doIfSuccess {
+                showToast(it.accessToken.toString()) // change this to device password request
+            }
+            doIfError {
+                showToast(getString(R.string.auth_token_error, it.message))
+            }
+        }
+    }
+
+    private fun getAuthRequest() {
+        showLoadingDialog()
+        viewModel.getAuthRequest()
+    }
+
+    @SuppressLint("SetJavaScriptEnabled")
+    private fun goToSsoLogin(authRequest: AuthorizationRequest) {
+        this.authRequest = authRequest
+        val intent = Intent(baseContext, SSOActivity::class.java)
+        startActivityForResult(intent, 100)
+    }
+
     private fun onConnectionSuccessful() {
-        getUserInformation()
+        viewModel.getUserInformation()
         if (CameraInfo.cameraType == CameraType.X1) showValidateOfficerPasswordFragment()
     }
 

@@ -14,10 +14,12 @@ import kotlinx.coroutines.test.TestCoroutineDispatcher
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Assert
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.api.extension.ExtendWith
 import java.lang.Exception
 
 @ExperimentalCoroutinesApi
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @ExtendWith(InstantExecutorExtension::class)
 internal class ValidateOfficerIdViewModelTest {
 
