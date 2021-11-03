@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import com.lawmobile.domain.entities.CameraInfo
@@ -130,30 +129,17 @@ class SimpleFileListFragment : FileListBaseFragment() {
     }
 
     private fun setObservers() {
-        simpleListViewModel.fileListResult.observe(
-            viewLifecycleOwner,
-            Observer(::handleFileListResult)
-        )
+        simpleListViewModel.fileListResult.observe(viewLifecycleOwner, ::handleFileListResult)
     }
 
     private fun handleFileListResult(result: Result<DomainInformationFileResponse>) {
         with(result) {
             doIfSuccess {
-                if (it.errors.isNotEmpty()) {
-                    handleErrors(it.errors)
-                }
+                if (it.errors.isNotEmpty()) showErrors(it.errors)
                 if (it.items.isNotEmpty()) {
-                    showFileListRecycler(
-                        binding.fileListRecycler,
-                        binding.noFilesTextView
-                    )
+                    showFileListRecycler(binding.fileListRecycler, binding.noFilesTextView)
                     setAdapter(it.items)
-                } else {
-                    showEmptyListMessage(
-                        binding.fileListRecycler,
-                        binding.noFilesTextView
-                    )
-                }
+                } else showEmptyListMessage(binding.fileListRecycler, binding.noFilesTextView)
             }
             doIfError {
                 val errorMessage =
@@ -174,7 +160,7 @@ class SimpleFileListFragment : FileListBaseFragment() {
         CameraInfo.onReadyToGetNotifications?.invoke()
     }
 
-    private fun handleErrors(errors: MutableList<String>) {
+    private fun showErrors(errors: MutableList<String>) {
         binding.fileListLayout.showErrorSnackBar(
             getString(R.string.getting_files_error_description),
             Snackbar.LENGTH_LONG

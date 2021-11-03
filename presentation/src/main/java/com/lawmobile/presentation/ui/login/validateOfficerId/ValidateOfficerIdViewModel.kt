@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.lawmobile.domain.usecase.validateOfficerId.ValidateOfficerIdUseCase
 import com.lawmobile.presentation.ui.base.BaseViewModel
-import com.lawmobile.presentation.utils.SimpleNetworkManager
+import com.safefleet.mobile.android_commons.helpers.network_manager.ListenableNetworkManager
 import com.safefleet.mobile.kotlin_commons.helpers.Result
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
@@ -15,7 +15,7 @@ import javax.inject.Inject
 @HiltViewModel
 class ValidateOfficerIdViewModel @Inject constructor(
     private val validateOfficerIdUseCase: ValidateOfficerIdUseCase,
-    private val simpleNetworkManager: SimpleNetworkManager,
+    private val simpleNetworkManager: ListenableNetworkManager,
     private val backgroundDispatcher: CoroutineDispatcher
 ) : BaseViewModel() {
     val validateOfficerIdResult: LiveData<Result<Boolean>> get() = _validateOfficerIdResult

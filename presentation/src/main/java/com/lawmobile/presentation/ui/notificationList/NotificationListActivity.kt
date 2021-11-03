@@ -86,7 +86,7 @@ class NotificationListActivity : BaseActivity() {
                 binding.textViewEmptyList.isVisible = true
             }
         }
-        CameraInfo.onReadyToGetStatusBar?.invoke()
+        CameraInfo.onReadyToGetSettings?.invoke()
     }
 
     private fun manageNotificationEventsResult(result: Result<List<CameraEvent>>) {
