@@ -133,6 +133,7 @@
 
         <activity android:name="com.lawmobile.presentation.ui.sso.SSOActivity"
             android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustNothing"
             android:theme="@style/AppTheme.NoActionBar"
             tools:ignore="LockedOrientationActivity"/>
 

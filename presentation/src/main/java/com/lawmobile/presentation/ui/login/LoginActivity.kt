@@ -1,8 +1,8 @@
 package com.lawmobile.presentation.ui.login
 
 import android.Manifest
-import android.annotation.SuppressLint
 import android.content.Intent
+import android.content.RestrictionsManager
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.cardview.widget.CardView
@@ -213,12 +213,16 @@ class LoginActivity :
     override fun onEmptyUserInformation() = showUserInformationError()
 
     private fun onExistingOfficerId(exist: Boolean, officerId: String) {
-        if (exist) getAuthRequest()
+        if (exist) getAuthRequest(officerId)
         else showStartPairingFragment(officerId)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
+
+        if (resultCode == RestrictionsManager.RESULT_ERROR_INTERNAL) {
+            showStartPairingFragment(officerId)
+        }
 
         if (!viewModel.isUserAuthorized() && data != null) {
             val response = buildAuthorizationResponse(data)
@@ -229,7 +233,10 @@ class LoginActivity :
                     response,
                     ::onIdTokenResponse
                 )
-                exception != null -> showToast(getString(R.string.sso_auth_error))
+                exception != null -> {
+                    showToast(getString(R.string.sso_auth_error))
+                    showStartPairingFragment(officerId)
+                }
             }
         }
     }
@@ -251,12 +258,12 @@ class LoginActivity :
         }
     }
 
-    private fun getAuthRequest() {
+    private fun getAuthRequest(officerId: String) {
+        this.officerId = officerId
         showLoadingDialog()
         viewModel.getAuthRequest()
     }
 
-    @SuppressLint("SetJavaScriptEnabled")
     private fun goToSsoLogin(authRequest: AuthorizationRequest) {
         this.authRequest = authRequest
         val intent = Intent(baseContext, SSOActivity::class.java)
