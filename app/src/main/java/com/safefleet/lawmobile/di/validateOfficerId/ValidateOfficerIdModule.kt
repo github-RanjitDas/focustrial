@@ -2,8 +2,8 @@ package com.safefleet.lawmobile.di.validateOfficerId
 
 import com.lawmobile.data.datasource.remote.validateOfficerId.ValidateOfficerIdRemoteDataSource
 import com.lawmobile.data.datasource.remote.validateOfficerId.ValidateOfficerIdRemoteDataSourceImpl
-import com.lawmobile.data.dto.api.ValidateOfficerIdApi
-import com.lawmobile.data.dto.api.ValidateOfficerIdApiImpl
+import com.lawmobile.data.dto.api.validateOfficerId.ValidateOfficerIdApi
+import com.lawmobile.data.dto.api.validateOfficerId.ValidateOfficerIdApiImpl
 import com.lawmobile.data.repository.validateOfficerId.ValidateOfficerIdRepositoryImpl
 import com.lawmobile.domain.repository.validateOfficerId.ValidateOfficerIdRepository
 import com.lawmobile.domain.usecase.validateOfficerId.ValidateOfficerIdUseCase

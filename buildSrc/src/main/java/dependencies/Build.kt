@@ -30,4 +30,10 @@ object Build {
             "\"email\"," +
             "\"profile\"" +
             "}"
+
+    const val DISCOVERY_URL_FIELD = "DISCOVERY_USER_URL"
+    const val DISCOVERY_URL_DEBUG_VALUE = "\"https://dev.safefleetcloud.us:443/tenant-settings/api/hardware/discovery\""
+    const val DISCOVERY_URL_RELEASE_VALUE = "\"https://safefleetcloud.us:443/tenant-settings/api/hardware/discovery\""
+    const val DISCOVERY_URL_STAGING_VALUE = "\"https://stage.safefleetcloud.us:443/tenant-settings/api/hardware/discovery\""
+    const val DISCOVERY_URL_QATEST_VALUE = "\"https://qatest.safefleetcloud.us:443/tenant-settings/api/hardware/discovery\""
 }

@@ -110,7 +110,8 @@ object Exclusions {
         "com.lawmobile.presentation.utils.MobileDataStatus*",
         "com.lawmobile.presentation.utils.OnSwipeTouchListener*",
         "com.lawmobile.presentation.utils.CameraEventsManager*",
-        "com.lawmobile.data.dto.api.ValidateOfficerIdApiImpl*",
-        "com.lawmobile.presentation.ui.splash.SplashViewModel*"
+        "com.lawmobile.data.dto.api.validateOfficerId.ValidateOfficerIdApiImpl*",
+        "com.lawmobile.presentation.ui.splash.SplashViewModel*",
+        "com.lawmobile.data.dto.api.authorization.AuthorizationApiImpl*"
     )
 }
