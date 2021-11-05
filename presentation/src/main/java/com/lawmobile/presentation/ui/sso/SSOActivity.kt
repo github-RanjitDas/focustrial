@@ -1,5 +1,6 @@
 package com.lawmobile.presentation.ui.sso
 
+import android.content.RestrictionsManager
 import android.os.Bundle
 import androidx.activity.viewModels
 import com.lawmobile.presentation.R
@@ -28,7 +29,8 @@ class SSOActivity : BaseActivity() {
 
     private fun ActivitySsoLoginBinding.setListeners() {
         returnButton.setOnClickListener {
-            onBackPressed()
+            setResult(RestrictionsManager.RESULT_ERROR_INTERNAL)
+            finish()
         }
     }
 

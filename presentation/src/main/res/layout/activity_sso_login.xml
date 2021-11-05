@@ -9,7 +9,7 @@
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/ssoLoginFragment"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/no_dp"
+        android:layout_height="match_parent"
         app:layout_constraintBottom_toTopOf="@id/guidelineBottom"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -18,18 +18,20 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.9" />
+        app:layout_constraintGuide_percent="0.77" />
 
-    <TextView
+    <Button
         android:id="@+id/returnButton"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:clickable="true"
-        android:focusable="true"
-        android:gravity="center"
+        android:background="@drawable/shape_button_white"
+        android:textAllCaps="false"
+        android:paddingHorizontal="@dimen/padding_30dp"
         android:text="@string/return_to_regular_login"
         android:textColor="@color/FMABlue"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/guidelineBottom" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

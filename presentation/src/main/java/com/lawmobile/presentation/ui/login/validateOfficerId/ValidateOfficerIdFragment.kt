@@ -114,7 +114,10 @@ class ValidateOfficerIdFragment : BaseFragment() {
     private fun FragmentValidateOfficerIdBinding.validateOfficerId() {
         (activity as AppCompatActivity).hideKeyboard()
         val officerId = editTextOfficerId.text.toString()
-        viewModel.validateOfficerId(officerId)
+        viewModel.verifyInternetConnection {
+            if (it) viewModel.validateOfficerId(officerId)
+            else onExistingOfficerId(false, officerId)
+        }
     }
 
     private fun goToSelectCamera() {
