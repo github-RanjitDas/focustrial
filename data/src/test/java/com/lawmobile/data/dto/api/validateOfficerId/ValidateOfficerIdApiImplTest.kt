@@ -1,4 +1,4 @@
-package com.lawmobile.data.dto.api
+package com.lawmobile.data.dto.api.validateOfficerId
 
 import com.lawmobile.data.dto.interceptors.FakeHttpClient
 import com.safefleet.mobile.kotlin_commons.helpers.Result

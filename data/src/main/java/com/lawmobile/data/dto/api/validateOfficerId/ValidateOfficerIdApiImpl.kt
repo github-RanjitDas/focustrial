@@ -1,6 +1,6 @@
-package com.lawmobile.data.dto.api
+package com.lawmobile.data.dto.api.validateOfficerId
 
-import com.lawmobile.data.dto.entities.OfficerIdResponseDto
+import com.lawmobile.data.dto.entities.validateOfficerId.OfficerIdResponseDto
 import com.safefleet.mobile.kotlin_commons.helpers.Result
 import io.ktor.client.HttpClient
 import io.ktor.client.request.get

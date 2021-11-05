@@ -1,4 +1,4 @@
-package com.lawmobile.data.dto.entities
+package com.lawmobile.data.dto.entities.validateOfficerId
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

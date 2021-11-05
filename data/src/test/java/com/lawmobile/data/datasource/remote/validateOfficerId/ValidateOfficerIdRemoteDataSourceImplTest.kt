@@ -1,6 +1,6 @@
 package com.lawmobile.data.datasource.remote.validateOfficerId
 
-import com.lawmobile.data.dto.api.ValidateOfficerIdApi
+import com.lawmobile.data.dto.api.validateOfficerId.ValidateOfficerIdApi
 import com.safefleet.mobile.kotlin_commons.helpers.Result
 import io.mockk.coEvery
 import io.mockk.coVerify

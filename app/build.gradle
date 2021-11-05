@@ -51,6 +51,7 @@ android {
             signingConfig signingConfigs.release
 
             buildConfigField Build.STRING_TYPE, Build.VALIDATE_USER_URL_FIELD, Build.VALIDATE_USER_URL_RELEASE_VALUE
+            buildConfigField Build.STRING_TYPE, Build.DISCOVERY_URL_FIELD, Build.DISCOVERY_URL_RELEASE_VALUE
 
             manifestPlaceholders = [
                     'appAuthRedirectScheme': Build.SSO_CALLBACK_VALUE
@@ -71,6 +72,7 @@ android {
             }
 
             buildConfigField Build.STRING_TYPE, Build.VALIDATE_USER_URL_FIELD, Build.VALIDATE_USER_URL_STAGING_VALUE
+            buildConfigField Build.STRING_TYPE, Build.DISCOVERY_URL_FIELD, Build.DISCOVERY_URL_STAGING_VALUE
 
             manifestPlaceholders = [
                     'appAuthRedirectScheme': Build.SSO_CALLBACK_VALUE
@@ -91,6 +93,7 @@ android {
             }
 
             buildConfigField Build.STRING_TYPE, Build.VALIDATE_USER_URL_FIELD, Build.VALIDATE_USER_URL_QATEST_VALUE
+            buildConfigField Build.STRING_TYPE, Build.DISCOVERY_URL_FIELD, Build.DISCOVERY_URL_QATEST_VALUE
 
             manifestPlaceholders = [
                     'appAuthRedirectScheme': Build.SSO_CALLBACK_VALUE
@@ -111,6 +114,7 @@ android {
             }
 
             buildConfigField Build.STRING_TYPE, Build.VALIDATE_USER_URL_FIELD, Build.VALIDATE_USER_URL_DEBUG_VALUE
+            buildConfigField Build.STRING_TYPE, Build.DISCOVERY_URL_FIELD, Build.DISCOVERY_URL_DEBUG_VALUE
 
             manifestPlaceholders = [
                     'appAuthRedirectScheme': Build.SSO_CALLBACK_VALUE

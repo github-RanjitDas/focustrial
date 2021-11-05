@@ -1,6 +1,6 @@
 package com.lawmobile.data.datasource.remote.validateOfficerId
 
-import com.lawmobile.data.dto.api.ValidateOfficerIdApi
+import com.lawmobile.data.dto.api.validateOfficerId.ValidateOfficerIdApi
 
 class ValidateOfficerIdRemoteDataSourceImpl(
     private val validateOfficerIdApi: ValidateOfficerIdApi
