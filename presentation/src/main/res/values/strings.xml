@@ -21,7 +21,7 @@
     <!-- Onboarding -->
     <string name="skip_intro">Skip</string>
     <string name="description_card_1">Please, &lt;b&gt;turn on &lt;/b&gt; the Body-Camera hotspot</string>
-    <string name="description_card_2">Please Enter your OfficerId and tap in the &lt;b&gt;Continue&lt;/b&gt; Button.</string>
+    <string name="description_card_2">Please Enter your Officer ID or Email and tap in the &lt;b&gt;Continue&lt;/b&gt; Button.</string>
     <string name="description_card_3">If you are in this screen, please enter your email and password and tap in the &lt;b&gt;Login&lt;/b&gt; button</string>
     <string name="description_card_4">If you are in this screen, please enter your device password and tap in the &lt;b&gt;Connect&lt;/b&gt; button.</string>
 
@@ -128,14 +128,11 @@
     <string name="playback_video_name">Name</string>
     <string name="default_text">DEFAULT TEXT</string>
     <string name="snapshot_detail_metadata_error">Unable to get snapshot information, please try again.</string>
-    <!-- link_snapshots -->
 
     <!-- Audio detail -->
     <string name="audio_item_detail_title">Audio Detail</string>
     <string name="audio_detail_load_failed">Unable to open audio, please go back or try again.</string>
     <string name="audio_detail_metadata_error">Unable to get audio information, please try again.</string>
-
-    <!-- link_snapshots -->
 
     <!-- Partner Id -->
     <string name="allowedOfficerIdAssociatedPattern">ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789</string>
@@ -282,13 +279,13 @@
     <string name="continue_text">Continue</string>
     <string name="or">or</string>
     <string name="display">Display</string>
-    <string name="officer_id">Officer ID</string>
+    <string name="officer_id">Officer ID or Email</string>
     <string name="change_camera_type">Change Body-Camera type</string>
     <string name="go_to_on_boarding_cards">Go to on-boarding cards</string>
     <string name="sign_in_with_email">Sign in with Email</string>
     <string name="connect">Connect</string>
     <string name="device_password">Device Password</string>
-    <string name="edit_officer_id_description">edit officer id</string>
+    <string name="edit_officer_id_description">edit officer id or email</string>
 
     <!-- Body-Camera Setting and Status-->
     <string name="body_worn_status_title">Body-Camera Status</string>
