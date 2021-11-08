@@ -139,7 +139,7 @@ class StartPairingX1Fragment : BaseFragment() {
             return
         }
         val serialNumberCamera = pairingViewModel.getNetworkName()
-        if (!CameraType.isValidNumberCameraBWC(serialNumberCamera)) {
+        if (!CameraType.isValidBodyCameraNumber(serialNumberCamera)) {
             pairingViewModel.isPossibleConnection()
             return
         }

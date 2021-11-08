@@ -6,37 +6,37 @@
     <string name="cancel">Cancel</string>
 
     <!--Alerts -->
-    <string name="the_camera_was_disconnected">Camera disconnected</string>
+    <string name="the_camera_was_disconnected">Body-Camera disconnected</string>
     <string name="the_camera_was_disconnected_description">Your Body-Camera was disconnected from Focus Mobile App, please tap in OK and reconnect again.</string>
     <string name="loading_wait">Loading…</string>
     <string name="connection_finished">Connection Finished</string>
-    <string name="connection_finished_description">After 5 minutes without interaction the BWC disconnects</string>
+    <string name="connection_finished_description">After 5 minutes without interaction the Body-Camera disconnects</string>
     <string name="gps_necessary_title">Location is required</string>
     <string name="gps_necessary_description">Please turn ON location/GPS in order to use the app</string>
     <string name="battery_alert_title">Low battery</string>
-    <string name="battery_alert_description">Low battery in your body-worn camera, please charge your body-worn camera</string>
+    <string name="battery_alert_description">Low battery in your Body-Camera, please charge your Body-Camera</string>
     <string name="storage_alert_title">Low memory capacity</string>
-    <string name="storage_alert_description">Your body-worn camera reached 95% of its memory capacity</string>
+    <string name="storage_alert_description">Your Body-Camera reached 95% of its memory capacity</string>
 
     <!-- Onboarding -->
     <string name="skip_intro">Skip</string>
-    <string name="description_card_1">Please, &lt;b&gt;turn on &lt;/b&gt; the BWC hotspot</string>
+    <string name="description_card_1">Please, &lt;b&gt;turn on &lt;/b&gt; the Body-Camera hotspot</string>
     <string name="description_card_2">Please Enter your OfficerId and tap in the &lt;b&gt;Continue&lt;/b&gt; Button.</string>
     <string name="description_card_3">If you are in this screen, please enter your email and password and tap in the &lt;b&gt;Login&lt;/b&gt; button</string>
     <string name="description_card_4">If you are in this screen, please enter your device password and tap in the &lt;b&gt;Connect&lt;/b&gt; button.</string>
 
     <!-- Login -->
     <string name="please_enable_permission">Please enable permission from settings</string>
-    <string name="please_enable_permission_location">Required location permission for pairing the camera</string>
-    <string name="waiting_for_camera" tools:ignore="ExtraTranslation">Click here to connect\nwith the camera</string>
+    <string name="please_enable_permission_location">Required location permission for pairing the Body-Camera</string>
+    <string name="waiting_for_camera" tools:ignore="ExtraTranslation">Click here to connect\nwith the Body-Camera</string>
     <string name="result_pairing_description">the result of the pairing process</string>
-    <string name="instructions_to_link_camera">Instructions to link camera</string>
-    <string name="connecting_to_camera">Connecting to Camera</string>
+    <string name="instructions_to_link_camera">Instructions to link Body-Camera</string>
+    <string name="connecting_to_camera">Connecting to Body-Camera</string>
     <string name="welcome_officer">Please enter your password</string>
     <string name="enter_password">Password</string>
     <string name="incorrect_password">The password you have entered is incorrect, try again</string>
     <string name="wifi_is_off">The WIFI is off</string>
-    <string name="please_turn_wifi_on">The WIFI is set to off on your device, please set the WIFI to on and reconnect the BWC with FMA</string>
+    <string name="please_turn_wifi_on">The WIFI is set to off on your device, please set the WIFI to on and reconnect the Body-Camera with FMA</string>
 
     <!-- Live view -->
     <string name="image_description_full_screen_size">Full Screen size</string>
@@ -51,9 +51,9 @@
     <string name="live_view_menu_item_view_snapshots">View Snapshots</string>
     <string name="live_view_menu_item_view_videos">View Videos</string>
     <string name="live_view_menu_item_view_audios">View Audio List</string>
-    <string name="live_view_menu_item_bodyworn_settings">Body-worn Settings</string>
+    <string name="live_view_menu_item_bodyworn_settings">Body-Camera Settings</string>
     <string name="live_view_menu_item_notification">Notifications</string>
-    <string name="live_view_menu_item_diagnose">Body-worn Diagnosis</string>
+    <string name="live_view_menu_item_diagnose">Body-Camera Diagnosis</string>
     <string name="live_view_menu_item_help">Help</string>
     <string name="live_view_menu_logout">Logout</string>
 
@@ -70,8 +70,8 @@
     <string name="video_list_description">Video List</string>
     <string name="view_videos">View Videos</string>
 
-    <!-- List of Snapshots and videos from camera -->
-    <string name="file_list_failed_load_files">Could not load files, please retry or checkout BWC again</string>
+    <!-- List of Snapshots and videos from Body-Camera -->
+    <string name="file_list_failed_load_files">Could not load files, please retry or checkout Body-Camera again</string>
     <string name="file_list_date_default"><u>Date</u></string>
     <string name="file_list_event_default">Event</string>
     <string name="no_images_found">No snapshots found</string>
@@ -104,8 +104,8 @@
     <string name="playback_license_plate">License Plate</string>
     <string name="select_event">Select event</string>
     <string name="event_mandatory">Please select Event Type</string>
-    <string name="catalog_error">Unable to get events, please retry or checkout BWC again</string>
-    <string name="catalog_error_video_playback">Unable to get events, please checkout BWC again</string>
+    <string name="catalog_error">Unable to get events, please retry or checkout Body-Camera again</string>
+    <string name="catalog_error_video_playback">Unable to get events, please checkout Body-Camera again</string>
     <string name="get_video_metadata_error">Could not get video metadata, please try again</string>
     <string name="video_metadata_saved_success">The changes you have made were saved successfully</string>
     <string name="video_metadata_save_error">Unable to save your changes, please try again</string>
@@ -120,7 +120,7 @@
     <string name="snapshot_item_detail_officer_assigned_title">Associated officer</string>
     <string name="snapshot_item_detail_video_assigned_title">Assigned to video</string>
     <string name="snapshot_item_detail_date_time_value">YYYY-MM-DD HH:MM:SS</string>
-    <string name="snapshot_item_detail_photo_content_description">Photo from BWC</string>
+    <string name="snapshot_item_detail_photo_content_description">Photo from Body-Camera</string>
     <string name="snapshot_detail_load_failed">Unable to open snapshot, please go back or try again.</string>
     <string name="image_video_recording">Image video recording</string>
     <string name="save_metadata">Save</string>
@@ -147,17 +147,17 @@
     <string name="button_link_audios_description">button link audios</string>
     <string name="valid_partner_id_message">You must enter a valid Partner ID</string>
     <string name="mobile_data_status_title">Mobile Data</string>
-    <string name="mobile_data_status_message">Please disable Mobile Data on your device in order to connect the BWC with the Focus Mobile App</string>
-    <string name="verify_camera_wifi">Please verify the WIFI connection between the BWC and Focus Mobile App</string>
-    <string name="error_saving_video">Error checking video saved in camera, please wait and try again</string>
-    <string name="error_saving_audio">Error checking audio saved in camera, please wait and try again</string>
+    <string name="mobile_data_status_message">Please disable Mobile Data on your device in order to connect the Body-Camera with the Focus Mobile App</string>
+    <string name="verify_camera_wifi">Please verify the WIFI connection between the Body-Camera and Focus Mobile App</string>
+    <string name="error_saving_video">Error checking video saved in Body-Camera, please wait and try again</string>
+    <string name="error_saving_audio">Error checking audio saved in Body-Camera, please wait and try again</string>
     <string name="go">GO</string>
     <string name="login">Login</string>
-    <string name="success_connection_to_camera">You have successfully connected to the camera</string>
+    <string name="success_connection_to_camera">You have successfully connected to the Body-Camera</string>
     <string name="try_again_button_pairing">Try Again</string>
-    <string name="error_connection_to_camera">There was a problem connecting to your camera</string>
+    <string name="error_connection_to_camera">There was a problem connecting to your Body-Camera</string>
     <string name="focus_mobile_app_logo_description">focus mobile app logo</string>
-    <string name="camera_status">Camera status</string>
+    <string name="camera_status">Body-Camera status</string>
     <string name="memory_level">memory level</string>
     <string name="battery_level">battery level</string>
     <string name="video_recording">Video Recording</string>
@@ -180,17 +180,17 @@
     <string name="app_bar_name_default">James</string>
     <string name="app_bar_last_name_default">Mendez</string>
     <string name="_1">1.</string>
-    <string name="instruction_1">Ensure that your Body-worn Camera (BWC) is charged. If you are using the ClipCam, connect it to your BWC.</string>
+    <string name="instruction_1">Ensure that your Body-Camera is charged. If you are using the ClipCam, connect it to your Body-Camera.</string>
     <string name="_2">2.</string>
-    <string name="instruction_2">Power on your BWC.</string>
+    <string name="instruction_2">Power on your Body-Camera.</string>
     <string name="_3">3.</string>
     <string name="instruction_3">Long-press the pairing button until you see the Wi-Fi icon in the display area.</string>
     <string name="_4">4.</string>
     <string name="instruction_4">On your phone, enable Wi-Fi under Settings.</string>
     <string name="_5">5.</string>
-    <string name="instruction_5">Tap on your BWC\'s SSID in the list of available networks. The SSID is an alphanumeric string that starts with an X.</string>
+    <string name="instruction_5">Tap on your Body-Camera\'s SSID in the list of available networks. The SSID is an alphanumeric string that starts with an X.</string>
     <string name="_6">6.</string>
-    <string name="instruction_6">When prompted, provide the SSID password to connect to the BWC.</string>
+    <string name="instruction_6">When prompted, provide the SSID password to connect to the Body-Camera.</string>
     <string name="got_it">Got it!</string>
     <string name="close_instructions_description">close instructions</string>
     <string name="snapshots_title">Snapshots</string>
@@ -218,7 +218,7 @@
     <string name="end_date_filter">End date</string>
     <string name="no_event">No event</string>
     <string name="error_get_information_metadata">Unable to get video information, please try again</string>
-    <string name="error_getting_officer_information">Unable to open officer information, please retry or checkout BWC</string>
+    <string name="error_getting_officer_information">Unable to open officer information, please retry or checkout Body-Camera</string>
     <string name="associate_snapshots_to_video">Associate snapshots to video</string>
     <string name="associate_snapshots">Associate snapshots</string>
     <string name="no_new_photo_selected_message">Not selected any new photos</string>
@@ -262,37 +262,37 @@
         <item>Default</item>
     </string-array>
 
-    <!-- Body Worn Diagnosis -->
+    <!-- Body-Camera Diagnosis -->
     <string name="body_worn_diagnosis_button_text">START</string>
     <string name="body_worn_diagnosis_loading_text">Diagnosing…</string>
     <string name="body_worn_diagnosis_success_text">Success</string>
     <string name="body_worn_diagnosis_error_text">Error</string>
     <string name="body_worn_icon_result_description">Icon result diagnosis</string>
-    <string name="body_worn_icon_error_is_not_possible_get_diagnosis">Error retrieving body-worn Diagnosis, please try again</string>
-    <string name="body_worn_result_success_description">Your Body-worn Camera hardware is operating correctly, no issues reported.</string>
-    <string name="body_worn_result_failed_description">There are one or more issues with the Body-worn Camera hardware that will prevent it from working properly!\n\nPlease contact your administrator and report this issue</string>
+    <string name="body_worn_icon_error_is_not_possible_get_diagnosis">Error retrieving Body-Camera Diagnosis, please try again</string>
+    <string name="body_worn_result_success_description">Your Body-Camera hardware is operating correctly, no issues reported.</string>
+    <string name="body_worn_result_failed_description">There are one or more issues with the Body-Camera hardware that will prevent it from working properly!\n\nPlease contact your administrator and report this issue</string>
     <string name="no_notifications_found">No notifications found</string>
-    <string name="notification_list_error">Unable to get notification list, please retry or checkout BWC</string>
-    <string name="choose_camera_type">Please turn on your BWC, check the display and choose the one that matches</string>
-    <string name="camera_display_image_description">Camera display image</string>
+    <string name="notification_list_error">Unable to get notification list, please retry or checkout Body-Camera</string>
+    <string name="choose_camera_type">Please turn on your Body-Camera, check the display and choose the one that matches</string>
+    <string name="camera_display_image_description">Body-Camera display image</string>
     <string name="x1">X1</string>
     <string name="x2">X2</string>
-    <string name="x1_camera_button_description">X1 camera button</string>
-    <string name="x2_camera_button_description">X2 camera button</string>
+    <string name="x1_camera_button_description">X1 Body-Camera button</string>
+    <string name="x2_camera_button_description">X2 Body-Camera button</string>
     <string name="continue_text">Continue</string>
     <string name="or">or</string>
     <string name="display">Display</string>
     <string name="officer_id">Officer ID</string>
-    <string name="change_camera_type">Change camera type</string>
+    <string name="change_camera_type">Change Body-Camera type</string>
     <string name="go_to_on_boarding_cards">Go to on-boarding cards</string>
     <string name="sign_in_with_email">Sign in with Email</string>
     <string name="connect">Connect</string>
     <string name="device_password">Device Password</string>
     <string name="edit_officer_id_description">edit officer id</string>
 
-    <!-- Body Worn Setting and Status-->
-    <string name="body_worn_status_title">Body-worn Status</string>
-    <string name="body_worn_settings_title">Body-worn Settings</string>
+    <!-- Body-Camera Setting and Status-->
+    <string name="body_worn_status_title">Body-Camera Status</string>
+    <string name="body_worn_settings_title">Body-Camera Settings</string>
     <string name="body_worn_settings_covert_mode">Covert Mode</string>
     <string name="body_worn_settings_bluetooth">Bluetooth</string>
     <string name="body_worn_settings_gps">GPS</string>
@@ -312,6 +312,5 @@
     <string name="auth_request_error">Something went wrong building the authorization request, please try again</string>
     <string name="sso_auth_error">Error login online, please use device password to login offline</string>
     <string name="auth_token_error">Error retrieving authorization token %1$s</string>
-
 
 </resources>
