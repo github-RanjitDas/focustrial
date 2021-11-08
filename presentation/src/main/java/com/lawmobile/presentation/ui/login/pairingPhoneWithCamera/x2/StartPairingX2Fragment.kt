@@ -145,10 +145,10 @@ class StartPairingX2Fragment : BaseFragment() {
     private fun startPairingProcess() {
         if (!pairingViewModel.isWifiEnable()) {
             createAlertToNavigateWifiSettings()
-        } else binding.suggestBWCNetwork()
+        } else binding.suggestBodyCameraNetwork()
     }
 
-    private fun FragmentStartPairingX2Binding.suggestBWCNetwork() {
+    private fun FragmentStartPairingX2Binding.suggestBodyCameraNetwork() {
         val networkName = editTextOfficerId.text.toString()
         val passwordName = editTextDevicePassword.text.toString()
 

@@ -103,9 +103,9 @@ class PairingViewModelTest {
     }
 
     @Test
-    fun testIsValidNumberCameraBWC() {
-        Assert.assertTrue(CameraType.isValidNumberCameraBWC(DEFAULT_SSID))
-        Assert.assertFalse(CameraType.isValidNumberCameraBWC(""))
+    fun testIsValidBodyCameraNumber() {
+        Assert.assertTrue(CameraType.isValidBodyCameraNumber(DEFAULT_SSID))
+        Assert.assertFalse(CameraType.isValidBodyCameraNumber(""))
     }
 
     @Test
