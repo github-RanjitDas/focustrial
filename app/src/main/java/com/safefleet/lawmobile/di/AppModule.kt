@@ -15,6 +15,7 @@ import com.lawmobile.presentation.extensions.dataStore
 import com.lawmobile.presentation.utils.MobileDataStatus
 import com.lawmobile.presentation.utils.VLCMediaPlayer
 import com.lawmobile.presentation.utils.WifiHelper
+import com.lawmobile.presentation.utils.WifiHelperImpl
 import com.lawmobile.presentation.utils.WifiStatus
 import com.safefleet.mobile.android_commons.helpers.network_manager.ListenableNetworkManager
 import com.safefleet.mobile.android_commons.helpers.network_manager.SimpleNetworkManager
@@ -81,10 +82,17 @@ class AppModule {
 
         @Provides
         @Singleton
+        fun provideWifiHelperImpl(
+            wifiManager: WifiManager,
+            connectivityManager: ConnectivityManager
+        ): WifiHelperImpl = WifiHelperImpl(wifiManager, connectivityManager)
+
+        @Provides
+        @Singleton
         fun provideWifiHelper(
             wifiManager: WifiManager,
             connectivityManager: ConnectivityManager
-        ): WifiHelper = WifiHelper(wifiManager, connectivityManager)
+        ): WifiHelper = WifiHelperImpl(wifiManager, connectivityManager)
 
         @Provides
         @Singleton

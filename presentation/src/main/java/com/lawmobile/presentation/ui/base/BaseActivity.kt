@@ -17,7 +17,6 @@ import com.lawmobile.domain.usecase.events.EventsUseCase
 import com.lawmobile.presentation.BuildConfig
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.entities.NeutralAlertInformation
-import com.lawmobile.presentation.extensions.checkIfSessionIsExpired
 import com.lawmobile.presentation.extensions.createAlertErrorConnection
 import com.lawmobile.presentation.extensions.createAlertMobileDataActive
 import com.lawmobile.presentation.extensions.createAlertProgress
@@ -201,5 +200,10 @@ open class BaseActivity : AppCompatActivity() {
 
         const val PERMISSION_FOR_LOCATION = 100
         const val MAX_TIME_SESSION = 300000
+
+        fun checkIfSessionIsExpired(): Boolean {
+            val timeNow = Timestamp(System.currentTimeMillis())
+            return (timeNow.time - BaseActivity.lastInteraction.time) > BaseActivity.MAX_TIME_SESSION
+        }
     }
 }

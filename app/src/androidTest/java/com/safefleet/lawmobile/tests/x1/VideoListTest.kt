@@ -1,10 +1,12 @@
-package com.safefleet.lawmobile.tests
+package com.safefleet.lawmobile.tests.x1
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
 import androidx.test.filters.MediumTest
 import com.lawmobile.presentation.ui.login.LoginActivity
 import com.safefleet.lawmobile.R
+import com.safefleet.lawmobile.helpers.MockUtils.Companion.cameraConnectServiceX1Mock
+import com.safefleet.lawmobile.helpers.SmokeTest
 import com.safefleet.lawmobile.screens.FileListScreen
 import com.safefleet.lawmobile.screens.FilterDialogScreen
 import com.safefleet.lawmobile.screens.LiveViewScreen
@@ -12,6 +14,7 @@ import com.safefleet.lawmobile.screens.LoginScreen
 import com.safefleet.lawmobile.screens.VideoPlaybackScreen
 import com.safefleet.lawmobile.testData.CameraFilesData
 import com.safefleet.lawmobile.testData.VideoPlaybackMetadata
+import com.safefleet.lawmobile.tests.EspressoStartActivityBaseTest
 import com.schibsted.spain.barista.interaction.BaristaSleepInteractions.sleep
 import org.junit.Before
 import org.junit.Test
@@ -39,6 +42,51 @@ class VideoListTest : EspressoStartActivityBaseTest<LoginActivity>(LoginActivity
         with(fileListScreen) {
             targetView = R.id.dateSimpleListItem
             targetCheckBox = R.id.checkboxSimpleListItem
+        }
+    }
+
+    /**
+     * Test cases:
+     * https://safefleet.atlassian.net/browse/FMA-578
+     * https://safefleet.atlassian.net/browse/FMA-723
+     *
+     */
+    @SmokeTest
+    @Test
+    fun recordVideoAndUpdateMetadata() {
+        setSimpleRecyclerView()
+        mockUtils.clearVideosOnX1()
+
+        with(liveViewScreen) {
+            isLiveViewDisplayed()
+            openVideoList()
+            fileListScreen.areNoFilesFound(R.string.no_videos_found)
+            fileListScreen.clickOnBack()
+            startRecording()
+            stopRecording()
+            openVideoList()
+        }
+
+        fileListScreen.clickOnItemInPosition(0)
+
+        with(videoPlaybackScreen) {
+            selectEvent(defaultMetadata)
+            updateField(R.id.ticket1Value, "TC001")
+            updateField(R.id.dispatch1Value, "DP001")
+            updateField(R.id.firstNameValue, "John")
+            updateField(R.id.lastNameValue, "Copeland")
+            updateField(R.id.locationValue, "Miami")
+            clickOnSave()
+            isSavedSuccessDisplayed()
+            cameraConnectServiceX1Mock.setIsVideoUpdated(true)
+
+            fileListScreen.checkFileEvent(defaultMetadata.metadata?.event?.name)
+            fileListScreen.clickOnItemInPosition(0)
+            checkIfFieldIsUpdated(R.id.ticket1Value, "TC001")
+            checkIfFieldIsUpdated(R.id.dispatch1Value, "DP001")
+            checkIfFieldIsUpdated(R.id.firstNameValue, "John")
+            checkIfFieldIsUpdated(R.id.lastNameValue, "Copeland")
+            checkIfFieldIsUpdated(R.id.locationValue, "Miami")
         }
     }
 
@@ -244,6 +292,7 @@ class VideoListTest : EspressoStartActivityBaseTest<LoginActivity>(LoginActivity
     /**
      * Test case: https://safefleet.atlassian.net/browse/FMA-1283
      */
+    @SmokeTest
     @Test
     fun filterVideos() {
         liveViewScreen.openVideoList()

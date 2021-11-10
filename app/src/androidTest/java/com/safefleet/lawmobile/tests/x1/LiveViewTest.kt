@@ -1,13 +1,17 @@
-package com.safefleet.lawmobile.tests
+package com.safefleet.lawmobile.tests.x1
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
+import com.lawmobile.presentation.ui.base.BaseActivity
 import com.lawmobile.presentation.ui.login.LoginActivity
 import com.safefleet.lawmobile.helpers.DeviceUtils
 import com.safefleet.lawmobile.helpers.SmokeTest
 import com.safefleet.lawmobile.screens.LiveViewScreen
 import com.safefleet.lawmobile.screens.LoginScreen
 import com.safefleet.lawmobile.screens.MainMenuScreen
+import com.safefleet.lawmobile.tests.EspressoStartActivityBaseTest
+import io.mockk.every
+import io.mockk.mockkObject
 import org.junit.Before
 import org.junit.FixMethodOrder
 import org.junit.Test
@@ -29,10 +33,10 @@ class LiveViewTest : EspressoStartActivityBaseTest<LoginActivity>(LoginActivity:
     /**
      * Test case: https://safefleet.atlassian.net/browse/FMA-389
      */
-    @SmokeTest
     @Test
     fun verifyLiveViewIsDisplayed() {
         liveViewScreen.isLiveViewDisplayed()
+        liveViewScreen.takeSnapshot()
     }
 
     /**
@@ -68,6 +72,20 @@ class LiveViewTest : EspressoStartActivityBaseTest<LoginActivity>(LoginActivity:
 
             switchLiveViewToggle()
             isDisconnectionAlertDisplayed()
+        }
+    }
+
+    /**
+     * Test case: https://safefleet.atlassian.net/browse/FMA-652
+     */
+    @SmokeTest
+    @Test
+    fun verifyDisconnectionDueInactivity() {
+        with(liveViewScreen) {
+            mockkObject(BaseActivity)
+            every { BaseActivity.checkIfSessionIsExpired() } returns true
+            switchLiveViewToggle()
+            isDisconnectionDueInactivityAlertDisplayed()
         }
     }
 

@@ -7,6 +7,15 @@ import com.schibsted.spain.barista.assertion.BaristaVisibilityAssertions.assertN
 
 object Alert {
 
+    fun isDisconnectionDueInactivityAlertDisplayed() {
+        assertDisplayed(R.string.connection_finished)
+        assertDisplayed(R.string.connection_finished_description)
+        assertDisplayed(R.string.OK)
+
+        Espresso.pressBack()
+        assertDisplayed(R.string.connection_finished_description)
+    }
+
     fun isDisconnectionAlertDisplayed() {
         assertDisplayed(R.string.the_camera_was_disconnected)
         assertDisplayed(R.string.the_camera_was_disconnected_description)

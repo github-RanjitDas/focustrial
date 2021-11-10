@@ -4,6 +4,7 @@ package com.safefleet.lawmobile.di
 
 import android.content.Context
 import android.net.ConnectivityManager
+import android.net.NetworkRequest
 import android.net.wifi.WifiConfiguration
 import android.net.wifi.WifiManager
 import androidx.datastore.core.DataStore
@@ -16,11 +17,9 @@ import com.lawmobile.presentation.utils.MobileDataStatus
 import com.lawmobile.presentation.utils.VLCMediaPlayer
 import com.lawmobile.presentation.utils.WifiHelper
 import com.lawmobile.presentation.utils.WifiStatus
-import com.safefleet.lawmobile.helpers.MockUtils.Companion.cameraSSID
-import com.safefleet.lawmobile.helpers.MockUtils.Companion.wifiEnabled
-import com.safefleet.lawmobile.testData.TestLoginData
+import com.safefleet.lawmobile.helpers.SimpleTestNetworkManager
+import com.safefleet.lawmobile.helpers.WifiHelperImpTest
 import com.safefleet.mobile.android_commons.helpers.network_manager.ListenableNetworkManager
-import com.safefleet.mobile.android_commons.helpers.network_manager.SimpleNetworkManager
 import com.squareup.sqldelight.android.AndroidSqliteDriver
 import com.squareup.sqldelight.db.SqlDriver
 import dagger.Module
@@ -29,7 +28,9 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import io.ktor.client.HttpClient
+import io.mockk.Runs
 import io.mockk.every
+import io.mockk.just
 import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers
 import org.videolan.libvlc.LibVLC
@@ -53,7 +54,7 @@ class AppModule {
 
         @Provides
         @Singleton
-        fun provideSimpleNetworkManager(): ListenableNetworkManager = SimpleNetworkManager()
+        fun provideSimpleNetworkManager(): ListenableNetworkManager = SimpleTestNetworkManager()
 
         @Provides
         @Singleton
@@ -82,25 +83,18 @@ class AppModule {
         @Provides
         @Singleton
         fun provideConnectivityManager(@ApplicationContext context: Context): ConnectivityManager =
-            context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+            mockk(relaxed = true) {
+                every { registerNetworkCallback(any<NetworkRequest>(), any<ConnectivityManager.NetworkCallback>()) } just Runs
+                every { requestNetwork(any<NetworkRequest>(), any<ConnectivityManager.NetworkCallback>()) } just Runs
+                every { bindProcessToNetwork(any()) } returns true
+            }
 
         @Provides
+        @Singleton
         fun provideWifiHelper(
             wifiManager: WifiManager,
             connectivityManager: ConnectivityManager
-        ): WifiHelper = mockk {
-            every { getGatewayAddress() } returns "192.168.42.1"
-            every { getIpAddress() } returns "192.168.42.2"
-            every { isEqualsValueWithSSID(TestLoginData.SSID_X1.value) } returns true
-            every { isEqualsValueWithSSID(TestLoginData.SSID_X2.value) } returns true
-            every { isEqualsValueWithSSID(TestLoginData.INVALID_SSID.value) } returns false
-            if (wifiEnabled) {
-                every { isWifiEnable() } returns true
-            } else {
-                every { isWifiEnable() } returns false andThen true
-            }
-            every { getSSIDWiFi() } returns cameraSSID
-        }
+        ): WifiHelper = WifiHelperImpTest()
 
         @Provides
         @Singleton

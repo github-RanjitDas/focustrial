@@ -1,4 +1,4 @@
-package com.safefleet.lawmobile.tests
+package com.safefleet.lawmobile.tests.x2
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
@@ -11,6 +11,7 @@ import com.safefleet.lawmobile.screens.LiveViewScreen
 import com.safefleet.lawmobile.screens.LoginScreen
 import com.safefleet.lawmobile.screens.NotificationViewScreen
 import com.safefleet.lawmobile.testData.CameraEventsData
+import com.safefleet.lawmobile.tests.EspressoBaseTest
 import com.safefleet.mobile.external_hardware.cameras.entities.NotificationResponse
 import com.schibsted.spain.barista.rule.BaristaRule
 import org.junit.Before
@@ -32,7 +33,7 @@ class SystemNotificationTest : EspressoBaseTest() {
     fun setUp() {
         mockUtils.setCameraType(CameraType.X2)
         baristaRule.launchActivity()
-        LoginScreen().login()
+        LoginScreen().loginWithoutSSO()
     }
 
     /**

@@ -1,4 +1,4 @@
-package com.safefleet.lawmobile.tests
+package com.safefleet.lawmobile.tests.x2
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
@@ -8,6 +8,7 @@ import com.safefleet.lawmobile.screens.BodyWornDiagnosisScreen
 import com.safefleet.lawmobile.screens.LiveViewScreen
 import com.safefleet.lawmobile.screens.LoginScreen
 import com.safefleet.lawmobile.screens.MainMenuScreen
+import com.safefleet.lawmobile.tests.EspressoBaseTest
 import com.safefleet.mobile.kotlin_commons.helpers.Result
 import com.schibsted.spain.barista.rule.BaristaRule
 import org.junit.Before
@@ -30,7 +31,7 @@ class BodyWornDiagnosisTest : EspressoBaseTest() {
     fun setUp() {
         mockUtils.setCameraType(CameraType.X2)
         baristaRule.launchActivity()
-        LoginScreen().login()
+        LoginScreen().loginWithoutSSO()
         mainMenuScreen.clickOnMainMenu()
         mainMenuScreen.clickOnViewDiagnose()
     }
@@ -60,10 +61,6 @@ class BodyWornDiagnosisTest : EspressoBaseTest() {
     fun verifyFailResponseBodyWornDiagnosis() {
         mockUtils.setBodyWornDiagnosisResult(Result.Success(false))
         with(bodyWornDiagnosisScreen) {
-            isStartButtonDisplayed()
-            isCloseButtonDisplayed()
-            containsBodyWornDiagnosisTitle()
-
             clickOnStartButton()
 
             isFailTitleDisplayed()

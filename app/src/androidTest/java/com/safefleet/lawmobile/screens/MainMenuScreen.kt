@@ -12,7 +12,10 @@ import com.schibsted.spain.barista.interaction.BaristaClickInteractions.clickOn
 
 class MainMenuScreen : BaseScreen() {
 
-    fun clickOnMainMenu() = clickOn(R.id.buttonMenu)
+    fun clickOnMainMenu() {
+        waitUntil { assertDisplayed(R.id.buttonMenu) }
+        waitUntil { clickOn(R.id.buttonMenu) }
+    }
 
     fun clickOnViewSnapshots() = clickOn(R.id.text_view_snapshots)
 

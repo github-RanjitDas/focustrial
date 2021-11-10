@@ -1,14 +1,17 @@
-package com.safefleet.lawmobile.tests
+package com.safefleet.lawmobile.tests.x1
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
 import com.lawmobile.presentation.ui.login.LoginActivity
 import com.safefleet.lawmobile.R
+import com.safefleet.lawmobile.helpers.SmokeTest
 import com.safefleet.lawmobile.screens.FileListScreen
 import com.safefleet.lawmobile.screens.FilterDialogScreen
 import com.safefleet.lawmobile.screens.LiveViewScreen
 import com.safefleet.lawmobile.screens.LoginScreen
 import com.safefleet.lawmobile.testData.CameraFilesData
+import com.safefleet.lawmobile.tests.EspressoStartActivityBaseTest
+import com.schibsted.spain.barista.interaction.BaristaSleepInteractions.sleep
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -17,6 +20,7 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 class SnapshotListTest : EspressoStartActivityBaseTest<LoginActivity>(LoginActivity::class.java) {
     companion object {
+        const val OFFICER = "murbanob"
         private val snapshotsList = CameraFilesData.DEFAULT_SNAPSHOT_LIST.value
         private val snapshotsQuantity = snapshotsList.items.size
         private val extraSnapshotsList = CameraFilesData.EXTRA_SNAPSHOT_LIST.value
@@ -40,6 +44,72 @@ class SnapshotListTest : EspressoStartActivityBaseTest<LoginActivity>(LoginActiv
         with(fileListScreen) {
             targetView = R.id.dateImageListItem
             targetCheckBox = R.id.checkboxImageListItem
+        }
+    }
+
+    /**
+     * Test cases:
+     * https://safefleet.atlassian.net/browse/FMA-1176
+     * https://safefleet.atlassian.net/browse/FMA-563
+     */
+    @SmokeTest
+    @Test
+    fun takeSnapshotAndAssociateOfficer() {
+        setSimpleListViews()
+        mockUtils.clearSnapshotsOnX1()
+
+        liveViewScreen.openSnapshotList()
+
+        with(fileListScreen) {
+            areNoFilesFound(R.string.no_images_found)
+            clickOnBack()
+        }
+
+        with(liveViewScreen) {
+            takeSnapshot()
+            takeSnapshot()
+            takeSnapshot()
+
+            openSnapshotList()
+        }
+
+        with(fileListScreen) {
+            clickOnSimpleListButton()
+            clickOnSelectFilesToAssociate()
+            selectCheckboxOnPosition(0)
+            selectCheckboxOnPosition(1)
+            clickOnAssociateWithAnOfficer()
+            typeOfficerIdToAssociate(OFFICER)
+            clickOnButtonAssignToOfficer()
+
+            sleep(1000)
+            clickOnItemInPosition(0)
+            isOfficerAssociatedDisplayed(OFFICER)
+            clickOnBack()
+            clickOnItemInPosition(1)
+            isOfficerAssociatedDisplayed(OFFICER)
+        }
+    }
+
+    /**
+     * Test case: https://safefleet.atlassian.net/browse/FMA-1091
+     */
+    @SmokeTest
+    @Test
+    fun sortSnapshots() {
+        setSimpleListViews()
+        liveViewScreen.openSnapshotList()
+
+        with(fileListScreen) {
+            clickOnSimpleListButton()
+
+            fileListScreen.areFilesSortedByDate(
+                snapshotsList.items
+            )
+
+            clickOnDateAndTimeTitle()
+
+            fileListScreen.areFilesSortedByAscendingDate((snapshotsList.items))
         }
     }
 
@@ -337,6 +407,7 @@ class SnapshotListTest : EspressoStartActivityBaseTest<LoginActivity>(LoginActiv
         mockUtils.disconnectCamera()
 
         liveViewScreen.openSnapshotList()
+
         liveViewScreen.isDisconnectionAlertDisplayed()
     }
 

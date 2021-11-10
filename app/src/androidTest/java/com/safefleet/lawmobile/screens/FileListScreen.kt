@@ -23,6 +23,7 @@ import com.schibsted.spain.barista.interaction.BaristaClickInteractions.clickOn
 import com.schibsted.spain.barista.interaction.BaristaEditTextInteractions.writeTo
 import com.schibsted.spain.barista.interaction.BaristaListInteractions
 import com.schibsted.spain.barista.interaction.BaristaListInteractions.clickListItem
+import com.schibsted.spain.barista.interaction.BaristaSleepInteractions.sleep
 import org.hamcrest.Matcher
 
 open class FileListScreen : BaseScreen() {
@@ -41,14 +42,20 @@ open class FileListScreen : BaseScreen() {
     }
 
     fun selectCheckboxOnPosition(position: Int) {
-        CustomCheckboxAction.selectCheckboxOnRecyclerPosition(
-            recyclerView,
-            targetCheckBox,
-            position
-        )
+        waitUntil {
+            CustomCheckboxAction.selectCheckboxOnRecyclerPosition(
+                recyclerView,
+                targetCheckBox,
+                position
+            )
+        }
     }
 
-    fun clickOnBack() = clickOn(R.id.imageButtonBackArrow)
+    fun clickOnBack() {
+        waitUntil { clickOn(R.id.imageButtonBackArrow) }
+        sleep(1000)
+        clickOn(R.id.imageButtonBackArrow)
+    }
 
     fun clickOnItemInPosition(position: Int) =
         waitUntil { clickListItem(recyclerView, position) }
@@ -90,6 +97,8 @@ open class FileListScreen : BaseScreen() {
     fun matchItemsCount(count: Int) =
         waitUntil { assertRecyclerViewItemCount(recyclerView, count) }
 
+    fun clickOnDateAndTimeTitle() = clickOn(R.id.textViewDateAndTime)
+
     fun areCheckboxesUnselected(startPosition: Int, endPosition: Int) {
         for (position in (startPosition..endPosition)) {
             isCheckboxUnselected(position)
@@ -109,6 +118,15 @@ open class FileListScreen : BaseScreen() {
         val sortedFilesList = filesList.sortedByDescending { it.getDateDependingOnNameLength() }
 
         for ((itemCount, file) in sortedFilesList.withIndex()) {
+            waitUntil { isFileDisplayedAtPosition(file.getDateDependingOnNameLength(), itemCount) }
+        }
+    }
+
+    fun areFilesSortedByAscendingDate(filesList: List<CameraFile>) {
+        val sortedFilesList = filesList.sortedByDescending { it.getDateDependingOnNameLength() }
+        val ascendingFileList = sortedFilesList.reversed()
+
+        for ((itemCount, file) in ascendingFileList.withIndex()) {
             waitUntil { isFileDisplayedAtPosition(file.getDateDependingOnNameLength(), itemCount) }
         }
     }

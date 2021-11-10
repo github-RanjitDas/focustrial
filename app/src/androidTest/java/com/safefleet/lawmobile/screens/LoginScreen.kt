@@ -11,11 +11,22 @@ import com.schibsted.spain.barista.assertion.BaristaVisibilityAssertions.assertD
 import com.schibsted.spain.barista.assertion.BaristaVisibilityAssertions.assertNotDisplayed
 import com.schibsted.spain.barista.interaction.BaristaClickInteractions.clickOn
 import com.schibsted.spain.barista.interaction.BaristaEditTextInteractions.writeTo
+import com.schibsted.spain.barista.interaction.BaristaSleepInteractions.sleep
 
 open class LoginScreen : BaseScreen() {
 
     fun typePassword(officerPassword: String = TestLoginData.OFFICER_PASSWORD.value) =
         writeTo(R.id.editTextOfficerPassword, officerPassword)
+
+    private fun typeOfficerId(officerId: String = TestLoginData.OFFICER_NAME.value) {
+        waitUntil { assertDisplayed(R.id.editTextOfficerId) }
+        writeTo(R.id.editTextOfficerId, officerId)
+    }
+
+    private fun typeDevicePassword(devicePassword: String = TestLoginData.OFFICER_PASSWORD.value) {
+        waitUntil { assertDisplayed(R.id.editTextDevicePassword) }
+        writeTo(R.id.editTextDevicePassword, devicePassword)
+    }
 
     fun clickOnGo() = clickOn(R.id.buttonGo)
 
@@ -31,6 +42,10 @@ open class LoginScreen : BaseScreen() {
         clickOn(R.id.buttonRetry)
     }
 
+    fun clickOnContinue() = waitUntil { clickOn(R.id.buttonContinue) }
+
+    fun clickOnConnect() = waitUntil { clickOn(R.id.buttonConnect) }
+
     open fun login(officerPassword: String = TestLoginData.OFFICER_PASSWORD.value) {
         try {
             clickOnGo()
@@ -41,6 +56,20 @@ open class LoginScreen : BaseScreen() {
         isLoginScreenDisplayed()
         typePassword(officerPassword)
         clickOnLogin()
+    }
+
+    open fun loginWithoutSSO(officerId: String = TestLoginData.OFFICER_NAME.value) {
+        try {
+            clickOnGo()
+            retryLogin()
+        } catch (e: Exception) {
+            e.printStackTrace()
+            typeOfficerId()
+            clickOnContinue()
+            typeDevicePassword()
+            clickOnConnect()
+            sleep(1000)
+        }
     }
 
     fun retryLogin(timeout: Long = 1000) {
@@ -128,4 +157,6 @@ open class LoginScreen : BaseScreen() {
         waitUntil { isPasswordTextDisplayed() }
         waitUntil { isFooterLogoDisplayed() }
     }
+
+    fun isOfficerIdLabelDisplayed() = waitUntil { assertDisplayed(R.id.textViewOfficerId) }
 }
