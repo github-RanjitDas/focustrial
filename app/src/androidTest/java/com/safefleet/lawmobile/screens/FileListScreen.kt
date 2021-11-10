@@ -23,7 +23,6 @@ import com.schibsted.spain.barista.interaction.BaristaClickInteractions.clickOn
 import com.schibsted.spain.barista.interaction.BaristaEditTextInteractions.writeTo
 import com.schibsted.spain.barista.interaction.BaristaListInteractions
 import com.schibsted.spain.barista.interaction.BaristaListInteractions.clickListItem
-import com.schibsted.spain.barista.interaction.BaristaSleepInteractions.sleep
 import org.hamcrest.Matcher
 
 open class FileListScreen : BaseScreen() {
@@ -38,7 +37,7 @@ open class FileListScreen : BaseScreen() {
     var targetCheckBox: Int = 0
 
     fun scrollListToPosition(position: Int) {
-        BaristaListInteractions.scrollListToPosition(recyclerView, position)
+        waitUntil { BaristaListInteractions.scrollListToPosition(recyclerView, position) }
     }
 
     fun selectCheckboxOnPosition(position: Int) {
@@ -51,11 +50,7 @@ open class FileListScreen : BaseScreen() {
         }
     }
 
-    fun clickOnBack() {
-        waitUntil { clickOn(R.id.imageButtonBackArrow) }
-        sleep(1000)
-        clickOn(R.id.imageButtonBackArrow)
-    }
+    fun clickOnBack() = waitUntil { clickOn(R.id.imageButtonBackArrow) }
 
     fun clickOnItemInPosition(position: Int) =
         waitUntil { clickListItem(recyclerView, position) }

@@ -4,6 +4,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
 import androidx.test.filters.MediumTest
 import com.lawmobile.presentation.ui.login.LoginActivity
+import com.lawmobile.presentation.utils.FeatureSupportHelper
 import com.safefleet.lawmobile.R
 import com.safefleet.lawmobile.helpers.MockUtils.Companion.cameraConnectServiceX1Mock
 import com.safefleet.lawmobile.helpers.SmokeTest
@@ -36,7 +37,10 @@ class VideoListTest : EspressoStartActivityBaseTest<LoginActivity>(LoginActivity
     }
 
     @Before
-    fun login() = LoginScreen().login()
+    fun setup() {
+        LoginScreen().login()
+        FeatureSupportHelper.supportAssociateOfficerID = true
+    }
 
     private fun setSimpleRecyclerView() {
         with(fileListScreen) {

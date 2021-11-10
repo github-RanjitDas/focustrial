@@ -3,6 +3,7 @@ package com.safefleet.lawmobile.tests.x1
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
 import com.lawmobile.presentation.ui.login.LoginActivity
+import com.lawmobile.presentation.utils.FeatureSupportHelper
 import com.safefleet.lawmobile.R
 import com.safefleet.lawmobile.helpers.SmokeTest
 import com.safefleet.lawmobile.screens.FileListScreen
@@ -31,7 +32,10 @@ class SnapshotListTest : EspressoStartActivityBaseTest<LoginActivity>(LoginActiv
     }
 
     @Before
-    fun login() = LoginScreen().login()
+    fun setup() {
+        LoginScreen().login()
+        FeatureSupportHelper.supportAssociateOfficerID = true
+    }
 
     private fun setSimpleListViews() {
         with(fileListScreen) {

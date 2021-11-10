@@ -91,7 +91,6 @@ android {
         }
 
         debug {
-            applicationIdSuffix ".debug"
             testCoverageEnabled true
             debuggable true
             minifyEnabled false
