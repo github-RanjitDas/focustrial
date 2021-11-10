@@ -51,6 +51,7 @@ object Exclusions {
         "**/database.**",
         "**/FakeHttpClient.**",
         "**/WifiHelperImpl.**",
+        "**/FeatureSupportHelper.**",
         "**/SimpleNetworkManager.**",
         "**/OnSwipeTouchListener.**",
         "**/LiveActivityBaseViewModel.**",

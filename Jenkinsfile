@@ -105,6 +105,16 @@ node('jenkins-builds-slave') {
                     }
                 }
 
+                stage('Get Keystore'){
+                    logger.stage()
+                    timeout(10){
+                        withVault(vaultSecrets: secrets) {
+                            sh """cat > $WORKSPACE/keystore.jks_64 <<  EOL\n$android_keystore\nEOL"""
+                            sh "base64 -d keystore.jks_64 > app/keystore.jks"
+                        }
+                    }
+                }
+
                 stage('Send APK Develop to Firebase'){
                     logger.stage()
                     timeout(10){
@@ -148,8 +158,6 @@ node('jenkins-builds-slave') {
                         def pass = ""
                         def alias = ""
                         withVault(vaultSecrets: secrets) {
-                            sh """cat > $WORKSPACE/keystore.jks_64 <<  EOL\n$android_keystore\nEOL"""
-                            sh "base64 -d keystore.jks_64 > app/keystore.jks"
                             sh """cat > $WORKSPACE/firebase_distribution_develop.json_64 <<  EOL\n$firebase_distribution_develop\nEOL"""
                             sh "base64 -d firebase_distribution_develop.json_64 > fma-service-account.json"
                             pass = "${env.KEYSTORE_PASSWORD}"
@@ -162,6 +170,14 @@ node('jenkins-builds-slave') {
                             sh "gcloud config set project fma-dev-8d851"
                             sh "gcloud firebase test android run --timeout 20m --type instrumentation --app app/build/outputs/apk/debug/app-debug-${BUILD_NUMBER}.apk --test app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk --device model=flame,version=29,locale=en,orientation=portrait --use-orchestrator --test-targets \"annotation com.safefleet.lawmobile.helpers.SmokeTest\""
                         }
+                    }
+                }
+
+                stage('Clean credentials Keystore'){
+                    logger.stage()
+                    timeout(10){
+                        sh "rm $WORKSPACE/keystore.jks_64"
+                        sh "rm $WORKSPACE/app/keystore.jks"
                     }
                 }
             }
