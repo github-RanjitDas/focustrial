@@ -16,6 +16,10 @@ open class BaseScreen {
         waitUntil { Alert.isDisconnectionAlertDisplayed() }
     }
 
+    fun isDisconnectionDueInactivityAlertDisplayed() {
+        waitUntil { Alert.isDisconnectionDueInactivityAlertDisplayed() }
+    }
+
     fun isAcceptOptionDisplayed() = assertDisplayed(R.string.accept)
 
     fun isCancelOptionDisplayed() = assertDisplayed(R.string.cancel)

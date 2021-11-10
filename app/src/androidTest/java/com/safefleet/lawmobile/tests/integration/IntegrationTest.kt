@@ -11,8 +11,8 @@ import com.safefleet.lawmobile.screens.integration.FileListScreen
 import com.safefleet.lawmobile.screens.integration.LiveViewScreen
 import com.safefleet.lawmobile.screens.integration.LoginScreen
 import com.safefleet.lawmobile.tests.EspressoStartActivityBaseTest
-import com.safefleet.lawmobile.tests.LoginTest.Companion.loginScreen
-import com.safefleet.lawmobile.tests.VideoPlaybackTest
+import com.safefleet.lawmobile.tests.x1.LoginTest.Companion.loginScreen
+import com.safefleet.lawmobile.tests.x1.VideoPlaybackTest
 import com.schibsted.spain.barista.interaction.BaristaSleepInteractions.sleep
 import org.hamcrest.Matchers.`is`
 import org.hamcrest.Matchers.greaterThanOrEqualTo

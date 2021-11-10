@@ -34,7 +34,7 @@ class WifiHelperTest {
 
     private val connectivityManager: ConnectivityManager = mockk(relaxed = true)
 
-    private val wifiHelper = WifiHelper(wifiManager, connectivityManager)
+    private val wifiHelper = WifiHelperImpl(wifiManager, connectivityManager)
 
     @BeforeEach
     fun setUp() {

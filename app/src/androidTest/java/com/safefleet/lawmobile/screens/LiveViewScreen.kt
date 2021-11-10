@@ -74,7 +74,7 @@ open class LiveViewScreen : BaseScreen() {
     }
 
     fun isLiveViewDisplayed() {
-        assertDisplayed(R.id.liveStreamingView)
+        waitUntil(5000) { assertDisplayed(R.id.liveStreamingView) }
         assertDisplayed(R.id.toggleFullScreenLiveView)
 
         isBatteryStatusDisplayed()
@@ -85,9 +85,6 @@ open class LiveViewScreen : BaseScreen() {
 
         assertDisplayed(R.id.buttonRecord)
         assertDisplayed(R.string.record_video)
-
-        assertDisplayed(R.id.buttonOpenHelpPage)
-
         assertDisplayed(R.id.textLiveViewSwitch, R.string.live_view_label)
 
         assertDisplayed(R.id.buttonSnapshotList)
