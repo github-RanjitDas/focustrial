@@ -27,6 +27,7 @@ import com.lawmobile.presentation.ui.live.x2.LiveX2Activity
 import com.lawmobile.presentation.ui.login.LoginActivity
 import com.lawmobile.presentation.ui.notificationList.NotificationListActivity
 import com.lawmobile.presentation.utils.Constants
+import com.lawmobile.presentation.utils.FeatureSupportHelper
 import com.safefleet.mobile.kotlin_commons.extensions.doIfSuccess
 import com.safefleet.mobile.kotlin_commons.helpers.Result
 
@@ -54,7 +55,13 @@ class MenuFragment : BaseFragment() {
         setObservers()
         setTouchListeners()
         setListeners()
+        setFeatures()
         binding.versionNumberTextMainMenu.text = getApplicationVersionText()
+    }
+
+    private fun setFeatures() {
+        binding.textViewDiagnose.isVisible = FeatureSupportHelper.supportBodyWornSettings
+        binding.textViewAudios.isVisible = FeatureSupportHelper.supportAudios
     }
 
     private fun setCurrentNotificationCount() {

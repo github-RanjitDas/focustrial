@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import com.lawmobile.presentation.databinding.FragmentLiveControlsX2Binding
 import com.lawmobile.presentation.ui.live.controls.LiveControlsBaseFragment
 import com.lawmobile.presentation.ui.live.controls.x1.LiveControlsX1Fragment
+import com.lawmobile.presentation.utils.FeatureSupportHelper
 
 class LiveControlsX2Fragment : LiveControlsBaseFragment() {
 
@@ -26,8 +27,16 @@ class LiveControlsX2Fragment : LiveControlsBaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setViews()
+        setFeatures()
         setSharedListeners()
         setLiveViewSwitchState()
+    }
+
+    private fun setFeatures() {
+        if (!FeatureSupportHelper.supportAudios) {
+            binding.buttonAudio.visibility = View.GONE
+            binding.guidelineMidHorizontalBottom.setGuidelinePercent(1F)
+        }
     }
 
     private fun setViews() {

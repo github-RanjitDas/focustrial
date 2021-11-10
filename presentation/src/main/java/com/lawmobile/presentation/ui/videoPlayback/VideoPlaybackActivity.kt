@@ -38,6 +38,7 @@ import com.lawmobile.presentation.utils.Constants.AUDIO_LIST
 import com.lawmobile.presentation.utils.Constants.DOMAIN_CAMERA_FILE
 import com.lawmobile.presentation.utils.Constants.FILE_LIST_TYPE
 import com.lawmobile.presentation.utils.Constants.SNAPSHOT_LIST
+import com.lawmobile.presentation.utils.FeatureSupportHelper
 import com.safefleet.mobile.android_commons.extensions.hideKeyboard
 import com.safefleet.mobile.kotlin_commons.extensions.doIfError
 import com.safefleet.mobile.kotlin_commons.extensions.doIfSuccess
@@ -70,6 +71,7 @@ class VideoPlaybackActivity : BaseActivity() {
         binding.setViews()
         setObservers()
         binding.setListeners()
+        binding.setFeatures()
 
         verifyIfSelectedVideoWasChanged()
 
@@ -95,6 +97,17 @@ class VideoPlaybackActivity : BaseActivity() {
     override fun onResume() {
         super.onResume()
         verifyEventEmpty()
+    }
+
+    private fun ActivityVideoPlaybackBinding.setFeatures() {
+        partnerIdTitle.isVisible = FeatureSupportHelper.supportAssociateOfficerID
+        partnerIdValue.isVisible = FeatureSupportHelper.supportAssociateOfficerID
+        buttonAssociateAudios?.isVisible = FeatureSupportHelper.supportAudioAssociation
+        layoutAssociatedAudios?.isVisible = FeatureSupportHelper.supportAudioAssociation
+        associateAudioTitle?.isVisible = FeatureSupportHelper.supportAudioAssociation
+        buttonAssociateSnapshots.isVisible = FeatureSupportHelper.supportSnapshotAssociation
+        layoutAssociatedSnapshots.isVisible = FeatureSupportHelper.supportSnapshotAssociation
+        associateSnapshotTitle.isVisible = FeatureSupportHelper.supportSnapshotAssociation
     }
 
     private fun ActivityVideoPlaybackBinding.configureBottomSheet() {
