@@ -57,14 +57,6 @@ object Dependencies {
         const val intents = "androidx.test.espresso:espresso-intents:$VERSION"
     }
 
-    object Firebase {
-        const val analytics = "com.google.firebase:firebase-analytics-ktx"
-        const val bom = "com.google.firebase:firebase-bom:25.12.0"
-        const val core = "com.google.firebase:firebase-core:18.0.0"
-        const val crashlytics = "com.google.firebase:firebase-crashlytics"
-        const val crashlyticsGradle = "com.google.firebase:firebase-crashlytics-gradle:2.4.1"
-    }
-
     object Fragment {
         private const val VERSION = "1.2.5"
         const val extensions = "androidx.fragment:fragment-ktx:$VERSION"
@@ -77,7 +69,6 @@ object Dependencies {
 
     object Google {
         const val gson = "com.google.code.gson:gson:2.8.6"
-        const val services = "com.google.gms:google-services:4.3.4"
         const val findBugs = "com.google.code.findbugs:jsr305:3.0.2"
     }
 

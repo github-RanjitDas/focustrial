@@ -8,8 +8,6 @@ plugins {
     id 'kotlin-android'
     id 'kotlin-kapt'
     id 'dagger.hilt.android.plugin'
-    id 'com.google.gms.google-services'
-    id 'com.google.firebase.crashlytics'
     id 'com.squareup.sqldelight'
     id 'com.google.firebase.appdistribution'
 }
@@ -59,11 +57,7 @@ android {
         }
 
         staging {
-            testCoverageEnabled true
-            debuggable true
-            minifyEnabled false
-            shrinkResources false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            initWith debug
             firebaseAppDistribution {
                 artifactType="APK"
                 appId="1:189561416446:android:6fa7154eae0824aef813af"
@@ -80,11 +74,7 @@ android {
         }
 
         qaTest {
-            testCoverageEnabled true
-            debuggable true
-            minifyEnabled false
-            shrinkResources false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            initWith debug
             firebaseAppDistribution {
                 artifactType="APK"
                 appId="1:608657564588:android:364a8d74bf5e16030e1009"
@@ -101,6 +91,7 @@ android {
         }
 
         debug {
+            applicationIdSuffix ".debug"
             testCoverageEnabled true
             debuggable true
             minifyEnabled false
@@ -177,11 +168,6 @@ dependencies {
     implementation Dependencies.Hilt.hiltViewModel
     kapt Dependencies.Hilt.hiltCompiler
 
-    // Import the Firebase BoM
-    implementation platform(Dependencies.Firebase.bom)
-    implementation Dependencies.Firebase.analytics
-    implementation Dependencies.Firebase.core
-    implementation Dependencies.Firebase.crashlytics
 
     //Base repository
     implementation Dependencies.Base.externalHardware
