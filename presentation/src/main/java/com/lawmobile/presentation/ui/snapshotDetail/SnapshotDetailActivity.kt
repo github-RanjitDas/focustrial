@@ -25,6 +25,7 @@ import com.lawmobile.presentation.extensions.verifySessionBeforeAction
 import com.lawmobile.presentation.ui.base.BaseActivity
 import com.lawmobile.presentation.ui.fileList.thumbnailList.ThumbnailFileListFragment.Companion.PATH_ERROR_IN_PHOTO
 import com.lawmobile.presentation.utils.Constants
+import com.lawmobile.presentation.utils.FeatureSupportHelper
 import com.safefleet.mobile.android_commons.extensions.hideKeyboard
 import com.safefleet.mobile.kotlin_commons.extensions.doIfError
 import com.safefleet.mobile.kotlin_commons.extensions.doIfSuccess
@@ -55,6 +56,7 @@ class SnapshotDetailActivity : BaseActivity() {
         getInformationFromIntent()
         setInformationOfSnapshot()
         setObservers()
+        setFeatures()
         configureListeners()
         configureBottomSheet()
     }
@@ -64,6 +66,11 @@ class SnapshotDetailActivity : BaseActivity() {
         restartVisibility()
         getSnapshotBytes()
         hideKeyboard()
+    }
+
+    private fun setFeatures() {
+        binding.buttonAssociatePartnerIdList.isVisible =
+            FeatureSupportHelper.supportAssociateOfficerID
     }
 
     private fun getSnapshotBytes() {
