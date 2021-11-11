@@ -17,6 +17,7 @@ import com.lawmobile.presentation.databinding.FragmentStatusBarBinding
 import com.lawmobile.presentation.extensions.setOnClickListenerCheckConnection
 import com.lawmobile.presentation.extensions.showErrorSnackBar
 import com.lawmobile.presentation.ui.base.BaseFragment
+import com.lawmobile.presentation.utils.FeatureSupportHelper
 import com.safefleet.mobile.kotlin_commons.extensions.doIfError
 import com.safefleet.mobile.kotlin_commons.extensions.doIfSuccess
 import com.safefleet.mobile.kotlin_commons.helpers.Result
@@ -40,11 +41,17 @@ class SettingsBarFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setObservers()
+        setFeatures()
         setListenersForOpenOrCloseStatusBar()
         setListenersForChangeTheStatus()
         CameraInfo.onReadyToGetSettings = {
             getSettingsInformation()
         }
+    }
+
+    private fun setFeatures() {
+        if (!FeatureSupportHelper.supportBodyWornSettings)
+            binding.parentStatusBar.visibility = View.GONE
     }
 
     private fun getSettingsInformation() {
