@@ -60,7 +60,7 @@ class MenuFragment : BaseFragment() {
     }
 
     private fun setFeatures() {
-        binding.textViewDiagnose.isVisible = FeatureSupportHelper.supportBodyWornSettings
+        binding.textViewSettings.isVisible = FeatureSupportHelper.supportBodyWornSettings
         binding.textViewAudios.isVisible = FeatureSupportHelper.supportAudios
     }
 
