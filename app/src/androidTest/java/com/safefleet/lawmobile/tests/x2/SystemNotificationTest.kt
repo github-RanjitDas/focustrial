@@ -176,7 +176,7 @@ class SystemNotificationTest : EspressoBaseTest() {
     fun verifyCorrectNotificationNumberIsShown() {
         CameraConnectServiceMock.eventList = CameraEventsData.LOG_EVENT_LIST.value
         with(notificationViewScreen) {
-            isPendingNotificationDisplayed()
+            isBellButtonDisplayed()
             val notificationCount = CameraEventsData.LOG_EVENT_LIST.value.size.toString()
             waitUntil {
                 isCorrectNumberOfPendingNotificationDisplayed(notificationCount)

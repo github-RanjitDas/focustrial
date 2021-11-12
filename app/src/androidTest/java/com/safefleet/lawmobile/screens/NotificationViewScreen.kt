@@ -80,8 +80,15 @@ class NotificationViewScreen : BaseScreen() {
         isDismissButtonDisplayed()
     }
 
-    fun isPendingNotificationDisplayed() = assertDisplayed(R.id.buttonNotification)
+    fun isBellButtonDisplayed() = waitUntil { assertDisplayed(R.id.buttonNotification) }
 
     fun isCorrectNumberOfPendingNotificationDisplayed(pendingNotifications: String) =
         assertContains(pendingNotifications)
+
+    fun clickOnBellButton() {
+        waitUntil { assertDisplayed(R.id.buttonNotification) }
+        waitUntil { clickOn(R.id.buttonNotification) }
+    }
+
+    fun isNotificationTitleDisplayed() = waitUntil { assertDisplayed(R.string.notifications) }
 }

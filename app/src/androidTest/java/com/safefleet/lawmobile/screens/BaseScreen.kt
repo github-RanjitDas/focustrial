@@ -12,6 +12,8 @@ open class BaseScreen {
 
     fun clickOnAccept() = clickOn(R.string.accept)
 
+    fun clickOnBack() = waitUntil { clickOn(R.id.imageButtonBackArrow) }
+
     fun isDisconnectionAlertDisplayed() {
         waitUntil { Alert.isDisconnectionAlertDisplayed() }
     }
