@@ -33,10 +33,10 @@ class LiveViewTest : EspressoStartActivityBaseTest<LoginActivity>(LoginActivity:
     /**
      * Test case: https://safefleet.atlassian.net/browse/FMA-389
      */
+    @SmokeTest
     @Test
     fun verifyLiveViewIsDisplayed() {
         liveViewScreen.isLiveViewDisplayed()
-        liveViewScreen.takeSnapshot()
     }
 
     /**
