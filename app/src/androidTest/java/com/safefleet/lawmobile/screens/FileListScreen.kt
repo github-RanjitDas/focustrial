@@ -50,8 +50,6 @@ open class FileListScreen : BaseScreen() {
         }
     }
 
-    fun clickOnBack() = waitUntil { clickOn(R.id.imageButtonBackArrow) }
-
     fun clickOnItemInPosition(position: Int) =
         waitUntil { clickListItem(recyclerView, position) }
 
@@ -149,7 +147,7 @@ open class FileListScreen : BaseScreen() {
     fun areNoFilesFound(@StringRes message: Int) =
         assertDisplayed(R.id.noFilesTextView, message)
 
-    fun isFilterButtonDisplayed() = assertDisplayed(R.id.buttonOpenFilters)
+    fun isFilterButtonDisplayed() = waitUntil { assertDisplayed(R.id.buttonOpenFilters) }
 
     fun isFilterActive() {
         assertDisplayed(R.id.scrollFilterTags)
@@ -164,11 +162,11 @@ open class FileListScreen : BaseScreen() {
     fun isNoFilesFoundDisplayed() = assertDisplayed(R.id.noFilesTextView)
 
     private fun isDateTimeHeaderDisplayed() =
-        assertDisplayed(R.id.textViewDateAndTime, R.string.date_and_time)
+        waitUntil { assertDisplayed(R.id.textViewDateAndTime, R.string.date_and_time) }
 
-    private fun isEventHeaderDisplayed() = assertDisplayed(R.id.textViewEvent, R.string.event)
+    private fun isEventHeaderDisplayed() = waitUntil { assertDisplayed(R.id.textViewEvent, R.string.event) }
 
-    private fun isSnapshotsTitleDisplayed() = assertDisplayed(R.string.snapshots_title)
+    fun isSnapshotsTitleDisplayed() = waitUntil { assertDisplayed(R.string.snapshots_title) }
 
     fun isSelectDisplayed() =
         waitUntil { assertDisplayed(R.string.select) }

@@ -4,6 +4,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
 import com.lawmobile.domain.enums.CameraType
 import com.lawmobile.presentation.ui.login.LoginActivity
+import com.lawmobile.presentation.utils.FeatureSupportHelper
 import com.safefleet.lawmobile.helpers.Alert.isExitAppDialogDisplayed
 import com.safefleet.lawmobile.helpers.SmokeTest
 import com.safefleet.lawmobile.screens.BaseScreen
@@ -50,11 +51,13 @@ class MainMenuTest : EspressoBaseTest() {
      * https://safefleet.atlassian.net/browse/FMA-1921
      * https://safefleet.atlassian.net/browse/FMA-1919
      * https://safefleet.atlassian.net/browse/FMA-1796
+     * https://safefleet.atlassian.net/browse/FMA-1762
      */
     @SmokeTest
     @Test
     fun verifyNavigationMainMenu() {
         with(mainMenuScreen) {
+            isDashboardDisplayed()
             isViewSnapshotsDisplayed()
             isViewVideosDisplayed()
             isViewNotificationsDisplayed()
@@ -62,24 +65,24 @@ class MainMenuTest : EspressoBaseTest() {
             isViewHelpDisplayed()
             isCloseMenuButtonDisplayed()
             isLogoutButtonDisplayed()
-            clickOnNotifications()
-        }
-    }
 
-    /**
-     * Test case: https://safefleet.atlassian.net/browse/FMA-1762
-     */
-    @Test
-    fun verifyOpenMainMenu() {
-        with(mainMenuScreen) {
-            isViewSnapshotsDisplayed()
-            isViewVideosDisplayed()
-            isViewNotificationsDisplayed()
-            isBodyWornDiagnosisDisplayed()
-            isViewHelpDisplayed()
-            isCloseMenuButtonDisplayed()
-            isLogoutButtonDisplayed()
+            clickOnNotifications()
+            notificationViewScreen.isNotificationViewDisplayed()
+            baseScreen.clickOnBack()
+            liveViewScreen.isLiveViewTextDisplayed()
+            clickOnMainMenu()
+            clickOnViewSnapshots()
         }
+
+        fileListScreen.isSnapshotsTitleDisplayed()
+
+        with(notificationViewScreen) {
+            clickOnBellButton()
+            isNotificationTitleDisplayed()
+        }
+
+        baseScreen.clickOnBack()
+        fileListScreen.isSnapshotsTitleDisplayed()
     }
 
     /**
@@ -87,10 +90,11 @@ class MainMenuTest : EspressoBaseTest() {
      */
     @Test
     fun verifyNavigationToViewSnapshots() {
+        FeatureSupportHelper.supportAssociateOfficerID = true
+
         with(mainMenuScreen) {
             isViewSnapshotsDisplayed()
             clickOnViewSnapshots()
-            fileListScreen.isSelectDisplayed()
             fileListScreen.isSnapshotsListScreenDisplayed()
         }
     }
@@ -103,7 +107,6 @@ class MainMenuTest : EspressoBaseTest() {
         with(mainMenuScreen) {
             isViewVideosDisplayed()
             clickOnViewVideos()
-            fileListScreen.isSelectDisplayed()
             fileListScreen.isVideosListScreenDisplayed()
         }
     }

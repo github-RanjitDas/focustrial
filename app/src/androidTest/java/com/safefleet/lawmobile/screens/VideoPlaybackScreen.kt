@@ -16,8 +16,6 @@ class VideoPlaybackScreen : BaseScreen() {
 
     fun clickOnSave() = clickOn(R.id.saveButtonVideoPlayback)
 
-    fun clickOnBack() = clickOn(R.id.imageButtonBackArrow)
-
     fun clickOnAddSnapshots() = clickOn(R.id.buttonAssociateSnapshots)
 
     fun selectEvent(data: VideoInformation) {
