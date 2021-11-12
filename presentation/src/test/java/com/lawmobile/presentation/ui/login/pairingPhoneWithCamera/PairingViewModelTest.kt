@@ -3,8 +3,8 @@ package com.lawmobile.presentation.ui.login.pairingPhoneWithCamera
 import com.lawmobile.domain.enums.CameraType
 import com.lawmobile.domain.usecase.pairingPhoneWithCamera.PairingPhoneWithCameraUseCase
 import com.lawmobile.presentation.InstantExecutorExtension
+import com.lawmobile.presentation.connectivity.WifiHelper
 import com.lawmobile.presentation.ui.login.pairingPhoneWithCamera.PairingViewModel.Companion.EXCEPTION_GET_PARAMS_TO_CONNECT
-import com.lawmobile.presentation.utils.WifiHelper
 import com.safefleet.mobile.kotlin_commons.helpers.Result
 import io.mockk.Runs
 import io.mockk.coEvery

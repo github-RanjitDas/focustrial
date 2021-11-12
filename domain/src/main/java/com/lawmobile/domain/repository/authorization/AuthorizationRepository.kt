@@ -5,5 +5,5 @@ import com.lawmobile.domain.repository.BaseRepository
 import com.safefleet.mobile.kotlin_commons.helpers.Result
 
 interface AuthorizationRepository : BaseRepository {
-    suspend fun getAuthorizationEndpoints(tenantID: String): Result<AuthorizationEndpoints>
+    suspend fun getAuthorizationEndpoints(): Result<AuthorizationEndpoints>
 }

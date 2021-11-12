@@ -8,8 +8,9 @@ import androidx.activity.viewModels
 import androidx.cardview.widget.CardView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.snackbar.Snackbar
+import com.lawmobile.domain.entities.AuthorizationEndpoints
 import com.lawmobile.domain.entities.CameraInfo
-import com.lawmobile.domain.entities.DomainUser
+import com.lawmobile.domain.entities.User
 import com.lawmobile.domain.enums.CameraType
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.databinding.ActivityLoginBinding
@@ -47,7 +48,7 @@ class LoginActivity :
 
     private val viewModel: LoginActivityViewModel by viewModels()
     private lateinit var binding: ActivityLoginBinding
-    override var domainUser: DomainUser? = null
+    override var user: User? = null
     override var officerId: String = ""
     private lateinit var authRequest: AuthorizationRequest
 
@@ -67,21 +68,64 @@ class LoginActivity :
     }
 
     private fun LoginActivityViewModel.setObservers() {
-        authRequestResult.observe(this@LoginActivity, ::manageAuthRequestResult)
-        userInformationResult.observe(this@LoginActivity, ::handleUserInformationResult)
+        authEndpointsResult.observe(this@LoginActivity, ::handleAuthEndpointsResult)
+        authRequestResult.observe(this@LoginActivity, ::handleAuthRequestResult)
+        devicePasswordResult.observe(this@LoginActivity, ::handleDevicePasswordResult)
+        userFromCameraResult.observe(this@LoginActivity, ::handleUserResult)
     }
 
-    private fun manageAuthRequestResult(result: Result<AuthorizationRequest>) {
+    private fun handleAuthEndpointsResult(result: Result<AuthorizationEndpoints>) {
         with(result) {
-            doIfSuccess {
-                goToSsoLogin(it)
+            doIfSuccess { viewModel.getAuthorizationRequest(it) }
+            doIfError { // change this and show a dialog to continue with offline login
+                showToast(it.message.toString())
             }
-            doIfError {
-                showToast(getString(R.string.auth_request_error))
-                finish()
+        }
+    }
+
+    private fun handleAuthRequestResult(result: Result<AuthorizationRequest>) {
+        with(result) {
+            doIfSuccess { goToSsoLogin(it) }
+            doIfError { // change this and show a dialog to continue with offline login
+                showToast(it.message.toString())
             }
         }
         hideLoadingDialog()
+    }
+
+    private fun handleDevicePasswordResult(result: Result<String>) {
+        with(result) {
+            doIfSuccess { // change this and use the password for suggested wifi
+                showToast(it)
+            }
+            doIfError { // change this and show a dialog to continue with offline login
+                showToast(it.message.toString())
+            }
+        }
+    }
+
+    private fun handleUserResult(result: Result<User>) {
+        with(result) {
+            doIfSuccess {
+                CameraInfo.officerName = it.name ?: ""
+                CameraInfo.officerId = it.id ?: ""
+                when (CameraInfo.cameraType) {
+                    CameraType.X1 -> user = it
+                    CameraType.X2 -> startLiveViewActivity()
+                }
+            }
+            doIfError { showUserInformationError() }
+        }
+    }
+
+    private fun showUserInformationError() {
+        hideKeyboard()
+        binding.root.showErrorSnackBar(
+            getString(R.string.error_getting_officer_information),
+            Snackbar.LENGTH_INDEFINITE
+        ) {
+            verifySessionBeforeAction { viewModel.getUserFromCamera() }
+        }
     }
 
     private fun configureBottomSheet() {
@@ -102,8 +146,7 @@ class LoginActivity :
     }
 
     private fun showFragmentDependingOnCameraType() {
-        if (CameraInfo.cameraType == CameraType.X1)
-            showStartPairingFragment()
+        if (CameraInfo.cameraType == CameraType.X1) showStartPairingFragment()
         else showValidateOfficerIdFragment()
     }
 
@@ -117,15 +160,14 @@ class LoginActivity :
     private fun showValidateOfficerIdFragment(officerId: String = "") {
         supportFragmentManager.attachFragmentWithAnimation(
             containerId = R.id.fragmentContainer,
-            fragment = ValidateOfficerIdFragment.createInstance(::onExistingOfficerId, officerId),
+            fragment = ValidateOfficerIdFragment.createInstance(::onContinueClick, officerId),
             tag = ValidateOfficerIdFragment.TAG,
             animationIn = android.R.anim.fade_in,
             animationOut = android.R.anim.fade_out
         )
     }
 
-    private fun showStartPairingFragment(officerId: String = "") {
-        this.officerId = officerId
+    private fun showStartPairingFragment() {
         val startPairingFragment = getStartPairingFragmentDependingOnCameraType()
         val fragmentTag = getFragmentTagDependingOnCameraType()
 
@@ -174,30 +216,6 @@ class LoginActivity :
         )
     }
 
-    private fun handleUserInformationResult(result: Result<DomainUser>) {
-        with(result) {
-            doIfSuccess {
-                CameraInfo.officerName = it.name
-                CameraInfo.officerId = it.id
-                when (CameraInfo.cameraType) {
-                    CameraType.X1 -> domainUser = it
-                    CameraType.X2 -> startLiveViewActivity()
-                }
-            }
-            doIfError { showUserInformationError() }
-        }
-    }
-
-    private fun showUserInformationError() {
-        hideKeyboard()
-        binding.root.showErrorSnackBar(
-            getString(R.string.error_getting_officer_information),
-            Snackbar.LENGTH_INDEFINITE
-        ) {
-            verifySessionBeforeAction { viewModel.getUserInformation() }
-        }
-    }
-
     override fun onValidRequirements() = showPairingResultFragment()
 
     override fun onEditOfficerId(officerId: String) = showValidateOfficerIdFragment(officerId)
@@ -212,16 +230,20 @@ class LoginActivity :
 
     override fun onEmptyUserInformation() = showUserInformationError()
 
-    private fun onExistingOfficerId(exist: Boolean, officerId: String) {
-        if (exist) getAuthRequest(officerId)
-        else showStartPairingFragment(officerId)
+    private fun onContinueClick(isEmail: Boolean, officerId: String) {
+        this.officerId = officerId
+        if (isEmail) runOnUiThread {
+            showLoadingDialog()
+            viewModel.getAuthorizationEndpoints()
+        }
+        else showStartPairingFragment()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
         if (resultCode == RestrictionsManager.RESULT_ERROR_INTERNAL) {
-            showStartPairingFragment(officerId)
+            showStartPairingFragment()
         }
 
         if (!viewModel.isUserAuthorized() && data != null) {
@@ -229,13 +251,12 @@ class LoginActivity :
             val exception = getAuthorizationException(data)
 
             when {
-                response.authorizationCode != null -> viewModel.authenticateToGetToken(
-                    response,
-                    ::onIdTokenResponse
-                )
+                response.authorizationCode != null -> {
+                    viewModel.authenticateToGetToken(response, ::onIdTokenResponse)
+                }
                 exception != null -> {
                     showToast(getString(R.string.sso_auth_error))
-                    showStartPairingFragment(officerId)
+                    showStartPairingFragment()
                 }
             }
         }
@@ -250,18 +271,13 @@ class LoginActivity :
     private fun onIdTokenResponse(response: Result<TokenResponse>) {
         with(response) {
             doIfSuccess {
-                showToast(it.accessToken.toString()) // change this to device password request
+                viewModel.saveToken(it.accessToken.toString())
+                viewModel.getDevicePassword(officerId)
             }
             doIfError {
                 showToast(getString(R.string.auth_token_error, it.message))
             }
         }
-    }
-
-    private fun getAuthRequest(officerId: String) {
-        this.officerId = officerId
-        showLoadingDialog()
-        viewModel.getAuthRequest()
     }
 
     private fun goToSsoLogin(authRequest: AuthorizationRequest) {
@@ -271,7 +287,7 @@ class LoginActivity :
     }
 
     private fun onConnectionSuccessful() {
-        viewModel.getUserInformation()
+        viewModel.getUserFromCamera()
         if (CameraInfo.cameraType == CameraType.X1) showValidateOfficerPasswordFragment()
     }
 

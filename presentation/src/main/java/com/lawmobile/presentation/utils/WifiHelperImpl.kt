@@ -10,6 +10,7 @@ import android.net.wifi.WifiManager
 import android.net.wifi.WifiNetworkSpecifier
 import android.os.Build
 import androidx.annotation.RequiresApi
+import com.lawmobile.presentation.connectivity.WifiHelper
 import java.lang.Thread.sleep
 import java.math.BigInteger
 import java.net.Inet4Address

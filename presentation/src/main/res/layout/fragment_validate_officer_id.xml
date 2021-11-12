@@ -33,7 +33,7 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/pairing_phone_camera_input_height"
             android:background="@android:color/transparent"
-            android:digits="@string/allowedOfficerIdAssociatedPattern"
+            android:digits="@string/allowedOfficerIdPattern"
             android:inputType="textFilter"
             android:imeOptions="actionDone"
             android:paddingHorizontal="@dimen/pairing_phone_camera_input_edit_padding_sides"

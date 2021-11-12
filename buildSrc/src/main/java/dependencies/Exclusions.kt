@@ -62,7 +62,10 @@ object Exclusions {
 
         //Temporal empty file that is decreasing the coverage
         "**/LoginActivityViewModel.**",
-        "**/EspressoIdlingResource.**"
+        "**/EspressoIdlingResource.**",
+        "**/RequestInterceptor.**",
+        "**/LoginUseCases.**",
+        "**/PreferencesManagerImpl.**" //here since could not found a way to mock datastore.edit
     )
     val pitest = mutableSetOf(
         //Dagger 2
@@ -113,6 +116,9 @@ object Exclusions {
         "com.lawmobile.presentation.utils.CameraEventsManager*",
         "com.lawmobile.data.dto.api.validateOfficerId.ValidateOfficerIdApiImpl*",
         "com.lawmobile.presentation.ui.splash.SplashViewModel*",
-        "com.lawmobile.data.dto.api.authorization.AuthorizationApiImpl*"
+        "com.lawmobile.data.dto.api.authorization.AuthorizationApiImpl*",
+        "com.lawmobile.presentation.utils.PreferencesManagerImpl*",
+        "com.lawmobile.data.dto.api.user.UserApiImpl*",
+        "com.lawmobile.data.repository.audioDetail.AudioDetailRepositoryImpl*"
     )
 }

@@ -16,6 +16,8 @@ import com.lawmobile.domain.enums.NotificationType
 import com.lawmobile.domain.usecase.events.EventsUseCase
 import com.lawmobile.presentation.BuildConfig
 import com.lawmobile.presentation.R
+import com.lawmobile.presentation.connectivity.MobileDataStatus
+import com.lawmobile.presentation.connectivity.WifiStatus
 import com.lawmobile.presentation.entities.NeutralAlertInformation
 import com.lawmobile.presentation.extensions.createAlertErrorConnection
 import com.lawmobile.presentation.extensions.createAlertMobileDataActive
@@ -26,8 +28,6 @@ import com.lawmobile.presentation.security.RootedHelper
 import com.lawmobile.presentation.ui.login.LoginActivity
 import com.lawmobile.presentation.utils.CameraHelper
 import com.lawmobile.presentation.utils.EspressoIdlingResource
-import com.lawmobile.presentation.utils.MobileDataStatus
-import com.lawmobile.presentation.utils.WifiStatus
 import dagger.hilt.android.AndroidEntryPoint
 import java.sql.Timestamp
 import javax.inject.Inject
@@ -203,7 +203,7 @@ open class BaseActivity : AppCompatActivity() {
 
         fun checkIfSessionIsExpired(): Boolean {
             val timeNow = Timestamp(System.currentTimeMillis())
-            return (timeNow.time - BaseActivity.lastInteraction.time) > BaseActivity.MAX_TIME_SESSION
+            return (timeNow.time - lastInteraction.time) > MAX_TIME_SESSION
         }
     }
 }

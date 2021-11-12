@@ -16,9 +16,6 @@ import com.lawmobile.presentation.ui.base.BaseFragment
 import com.lawmobile.presentation.ui.onBoardingCards.OnBoardingCardsActivity
 import com.lawmobile.presentation.ui.selectCamera.SelectCameraActivity
 import com.safefleet.mobile.android_commons.extensions.hideKeyboard
-import com.safefleet.mobile.kotlin_commons.extensions.doIfError
-import com.safefleet.mobile.kotlin_commons.extensions.doIfSuccess
-import com.safefleet.mobile.kotlin_commons.helpers.Result
 
 class ValidateOfficerIdFragment : BaseFragment() {
 
@@ -27,7 +24,7 @@ class ValidateOfficerIdFragment : BaseFragment() {
     private var _binding: FragmentValidateOfficerIdBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var onExistingOfficerId: (Boolean, String) -> Unit
+    private lateinit var onContinueClick: (Boolean, String) -> Unit
     private lateinit var officerId: String
 
     override fun onCreateView(
@@ -42,7 +39,6 @@ class ValidateOfficerIdFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         verifyInternetConnection()
-        viewModel.setObservers()
         binding.setOfficerId()
         binding.setListeners()
     }
@@ -62,18 +58,6 @@ class ValidateOfficerIdFragment : BaseFragment() {
             val cameraEvent = InternetErrorEvent.event
             context?.createNotificationDialog(cameraEvent)
                 ?.setButtonText(resources.getString(R.string.OK))
-        }
-    }
-
-    private fun ValidateOfficerIdViewModel.setObservers() {
-        validateOfficerIdResult.observe(viewLifecycleOwner, ::manageValidateOfficerIdResult)
-    }
-
-    private fun manageValidateOfficerIdResult(result: Result<Boolean>) {
-        val officerId = binding.editTextOfficerId.text.toString()
-        with(result) {
-            doIfSuccess { onExistingOfficerId(it, officerId) }
-            doIfError { onExistingOfficerId(false, officerId) }
         }
     }
 
@@ -115,8 +99,8 @@ class ValidateOfficerIdFragment : BaseFragment() {
         (activity as AppCompatActivity).hideKeyboard()
         val officerId = editTextOfficerId.text.toString()
         viewModel.verifyInternetConnection {
-            if (it) viewModel.validateOfficerId(officerId)
-            else onExistingOfficerId(false, officerId)
+            val isEmail = officerId.contains("@") && officerId.contains(".")
+            onContinueClick(isEmail, officerId)
         }
     }
 
@@ -135,11 +119,11 @@ class ValidateOfficerIdFragment : BaseFragment() {
         val TAG = ValidateOfficerIdFragment::class.java.simpleName
 
         fun createInstance(
-            onExistingOfficerId: (Boolean, String) -> Unit,
+            onContinueClick: (Boolean, String) -> Unit,
             officerId: String
         ) = ValidateOfficerIdFragment().apply {
             this.officerId = officerId
-            this.onExistingOfficerId = onExistingOfficerId
+            this.onContinueClick = onContinueClick
         }
     }
 }

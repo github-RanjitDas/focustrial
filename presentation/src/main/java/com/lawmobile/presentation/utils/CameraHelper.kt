@@ -2,6 +2,7 @@ package com.lawmobile.presentation.utils
 
 import com.lawmobile.domain.entities.CameraEvent
 import com.lawmobile.domain.utils.ConnectionHelper
+import com.lawmobile.presentation.connectivity.WifiHelper
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch

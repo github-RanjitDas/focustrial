@@ -1,8 +1,9 @@
 package com.lawmobile.data.datasource.remote.authorization
 
-import com.lawmobile.data.dto.entities.discoveryUrl.AuthorizationEndpointsResponseDto
-import com.safefleet.mobile.kotlin_commons.helpers.Result
+import com.lawmobile.data.dto.entities.AuthorizationEndpointsDto
+import com.lawmobile.data.dto.entities.DiscoveryEndpointsDto
 
 interface AuthorizationRemoteDataSource {
-    suspend fun getAuthorizationEndpoints(tenantID: String): Result<AuthorizationEndpointsResponseDto>
+    suspend fun getDiscoveryEndpoints(discoveryUrl: String): DiscoveryEndpointsDto
+    suspend fun getAuthorizationEndpoints(safeFleetIdUrl: String): AuthorizationEndpointsDto
 }

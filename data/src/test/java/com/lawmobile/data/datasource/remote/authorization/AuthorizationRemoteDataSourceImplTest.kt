@@ -1,8 +1,8 @@
 package com.lawmobile.data.datasource.remote.authorization
 
 import com.lawmobile.data.dto.api.authorization.AuthorizationApi
-import com.lawmobile.data.dto.entities.discoveryUrl.AuthorizationEndpointsResponseDto
-import com.safefleet.mobile.kotlin_commons.helpers.Result
+import com.lawmobile.data.dto.entities.AuthorizationEndpointsDto
+import com.lawmobile.data.dto.entities.DiscoveryEndpointsDto
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
@@ -15,28 +15,24 @@ import org.junit.jupiter.api.Test
 internal class AuthorizationRemoteDataSourceImplTest {
 
     private val authorizationApi: AuthorizationApi = mockk(relaxed = true)
-    private val discoveryUrlRemoteDataSourceImpl =
+    private val authorizationRemoteDataSourceImpl =
         AuthorizationRemoteDataSourceImpl(authorizationApi)
 
     @Test
-    fun getAuthorizationEndpointsSuccess() = runBlockingTest {
-        val auth = AuthorizationEndpointsResponseDto("", "")
-        coEvery { authorizationApi.getAuthorizationEndpoints(any()) } returns Result.Success(auth)
-        val result = discoveryUrlRemoteDataSourceImpl.getAuthorizationEndpoints("")
+    fun getAuthorizationEndpoints() = runBlockingTest {
+        val response = AuthorizationEndpointsDto("", "")
+        coEvery { authorizationApi.getAuthorizationEndpoints(any()) } returns response
+        val result = authorizationRemoteDataSourceImpl.getAuthorizationEndpoints("")
         coVerify { authorizationApi.getAuthorizationEndpoints(any()) }
-        Assert.assertTrue(result is Result.Success)
-        val resultSuccess = result as Result.Success
-        Assert.assertEquals(auth, resultSuccess.data)
+        Assert.assertEquals(response, result)
     }
 
     @Test
-    fun getAuthorizationEndpointsError() = runBlockingTest {
-        val e = Exception()
-        coEvery { authorizationApi.getAuthorizationEndpoints(any()) } returns Result.Error(e)
-        val result = discoveryUrlRemoteDataSourceImpl.getAuthorizationEndpoints("")
-        coVerify { authorizationApi.getAuthorizationEndpoints(any()) }
-        Assert.assertTrue(result is Result.Error)
-        val resultError = result as Result.Error
-        Assert.assertEquals(e, resultError.exception)
+    fun getDiscoveryEndpoints() = runBlockingTest {
+        val response = DiscoveryEndpointsDto("", "")
+        coEvery { authorizationApi.getDiscoveryEndpoints(any()) } returns response
+        val result = authorizationRemoteDataSourceImpl.getDiscoveryEndpoints("")
+        coVerify { authorizationApi.getDiscoveryEndpoints(any()) }
+        Assert.assertEquals(response, result)
     }
 }
