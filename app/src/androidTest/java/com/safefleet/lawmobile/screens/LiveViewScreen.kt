@@ -133,7 +133,7 @@ open class LiveViewScreen : BaseScreen() {
 
     fun isMemoryStorageIndicatorTextDisplayed(percent: String) {
         waitUntil {
-            assertContains(R.id.textViewStorageLevels, "$percent% used")
+            assertContains(R.id.textViewStorageLevels, "$percent% available")
         }
     }
 }

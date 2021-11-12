@@ -12,13 +12,20 @@ class NotificationViewScreen : BaseScreen() {
 
     fun clickOnDismissButton() = clickOn(R.id.buttonDismissNotification)
 
-    private fun isTypeHeaderDisplayed() = assertDisplayed(R.id.textViewType, R.string.type)
+    private fun isTypeHeaderDisplayed() =
+        waitUntil {
+            assertDisplayed(R.id.textViewType, R.string.type)
+        }
 
     private fun isNotificationHeaderDisplayed() =
-        assertDisplayed(R.id.textViewNotification, R.string.notification)
+        waitUntil {
+            assertDisplayed(R.id.textViewNotification, R.string.notification)
+        }
 
     private fun isDateTimeHeaderDisplayed() =
-        assertDisplayed(R.id.textViewDateAndTime, R.string.date_and_time)
+        waitUntil {
+            assertDisplayed(R.id.textViewDateAndTime, R.string.date_and_time)
+        }
 
     fun isNotificationViewDisplayed() {
         waitUntil { isTypeHeaderDisplayed() }
@@ -38,19 +45,33 @@ class NotificationViewScreen : BaseScreen() {
     fun isDateDisplayed() = assertDisplayed(R.id.textViewNotificationDate)
 
     private fun isLowBatteryTitleDisplayed() =
-        assertDisplayed(R.id.textViewNotificationTitle, NotificationType.LOW_BATTERY.title!!)
+        waitUntil {
+            assertDisplayed(R.id.textViewNotificationTitle, NotificationType.LOW_BATTERY.title!!)
+        }
 
     fun isLowStorageTitleDisplayed() =
-        assertDisplayed(R.id.textViewNotificationTitle, NotificationType.LOW_STORAGE.title!!)
+        waitUntil {
+            assertDisplayed(R.id.textViewNotificationTitle, NotificationType.LOW_STORAGE.title!!)
+        }
 
     private fun isLowBatteryDescriptionDisplayed(value: String) =
-        assertDisplayed(R.id.textViewNotificationMessage, NotificationType.LOW_BATTERY.getCustomMessage(value)!!)
+        assertDisplayed(
+            R.id.textViewNotificationMessage,
+            NotificationType.LOW_BATTERY.getCustomMessage(value)!!
+        )
 
     fun isLowStorageDescriptionDisplayed() =
-        assertDisplayed(R.id.textViewNotificationMessage, NotificationType.LOW_STORAGE.message!!)
+        waitUntil {
+            assertDisplayed(
+                R.id.textViewNotificationMessage,
+                NotificationType.LOW_STORAGE.message!!
+            )
+        }
 
     fun isDismissButtonDisplayed() =
-        assertDisplayed(R.id.buttonDismissNotification, R.string.dismiss)
+        waitUntil {
+            assertDisplayed(R.id.buttonDismissNotification, R.string.dismiss)
+        }
 
     fun isLowBatteryNotificationDisplayed(value: String) {
         isLowBatteryTitleDisplayed()

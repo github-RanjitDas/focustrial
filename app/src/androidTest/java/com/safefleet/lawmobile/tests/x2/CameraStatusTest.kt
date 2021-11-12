@@ -61,17 +61,17 @@ class CameraStatusTest : EspressoBaseTest() {
     fun verifyStorageIndicator() {
         mockUtils.setStorageProgressCamera(60000000, 60000000)
         liveViewScreen.refreshCameraStatus()
-        liveViewScreen.isMemoryStorageIndicatorTextDisplayed("0")
+        liveViewScreen.isMemoryStorageIndicatorTextDisplayed("100")
         liveViewScreen.isMemoryStorageStatusDisplayed()
 
         mockUtils.setStorageProgressCamera(60000000, 10000000)
         liveViewScreen.refreshCameraStatus()
-        liveViewScreen.isMemoryStorageIndicatorTextDisplayed("84")
+        liveViewScreen.isMemoryStorageIndicatorTextDisplayed("16")
         liveViewScreen.isMemoryStorageStatusDisplayed()
 
         mockUtils.setStorageProgressCamera(60000000, 0)
         liveViewScreen.refreshCameraStatus()
-        liveViewScreen.isMemoryStorageIndicatorTextDisplayed("100")
+        liveViewScreen.isMemoryStorageIndicatorTextDisplayed("0")
         liveViewScreen.isMemoryStorageStatusDisplayed()
     }
 }
