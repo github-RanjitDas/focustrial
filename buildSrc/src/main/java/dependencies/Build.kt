@@ -28,7 +28,8 @@ object Build {
             "\"commandcenterapi\"," +
             "\"openid\"," +
             "\"email\"," +
-            "\"profile\"" +
+            "\"profile\"," +
+            "\"hardware-read\"" +
             "}"
 
     const val DISCOVERY_URL_FIELD = "DISCOVERY_USER_URL"

@@ -1,6 +1,7 @@
 package com.lawmobile.presentation.utils
 
 import com.lawmobile.domain.utils.ConnectionHelper
+import com.lawmobile.presentation.connectivity.WifiHelper
 import com.safefleet.mobile.kotlin_commons.helpers.Result
 import io.mockk.Runs
 import io.mockk.clearAllMocks

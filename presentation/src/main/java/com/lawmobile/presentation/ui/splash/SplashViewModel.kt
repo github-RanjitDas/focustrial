@@ -14,7 +14,7 @@ import com.lawmobile.presentation.ui.onBoardingCards.OnBoardingCardsActivity
 import com.lawmobile.presentation.ui.selectCamera.SelectCameraActivity
 import com.lawmobile.presentation.utils.Constants
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -34,29 +34,27 @@ class SplashViewModel @Inject constructor(
     }
 
     private suspend fun getCameraTypePreference() {
-        val wasCameraSelectedFlow = dataStore.data
+        val cameraType = dataStore.data
             .map { preferences ->
                 preferences[Constants.CAMERA_TYPE] ?: "none"
-            }
+            }.first()
 
-        wasCameraSelectedFlow.collect {
-            when (it) {
-                CameraType.X1.name -> CameraInfo.cameraType = CameraType.X1
-                CameraType.X2.name -> CameraInfo.cameraType = CameraType.X2
-            }
-            getOnBoardingPreference(it != "none")
+        when (cameraType) {
+            CameraType.X1.name -> CameraInfo.cameraType = CameraType.X1
+            CameraType.X2.name -> CameraInfo.cameraType = CameraType.X2
         }
+
+        val wasCameraSelected = cameraType != "none"
+        getOnBoardingPreference(wasCameraSelected)
     }
 
     private suspend fun getOnBoardingPreference(wasCameraSelected: Boolean) {
-        val wasOnBoardingDisplayedFlow = dataStore.data
+        val wasOnBoardingDisplayed = dataStore.data
             .map { preferences ->
                 preferences[Constants.ON_BOARDING_DISPLAYED] ?: false
-            }
+            }.first()
 
-        wasOnBoardingDisplayedFlow.collect {
-            setNextActivity(it, wasCameraSelected)
-        }
+        setNextActivity(wasOnBoardingDisplayed, wasCameraSelected)
     }
 
     private fun setNextActivity(wasOnBoardingDisplayed: Boolean, wasCameraSelected: Boolean) {
@@ -65,6 +63,6 @@ class SplashViewModel @Inject constructor(
             !wasOnBoardingDisplayed -> OnBoardingCardsActivity::class.java
             else -> LoginActivity::class.java
         }
-        _nextActivityResult.postValue(activity)
+        _nextActivityResult.value = activity
     }
 }

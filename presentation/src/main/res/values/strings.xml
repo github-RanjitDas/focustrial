@@ -136,6 +136,7 @@
 
     <!-- Partner Id -->
     <string name="allowedOfficerIdAssociatedPattern">ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789</string>
+    <string name="allowedOfficerIdPattern">ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@.</string>
     <string name="associate_partner_id_content_description">Associate partner ID</string>
     <string name="file_list_associate_partner_id_success">The partner ID associated successfully</string>
     <string name="file_list_associate_partner_id_error">Partner ID could not be associated</string>
@@ -279,7 +280,7 @@
     <string name="continue_text">Continue</string>
     <string name="or">or</string>
     <string name="display">Display</string>
-    <string name="officer_id">Officer ID or Email</string>
+    <string name="officer_id">Enter Officer ID or Email</string>
     <string name="change_camera_type">Change Body-Camera type</string>
     <string name="go_to_on_boarding_cards">Go to on-boarding cards</string>
     <string name="sign_in_with_email">Sign in with Email</string>
@@ -306,7 +307,6 @@
     <string name="associate_audios_to_video">Associate audios to video</string>
     <string name="associate_audios">Associate audios</string>
     <string name="return_to_regular_login">Login using Device Password</string>
-    <string name="auth_request_error">Something went wrong building the authorization request, please try again</string>
     <string name="sso_auth_error">Error login online, please use device password to login offline</string>
     <string name="auth_token_error">Error retrieving authorization token %1$s</string>
 

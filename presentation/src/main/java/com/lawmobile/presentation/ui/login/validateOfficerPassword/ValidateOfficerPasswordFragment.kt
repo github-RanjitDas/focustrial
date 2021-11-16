@@ -44,14 +44,14 @@ class ValidateOfficerPasswordFragment : BaseFragment() {
     }
 
     private fun validateOfficerPassword() {
-        if (fragmentListener.domainUser?.password == null) fragmentListener.onEmptyUserInformation()
+        if (fragmentListener.user?.password == null) fragmentListener.onEmptyUserInformation()
         else fragmentListener.onPasswordValidationResult(isCorrectPassword())
     }
 
     private fun isCorrectPassword(): Boolean {
         val inputPassword = binding.textInputOfficerPassword.text()
         val sha256Password = EncodePassword.encodePasswordOfficer(inputPassword)
-        return sha256Password.isNotEmpty() && sha256Password == fragmentListener.domainUser?.password
+        return sha256Password.isNotEmpty() && sha256Password == fragmentListener.user?.password
     }
 
     override fun onDestroy() {

@@ -2,10 +2,17 @@ package com.safefleet.lawmobile.di.login
 
 import android.content.Context
 import android.content.SharedPreferences
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
-import com.lawmobile.presentation.utils.AuthStateManagerFactory
-import com.lawmobile.presentation.utils.AuthStateManagerFactoryImpl
+import com.lawmobile.domain.repository.authorization.AuthorizationRepository
+import com.lawmobile.domain.repository.user.UserRepository
+import com.lawmobile.domain.usecase.LoginUseCases
+import com.lawmobile.domain.usecase.getAuthorizationEndpoints.GetAuthorizationEndpoints
+import com.lawmobile.domain.usecase.getAuthorizationEndpoints.GetAuthorizationEndpointsImpl
+import com.lawmobile.domain.usecase.getDevicePassword.GetDevicePassword
+import com.lawmobile.domain.usecase.getDevicePassword.GetDevicePasswordImpl
+import com.lawmobile.domain.usecase.getUserFromCamera.GetUserFromCamera
+import com.lawmobile.domain.usecase.getUserFromCamera.GetUserFromCameraImpl
+import com.lawmobile.presentation.authentication.AuthStateManagerFactory
+import com.lawmobile.presentation.authentication.AuthStateManagerFactoryImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -26,10 +33,31 @@ class LoginModule {
         AuthorizationService(context)
 
     @Provides
+    fun provideGetAuthorizationEndpoints(
+        authorizationRepository: AuthorizationRepository
+    ): GetAuthorizationEndpoints = GetAuthorizationEndpointsImpl(authorizationRepository)
+
+    @Provides
+    fun provideGetDevicePassword(
+        userRepository: UserRepository
+    ): GetDevicePassword = GetDevicePasswordImpl(userRepository)
+
+    @Provides
+    fun provideGetUserFromCamera(
+        userRepository: UserRepository
+    ): GetUserFromCamera = GetUserFromCameraImpl(userRepository)
+
+    @Provides
+    fun provideLoginUseCases(
+        getAuthorizationEndpoints: GetAuthorizationEndpoints,
+        getDevicePassword: GetDevicePassword,
+        getUserFromCamera: GetUserFromCamera
+    ) = LoginUseCases(getAuthorizationEndpoints, getDevicePassword, getUserFromCamera)
+
+    @Provides
     fun provideAuthStateManagerFactory(
         sharedPreferences: SharedPreferences,
-        dataStore: DataStore<Preferences>,
         authorizationService: AuthorizationService
     ): AuthStateManagerFactory =
-        AuthStateManagerFactoryImpl(sharedPreferences, dataStore, authorizationService)
+        AuthStateManagerFactoryImpl(sharedPreferences, authorizationService)
 }

@@ -71,9 +71,7 @@ class SelectCameraActivity : BaseActivity() {
     private fun ActivitySelectCameraBinding.buttonContinueListener() {
         buttonContinue.isEnabled = false
         buttonContinue.setOnClickListener {
-            if (buttonX1Camera.isActivated || buttonX2Camera.isActivated) {
-                goToNextActivity()
-            }
+            if (buttonX1Camera.isActivated || buttonX2Camera.isActivated) goToNextActivity()
         }
     }
 

@@ -167,7 +167,6 @@ dependencies {
     implementation Dependencies.Hilt.hiltViewModel
     kapt Dependencies.Hilt.hiltCompiler
 
-
     //Base repository
     implementation Dependencies.Base.externalHardware
     implementation Dependencies.Base.androidCommons

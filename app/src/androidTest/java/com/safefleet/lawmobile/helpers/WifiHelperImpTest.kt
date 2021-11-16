@@ -1,6 +1,6 @@
 package com.safefleet.lawmobile.helpers
 
-import com.lawmobile.presentation.utils.WifiHelper
+import com.lawmobile.presentation.connectivity.WifiHelper
 import com.safefleet.lawmobile.testData.TestLoginData
 
 class WifiHelperImpTest : WifiHelper {
