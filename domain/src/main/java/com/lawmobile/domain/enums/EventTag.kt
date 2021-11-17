@@ -4,7 +4,8 @@ enum class EventTag(val value: String) {
     INFORMATION(""),
     WARNING("warn"),
     ERROR("err"),
-    INTERNET("internet");
+    INTERNET("internet"),
+    BLUETOOTH("bluetooth");
 
     companion object {
         fun getByValue(value: String): EventTag {
@@ -13,6 +14,7 @@ enum class EventTag(val value: String) {
                 WARNING.value -> WARNING
                 ERROR.value -> ERROR
                 INTERNET.value -> INTERNET
+                BLUETOOTH.value -> BLUETOOTH
                 else -> throw Exception("Event tag not supported or does not exist")
             }
         }
