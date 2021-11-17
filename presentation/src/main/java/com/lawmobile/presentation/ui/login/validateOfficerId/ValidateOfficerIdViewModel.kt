@@ -1,5 +1,6 @@
 package com.lawmobile.presentation.ui.login.validateOfficerId
 
+import android.bluetooth.BluetoothAdapter
 import androidx.lifecycle.viewModelScope
 import com.lawmobile.presentation.ui.base.BaseViewModel
 import com.safefleet.mobile.android_commons.helpers.network_manager.ListenableNetworkManager
@@ -11,11 +12,18 @@ import javax.inject.Inject
 @HiltViewModel
 class ValidateOfficerIdViewModel @Inject constructor(
     private val simpleNetworkManager: ListenableNetworkManager,
-    private val backgroundDispatcher: CoroutineDispatcher
+    private val backgroundDispatcher: CoroutineDispatcher,
+    private val bluetoothAdapter: BluetoothAdapter
 ) : BaseViewModel() {
     fun verifyInternetConnection(callback: (Boolean) -> Unit) {
         viewModelScope.launch(backgroundDispatcher) {
             simpleNetworkManager.verifyInternetConnection(callback)
+        }
+    }
+
+    fun verifyBluetoothConnection(callback: (Boolean) -> Unit) {
+        viewModelScope.launch(backgroundDispatcher) {
+            callback(bluetoothAdapter.isEnabled)
         }
     }
 }

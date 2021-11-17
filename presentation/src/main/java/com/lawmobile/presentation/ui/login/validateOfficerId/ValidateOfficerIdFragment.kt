@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.viewModels
+import com.lawmobile.domain.entities.customEvents.BluetoothErrorEvent
 import com.lawmobile.domain.entities.customEvents.InternetErrorEvent
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.databinding.FragmentValidateOfficerIdBinding
@@ -39,12 +40,27 @@ class ValidateOfficerIdFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         verifyInternetConnection()
+        verifyBluetoothConnection()
         binding.setOfficerId()
         binding.setListeners()
     }
 
     private fun FragmentValidateOfficerIdBinding.setOfficerId() {
         editTextOfficerId.setText(officerId)
+    }
+
+    private fun verifyBluetoothConnection() {
+        viewModel.verifyBluetoothConnection {
+            if (!it) showBluetoothOffDialog()
+        }
+    }
+
+    private fun showBluetoothOffDialog() {
+        activity?.runOnUiThread {
+            val event = BluetoothErrorEvent.event
+            context?.createNotificationDialog(event)
+                ?.setButtonText(resources.getString(R.string.OK))
+        }
     }
 
     private fun verifyInternetConnection() {

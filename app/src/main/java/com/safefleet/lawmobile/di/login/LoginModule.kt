@@ -1,5 +1,6 @@
 package com.safefleet.lawmobile.di.login
 
+import android.bluetooth.BluetoothAdapter
 import android.content.Context
 import android.content.SharedPreferences
 import com.lawmobile.domain.repository.authorization.AuthorizationRepository
@@ -60,4 +61,8 @@ class LoginModule {
         authorizationService: AuthorizationService
     ): AuthStateManagerFactory =
         AuthStateManagerFactoryImpl(sharedPreferences, authorizationService)
+
+    @Provides
+    fun provideBluetoothAdapter(): BluetoothAdapter =
+        BluetoothAdapter.getDefaultAdapter()
 }

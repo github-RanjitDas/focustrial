@@ -1,5 +1,6 @@
 package com.lawmobile.domain.enums
 
+import com.lawmobile.domain.entities.customEvents.BluetoothErrorEvent
 import com.lawmobile.domain.entities.customEvents.InternetErrorEvent
 import com.lawmobile.domain.entities.customEvents.WrongCredentialsEvent
 
@@ -75,6 +76,11 @@ enum class NotificationType(
         InternetErrorEvent.title,
         InternetErrorEvent.message
     ),
+    BLUETOOTH_CONNECTION_ISSUES(
+        BluetoothErrorEvent.value,
+        BluetoothErrorEvent.title,
+        BluetoothErrorEvent.message
+    ),
     HOTSPOT_CONNECTION_ISSUES(
         WrongCredentialsEvent.value,
         WrongCredentialsEvent.title,
@@ -116,6 +122,7 @@ enum class NotificationType(
                 STARTING_VIDEO_RECORD.value -> STARTING_VIDEO_RECORD
                 GPS_SIGNAL_LOST.value -> GPS_SIGNAL_LOST
                 INTERNET_CONNECTION_ISSUES.value -> INTERNET_CONNECTION_ISSUES
+                BLUETOOTH_CONNECTION_ISSUES.value -> BLUETOOTH_CONNECTION_ISSUES
                 HOTSPOT_CONNECTION_ISSUES.value -> HOTSPOT_CONNECTION_ISSUES
                 UNKNOWN_OPERATION.value -> UNKNOWN_OPERATION
                 else -> DEFAULT
