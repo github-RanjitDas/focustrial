@@ -9,6 +9,7 @@ import com.lawmobile.domain.usecase.LoginUseCases
 import com.lawmobile.domain.utils.PreferencesManager
 import com.lawmobile.presentation.BuildConfig
 import com.lawmobile.presentation.authentication.AuthStateManagerFactory
+import com.lawmobile.presentation.connectivity.WifiHelper
 import com.lawmobile.presentation.ui.base.BaseViewModel
 import com.safefleet.mobile.authentication.AuthStateManager
 import com.safefleet.mobile.kotlin_commons.helpers.Result
@@ -25,7 +26,8 @@ class LoginActivityViewModel @Inject constructor(
     private val loginUseCases: LoginUseCases,
     private val authStateManagerFactory: AuthStateManagerFactory,
     private val preferencesManager: PreferencesManager,
-    private val IODispatcher: CoroutineDispatcher
+    private val IODispatcher: CoroutineDispatcher,
+    private val wifiHelper: WifiHelper
 ) : BaseViewModel() {
 
     private lateinit var authStateManager: AuthStateManager
@@ -86,6 +88,16 @@ class LoginActivityViewModel @Inject constructor(
     fun getUserFromCamera() {
         viewModelScope.launch {
             _userFromCameraResult.postValue(loginUseCases.getUserFromCamera())
+        }
+    }
+
+    fun suggestWiFiNetwork(
+        networkName: String,
+        networkPassword: String,
+        connectionCallback: (connected: Boolean) -> Unit
+    ) {
+        viewModelScope.launch {
+            wifiHelper.suggestWiFiNetwork(networkName, networkPassword, connectionCallback)
         }
     }
 }

@@ -6,6 +6,8 @@ import com.lawmobile.domain.usecase.LoginUseCases
 import com.lawmobile.domain.utils.PreferencesManager
 import com.lawmobile.presentation.InstantExecutorExtension
 import com.lawmobile.presentation.authentication.AuthStateManagerFactory
+import com.lawmobile.presentation.connectivity.WifiHelper
+import com.lawmobile.presentation.ui.login.pairingPhoneWithCamera.PairingViewModelTest
 import com.safefleet.mobile.authentication.AuthStateManager
 import com.safefleet.mobile.kotlin_commons.helpers.Result
 import io.mockk.clearMocks
@@ -34,12 +36,16 @@ internal class LoginActivityViewModelTest {
     private val useCases: LoginUseCases = mockk()
     private val dispatcher = TestCoroutineDispatcher()
     private val authStateManager: AuthStateManager = mockk()
+    private val wifiHelper: WifiHelper = mockk {
+        every { isEqualsValueWithSSID(PairingViewModelTest.DEFAULT_SSID) } returns true
+        every { isEqualsValueWithSSID("X") } returns false
+    }
     private val authStateManagerFactory: AuthStateManagerFactory = mockk {
         every { create(any()) } returns authStateManager
     }
     private val preferencesManager: PreferencesManager = mockk()
     private val loginActivityViewModel =
-        LoginActivityViewModel(useCases, authStateManagerFactory, preferencesManager, dispatcher)
+        LoginActivityViewModel(useCases, authStateManagerFactory, preferencesManager, dispatcher, wifiHelper)
 
     @BeforeEach
     fun setUp() {
@@ -157,5 +163,12 @@ internal class LoginActivityViewModelTest {
         loginActivityViewModel.getDevicePassword("")
         Assert.assertEquals(result, loginActivityViewModel.devicePasswordResult.value)
         coVerify { useCases.getDevicePassword("") }
+    }
+
+    @Test
+    fun suggestWiFiNetwork() {
+        every { wifiHelper.suggestWiFiNetwork(any(), any(), any()) } returns Unit
+        loginActivityViewModel.suggestWiFiNetwork("", "") {}
+        verify { wifiHelper.suggestWiFiNetwork(any(), any(), any()) }
     }
 }

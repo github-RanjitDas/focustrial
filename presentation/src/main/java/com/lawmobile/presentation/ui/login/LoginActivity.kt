@@ -95,8 +95,13 @@ class LoginActivity :
 
     private fun handleDevicePasswordResult(result: Result<String>) {
         with(result) {
-            doIfSuccess { // change this and use the password for suggested wifi
-                showToast(it)
+            doIfSuccess {
+                val hotspotName = "X" + officerId.substringBefore("@")
+                val hotspotPassword = it.substring(0..14)
+                viewModel.suggestWiFiNetwork(hotspotName, hotspotPassword) { isConnected ->
+                    if (isConnected) showPairingResultFragment()
+                    else showStartPairingFragment()
+                }
             }
             doIfError { // change this and show a dialog to continue with offline login
                 showToast(it.message.toString())
