@@ -50,8 +50,10 @@ class SettingsBarFragment : BaseFragment() {
     }
 
     private fun setFeatures() {
-        if (!FeatureSupportHelper.supportBodyWornSettings)
-            binding.parentStatusBar.visibility = View.GONE
+        if (!FeatureSupportHelper.supportBodyWornSettings) {
+            binding.constraintHideStatusBar.visibility = View.GONE
+            binding.cameraStatusTitle.visibility = View.VISIBLE
+        }
     }
 
     private fun getSettingsInformation() {

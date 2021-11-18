@@ -21,6 +21,7 @@ import com.lawmobile.presentation.ui.base.BaseActivity
 import com.lawmobile.presentation.ui.base.appBar.x2.AppBarX2Fragment
 import com.lawmobile.presentation.ui.base.menu.MenuFragment
 import com.lawmobile.presentation.ui.base.settingsBar.SettingsBarFragment
+import com.lawmobile.presentation.utils.FeatureSupportHelper
 import com.safefleet.mobile.kotlin_commons.extensions.doIfError
 import com.safefleet.mobile.kotlin_commons.extensions.doIfSuccess
 import com.safefleet.mobile.kotlin_commons.helpers.Result
@@ -212,11 +213,13 @@ class NotificationListActivity : BaseActivity() {
     }
 
     private fun attachStatusBarSettingsFragment() {
-        supportFragmentManager.attachFragment(
-            containerId = R.id.statusBarFragment,
-            fragment = statusBarSettingsFragment,
-            tag = SettingsBarFragment.TAG
-        )
+        if (FeatureSupportHelper.supportBodyWornSettings) {
+            supportFragmentManager.attachFragment(
+                containerId = R.id.statusBarFragment,
+                fragment = statusBarSettingsFragment,
+                tag = SettingsBarFragment.TAG
+            )
+        }
     }
 
     private fun setAllNotificationsAsRead() {
