@@ -36,6 +36,7 @@
             android:digits="@string/allowedOfficerIdPattern"
             android:inputType="textFilter"
             android:imeOptions="actionDone"
+            android:singleLine="true"
             android:paddingHorizontal="@dimen/pairing_phone_camera_input_edit_padding_sides"
             android:textColor="@color/black"
             android:textCursorDrawable="@color/black"
