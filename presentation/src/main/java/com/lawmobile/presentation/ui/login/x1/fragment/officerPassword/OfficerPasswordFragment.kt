@@ -1,4 +1,4 @@
-package com.lawmobile.presentation.ui.login.validateOfficerPassword
+package com.lawmobile.presentation.ui.login.x1.fragment.officerPassword
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -13,12 +13,12 @@ import com.lawmobile.presentation.utils.EncodePassword
 import com.lawmobile.presentation.utils.EspressoIdlingResource
 import com.safefleet.mobile.android_commons.extensions.hideKeyboard
 
-class ValidateOfficerPasswordFragment : BaseFragment() {
+class OfficerPasswordFragment : BaseFragment() {
 
     private var _binding: FragmentValidateOfficerPasswordBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var fragmentListener: ValidateOfficerPasswordFragmentListener
+    private lateinit var fragmentListener: OfficerPasswordFragmentListener
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -61,11 +61,11 @@ class ValidateOfficerPasswordFragment : BaseFragment() {
 
     companion object {
         fun createInstance(
-            fragmentListener: ValidateOfficerPasswordFragmentListener
-        ) = ValidateOfficerPasswordFragment().apply {
+            fragmentListener: OfficerPasswordFragmentListener
+        ) = OfficerPasswordFragment().apply {
             this.fragmentListener = fragmentListener
         }
 
-        val TAG = ValidateOfficerPasswordFragment::class.java.simpleName
+        val TAG = OfficerPasswordFragment::class.java.simpleName
     }
 }

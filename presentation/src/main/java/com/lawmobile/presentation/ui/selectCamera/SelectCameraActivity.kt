@@ -10,7 +10,7 @@ import com.lawmobile.presentation.R
 import com.lawmobile.presentation.databinding.ActivitySelectCameraBinding
 import com.lawmobile.presentation.extensions.dataStore
 import com.lawmobile.presentation.ui.base.BaseActivity
-import com.lawmobile.presentation.ui.login.LoginActivity
+import com.lawmobile.presentation.ui.login.x1.LoginX1Activity
 import com.lawmobile.presentation.ui.onBoardingCards.OnBoardingCardsActivity
 import com.lawmobile.presentation.utils.Constants
 import kotlinx.coroutines.launch
@@ -77,15 +77,17 @@ class SelectCameraActivity : BaseActivity() {
 
     private fun ActivitySelectCameraBinding.goToNextActivity() {
         setCameraTypePreference()
-        val activity = getActivityDependingOnCameraType()
-        val onBoardingCardsActivityIntent = Intent(applicationContext, activity)
-        startActivity(onBoardingCardsActivityIntent)
+        val intent = getIntentDependingOnCameraType()
+        startActivity(intent)
         finish()
     }
 
-    private fun ActivitySelectCameraBinding.getActivityDependingOnCameraType() =
-        if (buttonX2Camera.isActivated) OnBoardingCardsActivity::class.java
-        else LoginActivity::class.java
+    private fun ActivitySelectCameraBinding.getIntentDependingOnCameraType() =
+        Intent(
+            baseContext,
+            if (buttonX2Camera.isActivated) OnBoardingCardsActivity::class.java
+            else LoginX1Activity::class.java
+        )
 
     private fun ActivitySelectCameraBinding.setCameraTypePreference() {
         CameraInfo.cameraType = if (buttonX2Camera.isActivated) CameraType.X2 else CameraType.X1

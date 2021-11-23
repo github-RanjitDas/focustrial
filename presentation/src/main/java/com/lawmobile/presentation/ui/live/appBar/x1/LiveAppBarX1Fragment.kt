@@ -11,7 +11,7 @@ import com.lawmobile.presentation.databinding.FragmentLiveAppBarX1Binding
 import com.lawmobile.presentation.extensions.createAlertConfirmAppExit
 import com.lawmobile.presentation.extensions.setOnClickListenerCheckConnection
 import com.lawmobile.presentation.ui.base.BaseFragment
-import com.lawmobile.presentation.ui.login.LoginActivity
+import com.lawmobile.presentation.ui.login.x1.LoginX1Activity
 
 class LiveAppBarX1Fragment : BaseFragment() {
 
@@ -53,7 +53,7 @@ class LiveAppBarX1Fragment : BaseFragment() {
 
     private fun logout() {
         viewModel.disconnectCamera()
-        startActivity(Intent(requireContext(), LoginActivity::class.java))
+        startActivity(Intent(requireContext(), LoginX1Activity::class.java))
         requireActivity().finish()
     }
 

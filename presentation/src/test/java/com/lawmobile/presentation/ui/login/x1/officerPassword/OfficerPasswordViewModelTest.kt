@@ -1,9 +1,10 @@
-package com.lawmobile.presentation.ui.login.validateOfficerPassword
+package com.lawmobile.presentation.ui.login.x1.officerPassword
 
 import com.lawmobile.domain.entities.CameraInfo
 import com.lawmobile.domain.enums.CameraType
 import com.lawmobile.domain.usecase.typeOfCamera.TypeOfCameraUseCase
 import com.lawmobile.presentation.InstantExecutorExtension
+import com.lawmobile.presentation.ui.login.x1.fragment.officerPassword.OfficerPasswordViewModel
 import com.safefleet.mobile.kotlin_commons.helpers.Result
 import io.mockk.Runs
 import io.mockk.clearMocks
@@ -27,12 +28,12 @@ import org.junit.jupiter.api.extension.ExtendWith
 @ExperimentalCoroutinesApi
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @ExtendWith(InstantExecutorExtension::class)
-class ValidateOfficerPasswordViewModelTest {
+class OfficerPasswordViewModelTest {
 
     private val typeOfCameraUseCase: TypeOfCameraUseCase = mockk()
 
-    private val passwordViewModel: ValidateOfficerPasswordViewModel by lazy {
-        ValidateOfficerPasswordViewModel(typeOfCameraUseCase)
+    private val passwordViewModel: OfficerPasswordViewModel by lazy {
+        OfficerPasswordViewModel(typeOfCameraUseCase)
     }
 
     private val dispatcher = TestCoroutineDispatcher()

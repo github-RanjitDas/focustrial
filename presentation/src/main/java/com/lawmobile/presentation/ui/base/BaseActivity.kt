@@ -25,7 +25,7 @@ import com.lawmobile.presentation.extensions.createAlertProgress
 import com.lawmobile.presentation.extensions.createAlertSessionExpired
 import com.lawmobile.presentation.extensions.createNotificationDialog
 import com.lawmobile.presentation.security.RootedHelper
-import com.lawmobile.presentation.ui.login.LoginActivity
+import com.lawmobile.presentation.ui.login.x1.LoginX1Activity
 import com.lawmobile.presentation.utils.CameraHelper
 import com.lawmobile.presentation.utils.EspressoIdlingResource
 import dagger.hilt.android.AndroidEntryPoint
@@ -153,12 +153,12 @@ open class BaseActivity : AppCompatActivity() {
 
     override fun onRestart() {
         super.onRestart()
-        if (checkIfSessionIsExpired() && this !is LoginActivity) this.createAlertSessionExpired()
+        if (checkIfSessionIsExpired() && this !is LoginX1Activity) this.createAlertSessionExpired()
     }
 
     override fun onUserInteraction() {
         super.onUserInteraction()
-        if (!isLiveVideoOrPlaybackActive && !isRecordingVideo && checkIfSessionIsExpired() && this !is LoginActivity) {
+        if (!isLiveVideoOrPlaybackActive && !isRecordingVideo && checkIfSessionIsExpired() && this !is LoginX1Activity) {
             return
         }
         updateLastInteraction()
