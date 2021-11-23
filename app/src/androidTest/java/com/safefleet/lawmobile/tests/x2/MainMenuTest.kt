@@ -3,7 +3,7 @@ package com.safefleet.lawmobile.tests.x2
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
 import com.lawmobile.domain.enums.CameraType
-import com.lawmobile.presentation.ui.login.LoginActivity
+import com.lawmobile.presentation.ui.login.x2.LoginX2Activity
 import com.lawmobile.presentation.utils.FeatureSupportHelper
 import com.safefleet.lawmobile.helpers.Alert.isExitAppDialogDisplayed
 import com.safefleet.lawmobile.helpers.SmokeTest
@@ -36,7 +36,7 @@ class MainMenuTest : EspressoBaseTest() {
     private val helpScreen = HelpPageScreen()
 
     @get:Rule
-    var baristaRule = BaristaRule.create(LoginActivity::class.java)
+    var baristaRule = BaristaRule.create(LoginX2Activity::class.java)
 
     @Before
     fun setUp() {

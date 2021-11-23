@@ -1,4 +1,4 @@
-package com.lawmobile.presentation.ui.login.validateOfficerId
+package com.lawmobile.presentation.ui.login.x2.fragment.officerId
 
 import android.content.Intent
 import android.os.Bundle
@@ -18,9 +18,9 @@ import com.lawmobile.presentation.ui.onBoardingCards.OnBoardingCardsActivity
 import com.lawmobile.presentation.ui.selectCamera.SelectCameraActivity
 import com.safefleet.mobile.android_commons.extensions.hideKeyboard
 
-class ValidateOfficerIdFragment : BaseFragment() {
+class OfficerIdFragment : BaseFragment() {
 
-    private val viewModel: ValidateOfficerIdViewModel by viewModels()
+    private val viewModel: OfficerIdViewModel by viewModels()
 
     private var _binding: FragmentValidateOfficerIdBinding? = null
     private val binding get() = _binding!!
@@ -115,8 +115,10 @@ class ValidateOfficerIdFragment : BaseFragment() {
         (activity as AppCompatActivity).hideKeyboard()
         val officerId = editTextOfficerId.text.toString()
         viewModel.verifyInternetConnection {
-            val isEmail = officerId.contains("@") && officerId.contains(".")
-            onContinueClick(isEmail, officerId)
+            if (it) {
+                val isEmail = officerId.contains("@") && officerId.contains(".")
+                onContinueClick(isEmail, officerId)
+            } else onContinueClick(it, officerId)
         }
     }
 
@@ -132,12 +134,12 @@ class ValidateOfficerIdFragment : BaseFragment() {
     }
 
     companion object {
-        val TAG = ValidateOfficerIdFragment::class.java.simpleName
+        val TAG = OfficerIdFragment::class.java.simpleName
 
         fun createInstance(
             onContinueClick: (Boolean, String) -> Unit,
             officerId: String
-        ) = ValidateOfficerIdFragment().apply {
+        ) = OfficerIdFragment().apply {
             this.officerId = officerId
             this.onContinueClick = onContinueClick
         }

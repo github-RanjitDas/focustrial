@@ -60,7 +60,14 @@
             tools:ignore="LockedOrientationActivity"/>
 
         <activity
-            android:name="com.lawmobile.presentation.ui.login.LoginActivity"
+            android:name="com.lawmobile.presentation.ui.login.x1.LoginX1Activity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustNothing"
+            tools:ignore="LockedOrientationActivity" />
+
+        <activity
+            android:name="com.lawmobile.presentation.ui.login.x2.LoginX2Activity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustNothing"

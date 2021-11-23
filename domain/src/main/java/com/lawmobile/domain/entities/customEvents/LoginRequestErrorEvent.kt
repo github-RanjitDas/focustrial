@@ -4,14 +4,14 @@ import com.lawmobile.domain.entities.CameraEvent
 import com.lawmobile.domain.enums.EventTag
 import com.lawmobile.domain.enums.EventType
 
-object BluetoothErrorEvent {
-    const val value = "bluetooth_issues"
-    const val title = "The mobile Bluetooth is off"
-    const val message = "Please turn on the Bluetooth."
+object LoginRequestErrorEvent {
+    const val value = "online_login_error"
+    const val title = "Something Went Wrong"
+    const val message = "Please use your device password to login or contact your administrator."
 
     val event = CameraEvent(
         name = value,
-        eventTag = EventTag.BLUETOOTH,
+        eventTag = EventTag.ERROR,
         eventType = EventType.NOTIFICATION
     )
 }

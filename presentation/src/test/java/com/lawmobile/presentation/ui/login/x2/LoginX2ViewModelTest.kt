@@ -1,7 +1,6 @@
-package com.lawmobile.presentation.ui.login
+package com.lawmobile.presentation.ui.login.x2
 
 import com.lawmobile.domain.entities.AuthorizationEndpoints
-import com.lawmobile.domain.entities.User
 import com.lawmobile.domain.usecase.LoginUseCases
 import com.lawmobile.domain.utils.PreferencesManager
 import com.lawmobile.presentation.InstantExecutorExtension
@@ -31,9 +30,8 @@ import org.junit.jupiter.api.extension.ExtendWith
 @ExperimentalCoroutinesApi
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @ExtendWith(InstantExecutorExtension::class)
-internal class LoginActivityViewModelTest {
-
-    private val useCases: LoginUseCases = mockk()
+internal class LoginX2ViewModelTest {
+    private val useCases: LoginUseCases = mockk(relaxed = true)
     private val dispatcher = TestCoroutineDispatcher()
     private val authStateManager: AuthStateManager = mockk()
     private val wifiHelper: WifiHelper = mockk {
@@ -45,36 +43,12 @@ internal class LoginActivityViewModelTest {
     }
     private val preferencesManager: PreferencesManager = mockk()
     private val loginActivityViewModel =
-        LoginActivityViewModel(useCases, authStateManagerFactory, preferencesManager, dispatcher, wifiHelper)
+        LoginX2ViewModel(useCases, authStateManagerFactory, preferencesManager, dispatcher, wifiHelper)
 
     @BeforeEach
     fun setUp() {
         clearMocks()
         Dispatchers.setMain(dispatcher)
-    }
-
-    @Test
-    fun testGetInformationUserFlow() {
-        coEvery { useCases.getUserFromCamera() } returns Result.Success(
-            User("1", "", "")
-        )
-        loginActivityViewModel.getUserFromCamera()
-        coVerify { useCases.getUserFromCamera() }
-    }
-
-    @Test
-    fun testGetInformationUserSuccess() {
-        val result = Result.Success(User("1", "", ""))
-        coEvery { useCases.getUserFromCamera() } returns result
-        loginActivityViewModel.getUserFromCamera()
-        Assert.assertEquals(loginActivityViewModel.userFromCameraResult.value, result)
-    }
-
-    @Test
-    fun testGetInformationUserError() {
-        coEvery { useCases.getUserFromCamera() } returns Result.Error(Exception("Error"))
-        loginActivityViewModel.getUserFromCamera()
-        Assert.assertTrue(loginActivityViewModel.userFromCameraResult.value is Result.Error)
     }
 
     @Test
@@ -163,12 +137,5 @@ internal class LoginActivityViewModelTest {
         loginActivityViewModel.getDevicePassword("")
         Assert.assertEquals(result, loginActivityViewModel.devicePasswordResult.value)
         coVerify { useCases.getDevicePassword("") }
-    }
-
-    @Test
-    fun suggestWiFiNetwork() {
-        every { wifiHelper.suggestWiFiNetwork(any(), any(), any()) } returns Unit
-        loginActivityViewModel.suggestWiFiNetwork("", "") {}
-        verify { wifiHelper.suggestWiFiNetwork(any(), any(), any()) }
     }
 }

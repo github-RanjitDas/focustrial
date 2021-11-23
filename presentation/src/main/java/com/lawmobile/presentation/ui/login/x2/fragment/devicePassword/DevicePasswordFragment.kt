@@ -1,4 +1,4 @@
-package com.lawmobile.presentation.ui.login.pairingPhoneWithCamera.x2
+package com.lawmobile.presentation.ui.login.x2.fragment.devicePassword
 
 import android.Manifest
 import android.content.ComponentName
@@ -29,21 +29,21 @@ import com.lawmobile.presentation.security.IIsolatedService
 import com.lawmobile.presentation.security.IsolatedService
 import com.lawmobile.presentation.ui.base.BaseActivity
 import com.lawmobile.presentation.ui.base.BaseFragment
-import com.lawmobile.presentation.ui.login.LoginActivity
-import com.lawmobile.presentation.ui.login.pairingPhoneWithCamera.PairingViewModel
-import com.lawmobile.presentation.ui.login.pairingPhoneWithCamera.x1.StartPairingX1Fragment
+import com.lawmobile.presentation.ui.login.shared.PairingViewModel
+import com.lawmobile.presentation.ui.login.x1.fragment.StartPairingFragment
+import com.lawmobile.presentation.ui.login.x2.LoginX2Activity
 import com.safefleet.mobile.android_commons.extensions.hideKeyboard
 import com.safefleet.mobile.kotlin_commons.extensions.doIfError
 import com.safefleet.mobile.kotlin_commons.extensions.doIfSuccess
 import com.safefleet.mobile.kotlin_commons.helpers.Result
 
-class StartPairingX2Fragment : BaseFragment() {
+class DevicePasswordFragment : BaseFragment() {
     private var _binding: FragmentStartPairingX2Binding? = null
     private val binding get() = _binding!!
 
     private val pairingViewModel: PairingViewModel by viewModels()
 
-    private lateinit var fragmentListener: StartPairingX2FragmentListener
+    private lateinit var fragmentListener: DevicePasswordFragmentListener
 
     private lateinit var serviceBinder: IIsolatedService
     private var isServiceBounded = false
@@ -117,7 +117,7 @@ class StartPairingX2Fragment : BaseFragment() {
     }
 
     private fun showBottomSheet() {
-        (activity as LoginActivity).sheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+        (activity as LoginX2Activity).sheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
     }
 
     private fun verifyPermissionsToStartPairing() {
@@ -243,11 +243,11 @@ class StartPairingX2Fragment : BaseFragment() {
     }
 
     companion object {
-        val TAG = StartPairingX1Fragment::class.java.simpleName
+        val TAG = StartPairingFragment::class.java.simpleName
         fun createInstance(
-            fragmentListener: StartPairingX2FragmentListener,
-        ): StartPairingX2Fragment =
-            StartPairingX2Fragment().apply {
+            fragmentListener: DevicePasswordFragmentListener,
+        ): DevicePasswordFragment =
+            DevicePasswordFragment().apply {
                 this.fragmentListener = fragmentListener
             }
     }

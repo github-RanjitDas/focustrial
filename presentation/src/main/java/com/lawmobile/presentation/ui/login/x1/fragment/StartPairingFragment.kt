@@ -1,4 +1,4 @@
-package com.lawmobile.presentation.ui.login.pairingPhoneWithCamera.x1
+package com.lawmobile.presentation.ui.login.x1.fragment
 
 import android.Manifest
 import android.content.ComponentName
@@ -27,14 +27,14 @@ import com.lawmobile.presentation.security.IIsolatedService
 import com.lawmobile.presentation.security.IsolatedService
 import com.lawmobile.presentation.ui.base.BaseActivity
 import com.lawmobile.presentation.ui.base.BaseFragment
-import com.lawmobile.presentation.ui.login.LoginActivity
-import com.lawmobile.presentation.ui.login.pairingPhoneWithCamera.PairingViewModel
+import com.lawmobile.presentation.ui.login.shared.PairingViewModel
+import com.lawmobile.presentation.ui.login.x1.LoginX1Activity
 import com.lawmobile.presentation.ui.selectCamera.SelectCameraActivity
 import com.safefleet.mobile.kotlin_commons.extensions.doIfError
 import com.safefleet.mobile.kotlin_commons.extensions.doIfSuccess
 import com.safefleet.mobile.kotlin_commons.helpers.Result
 
-class StartPairingX1Fragment : BaseFragment() {
+class StartPairingFragment : BaseFragment() {
 
     private var _binding: FragmentStartPairingX1Binding? = null
     private val binding get() = _binding!!
@@ -106,7 +106,7 @@ class StartPairingX1Fragment : BaseFragment() {
     }
 
     private fun showBottomSheet() {
-        (activity as LoginActivity).sheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+        (activity as LoginX1Activity).sheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
     }
 
     private fun verifyPermissionsToStartPairing() {
@@ -228,8 +228,8 @@ class StartPairingX1Fragment : BaseFragment() {
     }
 
     companion object {
-        val TAG = StartPairingX1Fragment::class.java.simpleName
-        fun createInstance(onValidRequirements: () -> Unit): StartPairingX1Fragment =
-            StartPairingX1Fragment().apply { this.onValidRequirements = onValidRequirements }
+        val TAG = StartPairingFragment::class.java.simpleName
+        fun createInstance(onValidRequirements: () -> Unit): StartPairingFragment =
+            StartPairingFragment().apply { this.onValidRequirements = onValidRequirements }
     }
 }

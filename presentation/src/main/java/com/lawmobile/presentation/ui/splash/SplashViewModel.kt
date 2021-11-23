@@ -9,7 +9,8 @@ import com.lawmobile.domain.entities.CameraInfo
 import com.lawmobile.domain.enums.CameraType
 import com.lawmobile.presentation.ui.base.BaseActivity
 import com.lawmobile.presentation.ui.base.BaseViewModel
-import com.lawmobile.presentation.ui.login.LoginActivity
+import com.lawmobile.presentation.ui.login.x1.LoginX1Activity
+import com.lawmobile.presentation.ui.login.x2.LoginX2Activity
 import com.lawmobile.presentation.ui.onBoardingCards.OnBoardingCardsActivity
 import com.lawmobile.presentation.ui.selectCamera.SelectCameraActivity
 import com.lawmobile.presentation.utils.Constants
@@ -39,19 +40,28 @@ class SplashViewModel @Inject constructor(
                 preferences[Constants.CAMERA_TYPE] ?: "none"
             }.first()
 
+        updateCameraType(cameraType)
+
+        val wasCameraSelected = wasCameraSelected(cameraType)
+        getOnBoardingPreference(wasCameraSelected)
+    }
+
+    private fun updateCameraType(cameraType: String) {
         when (cameraType) {
             CameraType.X1.name -> CameraInfo.cameraType = CameraType.X1
             CameraType.X2.name -> CameraInfo.cameraType = CameraType.X2
         }
-
-        val wasCameraSelected = cameraType != "none"
-        getOnBoardingPreference(wasCameraSelected)
     }
+
+    private fun wasCameraSelected(cameraType: String) =
+        cameraType == CameraType.X1.name || cameraType == CameraType.X2.name
 
     private suspend fun getOnBoardingPreference(wasCameraSelected: Boolean) {
         val wasOnBoardingDisplayed = dataStore.data
             .map { preferences ->
-                preferences[Constants.ON_BOARDING_DISPLAYED] ?: false
+                val displayed = preferences[Constants.ON_BOARDING_DISPLAYED] ?: false
+                if (!displayed) CameraInfo.cameraType == CameraType.X1
+                else displayed
             }.first()
 
         setNextActivity(wasOnBoardingDisplayed, wasCameraSelected)
@@ -61,8 +71,12 @@ class SplashViewModel @Inject constructor(
         val activity = when {
             !wasCameraSelected -> SelectCameraActivity::class.java
             !wasOnBoardingDisplayed -> OnBoardingCardsActivity::class.java
-            else -> LoginActivity::class.java
+            else -> getCameraTypeLoginActivity()
         }
         _nextActivityResult.value = activity
     }
+
+    private fun getCameraTypeLoginActivity() =
+        if (CameraInfo.cameraType == CameraType.X1) LoginX1Activity::class.java
+        else LoginX2Activity::class.java
 }

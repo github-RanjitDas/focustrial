@@ -23,6 +23,7 @@ class CustomNotificationDialog(
 ),
     View.OnClickListener {
 
+    var onConfirmationClick: (() -> Unit)? = null
     private lateinit var binding: DialogCustomNotificationBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -62,5 +63,6 @@ class CustomNotificationDialog(
 
     override fun onClick(v: View?) {
         dismiss()
+        onConfirmationClick?.invoke()
     }
 }
