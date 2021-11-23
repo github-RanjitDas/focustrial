@@ -21,7 +21,7 @@
     <!-- Onboarding -->
     <string name="skip_intro">Skip</string>
     <string name="description_card_1">Please, &lt;b&gt;turn on &lt;/b&gt; the Body-Camera hotspot</string>
-    <string name="description_card_2">Please Enter your Officer ID or Email and tap in the &lt;b&gt;Continue&lt;/b&gt; Button.</string>
+    <string name="description_card_2">Please enter your officer ID or email address as provided by your administrator and tap and tap on the &lt;b&gt;Continue&lt;/b&gt; button.</string>
     <string name="description_card_3">If you are in this screen, please enter your email and password and tap in the &lt;b&gt;Login&lt;/b&gt; button</string>
     <string name="description_card_4">If you are in this screen, please enter your device password and tap in the &lt;b&gt;Connect&lt;/b&gt; button.</string>
 
@@ -280,7 +280,7 @@
     <string name="continue_text">Continue</string>
     <string name="or">or</string>
     <string name="display">Display</string>
-    <string name="officer_id">Enter Officer ID or Email</string>
+    <string name="officer_id">Enter your officer ID or email</string>
     <string name="change_camera_type">Change Body-Camera type</string>
     <string name="go_to_on_boarding_cards">Go to on-boarding cards</string>
     <string name="sign_in_with_email">Sign in with Email</string>
