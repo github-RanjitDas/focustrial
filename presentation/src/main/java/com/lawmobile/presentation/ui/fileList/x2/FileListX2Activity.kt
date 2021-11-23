@@ -14,6 +14,7 @@ import com.lawmobile.presentation.ui.base.settingsBar.SettingsBarFragment
 import com.lawmobile.presentation.ui.fileList.FileListBaseActivity
 import com.lawmobile.presentation.ui.fileList.filterSection.x2.FilterSectionX2Fragment
 import com.lawmobile.presentation.utils.Constants
+import com.lawmobile.presentation.utils.FeatureSupportHelper
 
 class FileListX2Activity : FileListBaseActivity() {
 
@@ -144,11 +145,13 @@ class FileListX2Activity : FileListBaseActivity() {
     }
 
     private fun attachStatusBarSettingsFragment() {
-        supportFragmentManager.attachFragment(
-            containerId = R.id.statusBarFragment,
-            fragment = statusBarSettingsFragment,
-            tag = SettingsBarFragment.TAG
-        )
+        if (FeatureSupportHelper.supportBodyWornSettings) {
+            supportFragmentManager.attachFragment(
+                containerId = R.id.statusBarFragment,
+                fragment = statusBarSettingsFragment,
+                tag = SettingsBarFragment.TAG
+            )
+        }
     }
 
     private fun showAssignToOfficerBottomSheet() {

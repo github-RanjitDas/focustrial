@@ -1,4 +1,4 @@
-package com.lawmobile.presentation.ui.login.validateOfficerId
+package com.lawmobile.presentation.ui.login.x2.fragment.officerId
 
 import android.bluetooth.BluetoothAdapter
 import com.lawmobile.presentation.InstantExecutorExtension
@@ -20,12 +20,12 @@ import org.junit.jupiter.api.extension.ExtendWith
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @ExtendWith(InstantExecutorExtension::class)
 internal class
-ValidateOfficerIdViewModelTest {
+OfficerIdViewModelTest {
 
     private val simpleNetworkManager = mockk<ListenableNetworkManager>(relaxed = true)
     private val bluetoothAdapter = mockk<BluetoothAdapter>(relaxed = true)
     private val dispatcher = TestCoroutineDispatcher()
-    private val viewModel = ValidateOfficerIdViewModel(simpleNetworkManager, dispatcher, bluetoothAdapter)
+    private val viewModel = OfficerIdViewModel(simpleNetworkManager, dispatcher, bluetoothAdapter)
 
     @Test
     fun verifyInternetConnection() = runBlockingTest {

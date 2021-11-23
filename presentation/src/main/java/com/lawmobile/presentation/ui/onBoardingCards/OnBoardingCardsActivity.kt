@@ -16,7 +16,7 @@ import com.lawmobile.presentation.databinding.ActivityOnBoardingCardsBinding
 import com.lawmobile.presentation.entities.OnBoardingCardContent
 import com.lawmobile.presentation.extensions.dataStore
 import com.lawmobile.presentation.ui.base.BaseActivity
-import com.lawmobile.presentation.ui.login.LoginActivity
+import com.lawmobile.presentation.ui.login.x2.LoginX2Activity
 import com.lawmobile.presentation.utils.Constants.ON_BOARDING_DISPLAYED
 import kotlinx.coroutines.launch
 
@@ -89,7 +89,7 @@ class OnBoardingCardsActivity : BaseActivity() {
 
     private fun goToLoginActivity() {
         setOnBoardingDisplayPreference()
-        val loginActivityIntent = Intent(applicationContext, LoginActivity::class.java)
+        val loginActivityIntent = Intent(applicationContext, LoginX2Activity::class.java)
         startActivity(loginActivityIntent)
         finish()
     }

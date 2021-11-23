@@ -1,4 +1,4 @@
-package com.lawmobile.presentation.ui.login.pairingPhoneWithCamera
+package com.lawmobile.presentation.ui.login.shared
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData

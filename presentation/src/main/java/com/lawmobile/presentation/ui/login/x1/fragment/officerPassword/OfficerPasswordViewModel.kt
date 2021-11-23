@@ -1,4 +1,4 @@
-package com.lawmobile.presentation.ui.login.validateOfficerPassword
+package com.lawmobile.presentation.ui.login.x1.fragment.officerPassword
 
 import androidx.lifecycle.viewModelScope
 import com.lawmobile.domain.entities.CameraInfo
@@ -10,7 +10,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class ValidateOfficerPasswordViewModel @Inject constructor(
+class OfficerPasswordViewModel @Inject constructor(
     private val typeOfCameraUseCase: TypeOfCameraUseCase
 ) : BaseViewModel() {
     fun setCameraType() {

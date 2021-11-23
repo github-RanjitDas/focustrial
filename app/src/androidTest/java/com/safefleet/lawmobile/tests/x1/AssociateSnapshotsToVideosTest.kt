@@ -3,7 +3,7 @@ package com.safefleet.lawmobile.tests.x1
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
 import androidx.test.filters.Suppress
-import com.lawmobile.presentation.ui.login.LoginActivity
+import com.lawmobile.presentation.ui.login.x1.LoginX1Activity
 import com.safefleet.lawmobile.R
 import com.safefleet.lawmobile.screens.AssociateSnapshotsScreen
 import com.safefleet.lawmobile.screens.FileListScreen
@@ -21,7 +21,7 @@ import org.junit.runner.RunWith
 @Suppress
 @RunWith(AndroidJUnit4::class)
 class AssociateSnapshotsToVideosTest :
-    EspressoStartActivityBaseTest<LoginActivity>(LoginActivity::class.java) {
+    EspressoStartActivityBaseTest<LoginX1Activity>(LoginX1Activity::class.java) {
 
     companion object {
         private val defaultMetadata = VideoPlaybackMetadata.DEFAULT_VIDEO_METADATA.value

@@ -1,4 +1,4 @@
-package com.lawmobile.presentation.ui.login.pairingPhoneWithCamera
+package com.lawmobile.presentation.ui.login.shared
 
 import android.os.Bundle
 import android.view.LayoutInflater

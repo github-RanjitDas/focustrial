@@ -1,4 +1,4 @@
-package com.lawmobile.presentation.ui.login.validateOfficerId
+package com.lawmobile.presentation.ui.login.x2.fragment.officerId
 
 import android.bluetooth.BluetoothAdapter
 import androidx.lifecycle.viewModelScope
@@ -10,7 +10,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class ValidateOfficerIdViewModel @Inject constructor(
+class OfficerIdViewModel @Inject constructor(
     private val simpleNetworkManager: ListenableNetworkManager,
     private val backgroundDispatcher: CoroutineDispatcher,
     private val bluetoothAdapter: BluetoothAdapter
