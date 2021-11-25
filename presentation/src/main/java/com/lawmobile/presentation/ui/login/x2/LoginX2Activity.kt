@@ -11,7 +11,6 @@ import com.lawmobile.domain.entities.customEvents.LoginRequestErrorEvent
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.extensions.attachFragmentWithAnimation
 import com.lawmobile.presentation.extensions.createNotificationDialog
-import com.lawmobile.presentation.extensions.showToast
 import com.lawmobile.presentation.ui.live.x2.LiveX2Activity
 import com.lawmobile.presentation.ui.login.LoginBaseActivity
 import com.lawmobile.presentation.ui.login.x2.fragment.devicePassword.DevicePasswordFragment
@@ -63,6 +62,7 @@ class LoginX2Activity : LoginBaseActivity(), DevicePasswordFragmentListener {
     private fun handleDevicePasswordResult(result: Result<String>) {
         with(result) {
             doIfSuccess {
+                hideLoadingDialog()
                 val hotspotName = "X" + officerId.substringBefore("@")
                 val hotspotPassword = it.substring(0..14)
                 viewModel.suggestWiFiNetwork(hotspotName, hotspotPassword) { isConnected ->
@@ -161,11 +161,11 @@ class LoginX2Activity : LoginBaseActivity(), DevicePasswordFragmentListener {
 
             when {
                 response.authorizationCode != null -> {
-                    viewModel.authenticateToGetToken(response, ::onIdTokenResponse)
+                    showLoadingDialog()
+                    viewModel.authenticateToGetToken(response, ::onTokenResponse)
                 }
                 exception != null -> {
-                    showToast(getString(R.string.sso_auth_error))
-                    showDevicePasswordFragment()
+                    showRequestError()
                 }
             }
         }
@@ -177,14 +177,14 @@ class LoginX2Activity : LoginBaseActivity(), DevicePasswordFragmentListener {
     private fun buildAuthorizationResponse(data: Intent) =
         AuthorizationResponse.Builder(authRequest).fromUri(data.data!!).build()
 
-    private fun onIdTokenResponse(response: Result<TokenResponse>) {
+    private fun onTokenResponse(response: Result<TokenResponse>) {
         with(response) {
             doIfSuccess {
                 viewModel.saveToken(it.accessToken.toString())
                 viewModel.getDevicePassword(officerId)
             }
             doIfError {
-                showToast(getString(R.string.auth_token_error, it.message))
+                showRequestError()
             }
         }
     }
