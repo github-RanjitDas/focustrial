@@ -10,11 +10,11 @@ import javax.inject.Inject
 class MobileDataStatus @Inject constructor(private val connectivityManager: ConnectivityManager) : LiveData<Boolean>() {
 
     private val networkCallback = object : ConnectivityManager.NetworkCallback() {
-        override fun onAvailable(network: Network?) {
+        override fun onAvailable(network: Network) {
             postValue(true)
         }
 
-        override fun onLost(network: Network?) {
+        override fun onLost(network: Network) {
             postValue(false)
         }
     }
