@@ -11,7 +11,7 @@ import javax.inject.Inject
 class WifiStatus @Inject constructor(private val connectivityManager: ConnectivityManager) : LiveData<Boolean>() {
 
     private val networkCallback = object : ConnectivityManager.NetworkCallback() {
-        override fun onLost(network: Network?) {
+        override fun onLost(network: Network) {
             if (CameraInfo.isOfficerLogged) {
                 postValue(false)
             }
