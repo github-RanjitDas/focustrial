@@ -3,6 +3,7 @@ package com.lawmobile.presentation.ui.sso
 import android.content.RestrictionsManager
 import android.os.Bundle
 import androidx.activity.viewModels
+import androidx.core.view.isVisible
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.databinding.ActivitySsoLoginBinding
 import com.lawmobile.presentation.extensions.attachFragment
@@ -16,7 +17,14 @@ class SSOActivity : BaseActivity() {
     private lateinit var binding: ActivitySsoLoginBinding
 
     private val ssoLoginFragment by lazy {
-        SSOLoginFragment.createInstance(viewModel.getNetworkManager())
+        SSOLoginFragment.createInstance(
+            viewModel.getNetworkManager(),
+            ::onUriChange
+        )
+    }
+
+    private fun onUriChange(isLoginUri: Boolean) {
+        binding.returnButton.isVisible = isLoginUri
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
