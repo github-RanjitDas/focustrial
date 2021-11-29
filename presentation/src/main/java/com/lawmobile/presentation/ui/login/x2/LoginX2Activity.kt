@@ -4,6 +4,7 @@ import android.content.Intent
 import android.content.RestrictionsManager
 import android.os.Bundle
 import androidx.activity.viewModels
+import androidx.lifecycle.lifecycleScope
 import com.lawmobile.domain.entities.AuthorizationEndpoints
 import com.lawmobile.domain.entities.CameraInfo
 import com.lawmobile.domain.entities.User
@@ -20,6 +21,8 @@ import com.lawmobile.presentation.ui.sso.SSOActivity
 import com.safefleet.mobile.kotlin_commons.extensions.doIfError
 import com.safefleet.mobile.kotlin_commons.extensions.doIfSuccess
 import com.safefleet.mobile.kotlin_commons.helpers.Result
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import net.openid.appauth.AuthorizationException
 import net.openid.appauth.AuthorizationRequest
 import net.openid.appauth.AuthorizationResponse
@@ -30,6 +33,7 @@ class LoginX2Activity : LoginBaseActivity(), DevicePasswordFragmentListener {
     private val viewModel: LoginX2ViewModel by viewModels()
     override var officerId: String = ""
     private lateinit var authRequest: AuthorizationRequest
+    private lateinit var officerIdFragment: OfficerIdFragment
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,23 +60,30 @@ class LoginX2Activity : LoginBaseActivity(), DevicePasswordFragmentListener {
             doIfSuccess { goToSsoLogin(it) }
             doIfError { showRequestError() }
         }
-        hideLoadingDialog()
     }
 
     private fun handleDevicePasswordResult(result: Result<String>) {
         with(result) {
             doIfSuccess {
-                hideLoadingDialog()
                 val hotspotName = "X" + officerId.substringBefore("@")
                 val hotspotPassword = it.substring(0..14)
                 viewModel.suggestWiFiNetwork(hotspotName, hotspotPassword) { isConnected ->
                     if (isConnected) showPairingResultFragment()
                     else showDevicePasswordFragment()
                 }
+                waitToEnableContinue()
             }
             doIfError {
                 showRequestError()
             }
+        }
+    }
+
+    private fun waitToEnableContinue() {
+        lifecycleScope.launch {
+            delay(ENABLE_CONTINUE_DELAY)
+            officerIdFragment.setButtonContinueEnable(true)
+            hideLoadingDialog()
         }
     }
 
@@ -83,6 +94,7 @@ class LoginX2Activity : LoginBaseActivity(), DevicePasswordFragmentListener {
             setButtonText(resources.getString(R.string.OK))
             onConfirmationClick = ::showDevicePasswordFragment
         }
+        officerIdFragment.setButtonContinueEnable(true)
     }
 
     private fun handleUserResult(result: Result<User>) {
@@ -113,9 +125,10 @@ class LoginX2Activity : LoginBaseActivity(), DevicePasswordFragmentListener {
     }
 
     private fun showValidateOfficerIdFragment(officerId: String = "") {
+        officerIdFragment = OfficerIdFragment.createInstance(::onContinueClick, officerId)
         supportFragmentManager.attachFragmentWithAnimation(
             containerId = R.id.fragmentContainer,
-            fragment = OfficerIdFragment.createInstance(::onContinueClick, officerId),
+            fragment = officerIdFragment,
             tag = OfficerIdFragment.TAG,
             animationIn = android.R.anim.fade_in,
             animationOut = android.R.anim.fade_out
@@ -168,6 +181,8 @@ class LoginX2Activity : LoginBaseActivity(), DevicePasswordFragmentListener {
                     showRequestError()
                 }
             }
+        } else {
+            officerIdFragment.setButtonContinueEnable(true)
         }
     }
 
@@ -193,7 +208,12 @@ class LoginX2Activity : LoginBaseActivity(), DevicePasswordFragmentListener {
         this.authRequest = authRequest
         val intent = Intent(baseContext, SSOActivity::class.java)
         startActivityForResult(intent, 100)
+        hideLoadingDialog()
     }
 
     override fun onConnectionSuccessful() = getUserFromCamera()
+
+    companion object {
+        private const val ENABLE_CONTINUE_DELAY = 1000L
+    }
 }

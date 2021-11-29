@@ -86,8 +86,14 @@ class OfficerIdFragment : BaseFragment() {
 
     private fun FragmentValidateOfficerIdBinding.editTextOfficerIdListener() {
         editTextOfficerId.addTextChangedListener {
-            buttonContinue.isEnabled = it.toString().isNotEmpty()
-            buttonContinue.isActivated = it.toString().isNotEmpty()
+            setButtonContinueEnable(it.toString().isNotEmpty())
+        }
+    }
+
+    fun setButtonContinueEnable(enable: Boolean) {
+        binding.buttonContinue.apply {
+            this.isEnabled = enable
+            isActivated = enable
         }
     }
 
@@ -106,9 +112,11 @@ class OfficerIdFragment : BaseFragment() {
     }
 
     private fun FragmentValidateOfficerIdBinding.buttonContinueListener() {
-        buttonContinue.isEnabled = officerId.isNotEmpty()
-        buttonContinue.isActivated = officerId.isNotEmpty()
-        buttonContinue.setOnClickListener { validateOfficerId() }
+        setButtonContinueEnable(officerId.isNotEmpty())
+        buttonContinue.setOnClickListener {
+            setButtonContinueEnable(false)
+            validateOfficerId()
+        }
     }
 
     private fun FragmentValidateOfficerIdBinding.validateOfficerId() {
