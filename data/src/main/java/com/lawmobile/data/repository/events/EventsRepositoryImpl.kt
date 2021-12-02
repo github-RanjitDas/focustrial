@@ -51,7 +51,8 @@ class EventsRepositoryImpl(
     }
 
     override suspend fun getNotificationEvents(): Result<List<CameraEvent>> {
-        return when (val result = eventsLocalDataSource.getNotificationEvents(DateHelper.getTodayDateAtStartOfTheDay())) {
+        val todayDate = DateHelper.getTodayDateAtStartOfTheDay()
+        return when (val result = eventsLocalDataSource.getNotificationEvents(todayDate)) {
             is Result.Success -> Result.Success(result.data.toDomainList())
             is Result.Error -> result
         }
