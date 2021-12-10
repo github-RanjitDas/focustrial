@@ -7,6 +7,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.lifecycleScope
 import com.lawmobile.domain.entities.CameraEvent
 import com.lawmobile.domain.entities.CameraInfo
 import com.lawmobile.domain.entities.CameraInfo.isOfficerLogged
@@ -15,21 +16,24 @@ import com.lawmobile.domain.enums.EventType
 import com.lawmobile.domain.enums.NotificationType
 import com.lawmobile.domain.usecase.events.EventsUseCase
 import com.lawmobile.presentation.BuildConfig
-import com.lawmobile.presentation.R
-import com.lawmobile.presentation.entities.NeutralAlertInformation
 import com.lawmobile.presentation.extensions.checkIfSessionIsExpired
 import com.lawmobile.presentation.extensions.createAlertErrorConnection
-import com.lawmobile.presentation.extensions.createAlertMobileDataActive
 import com.lawmobile.presentation.extensions.createAlertProgress
 import com.lawmobile.presentation.extensions.createAlertSessionExpired
+import com.lawmobile.presentation.extensions.createLowWifiSignalAlert
+import com.lawmobile.presentation.extensions.createMobileDataAlert
 import com.lawmobile.presentation.extensions.createNotificationDialog
 import com.lawmobile.presentation.security.RootedHelper
 import com.lawmobile.presentation.ui.login.LoginActivity
 import com.lawmobile.presentation.utils.CameraHelper
 import com.lawmobile.presentation.utils.EspressoIdlingResource
 import com.lawmobile.presentation.utils.MobileDataStatus
+import com.lawmobile.presentation.utils.WifiHelper
 import com.lawmobile.presentation.utils.WifiStatus
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.withContext
 import java.sql.Timestamp
 import javax.inject.Inject
 
@@ -47,10 +51,15 @@ open class BaseActivity : AppCompatActivity() {
     @Inject
     lateinit var eventsUseCase: EventsUseCase
 
+    @Inject
+    lateinit var wifiHelper: WifiHelper
+
     private var isLiveVideoOrPlaybackActive: Boolean = false
     var isNetworkAlertShowing = MutableLiveData<Boolean>()
     private var isWifiAlertShowing = false
+    private var isLowSignalAlertShowing = false
 
+    private lateinit var lowSignalDialog: AlertDialog
     private lateinit var mobileDataDialog: AlertDialog
     private var loadingDialog: AlertDialog? = null
 
@@ -59,8 +68,8 @@ open class BaseActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         verifyDeviceIsNotRooted()
-        setBaseObservers()
         createNetworkDialogs()
+        setBaseObservers()
         updateLastInteraction()
         setEventsUseCase()
         setEventsListener()
@@ -110,9 +119,35 @@ open class BaseActivity : AppCompatActivity() {
         viewModel.saveNotificationEvent(cameraEvent)
     }
 
+    private fun createNetworkDialogs() {
+        mobileDataDialog = createMobileDataAlert()
+        lowSignalDialog = createLowWifiSignalAlert()
+    }
+
     private fun setBaseObservers() {
         mobileDataStatus.observe(this, ::showMobileDataDialog)
         wifiStatus.observe(this, ::showWifiOffDialog)
+        observeWifiSignalLevel()
+    }
+
+    private fun observeWifiSignalLevel() {
+        lifecycleScope.launchWhenResumed {
+            withContext(Dispatchers.IO) {
+                wifiHelper.isWifiSignalLow.collect {
+                    showLowWifiSignalAlert(it)
+                }
+            }
+        }
+    }
+
+    private fun showLowWifiSignalAlert(isLow: Boolean) {
+        runOnUiThread {
+            if (!isWifiAlertShowing) {
+                isNetworkAlertShowing.postValue(isLow)
+                if (isLow) lowSignalDialog.show()
+                else lowSignalDialog.hide()
+            } else lowSignalDialog.hide()
+        }
     }
 
     private fun showWifiOffDialog(active: Boolean) {
@@ -121,14 +156,6 @@ open class BaseActivity : AppCompatActivity() {
             isNetworkAlertShowing.postValue(true)
             createAlertErrorConnection()
         }
-    }
-
-    private fun createNetworkDialogs() {
-        val alertInformation = NeutralAlertInformation(
-            R.string.mobile_data_status_title,
-            R.string.mobile_data_status_message
-        )
-        mobileDataDialog = createAlertMobileDataActive(alertInformation)
     }
 
     private fun showMobileDataDialog(active: Boolean) {

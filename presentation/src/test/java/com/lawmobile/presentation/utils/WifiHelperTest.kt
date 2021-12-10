@@ -3,8 +3,13 @@ package com.lawmobile.presentation.utils
 import android.net.DhcpInfo
 import android.net.wifi.WifiInfo
 import android.net.wifi.WifiManager
+import com.lawmobile.domain.entities.CameraInfo
 import io.mockk.every
 import io.mockk.mockk
+import io.mockk.mockkObject
+import io.mockk.verify
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.runBlocking
 import org.junit.Assert
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -65,8 +70,16 @@ class WifiHelperTest {
 
     @Test
     fun testIsEqualsValueWithSSID() {
+        every { wifiManager.connectionInfo.ssid } returns DEFAULT_SSID
         every { wifiManager.dhcpInfo } returns dhcpInfoMock
         Assert.assertTrue(wifiHelper.isEqualsValueWithSSID(DEFAULT_SSID))
+    }
+
+    @Test
+    fun testIsNotEqualsValueWithSSID() {
+        every { wifiManager.connectionInfo.ssid } returns ""
+        every { wifiManager.dhcpInfo } returns dhcpInfoMock
+        Assert.assertFalse(wifiHelper.isEqualsValueWithSSID(DEFAULT_SSID))
     }
 
     @Test
@@ -79,5 +92,29 @@ class WifiHelperTest {
     fun testIsWifiEnabled() {
         every { wifiManager.isWifiEnabled } returns false
         Assert.assertFalse(wifiHelper.isWifiEnable())
+    }
+
+    @Test
+    fun isWifiSignalLowTrue() = runBlocking {
+        mockkObject(CameraInfo)
+        every { CameraInfo.isOfficerLogged } returns true
+        every { wifiManager.connectionInfo.rssi } returns 4
+        every { wifiManager.calculateSignalLevel(any()) } returns 0
+        Assert.assertTrue(wifiHelper.isWifiSignalLow.first())
+        verify { wifiManager.calculateSignalLevel(any()) }
+        verify { wifiManager.connectionInfo.rssi }
+        verify { CameraInfo.isOfficerLogged }
+    }
+
+    @Test
+    fun isWifiSignalLowFalse() = runBlocking {
+        mockkObject(CameraInfo)
+        every { CameraInfo.isOfficerLogged } returns true
+        every { wifiManager.connectionInfo.rssi } returns 4
+        every { wifiManager.calculateSignalLevel(any()) } returns 4
+        Assert.assertFalse(wifiHelper.isWifiSignalLow.first())
+        verify { wifiManager.calculateSignalLevel(any()) }
+        verify { wifiManager.connectionInfo.rssi }
+        verify { CameraInfo.isOfficerLogged }
     }
 }
