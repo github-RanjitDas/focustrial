@@ -138,7 +138,7 @@
     <string name="try_again_button_pairing">Try Again</string>
     <string name="error_connection_to_camera">There was a problem connecting to your Body Camera.</string>
     <string name="focus_mobile_app_logo_description">focus mobile app logo</string>
-    <string name="camera_status">Camera status</string>
+    <string name="camera_status">Body Camera Status</string>
     <string name="memory_level">memory usage</string>
     <string name="battery_level">battery level</string>
     <string name="recording">Recording</string>
@@ -250,5 +250,7 @@
     <string name="body_worn_result_failed_description">One or more issues were detected with your Body Camera hardware which will prevent it from working properly.\n\nPlease contact your administrator and report this issue.</string>
     <string name="no_notifications_found">No notifications</string>
     <string name="notification_list_error">Failed to retrieve the notification list. Please retry or check the Body Camera.</string>
+    <string name="low_signal_title">Your mobile device is too far away from the Body Camera.</string>
+    <string name="low_signal_message">In order to prevent disconnection, please get your mobile device closer to your Body Camera.</string>
 
 </resources>
