@@ -21,19 +21,11 @@ import kotlin.system.exitProcess
 
 fun Context.createAlertInformation(alertInformation: AlertInformation) {
     val builder = AlertDialog.Builder(this)
-    var message = ""
-    if (alertInformation.message != null) {
-        message = getString(alertInformation.message)
-    } else {
-        if (alertInformation.customMessage != null) {
-            message = alertInformation.customMessage
-        }
-    }
 
     builder.apply {
         setCancelable(false)
         setTitle(getString(alertInformation.title))
-        setMessage(message)
+        setMessage(alertInformation.message)
         if (alertInformation.onClickPositiveButton != null) {
             setPositiveButton(R.string.OK) { dialog, _ ->
                 alertInformation.onClickPositiveButton.invoke(dialog)
