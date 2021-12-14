@@ -112,13 +112,13 @@ class LiveStatusBarX2Fragment : LiveStatusBarBaseFragment() {
     }
 
     private fun manageLowStorage() {
-        requireActivity().runOnUiThread {
+        activity?.runOnUiThread {
             binding.imageViewStorage.startAnimationIfEnabled(blinkAnimation)
         }
     }
 
     private fun manageLowBattery(value: Int?) {
-        requireActivity().runOnUiThread {
+        activity?.runOnUiThread {
             wasNotificationArriveForLowBattery = true
             value?.let {
                 if (currentMinutesAfterNotifications == 0) currentMinutesAfterNotifications = value
@@ -149,7 +149,7 @@ class LiveStatusBarX2Fragment : LiveStatusBarBaseFragment() {
     }
 
     private fun manageStorageLevel(availablePercent: Double) {
-        requireActivity().runOnUiThread {
+        activity?.runOnUiThread {
             setColorInStorageLevel(availablePercent)
             setTextStorageLevel(availablePercent)
         }
