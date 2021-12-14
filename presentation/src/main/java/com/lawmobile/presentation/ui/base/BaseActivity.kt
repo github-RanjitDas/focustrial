@@ -97,13 +97,21 @@ open class BaseActivity : AppCompatActivity() {
     }
 
     private fun manageCameraEvent(cameraEvent: CameraEvent) {
-        if (cameraEvent.eventType == EventType.NOTIFICATION) {
-            when (cameraEvent.name) {
-                NotificationType.LOW_BATTERY.value -> onLowBattery?.invoke(cameraEvent.value?.toInt())
-                NotificationType.LOW_STORAGE.value -> onLowStorage?.invoke()
-            }
-            runOnUiThread { createNotificationDialog(cameraEvent) }
-        } else when (cameraEvent.name) {
+        if (cameraEvent.eventType == EventType.NOTIFICATION) handleNotificationEvent(cameraEvent)
+        else handleInformationEvent(cameraEvent)
+        viewModel.saveNotificationEvent(cameraEvent)
+    }
+
+    private fun handleNotificationEvent(cameraEvent: CameraEvent) {
+        when (cameraEvent.name) {
+            NotificationType.LOW_BATTERY.value -> onLowBattery?.invoke(cameraEvent.value?.toInt())
+            NotificationType.LOW_STORAGE.value -> onLowStorage?.invoke()
+        }
+        runOnUiThread { createNotificationDialog(cameraEvent) }
+    }
+
+    private fun handleInformationEvent(cameraEvent: CameraEvent) {
+        when (cameraEvent.name) {
             NotificationType.BATTERY_LEVEL.value -> {
                 cameraEvent.value?.toInt()?.let {
                     onBatteryLevelChanged?.invoke(it)
@@ -115,8 +123,6 @@ open class BaseActivity : AppCompatActivity() {
                 }
             }
         }
-
-        viewModel.saveNotificationEvent(cameraEvent)
     }
 
     private fun createNetworkDialogs() {

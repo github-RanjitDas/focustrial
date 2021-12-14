@@ -2,7 +2,9 @@ package com.lawmobile.presentation.utils
 
 import android.annotation.SuppressLint
 import android.net.wifi.WifiManager
+import android.os.Build
 import com.lawmobile.domain.entities.CameraInfo
+import com.lawmobile.presentation.utils.Build.getSDKVersion
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.flow
 import java.math.BigInteger
@@ -44,7 +46,11 @@ open class WifiHelper(private val wifiManager: WifiManager) {
 
     private fun getSignalLevel(): Int {
         val connectionInfo = wifiManager.connectionInfo
-        return wifiManager.calculateSignalLevel(connectionInfo.rssi)
+        return if (getSDKVersion() >= Build.VERSION_CODES.R) {
+            wifiManager.calculateSignalLevel(connectionInfo.rssi)
+        } else {
+            WifiManager.calculateSignalLevel(connectionInfo.rssi, SIGNAL_LEVELS)
+        }
     }
 
     @SuppressLint("MissingPermission")
@@ -57,6 +63,7 @@ open class WifiHelper(private val wifiManager: WifiManager) {
     open fun isEqualsValueWithSSID(value: String): Boolean = getSSIDWiFi() == value
 
     companion object {
+        private const val SIGNAL_LEVELS = 5
         private const val LOW_SIGNAL_LEVEL = 0
         private const val DELAY_ON_READING_SIGNAL = 1000L
     }

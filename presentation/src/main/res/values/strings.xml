@@ -21,7 +21,7 @@
     <!-- Login -->
     <string name="please_enable_permission">Please enable permission from settings</string>
     <string name="please_enable_permission_location">Require location permission for pairing the Body Camera.</string>
-    <string name="waiting_for_camera" tools:ignore="ExtraTranslation">Click here to connect\nwith the camera</string>
+    <string name="waiting_for_camera">Click here to connect\nwith the Body Camera</string>
     <string name="result_pairing_description">Result of the pairing process</string>
     <string name="instructions_to_link_camera">Instructions to link Body Camera</string>
     <string name="connecting_to_camera">Connecting to Body Camera</string>
