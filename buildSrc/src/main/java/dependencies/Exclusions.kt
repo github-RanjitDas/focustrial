@@ -53,7 +53,10 @@ object Exclusions {
         "**/LiveActivityBaseViewModel.**",
         "**/CameraEventsManager.**",
         "**/DateHelper.**",
-        "**/EspressoIdlingResource.**"
+        "**/EspressoIdlingResource.**",
+        "**/WifiHelper.**",
+        "**/RunWithDelay.**",
+        "**/Build.**"
     )
     val pitest = mutableSetOf(
         //Dagger 2

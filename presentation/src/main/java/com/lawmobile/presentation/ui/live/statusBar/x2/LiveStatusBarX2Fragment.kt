@@ -10,8 +10,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import com.lawmobile.domain.entities.CameraInfo
+import com.lawmobile.domain.entities.customEvents.LowStorageEvent
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.databinding.FragmentLiveStatusBarX2Binding
+import com.lawmobile.presentation.extensions.createNotificationDialog
 import com.lawmobile.presentation.extensions.setOnClickListenerCheckConnection
 import com.lawmobile.presentation.extensions.showErrorSnackBar
 import com.lawmobile.presentation.extensions.startAnimationIfEnabled
@@ -25,6 +27,7 @@ import com.safefleet.mobile.kotlin_commons.helpers.Event
 import com.safefleet.mobile.kotlin_commons.helpers.Result
 import com.safefleet.mobile.safefleet_ui.widgets.linearProgressBar.SafeFleetLinearProgressBarColors
 import com.safefleet.mobile.safefleet_ui.widgets.linearProgressBar.SafeFleetLinearProgressBarRanges
+import kotlin.math.roundToInt
 
 class LiveStatusBarX2Fragment : LiveStatusBarBaseFragment() {
 
@@ -33,6 +36,8 @@ class LiveStatusBarX2Fragment : LiveStatusBarBaseFragment() {
 
     private lateinit var storageBarRanges: SafeFleetLinearProgressBarRanges
     private lateinit var storageBarColors: SafeFleetLinearProgressBarColors
+
+    private var wasLowStorageAlertShowed = false
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -112,13 +117,13 @@ class LiveStatusBarX2Fragment : LiveStatusBarBaseFragment() {
     }
 
     private fun manageLowStorage() {
-        requireActivity().runOnUiThread {
+        activity?.runOnUiThread {
             binding.imageViewStorage.startAnimationIfEnabled(blinkAnimation)
         }
     }
 
     private fun manageLowBattery(value: Int?) {
-        requireActivity().runOnUiThread {
+        activity?.runOnUiThread {
             wasNotificationArriveForLowBattery = true
             value?.let {
                 if (currentMinutesAfterNotifications == 0) currentMinutesAfterNotifications = value
@@ -149,10 +154,22 @@ class LiveStatusBarX2Fragment : LiveStatusBarBaseFragment() {
     }
 
     private fun manageStorageLevel(availablePercent: Double) {
-        requireActivity().runOnUiThread {
+        activity?.runOnUiThread {
             setColorInStorageLevel(availablePercent)
             setTextStorageLevel(availablePercent)
+            checkPercentToShowNotification(availablePercent)
         }
+    }
+
+    private fun checkPercentToShowNotification(availablePercent: Double) {
+        if (availablePercent.roundToInt() <= LOW_STORAGE_LEVEL) {
+            if (!wasLowStorageAlertShowed) {
+                activity?.runOnUiThread {
+                    context?.createNotificationDialog(LowStorageEvent.event)
+                }
+                wasLowStorageAlertShowed = true
+            }
+        } else wasLowStorageAlertShowed = false
     }
 
     private fun getAvailableStoragePercent(information: List<Double>): Double {
@@ -255,5 +272,6 @@ class LiveStatusBarX2Fragment : LiveStatusBarBaseFragment() {
         private var wasNotificationArriveForLowBattery = false
         private var currentMinutesAfterNotifications = 0
         private var currentPercentInBattery = 100
+        const val LOW_STORAGE_LEVEL = 5
     }
 }

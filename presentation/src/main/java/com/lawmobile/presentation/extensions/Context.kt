@@ -6,13 +6,13 @@ import android.os.Process
 import android.provider.Settings
 import android.view.View
 import android.widget.Toast
+import androidx.annotation.StringRes
 import androidx.appcompat.app.AlertDialog
 import com.lawmobile.domain.entities.CameraEvent
 import com.lawmobile.domain.entities.CameraInfo
 import com.lawmobile.domain.enums.CameraType
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.entities.AlertInformation
-import com.lawmobile.presentation.entities.NeutralAlertInformation
 import com.lawmobile.presentation.ui.base.BaseActivity
 import com.lawmobile.presentation.utils.CameraHelper
 import com.lawmobile.presentation.widgets.CustomNotificationDialog
@@ -21,19 +21,11 @@ import kotlin.system.exitProcess
 
 fun Context.createAlertInformation(alertInformation: AlertInformation) {
     val builder = AlertDialog.Builder(this)
-    var message = ""
-    if (alertInformation.message != null) {
-        message = getString(alertInformation.message)
-    } else {
-        if (alertInformation.customMessage != null) {
-            message = alertInformation.customMessage
-        }
-    }
 
     builder.apply {
         setCancelable(false)
         setTitle(getString(alertInformation.title))
-        setMessage(message)
+        setMessage(alertInformation.message)
         if (alertInformation.onClickPositiveButton != null) {
             setPositiveButton(R.string.OK) { dialog, _ ->
                 alertInformation.onClickPositiveButton.invoke(dialog)
@@ -48,12 +40,33 @@ fun Context.createAlertInformation(alertInformation: AlertInformation) {
     }
 }
 
+fun Context.createNotCancellableAlert(@StringRes title: Int, @StringRes message: Int): AlertDialog {
+    val builder = AlertDialog.Builder(this)
+    return builder.run {
+        setTitle(getString(title))
+        setMessage(getString(message))
+        setCancelable(false)
+        create()
+    }
+}
+
+fun Context.createLowWifiSignalAlert(): AlertDialog =
+    createNotCancellableAlert(
+        title = R.string.low_signal_title,
+        message = R.string.low_signal_message
+    )
+
 fun Context.createAlertErrorConnection() {
     val title = R.string.the_camera_was_disconnected
     val message = R.string.the_camera_was_disconnected_description
-    val alertInformation = AlertInformation(title, message, null, null)
+    val alertInformation = AlertInformation(
+        title,
+        message,
+        { restartApp() },
+        null
+    )
 
-    this.createAlertInformation(alertInformation)
+    createAlertInformation(alertInformation)
 }
 
 fun Context.createAlertSessionExpired() {
@@ -110,22 +123,11 @@ fun Context.createAlertDialogUnsavedChanges() {
     }
 }
 
-fun Context.createAlertMobileDataActive(neutralAlertInformation: NeutralAlertInformation): AlertDialog {
-    val builder = AlertDialog.Builder(this)
-    builder.apply {
-        neutralAlertInformation.run {
-            setTitle(title)
-            setMessage(message)
-            buttonText?.let {
-                setNeutralButton(getString(it)) { dialog, _ ->
-                    onClickNeutralButton?.invoke(dialog)
-                }
-            }
-        }
-        setCancelable(false)
-    }
-    return builder.create()
-}
+fun Context.createMobileDataAlert(): AlertDialog =
+    createNotCancellableAlert(
+        title = R.string.mobile_data_status_title,
+        message = R.string.mobile_data_status_message
+    )
 
 fun Context.showToast(message: String, duration: Int) {
     Toast.makeText(this, message, duration).show()
@@ -178,7 +180,10 @@ fun Context.createNotificationDialog(cameraEvent: CameraEvent) {
     ).show()
 }
 
-fun Context.getIntentDependsCameraType(activityForX1: BaseActivity, activityForX2: BaseActivity): Intent {
+fun Context.getIntentDependsCameraType(
+    activityForX1: BaseActivity,
+    activityForX2: BaseActivity
+): Intent {
     return when (CameraInfo.cameraType) {
         CameraType.X1 -> Intent(this, activityForX1::class.java)
         CameraType.X2 -> Intent(this, activityForX2::class.java)
