@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/layoutMenu"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layoutMenu"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/background_menu">
@@ -23,9 +23,9 @@
             android:background="@color/transparent"
             android:contentDescription="@string/icon_close_menu"
             android:src="@drawable/ic_cancel"
-            android:tint="@color/white"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="@color/white" />
 
         <ImageView
             android:id="@+id/imageView2"
@@ -113,9 +113,9 @@
             android:id="@+id/versionNumberTextMainMenu"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:gravity="center_vertical"
             android:paddingStart="@dimen/menu_live_view_icon_user_margin"
             android:paddingEnd="@dimen/no_dp"
-            android:gravity="center_vertical"
             android:textColor="@color/white"
             android:textSize="@dimen/text_size_version_number"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -142,8 +142,8 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/roboto_regular"
                 android:paddingStart="@dimen/menu_live_view_icon_user_margin"
-                android:paddingEnd="@dimen/no_dp"
                 android:paddingTop="@dimen/menu_live_view_item_navigation_margin"
+                android:paddingEnd="@dimen/no_dp"
                 android:paddingBottom="@dimen/menu_live_view_item_navigation_margin"
                 android:text="@string/live_view_menu_item_dashboard"
                 android:textColor="@color/white"
@@ -165,8 +165,8 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/roboto_regular"
                 android:paddingStart="@dimen/menu_live_view_icon_user_margin"
-                android:paddingEnd="@dimen/no_dp"
                 android:paddingTop="@dimen/menu_live_view_item_navigation_margin"
+                android:paddingEnd="@dimen/no_dp"
                 android:paddingBottom="@dimen/menu_live_view_item_navigation_margin"
                 android:text="@string/live_view_menu_item_view_snapshots"
                 android:textColor="@color/white"
@@ -188,8 +188,8 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/roboto_regular"
                 android:paddingStart="@dimen/menu_live_view_icon_user_margin"
-                android:paddingEnd="@dimen/no_dp"
                 android:paddingTop="@dimen/menu_live_view_item_navigation_margin"
+                android:paddingEnd="@dimen/no_dp"
                 android:paddingBottom="@dimen/menu_live_view_item_navigation_margin"
                 android:text="@string/live_view_menu_item_view_videos"
                 android:textColor="@color/white"
@@ -206,16 +206,15 @@
                 app:layout_constraintTop_toBottomOf="@id/text_view_videos" />
 
             <TextView
-                android:visibility="gone"
-                android:id="@+id/text_view_settings"
+                android:id="@+id/text_view_audios"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/roboto_light"
+                android:fontFamily="@font/roboto_regular"
                 android:paddingStart="@dimen/menu_live_view_icon_user_margin"
-                android:paddingEnd="@dimen/no_dp"
                 android:paddingTop="@dimen/menu_live_view_item_navigation_margin"
+                android:paddingEnd="@dimen/no_dp"
                 android:paddingBottom="@dimen/menu_live_view_item_navigation_margin"
-                android:text="@string/live_view_menu_item_bodyworn_settings"
+                android:text="@string/view_audio_list"
                 android:textColor="@color/white"
                 android:textSize="@dimen/menu_live_view_text_items_size"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -223,12 +222,11 @@
                 app:layout_constraintTop_toBottomOf="@id/dividerViewVideos" />
 
             <View
-                android:visibility="gone"
-                android:id="@+id/dividerSettings"
+                android:id="@+id/dividerViewAudios"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/width_1dp"
                 android:background="@color/whiteTransparentMenuDivider"
-                app:layout_constraintTop_toBottomOf="@id/text_view_settings" />
+                app:layout_constraintTop_toBottomOf="@id/text_view_audios" />
 
             <TextView
                 android:id="@+id/text_view_notification"
@@ -236,8 +234,8 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/roboto_regular"
                 android:paddingStart="@dimen/menu_live_view_icon_user_margin"
-                android:paddingEnd="@dimen/no_dp"
                 android:paddingTop="@dimen/menu_live_view_item_navigation_margin"
+                android:paddingEnd="@dimen/no_dp"
                 android:paddingBottom="@dimen/menu_live_view_item_navigation_margin"
                 android:text="@string/live_view_menu_item_notification"
                 android:textColor="@color/white"
@@ -245,22 +243,22 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/dividerSettings" />
+                app:layout_constraintTop_toBottomOf="@id/dividerViewAudios" />
 
             <TextView
-                android:visibility="gone"
                 android:id="@+id/textPendingNotification"
-                android:background="@drawable/background_notification_text"
                 android:layout_width="@dimen/menu_live_view_item_notification_size"
                 android:layout_height="@dimen/menu_live_view_item_notification_size"
                 android:layout_marginStart="@dimen/menu_live_view_item_notification_margin_start"
-                android:gravity="center"
+                android:background="@drawable/background_notification_text"
                 android:fontFamily="@font/roboto_bold"
+                android:gravity="center"
                 android:textColor="@color/white"
                 android:textSize="@dimen/text_size_14sp"
+                android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="@+id/text_view_notification"
                 app:layout_constraintStart_toStartOf="@+id/text_view_notification"
-                app:layout_constraintTop_toBottomOf="@+id/text_view_videos"
+                app:layout_constraintTop_toBottomOf="@+id/text_view_audios"
                 tools:text="3" />
 
             <View
@@ -271,20 +269,43 @@
                 app:layout_constraintTop_toBottomOf="@id/text_view_notification" />
 
             <TextView
+                android:id="@+id/text_view_settings"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/roboto_regular"
+                android:paddingStart="@dimen/menu_live_view_icon_user_margin"
+                android:paddingTop="@dimen/menu_live_view_item_navigation_margin"
+                android:paddingEnd="@dimen/no_dp"
+                android:paddingBottom="@dimen/menu_live_view_item_navigation_margin"
+                android:text="@string/live_view_menu_item_bodyworn_settings"
+                android:textColor="@color/white"
+                android:textSize="@dimen/menu_live_view_text_items_size"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/dividerNotifications" />
+
+            <View
+                android:id="@+id/dividerSettings"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/width_1dp"
+                android:background="@color/whiteTransparentMenuDivider"
+                app:layout_constraintTop_toBottomOf="@id/text_view_settings" />
+
+            <TextView
                 android:id="@+id/text_view_diagnose"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/roboto_regular"
                 android:paddingStart="@dimen/menu_live_view_icon_user_margin"
-                android:paddingEnd="@dimen/no_dp"
                 android:paddingTop="@dimen/menu_live_view_item_navigation_margin"
+                android:paddingEnd="@dimen/no_dp"
                 android:paddingBottom="@dimen/menu_live_view_item_navigation_margin"
                 android:text="@string/live_view_menu_item_diagnose"
                 android:textColor="@color/white"
                 android:textSize="@dimen/menu_live_view_text_items_size"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/dividerNotifications" />
+                app:layout_constraintTop_toBottomOf="@id/dividerSettings" />
 
             <View
                 android:id="@+id/dividerDiagnose"
@@ -299,8 +320,8 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/roboto_regular"
                 android:paddingStart="@dimen/menu_live_view_icon_user_margin"
-                android:paddingEnd="@dimen/no_dp"
                 android:paddingTop="@dimen/menu_live_view_item_navigation_margin"
+                android:paddingEnd="@dimen/no_dp"
                 android:paddingBottom="@dimen/menu_live_view_item_navigation_margin"
                 android:text="@string/live_view_menu_item_help"
                 android:textColor="@color/white"

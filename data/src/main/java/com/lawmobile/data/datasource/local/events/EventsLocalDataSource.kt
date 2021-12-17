@@ -7,7 +7,7 @@ interface EventsLocalDataSource {
     suspend fun getAllEvents(): Result<List<LocalCameraEvent>>
     suspend fun getNotificationEvents(date: String): Result<List<LocalCameraEvent>>
     suspend fun getPendingNotificationsCount(): Result<Int>
-    fun getEventsCount(): Int
+    suspend fun getEventsCount(): Int
     suspend fun saveEvent(localEvent: LocalCameraEvent)
     suspend fun saveAllEvents(events: List<LocalCameraEvent>): Result<Unit>
     suspend fun setAllNotificationsAsRead()

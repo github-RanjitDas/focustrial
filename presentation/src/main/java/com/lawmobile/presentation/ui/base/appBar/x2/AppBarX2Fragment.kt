@@ -88,9 +88,8 @@ class AppBarX2Fragment : BaseFragment() {
             if (!callPendingNotification && isInPortraitMode()) {
                 callPendingNotification = true
                 getPendingNotifications()
-            }
-            activity?.runOnUiThread {
-                hideLoadingDialog()
+            } else {
+                CameraInfo.onReadyToGetSettings?.invoke()
             }
         }
     }
@@ -114,6 +113,7 @@ class AppBarX2Fragment : BaseFragment() {
             CameraInfo.currentNotificationCount = it
             setCurrentNotificationCount()
         }
+        CameraInfo.onReadyToGetSettings?.invoke()
     }
 
     override fun onDestroy() {

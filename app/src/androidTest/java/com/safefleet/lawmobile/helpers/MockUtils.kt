@@ -1,5 +1,6 @@
 package com.safefleet.lawmobile.helpers
 
+import com.lawmobile.domain.entities.CameraInfo
 import com.lawmobile.domain.enums.CameraType
 import com.lawmobile.presentation.utils.CameraHelper
 import com.safefleet.lawmobile.di.mocksServiceCameras.CameraConnectServiceMock
@@ -71,11 +72,12 @@ class MockUtils {
     }
 
     fun setCameraType(cameraType: CameraType) {
-        if (cameraType == CameraType.X1) {
-            cameraSSID = TestLoginData.SSID_X1.value
+        cameraSSID = if (cameraType == CameraType.X1) {
+            TestLoginData.SSID_X1.value
         } else {
-            cameraSSID = TestLoginData.SSID_X2.value
+            TestLoginData.SSID_X2.value
         }
+        CameraInfo.cameraType = cameraType
     }
 
     fun setBodyWornDiagnosisResult(result: Result<Boolean>) {

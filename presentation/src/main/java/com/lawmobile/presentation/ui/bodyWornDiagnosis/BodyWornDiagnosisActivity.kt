@@ -28,10 +28,10 @@ class BodyWornDiagnosisActivity : BaseActivity() {
     }
 
     private fun setCustomAppBar() {
-        binding.textViewTitle.text =
+        binding.layoutCustomAppBar.textViewTitle.text =
             getString(R.string.live_view_menu_item_diagnose)
-        binding.imageButtonBackArrow.setImageResource(R.drawable.ic_cancel)
-        binding.imageButtonBackArrow.setOnClickListener {
+        binding.layoutCustomAppBar.imageButtonBackArrow.setImageResource(R.drawable.ic_cancel)
+        binding.layoutCustomAppBar.imageButtonBackArrow.setOnClickListener {
             onBackPressed()
         }
     }
@@ -42,7 +42,7 @@ class BodyWornDiagnosisActivity : BaseActivity() {
             viewModel.getDiagnosis()
         }
 
-        binding.imageButtonBackArrow.setOnClickListenerCheckConnection {
+        binding.layoutCustomAppBar.imageButtonBackArrow.setOnClickListenerCheckConnection {
             onBackPressed()
         }
 

@@ -1,6 +1,6 @@
 package com.lawmobile.data.utils
 
-import com.lawmobile.data.mappers.NotificationResponseMapper
+import com.lawmobile.data.mappers.impl.NotificationResponseMapper.toDomain
 import com.lawmobile.domain.entities.CameraEvent
 import com.lawmobile.domain.utils.ConnectionHelper
 import com.safefleet.mobile.external_hardware.cameras.CameraService
@@ -11,7 +11,7 @@ class ConnectionHelperImpl(private val cameraServiceFactory: CameraServiceFactor
     override fun isCameraConnected(ipAddress: String) = cameraService.isCameraConnected(ipAddress)
     override fun onCameraEvent(callback: (CameraEvent) -> Unit) {
         cameraService.arriveNotificationFromCamera = {
-            callback.invoke(NotificationResponseMapper.cameraToDomain(it))
+            callback.invoke(it.toDomain())
         }
     }
 

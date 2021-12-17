@@ -1,6 +1,8 @@
 package com.safefleet.lawmobile.di
 
+import com.safefleet.lawmobile.di.audioDetail.AudioDetailComponent
 import com.safefleet.lawmobile.di.bodyWornDiagnosis.BodyWornDiagnosisComponent
+import com.safefleet.lawmobile.di.bodyWornSettings.BodyWornSettingsComponent
 import com.safefleet.lawmobile.di.fileList.FileListComponent
 import com.safefleet.lawmobile.di.helpSection.HelpPageComponent
 import com.safefleet.lawmobile.di.liveStreaming.LiveStreamingComponent
@@ -20,8 +22,10 @@ import dagger.hilt.components.SingletonComponent
         LiveStreamingComponent::class,
         LoginComponent::class,
         SnapshotDetailComponent::class,
+        AudioDetailComponent::class,
         VideoPlaybackComponent::class,
         BodyWornDiagnosisComponent::class,
+        BodyWornSettingsComponent::class,
         TypeOfCameraComponent::class
     ]
 )

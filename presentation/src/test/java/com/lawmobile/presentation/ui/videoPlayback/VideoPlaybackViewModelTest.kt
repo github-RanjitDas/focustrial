@@ -10,7 +10,6 @@ import io.mockk.coVerify
 import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.TestCoroutineDispatcher
 import kotlinx.coroutines.test.runBlockingTest
 import kotlinx.coroutines.test.setMain
@@ -67,52 +66,48 @@ class VideoPlaybackViewModelTest {
     }
 
     @Test
-    fun testGetVideoMetadataLiveDataSuccess() {
+    fun testGetVideoMetadataLiveDataSuccess() = runBlockingTest {
         coEvery {
             videoPlaybackUseCase.getVideoMetadata(
                 any(),
                 any()
             )
         } returns Result.Success(mockk())
-        runBlocking {
-            videoPlaybackViewModel.getVideoMetadata("", "")
-            Assert.assertTrue(videoPlaybackViewModel.videoMetadataLiveData.value is Result.Success)
-        }
+
+        videoPlaybackViewModel.getVideoMetadata("", "")
+        Assert.assertTrue(videoPlaybackViewModel.videoMetadataLiveData.value is Result.Success)
+
         coVerify { videoPlaybackUseCase.getVideoMetadata(any(), any()) }
     }
 
     @Test
-    fun testGetVideoMetadataLiveDataError() {
+    fun testGetVideoMetadataLiveDataError() = runBlockingTest {
         coEvery {
             videoPlaybackUseCase.getVideoMetadata(
                 any(),
                 any()
             )
         } returns Result.Error(mockk())
-        runBlocking {
-            videoPlaybackViewModel.getVideoMetadata("", "")
-            Assert.assertTrue(videoPlaybackViewModel.videoMetadataLiveData.value is Result.Error)
-        }
+
+        videoPlaybackViewModel.getVideoMetadata("", "")
+        Assert.assertTrue(videoPlaybackViewModel.videoMetadataLiveData.value is Result.Error)
+
         coVerify { videoPlaybackUseCase.getVideoMetadata(any(), any()) }
     }
 
     @Test
-    fun testSaveVideoMetadataSuccess() {
+    fun testSaveVideoMetadataSuccess() = runBlockingTest {
         coEvery { videoPlaybackUseCase.saveVideoMetadata(any()) } returns Result.Success(mockk())
-        runBlocking {
-            videoPlaybackViewModel.saveVideoMetadata(mockk())
-            Assert.assertTrue(videoPlaybackViewModel.saveVideoMetadataLiveData.value is Result.Success)
-        }
+        videoPlaybackViewModel.saveVideoMetadata(mockk())
+        Assert.assertTrue(videoPlaybackViewModel.saveVideoMetadataLiveData.value is Result.Success)
         coVerify { videoPlaybackUseCase.saveVideoMetadata(any()) }
     }
 
     @Test
-    fun testSaveVideoMetadataError() {
+    fun testSaveVideoMetadataError() = runBlockingTest {
         coEvery { videoPlaybackUseCase.saveVideoMetadata(any()) } returns Result.Success(mockk())
-        runBlocking {
-            videoPlaybackViewModel.saveVideoMetadata(mockk())
-            Assert.assertTrue(videoPlaybackViewModel.saveVideoMetadataLiveData.value is Result.Success)
-        }
+        videoPlaybackViewModel.saveVideoMetadata(mockk())
+        Assert.assertTrue(videoPlaybackViewModel.saveVideoMetadataLiveData.value is Result.Success)
         coVerify { videoPlaybackUseCase.saveVideoMetadata(any()) }
     }
 }

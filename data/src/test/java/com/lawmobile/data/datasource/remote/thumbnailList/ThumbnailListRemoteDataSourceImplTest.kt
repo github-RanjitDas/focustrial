@@ -35,20 +35,16 @@ internal class ThumbnailListRemoteDataSourceImplTest {
     fun testGetImageBytesFlow() {
         val byteArray = "".toByteArray()
         coEvery { cameraService.getImageBytes(any()) } returns Result.Success(byteArray)
-
         runBlocking {
-            when (val result = linkSnapshotsRemoteDataSourceImpl.getImageBytes(mockk())) {
-                is Result.Success -> Assert.assertEquals(byteArray, result.data)
-            }
+            val result = linkSnapshotsRemoteDataSourceImpl.getImageBytes(mockk()) as Result.Success
+            Assert.assertEquals(byteArray, result.data)
         }
-
         coVerify { cameraService.getImageBytes(any()) }
     }
 
     @Test
     fun testGetImageBytesSuccess() {
         coEvery { cameraService.getImageBytes(any()) } returns Result.Success("".toByteArray())
-
         runBlocking {
             val result = linkSnapshotsRemoteDataSourceImpl.getImageBytes(mockk())
             Assert.assertTrue(result is Result.Success)
@@ -58,7 +54,6 @@ internal class ThumbnailListRemoteDataSourceImplTest {
     @Test
     fun testGetImageBytesError() {
         coEvery { cameraService.getImageBytes(any()) } returns Result.Error(mockk())
-
         runBlocking {
             val result = linkSnapshotsRemoteDataSourceImpl.getImageBytes(mockk())
             Assert.assertTrue(result is Result.Error)

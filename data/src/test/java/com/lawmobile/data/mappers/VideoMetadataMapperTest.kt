@@ -1,5 +1,7 @@
 package com.lawmobile.data.mappers
 
+import com.lawmobile.data.mappers.impl.VideoMetadataMapper.toCamera
+import com.lawmobile.data.mappers.impl.VideoMetadataMapper.toDomain
 import com.lawmobile.domain.entities.CameraInfo
 import com.lawmobile.domain.entities.DomainAssociatedFile
 import com.lawmobile.domain.entities.DomainVideoMetadata
@@ -23,7 +25,7 @@ internal class VideoMetadataMapperTest {
                 AssociatedFile("5", ""),
             )
         }
-        val domainVideoMetadata = VideoMetadataMapper.cameraToDomain(videoInformation)
+        val domainVideoMetadata = videoInformation.toDomain()
         with(videoInformation) {
             domainVideoMetadata.let {
                 assertTrue(it.fileName == fileName)
@@ -51,7 +53,7 @@ internal class VideoMetadataMapperTest {
                 DomainAssociatedFile("", "5"),
             )
         }
-        val cameraConnectVideoMetadata = VideoMetadataMapper.domainToCamera(domainVideoMetadata)
+        val cameraConnectVideoMetadata = domainVideoMetadata.toCamera()
         with(cameraConnectVideoMetadata) {
             domainVideoMetadata.let {
                 assertTrue(it.fileName == fileName)
@@ -79,7 +81,7 @@ internal class VideoMetadataMapperTest {
                 DomainAssociatedFile("", "5"),
             )
         }
-        val cameraConnectVideoMetadata = VideoMetadataMapper.domainToCamera(domainVideoMetadata)
+        val cameraConnectVideoMetadata = domainVideoMetadata.toCamera()
         with(cameraConnectVideoMetadata) {
             domainVideoMetadata.let {
                 assertTrue(it.fileName == fileName)

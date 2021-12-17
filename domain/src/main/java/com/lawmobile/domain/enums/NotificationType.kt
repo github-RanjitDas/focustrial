@@ -1,5 +1,10 @@
 package com.lawmobile.domain.enums
 
+import com.lawmobile.domain.entities.customEvents.BluetoothErrorEvent
+import com.lawmobile.domain.entities.customEvents.InternetErrorEvent
+import com.lawmobile.domain.entities.customEvents.LoginRequestErrorEvent
+import com.lawmobile.domain.entities.customEvents.WrongCredentialsEvent
+
 enum class NotificationType(
     val value: String,
     val title: String? = null,
@@ -67,6 +72,26 @@ enum class NotificationType(
             return EventType.NOTIFICATION
         }
     },
+    INTERNET_CONNECTION_ISSUES(
+        InternetErrorEvent.value,
+        InternetErrorEvent.title,
+        InternetErrorEvent.message
+    ),
+    BLUETOOTH_CONNECTION_ISSUES(
+        BluetoothErrorEvent.value,
+        BluetoothErrorEvent.title,
+        BluetoothErrorEvent.message
+    ),
+    HOTSPOT_CONNECTION_ISSUES(
+        WrongCredentialsEvent.value,
+        WrongCredentialsEvent.title,
+        WrongCredentialsEvent.message
+    ),
+    LOGIN_REQUEST_ERROR(
+        LoginRequestErrorEvent.value,
+        LoginRequestErrorEvent.title,
+        LoginRequestErrorEvent.message
+    ),
     UNKNOWN_OPERATION(
         "unknown_operation",
         "Unknown operation",
@@ -102,6 +127,10 @@ enum class NotificationType(
                 VIDEO_RECORD_COMPLETE.value -> VIDEO_RECORD_COMPLETE
                 STARTING_VIDEO_RECORD.value -> STARTING_VIDEO_RECORD
                 GPS_SIGNAL_LOST.value -> GPS_SIGNAL_LOST
+                INTERNET_CONNECTION_ISSUES.value -> INTERNET_CONNECTION_ISSUES
+                BLUETOOTH_CONNECTION_ISSUES.value -> BLUETOOTH_CONNECTION_ISSUES
+                HOTSPOT_CONNECTION_ISSUES.value -> HOTSPOT_CONNECTION_ISSUES
+                LOGIN_REQUEST_ERROR.value -> LOGIN_REQUEST_ERROR
                 UNKNOWN_OPERATION.value -> UNKNOWN_OPERATION
                 else -> DEFAULT
             }

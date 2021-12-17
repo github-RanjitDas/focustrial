@@ -4,24 +4,40 @@
     package="com.safefleet.lawmobile">
 
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
+    <uses-permission
+        android:name="android.permission.WRITE_SETTINGS"
+        tools:ignore="ProtectedPermissions" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
     <application
         android:name=".BaseApplication"
         android:allowBackup="true"
         android:fullBackupContent="true"
         android:icon="@mipmap/ic_launcher"
-        android:roundIcon="@mipmap/ic_launcher_rounded"
         android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_rounded"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="Instantiatable">
 
+        <activity android:name="net.openid.appauth.RedirectUriReceiverActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data
+                    android:host="callback"
+                    android:scheme="focus-mobile" />
+            </intent-filter>
+        </activity>
+
         <activity
-            android:name="com.lawmobile.presentation.ui.login.LoginActivity"
+            android:name="com.lawmobile.presentation.ui.splash.SplashActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
             tools:ignore="LockedOrientationActivity">
@@ -30,6 +46,32 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name="com.lawmobile.presentation.ui.selectCamera.SelectCameraActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"
+            tools:ignore="LockedOrientationActivity" />
+
+        <activity
+            android:name="com.lawmobile.presentation.ui.onBoardingCards.OnBoardingCardsActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"
+            tools:ignore="LockedOrientationActivity"/>
+
+        <activity
+            android:name="com.lawmobile.presentation.ui.login.x1.LoginX1Activity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustNothing"
+            tools:ignore="LockedOrientationActivity" />
+
+        <activity
+            android:name="com.lawmobile.presentation.ui.login.x2.LoginX2Activity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustNothing"
+            tools:ignore="LockedOrientationActivity" />
 
         <activity
             android:name="com.lawmobile.presentation.ui.live.x1.LiveX1Activity"
@@ -56,6 +98,12 @@
             tools:ignore="LockedOrientationActivity" />
 
         <activity
+            android:name="com.lawmobile.presentation.ui.audioDetail.AudioDetailActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"
+            tools:ignore="LockedOrientationActivity" />
+
+        <activity
             android:name="com.lawmobile.presentation.ui.helpSection.HelpPageActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Translucent"
@@ -73,13 +121,26 @@
             android:theme="@style/AppTheme.NoActionBar"
             tools:ignore="LockedOrientationActivity" />
 
-        <activity android:name="com.lawmobile.presentation.ui.fileList.x1.FileListX1Activity"
+        <activity
+            android:name="com.lawmobile.presentation.ui.fileList.x1.FileListX1Activity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"
+            tools:ignore="LockedOrientationActivity" />
+
+        <activity
+            android:name="com.lawmobile.presentation.ui.fileList.x2.FileListX2Activity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"
+            tools:ignore="LockedOrientationActivity" />
+
+        <activity android:name="com.lawmobile.presentation.ui.bodyWornSettings.BodyWornSettingsActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
             tools:ignore="LockedOrientationActivity"/>
 
-        <activity android:name="com.lawmobile.presentation.ui.fileList.x2.FileListX2Activity"
+        <activity android:name="com.lawmobile.presentation.ui.sso.SSOActivity"
             android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustNothing"
             android:theme="@style/AppTheme.NoActionBar"
             tools:ignore="LockedOrientationActivity"/>
 

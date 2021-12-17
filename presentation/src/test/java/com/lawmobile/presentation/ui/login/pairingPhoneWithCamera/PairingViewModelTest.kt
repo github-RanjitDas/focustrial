@@ -3,8 +3,9 @@ package com.lawmobile.presentation.ui.login.pairingPhoneWithCamera
 import com.lawmobile.domain.enums.CameraType
 import com.lawmobile.domain.usecase.pairingPhoneWithCamera.PairingPhoneWithCameraUseCase
 import com.lawmobile.presentation.InstantExecutorExtension
-import com.lawmobile.presentation.ui.login.pairingPhoneWithCamera.PairingViewModel.Companion.EXCEPTION_GET_PARAMS_TO_CONNECT
-import com.lawmobile.presentation.utils.WifiHelper
+import com.lawmobile.presentation.connectivity.WifiHelper
+import com.lawmobile.presentation.ui.login.shared.PairingViewModel
+import com.lawmobile.presentation.ui.login.shared.PairingViewModel.Companion.EXCEPTION_GET_PARAMS_TO_CONNECT
 import com.safefleet.mobile.kotlin_commons.helpers.Result
 import io.mockk.Runs
 import io.mockk.coEvery
@@ -13,9 +14,11 @@ import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
 import io.mockk.runs
+import io.mockk.verify
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.TestCoroutineDispatcher
 import kotlinx.coroutines.test.setMain
 import org.junit.Assert
 import org.junit.jupiter.api.BeforeEach
@@ -23,6 +26,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.api.extension.ExtendWith
 
+@ExperimentalCoroutinesApi
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @ExtendWith(InstantExecutorExtension::class)
 class PairingViewModelTest {
@@ -44,10 +48,12 @@ class PairingViewModelTest {
 
     private var cameraPairingProgress: Result<Int>? = null
 
+    private val dispatcher = TestCoroutineDispatcher()
+
     @ExperimentalCoroutinesApi
     @BeforeEach
     fun setUp() {
-        Dispatchers.setMain(Dispatchers.Unconfined)
+        Dispatchers.setMain(dispatcher)
     }
 
     @Test
@@ -98,9 +104,9 @@ class PairingViewModelTest {
     }
 
     @Test
-    fun testIsValidNumberCameraBWC() {
-        Assert.assertTrue(CameraType.isValidNumberCameraBWC(DEFAULT_SSID))
-        Assert.assertFalse(CameraType.isValidNumberCameraBWC(""))
+    fun testIsValidBodyCameraNumber() {
+        Assert.assertTrue(CameraType.isValidBodyCameraNumber(DEFAULT_SSID))
+        Assert.assertFalse(CameraType.isValidBodyCameraNumber(""))
     }
 
     @Test
@@ -150,5 +156,12 @@ class PairingViewModelTest {
     fun testCleanCacheFiles() {
         every { viewModel.cleanCacheFiles() } just runs
         viewModel.cleanCacheFiles()
+    }
+
+    @Test
+    fun suggestWiFiNetwork() {
+        every { wifiHelper.suggestWiFiNetwork(any(), any(), any()) } returns Unit
+        viewModel.suggestWiFiNetwork("", "") {}
+        verify { wifiHelper.suggestWiFiNetwork(any(), any(), any()) }
     }
 }

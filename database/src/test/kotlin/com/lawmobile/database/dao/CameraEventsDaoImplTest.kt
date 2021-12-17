@@ -3,7 +3,7 @@ package com.lawmobile.database.dao
 import com.lawmobile.data.dao.entities.LocalCameraEvent
 import com.lawmobile.database.Database
 import com.lawmobile.database.DbCameraEvent
-import com.lawmobile.database.mappers.DbEventsMapper
+import com.lawmobile.database.mappers.DbEventsMapper.toLocalList
 import io.mockk.Runs
 import io.mockk.every
 import io.mockk.just
@@ -53,7 +53,7 @@ internal class CameraEventsDaoImplTest {
         )
         every { database.databaseQueries.getAllEvents().executeAsList() } returns result
         Assert.assertEquals(
-            DbEventsMapper.dbToLocalList(result),
+            result.toLocalList(),
             cameraEventsDaoImpl.getAllEvents()
         )
     }
@@ -110,7 +110,7 @@ internal class CameraEventsDaoImplTest {
     @Test
     fun getAllNotificationEventsResult() {
         val response = listOf(mockk<DbCameraEvent>(relaxed = true))
-        val result = DbEventsMapper.dbToLocalList(response)
+        val result = response.toLocalList()
         every { database.databaseQueries.getNotificationEvents(any()).executeAsList() } returns response
         Assert.assertEquals(
             result,

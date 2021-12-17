@@ -7,6 +7,7 @@ import com.safefleet.lawmobile.testData.CameraEventsData
 import com.safefleet.lawmobile.testData.CameraFilesData
 import com.safefleet.lawmobile.testData.TestLoginData
 import com.safefleet.mobile.external_hardware.cameras.CameraService
+import com.safefleet.mobile.external_hardware.cameras.entities.AudioInformation
 import com.safefleet.mobile.external_hardware.cameras.entities.CameraCatalog
 import com.safefleet.mobile.external_hardware.cameras.entities.CameraFile
 import com.safefleet.mobile.external_hardware.cameras.entities.CameraUser
@@ -36,10 +37,12 @@ class CameraConnectServiceMock : CameraService {
     companion object {
         var snapshotsList = CameraFilesData.DEFAULT_SNAPSHOT_LIST.value
         var videoList = CameraFilesData.DEFAULT_VIDEO_LIST.value
+        var audioList = CameraFilesData.DEFAULT_AUDIO_LIST.value
         var takenPhotos = 0
         var takenVideos = 0
         var result: Result<Int> = Result.Success(100)
         var eventList: MutableList<LogEvent> = CameraEventsData.DEFAULT.value
+        var isVideoUpdated = false
     }
 
     override suspend fun disconnectCamera(): Result<Unit> {
@@ -73,6 +76,11 @@ class CameraConnectServiceMock : CameraService {
         return Result.Success(VideoFileInfo(0, 1000, 100, "", "10", 10, "", ""))
     }
 
+    override suspend fun getListOfAudios(): Result<FileResponseWithErrors> {
+        FileList.audioList = emptyList()
+        return Result.Success(audioList)
+    }
+
     override suspend fun getListOfImages(): Result<FileResponseWithErrors> {
         FileList.imageList = emptyList()
         return Result.Success(snapshotsList)
@@ -81,10 +89,6 @@ class CameraConnectServiceMock : CameraService {
     override suspend fun getListOfVideos(): Result<FileResponseWithErrors> {
         FileList.videoList = emptyList()
         return Result.Success(videoList)
-    }
-
-    override suspend fun getListOfAudios(): Result<FileResponseWithErrors> {
-        throw NotImplementedError()
     }
 
     override suspend fun getLogEvents(): Result<List<LogEvent>> {
@@ -115,6 +119,33 @@ class CameraConnectServiceMock : CameraService {
         fileName: String,
         folderName: String
     ): Result<VideoInformation> {
+
+        if (isVideoUpdated) {
+            return Result.Success(
+                VideoInformation(
+                    fileName, "kmenesesp", "/DCIM/", folderName, "X57",
+                    VideoMetadata(
+                        "1234",
+                        "1234",
+                        "DP001",
+                        "1234",
+                        "1234",
+                        "1234",
+                        null,
+                        "John",
+                        null,
+                        "Copeland",
+                        "Miami",
+                        "1234",
+                        null,
+                        "1234",
+                        "TC001",
+                        "1234"
+                    ),
+                    null
+                )
+            )
+        }
         return Result.Success(
             VideoInformation(
                 fileName,
@@ -130,10 +161,10 @@ class CameraConnectServiceMock : CameraService {
                     "1234",
                     "1234",
                     null,
-                    "1234",
+                    "John",
                     null,
-                    "1234",
-                    "1234",
+                    "Copeland",
+                    "Miami",
                     "1234",
                     null,
                     "1234",
@@ -217,7 +248,29 @@ class CameraConnectServiceMock : CameraService {
         return Result.Success(MockUtils.totalStorageCamera.toString())
     }
 
+    fun setMaxTimeSession(time: Int) {}
+
     fun sendPushNotification(notificationResponse: NotificationResponse) {
         arriveNotificationFromCamera?.invoke(notificationResponse)
+    }
+
+    fun setIsVideoUpdated(value: Boolean) {
+        isVideoUpdated = value
+    }
+
+    override suspend fun getAudioBytes(cameraFile: CameraFile): Result<ByteArray> {
+        return Result.Error(mockk())
+    }
+
+    override suspend fun getAudioMetadata(cameraFile: CameraFile): Result<AudioInformation> {
+        return Result.Error(mockk())
+    }
+
+    override suspend fun saveAudioMetadata(audioInformation: AudioInformation): Result<Unit> {
+        return Result.Success(Unit)
+    }
+
+    override suspend fun getAssociatedVideos(cameraFile: CameraFile): Result<List<CameraFile>> {
+        return Result.Success(listOf(cameraFile))
     }
 }

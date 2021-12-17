@@ -15,9 +15,9 @@ import com.lawmobile.domain.entities.DomainCameraFile
 import com.lawmobile.domain.entities.DomainInformationFile
 import com.lawmobile.domain.entities.DomainInformationFileResponse
 import com.lawmobile.domain.entities.DomainInformationImage
+import com.lawmobile.domain.entities.FilesAssociatedByUser
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.databinding.FragmentFileListBinding
-import com.lawmobile.presentation.entities.FilesAssociatedByUser
 import com.lawmobile.presentation.entities.ImageFilesPathManager
 import com.lawmobile.presentation.entities.ImageWithPathSaved
 import com.lawmobile.presentation.extensions.getPathFromTemporalFile
@@ -54,8 +54,7 @@ class ThumbnailFileListFragment : FileListBaseFragment() {
         savedInstanceState: Bundle?
     ): View {
         setObservers()
-        _binding =
-            FragmentFileListBinding.inflate(inflater, container, false)
+        _binding = FragmentFileListBinding.inflate(inflater, container, false)
         return binding.root
     }
 

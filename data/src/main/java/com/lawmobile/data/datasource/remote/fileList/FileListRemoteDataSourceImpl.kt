@@ -1,6 +1,7 @@
 package com.lawmobile.data.datasource.remote.fileList
 
 import com.lawmobile.data.utils.CameraServiceFactory
+import com.safefleet.mobile.external_hardware.cameras.entities.AudioInformation
 import com.safefleet.mobile.external_hardware.cameras.entities.PhotoInformation
 import com.safefleet.mobile.external_hardware.cameras.entities.VideoInformation
 import com.safefleet.mobile.kotlin_commons.helpers.Result
@@ -10,17 +11,18 @@ class FileListRemoteDataSourceImpl(cameraServiceFactory: CameraServiceFactory) :
 
     private var cameraConnectService = cameraServiceFactory.create()
 
-    override suspend fun savePartnerIdVideos(
-        videoInformation: VideoInformation
-    ): Result<Unit> = cameraConnectService.saveVideoMetadata(videoInformation)
-
-    override suspend fun savePartnerIdInAllSnapshots(
-        list: List<PhotoInformation>
-    ): Result<Unit> = cameraConnectService.saveAllPhotoMetadata(list)
-
-    override suspend fun getSavedPhotosMetadata(): Result<List<PhotoInformation>> =
-        cameraConnectService.getMetadataOfPhotos()
+    override suspend fun savePartnerIdVideos(videoInformation: VideoInformation): Result<Unit> =
+        cameraConnectService.saveVideoMetadata(videoInformation)
 
     override suspend fun savePartnerIdSnapshot(photoInformation: PhotoInformation): Result<Unit> =
         cameraConnectService.savePhotoMetadata(photoInformation)
+
+    override suspend fun savePartnerIdAudios(audioInformation: AudioInformation): Result<Unit> =
+        cameraConnectService.saveAudioMetadata(audioInformation)
+
+    override suspend fun savePartnerIdInAllSnapshots(list: List<PhotoInformation>): Result<Unit> =
+        cameraConnectService.saveAllPhotoMetadata(list)
+
+    override suspend fun getSavedPhotosMetadata(): Result<List<PhotoInformation>> =
+        cameraConnectService.getMetadataOfPhotos()
 }

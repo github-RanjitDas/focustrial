@@ -22,9 +22,7 @@ internal class FileListUseCaseImplTest {
         coEvery { fileListRepository.savePartnerIdVideos(any(), any()) } returns Result.Success(
             mockk()
         )
-        runBlocking {
-            fileListUseCaseImpl.savePartnerIdVideos(listOf(mockk()), "")
-        }
+        runBlocking { fileListUseCaseImpl.savePartnerIdVideos(listOf(mockk()), "") }
         coVerify { fileListRepository.savePartnerIdVideos(any(), any()) }
     }
 
@@ -57,9 +55,7 @@ internal class FileListUseCaseImplTest {
         coEvery { fileListRepository.savePartnerIdSnapshot(any(), any()) } returns Result.Success(
             mockk()
         )
-        runBlocking {
-            fileListUseCaseImpl.savePartnerIdSnapshot(listOf(mockk()), "")
-        }
+        runBlocking { fileListUseCaseImpl.savePartnerIdSnapshot(listOf(mockk()), "") }
         coVerify { fileListRepository.savePartnerIdSnapshot(any(), any()) }
     }
 
@@ -82,6 +78,39 @@ internal class FileListUseCaseImplTest {
         runBlocking {
             Assert.assertEquals(
                 fileListUseCaseImpl.savePartnerIdSnapshot(listOf(mockk()), ""),
+                result
+            )
+        }
+    }
+
+    @Test
+    fun testSavePartnerIdAudiosFlow() {
+        coEvery { fileListRepository.savePartnerIdAudios(any(), any()) } returns Result.Success(
+            mockk()
+        )
+        runBlocking { fileListUseCaseImpl.savePartnerIdAudios(listOf(mockk()), "") }
+        coVerify { fileListRepository.savePartnerIdAudios(any(), any()) }
+    }
+
+    @Test
+    fun testSavePartnerIdAudiosSuccess() {
+        val result = Result.Success(Unit)
+        coEvery { fileListRepository.savePartnerIdAudios(any(), any()) } returns result
+        runBlocking {
+            Assert.assertEquals(
+                fileListUseCaseImpl.savePartnerIdAudios(listOf(mockk()), ""),
+                result
+            )
+        }
+    }
+
+    @Test
+    fun testSavePartnerIdAudiosFailed() {
+        val result = Result.Error(mockk())
+        coEvery { fileListRepository.savePartnerIdAudios(any(), any()) } returns result
+        runBlocking {
+            Assert.assertEquals(
+                fileListUseCaseImpl.savePartnerIdAudios(listOf(mockk()), ""),
                 result
             )
         }

@@ -6,7 +6,7 @@ import android.view.SurfaceView
 import android.widget.SeekBar
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
-import com.lawmobile.domain.utils.runWithDelay
+import com.lawmobile.domain.helpers.runWithDelay
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.entities.MediaPlayerControls
 import com.lawmobile.presentation.extensions.milliSecondsToString

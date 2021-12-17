@@ -5,7 +5,7 @@ import android.view.animation.AnimationUtils
 import androidx.activity.viewModels
 import androidx.core.view.isVisible
 import com.lawmobile.presentation.R
-import com.lawmobile.presentation.databinding.ActivityLiveViewBinding
+import com.lawmobile.presentation.databinding.ActivityLiveViewX2Binding
 import com.lawmobile.presentation.entities.MenuInformation
 import com.lawmobile.presentation.extensions.attachFragment
 import com.lawmobile.presentation.extensions.closeMenuButton
@@ -15,9 +15,12 @@ import com.lawmobile.presentation.ui.base.BaseActivity
 import com.lawmobile.presentation.ui.base.appBar.x2.AppBarX2Fragment
 import com.lawmobile.presentation.ui.base.menu.MenuFragment
 import com.lawmobile.presentation.ui.base.menu.MenuFragment.Companion.isInMainScreen
+import com.lawmobile.presentation.ui.base.settingsBar.SettingsBarFragment
 import com.lawmobile.presentation.ui.live.LiveActivityBaseViewModel
 import com.lawmobile.presentation.ui.live.controls.x1.LiveControlsX1Fragment
+import com.lawmobile.presentation.ui.live.controls.x2.LiveControlsX2Fragment
 import com.lawmobile.presentation.ui.live.navigation.x1.LiveNavigationX1Fragment
+import com.lawmobile.presentation.ui.live.navigation.x2.LiveNavigationX2Fragment
 import com.lawmobile.presentation.ui.live.statusBar.x1.LiveStatusBarX1Fragment
 import com.lawmobile.presentation.ui.live.statusBar.x2.LiveStatusBarX2Fragment
 import com.lawmobile.presentation.ui.live.stream.LiveStreamFragment
@@ -27,21 +30,22 @@ import com.safefleet.mobile.kotlin_commons.helpers.Event
 class LiveX2Activity : BaseActivity() {
 
     private val viewModel: LiveActivityBaseViewModel by viewModels()
-    private lateinit var binding: ActivityLiveViewBinding
+    private lateinit var binding: ActivityLiveViewX2Binding
 
     private val appBarFragment = AppBarX2Fragment.createInstance(true, "")
     private val statusBarFragment = LiveStatusBarX2Fragment()
     private val streamFragment = LiveStreamFragment()
-    private val controlsFragment = LiveControlsX1Fragment()
-    private val navigationFragment = LiveNavigationX1Fragment()
+    private val controlsFragment = LiveControlsX2Fragment()
+    private val navigationFragment = LiveNavigationX2Fragment()
     private val menuFragment = MenuFragment()
+    private val statusBarSettingsFragment = SettingsBarFragment.createInstance()
     private var isMenuOpen = false
 
     private lateinit var menuInformation: MenuInformation
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityLiveViewBinding.inflate(layoutInflater)
+        binding = ActivityLiveViewX2Binding.inflate(layoutInflater)
         setContentView(binding.root)
         overridePendingTransition(0, 0)
         activitySetup()
@@ -93,11 +97,15 @@ class LiveX2Activity : BaseActivity() {
         EspressoIdlingResource.increment()
         onLiveStreamSwitchClick(true)
         streamFragment.showLoadingState(message)
+        setStreamFragment()
     }
 
-    private fun onCameraOperationFinished() {
+    private fun onCameraOperationFinished(isAudio: Boolean) {
         streamFragment.hideLoadingState()
+        streamFragment.showRecordingAudio(isAudio)
+        streamFragment.setStreamVisibility(!isAudio)
         EspressoIdlingResource.decrement()
+        setStreamFragment()
     }
 
     private fun onLiveStreamSwitchClick(isActive: Boolean) {
@@ -151,6 +159,7 @@ class LiveX2Activity : BaseActivity() {
         setControlsFragment()
         setNavigationFragment()
         setMenuFragment()
+        setStatusBarSettingsFragment()
     }
 
     private fun setMenuFragment() {
@@ -190,6 +199,14 @@ class LiveX2Activity : BaseActivity() {
             containerId = R.id.statusBarContainer,
             fragment = statusBarFragment,
             tag = LiveStatusBarX1Fragment.TAG
+        )
+    }
+
+    private fun setStatusBarSettingsFragment() {
+        supportFragmentManager.attachFragment(
+            containerId = R.id.settingsBarContainer,
+            fragment = statusBarSettingsFragment,
+            tag = SettingsBarFragment.TAG
         )
     }
 

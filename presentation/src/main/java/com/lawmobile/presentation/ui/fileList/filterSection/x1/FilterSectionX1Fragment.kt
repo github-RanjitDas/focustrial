@@ -11,6 +11,7 @@ import com.lawmobile.presentation.extensions.createFilterDialog
 import com.lawmobile.presentation.extensions.setOnClickListenerCheckConnection
 import com.lawmobile.presentation.ui.base.BaseFragment
 import com.lawmobile.presentation.utils.Constants
+import com.lawmobile.presentation.utils.FeatureSupportHelper
 import com.lawmobile.presentation.widgets.CustomFilterDialog
 
 class FilterSectionX1Fragment : BaseFragment() {
@@ -33,7 +34,13 @@ class FilterSectionX1Fragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setListener()
+        setFeatures()
         isViewCreated = true
+    }
+
+    private fun setFeatures() {
+        if (!FeatureSupportHelper.supportAssociateOfficerID)
+            binding.buttonSelectToAssociate.visibility = View.INVISIBLE
     }
 
     fun resetButtonAssociateSnapshot(listType: String?) {

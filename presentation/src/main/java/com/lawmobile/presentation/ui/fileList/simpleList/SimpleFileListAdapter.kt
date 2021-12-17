@@ -9,9 +9,9 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.lawmobile.domain.entities.DomainInformationFile
+import com.lawmobile.domain.entities.FilesAssociatedByUser
 import com.lawmobile.domain.extensions.getDateDependingOnNameLength
 import com.lawmobile.presentation.R
-import com.lawmobile.presentation.entities.FilesAssociatedByUser
 import com.lawmobile.presentation.extensions.setCheckedListenerCheckConnection
 import com.lawmobile.presentation.extensions.setOnClickListenerCheckConnection
 import com.lawmobile.presentation.ui.fileList.FileListBaseFragment

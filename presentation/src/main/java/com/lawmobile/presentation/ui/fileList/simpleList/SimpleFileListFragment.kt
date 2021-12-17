@@ -6,21 +6,21 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import com.lawmobile.domain.entities.CameraInfo
 import com.lawmobile.domain.entities.DomainInformationFile
 import com.lawmobile.domain.entities.DomainInformationFileResponse
+import com.lawmobile.domain.entities.FilesAssociatedByUser
 import com.lawmobile.domain.enums.RequestError
 import com.lawmobile.domain.extensions.getDateDependingOnNameLength
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.databinding.FragmentFileListBinding
-import com.lawmobile.presentation.entities.FilesAssociatedByUser
 import com.lawmobile.presentation.extensions.setOnClickListenerCheckConnection
 import com.lawmobile.presentation.extensions.showErrorSnackBar
 import com.lawmobile.presentation.extensions.verifySessionBeforeAction
 import com.lawmobile.presentation.ui.fileList.FileListBaseFragment
+import com.lawmobile.presentation.utils.Constants.AUDIO_LIST
 import com.lawmobile.presentation.utils.Constants.FILE_LIST_TYPE
 import com.lawmobile.presentation.utils.Constants.SNAPSHOT_LIST
 import com.lawmobile.presentation.utils.Constants.VIDEO_LIST
@@ -44,17 +44,20 @@ class SimpleFileListFragment : FileListBaseFragment() {
         savedInstanceState: Bundle?
     ): View {
         setObservers()
-        _binding =
-            FragmentFileListBinding.inflate(inflater, container, false)
+        _binding = FragmentFileListBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setListeners()
-        listType = arguments?.getString(FILE_LIST_TYPE)
+        setListType()
         isLoadedOnCreate = true
         getFileList()
+    }
+
+    private fun setListType() {
+        listType = arguments?.getString(FILE_LIST_TYPE)
     }
 
     private fun getFileList() {
@@ -64,6 +67,10 @@ class SimpleFileListFragment : FileListBaseFragment() {
             SNAPSHOT_LIST -> {
                 binding.textViewEvent.isVisible = false
                 simpleListViewModel.getSnapshotList()
+            }
+            AUDIO_LIST -> {
+                binding.textViewEvent.isVisible = false
+                simpleListViewModel.getAudioList()
             }
         }
     }
@@ -122,30 +129,17 @@ class SimpleFileListFragment : FileListBaseFragment() {
     }
 
     private fun setObservers() {
-        simpleListViewModel.fileListLiveData.observe(
-            viewLifecycleOwner,
-            Observer(::handleFileListResult)
-        )
+        simpleListViewModel.fileListResult.observe(viewLifecycleOwner, ::handleFileListResult)
     }
 
     private fun handleFileListResult(result: Result<DomainInformationFileResponse>) {
         with(result) {
             doIfSuccess {
-                if (it.errors.isNotEmpty()) {
-                    handleErrors(it.errors)
-                }
+                if (it.errors.isNotEmpty()) showErrors(it.errors)
                 if (it.items.isNotEmpty()) {
-                    showFileListRecycler(
-                        binding.fileListRecycler,
-                        binding.noFilesTextView
-                    )
+                    showFileListRecycler(binding.fileListRecycler, binding.noFilesTextView)
                     setAdapter(it.items)
-                } else {
-                    showEmptyListMessage(
-                        binding.fileListRecycler,
-                        binding.noFilesTextView
-                    )
-                }
+                } else showEmptyListMessage(binding.fileListRecycler, binding.noFilesTextView)
             }
             doIfError {
                 val errorMessage =
@@ -166,7 +160,7 @@ class SimpleFileListFragment : FileListBaseFragment() {
         CameraInfo.onReadyToGetNotifications?.invoke()
     }
 
-    private fun handleErrors(errors: MutableList<String>) {
+    private fun showErrors(errors: MutableList<String>) {
         binding.fileListLayout.showErrorSnackBar(
             getString(R.string.getting_files_error_description),
             Snackbar.LENGTH_LONG

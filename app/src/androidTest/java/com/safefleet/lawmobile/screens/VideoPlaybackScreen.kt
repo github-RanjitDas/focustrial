@@ -8,14 +8,13 @@ import com.safefleet.mobile.external_hardware.cameras.entities.VideoInformation
 import com.schibsted.spain.barista.assertion.BaristaVisibilityAssertions.assertDisplayed
 import com.schibsted.spain.barista.assertion.BaristaVisibilityAssertions.assertNotDisplayed
 import com.schibsted.spain.barista.interaction.BaristaClickInteractions.clickOn
+import com.schibsted.spain.barista.interaction.BaristaEditTextInteractions.clearText
 import com.schibsted.spain.barista.interaction.BaristaEditTextInteractions.writeTo
 import com.schibsted.spain.barista.interaction.BaristaScrollInteractions.safelyScrollTo
 
 class VideoPlaybackScreen : BaseScreen() {
 
     fun clickOnSave() = clickOn(R.id.saveButtonVideoPlayback)
-
-    fun clickOnBack() = clickOn(R.id.imageButtonBackArrow)
 
     fun clickOnAddSnapshots() = clickOn(R.id.buttonAssociateSnapshots)
 
@@ -36,6 +35,15 @@ class VideoPlaybackScreen : BaseScreen() {
 
     fun typePartnerId(data: VideoInformation) =
         data.officerId?.let { writeTo(R.id.partnerIdValue, it) }
+
+    fun updateField(inputId: Int, value: String) {
+        clearText(inputId)
+        writeTo(R.id.ticket1Value, value)
+    }
+
+    fun fieldHasValue(inputId: Int, value: String) {
+        assertDisplayed(value)
+    }
 
     fun fillAllFields(data: VideoInformation) {
         waitUntil { selectEvent(data) }
@@ -121,7 +129,7 @@ class VideoPlaybackScreen : BaseScreen() {
         }
     }
 
-    private fun checkIfFieldIsUpdated(id: Int, value: String) {
+    fun checkIfFieldIsUpdated(id: Int, value: String) {
         safelyScrollTo(id)
         waitUntil { assertDisplayed(id, value) }
     }

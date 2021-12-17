@@ -2,6 +2,7 @@ package com.lawmobile.presentation.utils
 
 import com.lawmobile.domain.entities.CameraEvent
 import com.lawmobile.domain.utils.ConnectionHelper
+import com.lawmobile.presentation.connectivity.WifiHelper
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -9,7 +10,7 @@ import kotlinx.coroutines.launch
 class CameraHelper(
     private val connectionHelper: ConnectionHelper,
     private val wifiHelper: WifiHelper,
-    private val backgroundDispatcher: CoroutineDispatcher
+    private val dispatcher: CoroutineDispatcher
 ) {
 
     companion object {
@@ -32,7 +33,7 @@ class CameraHelper(
     }
 
     fun disconnectCamera() {
-        CoroutineScope(backgroundDispatcher).launch {
+        CoroutineScope(dispatcher).launch {
             connectionHelper.disconnectCamera()
         }
     }

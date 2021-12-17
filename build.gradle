@@ -22,9 +22,8 @@ buildscript {
         classpath "info.solidsoft.gradle.pitest:gradle-pitest-plugin:$pitest_plugin_version"
         pitest "org.pitest:pitest-junit5-plugin:$pitest_junit5_plugin_version"
         classpath "com.google.dagger:hilt-android-gradle-plugin:$hilt_version"
-        classpath "com.google.gms:google-services:$google_services_version"
-        classpath "com.google.firebase:firebase-crashlytics-gradle:$firebase_crashlytics_version"
         classpath "com.squareup.sqldelight:gradle-plugin:$sqldelight_version"
+        classpath "com.google.firebase:firebase-appdistribution-gradle:$firebase_app_distribution_version"
     }
 }
 

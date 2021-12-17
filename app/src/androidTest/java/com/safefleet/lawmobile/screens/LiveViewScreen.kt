@@ -74,7 +74,7 @@ open class LiveViewScreen : BaseScreen() {
     }
 
     fun isLiveViewDisplayed() {
-        assertDisplayed(R.id.liveStreamingView)
+        waitUntil(5000) { assertDisplayed(R.id.liveStreamingView) }
         assertDisplayed(R.id.toggleFullScreenLiveView)
 
         isBatteryStatusDisplayed()
@@ -86,9 +86,7 @@ open class LiveViewScreen : BaseScreen() {
         assertDisplayed(R.id.buttonRecord)
         assertDisplayed(R.string.record_video)
 
-        assertDisplayed(R.id.buttonOpenHelpPage)
-
-        assertDisplayed(R.id.textLiveViewSwitch, R.string.live_view_label)
+        isLiveViewTextDisplayed()
 
         assertDisplayed(R.id.buttonSnapshotList)
         assertDisplayed(R.string.view_snapshots)
@@ -96,6 +94,8 @@ open class LiveViewScreen : BaseScreen() {
         assertDisplayed(R.id.buttonVideoList)
         assertDisplayed(R.string.view_videos)
     }
+
+    fun isLiveViewTextDisplayed() = waitUntil { assertDisplayed(R.id.textLiveViewSwitch, R.string.live_view_label) }
 
     fun isVideoInFullScreen() {
         assertNotDisplayed(R.id.buttonSwitchLiveView)
@@ -136,7 +136,7 @@ open class LiveViewScreen : BaseScreen() {
 
     fun isMemoryStorageIndicatorTextDisplayed(percent: String) {
         waitUntil {
-            assertContains(R.id.textViewStorageLevels, "$percent% used")
+            assertContains(R.id.textViewStorageLevels, "$percent% available")
         }
     }
 }

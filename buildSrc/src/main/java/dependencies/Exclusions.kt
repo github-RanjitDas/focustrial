@@ -34,6 +34,7 @@ object Exclusions {
         "**/*Application.**",
         "**/res/**",
         "**/entities/**",
+        "**/helpers/**",
         "**/enums/**",
         "**/security/**",
         "**/models/**",
@@ -46,9 +47,12 @@ object Exclusions {
         "**/*WifiStatus.**",
         "**/root/**",
         "**/databinding.**",
+
         "**/database.**",
-        //Temporal empty file that is decreasing the coverage
-        "**/LoginActivityViewModel.**",
+        "**/FakeHttpClient.**",
+        "**/WifiHelperImpl.**",
+        "**/FeatureSupportHelper.**",
+        "**/SimpleNetworkManager.**",
         "**/OnSwipeTouchListener.**",
         "**/LiveActivityBaseViewModel.**",
         "**/CameraEventsManager.**",
@@ -57,6 +61,15 @@ object Exclusions {
         "**/WifiHelper.**",
         "**/RunWithDelay.**",
         "**/Build.**"
+        "**/SplashViewModel.**",
+        "**/AuthStateManagerFactoryImpl.**",
+
+        //Temporal empty file that is decreasing the coverage
+        "**/LoginX1ViewModel.**",
+        "**/EspressoIdlingResource.**",
+        "**/RequestInterceptor.**",
+        "**/LoginUseCases.**",
+        "**/PreferencesManagerImpl.**" //here since could not found a way to mock datastore.edit
     )
     val pitest = mutableSetOf(
         //Dagger 2
@@ -104,6 +117,12 @@ object Exclusions {
         "com.lawmobile.data.mappers.FileResponseMapper*",
         "com.lawmobile.presentation.utils.MobileDataStatus*",
         "com.lawmobile.presentation.utils.OnSwipeTouchListener*",
-        "com.lawmobile.presentation.utils.CameraEventsManager*"
+        "com.lawmobile.presentation.utils.CameraEventsManager*",
+        "com.lawmobile.data.dto.api.validateOfficerId.ValidateOfficerIdApiImpl*",
+        "com.lawmobile.presentation.ui.splash.SplashViewModel*",
+        "com.lawmobile.data.dto.api.authorization.AuthorizationApiImpl*",
+        "com.lawmobile.presentation.utils.PreferencesManagerImpl*",
+        "com.lawmobile.data.dto.api.user.UserApiImpl*",
+        "com.lawmobile.data.repository.audioDetail.AudioDetailRepositoryImpl*"
     )
 }

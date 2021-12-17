@@ -18,6 +18,13 @@
     <string name="storage_alert_title">Low Storage Warning</string>
     <string name="storage_alert_description">Your Body Camera has reached 95% of its storage capacity.</string>
 
+    <!-- Onboarding -->
+    <string name="skip_intro">Skip</string>
+    <string name="description_card_1">Please, &lt;b&gt;turn on &lt;/b&gt; the Body-Camera hotspot</string>
+    <string name="description_card_2">Please enter your officer ID or email address as provided by your administrator and tap on the &lt;b&gt;Continue&lt;/b&gt; button.</string>
+    <string name="description_card_3">If you are in this screen, please enter your email and password and tap in the &lt;b&gt;Login&lt;/b&gt; button</string>
+    <string name="description_card_4">If you are in this screen, please enter your device password and tap in the &lt;b&gt;Connect&lt;/b&gt; button.</string>
+
     <!-- Login -->
     <string name="please_enable_permission">Please enable permission from settings</string>
     <string name="please_enable_permission_location">Require location permission for pairing the Body Camera.</string>
@@ -43,6 +50,7 @@
     <string name="live_view_menu_item_dashboard">Dashboard</string>
     <string name="live_view_menu_item_view_snapshots">View Snapshots</string>
     <string name="live_view_menu_item_view_videos">View Videos</string>
+    <string name="live_view_menu_item_view_audios">View Audios</string>
     <string name="live_view_menu_item_bodyworn_settings">Body Camera Settings</string>
     <string name="live_view_menu_item_notification">Notifications</string>
     <string name="live_view_menu_item_diagnose">Body Camera Diagnosis</string>
@@ -56,6 +64,7 @@
     <string name="button_record_description">Record</string>
     <string name="take_snapshots">Take Snapshot</string>
     <string name="record_video">Record Video</string>
+    <string name="record_audio">Record Audio</string>
     <string name="snapshot_list_description">Snapshot List</string>
     <string name="view_snapshots">View Snapshots</string>
     <string name="video_list_description">Video List</string>
@@ -67,6 +76,7 @@
     <string name="file_list_event_default">Event</string>
     <string name="no_images_found">No snapshots found</string>
     <string name="no_videos_found">No videos found</string>
+    <string name="no_audios_found">No audios found</string>
     <string name="getting_files_error">File Retrieval Error</string>
     <string name="getting_files_error_description">The system failed to retrieve all the requested files. Please try again.</string>
 
@@ -118,20 +128,27 @@
     <string name="playback_video_name">Name</string>
     <string name="default_text">Default text</string>
     <string name="snapshot_detail_metadata_error">Failed to retrieve snapshot information. Please try again.</string>
-    <!-- link_snapshots -->
+
+    <!-- Audio detail -->
+    <string name="audio_item_detail_title">Audio Detail</string>
+    <string name="audio_detail_load_failed">Unable to open audio, please go back or try again.</string>
+    <string name="audio_detail_metadata_error">Unable to get audio information, please try again.</string>
 
     <!-- Partner Id -->
     <string name="allowedOfficerIdAssociatedPattern">ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789</string>
+    <string name="allowedOfficerIdPattern">ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@.</string>
     <string name="associate_partner_id_content_description">Associate Partner ID</string>
     <string name="file_list_associate_partner_id_success">The Partner ID has been associated successfully.</string>
     <string name="file_list_associate_partner_id_error">Partner ID could not be associated</string>
     <string name="associate_partner_to_file_button_description">Associate Partner ID with file</string>
     <string name="button_link_snapshots_description">Link snapshots</string>
+    <string name="button_link_audios_description">button link audios</string>
     <string name="valid_partner_id_message">You must enter a valid Partner ID</string>
     <string name="mobile_data_status_title">Mobile Data</string>
     <string name="mobile_data_status_message">Please disable Mobile Data on your device in order to connect the Body Camera with the FOCUS Mobile App.</string>
     <string name="verify_camera_wifi">Please verify the Wi-Fi connection between the Body Camera and FOCUS Mobile App.</string>
     <string name="error_saving_video">Error occurred when checking the videos saved in the Body Camera. Please wait and try again.</string>
+    <string name="error_saving_audio">Error checking audio saved in Body-Camera, please wait and try again</string>
     <string name="go">GO</string>
     <string name="login">Login</string>
     <string name="success_connection_to_camera">You have successfully connected to the Body Camera.</string>
@@ -141,8 +158,10 @@
     <string name="camera_status">Body Camera Status</string>
     <string name="memory_level">memory usage</string>
     <string name="battery_level">battery level</string>
-    <string name="recording">Recording</string>
+    <string name="video_recording">Video Recording</string>
+    <string name="audio_recording">Audio Recording</string>
     <string name="stop">Stop</string>
+    <string name="stop_audio">Stop Record Audio</string>
     <string name="taking_snapshot">Taking snapshot</string>
     <string name="starting_recording">Starting recording</string>
     <string name="stopping_recording">Stopping recording</string>
@@ -174,6 +193,7 @@
     <string name="close_instructions_description">close instructions</string>
     <string name="snapshots_title">Snapshots</string>
     <string name="videos_title">Videos</string>
+    <string name="audios_title">Audios</string>
     <string name="associate_with_an_officer">Associate with an officer</string>
     <string name="select_snapshots_to_associate">Select snapshots to associate</string>
     <string name="select">Select</string>
@@ -186,6 +206,7 @@
     <string name="select_videos_to_associate">Select videos to associate</string>
     <string name="button_help">\?</string>
     <string name="add_snapshots">Add snapshots</string>
+    <string name="add_audios">Add audios</string>
     <string name="associate_image_to_video">Associate snapshots to video</string>
     <string name="video_detail">Video Detail</string>
     <string name="time_divider"> / </string>
@@ -204,6 +225,7 @@
     <string name="items_selected" tools:ignore="PluralsCandidate">%1$d Selected</string>
     <string name="no_snapshots_filter">No snapshots match these criteria</string>
     <string name="no_videos_filter">No videos match these criteria</string>
+    <string name="no_audios_filter">No audios match these criteria</string>
     <string name="not_available">Not available</string>
     <string name="user_guide">User Guide</string>
     <string name="image_error_thumbnail">This thumbnail is not loading properly.</string>
@@ -239,7 +261,7 @@
         <item>Default</item>
     </string-array>
 
-    <!-- Body Worn Diagnosis -->
+    <!-- Body Camera Diagnosis -->
     <string name="body_worn_diagnosis_button_text">START</string>
     <string name="body_worn_diagnosis_loading_text">Diagnosing…</string>
     <string name="body_worn_diagnosis_success_text">Success</string>
@@ -252,5 +274,40 @@
     <string name="notification_list_error">Failed to retrieve the notification list. Please retry or check the Body Camera.</string>
     <string name="low_signal_title">Your mobile device is too far away from the Body Camera.</string>
     <string name="low_signal_message">In order to prevent disconnection, please get your mobile device closer to your Body Camera.</string>
+    <string name="choose_camera_type">Please turn on your Body-Camera, check the display and choose the one that matches</string>
+    <string name="camera_display_image_description">Body-Camera display image</string>
+    <string name="x1">X1</string>
+    <string name="x2">X2</string>
+    <string name="x1_camera_button_description">X1 Body-Camera button</string>
+    <string name="x2_camera_button_description">X2 Body-Camera button</string>
+    <string name="continue_text">Continue</string>
+    <string name="or">or</string>
+    <string name="display">Display</string>
+    <string name="officer_id">Enter your officer ID or email</string>
+    <string name="change_camera_type">Change Body-Camera type</string>
+    <string name="go_to_on_boarding_cards">Go to on-boarding cards</string>
+    <string name="sign_in_with_email">Sign in with Email</string>
+    <string name="connect">Connect</string>
+    <string name="device_password">Device Password</string>
+    <string name="edit_officer_id_description">edit officer id or email</string>
 
+    <!-- Body-Camera Setting and Status-->
+    <string name="body_worn_status_title">Body-Camera Status</string>
+    <string name="body_worn_settings_title">Body-Camera Settings</string>
+    <string name="body_worn_settings_covert_mode">Covert Mode</string>
+    <string name="body_worn_settings_bluetooth">Bluetooth</string>
+    <string name="body_worn_settings_gps">GPS</string>
+    <string name="body_worn_settings_audio">Audio</string>
+    <string name="body_worn_settings_signal">Signal</string>
+    <string name="body_worn_settings_error_in_get_settings">Error in get settings, please try again</string>
+    <string name="body_worn_settings_error_in_change_settings">Error in change setting, please try again</string>
+    <string name="start_now">Start Now</string>
+    <string name="view_audio_list">View Audio List</string>
+    <string name="body_worn_status_change_status_covert_mode">Change status Covert mode</string>
+    <string name="body_worn_status_change_status_bluetooth">Change status Bluetooth</string>
+    <string name="body_worn_status_change_status_gps">Change status GPS</string>
+    <string name="body_worn_status_hide_or_show_status_bar">Hide or Show Status Bar</string>
+    <string name="associate_audios_to_video">Associate audios to video</string>
+    <string name="associate_audios">Associate audios</string>
+    <string name="return_to_regular_login">Login using Device Password</string>
 </resources>

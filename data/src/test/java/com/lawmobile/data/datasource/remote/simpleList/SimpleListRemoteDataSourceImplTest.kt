@@ -26,16 +26,14 @@ internal class SimpleListRemoteDataSourceImplTest {
     }
 
     @Test
-    fun testGetSnapshotListFlow() {
+    fun getSnapshotListFlow() {
         coEvery { cameraService.getListOfImages() } returns Result.Success(mockk())
-        runBlocking {
-            simpleListRemoteDataSourceImpl.getSnapshotList()
-        }
+        runBlocking { simpleListRemoteDataSourceImpl.getSnapshotList() }
         coVerify { cameraService.getListOfImages() }
     }
 
     @Test
-    fun testGetSnapshotListSuccess() {
+    fun getSnapshotListSuccess() {
         val cameraFile: CameraFile = mockk(relaxed = true)
         val cameraResponse: FileResponseWithErrors = mockk {
             every { items } returns arrayListOf(cameraFile)
@@ -48,7 +46,7 @@ internal class SimpleListRemoteDataSourceImplTest {
     }
 
     @Test
-    fun testGetSnapshotListFailed() {
+    fun getSnapshotListFailed() {
         val result = Result.Error(mockk())
         coEvery { cameraService.getListOfImages() } returns result
         runBlocking {
@@ -57,7 +55,7 @@ internal class SimpleListRemoteDataSourceImplTest {
     }
 
     @Test
-    fun testGetVideoListFlow() {
+    fun getVideoListFlow() {
         val cameraFile: CameraFile = mockk(relaxed = true)
         val cameraResponse: FileResponseWithErrors = mockk {
             every { items } returns arrayListOf(cameraFile)
@@ -66,14 +64,10 @@ internal class SimpleListRemoteDataSourceImplTest {
 
         VideoListMetadata.metadataList = mutableListOf()
         coEvery {
-            cameraService.getVideoMetadata(
-                any(),
-                any()
-            )
+            cameraService.getVideoMetadata(any(), any())
         } returns Result.Success(mockk(relaxed = true))
-        runBlocking {
-            simpleListRemoteDataSourceImpl.getVideoList()
-        }
+
+        runBlocking { simpleListRemoteDataSourceImpl.getVideoList() }
         coVerify {
             cameraService.getListOfVideos()
             cameraService.getVideoMetadata(any(), any())
@@ -81,7 +75,7 @@ internal class SimpleListRemoteDataSourceImplTest {
     }
 
     @Test
-    fun testGetVideoListSuccess() {
+    fun getVideoListSuccess() {
         val cameraFile: CameraFile = mockk(relaxed = true)
         val cameraResponse: FileResponseWithErrors = mockk {
             every { items } returns arrayListOf(cameraFile)
@@ -89,22 +83,49 @@ internal class SimpleListRemoteDataSourceImplTest {
         val result = Result.Success(cameraResponse)
         coEvery { cameraService.getListOfVideos() } returns result
         coEvery {
-            cameraService.getVideoMetadata(
-                any(),
-                any()
-            )
+            cameraService.getVideoMetadata(any(), any())
         } returns Result.Success(mockk(relaxed = true))
+
         runBlocking {
             Assert.assertEquals(simpleListRemoteDataSourceImpl.getVideoList(), result)
         }
     }
 
     @Test
-    fun testGetVideoListFailed() {
+    fun getVideoListFailed() {
         val result = Result.Error(mockk())
         coEvery { cameraService.getListOfVideos() } returns result
         runBlocking {
             Assert.assertEquals(simpleListRemoteDataSourceImpl.getVideoList(), result)
+        }
+    }
+
+    @Test
+    fun getAudioListFlow() {
+        coEvery { cameraService.getListOfAudios() } returns Result.Success(mockk())
+        runBlocking { simpleListRemoteDataSourceImpl.getAudioList() }
+        coVerify { cameraService.getListOfAudios() }
+    }
+
+    @Test
+    fun getAudioListSuccess() {
+        val cameraFile: CameraFile = mockk(relaxed = true)
+        val cameraResponse: FileResponseWithErrors = mockk {
+            every { items } returns arrayListOf(cameraFile)
+        }
+        val result = Result.Success(cameraResponse)
+        coEvery { cameraService.getListOfAudios() } returns result
+        runBlocking {
+            Assert.assertEquals(simpleListRemoteDataSourceImpl.getAudioList(), result)
+        }
+    }
+
+    @Test
+    fun getAudioListFailed() {
+        val result = Result.Error(mockk())
+        coEvery { cameraService.getListOfAudios() } returns result
+        runBlocking {
+            Assert.assertEquals(simpleListRemoteDataSourceImpl.getAudioList(), result)
         }
     }
 }

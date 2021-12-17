@@ -30,7 +30,7 @@ import com.safefleet.mobile.kotlin_commons.helpers.Result
 open class FileListBaseActivity : BaseActivity() {
 
     lateinit var binding: ActivityFileListBinding
-    private val fileListViewModel: FileListViewModel by viewModels()
+    private val viewModel: FileListViewModel by viewModels()
 
     var actualFragment: String = ""
     var listType: String? = null
@@ -49,15 +49,10 @@ open class FileListBaseActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityFileListBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        setListType()
-        setExtras()
-        fileListViewModel.setObservers()
-        binding.configureBottomSheet()
-    }
-
-    private fun setListType() {
         listType = intent.extras?.getString(Constants.FILE_LIST_SELECTOR)
+        setExtras()
+        setObservers()
+        binding.configureBottomSheet()
     }
 
     override fun onRestart() {
@@ -72,9 +67,8 @@ open class FileListBaseActivity : BaseActivity() {
             Bundle().apply { putString(Constants.FILE_LIST_TYPE, listType) }
     }
 
-    fun FileListViewModel.setObservers() {
-        snapshotPartnerIdLiveData.observe(this@FileListBaseActivity, ::handlePartnerIdResult)
-        videoPartnerIdLiveData.observe(this@FileListBaseActivity, ::handlePartnerIdResult)
+    fun setObservers() {
+        viewModel.associatePartnerIdResult.observe(this, ::handlePartnerIdResult)
     }
 
     fun activateButtonAssociate() {
@@ -184,9 +178,11 @@ open class FileListBaseActivity : BaseActivity() {
         listSelected?.let {
             when (listType) {
                 Constants.SNAPSHOT_LIST ->
-                    fileListViewModel.associatePartnerIdToSnapshotList(it, partnerId)
+                    viewModel.associatePartnerIdToSnapshotList(it, partnerId)
                 Constants.VIDEO_LIST ->
-                    fileListViewModel.associatePartnerIdToVideoList(it, partnerId)
+                    viewModel.associatePartnerIdToVideoList(it, partnerId)
+                Constants.AUDIO_LIST ->
+                    viewModel.associatePartnerIdToAudioList(it, partnerId)
             }
         }
     }
@@ -224,10 +220,8 @@ open class FileListBaseActivity : BaseActivity() {
 
     fun getListToFilter(): List<DomainInformationForList> {
         return when (actualFragment) {
-            Constants.SIMPLE_FILE_LIST ->
-                simpleFileListFragment.fileListBackup
-            Constants.THUMBNAIL_FILE_LIST ->
-                thumbnailFileListFragment.fileListBackup
+            Constants.SIMPLE_FILE_LIST -> simpleFileListFragment.fileListBackup
+            Constants.THUMBNAIL_FILE_LIST -> thumbnailFileListFragment.fileListBackup
             else -> emptyList()
         }
     }
@@ -239,6 +233,7 @@ open class FileListBaseActivity : BaseActivity() {
             when (listType) {
                 Constants.VIDEO_LIST -> filterDialog?.isEventSpinnerFilterVisible(true)
                 Constants.SNAPSHOT_LIST -> filterDialog?.isEventSpinnerFilterVisible(false)
+                Constants.AUDIO_LIST -> filterDialog?.isEventSpinnerFilterVisible(false)
             }
             simpleFileListFragment.filter = this
             thumbnailFileListFragment.filter = this

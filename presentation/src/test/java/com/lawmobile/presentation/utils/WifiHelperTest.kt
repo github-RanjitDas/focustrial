@@ -1,5 +1,6 @@
 package com.lawmobile.presentation.utils
 
+import android.net.ConnectivityManager
 import android.net.DhcpInfo
 import android.net.wifi.WifiInfo
 import android.net.wifi.WifiManager
@@ -38,7 +39,9 @@ class WifiHelperTest {
         every { connectionInfo } returns connectionInfoMock
     }
 
-    private val wifiHelper = WifiHelper(wifiManager)
+    private val connectivityManager: ConnectivityManager = mockk(relaxed = true)
+
+    private val wifiHelper = WifiHelperImpl(wifiManager, connectivityManager)
 
     @BeforeEach
     fun setUp() {

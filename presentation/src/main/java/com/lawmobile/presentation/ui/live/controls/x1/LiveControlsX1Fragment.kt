@@ -26,7 +26,7 @@ class LiveControlsX1Fragment : LiveControlsBaseFragment() {
         super.onViewCreated(view, savedInstanceState)
         setViews()
         setSharedListeners()
-        turnOnLiveViewSwitch()
+        setLiveViewSwitchState()
     }
 
     private fun setViews() {

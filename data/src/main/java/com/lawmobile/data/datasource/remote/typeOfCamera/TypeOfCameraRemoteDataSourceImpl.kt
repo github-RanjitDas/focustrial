@@ -7,8 +7,5 @@ import com.safefleet.mobile.kotlin_commons.helpers.Result
 class TypeOfCameraRemoteDataSourceImpl(cameraServiceFactory: CameraServiceFactory) :
     TypeOfCameraRemoteDataSource {
     private var cameraService = cameraServiceFactory.create()
-
-    override suspend fun getTypeOfCamera(): Result<CameraType> {
-        return cameraService.getCameraType()
-    }
+    override suspend fun getTypeOfCamera(): Result<CameraType> = cameraService.getCameraType()
 }

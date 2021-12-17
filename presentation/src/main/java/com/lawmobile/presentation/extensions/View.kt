@@ -4,13 +4,11 @@ import android.view.View
 import android.view.animation.Animation
 import com.google.android.material.snackbar.Snackbar
 import com.lawmobile.presentation.R
-import com.lawmobile.presentation.ui.base.BaseActivity
 import com.lawmobile.presentation.utils.EspressoIdlingResource
 import com.lawmobile.presentation.utils.OnSwipeTouchListener
 import com.safefleet.mobile.safefleet_ui.widgets.SafeFleetClickable
 import com.safefleet.mobile.safefleet_ui.widgets.snackbar.SafeFleetSnackBar
 import com.safefleet.mobile.safefleet_ui.widgets.snackbar.SafeFleetSnackBarSettings
-import java.sql.Timestamp
 
 private val snackBarListener = object : View.OnAttachStateChangeListener {
     override fun onViewAttachedToWindow(v: View?) {
@@ -106,9 +104,4 @@ fun View.startAnimationIfEnabled(animation: Animation) {
     if (context.isAnimationsEnabled()) {
         startAnimation(animation)
     }
-}
-
-fun checkIfSessionIsExpired(): Boolean {
-    val timeNow = Timestamp(System.currentTimeMillis())
-    return (timeNow.time - BaseActivity.lastInteraction.time) > BaseActivity.MAX_TIME_SESSION
 }

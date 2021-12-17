@@ -1,6 +1,7 @@
 package com.lawmobile.data.mappers
 
 import com.lawmobile.data.extensions.getDateDependingOnNameLength
+import com.lawmobile.data.mappers.impl.FileResponseMapper.toDomain
 import com.safefleet.mobile.external_hardware.cameras.entities.CameraFile
 import com.safefleet.mobile.external_hardware.cameras.entities.FileResponseWithErrors
 import io.mockk.every
@@ -19,7 +20,7 @@ internal class FileResponseMapperTest {
                 CameraFile("", "6", "", ""),
             )
         }
-        val domainResponse = FileResponseMapper.cameraToDomain(cameraConnectResponse)
+        val domainResponse = cameraConnectResponse.toDomain()
         with(cameraConnectResponse) {
             domainResponse.let { response ->
                 assertTrue(

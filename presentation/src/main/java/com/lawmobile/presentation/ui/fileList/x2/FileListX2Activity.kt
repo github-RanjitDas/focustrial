@@ -10,9 +10,11 @@ import com.lawmobile.presentation.extensions.openMenuButton
 import com.lawmobile.presentation.extensions.setOnClickListenerCheckConnection
 import com.lawmobile.presentation.ui.base.appBar.x2.AppBarX2Fragment
 import com.lawmobile.presentation.ui.base.menu.MenuFragment
+import com.lawmobile.presentation.ui.base.settingsBar.SettingsBarFragment
 import com.lawmobile.presentation.ui.fileList.FileListBaseActivity
 import com.lawmobile.presentation.ui.fileList.filterSection.x2.FilterSectionX2Fragment
 import com.lawmobile.presentation.utils.Constants
+import com.lawmobile.presentation.utils.FeatureSupportHelper
 
 class FileListX2Activity : FileListBaseActivity() {
 
@@ -20,6 +22,8 @@ class FileListX2Activity : FileListBaseActivity() {
     private lateinit var menuInformation: MenuInformation
     private lateinit var appBarFragment: AppBarX2Fragment
     private lateinit var filterSectionFragment: FilterSectionX2Fragment
+
+    private val statusBarSettingsFragment = SettingsBarFragment.createInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,13 +42,14 @@ class FileListX2Activity : FileListBaseActivity() {
     private fun attachFragments() {
         attachAppBarFragment()
         attachFilterSectionFragment()
+        attachStatusBarSettingsFragment()
         attachListTypeFragment()
         attachMenuFragment()
     }
 
     private fun attachListTypeFragment() {
         when (listType) {
-            Constants.VIDEO_LIST -> {
+            Constants.VIDEO_LIST, Constants.AUDIO_LIST -> {
                 filterSectionFragment.isSimpleListActivity(true)
                 attachSimpleFileListFragment()
             }
@@ -107,6 +112,11 @@ class FileListX2Activity : FileListBaseActivity() {
                     AppBarX2Fragment.createInstance(false, getString(R.string.videos_title))
                 filterSectionFragment = FilterSectionX2Fragment.createInstance(false)
             }
+            Constants.AUDIO_LIST -> {
+                appBarFragment =
+                    AppBarX2Fragment.createInstance(false, getString(R.string.audios_title))
+                filterSectionFragment = FilterSectionX2Fragment.createInstance(false)
+            }
         }
     }
 
@@ -132,6 +142,16 @@ class FileListX2Activity : FileListBaseActivity() {
             fragment = filterSectionFragment,
             tag = FilterSectionX2Fragment.TAG
         )
+    }
+
+    private fun attachStatusBarSettingsFragment() {
+        if (FeatureSupportHelper.supportBodyWornSettings) {
+            supportFragmentManager.attachFragment(
+                containerId = R.id.statusBarFragment,
+                fragment = statusBarSettingsFragment,
+                tag = SettingsBarFragment.TAG
+            )
+        }
     }
 
     private fun showAssignToOfficerBottomSheet() {

@@ -1,6 +1,5 @@
 package com.lawmobile.presentation.ui.live.statusBar.x2
 
-import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.text.Html
@@ -18,7 +17,6 @@ import com.lawmobile.presentation.extensions.setOnClickListenerCheckConnection
 import com.lawmobile.presentation.extensions.showErrorSnackBar
 import com.lawmobile.presentation.extensions.startAnimationIfEnabled
 import com.lawmobile.presentation.ui.base.BaseActivity
-import com.lawmobile.presentation.ui.helpSection.HelpPageActivity
 import com.lawmobile.presentation.ui.live.statusBar.LiveStatusBarBaseFragment
 import com.lawmobile.presentation.utils.EspressoIdlingResource
 import com.safefleet.mobile.kotlin_commons.extensions.doIfError
@@ -108,11 +106,6 @@ class LiveStatusBarX2Fragment : LiveStatusBarBaseFragment() {
             onStorageLevelChanged = ::manageStorageLevel
             onLowBattery = ::manageLowBattery
             onLowStorage = ::manageLowStorage
-        }
-
-        binding.buttonOpenHelpPage.setOnClickListenerCheckConnection {
-            val intent = Intent(requireContext(), HelpPageActivity::class.java)
-            startActivity(intent)
         }
     }
 

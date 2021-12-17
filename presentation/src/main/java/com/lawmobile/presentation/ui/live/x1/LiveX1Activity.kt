@@ -5,7 +5,7 @@ import android.view.animation.AnimationUtils
 import androidx.activity.viewModels
 import com.lawmobile.domain.entities.CameraInfo
 import com.lawmobile.presentation.R
-import com.lawmobile.presentation.databinding.ActivityLiveViewBinding
+import com.lawmobile.presentation.databinding.ActivityLiveViewX1Binding
 import com.lawmobile.presentation.extensions.attachFragmentWithAnimation
 import com.lawmobile.presentation.ui.base.BaseActivity
 import com.lawmobile.presentation.ui.live.LiveActivityBaseViewModel
@@ -20,7 +20,7 @@ import com.safefleet.mobile.kotlin_commons.helpers.Event
 class LiveX1Activity : BaseActivity() {
 
     private val viewModel: LiveActivityBaseViewModel by viewModels()
-    private lateinit var binding: ActivityLiveViewBinding
+    private lateinit var binding: ActivityLiveViewX1Binding
 
     private val appBarFragment = LiveAppBarX1Fragment()
     private val statusBarFragment = LiveStatusBarX1Fragment()
@@ -30,7 +30,7 @@ class LiveX1Activity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityLiveViewBinding.inflate(layoutInflater)
+        binding = ActivityLiveViewX1Binding.inflate(layoutInflater)
         setContentView(binding.root)
         overridePendingTransition(0, 0)
         activitySetup()
@@ -55,7 +55,7 @@ class LiveX1Activity : BaseActivity() {
     private fun setListeners() {
         controlsFragment.onCameraOperation = ::onCameraOperation
         controlsFragment.onLiveStreamSwitchClick = ::onLiveStreamSwitchClick
-        controlsFragment.onCameraOperationFinished = ::onCameraOperationFinished
+        controlsFragment.onCameraOperationFinished = { onCameraOperationFinished() }
     }
 
     private fun onCameraOperation(message: String) {

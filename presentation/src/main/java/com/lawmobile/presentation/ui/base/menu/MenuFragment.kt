@@ -11,21 +11,24 @@ import androidx.fragment.app.viewModels
 import com.lawmobile.domain.entities.CameraInfo
 import com.lawmobile.presentation.databinding.FragmentLiveMenuX2Binding
 import com.lawmobile.presentation.extensions.createAlertConfirmAppExit
-import com.lawmobile.presentation.extensions.getIntentDependsCameraType
+import com.lawmobile.presentation.extensions.getCameraTypeIntent
 import com.lawmobile.presentation.extensions.setOnClickListenerCheckConnection
 import com.lawmobile.presentation.extensions.setOnSwipeRightListener
 import com.lawmobile.presentation.extensions.setOnTouchListenerCheckConnection
 import com.lawmobile.presentation.ui.base.BaseActivity
 import com.lawmobile.presentation.ui.base.BaseFragment
 import com.lawmobile.presentation.ui.bodyWornDiagnosis.BodyWornDiagnosisActivity
+import com.lawmobile.presentation.ui.bodyWornSettings.BodyWornSettingsActivity
 import com.lawmobile.presentation.ui.fileList.x1.FileListX1Activity
 import com.lawmobile.presentation.ui.fileList.x2.FileListX2Activity
 import com.lawmobile.presentation.ui.helpSection.HelpPageActivity
 import com.lawmobile.presentation.ui.live.x1.LiveX1Activity
 import com.lawmobile.presentation.ui.live.x2.LiveX2Activity
-import com.lawmobile.presentation.ui.login.LoginActivity
+import com.lawmobile.presentation.ui.login.x1.LoginX1Activity
+import com.lawmobile.presentation.ui.login.x2.LoginX2Activity
 import com.lawmobile.presentation.ui.notificationList.NotificationListActivity
 import com.lawmobile.presentation.utils.Constants
+import com.lawmobile.presentation.utils.FeatureSupportHelper
 import com.safefleet.mobile.kotlin_commons.extensions.doIfSuccess
 import com.safefleet.mobile.kotlin_commons.helpers.Result
 
@@ -53,7 +56,13 @@ class MenuFragment : BaseFragment() {
         setObservers()
         setTouchListeners()
         setListeners()
+        setFeatures()
         binding.versionNumberTextMainMenu.text = getApplicationVersionText()
+    }
+
+    private fun setFeatures() {
+        binding.textViewSettings.isVisible = FeatureSupportHelper.supportBodyWornSettings
+        binding.textViewAudios.isVisible = FeatureSupportHelper.supportAudios
     }
 
     private fun setCurrentNotificationCount() {
@@ -120,9 +129,25 @@ class MenuFragment : BaseFragment() {
             { onCloseMenuButton() }
         )
 
+        binding.textViewAudios.setOnTouchListenerCheckConnection(
+            {
+                startFileListActivity(Constants.AUDIO_LIST)
+                onCloseMenuButton()
+            },
+            { onCloseMenuButton() }
+        )
+
         binding.textViewNotification.setOnTouchListenerCheckConnection(
             {
                 startNotificationListActivity()
+                onCloseMenuButton()
+            },
+            { onCloseMenuButton() }
+        )
+
+        binding.textViewSettings.setOnTouchListenerCheckConnection(
+            {
+                startBodyWornSettings()
                 onCloseMenuButton()
             },
             { onCloseMenuButton() }
@@ -145,7 +170,7 @@ class MenuFragment : BaseFragment() {
         )
 
         binding.viewLogout.setOnClickListenerCheckConnection {
-            requireActivity().createAlertConfirmAppExit(::logoutApplication)
+            activity?.createAlertConfirmAppExit(::logoutApplication)
             onCloseMenuButton()
         }
 
@@ -158,7 +183,7 @@ class MenuFragment : BaseFragment() {
         isInMainScreen = true
         if (activity is LiveX2Activity) return
         val intent =
-            requireActivity().getIntentDependsCameraType(LiveX1Activity(), LiveX2Activity())
+            activity?.getCameraTypeIntent(LiveX1Activity::class.java, LiveX2Activity::class.java)
         startActivity(intent)
     }
 
@@ -167,33 +192,42 @@ class MenuFragment : BaseFragment() {
         currentListView = fileType
         (activity as BaseActivity).updateLiveOrPlaybackActive(false)
         val fileListIntent =
-            requireActivity().getIntentDependsCameraType(FileListX1Activity(), FileListX2Activity())
-        fileListIntent.putExtra(Constants.FILE_LIST_SELECTOR, fileType)
+            context?.getCameraTypeIntent(
+                FileListX1Activity::class.java,
+                FileListX2Activity::class.java
+            )
+        fileListIntent?.putExtra(Constants.FILE_LIST_SELECTOR, fileType)
         startActivity(fileListIntent)
-        if (!isInMainScreen) requireActivity().finish()
+        if (!isInMainScreen) activity?.finish()
         isInMainScreen = false
     }
 
     private fun startNotificationListActivity() {
         if (activity is NotificationListActivity) return
-        startActivity(Intent(requireContext(), NotificationListActivity::class.java))
-        if (!isInMainScreen) requireActivity().finish()
+        startActivity(Intent(context, NotificationListActivity::class.java))
+        if (!isInMainScreen) activity?.finish()
         isInMainScreen = false
     }
 
     private fun startBodyWornDiagnosisActivity() {
-        startActivity(Intent(requireContext(), BodyWornDiagnosisActivity::class.java))
+        startActivity(Intent(context, BodyWornDiagnosisActivity::class.java))
     }
 
     private fun startHelpActivity() {
-        startActivity(Intent(requireActivity(), HelpPageActivity::class.java))
+        startActivity(Intent(activity, HelpPageActivity::class.java))
     }
 
     private fun logoutApplication() {
-        menuViewModel.disconnectCamera()
         CameraInfo.cleanInfo()
-        startActivity(Intent(requireActivity(), LoginActivity::class.java))
-        requireActivity().finish()
+        menuViewModel.disconnectCamera()
+        val intent =
+            context?.getCameraTypeIntent(LoginX1Activity::class.java, LoginX2Activity::class.java)
+        startActivity(intent)
+        activity?.finish()
+    }
+
+    private fun startBodyWornSettings() {
+        startActivity(Intent(context, BodyWornSettingsActivity::class.java))
     }
 
     fun openMenu() {

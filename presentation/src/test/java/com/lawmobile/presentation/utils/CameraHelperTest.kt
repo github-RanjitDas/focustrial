@@ -1,6 +1,7 @@
 package com.lawmobile.presentation.utils
 
 import com.lawmobile.domain.utils.ConnectionHelper
+import com.lawmobile.presentation.connectivity.WifiHelper
 import com.safefleet.mobile.kotlin_commons.helpers.Result
 import io.mockk.Runs
 import io.mockk.clearAllMocks
@@ -63,5 +64,12 @@ class CameraHelperTest {
         coEvery { connectionHelper.disconnectCamera() } returns Result.Success(Unit)
         cameraHelper.disconnectCamera()
         coVerify { connectionHelper.disconnectCamera() }
+    }
+
+    @Test
+    fun testOnCameraEventFlow() = runBlockingTest {
+        coEvery { connectionHelper.onCameraEvent(any()) } returns Unit
+        cameraHelper.onCameraEvent {}
+        coVerify { connectionHelper.onCameraEvent(any()) }
     }
 }

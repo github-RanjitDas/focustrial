@@ -654,7 +654,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/video_playback_metadata_spacing"
-                android:text="@string/associate_image_to_video"
+                android:text="@string/associate_snapshots_to_video"
                 android:textSize="@dimen/video_playback_metadata_text_size"
                 android:textStyle="bold"
                 android:visibility="gone"

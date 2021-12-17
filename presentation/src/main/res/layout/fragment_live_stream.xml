@@ -8,8 +8,6 @@
         android:id="@+id/liveStreamingView"
         android:layout_width="match_parent"
         android:layout_height="@dimen/no_dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"/>
 
@@ -19,8 +17,6 @@
         android:layout_height="@dimen/no_dp"
         android:background="@color/whiteTransparentShadow"
         android:visibility="invisible"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"/>
 
@@ -60,7 +56,25 @@
         android:padding="@dimen/toggle_full_screen_padding"
         android:scaleType="centerCrop"
         android:src="@drawable/ic_full_size"
-        app:layout_constraintBottom_toBottomOf="@+id/liveStreamingView"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
+
+    <ImageView
+        android:id="@+id/imageBackgroundDisable"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:padding="@dimen/padding_audio_icon_background"
+        android:visibility="gone"
+        android:background="@color/whiteBackgroundShadow"
+        android:contentDescription="@string/snapshot_item_detail_photo_content_description" />
+
+    <ImageView
+        android:id="@+id/imageAudio"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:padding="@dimen/padding_audio_icon_background"
+        android:src="@drawable/ic_audio"
+        android:visibility="gone"
+        android:contentDescription="@string/snapshot_item_detail_photo_content_description" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

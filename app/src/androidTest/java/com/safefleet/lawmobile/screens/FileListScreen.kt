@@ -37,18 +37,18 @@ open class FileListScreen : BaseScreen() {
     var targetCheckBox: Int = 0
 
     fun scrollListToPosition(position: Int) {
-        BaristaListInteractions.scrollListToPosition(recyclerView, position)
+        waitUntil { BaristaListInteractions.scrollListToPosition(recyclerView, position) }
     }
 
     fun selectCheckboxOnPosition(position: Int) {
-        CustomCheckboxAction.selectCheckboxOnRecyclerPosition(
-            recyclerView,
-            targetCheckBox,
-            position
-        )
+        waitUntil {
+            CustomCheckboxAction.selectCheckboxOnRecyclerPosition(
+                recyclerView,
+                targetCheckBox,
+                position
+            )
+        }
     }
-
-    fun clickOnBack() = clickOn(R.id.imageButtonBackArrow)
 
     fun clickOnItemInPosition(position: Int) =
         waitUntil { clickListItem(recyclerView, position) }
@@ -90,6 +90,8 @@ open class FileListScreen : BaseScreen() {
     fun matchItemsCount(count: Int) =
         waitUntil { assertRecyclerViewItemCount(recyclerView, count) }
 
+    fun clickOnDateAndTimeTitle() = clickOn(R.id.textViewDateAndTime)
+
     fun areCheckboxesUnselected(startPosition: Int, endPosition: Int) {
         for (position in (startPosition..endPosition)) {
             isCheckboxUnselected(position)
@@ -109,6 +111,15 @@ open class FileListScreen : BaseScreen() {
         val sortedFilesList = filesList.sortedByDescending { it.getDateDependingOnNameLength() }
 
         for ((itemCount, file) in sortedFilesList.withIndex()) {
+            waitUntil { isFileDisplayedAtPosition(file.getDateDependingOnNameLength(), itemCount) }
+        }
+    }
+
+    fun areFilesSortedByAscendingDate(filesList: List<CameraFile>) {
+        val sortedFilesList = filesList.sortedByDescending { it.getDateDependingOnNameLength() }
+        val ascendingFileList = sortedFilesList.reversed()
+
+        for ((itemCount, file) in ascendingFileList.withIndex()) {
             waitUntil { isFileDisplayedAtPosition(file.getDateDependingOnNameLength(), itemCount) }
         }
     }
@@ -136,7 +147,7 @@ open class FileListScreen : BaseScreen() {
     fun areNoFilesFound(@StringRes message: Int) =
         assertDisplayed(R.id.noFilesTextView, message)
 
-    fun isFilterButtonDisplayed() = assertDisplayed(R.id.buttonOpenFilters)
+    fun isFilterButtonDisplayed() = waitUntil { assertDisplayed(R.id.buttonOpenFilters) }
 
     fun isFilterActive() {
         assertDisplayed(R.id.scrollFilterTags)
@@ -151,11 +162,11 @@ open class FileListScreen : BaseScreen() {
     fun isNoFilesFoundDisplayed() = assertDisplayed(R.id.noFilesTextView)
 
     private fun isDateTimeHeaderDisplayed() =
-        assertDisplayed(R.id.textViewDateAndTime, R.string.date_and_time)
+        waitUntil { assertDisplayed(R.id.textViewDateAndTime, R.string.date_and_time) }
 
-    private fun isEventHeaderDisplayed() = assertDisplayed(R.id.textViewEvent, R.string.event)
+    private fun isEventHeaderDisplayed() = waitUntil { assertDisplayed(R.id.textViewEvent, R.string.event) }
 
-    private fun isSnapshotsTitleDisplayed() = assertDisplayed(R.string.snapshots_title)
+    fun isSnapshotsTitleDisplayed() = waitUntil { assertDisplayed(R.string.snapshots_title) }
 
     fun isSelectDisplayed() =
         waitUntil { assertDisplayed(R.string.select) }

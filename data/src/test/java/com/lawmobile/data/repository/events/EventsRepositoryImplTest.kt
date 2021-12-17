@@ -17,27 +17,34 @@ import io.mockk.just
 import io.mockk.mockk
 import io.mockk.mockkObject
 import io.mockk.verify
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.TestCoroutineDispatcher
+import kotlinx.coroutines.test.runBlockingTest
+import kotlinx.coroutines.test.setMain
 import org.junit.Assert
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
+@ExperimentalCoroutinesApi
 internal class EventsRepositoryImplTest {
 
     private val eventsRemoteDataSource: EventsRemoteDataSource = mockk()
     private val eventsLocalDataSource: EventsLocalDataSource = mockk()
+    private val dispatcher = TestCoroutineDispatcher()
 
     private val eventsRepositoryImpl: EventsRepositoryImpl by lazy {
         EventsRepositoryImpl(eventsRemoteDataSource, eventsLocalDataSource)
     }
 
     @BeforeEach
-    fun clearMocks() {
+    fun setup() {
         clearAllMocks()
+        Dispatchers.setMain(dispatcher)
     }
 
     @Test
-    fun getCameraEventsFlowWithEventsInDB() {
+    fun getCameraEventsFlowWithEventsInDB() = runBlockingTest {
         val remoteEvents = Result.Success(
             listOf(
                 LogEvent(
@@ -73,11 +80,11 @@ internal class EventsRepositoryImplTest {
         coEvery { eventsLocalDataSource.deleteOutdatedEvents(any()) } returns Result.Success(Unit)
         coEvery { eventsRemoteDataSource.getCameraEvents() } returns remoteEvents
         coEvery { eventsLocalDataSource.getAllEvents() } returns localEvents
-        every { eventsLocalDataSource.getEventsCount() } returns 1
+        coEvery { eventsLocalDataSource.getEventsCount() } returns 1
         coEvery { eventsLocalDataSource.clearAllEvents() } just Runs
         coEvery { eventsLocalDataSource.saveAllEvents(any()) } returns Result.Success(Unit)
 
-        runBlocking { eventsRepositoryImpl.getCameraEvents() }
+        eventsRepositoryImpl.getCameraEvents()
 
         coVerify {
             eventsLocalDataSource.deleteOutdatedEvents(any())
@@ -90,7 +97,7 @@ internal class EventsRepositoryImplTest {
     }
 
     @Test
-    fun getCameraEventsWithEmptyDB() {
+    fun getCameraEventsWithEmptyDB() = runBlockingTest {
         val remoteEvents = Result.Success(
             listOf(
                 LogEvent(
@@ -117,10 +124,10 @@ internal class EventsRepositoryImplTest {
         coEvery { eventsLocalDataSource.deleteOutdatedEvents(any()) } returns Result.Success(Unit)
         coEvery { eventsRemoteDataSource.getCameraEvents() } returns remoteEvents
         coEvery { eventsLocalDataSource.getAllEvents() } returns localEvents
-        every { eventsLocalDataSource.getEventsCount() } returns 0
+        coEvery { eventsLocalDataSource.getEventsCount() } returns 0
         coEvery { eventsLocalDataSource.saveAllEvents(any()) } returns Result.Success(Unit)
 
-        runBlocking { eventsRepositoryImpl.getCameraEvents() }
+        eventsRepositoryImpl.getCameraEvents()
 
         coVerify {
             eventsLocalDataSource.deleteOutdatedEvents(any())
@@ -132,7 +139,7 @@ internal class EventsRepositoryImplTest {
     }
 
     @Test
-    fun getCameraEventsSuccess() {
+    fun getCameraEventsSuccess() = runBlockingTest {
         val notificationList = listOf(
             LogEvent(
                 name = "Notification",
@@ -150,22 +157,18 @@ internal class EventsRepositoryImplTest {
             )
         )
 
-        every { eventsLocalDataSource.getEventsCount() } returns 1
+        coEvery { eventsLocalDataSource.getEventsCount() } returns 1
         coEvery { eventsLocalDataSource.deleteOutdatedEvents(any()) } returns Result.Success(Unit)
         coEvery { eventsLocalDataSource.getAllEvents() } returns mockk(relaxed = true)
         coEvery { eventsRemoteDataSource.getCameraEvents() } returns Result.Success(notificationList)
         coEvery { eventsLocalDataSource.saveAllEvents(any()) } returns Result.Success(Unit)
         coEvery { eventsLocalDataSource.clearAllEvents() } just Runs
 
-        runBlocking {
-            Assert.assertTrue(
-                eventsRepositoryImpl.getCameraEvents() is Result.Success
-            )
-        }
+        Assert.assertTrue(eventsRepositoryImpl.getCameraEvents() is Result.Success)
     }
 
     @Test
-    fun getCameraEventsErrorInDB() {
+    fun getCameraEventsErrorInDB() = runBlockingTest {
         val notificationList = listOf(
             LogEvent(
                 name = "Notification",
@@ -183,22 +186,18 @@ internal class EventsRepositoryImplTest {
             )
         )
 
-        every { eventsLocalDataSource.getEventsCount() } returns 1
+        coEvery { eventsLocalDataSource.getEventsCount() } returns 1
         coEvery { eventsLocalDataSource.deleteOutdatedEvents(any()) } returns Result.Success(Unit)
         coEvery { eventsLocalDataSource.getAllEvents() } returns mockk(relaxed = true)
         coEvery { eventsRemoteDataSource.getCameraEvents() } returns Result.Success(notificationList)
         coEvery { eventsLocalDataSource.saveAllEvents(any()) } returns Result.Success(mockk())
         coEvery { eventsLocalDataSource.clearAllEvents() } just Runs
 
-        runBlocking {
-            Assert.assertTrue(
-                eventsRepositoryImpl.getCameraEvents() is Result.Success
-            )
-        }
+        Assert.assertTrue(eventsRepositoryImpl.getCameraEvents() is Result.Success)
     }
 
     @Test
-    fun getCameraEventsEmptyEventsDBError() {
+    fun getCameraEventsEmptyEventsDBError() = runBlockingTest {
         val notificationList = listOf(
             LogEvent(
                 name = "Notification",
@@ -209,32 +208,24 @@ internal class EventsRepositoryImplTest {
             )
         )
 
-        every { eventsLocalDataSource.getEventsCount() } returns 0
+        coEvery { eventsLocalDataSource.getEventsCount() } returns 0
         coEvery { eventsLocalDataSource.deleteOutdatedEvents(any()) } returns Result.Success(Unit)
         coEvery { eventsLocalDataSource.getAllEvents() } returns mockk(relaxed = true)
         coEvery { eventsRemoteDataSource.getCameraEvents() } returns Result.Success(notificationList)
         coEvery { eventsLocalDataSource.saveAllEvents(any()) } returns Result.Error(mockk())
 
-        runBlocking {
-            Assert.assertTrue(
-                eventsRepositoryImpl.getCameraEvents() is Result.Error
-            )
-        }
+        Assert.assertTrue(eventsRepositoryImpl.getCameraEvents() is Result.Error)
     }
 
     @Test
-    fun getCameraEventsError() {
+    fun getCameraEventsError() = dispatcher.runBlockingTest {
         coEvery { eventsLocalDataSource.deleteOutdatedEvents(any()) } returns Result.Success(Unit)
         coEvery { eventsRemoteDataSource.getCameraEvents() } returns Result.Error(mockk(relaxed = true))
-        runBlocking {
-            Assert.assertTrue(
-                eventsRepositoryImpl.getCameraEvents() is Result.Error
-            )
-        }
+        Assert.assertTrue(eventsRepositoryImpl.getCameraEvents() is Result.Error)
     }
 
     @Test
-    fun getAllNotificationEvents() {
+    fun getAllNotificationEvents() = runBlockingTest {
         mockkObject(CameraInfo)
         val cameraEventList = listOf<LocalCameraEvent>(
             mockk(relaxed = true) {
@@ -247,90 +238,79 @@ internal class EventsRepositoryImplTest {
         coEvery { eventsLocalDataSource.getNotificationEvents(any()) } returns Result.Success(
             cameraEventList
         )
-        runBlocking {
-            val result = eventsRepositoryImpl.getNotificationEvents() as Result.Success
-            Assert.assertTrue(result.data.size == 2)
-        }
+
+        val result = eventsRepositoryImpl.getNotificationEvents() as Result.Success
+        Assert.assertTrue(result.data.size == 2)
     }
 
     @Test
-    fun isPossibleToReadLogFlow() {
+    fun isPossibleToReadLogFlow() = runBlockingTest {
         every { eventsRemoteDataSource.isPossibleToReadLog() } returns true
         eventsRepositoryImpl.isPossibleToReadLog()
         verify { eventsRemoteDataSource.isPossibleToReadLog() }
     }
 
     @Test
-    fun isPossibleToReadLogTrue() {
+    fun isPossibleToReadLogTrue() = runBlockingTest {
         every { eventsRemoteDataSource.isPossibleToReadLog() } returns true
         Assert.assertTrue(eventsRepositoryImpl.isPossibleToReadLog())
     }
 
     @Test
-    fun isPossibleToReadLogFalse() {
+    fun isPossibleToReadLogFalse() = runBlockingTest {
         every { eventsRemoteDataSource.isPossibleToReadLog() } returns false
         Assert.assertFalse(eventsRepositoryImpl.isPossibleToReadLog())
     }
 
     @Test
-    fun setAllNotificationsAsReadFlow() {
+    fun setAllNotificationsAsReadFlow() = runBlockingTest {
         coEvery { eventsLocalDataSource.setAllNotificationsAsRead() } just Runs
-        runBlocking {
-            eventsRepositoryImpl.setAllNotificationsAsRead()
-        }
+        eventsRepositoryImpl.setAllNotificationsAsRead()
         coVerify { eventsLocalDataSource.setAllNotificationsAsRead() }
     }
 
     @Test
-    fun clearAllEventsFlow() {
+    fun clearAllEventsFlow() = runBlockingTest {
         coEvery { eventsLocalDataSource.clearAllEvents() } just Runs
-        runBlocking { eventsRepositoryImpl.clearAllEvents() }
+        eventsRepositoryImpl.clearAllEvents()
         coVerify { eventsLocalDataSource.clearAllEvents() }
     }
 
     @Test
-    fun getPendingNotificationsCountFlow() {
+    fun getPendingNotificationsCountFlow() = runBlockingTest {
         coEvery { eventsLocalDataSource.deleteOutdatedEvents(any()) } returns Result.Success(Unit)
         coEvery { eventsRemoteDataSource.getCameraEvents() } returns Result.Success(mockk(relaxed = true))
         coEvery { eventsLocalDataSource.getAllEvents() } returns Result.Success(mockk(relaxed = true))
         coEvery { eventsLocalDataSource.getPendingNotificationsCount() } returns Result.Success(1)
         coEvery { eventsLocalDataSource.getEventsCount() } returns 3
-        runBlocking { eventsRepositoryImpl.getPendingNotificationsCount() }
+        eventsRepositoryImpl.getPendingNotificationsCount()
         coVerify { eventsLocalDataSource.getPendingNotificationsCount() }
     }
 
     @Test
-    fun getPendingNotificationsCountSuccess() {
+    fun getPendingNotificationsCountSuccess() = runBlockingTest {
         coEvery { eventsLocalDataSource.deleteOutdatedEvents(any()) } returns Result.Success(Unit)
         coEvery { eventsRemoteDataSource.getCameraEvents() } returns Result.Success(mockk(relaxed = true))
         coEvery { eventsLocalDataSource.getAllEvents() } returns Result.Success(mockk(relaxed = true))
         coEvery { eventsLocalDataSource.getEventsCount() } returns 3
         coEvery { eventsLocalDataSource.getPendingNotificationsCount() } returns Result.Success(1)
-        runBlocking {
-            Assert.assertTrue(
-                eventsRepositoryImpl.getPendingNotificationsCount() is Result.Success
-            )
-        }
+        Assert.assertTrue(eventsRepositoryImpl.getPendingNotificationsCount() is Result.Success)
     }
 
     @Test
-    fun getPendingNotificationsCountError() {
+    fun getPendingNotificationsCountError() = runBlockingTest {
         coEvery { eventsLocalDataSource.deleteOutdatedEvents(any()) } returns Result.Success(Unit)
         coEvery { eventsRemoteDataSource.getCameraEvents() } returns Result.Success(mockk(relaxed = true))
         coEvery { eventsLocalDataSource.getAllEvents() } returns Result.Success(mockk(relaxed = true))
         coEvery { eventsLocalDataSource.getEventsCount() } returns 3
         coEvery { eventsLocalDataSource.getPendingNotificationsCount() } returns Result.Error(mockk())
-        runBlocking {
-            Assert.assertTrue(
-                eventsRepositoryImpl.getPendingNotificationsCount() is Result.Error
-            )
-        }
+        Assert.assertTrue(eventsRepositoryImpl.getPendingNotificationsCount() is Result.Error)
     }
 
     @Test
-    fun saveEventFlow() {
+    fun saveEventFlow() = runBlockingTest {
         coEvery { eventsLocalDataSource.saveEvent(any()) } just Runs
-        runBlocking { eventsRepositoryImpl.saveEvent(mockk(relaxed = true)) }
+        eventsRepositoryImpl.saveEvent(mockk(relaxed = true))
         coVerify { eventsLocalDataSource.saveEvent(any()) }
     }
 }

@@ -1,7 +1,8 @@
 package com.lawmobile.data.repository.videoPlayback
 
 import com.lawmobile.data.datasource.remote.videoPlayback.VideoPlaybackRemoteDataSource
-import com.lawmobile.data.mappers.VideoInformationMapper
+import com.lawmobile.data.mappers.impl.VideoInformationMapper
+import com.lawmobile.data.mappers.impl.VideoInformationMapper.toDomain
 import com.lawmobile.data.repository.videoPlayback.VideoPlaybackRepositoryImpl.Companion.ERROR_TO_GET_VIDEO
 import com.lawmobile.domain.entities.DomainCameraFile
 import com.lawmobile.domain.entities.DomainInformationVideo
@@ -16,27 +17,35 @@ import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkObject
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.TestCoroutineDispatcher
+import kotlinx.coroutines.test.runBlockingTest
+import kotlinx.coroutines.test.setMain
 import org.junit.Assert
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 
+@ExperimentalCoroutinesApi
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class VideoPlaybackRepositoryImplTest {
 
     private val videoPlayBackRemoteDataSource: VideoPlaybackRemoteDataSource = mockk()
+    private val dispatcher = TestCoroutineDispatcher()
+
     private val videoPlaybackRepositoryImpl by lazy {
         VideoPlaybackRepositoryImpl(videoPlayBackRemoteDataSource)
     }
 
     @BeforeEach
     fun setUp() {
+        Dispatchers.setMain(dispatcher)
         clearAllMocks()
     }
 
     @Test
-    fun testGetInformationResourcesVideoSuccess() {
+    fun testGetInformationResourcesVideoSuccess() = runBlockingTest {
         val domainCameraFile: DomainCameraFile = mockk(relaxed = true)
         val domainInformationVideo = DomainInformationVideo(1, "", 1, "")
         val cameraConnectVideoInformationVideo = VideoFileInfo(1, 1, 1, "", "", 1, "", "")
@@ -44,19 +53,17 @@ class VideoPlaybackRepositoryImplTest {
         coEvery { videoPlayBackRemoteDataSource.getInformationResourcesVideo(any()) } returns
             Result.Success(cameraConnectVideoInformationVideo)
 
-        runBlocking {
-            val result =
-                videoPlaybackRepositoryImpl.getInformationResourcesVideo(domainCameraFile) as Result.Success
-            Assert.assertEquals(result.data, domainInformationVideo)
-        }
+        val result =
+            videoPlaybackRepositoryImpl.getInformationResourcesVideo(domainCameraFile) as Result.Success
+        Assert.assertEquals(result.data, domainInformationVideo)
 
         coVerify { videoPlayBackRemoteDataSource.getInformationResourcesVideo(any()) }
     }
 
     @Test
-    fun testGetInformationResourcesVideoSuccessMapperFailed() {
+    fun testGetInformationResourcesVideoSuccessMapperFailed() = runBlockingTest {
         mockkObject(VideoInformationMapper)
-        every { VideoInformationMapper.cameraToDomain(any()) } throws Exception()
+        every { any<VideoFileInfo>().toDomain() } throws Exception()
 
         val domainCameraFile: DomainCameraFile = mockk(relaxed = true)
         val cameraConnectVideoInformationVideo = VideoFileInfo(1, 1, 1, "", "", 1, "", "")
@@ -64,49 +71,43 @@ class VideoPlaybackRepositoryImplTest {
         coEvery { videoPlayBackRemoteDataSource.getInformationResourcesVideo(any()) } returns
             Result.Success(cameraConnectVideoInformationVideo)
 
-        runBlocking {
-            val result =
-                videoPlaybackRepositoryImpl.getInformationResourcesVideo(domainCameraFile) as Result.Error
-            Assert.assertEquals(result.exception.message, ERROR_TO_GET_VIDEO)
-        }
+        val result =
+            videoPlaybackRepositoryImpl.getInformationResourcesVideo(domainCameraFile) as Result.Error
+        Assert.assertEquals(result.exception.message, ERROR_TO_GET_VIDEO)
 
         coVerify { videoPlayBackRemoteDataSource.getInformationResourcesVideo(any()) }
     }
 
     @Test
-    fun testGetInformationResourcesVideoError() {
+    fun testGetInformationResourcesVideoError() = runBlockingTest {
         val domainCameraFile: DomainCameraFile = mockk(relaxed = true)
 
         coEvery {
             videoPlayBackRemoteDataSource.getInformationResourcesVideo(any())
         } returns Result.Error(mockk())
 
-        runBlocking {
-            val result = videoPlaybackRepositoryImpl.getInformationResourcesVideo(domainCameraFile)
-            Assert.assertTrue(result is Result.Error)
-        }
+        val result = videoPlaybackRepositoryImpl.getInformationResourcesVideo(domainCameraFile)
+        Assert.assertTrue(result is Result.Error)
 
         coVerify { videoPlayBackRemoteDataSource.getInformationResourcesVideo(any()) }
     }
 
     @Test
-    fun testSaveVideoMetadataSuccess() {
+    fun testSaveVideoMetadataSuccess() = runBlockingTest {
         val domainVideoMetadata: DomainVideoMetadata = mockk(relaxed = true)
 
         coEvery {
             videoPlayBackRemoteDataSource.saveVideoMetadata(any())
         } returns Result.Success(Unit)
 
-        runBlocking {
-            val result = videoPlaybackRepositoryImpl.saveVideoMetadata(domainVideoMetadata)
-            Assert.assertTrue(result is Result.Success)
-        }
+        val result = videoPlaybackRepositoryImpl.saveVideoMetadata(domainVideoMetadata)
+        Assert.assertTrue(result is Result.Success)
 
         coVerify { videoPlayBackRemoteDataSource.saveVideoMetadata(any()) }
     }
 
     @Test
-    fun testSaveVideoMetadataError() {
+    fun testSaveVideoMetadataError() = runBlockingTest {
         val domainVideoMetadata: DomainVideoMetadata = mockk(relaxed = true)
         mockkObject(VideoListMetadata)
 
@@ -115,16 +116,14 @@ class VideoPlaybackRepositoryImplTest {
             videoPlayBackRemoteDataSource.saveVideoMetadata(any())
         } returns Result.Error(mockk())
 
-        runBlocking {
-            val result = videoPlaybackRepositoryImpl.saveVideoMetadata(domainVideoMetadata)
-            Assert.assertTrue(result is Result.Error)
-        }
+        val result = videoPlaybackRepositoryImpl.saveVideoMetadata(domainVideoMetadata)
+        Assert.assertTrue(result is Result.Error)
 
         coVerify { videoPlayBackRemoteDataSource.saveVideoMetadata(any()) }
     }
 
     @Test
-    fun testGetVideoMetadataSuccessSave() {
+    fun testGetVideoMetadataSuccessSave() = runBlockingTest {
         val cameraConnectVideoMetadata: VideoInformation = mockk(relaxed = true)
 
         mockkObject(VideoListMetadata)
@@ -133,43 +132,35 @@ class VideoPlaybackRepositoryImplTest {
             videoPlayBackRemoteDataSource.getVideoMetadata(any(), any())
         } returns Result.Success(cameraConnectVideoMetadata)
 
-        runBlocking {
-            val result =
-                videoPlaybackRepositoryImpl.getVideoMetadata("", "")
-            Assert.assertTrue(result is Result.Success)
-        }
+        val result = videoPlaybackRepositoryImpl.getVideoMetadata("", "")
+        Assert.assertTrue(result is Result.Success)
 
         coVerify { videoPlayBackRemoteDataSource.getVideoMetadata(any(), any()) }
     }
 
     @Test
-    fun testGetVideoMetadataError() {
+    fun testGetVideoMetadataError() = runBlockingTest {
         mockkObject(VideoListMetadata)
         every { VideoListMetadata.getVideoMetadata(any()) } returns null
         coEvery {
             videoPlayBackRemoteDataSource.getVideoMetadata(any(), any())
         } returns Result.Error(mockk())
 
-        runBlocking {
-            val result =
-                videoPlaybackRepositoryImpl.getVideoMetadata("", "")
-            Assert.assertTrue(result is Result.Error)
-        }
+        val result = videoPlaybackRepositoryImpl.getVideoMetadata("", "")
+        Assert.assertTrue(result is Result.Error)
 
         coVerify { videoPlayBackRemoteDataSource.getVideoMetadata(any(), any()) }
     }
 
     @Test
-    fun testGetVideoMetadataSaved() {
+    fun testGetVideoMetadataSaved() = runBlockingTest {
         val cameraConnectVideoMetadata: VideoInformation = mockk(relaxed = true)
 
         coEvery {
             videoPlayBackRemoteDataSource.getVideoMetadata(any(), any())
         } returns Result.Success(cameraConnectVideoMetadata)
 
-        runBlocking {
-            val result = videoPlaybackRepositoryImpl.getVideoMetadata("", "")
-            Assert.assertTrue(result is Result.Success)
-        }
+        val result = videoPlaybackRepositoryImpl.getVideoMetadata("", "")
+        Assert.assertTrue(result is Result.Success)
     }
 }

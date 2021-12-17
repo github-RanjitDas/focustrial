@@ -1,6 +1,8 @@
 package com.lawmobile.data.mappers
 
 import com.lawmobile.data.dao.entities.LocalCameraEvent
+import com.lawmobile.data.mappers.impl.CameraEventMapper.toDomainList
+import com.lawmobile.data.mappers.impl.CameraEventMapper.toLocalList
 import com.lawmobile.domain.entities.CameraEvent
 import com.lawmobile.domain.enums.EventTag
 import com.lawmobile.domain.enums.EventType
@@ -21,7 +23,7 @@ internal class CameraEventMapperTest {
                 additionalInformation = null
             )
         )
-        val domainList = CameraEventMapper.cameraToDomainList(logEventList)
+        val domainList = logEventList.toDomainList()
 
         domainList.forEachIndexed { index, domain ->
             logEventList.let { camera ->
@@ -55,7 +57,7 @@ internal class CameraEventMapperTest {
                 additionalInformation = null
             )
         )
-        val domainList = CameraEventMapper.cameraToDomainList(logEventList)
+        val domainList = logEventList.toDomainList()
 
         domainList.forEachIndexed { index, domain ->
             logEventList.let { camera ->
@@ -89,7 +91,7 @@ internal class CameraEventMapperTest {
                 additionalInformation = null
             )
         )
-        val domainList = CameraEventMapper.cameraToDomainList(logEventList)
+        val domainList = logEventList.toDomainList()
 
         domainList.forEachIndexed { index, domain ->
             logEventList.let { camera ->
@@ -123,7 +125,7 @@ internal class CameraEventMapperTest {
                 additionalInformation = null
             )
         )
-        val domainList = CameraEventMapper.cameraToDomainList(logEventList)
+        val domainList = logEventList.toDomainList()
 
         domainList.forEachIndexed { index, domain ->
             logEventList.let { camera ->
@@ -157,7 +159,7 @@ internal class CameraEventMapperTest {
                 additionalInformation = null
             )
         )
-        val domainList = CameraEventMapper.cameraToDomainList(logEventList)
+        val domainList = logEventList.toDomainList()
 
         domainList.forEachIndexed { index, domain ->
             logEventList.let { camera ->
@@ -192,7 +194,7 @@ internal class CameraEventMapperTest {
                 isRead = 0
             )
         )
-        val domainList = CameraEventMapper.localToDomainList(localEvent)
+        val domainList = localEvent.toDomainList()
 
         domainList.forEachIndexed { index, domain ->
             localEvent.let { camera ->
@@ -230,7 +232,7 @@ internal class CameraEventMapperTest {
                 isRead = true
             )
         )
-        val localEvent = CameraEventMapper.domainToLocalList(domainList)
+        val localEvent = domainList.toLocalList()
 
         domainList.forEachIndexed { index, domain ->
             localEvent.let { camera ->

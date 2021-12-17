@@ -23,13 +23,6 @@ object VideoListMetadata {
         metadataList[indexVideoMetadata] = remoteVideoMetadata
     }
 
-    fun getVideosWithPhotosAssociated(domainCameraFile: DomainCameraFile) =
-        metadataList.map { it.videoMetadata }.filter {
-            it.associatedFiles?.find { photo ->
-                photo.name == domainCameraFile.name
-            } != null
-        }
-
     fun cleanVideoMetadataList() {
         metadataList.clear()
     }

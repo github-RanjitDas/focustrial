@@ -16,16 +16,22 @@ object Dependencies {
         const val appCompat = "androidx.appcompat:appcompat:$VERSION"
     }
 
+    object Auth0 {
+        private const val VERSION = "2.0.0"
+        const val jwtDecode = "com.auth0.android:jwtdecode:$VERSION"
+    }
+
     object Barista {
         private const val VERSION = "3.6.0"
         const val barista = "com.schibsted.spain:barista:$VERSION"
     }
 
     object Base {
-        const val androidCommons = "com.safefleet.mobile:android-commons:1.3.1@aar"
-        const val externalHardware = "com.safefleet.mobile:external-hardware:5.9.7@jar"
-        const val kotlinCommons = "com.safefleet.mobile:kotlin-commons:1.2.0@jar"
-        const val safeFleetUI = "com.safefleet.mobile:safefleet-ui:1.4.3@aar"
+        const val androidCommons = "com.safefleet.mobile:android-commons:1.4.1-SNAPSHOT@aar"
+        const val externalHardware = "com.safefleet.mobile:external-hardware:5.13.8-SNAPSHOT@jar"
+        const val kotlinCommons = "com.safefleet.mobile:kotlin-commons:1.4.0-SNAPSHOT@jar"
+        const val safeFleetUI = "com.safefleet.mobile:safefleet-ui:1.4.3-SNAPSHOT@aar"
+        const val authentication = "com.safefleet.mobile:authentication:2.5.4-SNAPSHOT@aar"
     }
 
     object ConstraintLayout {
@@ -34,13 +40,14 @@ object Dependencies {
     }
 
     object Coroutines {
-        private const val CORE_VERSION = "1.3.9"
-        private const val ANDROID_VERSION = "1.3.5"
-        private const val TEST_VERSION = "1.3.5"
-        const val coroutinesAndroid =
-            "org.jetbrains.kotlinx:kotlinx-coroutines-android:$ANDROID_VERSION"
-        const val coroutinesCore = "org.jetbrains.kotlinx:kotlinx-coroutines-core:$CORE_VERSION"
-        const val coroutinesTest = "org.jetbrains.kotlinx:kotlinx-coroutines-test:$TEST_VERSION"
+        private const val VERSION = "1.5.2"
+        const val coroutinesAndroid = "org.jetbrains.kotlinx:kotlinx-coroutines-android:$VERSION"
+        const val coroutinesCore = "org.jetbrains.kotlinx:kotlinx-coroutines-core:$VERSION"
+        const val coroutinesTest = "org.jetbrains.kotlinx:kotlinx-coroutines-test:$VERSION"
+    }
+
+    object DataStore {
+        const val preferences = "androidx.datastore:datastore-preferences:1.0.0"
     }
 
     object Espresso {
@@ -48,14 +55,6 @@ object Dependencies {
         const val espressoCore = "androidx.test.espresso:espresso-core:$VERSION"
         const val idlingResource = "androidx.test.espresso:espresso-idling-resource:$VERSION"
         const val intents = "androidx.test.espresso:espresso-intents:$VERSION"
-    }
-
-    object Firebase {
-        const val analytics = "com.google.firebase:firebase-analytics-ktx"
-        const val bom = "com.google.firebase:firebase-bom:25.12.0"
-        const val core = "com.google.firebase:firebase-core:18.0.0"
-        const val crashlytics = "com.google.firebase:firebase-crashlytics"
-        const val crashlyticsGradle = "com.google.firebase:firebase-crashlytics-gradle:2.4.1"
     }
 
     object Fragment {
@@ -70,7 +69,6 @@ object Dependencies {
 
     object Google {
         const val gson = "com.google.code.gson:gson:2.8.6"
-        const val services = "com.google.gms:google-services:4.3.4"
         const val findBugs = "com.google.code.findbugs:jsr305:3.0.2"
     }
 
@@ -102,6 +100,14 @@ object Dependencies {
         const val gradlePlugin = "org.jetbrains.kotlin:kotlin-gradle-plugin:$VERSION"
     }
 
+    object Ktor {
+        private const val VERSION = "1.6.3"
+        const val clientCore = "io.ktor:ktor-client-core:$VERSION"
+        const val clientAndroid = "io.ktor:ktor-client-android:$VERSION"
+        const val clientSerialization = "io.ktor:ktor-client-serialization:$VERSION"
+        const val clientMock = "io.ktor:ktor-client-mock:$VERSION"
+    }
+
     object Lifecycle {
         private const val VERSION = "2.2.0"
         const val extensions = "androidx.lifecycle:lifecycle-extensions:$VERSION"
@@ -122,6 +128,11 @@ object Dependencies {
         private const val VERSION = "1.9"
         const val mockk = "io.mockk:mockk:$VERSION"
         const val mockkAndroid = "io.mockk:mockk-android:$VERSION"
+    }
+
+    object OpenId {
+        private const val VERSION = "0.7.1"
+        const val appAuth = "net.openid:appauth:$VERSION"
     }
 
     object PDF {

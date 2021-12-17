@@ -9,7 +9,10 @@ import com.schibsted.spain.barista.interaction.BaristaClickInteractions.clickOn
 
 class BodyWornDiagnosisScreen : BaseScreen() {
 
-    fun clickOnStartButton() = clickOn(R.id.buttonStartDiagnosis)
+    fun clickOnStartButton() {
+        isStartButtonDisplayed()
+        clickOn(R.id.buttonStartDiagnosis)
+    }
 
     fun clickOnCloseButton() = clickOn(R.id.imageButtonBackArrow)
 

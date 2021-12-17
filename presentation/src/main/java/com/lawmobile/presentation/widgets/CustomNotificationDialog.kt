@@ -5,6 +5,7 @@ import android.content.Context
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import com.lawmobile.domain.entities.CameraEvent
 import com.lawmobile.domain.enums.NotificationType
 import com.lawmobile.presentation.R
@@ -22,6 +23,7 @@ class CustomNotificationDialog(
 ),
     View.OnClickListener {
 
+    var onConfirmationClick: (() -> Unit)? = null
     private lateinit var binding: DialogCustomNotificationBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,14 +31,13 @@ class CustomNotificationDialog(
         val view = findViewById<View>(android.R.id.content) as ViewGroup
         binding = DialogCustomNotificationBinding.inflate(layoutInflater, view)
         setTextViews()
-        setButtonText()
+        setButtonText(context.getString(R.string.dismiss))
         setNotificationIcon()
         setListeners()
     }
 
-    private fun setButtonText() {
-        binding.layoutNotificationInformation.buttonDismissNotification.text =
-            context.getString(R.string.dismiss)
+    fun setButtonText(text: String) {
+        binding.layoutNotificationInformation.buttonDismissNotification.text = text
     }
 
     private fun setNotificationIcon() {
@@ -50,6 +51,7 @@ class CustomNotificationDialog(
             textViewNotificationTitle.text = notificationType.title ?: cameraEvent.name
             textViewNotificationMessage.text =
                 notificationType.getCustomMessage(cameraEvent.value) ?: cameraEvent.value
+            textViewNotificationDate.isVisible = cameraEvent.date.isNotEmpty()
             textViewNotificationDate.text = cameraEvent.date
         }
     }
@@ -61,5 +63,6 @@ class CustomNotificationDialog(
 
     override fun onClick(v: View?) {
         dismiss()
+        onConfirmationClick?.invoke()
     }
 }

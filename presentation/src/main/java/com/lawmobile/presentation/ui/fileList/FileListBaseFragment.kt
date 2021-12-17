@@ -9,10 +9,12 @@ import com.lawmobile.domain.entities.CameraInfo
 import com.lawmobile.domain.entities.DomainCameraFile
 import com.lawmobile.domain.entities.DomainInformationForList
 import com.lawmobile.presentation.R
+import com.lawmobile.presentation.ui.audioDetail.AudioDetailActivity
 import com.lawmobile.presentation.ui.base.BaseFragment
 import com.lawmobile.presentation.ui.snapshotDetail.SnapshotDetailActivity
 import com.lawmobile.presentation.ui.videoPlayback.VideoPlaybackActivity
 import com.lawmobile.presentation.utils.Constants
+import com.lawmobile.presentation.utils.Constants.AUDIO_LIST
 import com.lawmobile.presentation.utils.Constants.SNAPSHOT_LIST
 import com.lawmobile.presentation.utils.Constants.VIDEO_LIST
 import com.lawmobile.presentation.widgets.CustomFilterDialog
@@ -34,6 +36,7 @@ open class FileListBaseFragment : BaseFragment() {
         when (listType) {
             SNAPSHOT_LIST -> noFilesTextView?.text = getString(R.string.no_images_found)
             VIDEO_LIST -> noFilesTextView?.text = getString(R.string.no_videos_found)
+            AUDIO_LIST -> noFilesTextView?.text = getString(R.string.no_audios_found)
         }
     }
 
@@ -51,6 +54,7 @@ open class FileListBaseFragment : BaseFragment() {
         when (listType) {
             SNAPSHOT_LIST -> noFilesTextView?.text = getString(R.string.no_snapshots_filter)
             VIDEO_LIST -> noFilesTextView?.text = getString(R.string.no_videos_filter)
+            AUDIO_LIST -> noFilesTextView?.text = getString(R.string.no_audios_filter)
         }
     }
 
@@ -61,6 +65,7 @@ open class FileListBaseFragment : BaseFragment() {
             when (listType) {
                 SNAPSHOT_LIST -> fileListIntent.setClass(it, SnapshotDetailActivity::class.java)
                 VIDEO_LIST -> fileListIntent.setClass(it, VideoPlaybackActivity::class.java)
+                AUDIO_LIST -> fileListIntent.setClass(it, AudioDetailActivity::class.java)
                 else -> throw Exception("List type not supported")
             }
         }

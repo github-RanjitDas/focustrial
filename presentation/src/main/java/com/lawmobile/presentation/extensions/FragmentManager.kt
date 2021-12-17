@@ -1,12 +1,12 @@
 package com.lawmobile.presentation.extensions
 
 import androidx.annotation.AnimRes
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
-import com.lawmobile.presentation.ui.base.BaseFragment
 
 fun FragmentManager.attachFragment(
     containerId: Int,
-    fragment: BaseFragment,
+    fragment: Fragment,
     tag: String,
     isInStack: Boolean = false
 ) {
@@ -26,7 +26,7 @@ fun FragmentManager.detachFragment(
 
 fun FragmentManager.attachFragmentWithAnimation(
     containerId: Int,
-    fragment: BaseFragment,
+    fragment: Fragment,
     tag: String,
     isInStack: Boolean = false,
     @AnimRes animationIn: Int,

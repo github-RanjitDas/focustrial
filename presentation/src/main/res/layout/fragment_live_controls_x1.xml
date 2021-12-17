@@ -44,7 +44,7 @@
         android:layout_height="wrap_content"
         android:paddingHorizontal="@dimen/recording_padding_horizontal"
         android:paddingVertical="@dimen/no_dp"
-        android:text="@string/recording"
+        android:text="@string/video_recording"
         android:textAlignment="center"
         android:textColor="@color/red"
         android:textSize="@dimen/live_view_label_text_size"

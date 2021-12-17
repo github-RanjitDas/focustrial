@@ -12,9 +12,12 @@ import com.schibsted.spain.barista.interaction.BaristaClickInteractions.clickOn
 
 class MainMenuScreen : BaseScreen() {
 
-    fun clickOnMainMenu() = clickOn(R.id.buttonMenu)
+    fun clickOnMainMenu() {
+        waitUntil { assertDisplayed(R.id.buttonMenu) }
+        waitUntil { clickOn(R.id.buttonMenu) }
+    }
 
-    fun clickOnViewSnapshots() = clickOn(R.id.text_view_snapshots)
+    fun clickOnViewSnapshots() = waitUntil { clickOn(R.id.text_view_snapshots) }
 
     fun clickOnViewVideos() = clickOn(R.id.text_view_videos)
 
@@ -62,4 +65,6 @@ class MainMenuScreen : BaseScreen() {
         assertNotDisplayed(R.id.closeMenu)
         assertNotDisplayed(R.id.viewLogout)
     }
+
+    fun isDashboardDisplayed() = waitUntil { assertDisplayed(R.id.text_view_dashboard, R.string.live_view_menu_item_dashboard) }
 }

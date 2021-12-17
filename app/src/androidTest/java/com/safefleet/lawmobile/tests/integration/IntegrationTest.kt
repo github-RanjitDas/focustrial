@@ -2,7 +2,7 @@ package com.safefleet.lawmobile.tests.integration
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
-import com.lawmobile.presentation.ui.login.LoginActivity
+import com.lawmobile.presentation.ui.login.x1.LoginX1Activity
 import com.safefleet.lawmobile.R
 import com.safefleet.lawmobile.helpers.CustomAssertionActions.retry
 import com.safefleet.lawmobile.helpers.RecyclerViewHelper
@@ -11,8 +11,8 @@ import com.safefleet.lawmobile.screens.integration.FileListScreen
 import com.safefleet.lawmobile.screens.integration.LiveViewScreen
 import com.safefleet.lawmobile.screens.integration.LoginScreen
 import com.safefleet.lawmobile.tests.EspressoStartActivityBaseTest
-import com.safefleet.lawmobile.tests.LoginTest.Companion.loginScreen
-import com.safefleet.lawmobile.tests.VideoPlaybackTest
+import com.safefleet.lawmobile.tests.x1.LoginTest.Companion.loginScreen
+import com.safefleet.lawmobile.tests.x1.VideoPlaybackTest
 import com.schibsted.spain.barista.interaction.BaristaSleepInteractions.sleep
 import org.hamcrest.Matchers.`is`
 import org.hamcrest.Matchers.greaterThanOrEqualTo
@@ -24,7 +24,7 @@ import org.junit.runners.MethodSorters
 @LargeTest
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @RunWith(AndroidJUnit4::class)
-class IntegrationTest : EspressoStartActivityBaseTest<LoginActivity>(LoginActivity::class.java) {
+class IntegrationTest : EspressoStartActivityBaseTest<LoginX1Activity>(LoginX1Activity::class.java) {
 
     companion object {
         const val OFFICER = "murbanob"

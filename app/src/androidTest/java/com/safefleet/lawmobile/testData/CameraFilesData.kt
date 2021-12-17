@@ -279,5 +279,26 @@ enum class CameraFilesData(val value: FileResponseWithErrors) {
                 )
             )
         }
+    ),
+    DEFAULT_AUDIO_LIST(
+        FileResponseWithErrors().apply {
+            errors.addAll(emptyList())
+            items.addAll(
+                listOf(
+                    CameraFile(
+                        name = "16334400.WAV",
+                        date = "2020-05-20 16:33:44",
+                        path = "/tmp/SD0/DCIM/200520001/",
+                        nameFolder = "200520001/"
+                    ),
+                    CameraFile(
+                        name = "16544400.WAV",
+                        date = "2020-05-21 16:54:44",
+                        path = "/tmp/SD0/DCIM/200521001/",
+                        nameFolder = "200521001/"
+                    )
+                )
+            )
+        }
     )
 }

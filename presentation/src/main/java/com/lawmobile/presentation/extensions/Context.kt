@@ -8,19 +8,33 @@ import android.view.View
 import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AlertDialog
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.preferencesDataStore
 import com.lawmobile.domain.entities.CameraEvent
 import com.lawmobile.domain.entities.CameraInfo
 import com.lawmobile.domain.enums.CameraType
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.entities.AlertInformation
 import com.lawmobile.presentation.ui.base.BaseActivity
+import com.lawmobile.presentation.ui.base.BaseActivity.Companion.checkIfSessionIsExpired
 import com.lawmobile.presentation.utils.CameraHelper
 import com.lawmobile.presentation.widgets.CustomNotificationDialog
 import com.safefleet.mobile.safefleet_ui.widgets.SafeFleetConfirmationDialog
 import kotlin.system.exitProcess
 
+val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
+
 fun Context.createAlertInformation(alertInformation: AlertInformation) {
     val builder = AlertDialog.Builder(this)
+    var message = ""
+    if (alertInformation.message != null) {
+        message = getString(alertInformation.message)
+    } else {
+        if (alertInformation.customMessage != null) {
+            message = alertInformation.customMessage
+        }
+    }
 
     builder.apply {
         setCancelable(false)
@@ -129,7 +143,7 @@ fun Context.createMobileDataAlert(): AlertDialog =
         message = R.string.mobile_data_status_message
     )
 
-fun Context.showToast(message: String, duration: Int) {
+fun Context.showToast(message: String, duration: Int = Toast.LENGTH_SHORT) {
     Toast.makeText(this, message, duration).show()
 }
 
@@ -172,20 +186,24 @@ fun Context.isAnimationsEnabled() =
         0F
     ) != 0F
 
-fun Context.createNotificationDialog(cameraEvent: CameraEvent) {
-    CustomNotificationDialog(
-        this,
-        false,
-        cameraEvent
-    ).show()
+fun Context.createNotificationDialog(
+    cameraEvent: CameraEvent,
+    builder: (CustomNotificationDialog.() -> Unit)? = null
+) = CustomNotificationDialog(
+    this,
+    false,
+    cameraEvent
+).apply {
+    show()
+    builder?.invoke(this)
 }
 
-fun Context.getIntentDependsCameraType(
-    activityForX1: BaseActivity,
-    activityForX2: BaseActivity
+fun Context.getCameraTypeIntent(
+    activityForX1: Class<out BaseActivity>,
+    activityForX2: Class<out BaseActivity>
 ): Intent {
     return when (CameraInfo.cameraType) {
-        CameraType.X1 -> Intent(this, activityForX1::class.java)
-        CameraType.X2 -> Intent(this, activityForX2::class.java)
+        CameraType.X1 -> Intent(this, activityForX1)
+        CameraType.X2 -> Intent(this, activityForX2)
     }
 }
