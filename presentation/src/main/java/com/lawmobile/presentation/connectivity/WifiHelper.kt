@@ -1,6 +1,10 @@
 package com.lawmobile.presentation.connectivity
 
+import kotlinx.coroutines.flow.Flow
+
 interface WifiHelper {
+
+    val isWifiSignalLow: Flow<Boolean>
 
     fun isWifiEnable(): Boolean
 

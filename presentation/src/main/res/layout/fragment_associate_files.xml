@@ -82,7 +82,7 @@
         android:layout_marginHorizontal="@dimen/button_dismiss_instructions_spacing"
         android:layout_marginVertical="@dimen/margin_26dp"
         android:background="@drawable/background_button_blue"
-        android:text="@string/associate_snapshots"
+        android:text="@string/add_snapshots"
         android:textAllCaps="false"
         android:textColor="@color/white"
         android:textSize="@dimen/text_size_20sp"

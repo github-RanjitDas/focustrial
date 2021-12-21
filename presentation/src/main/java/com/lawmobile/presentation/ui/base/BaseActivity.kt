@@ -16,10 +16,9 @@ import com.lawmobile.domain.enums.EventType
 import com.lawmobile.domain.enums.NotificationType
 import com.lawmobile.domain.usecase.events.EventsUseCase
 import com.lawmobile.presentation.BuildConfig
-import com.lawmobile.presentation.R
 import com.lawmobile.presentation.connectivity.MobileDataStatus
+import com.lawmobile.presentation.connectivity.WifiHelper
 import com.lawmobile.presentation.connectivity.WifiStatus
-import com.lawmobile.presentation.extensions.checkIfSessionIsExpired
 import com.lawmobile.presentation.extensions.createAlertErrorConnection
 import com.lawmobile.presentation.extensions.createAlertProgress
 import com.lawmobile.presentation.extensions.createAlertSessionExpired
@@ -30,7 +29,6 @@ import com.lawmobile.presentation.security.RootedHelper
 import com.lawmobile.presentation.ui.login.x1.LoginX1Activity
 import com.lawmobile.presentation.utils.CameraHelper
 import com.lawmobile.presentation.utils.EspressoIdlingResource
-import com.lawmobile.presentation.utils.WifiHelper
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect

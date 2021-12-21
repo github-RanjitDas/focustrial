@@ -60,7 +60,7 @@ object Exclusions {
         "**/EspressoIdlingResource.**",
         "**/WifiHelper.**",
         "**/RunWithDelay.**",
-        "**/Build.**"
+        "**/Build.**",
         "**/SplashViewModel.**",
         "**/AuthStateManagerFactoryImpl.**",
 

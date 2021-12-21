@@ -13,7 +13,6 @@ import com.lawmobile.domain.entities.customEvents.LowStorageEvent
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.databinding.FragmentLiveStatusBarX2Binding
 import com.lawmobile.presentation.extensions.createNotificationDialog
-import com.lawmobile.presentation.extensions.setOnClickListenerCheckConnection
 import com.lawmobile.presentation.extensions.showErrorSnackBar
 import com.lawmobile.presentation.extensions.startAnimationIfEnabled
 import com.lawmobile.presentation.ui.base.BaseActivity

@@ -27,14 +27,6 @@ val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "se
 
 fun Context.createAlertInformation(alertInformation: AlertInformation) {
     val builder = AlertDialog.Builder(this)
-    var message = ""
-    if (alertInformation.message != null) {
-        message = getString(alertInformation.message)
-    } else {
-        if (alertInformation.customMessage != null) {
-            message = alertInformation.customMessage
-        }
-    }
 
     builder.apply {
         setCancelable(false)

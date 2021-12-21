@@ -21,7 +21,7 @@ object NotificationResponseMapper : DomainMapper<NotificationResponse, CameraEve
             name = eventName,
             eventType = eventType,
             eventTag = eventTag,
-            value = notificationResponse.param,
+            value = param,
             date = DateHelper.getCurrentDate(),
             isRead = true
         )

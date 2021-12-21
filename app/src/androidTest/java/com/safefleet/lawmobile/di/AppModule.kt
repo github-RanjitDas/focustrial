@@ -22,7 +22,7 @@ import com.lawmobile.presentation.extensions.dataStore
 import com.lawmobile.presentation.utils.PreferencesManagerImpl
 import com.lawmobile.presentation.utils.VLCMediaPlayer
 import com.safefleet.lawmobile.helpers.SimpleTestNetworkManager
-import com.safefleet.lawmobile.helpers.WifiHelperImpTest
+import com.safefleet.lawmobile.helpers.WifiHelperMock
 import com.safefleet.mobile.android_commons.helpers.network_manager.ListenableNetworkManager
 import com.squareup.sqldelight.android.AndroidSqliteDriver
 import com.squareup.sqldelight.db.SqlDriver
@@ -115,7 +115,7 @@ class AppModule {
         fun provideWifiHelper(
             wifiManager: WifiManager,
             connectivityManager: ConnectivityManager
-        ): WifiHelper = WifiHelperImpTest()
+        ): WifiHelper = WifiHelperMock()
 
         @Provides
         @Singleton

@@ -308,6 +308,5 @@
     <string name="body_worn_status_change_status_gps">Change status GPS</string>
     <string name="body_worn_status_hide_or_show_status_bar">Hide or Show Status Bar</string>
     <string name="associate_audios_to_video">Associate audios to video</string>
-    <string name="associate_audios">Associate audios</string>
     <string name="return_to_regular_login">Login using Device Password</string>
 </resources>
