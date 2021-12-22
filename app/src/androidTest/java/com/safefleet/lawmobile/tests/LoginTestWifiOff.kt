@@ -2,7 +2,7 @@ package com.safefleet.lawmobile.tests
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
-import com.lawmobile.presentation.ui.login.LoginActivity
+import com.lawmobile.presentation.ui.login.x1.LoginX1Activity
 import com.schibsted.spain.barista.rule.BaristaRule
 import org.junit.Before
 import org.junit.Rule
@@ -14,7 +14,7 @@ import org.junit.runner.RunWith
 class LoginTestWifiOff : EspressoBaseTest() {
 
     @get:Rule
-    var baristaRule = BaristaRule.create(LoginActivity::class.java)
+    var baristaRule = BaristaRule.create(LoginX1Activity::class.java)
 
     @Before
     fun setupTest() {

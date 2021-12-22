@@ -3,7 +3,7 @@ package com.safefleet.lawmobile.tests
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
 import androidx.test.filters.MediumTest
-import com.lawmobile.presentation.ui.login.LoginActivity
+import com.lawmobile.presentation.ui.login.x1.LoginX1Activity
 import com.safefleet.lawmobile.R
 import com.safefleet.lawmobile.screens.FileListScreen
 import com.safefleet.lawmobile.screens.FilterDialogScreen
@@ -19,7 +19,7 @@ import org.junit.runner.RunWith
 
 @LargeTest
 @RunWith(AndroidJUnit4::class)
-class VideoListTest : EspressoStartActivityBaseTest<LoginActivity>(LoginActivity::class.java) {
+class VideoListTest : EspressoStartActivityBaseTest<LoginX1Activity>(LoginX1Activity::class.java) {
     companion object {
         private val videoList = CameraFilesData.DEFAULT_VIDEO_LIST.value
         private val videosQuantity = videoList.items.size

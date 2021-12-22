@@ -2,7 +2,7 @@ package com.safefleet.lawmobile.tests
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
-import com.lawmobile.presentation.ui.login.LoginActivity
+import com.lawmobile.presentation.ui.login.x1.LoginX1Activity
 import com.safefleet.lawmobile.screens.LiveViewScreen
 import com.safefleet.lawmobile.screens.LoginScreen
 import com.safefleet.lawmobile.testData.TestLoginData
@@ -11,7 +11,7 @@ import org.junit.runner.RunWith
 
 @LargeTest
 @RunWith(AndroidJUnit4::class)
-class LoginTest : EspressoStartActivityBaseTest<LoginActivity>(LoginActivity::class.java) {
+class LoginTest : EspressoStartActivityBaseTest<LoginX1Activity>(LoginX1Activity::class.java) {
 
     companion object {
         val OFFICER_PASSWORD = TestLoginData.OFFICER_PASSWORD.value

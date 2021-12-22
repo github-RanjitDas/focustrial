@@ -24,7 +24,7 @@ import com.lawmobile.presentation.extensions.createLowWifiSignalAlert
 import com.lawmobile.presentation.extensions.createMobileDataAlert
 import com.lawmobile.presentation.extensions.createNotificationDialog
 import com.lawmobile.presentation.security.RootedHelper
-import com.lawmobile.presentation.ui.login.LoginActivity
+import com.lawmobile.presentation.ui.login.x1.LoginX1Activity
 import com.lawmobile.presentation.utils.CameraHelper
 import com.lawmobile.presentation.utils.EspressoIdlingResource
 import com.lawmobile.presentation.utils.MobileDataStatus
@@ -40,7 +40,7 @@ import javax.inject.Inject
 @AndroidEntryPoint
 open class BaseActivity : AppCompatActivity() {
 
-    private val viewModel: BaseViewModel by viewModels()
+    private val baseViewModel: BaseViewModel by viewModels()
 
     @Inject
     lateinit var mobileDataStatus: MobileDataStatus
@@ -53,6 +53,9 @@ open class BaseActivity : AppCompatActivity() {
 
     @Inject
     lateinit var wifiHelper: WifiHelper
+
+    @Inject
+    lateinit var cameraHelper: CameraHelper
 
     private var isLiveVideoOrPlaybackActive: Boolean = false
     var isNetworkAlertShowing = MutableLiveData<Boolean>()
@@ -67,6 +70,7 @@ open class BaseActivity : AppCompatActivity() {
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         super.onCreate(savedInstanceState)
 
+        createCameraHelper()
         verifyDeviceIsNotRooted()
         createNetworkDialogs()
         setBaseObservers()
@@ -75,13 +79,17 @@ open class BaseActivity : AppCompatActivity() {
         setEventsListener()
     }
 
+    private fun createCameraHelper() {
+        CameraHelper.setInstance(cameraHelper)
+    }
+
     fun getApplicationVersionText(): String {
         return if (BuildConfig.DEBUG) "Version ${BuildConfig.VERSION_NAME}(${BuildConfig.VERSION_CODE})"
         else "Version ${BuildConfig.VERSION_NAME}"
     }
 
     private fun setEventsUseCase() {
-        viewModel.setEventsUseCase(eventsUseCase)
+        baseViewModel.setEventsUseCase(eventsUseCase)
     }
 
     private fun verifyDeviceIsNotRooted() {
@@ -93,13 +101,13 @@ open class BaseActivity : AppCompatActivity() {
 
     private fun setEventsListener() {
         if (isOfficerLogged && CameraInfo.cameraType == CameraType.X2)
-            CameraHelper.getInstance().onCameraEvent(::manageCameraEvent)
+            cameraHelper.onCameraEvent(::manageCameraEvent)
     }
 
     private fun manageCameraEvent(cameraEvent: CameraEvent) {
         if (cameraEvent.eventType == EventType.NOTIFICATION) handleNotificationEvent(cameraEvent)
         else handleInformationEvent(cameraEvent)
-        viewModel.saveNotificationEvent(cameraEvent)
+        baseViewModel.saveNotificationEvent(cameraEvent)
     }
 
     private fun handleNotificationEvent(cameraEvent: CameraEvent) {
@@ -181,12 +189,12 @@ open class BaseActivity : AppCompatActivity() {
 
     override fun onRestart() {
         super.onRestart()
-        if (checkIfSessionIsExpired() && this !is LoginActivity) this.createAlertSessionExpired()
+        if (checkIfSessionIsExpired() && this !is LoginX1Activity) this.createAlertSessionExpired()
     }
 
     override fun onUserInteraction() {
         super.onUserInteraction()
-        if (!isLiveVideoOrPlaybackActive && !isRecordingVideo && checkIfSessionIsExpired() && this !is LoginActivity) {
+        if (!isLiveVideoOrPlaybackActive && !isRecordingVideo && checkIfSessionIsExpired() && this !is LoginX1Activity) {
             return
         }
         updateLastInteraction()

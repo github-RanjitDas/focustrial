@@ -3,7 +3,7 @@ package com.safefleet.lawmobile.tests
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
 import com.lawmobile.domain.enums.CameraType
-import com.lawmobile.presentation.ui.login.LoginActivity
+import com.lawmobile.presentation.ui.login.x1.LoginX1Activity
 import com.safefleet.lawmobile.screens.BodyWornDiagnosisScreen
 import com.safefleet.lawmobile.screens.LiveViewScreen
 import com.safefleet.lawmobile.screens.LoginScreen
@@ -24,7 +24,7 @@ class BodyWornDiagnosisTest : EspressoBaseTest() {
     private val liveViewScreen = LiveViewScreen()
 
     @get:Rule
-    var baristaRule = BaristaRule.create(LoginActivity::class.java)
+    var baristaRule = BaristaRule.create(LoginX1Activity::class.java)
 
     @Before
     fun setUp() {
