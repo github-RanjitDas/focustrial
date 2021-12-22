@@ -10,7 +10,11 @@ import android.net.wifi.WifiManager
 import android.net.wifi.WifiNetworkSpecifier
 import android.os.Build
 import androidx.annotation.RequiresApi
+import com.lawmobile.domain.entities.CameraInfo
 import com.lawmobile.presentation.connectivity.WifiHelper
+import com.lawmobile.presentation.utils.Build.getSDKVersion
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.flow
 import java.lang.Thread.sleep
 import java.math.BigInteger
 import java.net.Inet4Address
@@ -19,6 +23,14 @@ class WifiHelperImpl(
     private val wifiManager: WifiManager,
     private val connectivityManager: ConnectivityManager
 ) : WifiHelper {
+
+    override val isWifiSignalLow = flow {
+        while (CameraInfo.isOfficerLogged) {
+            delay(DELAY_ON_READING_SIGNAL)
+            val isSignalLevelLow = getSignalLevel() == LOW_SIGNAL_LEVEL
+            emit(isSignalLevelLow)
+        }
+    }
 
     override fun isWifiEnable(): Boolean = wifiManager.isWifiEnabled
 
@@ -41,6 +53,15 @@ class WifiHelperImpl(
             Inet4Address.getByAddress(reverseArrayIpAddress).hostAddress
         } catch (e: Exception) {
             ""
+        }
+    }
+
+    private fun getSignalLevel(): Int {
+        val connectionInfo = wifiManager.connectionInfo
+        return if (getSDKVersion() >= Build.VERSION_CODES.R) {
+            wifiManager.calculateSignalLevel(connectionInfo.rssi)
+        } else {
+            WifiManager.calculateSignalLevel(connectionInfo.rssi, SIGNAL_LEVELS)
         }
     }
 
@@ -107,4 +128,10 @@ class WifiHelperImpl(
     override fun getSSIDWiFi(): String = wifiManager.connectionInfo.ssid.replace("\"", "")
 
     override fun isEqualsValueWithSSID(value: String): Boolean = getSSIDWiFi() == value
+
+    companion object {
+        private const val SIGNAL_LEVELS = 5
+        private const val LOW_SIGNAL_LEVEL = 0
+        private const val DELAY_ON_READING_SIGNAL = 1000L
+    }
 }

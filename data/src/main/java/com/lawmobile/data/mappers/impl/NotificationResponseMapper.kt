@@ -4,9 +4,8 @@ import com.lawmobile.data.mappers.DomainMapper
 import com.lawmobile.domain.entities.CameraEvent
 import com.lawmobile.domain.enums.EventTag
 import com.lawmobile.domain.enums.NotificationType
-import com.lawmobile.domain.utils.DateHelper.dateToString
+import com.lawmobile.domain.utils.DateHelper
 import com.safefleet.mobile.external_hardware.cameras.entities.NotificationResponse
-import java.util.Date
 
 object NotificationResponseMapper : DomainMapper<NotificationResponse, CameraEvent> {
     override fun NotificationResponse.toDomain(): CameraEvent {
@@ -23,7 +22,7 @@ object NotificationResponseMapper : DomainMapper<NotificationResponse, CameraEve
             eventType = eventType,
             eventTag = eventTag,
             value = param,
-            date = dateToString(Date(), "MM/dd/yyyy HH:mm:ss"),
+            date = DateHelper.getCurrentDate(),
             isRead = true
         )
     }

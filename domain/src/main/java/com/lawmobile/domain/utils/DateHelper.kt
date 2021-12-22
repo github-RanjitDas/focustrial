@@ -8,7 +8,7 @@ object DateHelper {
 
     private val format = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH)
 
-    fun dateToString(
+    private fun dateToString(
         date: Date,
         pattern: String = "dd/MM/yyyy",
         locale: Locale = Locale.getDefault()
@@ -20,4 +20,10 @@ object DateHelper {
     fun getTodayDateAtStartOfTheDay(): String {
         return format.format(System.currentTimeMillis()) + " 00:00:00"
     }
+
+    fun getCurrentDate(): String {
+        return dateToString(Date(), NOTIFICATION_DATE_PATTERN)
+    }
+
+    private const val NOTIFICATION_DATE_PATTERN = "MM/dd/yyyy HH:mm:ss"
 }

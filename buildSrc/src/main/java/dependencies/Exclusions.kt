@@ -57,6 +57,10 @@ object Exclusions {
         "**/LiveActivityBaseViewModel.**",
         "**/CameraEventsManager.**",
         "**/DateHelper.**",
+        "**/EspressoIdlingResource.**",
+        "**/WifiHelper.**",
+        "**/RunWithDelay.**",
+        "**/Build.**",
         "**/SplashViewModel.**",
         "**/AuthStateManagerFactoryImpl.**",
 

@@ -6,17 +6,17 @@
     <string name="cancel">Cancel</string>
 
     <!--Alerts -->
-    <string name="the_camera_was_disconnected">Body-Camera disconnected</string>
-    <string name="the_camera_was_disconnected_description">Your Body-Camera was disconnected from Focus Mobile App, please tap in OK and reconnect again.</string>
+    <string name="the_camera_was_disconnected">Body Camera Disconnected</string>
+    <string name="the_camera_was_disconnected_description">Your Body Camera was disconnected from FOCUS Mobile App. Please tap <b>OK</b> and reconnect again.</string>
     <string name="loading_wait">Loading…</string>
-    <string name="connection_finished">Connection Finished</string>
-    <string name="connection_finished_description">After 5 minutes without interaction the Body-Camera disconnects</string>
-    <string name="gps_necessary_title">Location is required</string>
-    <string name="gps_necessary_description">Please turn ON location/GPS in order to use the app</string>
-    <string name="battery_alert_title">Low battery</string>
-    <string name="battery_alert_description">Low battery in your Body-Camera, please charge your Body-Camera</string>
-    <string name="storage_alert_title">Low memory capacity</string>
-    <string name="storage_alert_description">Your Body-Camera reached 95% of its memory capacity</string>
+    <string name="connection_finished">Idle Session Timeout</string>
+    <string name="connection_finished_description">Your Body Camera was disconnected from FOCUS Mobile App after 5 minutes of inactivity.</string>
+    <string name="gps_necessary_title">Location Required</string>
+    <string name="gps_necessary_description">Please turn ON location services / GPS in order to use the app.</string>
+    <string name="battery_alert_title">Low Battery Warning</string>
+    <string name="battery_alert_description">Please charge your Body Camera.</string>
+    <string name="storage_alert_title">Low Storage Warning</string>
+    <string name="storage_alert_description">Your Body Camera has reached 95% of its storage capacity.</string>
 
     <!-- Onboarding -->
     <string name="skip_intro">Skip</string>
@@ -27,22 +27,22 @@
 
     <!-- Login -->
     <string name="please_enable_permission">Please enable permission from settings</string>
-    <string name="please_enable_permission_location">Required location permission for pairing the Body-Camera</string>
-    <string name="waiting_for_camera" tools:ignore="ExtraTranslation">Click here to connect\nwith the Body-Camera</string>
-    <string name="result_pairing_description">the result of the pairing process</string>
-    <string name="instructions_to_link_camera">Instructions to link Body-Camera</string>
-    <string name="connecting_to_camera">Connecting to Body-Camera</string>
+    <string name="please_enable_permission_location">Require location permission for pairing the Body Camera.</string>
+    <string name="waiting_for_camera">Click here to connect\nwith the Body Camera</string>
+    <string name="result_pairing_description">Result of the pairing process</string>
+    <string name="instructions_to_link_camera">Instructions to link Body Camera</string>
+    <string name="connecting_to_camera">Connecting to Body Camera</string>
     <string name="welcome_officer">Please enter your password</string>
     <string name="enter_password">Password</string>
-    <string name="incorrect_password">The password you have entered is incorrect, try again</string>
-    <string name="wifi_is_off">The WIFI is off</string>
-    <string name="please_turn_wifi_on">The WIFI is set to off on your device, please set the WIFI to on and reconnect the Body-Camera with FMA</string>
+    <string name="incorrect_password">The password you have entered is incorrect. Please try again.</string>
+    <string name="wifi_is_off">Wi-Fi is off</string>
+    <string name="please_turn_wifi_on">The Wi-Fi is set to be off on your device. Please turn on the Wi-Fi and reconnect the Body Camera with FMA.</string>
 
     <!-- Live view -->
-    <string name="image_description_full_screen_size">Full Screen size</string>
+    <string name="image_description_full_screen_size">Full Screen</string>
     <string name="live_view_label">Live view</string>
     <string name="logout">Exit FMA</string>
-    <string name="logout_message">Are you sure you want to exit the Focus Mobile App?</string>
+    <string name="logout_message">Are you sure you want to exit the FOCUS Mobile App?</string>
 
     <!-- Live View Menu -->
     <string name="icon_user_menu">Officer Information Menu</string>
@@ -50,19 +50,19 @@
     <string name="live_view_menu_item_dashboard">Dashboard</string>
     <string name="live_view_menu_item_view_snapshots">View Snapshots</string>
     <string name="live_view_menu_item_view_videos">View Videos</string>
-    <string name="live_view_menu_item_view_audios">View Audio List</string>
-    <string name="live_view_menu_item_bodyworn_settings">Body-Camera Settings</string>
+    <string name="live_view_menu_item_view_audios">View Audios</string>
+    <string name="live_view_menu_item_bodyworn_settings">Body Camera Settings</string>
     <string name="live_view_menu_item_notification">Notifications</string>
-    <string name="live_view_menu_item_diagnose">Body-Camera Diagnosis</string>
+    <string name="live_view_menu_item_diagnose">Body Camera Diagnosis</string>
     <string name="live_view_menu_item_help">Help</string>
     <string name="live_view_menu_logout">Logout</string>
 
     <!-- Snapshots -->
     <string name="live_view_take_photo_success">Snapshot captured successfully</string>
     <string name="live_view_take_photo_failed">The system failed to capture a snapshot</string>
-    <string name="button_snapshot">Button Snapshot</string>
-    <string name="button_record_description">Button Record</string>
-    <string name="take_snapshots">Take Snapshots</string>
+    <string name="button_snapshot">Snapshot</string>
+    <string name="button_record_description">Record</string>
+    <string name="take_snapshots">Take Snapshot</string>
     <string name="record_video">Record Video</string>
     <string name="record_audio">Record Audio</string>
     <string name="snapshot_list_description">Snapshot List</string>
@@ -70,19 +70,19 @@
     <string name="video_list_description">Video List</string>
     <string name="view_videos">View Videos</string>
 
-    <!-- List of Snapshots and videos from Body-Camera -->
-    <string name="file_list_failed_load_files">Could not load files, please retry or checkout Body-Camera again</string>
+    <!-- List of Snapshots and videos from camera -->
+    <string name="file_list_failed_load_files">Failed to load the files. Please retry or check the Body Camera again.</string>
     <string name="file_list_date_default"><u>Date</u></string>
     <string name="file_list_event_default">Event</string>
     <string name="no_images_found">No snapshots found</string>
     <string name="no_videos_found">No videos found</string>
     <string name="no_audios_found">No audios found</string>
-    <string name="getting_files_error">Getting files error</string>
-    <string name="getting_files_error_description">The system failed to retrieve all the requested files, please try again</string>
+    <string name="getting_files_error">File Retrieval Error</string>
+    <string name="getting_files_error_description">The system failed to retrieve all the requested files. Please try again.</string>
 
     <!-- Video playback -->
-    <string name="play_pause_playback_button_description">Play/Pause button video playback</string>
-    <string name="aspect_video_playback_description">Aspect video playback</string>
+    <string name="play_pause_playback_button_description">Play/Pause Video</string>
+    <string name="aspect_video_playback_description">Video Aspect</string>
     <string name="video_default_time">00:00:00</string>
     <string name="playback_start_time">Start Time</string>
     <string name="playback_duration">Duration</string>
@@ -104,30 +104,30 @@
     <string name="playback_license_plate">License Plate</string>
     <string name="select_event">Select event</string>
     <string name="event_mandatory">Please select Event Type</string>
-    <string name="catalog_error">Unable to get events, please retry or checkout Body-Camera again</string>
-    <string name="catalog_error_video_playback">Unable to get events, please checkout Body-Camera again</string>
-    <string name="get_video_metadata_error">Could not get video metadata, please try again</string>
+    <string name="catalog_error">Failed to retrieve the events. Please retry or check the Body Camera again.</string>
+    <string name="catalog_error_video_playback">Failed to retrieve the events. Please check the Body Camera again.</string>
+    <string name="get_video_metadata_error">Failed to retrieve video metadata. Please try again.</string>
     <string name="video_metadata_saved_success">The changes you have made were saved successfully</string>
-    <string name="video_metadata_save_error">Unable to save your changes, please try again</string>
+    <string name="video_metadata_save_error">Failed to save your changes. Please try again.</string>
     <string name="unsaved_changes">Unsaved changes</string>
-    <string name="unsaved_changes_message">Are you sure you like to leave this page without saving any of your changes?</string>
+    <string name="unsaved_changes_message">Are you sure you want to leave this page without saving any of your changes?</string>
 
     <!-- Snapshot detail -->
     <string name="snapshot_item_detail_title">Snapshot Detail</string>
     <string name="snapshot_item_detail_photo_name_title">Name</string>
     <string name="snapshot_item_detail_photo_name_value">Default</string>
-    <string name="snapshot_item_detail_date_time_title">Date Time</string>
+    <string name="snapshot_item_detail_date_time_title">Date &amp; Time</string>
     <string name="snapshot_item_detail_officer_assigned_title">Associated officer</string>
     <string name="snapshot_item_detail_video_assigned_title">Assigned to video</string>
     <string name="snapshot_item_detail_date_time_value">YYYY-MM-DD HH:MM:SS</string>
-    <string name="snapshot_item_detail_photo_content_description">Photo from Body-Camera</string>
-    <string name="snapshot_detail_load_failed">Unable to open snapshot, please go back or try again.</string>
-    <string name="image_video_recording">Image video recording</string>
+    <string name="snapshot_item_detail_photo_content_description">Photo from Body Camera</string>
+    <string name="snapshot_detail_load_failed">Failed to open snapshot. Please go back and try again.</string>
+    <string name="image_video_recording">Video recording</string>
     <string name="save_metadata">Save</string>
     <string name="none">None</string>
     <string name="playback_video_name">Name</string>
-    <string name="default_text">DEFAULT TEXT</string>
-    <string name="snapshot_detail_metadata_error">Unable to get snapshot information, please try again.</string>
+    <string name="default_text">Default text</string>
+    <string name="snapshot_detail_metadata_error">Failed to retrieve snapshot information. Please try again.</string>
 
     <!-- Audio detail -->
     <string name="audio_item_detail_title">Audio Detail</string>
@@ -137,26 +137,26 @@
     <!-- Partner Id -->
     <string name="allowedOfficerIdAssociatedPattern">ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789</string>
     <string name="allowedOfficerIdPattern">ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@.</string>
-    <string name="associate_partner_id_content_description">Associate partner ID</string>
-    <string name="file_list_associate_partner_id_success">The partner ID associated successfully</string>
+    <string name="associate_partner_id_content_description">Associate Partner ID</string>
+    <string name="file_list_associate_partner_id_success">The Partner ID has been associated successfully.</string>
     <string name="file_list_associate_partner_id_error">Partner ID could not be associated</string>
-    <string name="associate_partner_to_file_button_description">Associate partner to file button</string>
-    <string name="button_link_snapshots_description">button link snapshots</string>
+    <string name="associate_partner_to_file_button_description">Associate Partner ID with file</string>
+    <string name="button_link_snapshots_description">Link snapshots</string>
     <string name="button_link_audios_description">button link audios</string>
     <string name="valid_partner_id_message">You must enter a valid Partner ID</string>
     <string name="mobile_data_status_title">Mobile Data</string>
-    <string name="mobile_data_status_message">Please disable Mobile Data on your device in order to connect the Body-Camera with the Focus Mobile App</string>
-    <string name="verify_camera_wifi">Please verify the WIFI connection between the Body-Camera and Focus Mobile App</string>
-    <string name="error_saving_video">Error checking video saved in Body-Camera, please wait and try again</string>
+    <string name="mobile_data_status_message">Please disable Mobile Data on your device in order to connect the Body Camera with the FOCUS Mobile App.</string>
+    <string name="verify_camera_wifi">Please verify the Wi-Fi connection between the Body Camera and FOCUS Mobile App.</string>
+    <string name="error_saving_video">Error occurred when checking the videos saved in the Body Camera. Please wait and try again.</string>
     <string name="error_saving_audio">Error checking audio saved in Body-Camera, please wait and try again</string>
     <string name="go">GO</string>
     <string name="login">Login</string>
-    <string name="success_connection_to_camera">You have successfully connected to the Body-Camera</string>
+    <string name="success_connection_to_camera">You have successfully connected to the Body Camera.</string>
     <string name="try_again_button_pairing">Try Again</string>
-    <string name="error_connection_to_camera">There was a problem connecting to your Body-Camera</string>
+    <string name="error_connection_to_camera">There was a problem connecting to your Body Camera.</string>
     <string name="focus_mobile_app_logo_description">focus mobile app logo</string>
-    <string name="camera_status">Body-Camera status</string>
-    <string name="memory_level">memory level</string>
+    <string name="camera_status">Body Camera Status</string>
+    <string name="memory_level">memory usage</string>
     <string name="battery_level">battery level</string>
     <string name="video_recording">Video Recording</string>
     <string name="audio_recording">Audio Recording</string>
@@ -171,24 +171,24 @@
     <string name="storage_level_x1"><![CDATA[Used  &nbsp;&nbsp; -  &nbsp;&nbsp; Free <br/><b>%1$s</b> - <b>%2$s</b>]]></string>
     <string name="storage_level_x2"><![CDATA[<b>%1$d%%</b> available]]></string>
     <string name="battery_level_error">Error retrieving battery level</string>
-    <string name="storage_level_error">Error retrieving storage level</string>
+    <string name="storage_level_error">Error retrieving memory usage</string>
     <string name="battery_percent_placeholder"><b>100%</b> - 10 hour left</string>
     <string name="storage_level_placeholder_x1">Used \  - \  Free\n <b>272 MB</b> - <b>57.7GB</b></string>
     <string name="storage_level_placeholder_x2"><b>100%</b> available</string>
     <string name="app_bar_name_default">James</string>
     <string name="app_bar_last_name_default">Mendez</string>
     <string name="_1">1.</string>
-    <string name="instruction_1">Ensure that your Body-Camera is charged. If you are using the ClipCam, connect it to your Body-Camera.</string>
+    <string name="instruction_1">Ensure that your Body Camera is charged. If you are using the ClipCam, connect it to your Body Camera.</string>
     <string name="_2">2.</string>
-    <string name="instruction_2">Power on your Body-Camera.</string>
+    <string name="instruction_2">Power on your Body Camera.</string>
     <string name="_3">3.</string>
-    <string name="instruction_3">Long-press the pairing button until you see the Wi-Fi icon in the display area.</string>
+    <string name="instruction_3">Press and hold the <b>Wi-Fi Activation</b> button for 3 seconds to activate the Wi-Fi as a hotspot for FMA. <b>FMA WiFi</b> will appear in the display area.</string>
     <string name="_4">4.</string>
     <string name="instruction_4">On your phone, enable Wi-Fi under Settings.</string>
     <string name="_5">5.</string>
-    <string name="instruction_5">Tap on your Body-Camera\'s SSID in the list of available networks. The SSID is an alphanumeric string that starts with an X.</string>
+    <string name="instruction_5">Tap your Body Camera SSID in the list of available networks. The SSID is an alphanumeric string that starts with an X.</string>
     <string name="_6">6.</string>
-    <string name="instruction_6">When prompted, provide the SSID password to connect to the Body-Camera.</string>
+    <string name="instruction_6">When prompted, provide the SSID password to connect to the Body Camera.</string>
     <string name="got_it">Got it!</string>
     <string name="close_instructions_description">close instructions</string>
     <string name="snapshots_title">Snapshots</string>
@@ -202,11 +202,12 @@
     <string name="event">Event</string>
     <string name="officer_id_hint">Officer ID</string>
     <string name="assign_to_officer_subtitle">Enter officer ID</string>
-    <string name="file_item_image_description">file item image</string>
+    <string name="file_item_image_description">File image</string>
     <string name="select_videos_to_associate">Select videos to associate</string>
     <string name="button_help">\?</string>
     <string name="add_snapshots">Add snapshots</string>
     <string name="add_audios">Add audios</string>
+    <string name="associate_image_to_video">Associate snapshots to video</string>
     <string name="video_detail">Video Detail</string>
     <string name="time_divider"> / </string>
     <string name="title_placeholder">Title</string>
@@ -215,19 +216,19 @@
     <string name="start_date_filter">Start date</string>
     <string name="end_date_filter">End date</string>
     <string name="no_event">No event</string>
-    <string name="error_get_information_metadata">Unable to get video information, please try again</string>
-    <string name="error_getting_officer_information">Unable to open officer information, please retry or checkout Body-Camera</string>
-    <string name="associate_snapshots_to_video">Associate snapshots to video</string>
-    <string name="associate_snapshots">Associate snapshots</string>
-    <string name="no_new_photo_selected_message">Not selected any new photos</string>
+    <string name="error_get_information_metadata">Failed to retrieve video information. Please try again.</string>
+    <string name="error_getting_officer_information">Failed to retrieve officer information. Please retry or check the Body Camera.</string>
+    <string name="associate_snapshots_to_video">Associate snapshots with video</string>
+    <string name="associate_images">Associate snapshots</string>
+    <string name="no_new_photo_selected_message">No new photos selected</string>
     <string name="snapshots_added_success">Snapshots added successfully</string>
     <string name="items_selected" tools:ignore="PluralsCandidate">%1$d Selected</string>
-    <string name="no_snapshots_filter">No snapshots match to these criteria</string>
-    <string name="no_videos_filter">No videos match to these criteria</string>
-    <string name="no_audios_filter">No audios match to these criteria</string>
+    <string name="no_snapshots_filter">No snapshots match these criteria</string>
+    <string name="no_videos_filter">No videos match these criteria</string>
+    <string name="no_audios_filter">No audios match these criteria</string>
     <string name="not_available">Not available</string>
     <string name="user_guide">User Guide</string>
-    <string name="image_error_thumbnail">this thumbnail did not load correctly</string>
+    <string name="image_error_thumbnail">This thumbnail is not loading properly.</string>
     <string name="notification_type">notification type</string>
     <string name="notifications">Notifications</string>
     <string name="notification">Notification</string>
@@ -235,7 +236,7 @@
 
     <!-- Alert notification-->
     <string name="alert_notification_dismiss_button">Dismiss</string>
-    <string name="alert_notification_information_image">Image type of notification</string>
+    <string name="alert_notification_information_image">Notification image</string>
     <string name="dismiss">Dismiss</string>
     <string name="notification_detail">Notification Detail</string>
 
@@ -260,17 +261,19 @@
         <item>Default</item>
     </string-array>
 
-    <!-- Body-Camera Diagnosis -->
+    <!-- Body Camera Diagnosis -->
     <string name="body_worn_diagnosis_button_text">START</string>
     <string name="body_worn_diagnosis_loading_text">Diagnosing…</string>
     <string name="body_worn_diagnosis_success_text">Success</string>
     <string name="body_worn_diagnosis_error_text">Error</string>
-    <string name="body_worn_icon_result_description">Icon result diagnosis</string>
-    <string name="body_worn_icon_error_is_not_possible_get_diagnosis">Error retrieving Body-Camera Diagnosis, please try again</string>
-    <string name="body_worn_result_success_description">Your Body-Camera hardware is operating correctly, no issues reported.</string>
-    <string name="body_worn_result_failed_description">There are one or more issues with the Body-Camera hardware that will prevent it from working properly!\n\nPlease contact your administrator and report this issue</string>
-    <string name="no_notifications_found">No notifications found</string>
-    <string name="notification_list_error">Unable to get notification list, please retry or checkout Body-Camera</string>
+    <string name="body_worn_icon_result_description">Result</string>
+    <string name="body_worn_icon_error_is_not_possible_get_diagnosis">Error occurred when retrieving Body Camera Diagnosis. Please try again.</string>
+    <string name="body_worn_result_success_description">Your Body Camera hardware is operating properly with no issues found.</string>
+    <string name="body_worn_result_failed_description">One or more issues were detected with your Body Camera hardware which will prevent it from working properly.\n\nPlease contact your administrator and report this issue.</string>
+    <string name="no_notifications_found">No notifications</string>
+    <string name="notification_list_error">Failed to retrieve the notification list. Please retry or check the Body Camera.</string>
+    <string name="low_signal_title">Your mobile device is too far away from the Body Camera.</string>
+    <string name="low_signal_message">In order to prevent disconnection, please get your mobile device closer to your Body Camera.</string>
     <string name="choose_camera_type">Please turn on your Body-Camera, check the display and choose the one that matches</string>
     <string name="camera_display_image_description">Body-Camera display image</string>
     <string name="x1">X1</string>
@@ -305,7 +308,5 @@
     <string name="body_worn_status_change_status_gps">Change status GPS</string>
     <string name="body_worn_status_hide_or_show_status_bar">Hide or Show Status Bar</string>
     <string name="associate_audios_to_video">Associate audios to video</string>
-    <string name="associate_audios">Associate audios</string>
     <string name="return_to_regular_login">Login using Device Password</string>
-
 </resources>

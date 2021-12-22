@@ -6,6 +6,7 @@ import android.os.Process
 import android.provider.Settings
 import android.view.View
 import android.widget.Toast
+import androidx.annotation.StringRes
 import androidx.appcompat.app.AlertDialog
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
@@ -15,7 +16,6 @@ import com.lawmobile.domain.entities.CameraInfo
 import com.lawmobile.domain.enums.CameraType
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.entities.AlertInformation
-import com.lawmobile.presentation.entities.NeutralAlertInformation
 import com.lawmobile.presentation.ui.base.BaseActivity
 import com.lawmobile.presentation.ui.base.BaseActivity.Companion.checkIfSessionIsExpired
 import com.lawmobile.presentation.utils.CameraHelper
@@ -27,19 +27,11 @@ val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "se
 
 fun Context.createAlertInformation(alertInformation: AlertInformation) {
     val builder = AlertDialog.Builder(this)
-    var message = ""
-    if (alertInformation.message != null) {
-        message = getString(alertInformation.message)
-    } else {
-        if (alertInformation.customMessage != null) {
-            message = alertInformation.customMessage
-        }
-    }
 
     builder.apply {
         setCancelable(false)
         setTitle(getString(alertInformation.title))
-        setMessage(message)
+        setMessage(alertInformation.message)
         if (alertInformation.onClickPositiveButton != null) {
             setPositiveButton(R.string.OK) { dialog, _ ->
                 alertInformation.onClickPositiveButton.invoke(dialog)
@@ -54,18 +46,33 @@ fun Context.createAlertInformation(alertInformation: AlertInformation) {
     }
 }
 
+fun Context.createNotCancellableAlert(@StringRes title: Int, @StringRes message: Int): AlertDialog {
+    val builder = AlertDialog.Builder(this)
+    return builder.run {
+        setTitle(getString(title))
+        setMessage(getString(message))
+        setCancelable(false)
+        create()
+    }
+}
+
+fun Context.createLowWifiSignalAlert(): AlertDialog =
+    createNotCancellableAlert(
+        title = R.string.low_signal_title,
+        message = R.string.low_signal_message
+    )
+
 fun Context.createAlertErrorConnection() {
     val title = R.string.the_camera_was_disconnected
     val message = R.string.the_camera_was_disconnected_description
     val alertInformation = AlertInformation(
-        title, message,
-        {
-            exitProcess(0)
-        },
+        title,
+        message,
+        { restartApp() },
         null
     )
 
-    this.createAlertInformation(alertInformation)
+    createAlertInformation(alertInformation)
 }
 
 fun Context.createAlertSessionExpired() {
@@ -122,22 +129,11 @@ fun Context.createAlertDialogUnsavedChanges() {
     }
 }
 
-fun Context.createAlertMobileDataActive(neutralAlertInformation: NeutralAlertInformation): AlertDialog {
-    val builder = AlertDialog.Builder(this)
-    builder.apply {
-        neutralAlertInformation.run {
-            setTitle(title)
-            setMessage(message)
-            buttonText?.let {
-                setNeutralButton(getString(it)) { dialog, _ ->
-                    onClickNeutralButton?.invoke(dialog)
-                }
-            }
-        }
-        setCancelable(false)
-    }
-    return builder.create()
-}
+fun Context.createMobileDataAlert(): AlertDialog =
+    createNotCancellableAlert(
+        title = R.string.mobile_data_status_title,
+        message = R.string.mobile_data_status_message
+    )
 
 fun Context.showToast(message: String, duration: Int = Toast.LENGTH_SHORT) {
     Toast.makeText(this, message, duration).show()

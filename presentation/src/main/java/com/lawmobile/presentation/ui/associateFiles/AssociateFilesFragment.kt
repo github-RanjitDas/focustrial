@@ -65,12 +65,12 @@ class AssociateFilesFragment : BaseFragment() {
         when (listType) {
             SNAPSHOT_LIST -> {
                 setListTypeButtonsVisibility(true)
-                buttonAssociateFiles.text = getString(R.string.associate_snapshots)
+                buttonAssociateFiles.text = getString(R.string.add_snapshots)
                 setThumbnailListFragment()
             }
             AUDIO_LIST -> {
                 setListTypeButtonsVisibility(false)
-                buttonAssociateFiles.text = getString(R.string.associate_audios)
+                buttonAssociateFiles.text = getString(R.string.add_audios)
                 setSimpleFileListFragment()
             }
         }

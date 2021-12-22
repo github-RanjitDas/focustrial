@@ -41,13 +41,13 @@ enum class NotificationType(
         }
 
         override fun getCustomMessage(value: String?): String {
-            return "Your Body-Camera will stop running in ${value ?: 7} minutes. Please charge your Body-Camera"
+            return "Your Body Camera will stop running in ${value ?: 7} minutes. Please charge your Body Camera"
         }
     },
     LOW_STORAGE(
         "low_storage_warning",
         "Low Storage Warning!",
-        "Your Body-Camera is critically low on storage"
+        "Your Body Camera is critically low on storage"
     ) {
         override fun getTypeOfEvent(): EventType {
             return EventType.NOTIFICATION
@@ -66,7 +66,7 @@ enum class NotificationType(
     GPS_SIGNAL_LOST(
         "GPS_signal_lost",
         "GPS Signal Lost!",
-        "Your Body-Camera lost its GPS signal"
+        "Your Body Camera lost its GPS signal"
     ) {
         override fun getTypeOfEvent(): EventType {
             return EventType.NOTIFICATION

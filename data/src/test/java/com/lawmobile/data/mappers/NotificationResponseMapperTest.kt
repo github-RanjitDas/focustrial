@@ -16,7 +16,7 @@ class NotificationResponseMapperTest {
     @Test
     fun testCameraToDomainNotification() {
         mockkObject(DateHelper)
-        every { DateHelper.dateToString(any(), any(), any()) } returns "07/22/2020"
+        every { DateHelper.getCurrentDate() } returns "07/22/2020"
         val cameraNotification = NotificationResponse("7", "low_storage_warning", "value")
         val response = cameraNotification.toDomain()
         Assert.assertEquals(
@@ -35,7 +35,7 @@ class NotificationResponseMapperTest {
     @Test
     fun testCameraToDomainCameraEvent() {
         mockkObject(DateHelper)
-        every { DateHelper.dateToString(any(), any(), any()) } returns "07/22/2020"
+        every { DateHelper.getCurrentDate() } returns "07/22/2020"
         val cameraNotification = NotificationResponse("7", "new_event", "value")
         val response = cameraNotification.toDomain()
         Assert.assertEquals(

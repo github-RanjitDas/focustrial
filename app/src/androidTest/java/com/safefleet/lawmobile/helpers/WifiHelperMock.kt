@@ -2,8 +2,13 @@ package com.safefleet.lawmobile.helpers
 
 import com.lawmobile.presentation.connectivity.WifiHelper
 import com.safefleet.lawmobile.testData.TestLoginData
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 
-class WifiHelperImpTest : WifiHelper {
+class WifiHelperMock : WifiHelper {
+
+    override val isWifiSignalLow: Flow<Boolean>
+        get() = flow { emit(false) }
 
     override fun isWifiEnable(): Boolean {
         return if (MockUtils.wifiEnabled) {
