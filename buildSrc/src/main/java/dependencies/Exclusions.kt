@@ -37,6 +37,7 @@ object Exclusions {
         "**/enums/**",
         "**/security/**",
         "**/models/**",
+        "**/model/**",
         "**/app/**",
         "**/adapters/**",
         "**/widgets/**",
@@ -56,7 +57,8 @@ object Exclusions {
         "**/EspressoIdlingResource.**",
         "**/WifiHelper.**",
         "**/RunWithDelay.**",
-        "**/Build.**"
+        "**/Build.**",
+        "**/ConnectionHelperImpl.**"
     )
     val pitest = mutableSetOf(
         //Dagger 2

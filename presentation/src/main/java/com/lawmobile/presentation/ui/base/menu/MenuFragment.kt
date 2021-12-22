@@ -11,7 +11,7 @@ import androidx.fragment.app.viewModels
 import com.lawmobile.domain.entities.CameraInfo
 import com.lawmobile.presentation.databinding.FragmentLiveMenuX2Binding
 import com.lawmobile.presentation.extensions.createAlertConfirmAppExit
-import com.lawmobile.presentation.extensions.getIntentDependsCameraType
+import com.lawmobile.presentation.extensions.getIntentForCameraType
 import com.lawmobile.presentation.extensions.setOnClickListenerCheckConnection
 import com.lawmobile.presentation.extensions.setOnSwipeRightListener
 import com.lawmobile.presentation.extensions.setOnTouchListenerCheckConnection
@@ -23,7 +23,7 @@ import com.lawmobile.presentation.ui.fileList.x2.FileListX2Activity
 import com.lawmobile.presentation.ui.helpSection.HelpPageActivity
 import com.lawmobile.presentation.ui.live.x1.LiveX1Activity
 import com.lawmobile.presentation.ui.live.x2.LiveX2Activity
-import com.lawmobile.presentation.ui.login.LoginActivity
+import com.lawmobile.presentation.ui.login.x1.LoginX1Activity
 import com.lawmobile.presentation.ui.notificationList.NotificationListActivity
 import com.lawmobile.presentation.utils.Constants
 import com.safefleet.mobile.kotlin_commons.extensions.doIfSuccess
@@ -158,7 +158,10 @@ class MenuFragment : BaseFragment() {
         isInMainScreen = true
         if (activity is LiveX2Activity) return
         val intent =
-            requireActivity().getIntentDependsCameraType(LiveX1Activity(), LiveX2Activity())
+            activity?.getIntentForCameraType(
+                LiveX1Activity::class.java,
+                LiveX2Activity::class.java
+            )
         startActivity(intent)
     }
 
@@ -167,8 +170,11 @@ class MenuFragment : BaseFragment() {
         currentListView = fileType
         (activity as BaseActivity).updateLiveOrPlaybackActive(false)
         val fileListIntent =
-            requireActivity().getIntentDependsCameraType(FileListX1Activity(), FileListX2Activity())
-        fileListIntent.putExtra(Constants.FILE_LIST_SELECTOR, fileType)
+            activity?.getIntentForCameraType(
+                FileListX1Activity::class.java,
+                FileListX2Activity::class.java
+            )
+        fileListIntent?.putExtra(Constants.FILE_LIST_SELECTOR, fileType)
         startActivity(fileListIntent)
         if (!isInMainScreen) requireActivity().finish()
         isInMainScreen = false
@@ -192,7 +198,7 @@ class MenuFragment : BaseFragment() {
     private fun logoutApplication() {
         menuViewModel.disconnectCamera()
         CameraInfo.cleanInfo()
-        startActivity(Intent(requireActivity(), LoginActivity::class.java))
+        startActivity(Intent(requireActivity(), LoginX1Activity::class.java))
         requireActivity().finish()
     }
 

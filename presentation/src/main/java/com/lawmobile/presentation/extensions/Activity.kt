@@ -6,8 +6,13 @@ import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.lifecycleScope
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.ui.base.BaseActivity
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 fun BaseActivity.isPermissionGranted(permission: String): Boolean {
     return ContextCompat.checkSelfPermission(this, permission) == PackageManager.PERMISSION_GRANTED
@@ -33,4 +38,15 @@ fun BaseActivity.createAlertProgress(textLoading: Int = R.string.loading_wait): 
     dialog.window?.setBackgroundDrawableResource(R.color.transparent)
 
     return dialog
+}
+
+fun BaseActivity.runWithDelay(
+    delay: Long = 200,
+    dispatcher: CoroutineDispatcher = Dispatchers.IO,
+    callback: () -> Unit
+) {
+    lifecycleScope.launch(dispatcher) {
+        delay(delay)
+        callback()
+    }
 }

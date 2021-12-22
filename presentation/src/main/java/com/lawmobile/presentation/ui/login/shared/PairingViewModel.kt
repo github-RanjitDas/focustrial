@@ -1,4 +1,4 @@
-package com.lawmobile.presentation.ui.login.pairingPhoneWithCamera
+package com.lawmobile.presentation.ui.login.shared
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
@@ -17,46 +17,41 @@ class PairingViewModel @Inject constructor(
     private val wifiHelper: WifiHelper
 ) : BaseViewModel() {
 
-    var cameraPairingProgress: ((Result<Int>) -> Unit)? = null
+    val connectionProgress: LiveData<Result<Int>> get() = _connectionProgress
+    private val _connectionProgress: MediatorLiveData<Result<Int>> = MediatorLiveData()
 
-    private val validateConnectionMediatorLiveData: MediatorLiveData<Result<Unit>> =
+    private val _isConnectionPossible: MediatorLiveData<Result<Unit>> =
         MediatorLiveData()
-    val validateConnectionLiveData: LiveData<Result<Unit>> get() = validateConnectionMediatorLiveData
+    val isConnectionPossible: LiveData<Result<Unit>> get() = _isConnectionPossible
 
-    fun getProgressConnectionWithTheCamera() {
-        val gateway = wifiHelper.getGatewayAddress()
-        val ipAddress = wifiHelper.getIpAddress()
-        if (ipAddress.isEmpty() || gateway.isEmpty()) {
-            cameraPairingProgress?.invoke(
-                Result.Error(Exception(EXCEPTION_GET_PARAMS_TO_CONNECT))
-            )
-        }
+    fun connectWithCamera() {
+        if (connectionProgress.value == null) {
+            val gateway = wifiHelper.getGatewayAddress()
+            val ipAddress = wifiHelper.getIpAddress()
+            if (ipAddress.isEmpty() || gateway.isEmpty()) {
+                _connectionProgress.value = Result.Error(Exception(EXCEPTION_GET_PARAMS_TO_CONNECT))
+            }
 
-        viewModelScope.launch {
-            with(pairingPhoneWithCameraUseCase) {
-                cameraPairingProgress?.let { loadPairingCamera(gateway, ipAddress, it) }
+            viewModelScope.launch {
+                with(pairingPhoneWithCameraUseCase) {
+                    loadPairingCamera(gateway, ipAddress) { _connectionProgress.postValue(it) }
+                }
             }
         }
     }
 
-    fun isPossibleConnection() {
+    fun isConnectionPossible() {
         val gateway = wifiHelper.getGatewayAddress()
         if (gateway.isEmpty()) {
-            validateConnectionMediatorLiveData.postValue(
+            _isConnectionPossible.postValue(
                 Result.Error(Exception(EXCEPTION_GET_PARAMS_TO_CONNECT))
             )
         }
         viewModelScope.launch {
-            validateConnectionMediatorLiveData.postValue(
-                pairingPhoneWithCameraUseCase.isPossibleTheConnection(
-                    gateway
-                )
+            _isConnectionPossible.postValue(
+                pairingPhoneWithCameraUseCase.isPossibleTheConnection(gateway)
             )
         }
-    }
-
-    fun resetProgress() {
-        cameraPairingProgress?.invoke(Result.Success(0))
     }
 
     fun getNetworkName() = wifiHelper.getSSIDWiFi()

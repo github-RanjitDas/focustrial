@@ -13,6 +13,7 @@ enum class CameraType {
     };
 
     open fun getPossibleStringsToIdentifySSID(): List<String> = emptyList()
+
     open fun reviewIfIsThisTypeOfCamera(serialNumber: String): Boolean {
         getPossibleStringsToIdentifySSID().forEach {
             if (serialNumber.contains(it)) return true
@@ -21,7 +22,7 @@ enum class CameraType {
     }
 
     companion object {
-        fun isValidNumberCameraBWC(codeCamera: String): Boolean =
+        fun isValidBodyCameraNumber(codeCamera: String): Boolean =
             X1.reviewIfIsThisTypeOfCamera(codeCamera) || X2.reviewIfIsThisTypeOfCamera(codeCamera)
     }
 }

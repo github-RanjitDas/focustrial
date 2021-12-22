@@ -2,7 +2,7 @@ package com.safefleet.lawmobile.tests
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
-import com.lawmobile.presentation.ui.login.LoginActivity
+import com.lawmobile.presentation.ui.login.x1.LoginX1Activity
 import com.safefleet.lawmobile.helpers.DeviceUtils
 import com.safefleet.lawmobile.screens.LiveViewScreen
 import com.safefleet.lawmobile.screens.LoginScreen
@@ -16,7 +16,7 @@ import org.junit.runners.MethodSorters
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @LargeTest
 @RunWith(AndroidJUnit4::class)
-class LiveViewTest : EspressoStartActivityBaseTest<LoginActivity>(LoginActivity::class.java) {
+class LiveViewTest : EspressoStartActivityBaseTest<LoginX1Activity>(LoginX1Activity::class.java) {
 
     private val liveViewScreen = LiveViewScreen()
     private val device = DeviceUtils()
