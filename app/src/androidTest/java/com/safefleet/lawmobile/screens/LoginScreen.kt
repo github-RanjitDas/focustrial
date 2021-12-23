@@ -1,7 +1,13 @@
 package com.safefleet.lawmobile.screens
 
+import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.ViewInteraction
+import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
+import androidx.test.espresso.matcher.ViewMatchers.withId
 import com.safefleet.lawmobile.R
 import com.safefleet.lawmobile.helpers.Alert
+import com.safefleet.lawmobile.helpers.CustomAssertionActions.customSwipeLeft
+import com.safefleet.lawmobile.helpers.CustomAssertionActions.customSwipeRight
 import com.safefleet.lawmobile.helpers.CustomAssertionActions.retry
 import com.safefleet.lawmobile.helpers.CustomAssertionActions.waitUntil
 import com.safefleet.lawmobile.testData.TestLoginData
@@ -46,6 +52,16 @@ open class LoginScreen : BaseScreen() {
 
     fun clickOnConnect() = waitUntil { clickOn(R.id.buttonConnect) }
 
+    fun swipeCardToTheRight(): ViewInteraction = onView(withId(R.id.introSliderViewPager)).perform(customSwipeRight())
+
+    fun swipeCardToTheLeft(): ViewInteraction = onView(withId(R.id.introSliderViewPager)).perform(customSwipeLeft())
+
+    fun clickOnSkipButton() = clickOn(R.id.textViewSkip)
+
+    fun clickOnStartNowButton() = clickOn(R.id.buttonStartNow)
+
+    fun clickOnOnboardingCards() = clickOn(R.id.textViewOnBoardingCards)
+
     open fun login(officerPassword: String = TestLoginData.OFFICER_PASSWORD.value) {
         try {
             clickOnGo()
@@ -86,7 +102,7 @@ open class LoginScreen : BaseScreen() {
         return true
     }
 
-    private fun isLogoDisplayed() = assertDisplayed(R.id.imageViewFMALogoNoAnimation)
+    fun isLogoDisplayed() = assertDisplayed(R.id.imageViewFMALogoNoAnimation)
 
     private fun isConnectToCameraTextDisplayed() =
         assertDisplayed(R.id.textViewConnectToCamera, R.string.waiting_for_camera)
@@ -159,4 +175,30 @@ open class LoginScreen : BaseScreen() {
     }
 
     fun isOfficerIdLabelDisplayed() = waitUntil { assertDisplayed(R.id.textViewOfficerId) }
+
+    fun isFirstCardDisplayed(description: String) {
+        assertDisplayed(R.id.textDescription, description)
+        assertHasDrawable(R.id.imageSlideIcon, R.drawable.ob_card_1)
+        assertDisplayed(R.id.textViewSkip)
+    }
+
+    fun isSecondCardDisplayed(description: String) {
+        waitUntil { assertDisplayed(R.id.textDescription, description) }
+        waitUntil { assertHasDrawable(R.id.imageSlideIcon, R.drawable.ob_card_2) }
+        assertDisplayed(R.id.textViewSkip)
+    }
+
+    fun isThirdCardDisplayed(description: String) {
+        waitUntil { assertDisplayed(R.id.textDescription, description) }
+        waitUntil { assertHasDrawable(R.id.imageSlideIcon, R.drawable.ob_card_3) }
+        assertDisplayed(R.id.textViewSkip)
+    }
+
+    fun isFourthCardDisplayed(description: String) {
+        waitUntil { assertDisplayed(R.id.textDescription, description) }
+        waitUntil { assertHasDrawable(R.id.imageSlideIcon, R.drawable.ob_card_4) }
+        assertDisplayed(R.id.buttonStartNow)
+    }
+
+    fun isLogoNotDisplayed(): ViewInteraction = onView(withId(R.id.imageViewFMALogoNoAnimation)).check(doesNotExist())
 }
