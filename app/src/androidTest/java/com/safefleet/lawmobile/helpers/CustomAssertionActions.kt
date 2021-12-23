@@ -57,4 +57,13 @@ object CustomAssertionActions {
             Press.FINGER
         )
     }
+
+    fun customSwipeLeft(): ViewAction {
+        return GeneralSwipeAction(
+            Swipe.FAST,
+            GeneralLocation.CENTER_RIGHT,
+            GeneralLocation.CENTER_LEFT,
+            Press.FINGER
+        )
+    }
 }
