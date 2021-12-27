@@ -1,4 +1,4 @@
-package com.safefleet.lawmobile.tests.x1
+package com.safefleet.lawmobile.tests.x2
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
