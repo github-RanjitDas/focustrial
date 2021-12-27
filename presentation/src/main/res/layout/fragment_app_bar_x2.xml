@@ -3,11 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="match_parent">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/live_view_app_bar_height"
+        android:layout_height="match_parent"
         android:background="@drawable/background_app_bar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -15,7 +15,7 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/constrainAppBarTitle"
-            android:layout_width="0dp"
+            android:layout_width="@dimen/no_dp"
             android:layout_height="match_parent"
             app:layout_constraintEnd_toStartOf="@+id/buttonNotification"
             app:layout_constraintStart_toStartOf="@+id/imageViewLogo">
@@ -54,7 +54,7 @@
             android:layout_marginHorizontal="@dimen/app_bar_logo_margin_horizontal"
             android:background="@drawable/ic_logo_focus"
             android:contentDescription="@string/focus_mobile_app_logo_description"
-            android:visibility="gone"
+            android:visibility="invisible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -62,17 +62,19 @@
         <View
             android:id="@+id/viewAppBarDivider"
             android:layout_width="@dimen/app_bar_divider_width"
-            android:layout_height="match_parent"
-            android:layout_marginVertical="@dimen/app_bar_divider_margin_vertical"
+            android:layout_height="@dimen/no_dp"
+            android:layout_marginVertical="@dimen/margin_8dp"
+            app:layout_constraintTop_toTopOf="@id/imageViewLogo"
+            app:layout_constraintBottom_toBottomOf="@id/imageViewLogo"
             android:background="@color/whiteTransparentLive"
             app:layout_constraintEnd_toStartOf="@id/buttonMenu" />
 
         <ImageView
             android:id="@+id/buttonNotification"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/no_dp"
             android:contentDescription="@string/focus_mobile_app_logo_description"
-            android:padding="@dimen/app_bar_logout_padding"
+            android:paddingHorizontal="@dimen/app_bar_logout_padding"
             android:src="@drawable/ic_notification"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@id/viewAppBarDivider"
@@ -97,16 +99,21 @@
         <ImageView
             android:id="@+id/buttonMenu"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/no_dp"
             android:contentDescription="@string/focus_mobile_app_logo_description"
-            android:padding="@dimen/app_bar_logout_padding"
+            android:paddingHorizontal="@dimen/app_bar_logout_padding"
             android:src="@drawable/ic_menu_tap_bar"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.461" />
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/midGuideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.3"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-
 
 </com.google.android.material.appbar.AppBarLayout>

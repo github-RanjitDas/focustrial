@@ -13,7 +13,7 @@ import com.lawmobile.presentation.extensions.setOnClickListenerCheckConnection
 import com.lawmobile.presentation.ui.base.BaseFragment
 import com.lawmobile.presentation.ui.login.x1.LoginX1Activity
 
-class LiveAppBarX1Fragment : BaseFragment() {
+class AppBarX1Fragment : BaseFragment() {
 
     private val viewModel: LiveAppBarX1ViewModel by activityViewModels()
 
@@ -25,8 +25,7 @@ class LiveAppBarX1Fragment : BaseFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding =
-            FragmentLiveAppBarX1Binding.inflate(inflater, container, false)
+        _binding = FragmentLiveAppBarX1Binding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -63,6 +62,6 @@ class LiveAppBarX1Fragment : BaseFragment() {
     }
 
     companion object {
-        val TAG = LiveAppBarX1Fragment::class.java.simpleName
+        val TAG = AppBarX1Fragment::class.java.simpleName
     }
 }

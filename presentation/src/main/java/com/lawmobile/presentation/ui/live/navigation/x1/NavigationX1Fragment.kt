@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import com.lawmobile.presentation.databinding.FragmentLiveNavigationX1Binding
 import com.lawmobile.presentation.ui.live.navigation.LiveNavigationBaseFragment
 
-class LiveNavigationX1Fragment : LiveNavigationBaseFragment() {
+class NavigationX1Fragment : LiveNavigationBaseFragment() {
 
     private val binding: FragmentLiveNavigationX1Binding get() = _binding!!
     private var _binding: FragmentLiveNavigationX1Binding? = null
@@ -38,6 +38,6 @@ class LiveNavigationX1Fragment : LiveNavigationBaseFragment() {
     }
 
     companion object {
-        val TAG = LiveNavigationX1Fragment::class.java.simpleName
+        val TAG = NavigationX1Fragment::class.java.simpleName
     }
 }

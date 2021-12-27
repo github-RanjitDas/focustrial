@@ -214,6 +214,6 @@ class MenuFragment : BaseFragment() {
     companion object {
         var currentListView = ""
         var isInMainScreen = true
-        val TAG = MenuFragment::class.java.simpleName
+        val TAG: String = MenuFragment::class.java.simpleName
     }
 }

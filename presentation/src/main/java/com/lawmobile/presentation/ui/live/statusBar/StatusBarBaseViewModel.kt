@@ -2,6 +2,7 @@ package com.lawmobile.presentation.ui.live.statusBar
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.lawmobile.domain.entities.MetadataEvent
 import com.lawmobile.domain.usecase.liveStreaming.LiveStreamingUseCase
@@ -17,24 +18,39 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class LiveStatusBarBaseViewModel @Inject constructor(
+class StatusBarBaseViewModel @Inject constructor(
     private val liveStreamingUseCase: LiveStreamingUseCase
 ) : BaseViewModel() {
 
-    private val catalogInfoMediatorLiveData = MediatorLiveData<Result<List<MetadataEvent>>>()
-    val catalogInfoLiveData: LiveData<Result<List<MetadataEvent>>> get() = catalogInfoMediatorLiveData
+    private val wasLowStorageShowed = MutableLiveData<Boolean>().apply { value = false }
+    private val wasLowBatteryShowed = MutableLiveData<Boolean>().apply { value = false }
 
-    private val batteryLevelMediatorLiveData = MediatorLiveData<Event<Result<Int>>>()
-    val batteryLevelLiveData: LiveData<Event<Result<Int>>> get() = batteryLevelMediatorLiveData
+    private val _metadataEvents = MediatorLiveData<Result<List<MetadataEvent>>>()
+    val metadataEvents: LiveData<Result<List<MetadataEvent>>> get() = _metadataEvents
 
-    private val storageMediatorLiveData = MediatorLiveData<Event<Result<List<Double>>>>()
-    val storageLiveData: LiveData<Event<Result<List<Double>>>> get() = storageMediatorLiveData
+    private val _batteryLevel = MediatorLiveData<Event<Result<Int>>>()
+    val batteryLevel: LiveData<Event<Result<Int>>> get() = _batteryLevel
+
+    private val _storageLevel = MediatorLiveData<Event<Result<List<Double>>>>()
+    val storageLevel: LiveData<Event<Result<List<Double>>>> get() = _storageLevel
+
+    fun setLowStorageShowed(wasShowed: Boolean) {
+        wasLowStorageShowed.value = wasShowed
+    }
+
+    fun wasLowStorageShowed(): Boolean = wasLowStorageShowed.value ?: false
+
+    fun setLowBatteryShowed(wasShowed: Boolean) {
+        wasLowBatteryShowed.value = wasShowed
+    }
+
+    fun wasLowBatteryShowed(): Boolean = wasLowBatteryShowed.value ?: false
 
     fun getMetadataEvents() {
         viewModelScope.launch {
             val catalogInfo =
                 getResultWithAttempts(RETRY_ATTEMPTS) { liveStreamingUseCase.getCatalogInfo() }
-            catalogInfoMediatorLiveData.postValue(catalogInfo)
+            _metadataEvents.postValue(catalogInfo)
         }
     }
 
@@ -42,7 +58,7 @@ class LiveStatusBarBaseViewModel @Inject constructor(
         viewModelScope.launch {
             val batteryLevel: Result<Int> =
                 getResultWithAttempts(RETRY_ATTEMPTS) { liveStreamingUseCase.getBatteryLevel() }
-            batteryLevelMediatorLiveData.postValue(
+            _batteryLevel.postValue(
                 Event(batteryLevel)
             )
         }
@@ -67,15 +83,15 @@ class LiveStatusBarBaseViewModel @Inject constructor(
                             val usedBytes = totalMb - freeStorageMb
                             gigabyteList.add(usedBytes)
                             gigabyteList.add(totalMb)
-                            storageMediatorLiveData.postValue(Event(Result.Success(gigabyteList)))
+                            _storageLevel.postValue(Event(Result.Success(gigabyteList)))
                         }
                         doIfError {
-                            storageMediatorLiveData.postValue(Event(Result.Error(it)))
+                            _storageLevel.postValue(Event(Result.Error(it)))
                         }
                     }
                 }
                 doIfError {
-                    storageMediatorLiveData.postValue(Event(Result.Error(it)))
+                    _storageLevel.postValue(Event(Result.Error(it)))
                 }
             }
         }

@@ -1,9 +1,8 @@
-package com.lawmobile.presentation.ui.login.pairingPhoneWithCamera
+package com.lawmobile.presentation.ui.login.shared
 
 import com.lawmobile.domain.enums.CameraType
 import com.lawmobile.domain.usecase.pairingPhoneWithCamera.PairingPhoneWithCameraUseCase
 import com.lawmobile.presentation.InstantExecutorExtension
-import com.lawmobile.presentation.ui.login.shared.PairingViewModel
 import com.lawmobile.presentation.ui.login.shared.PairingViewModel.Companion.EXCEPTION_GET_PARAMS_TO_CONNECT
 import com.lawmobile.presentation.utils.WifiHelper
 import com.safefleet.mobile.kotlin_commons.helpers.Result
@@ -140,5 +139,11 @@ class PairingViewModelTest {
     fun testCleanCacheFiles() {
         every { viewModel.cleanCacheFiles() } just runs
         viewModel.cleanCacheFiles()
+    }
+
+    @Test
+    fun testResetProgress() {
+        viewModel.resetProgress()
+        Assert.assertTrue(viewModel.connectionProgress.value == Result.Success(0))
     }
 }

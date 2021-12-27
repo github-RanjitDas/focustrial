@@ -5,9 +5,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.lawmobile.presentation.databinding.FragmentLiveControlsX1Binding
-import com.lawmobile.presentation.ui.live.controls.LiveControlsBaseFragment
+import com.lawmobile.presentation.ui.live.controls.ControlsBaseFragment
 
-class LiveControlsX1Fragment : LiveControlsBaseFragment() {
+class ControlsX1Fragment : ControlsBaseFragment() {
 
     private val binding: FragmentLiveControlsX1Binding get() = _binding!!
     private var _binding: FragmentLiveControlsX1Binding? = null
@@ -45,6 +45,6 @@ class LiveControlsX1Fragment : LiveControlsBaseFragment() {
     }
 
     companion object {
-        val TAG = LiveControlsX1Fragment::class.java.simpleName
+        val TAG = ControlsX1Fragment::class.java.simpleName
     }
 }

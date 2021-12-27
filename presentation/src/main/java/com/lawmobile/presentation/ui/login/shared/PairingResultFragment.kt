@@ -50,6 +50,7 @@ class PairingResultFragment : BaseFragment() {
 
     private fun setListeners() {
         binding.buttonRetry.setOnClickListener {
+            pairingViewModel.resetProgress()
             startConnectionToHotspotCamera()
         }
     }
