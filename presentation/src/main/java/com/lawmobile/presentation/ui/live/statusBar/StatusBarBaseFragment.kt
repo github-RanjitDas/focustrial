@@ -10,7 +10,6 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
 import com.lawmobile.domain.entities.CameraInfo
 import com.lawmobile.domain.entities.MetadataEvent
-import com.lawmobile.domain.enums.CameraType
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.entities.AlertInformation
 import com.lawmobile.presentation.enums.CatalogTypes
@@ -27,9 +26,9 @@ import com.safefleet.mobile.safefleet_ui.widgets.linearProgressBar.SafeFleetLine
 import com.safefleet.mobile.safefleet_ui.widgets.linearProgressBar.SafeFleetLinearProgressBarColors
 import com.safefleet.mobile.safefleet_ui.widgets.linearProgressBar.SafeFleetLinearProgressBarRanges
 
-open class LiveStatusBarBaseFragment : BaseFragment() {
+open class StatusBarBaseFragment : BaseFragment() {
 
-    val sharedViewModel: LiveStatusBarBaseViewModel by activityViewModels()
+    val sharedViewModel: StatusBarBaseViewModel by activityViewModels()
     val blinkAnimation = Animations.createBlinkAnimation(BLINK_ANIMATION_DURATION)
 
     var isViewLoaded = false
@@ -48,12 +47,12 @@ open class LiveStatusBarBaseFragment : BaseFragment() {
     var highRangeColor: Int = 0
 
     fun setSharedObservers() {
-        sharedViewModel.catalogInfoLiveData.observe(viewLifecycleOwner, ::setCatalogInfo)
+        sharedViewModel.metadataEvents.observe(viewLifecycleOwner, ::setCatalogInfo)
     }
 
     fun getCameraStatus(isViewLoaded: Boolean) {
         if (isViewLoaded) {
-            if (isInPortraitMode()) showLoadingDialog()
+            showLoadingDialog()
             hideLoadingAfterTimeout()
             if (CameraInfo.metadataEvents.isEmpty()) {
                 sharedViewModel.getMetadataEvents()
@@ -116,7 +115,7 @@ open class LiveStatusBarBaseFragment : BaseFragment() {
     open fun manageBatteryLevel(batteryPercent: Int) {
         activity?.runOnUiThread {
             if (batteryPercent >= 0) {
-                if (batteryPercent == 0 && CameraInfo.cameraType == CameraType.X1) {
+                if (batteryPercent == 0 && CameraInfo.cameraType.isX1()) {
                     showBatteryLevelNotAvailable()
                 } else {
                     progressBarBattery.setProgress(batteryPercent)

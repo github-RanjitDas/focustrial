@@ -18,14 +18,14 @@ class PairingViewModel @Inject constructor(
 ) : BaseViewModel() {
 
     val connectionProgress: LiveData<Result<Int>> get() = _connectionProgress
-    private val _connectionProgress: MediatorLiveData<Result<Int>> = MediatorLiveData()
+    private val _connectionProgress =
+        MediatorLiveData<Result<Int>>().apply { value = Result.Success(0) }
 
-    private val _isConnectionPossible: MediatorLiveData<Result<Unit>> =
-        MediatorLiveData()
     val isConnectionPossible: LiveData<Result<Unit>> get() = _isConnectionPossible
+    private val _isConnectionPossible: MediatorLiveData<Result<Unit>> = MediatorLiveData()
 
     fun connectWithCamera() {
-        if (connectionProgress.value == null) {
+        if (connectionProgress.value == Result.Success(0)) {
             val gateway = wifiHelper.getGatewayAddress()
             val ipAddress = wifiHelper.getIpAddress()
             if (ipAddress.isEmpty() || gateway.isEmpty()) {
@@ -60,6 +60,10 @@ class PairingViewModel @Inject constructor(
 
     fun cleanCacheFiles() {
         pairingPhoneWithCameraUseCase.cleanCacheFiles()
+    }
+
+    fun resetProgress() {
+        _connectionProgress.value = Result.Success(0)
     }
 
     companion object {

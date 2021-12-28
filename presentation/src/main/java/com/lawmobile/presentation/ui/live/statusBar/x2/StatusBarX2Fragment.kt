@@ -19,7 +19,7 @@ import com.lawmobile.presentation.extensions.showErrorSnackBar
 import com.lawmobile.presentation.extensions.startAnimationIfEnabled
 import com.lawmobile.presentation.ui.base.BaseActivity
 import com.lawmobile.presentation.ui.helpSection.HelpPageActivity
-import com.lawmobile.presentation.ui.live.statusBar.LiveStatusBarBaseFragment
+import com.lawmobile.presentation.ui.live.statusBar.StatusBarBaseFragment
 import com.lawmobile.presentation.utils.EspressoIdlingResource
 import com.safefleet.mobile.kotlin_commons.extensions.doIfError
 import com.safefleet.mobile.kotlin_commons.extensions.doIfSuccess
@@ -29,7 +29,7 @@ import com.safefleet.mobile.safefleet_ui.widgets.linearProgressBar.SafeFleetLine
 import com.safefleet.mobile.safefleet_ui.widgets.linearProgressBar.SafeFleetLinearProgressBarRanges
 import kotlin.math.roundToInt
 
-class LiveStatusBarX2Fragment : LiveStatusBarBaseFragment() {
+class StatusBarX2Fragment : StatusBarBaseFragment() {
 
     private val binding: FragmentLiveStatusBarX2Binding get() = _binding!!
     private var _binding: FragmentLiveStatusBarX2Binding? = null
@@ -37,17 +37,15 @@ class LiveStatusBarX2Fragment : LiveStatusBarBaseFragment() {
     private lateinit var storageBarRanges: SafeFleetLinearProgressBarRanges
     private lateinit var storageBarColors: SafeFleetLinearProgressBarColors
 
-    private var wasLowStorageAlertShowed = false
+    private val wasLowStorageShowed: Boolean get() = sharedViewModel.wasLowStorageShowed()
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        if (isInPortraitMode()) {
-            setSharedObservers()
-            setObservers()
-        }
+        setSharedObservers()
+        setObservers()
         _binding = FragmentLiveStatusBarX2Binding.inflate(inflater, container, false)
         return binding.root
     }
@@ -65,8 +63,8 @@ class LiveStatusBarX2Fragment : LiveStatusBarBaseFragment() {
     }
 
     private fun setObservers() {
-        sharedViewModel.storageLiveData.observe(viewLifecycleOwner, ::setStorageLevels)
-        sharedViewModel.batteryLevelLiveData.observe(viewLifecycleOwner, ::setBatteryLevel)
+        sharedViewModel.storageLevel.observe(viewLifecycleOwner, ::setStorageLevels)
+        sharedViewModel.batteryLevel.observe(viewLifecycleOwner, ::setBatteryLevel)
     }
 
     private fun configureProgressBars() {
@@ -163,13 +161,13 @@ class LiveStatusBarX2Fragment : LiveStatusBarBaseFragment() {
 
     private fun checkPercentToShowNotification(availablePercent: Double) {
         if (availablePercent.roundToInt() <= LOW_STORAGE_LEVEL) {
-            if (!wasLowStorageAlertShowed) {
+            if (!wasLowStorageShowed) {
                 activity?.runOnUiThread {
                     context?.createNotificationDialog(LowStorageEvent.event)
                 }
-                wasLowStorageAlertShowed = true
+                sharedViewModel.setLowStorageShowed(true)
             }
-        } else wasLowStorageAlertShowed = false
+        } else sharedViewModel.setLowStorageShowed(false)
     }
 
     private fun getAvailableStoragePercent(information: List<Double>): Double {
@@ -268,7 +266,7 @@ class LiveStatusBarX2Fragment : LiveStatusBarBaseFragment() {
     }
 
     companion object {
-        val TAG = LiveStatusBarX2Fragment::class.java.simpleName
+        val TAG: String = StatusBarX2Fragment::class.java.simpleName
         private var wasNotificationArriveForLowBattery = false
         private var currentMinutesAfterNotifications = 0
         private var currentPercentInBattery = 100

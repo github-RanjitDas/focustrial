@@ -6,19 +6,23 @@ import com.safefleet.mobile.kotlin_commons.helpers.Result
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.TestCoroutineDispatcher
 import org.junit.Assert
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.api.extension.ExtendWith
 
+@ExperimentalCoroutinesApi
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @ExtendWith(InstantExecutorExtension::class)
 internal class AppBarX2ViewModelTest {
 
     private val eventsUseCase: EventsUseCase = mockk()
+    private val dispatcher = TestCoroutineDispatcher()
 
     private val appBarX2ViewModel: AppBarX2ViewModel by lazy {
-        AppBarX2ViewModel(eventsUseCase)
+        AppBarX2ViewModel(eventsUseCase, dispatcher)
     }
 
     @Test

@@ -11,7 +11,6 @@ import androidx.lifecycle.lifecycleScope
 import com.lawmobile.domain.entities.CameraEvent
 import com.lawmobile.domain.entities.CameraInfo
 import com.lawmobile.domain.entities.CameraInfo.isOfficerLogged
-import com.lawmobile.domain.enums.CameraType
 import com.lawmobile.domain.enums.EventType
 import com.lawmobile.domain.enums.NotificationType
 import com.lawmobile.domain.usecase.events.EventsUseCase
@@ -100,7 +99,7 @@ open class BaseActivity : AppCompatActivity() {
     }
 
     private fun setEventsListener() {
-        if (isOfficerLogged && CameraInfo.cameraType == CameraType.X2)
+        if (isOfficerLogged && CameraInfo.cameraType.isX2())
             cameraHelper.onCameraEvent(::manageCameraEvent)
     }
 

@@ -36,15 +36,15 @@ open class OnSwipeTouchListener(context: Context?) : OnTouchListener {
         }
 
         override fun onFling(
-            event1: MotionEvent,
-            event2: MotionEvent,
+            event1: MotionEvent?,
+            event2: MotionEvent?,
             velocityX: Float,
             velocityY: Float
         ): Boolean {
             var result = false
             try {
-                val diffY = event2.y - event1.y
-                val diffX = event2.x - event1.x
+                val diffY = (event2?.y ?: 0f) - (event1?.y ?: 0f)
+                val diffX = (event2?.x ?: 0f) - (event1?.x ?: 0f)
                 if (isMovementFromLeftToRight(diffX, diffY, velocityX)) {
                     val isMoveToRight = diffX > 0
                     if (isMoveToRight) {
