@@ -4,6 +4,7 @@ import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.ViewInteraction
 import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
 import androidx.test.espresso.matcher.ViewMatchers.withId
+import com.lawmobile.domain.entities.customEvents.WrongCredentialsEvent
 import com.safefleet.lawmobile.R
 import com.safefleet.lawmobile.helpers.Alert
 import com.safefleet.lawmobile.helpers.CustomAssertionActions.customSwipeLeft
@@ -24,12 +25,12 @@ open class LoginScreen : BaseScreen() {
     fun typePassword(officerPassword: String = TestLoginData.OFFICER_PASSWORD.value) =
         writeTo(R.id.editTextOfficerPassword, officerPassword)
 
-    private fun typeOfficerId(officerId: String = TestLoginData.OFFICER_NAME.value) {
+    fun typeOfficerId(officerId: String = TestLoginData.OFFICER_NAME.value) {
         waitUntil { assertDisplayed(R.id.editTextOfficerId) }
         writeTo(R.id.editTextOfficerId, officerId)
     }
 
-    private fun typeDevicePassword(devicePassword: String = TestLoginData.OFFICER_PASSWORD.value) {
+    fun typeDevicePassword(devicePassword: String = TestLoginData.OFFICER_PASSWORD.value) {
         waitUntil { assertDisplayed(R.id.editTextDevicePassword) }
         writeTo(R.id.editTextDevicePassword, devicePassword)
     }
@@ -61,6 +62,8 @@ open class LoginScreen : BaseScreen() {
     fun clickOnStartNowButton() = clickOn(R.id.buttonStartNow)
 
     fun clickOnOnboardingCards() = clickOn(R.id.textViewOnBoardingCards)
+
+    fun clickOnOkButton() = clickOn(R.id.buttonDismissNotification)
 
     open fun login(officerPassword: String = TestLoginData.OFFICER_PASSWORD.value) {
         try {
@@ -201,4 +204,27 @@ open class LoginScreen : BaseScreen() {
     }
 
     fun isLogoNotDisplayed(): ViewInteraction = onView(withId(R.id.imageViewFMALogoNoAnimation)).check(doesNotExist())
+
+    fun areLoginLogosDisplayed() {
+        isLogoDisplayed()
+        isFooterLogoDisplayed()
+    }
+
+    fun isChangeBodyCameraButtonDisplayed() = assertDisplayed(R.id.buttonChangeCamera)
+
+    fun isOnBoardingCardsTextDisplayed() = assertDisplayed(R.id.textViewOnBoardingCards)
+
+    fun isEditButtonDisplayed() = assertDisplayed(R.id.buttonEditOfficerId)
+
+    fun isDevicePasswordDisplayed() = assertDisplayed(R.id.textViewDevicePassword)
+
+    fun isInstructionsToLinkCameraButtonDisplayed() = assertDisplayed(R.id.textViewInstructionsToLinkCamera)
+
+    fun isBodyCameraConnectedSuccessfully() = assertDisplayed(R.string.success_connection_to_camera)
+
+    fun isCredentialsErrorDisplayed() {
+        assertDisplayed(R.id.imageViewNotificationIcon)
+        assertDisplayed(R.id.textViewNotificationTitle, WrongCredentialsEvent.title)
+        assertDisplayed(R.id.textViewNotificationMessage, WrongCredentialsEvent.message)
+    }
 }

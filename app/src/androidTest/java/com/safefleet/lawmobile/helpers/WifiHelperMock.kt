@@ -32,7 +32,7 @@ class WifiHelperMock : WifiHelper {
         networkPassword: String,
         connectionCallback: (connected: Boolean) -> Unit
     ) {
-        connectionCallback.invoke(true)
+        connectionCallback.invoke(MockUtils.suggestWifiConnected)
     }
 
     override fun getSSIDWiFi(): String {
