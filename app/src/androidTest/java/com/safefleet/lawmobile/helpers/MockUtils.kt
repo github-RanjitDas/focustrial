@@ -23,6 +23,7 @@ class MockUtils {
         var totalStorageCamera = 60000000
         var freeStorageCamera = 50000000
         var cameraConnectServiceX1Mock = CameraConnectServiceMock()
+        var suggestWifiConnected = true
     }
 
     fun disconnectCamera() {
@@ -69,6 +70,10 @@ class MockUtils {
 
     fun turnWifiOn() {
         wifiEnabled = true
+    }
+
+    fun setIncorrectNetwork() {
+        suggestWifiConnected = false
     }
 
     fun setCameraType(cameraType: CameraType) {
