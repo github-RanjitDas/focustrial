@@ -15,6 +15,7 @@ import com.lawmobile.presentation.R
 import com.lawmobile.presentation.entities.AlertInformation
 import com.lawmobile.presentation.ui.base.BaseActivity
 import com.lawmobile.presentation.utils.CameraHelper
+import com.lawmobile.presentation.utils.checkIfSessionIsExpired
 import com.lawmobile.presentation.widgets.CustomNotificationDialog
 import com.safefleet.mobile.safefleet_ui.widgets.SafeFleetConfirmationDialog
 import kotlin.system.exitProcess

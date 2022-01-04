@@ -78,7 +78,7 @@ class StartPairingFragment : BaseFragment() {
 
     private fun FragmentStartPairingBinding.buttonInstructionsListener() {
         buttonInstructionsToLinkCamera.setOnClickListener {
-            activityViewModel.setInstructionsOpen(true)
+            activityViewModel.isInstructionsOpen = true
         }
     }
 

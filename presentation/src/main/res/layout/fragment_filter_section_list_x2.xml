@@ -10,7 +10,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/margin_20dp"
-        android:layout_marginTop="@dimen/margin_top_associate_snapshots_button"
         android:background="@drawable/border_rounded_blue"
         android:drawableStart="@drawable/selector_associate_snapshots"
         android:drawablePadding="@dimen/padding_10dp"
@@ -20,7 +19,7 @@
         android:textColor="@color/lightBlue"
         android:textSize="@dimen/text_size_14sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"/>
 
     <com.safefleet.mobile.safefleet_ui.widgets.SafeFleetGridButton
         android:id="@+id/buttonThumbnailList"

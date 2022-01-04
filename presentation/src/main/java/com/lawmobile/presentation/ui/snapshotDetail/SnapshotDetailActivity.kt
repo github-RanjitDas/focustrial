@@ -43,7 +43,7 @@ class SnapshotDetailActivity : BaseActivity() {
 
     private val sheetBehavior: BottomSheetBehavior<CardView> by lazy {
         BottomSheetBehavior.from(
-            binding.bottomSheetPartnerId!!.bottomSheetPartnerId
+            binding.bottomSheetAssociateOfficer!!.bottomSheetAssociateOfficer
         )
     }
 
@@ -95,7 +95,7 @@ class SnapshotDetailActivity : BaseActivity() {
     }
 
     private fun configureListeners() {
-        binding.buttonAssociatePartnerIdList.setOnClickListenerCheckConnection {
+        binding.buttonAssociateOfficer.setOnClickListenerCheckConnection {
             showAssignToOfficerBottomSheet()
         }
         binding.layoutCustomAppBar?.imageButtonBackArrow?.setOnClickListenerCheckConnection { onBackPressed() }
@@ -192,14 +192,14 @@ class SnapshotDetailActivity : BaseActivity() {
 
     private fun configureBottomSheet() {
         sheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
-        binding.bottomSheetPartnerId?.buttonAssignToOfficer?.setOnClickListenerCheckConnection {
+        binding.bottomSheetAssociateOfficer?.buttonAssignToOfficer?.setOnClickListenerCheckConnection {
             currentAssociatedOfficerId =
-                binding.bottomSheetPartnerId?.editTextAssignToOfficer?.text.toString()
+                binding.bottomSheetAssociateOfficer?.editTextAssignToOfficer?.text.toString()
             associatePartnerId(currentAssociatedOfficerId)
             hideKeyboard()
             cleanPartnerIdField()
         }
-        binding.bottomSheetPartnerId?.buttonCloseAssignToOfficer?.setOnClickListenerCheckConnection {
+        binding.bottomSheetAssociateOfficer?.buttonClose?.setOnClickListenerCheckConnection {
             hideKeyboard()
             cleanPartnerIdField()
             sheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
@@ -222,7 +222,7 @@ class SnapshotDetailActivity : BaseActivity() {
     }
 
     private fun cleanPartnerIdField() {
-        binding.bottomSheetPartnerId?.editTextAssignToOfficer?.text?.clear()
+        binding.bottomSheetAssociateOfficer?.editTextAssignToOfficer?.text?.clear()
     }
 
     private fun showAssignToOfficerBottomSheet() {

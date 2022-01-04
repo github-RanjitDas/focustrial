@@ -19,6 +19,8 @@ abstract class LoginBaseActivity : BaseActivity() {
 
     lateinit var binding: ActivityLoginBinding
 
+    protected abstract var isInstructionsOpen: Boolean
+
     private val sheetBehavior: BottomSheetBehavior<CardView> by lazy {
         BottomSheetBehavior.from(
             binding.bottomSheetInstructions.bottomSheetInstructions
@@ -43,7 +45,7 @@ abstract class LoginBaseActivity : BaseActivity() {
         }
     }
 
-    fun handleInstructionsVisibility(isOpen: Boolean) {
+    fun toggleInstructionsBottomSheet(isOpen: Boolean) {
         if (isOpen) sheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
         else sheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
     }

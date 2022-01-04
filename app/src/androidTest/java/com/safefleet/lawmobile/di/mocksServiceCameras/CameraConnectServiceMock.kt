@@ -7,6 +7,7 @@ import com.safefleet.lawmobile.testData.CameraEventsData
 import com.safefleet.lawmobile.testData.CameraFilesData
 import com.safefleet.lawmobile.testData.TestLoginData
 import com.safefleet.mobile.external_hardware.cameras.CameraService
+import com.safefleet.mobile.external_hardware.cameras.entities.AudioInformation
 import com.safefleet.mobile.external_hardware.cameras.entities.CameraCatalog
 import com.safefleet.mobile.external_hardware.cameras.entities.CameraFile
 import com.safefleet.mobile.external_hardware.cameras.entities.CameraUser
@@ -73,18 +74,17 @@ class CameraConnectServiceMock : CameraService {
         return Result.Success(VideoFileInfo(0, 1000, 100, "", "10", 10, "", ""))
     }
 
+    override suspend fun getListOfAudios(): Result<FileResponseWithErrors> {
+        return Result.Success(mockk())
+    }
+
     override suspend fun getListOfImages(): Result<FileResponseWithErrors> {
-        FileList.imageList = emptyList()
         return Result.Success(snapshotsList)
     }
 
     override suspend fun getListOfVideos(): Result<FileResponseWithErrors> {
         FileList.videoList = emptyList()
         return Result.Success(videoList)
-    }
-
-    override suspend fun getListOfAudios(): Result<FileResponseWithErrors> {
-        throw NotImplementedError()
     }
 
     override suspend fun getLogEvents(): Result<List<LogEvent>> {
@@ -219,5 +219,21 @@ class CameraConnectServiceMock : CameraService {
 
     fun sendPushNotification(notificationResponse: NotificationResponse) {
         arriveNotificationFromCamera?.invoke(notificationResponse)
+    }
+
+    override suspend fun getAudioBytes(cameraFile: CameraFile): Result<ByteArray> {
+        return Result.Error(mockk())
+    }
+
+    override suspend fun getAudioMetadata(cameraFile: CameraFile): Result<AudioInformation> {
+        return Result.Error(mockk())
+    }
+
+    override suspend fun saveAudioMetadata(audioInformation: AudioInformation): Result<Unit> {
+        return Result.Success(Unit)
+    }
+
+    override suspend fun getAssociatedVideos(cameraFile: CameraFile): Result<List<CameraFile>> {
+        return Result.Success(listOf(cameraFile))
     }
 }

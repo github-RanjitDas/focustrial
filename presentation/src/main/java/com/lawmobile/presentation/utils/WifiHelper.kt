@@ -44,6 +44,7 @@ open class WifiHelper(private val wifiManager: WifiManager) {
         }
     }
 
+    @Suppress("DEPRECATION")
     private fun getSignalLevel(): Int {
         val connectionInfo = wifiManager.connectionInfo
         return if (getSDKVersion() >= Build.VERSION_CODES.R) {

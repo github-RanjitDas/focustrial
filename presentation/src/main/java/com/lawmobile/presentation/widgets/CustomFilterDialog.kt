@@ -19,7 +19,8 @@ import com.safefleet.mobile.safefleet_ui.widgets.SafeFleetFilterTag
 
 class CustomFilterDialog constructor(
     private val tagsGridLayout: GridLayout,
-    private var onApplyClick: (Boolean) -> Unit
+    private var onApplyClick: (Boolean) -> Unit,
+    private var onCloseClick: () -> Unit
 ) : Dialog(tagsGridLayout.context, true, null), View.OnClickListener {
 
     private lateinit var binding: FileListFilterDialogBinding
@@ -85,6 +86,11 @@ class CustomFilterDialog constructor(
         } catch (e: Exception) {
             false
         }
+    }
+
+    override fun dismiss() {
+        super.dismiss()
+        onCloseClick()
     }
 
     override fun onClick(v: View?) {

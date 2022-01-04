@@ -8,22 +8,23 @@ import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
+import com.lawmobile.domain.entities.DomainCameraFile
 import com.lawmobile.domain.entities.DomainInformationFile
 import com.lawmobile.domain.extensions.getDateDependingOnNameLength
 import com.lawmobile.presentation.R
-import com.lawmobile.presentation.entities.FilesAssociatedByUser
 import com.lawmobile.presentation.extensions.setCheckedListenerCheckConnection
 import com.lawmobile.presentation.extensions.setOnClickListenerCheckConnection
-import com.lawmobile.presentation.ui.fileList.FileListBaseFragment
 import com.safefleet.mobile.android_commons.extensions.convertDpToPixel
 import com.safefleet.mobile.android_commons.extensions.inflate
 import com.safefleet.mobile.safefleet_ui.widgets.SafeFleetCheckBox2
 
 class SimpleFileListAdapter(
     private val onFileClick: (DomainInformationFile) -> Unit,
-    private val onFileCheck: ((Boolean, Int) -> Unit)?
+    private val onFileCheck: ((Int) -> Unit)?
 ) : RecyclerView.Adapter<SimpleFileListAdapter.SimpleListViewHolder>() {
+
     var showCheckBoxes = false
+
     private var isSortedAscendingByDateAndTime = true
     private var isSortedAscendingByEvent = false
     var fileList = mutableListOf<DomainInformationFile>()
@@ -53,7 +54,7 @@ class SimpleFileListAdapter(
         tmpList.forEach {
             it.isSelected = false
         }
-        onFileCheck?.invoke(false, 0)
+        onFileCheck?.invoke(0)
         fileList = tmpList
     }
 
@@ -81,10 +82,30 @@ class SimpleFileListAdapter(
         }
     }
 
+    fun updateFileList(newList: MutableList<DomainInformationFile>) {
+        if (fileList.isEmpty()) fileList = newList
+        else {
+            val newElementsCount = newList.size - fileList.size
+            if (newElementsCount > 0) {
+                fileList.addAll(newList.takeLast(newElementsCount))
+                notifyDataSetChanged()
+            }
+        }
+    }
+
+    fun setSelectedFiles(selectedFiles: List<DomainCameraFile>) {
+        val tmpList = fileList
+        fileList.forEach {
+            it.isSelected = selectedFiles.contains(it.domainCameraFile)
+        }
+        onFileCheck?.invoke(selectedFiles.size)
+        fileList = tmpList
+    }
+
     inner class SimpleListViewHolder(
         private val fileView: View,
         private val onFileClick: (DomainInformationFile) -> Unit,
-        private val onFileCheck: ((Boolean, Int) -> Unit)?
+        private val onFileCheck: ((Int) -> Unit)?
     ) : RecyclerView.ViewHolder(fileView) {
 
         private lateinit var dateSimpleListItem: TextView
@@ -101,7 +122,6 @@ class SimpleFileListAdapter(
 
         fun bind(remoteCameraFile: DomainInformationFile) {
             getViews()
-            onFileCheck?.invoke(isAnyFileChecked(), selectedItemsSize())
             setDataToViews(remoteCameraFile)
             enableCheckBoxes(remoteCameraFile)
             setListeners(remoteCameraFile)
@@ -154,9 +174,6 @@ class SimpleFileListAdapter(
         }
 
         private fun selectItemFromTheList(remoteCameraFile: DomainInformationFile) {
-            if (FileListBaseFragment.checkableListInit) {
-                FilesAssociatedByUser.updateAssociatedSnapshots(remoteCameraFile.domainCameraFile)
-            }
             onCheckedFile(remoteCameraFile, checkboxSimpleListItem.isActivated)
         }
 
@@ -164,11 +181,9 @@ class SimpleFileListAdapter(
             val index =
                 fileList.indexOfFirst { it.domainCameraFile.name == simpleFile.domainCameraFile.name }
             fileList[index].isSelected = isChecked
-            onFileCheck?.invoke(isAnyFileChecked(), selectedItemsSize())
+            onFileCheck?.invoke(selectedItemsSize())
         }
 
         private fun selectedItemsSize() = fileList.filter { it.isSelected }.size
-
-        private fun isAnyFileChecked() = fileList.any { it.isSelected }
     }
 }
