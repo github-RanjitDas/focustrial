@@ -19,7 +19,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class ThumbnailListFragmentViewModel @Inject constructor(private val thumbnailListUseCase: ThumbnailListUseCase) :
+class ThumbnailListViewModel @Inject constructor(private val thumbnailListUseCase: ThumbnailListUseCase) :
     BaseViewModel() {
 
     private val thumbnailBytesListMediatorLiveData =

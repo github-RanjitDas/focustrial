@@ -25,14 +25,14 @@ internal class LoginBaseViewModelTest {
 
     @Test
     fun setInstructionsOpenTrue() {
-        baseViewModel.setInstructionsOpen(true)
-        Assert.assertTrue(baseViewModel.isInstructionsOpen.value!!)
+        baseViewModel.isInstructionsOpen = true
+        Assert.assertTrue(baseViewModel.isInstructionsOpen)
     }
 
     @Test
     fun setInstructionsOpenFalse() {
-        baseViewModel.setInstructionsOpen(false)
-        Assert.assertFalse(baseViewModel.isInstructionsOpen.value!!)
+        baseViewModel.isInstructionsOpen = false
+        Assert.assertFalse(baseViewModel.isInstructionsOpen)
     }
 
     @Test

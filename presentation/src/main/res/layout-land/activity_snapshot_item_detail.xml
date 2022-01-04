@@ -78,7 +78,7 @@
 
         <Button
             android:visibility="gone"
-            android:id="@+id/buttonAssociatePartnerIdList"
+            android:id="@+id/buttonAssociateOfficer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/margin_30dp"
@@ -96,7 +96,7 @@
             android:visibility="gone"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toTopOf="@+id/buttonAssociatePartnerIdList"
+            app:layout_constraintBottom_toTopOf="@+id/buttonAssociateOfficer"
             android:layout_width="match_parent"
             android:layout_marginBottom="@dimen/snapshot_detail_margin_bottom_scroll"
             app:layout_constraintTop_toBottomOf="@+id/layoutDetailControls"

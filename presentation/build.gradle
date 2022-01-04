@@ -90,6 +90,7 @@ dependencies {
     api Dependencies.Material.material
     api Dependencies.Lifecycle.extensions
     api Dependencies.Lifecycle.viewModel
+    api Dependencies.Lifecycle.runtime
 
     implementation Dependencies.Lottie.lottie
     implementation Dependencies.AppCompat.appCompat
@@ -104,6 +105,7 @@ dependencies {
     implementation Dependencies.Fragment.extensions
     implementation Dependencies.Hilt.hiltViewModel
     implementation Dependencies.Glide.glide
+    implementation Dependencies.Google.flexBox
 
     api Dependencies.Coroutines.coroutinesAndroid
     api Dependencies.Coroutines.coroutinesCore

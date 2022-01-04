@@ -22,6 +22,13 @@ class LoginX1Activity : LoginBaseActivity() {
 
     private val viewModel: LoginX1ViewModel by viewModels()
 
+    override var isInstructionsOpen: Boolean
+        get() = viewModel.isInstructionsOpen
+        set(value) {
+            viewModel.isInstructionsOpen = value
+            toggleInstructionsBottomSheet(value)
+        }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         overridePendingTransition(0, R.anim.fade_out)
@@ -44,7 +51,6 @@ class LoginX1Activity : LoginBaseActivity() {
     }
 
     private fun LoginX1ViewModel.setObservers() {
-        isInstructionsOpen.observe(this@LoginX1Activity, ::handleInstructionsVisibility)
         loginState.observe(this@LoginX1Activity, ::handleLoginState)
         userFromCameraResult.observe(this@LoginX1Activity, ::handleUserResult)
     }
@@ -61,6 +67,7 @@ class LoginX1Activity : LoginBaseActivity() {
             onOfficerPassword { showOfficerPasswordFragment() }
             onPairingResult { showPairingResultFragment() }
         }
+        toggleInstructionsBottomSheet(isInstructionsOpen)
     }
 
     private fun handleUserResult(result: Result<DomainUser>) {
@@ -105,7 +112,7 @@ class LoginX1Activity : LoginBaseActivity() {
     }
 
     override val closeInstructions = {
-        viewModel.setInstructionsOpen(false)
+        isInstructionsOpen = false
     }
 
     companion object {

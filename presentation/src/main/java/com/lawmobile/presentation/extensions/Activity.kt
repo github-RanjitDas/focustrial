@@ -6,12 +6,16 @@ import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.ui.base.BaseActivity
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 fun BaseActivity.isPermissionGranted(permission: String): Boolean {
@@ -48,5 +52,13 @@ fun BaseActivity.runWithDelay(
     lifecycleScope.launch(dispatcher) {
         delay(delay)
         callback()
+    }
+}
+
+fun <T> BaseActivity.collectFlow(flow: Flow<T>, callback: (T) -> Unit) {
+    lifecycleScope.launch {
+        repeatOnLifecycle(Lifecycle.State.STARTED) {
+            flow.collect { callback(it) }
+        }
     }
 }

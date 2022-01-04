@@ -22,9 +22,9 @@ object Dependencies {
     }
 
     object Base {
-        const val androidCommons = "com.safefleet.mobile:android-commons:1.3.1@aar"
-        const val externalHardware = "com.safefleet.mobile:external-hardware:5.9.7@jar"
-        const val kotlinCommons = "com.safefleet.mobile:kotlin-commons:1.2.0@jar"
+        const val androidCommons = "com.safefleet.mobile:android-commons:2.4.1-SNAPSHOT@aar"
+        const val externalHardware = "com.safefleet.mobile:external-hardware:5.13.8-SNAPSHOT@jar"
+        const val kotlinCommons = "com.safefleet.mobile:kotlin-commons:2.4.0-SNAPSHOT@jar"
         const val safeFleetUI = "com.safefleet.mobile:safefleet-ui:1.4.3@aar"
     }
 
@@ -34,13 +34,10 @@ object Dependencies {
     }
 
     object Coroutines {
-        private const val CORE_VERSION = "1.3.9"
-        private const val ANDROID_VERSION = "1.3.5"
-        private const val TEST_VERSION = "1.3.5"
-        const val coroutinesAndroid =
-            "org.jetbrains.kotlinx:kotlinx-coroutines-android:$ANDROID_VERSION"
-        const val coroutinesCore = "org.jetbrains.kotlinx:kotlinx-coroutines-core:$CORE_VERSION"
-        const val coroutinesTest = "org.jetbrains.kotlinx:kotlinx-coroutines-test:$TEST_VERSION"
+        private const val VERSION = "1.5.2"
+        const val coroutinesAndroid = "org.jetbrains.kotlinx:kotlinx-coroutines-android:$VERSION"
+        const val coroutinesCore = "org.jetbrains.kotlinx:kotlinx-coroutines-core:$VERSION"
+        const val coroutinesTest = "org.jetbrains.kotlinx:kotlinx-coroutines-test:$VERSION"
     }
 
     object Espresso {
@@ -72,6 +69,7 @@ object Dependencies {
         const val gson = "com.google.code.gson:gson:2.8.6"
         const val services = "com.google.gms:google-services:4.3.4"
         const val findBugs = "com.google.code.findbugs:jsr305:3.0.2"
+        const val flexBox = "com.google.android.flexbox:flexbox:3.0.0"
     }
 
     object Hilt {
@@ -103,8 +101,10 @@ object Dependencies {
     }
 
     object Lifecycle {
-        private const val VERSION = "2.2.0"
-        const val extensions = "androidx.lifecycle:lifecycle-extensions:$VERSION"
+        private const val VERSION = "2.4.0-alpha03"
+        private const val EXT_VERSION = "2.2.0"
+        const val extensions = "androidx.lifecycle:lifecycle-extensions:$EXT_VERSION"
+        const val runtime = "androidx.lifecycle:lifecycle-runtime-ktx:$VERSION"
         const val viewModel = "androidx.lifecycle:lifecycle-viewmodel-ktx:$VERSION"
     }
 

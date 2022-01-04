@@ -7,8 +7,11 @@ import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.flexbox.AlignItems
+import com.google.android.flexbox.FlexDirection
+import com.google.android.flexbox.FlexboxLayoutManager
+import com.google.android.flexbox.JustifyContent
 import com.google.android.material.snackbar.Snackbar
 import com.lawmobile.domain.entities.CameraInfo
 import com.lawmobile.domain.entities.DomainCameraFile
@@ -37,16 +40,16 @@ class ThumbnailFileListFragment : FileListBaseFragment() {
     private var _binding: FragmentFileListBinding? = null
     private val binding get() = _binding!!
 
-    private val thumbnailListFragmentViewModel: ThumbnailListFragmentViewModel by activityViewModels()
+    private val viewModel: ThumbnailListViewModel by activityViewModels()
     private var imagesFailedToLoad: ArrayList<String> = arrayListOf()
     private var isLoading = false
     private var currentImageLoading: DomainCameraFile? = null
-    var fileListBackup = mutableListOf<DomainInformationImage>()
 
-    private lateinit var gridLayoutManager: GridLayoutManager
+    private lateinit var flexLayoutManager: FlexboxLayoutManager
 
-    var onImageCheck: ((Boolean, Int) -> Unit)? = null
-    var thumbnailFileListAdapter: ThumbnailFileListAdapter? = null
+    val listAdapter: ThumbnailFileListAdapter by lazy {
+        ThumbnailFileListAdapter(::onImageClick, onFileCheck)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -54,37 +57,23 @@ class ThumbnailFileListFragment : FileListBaseFragment() {
         savedInstanceState: Bundle?
     ): View {
         setObservers()
-        _binding =
-            FragmentFileListBinding.inflate(inflater, container, false)
+        _binding = FragmentFileListBinding.inflate(inflater, container, false)
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        setViews()
     }
 
     override fun onResume() {
         super.onResume()
-        thumbnailListFragmentViewModel.cancelGetImageBytes()
-        cleanFileList()
-        setAdapter()
+        viewModel.cancelGetImageBytes()
         listType = arguments?.getString(FILE_LIST_TYPE)
-        configureLayoutItems()
         getSnapshotList()
     }
 
-    private fun cleanFileList() {
-        thumbnailFileListAdapter?.fileList = mutableListOf()
-    }
-
-    private fun setAssociatedRecyclerView() {
-        thumbnailFileListAdapter?.run {
-            fileList.let { completeList ->
-                fileList = FilesAssociatedByUser
-                    .getListOfImagesAssociatedToVideo(completeList)
-                    .filterIsInstance<DomainInformationImage>() as MutableList
-            }
-        }
-        setAndFilterRecyclerView()
-    }
-
-    private fun configureLayoutItems() {
+    private fun setViews() {
         binding.textViewEvent.isVisible = false
         binding.textViewDateAndTime.isVisible = false
         binding.dividerViewList.isVisible = false
@@ -92,44 +81,36 @@ class ThumbnailFileListFragment : FileListBaseFragment() {
 
     private fun getSnapshotList() {
         showLoadingDialog()
-        thumbnailListFragmentViewModel.getSnapshotList()
-    }
-
-    private fun setAdapter() {
-        thumbnailFileListAdapter =
-            ThumbnailFileListAdapter(::onImageClick, onImageCheck)
-                .apply { showCheckBoxes = checkableListInit }
+        viewModel.getSnapshotList()
     }
 
     private fun fillAdapter(listItems: MutableList<DomainInformationFile>) {
-        showFileListRecycler(
-            binding.fileListRecycler,
-            binding.noFilesTextView
-        )
-
-        fileListBackup = mutableListOf()
-
-        thumbnailFileListAdapter?.fileList = mutableListOf()
-        listItems.forEach {
-            val domainInformationImage = DomainInformationImage(it.domainCameraFile)
-            thumbnailFileListAdapter?.addItemToList(domainInformationImage)
-            fileListBackup.add(domainInformationImage)
+        listAdapter.apply {
+            showCheckBoxes = isSelectionActive
+            listItems.forEach {
+                val domainInformationImage = DomainInformationImage(it.domainCameraFile)
+                listAdapter.addItemToList(domainInformationImage)
+            }
+            listBackup = fileList
         }
 
-        if (checkableListInit) setAssociatedRecyclerView()
-        else setAndFilterRecyclerView()
+        setRecyclerView()
         startRetrievingImages()
     }
 
     private fun startRetrievingImages() {
         isLoading = true
-        val itemToLoad = thumbnailFileListAdapter?.fileList?.firstOrNull()?.domainCameraFile
-        itemToLoad?.let { thumbnailListFragmentViewModel.getImageBytes(it) }
+        val itemToLoad = listAdapter.fileList.firstOrNull()?.domainCameraFile
+        itemToLoad?.let { viewModel.getImageBytes(it) }
     }
 
-    fun applyFiltersToList() {
-        thumbnailListFragmentViewModel.cancelGetImageBytes()
-        thumbnailFileListAdapter?.fileList =
+    override fun setSelectedFiles(selectedFiles: List<DomainCameraFile>) {
+        listAdapter.setSelectedFiles(selectedFiles)
+    }
+
+    override fun applyFiltersToList() {
+        viewModel.cancelGetImageBytes()
+        listAdapter.fileList =
             filter?.filteredList?.filterIsInstance<DomainInformationImage>()
             as MutableList<DomainInformationImage>
         loadNewImage()
@@ -139,45 +120,45 @@ class ThumbnailFileListFragment : FileListBaseFragment() {
         )
     }
 
+    override fun getListOfSelectedItems(): List<DomainCameraFile> =
+        listAdapter.fileList.filter { it.isSelected }.map { it.domainCameraFile }
+
     private fun restoreFilters() {
-        thumbnailFileListAdapter?.fileList =
-            thumbnailFileListAdapter?.fileList?.let { getFilteredList(it) }
-            ?.filterIsInstance<DomainInformationImage>() as MutableList
+        listAdapter.fileList =
+            listAdapter.fileList.let { getFilteredList(it) }
+            .filterIsInstance<DomainInformationImage>() as MutableList
     }
 
     private fun onImageClick(file: DomainInformationImage) {
         startFileListIntent(file.domainCameraFile)
     }
 
-    fun reviewIfShowCheckBoxes() {
-        if (thumbnailFileListAdapter?.showCheckBoxes == true) showCheckBoxes()
-    }
-
-    fun showCheckBoxes() {
-        thumbnailFileListAdapter?.run {
-            showCheckBoxes = !showCheckBoxes
-            if (!showCheckBoxes) uncheckAllItems()
+    override fun toggleCheckBoxes(show: Boolean) {
+        isSelectionActive = show
+        listAdapter.apply {
+            showCheckBoxes = show
+            if (!show) uncheckAllItems()
         }
-        setAndFilterRecyclerView()
-    }
-
-    private fun setAndFilterRecyclerView() {
-        restoreFilters()
         setRecyclerView()
     }
 
     private fun setRecyclerView() {
-        binding.fileListRecycler.apply {
+        restoreFilters()
+        _binding?.fileListRecycler?.apply {
             setHasFixedSize(true)
-            gridLayoutManager = GridLayoutManager(requireContext(), 2)
-            layoutManager = gridLayoutManager
-            adapter = thumbnailFileListAdapter
+            flexLayoutManager = FlexboxLayoutManager(context).apply {
+                flexDirection = FlexDirection.ROW
+                alignItems = AlignItems.FLEX_START
+                justifyContent = JustifyContent.CENTER
+            }
+            layoutManager = flexLayoutManager
+            adapter = listAdapter
             addOnScrollListener(scrollListenerForPagination())
         }
     }
 
     private fun setObservers() {
-        with(thumbnailListFragmentViewModel) {
+        with(viewModel) {
             thumbnailListLiveData.observe(
                 viewLifecycleOwner,
                 Observer(::handleImageBytes)
@@ -194,11 +175,10 @@ class ThumbnailFileListFragment : FileListBaseFragment() {
         with(result) {
             doIfSuccess {
                 if (it.errors.isNotEmpty()) showErrorInSomeFiles(it.errors)
-                if (it.items.isNotEmpty()) fillAdapter(it.items)
-                else showEmptyListMessage(
-                    binding.fileListRecycler,
-                    binding.noFilesTextView
-                )
+                if (it.items.isNotEmpty()) {
+                    showFileListRecycler(binding.fileListRecycler, binding.noFilesTextView)
+                    fillAdapter(it.items)
+                } else showEmptyListMessage(binding.fileListRecycler, binding.noFilesTextView)
             }
             doIfError {
                 binding.fileListLayout.showErrorSnackBar(
@@ -207,7 +187,7 @@ class ThumbnailFileListFragment : FileListBaseFragment() {
                 ) {
                     context?.verifySessionBeforeAction {
                         showLoadingDialog()
-                        thumbnailListFragmentViewModel.getSnapshotList()
+                        viewModel.getSnapshotList()
                     }
                 }
             }
@@ -221,7 +201,7 @@ class ThumbnailFileListFragment : FileListBaseFragment() {
         ) {
             context?.verifySessionBeforeAction {
                 showLoadingDialog()
-                thumbnailListFragmentViewModel.getSnapshotList()
+                viewModel.getSnapshotList()
             }
         }
         showFailedFoldersInLog(errors)
@@ -247,7 +227,7 @@ class ThumbnailFileListFragment : FileListBaseFragment() {
             )
             val domainInformationImage =
                 DomainInformationImage(cameraConnectFile, null, false, PATH_ERROR_IN_PHOTO)
-            thumbnailFileListAdapter?.addItemToList(domainInformationImage)
+            listAdapter.addItemToList(domainInformationImage)
             isLoading = false
             loadNewImage()
         }
@@ -266,28 +246,27 @@ class ThumbnailFileListFragment : FileListBaseFragment() {
             )
         }
 
-        val isImageInAdapter = thumbnailFileListAdapter?.isImageInAdapter(image)
-        if (isImageInAdapter != null && isImageInAdapter) {
-            image.isSelected =
-                FilesAssociatedByUser.isImageAssociated(image.domainCameraFile.name)
-            thumbnailFileListAdapter?.addItemToList(image)
+        val isImageInAdapter = listAdapter.isImageInAdapter(image)
+        if (isImageInAdapter) {
+            image.isSelected = FilesAssociatedByUser.isImageAssociated(image.domainCameraFile.name)
+            listAdapter.addItemToList(image)
             isLoading = false
             loadNewImage()
         }
     }
 
     private fun checkLastItemStatusIsSavedWhenSwitchingLists(domainCameraFile: DomainCameraFile) =
-        fileListBackup.last().domainCameraFile.name == domainCameraFile.name && fileListBackup.size != thumbnailFileListAdapter?.fileList?.size
+        listBackup.last().domainCameraFile.name == domainCameraFile.name && listBackup.size != listAdapter.fileList.size
 
     private fun scrollListenerForPagination() = object : RecyclerView.OnScrollListener() {
         override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
             super.onScrollStateChanged(recyclerView, newState)
             val visibleItemCount = recyclerView.childCount
             val firstVisibleItemPosition =
-                (recyclerView.layoutManager as GridLayoutManager).findFirstVisibleItemPosition()
+                (recyclerView.layoutManager as FlexboxLayoutManager).findFirstVisibleItemPosition()
             if (!isLoading && !isLastPage()) {
-                thumbnailFileListAdapter?.itemWithImagesLoaded()?.size.let { itemWithImagesLoaded ->
-                    val items = itemWithImagesLoaded ?: 0
+                listAdapter.itemWithImagesLoaded().size.let { itemWithImagesLoaded ->
+                    val items = itemWithImagesLoaded
                     if (visibleItemCount + firstVisibleItemPosition >= items && firstVisibleItemPosition >= 0) {
                         loadNewImage()
                     }
@@ -299,8 +278,8 @@ class ThumbnailFileListFragment : FileListBaseFragment() {
     private fun getVisibleSubListToLoad(): List<DomainInformationImage> {
         var subList: List<DomainInformationImage>? = null
 
-        thumbnailFileListAdapter?.fileList?.let {
-            val lastPosition = gridLayoutManager.findLastVisibleItemPosition() + 1
+        listAdapter.fileList.let {
+            val lastPosition = flexLayoutManager.findLastVisibleItemPosition() + 1
             val lastPositionToFilter = min(lastPosition, it.size)
             subList = it.subList(0, lastPositionToFilter).filter { image ->
                 image.internalPath == null
@@ -331,7 +310,7 @@ class ThumbnailFileListFragment : FileListBaseFragment() {
                     DomainInformationImage(it, null, false, file.absolutePath)
 
                 if (checkIfFileExist(file.absolutePath)) {
-                    thumbnailFileListAdapter?.addItemToList(domainImage)
+                    listAdapter.addItemToList(domainImage)
                     isLoading = false
                     loadNewImage()
                     return
@@ -339,13 +318,13 @@ class ThumbnailFileListFragment : FileListBaseFragment() {
             }
 
             currentImageLoading = it
-            thumbnailListFragmentViewModel.getImageBytes(it)
+            viewModel.getImageBytes(it)
         } ?: run {
             val cameraConnectFile = subList.firstOrNull()
             cameraConnectFile?.let {
                 val domainImage =
                     DomainInformationImage(it.domainCameraFile, null, false, PATH_ERROR_IN_PHOTO)
-                thumbnailFileListAdapter?.addItemToList(domainImage)
+                listAdapter.addItemToList(domainImage)
                 isLoading = false
                 loadNewImage()
             }
@@ -356,11 +335,6 @@ class ThumbnailFileListFragment : FileListBaseFragment() {
         CameraInfo.onReadyToGetNotifications?.invoke()
     }
 
-    override fun onPause() {
-        super.onPause()
-        cleanFileList()
-    }
-
     override fun onDestroy() {
         super.onDestroy()
         _binding = null
@@ -368,8 +342,7 @@ class ThumbnailFileListFragment : FileListBaseFragment() {
 
     private fun checkIfFileExist(path: String) = File(path).exists()
 
-    private fun isLastPage(): Boolean =
-        thumbnailFileListAdapter?.getItemsWithImageToLoading()?.isEmpty() ?: true
+    private fun isLastPage(): Boolean = listAdapter.getItemsWithImageToLoading().isEmpty()
 
     companion object {
         const val PATH_ERROR_IN_PHOTO = "errorPath"

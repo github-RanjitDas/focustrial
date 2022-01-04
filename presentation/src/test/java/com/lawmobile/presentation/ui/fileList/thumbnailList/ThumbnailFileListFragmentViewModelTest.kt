@@ -25,8 +25,8 @@ import org.junit.jupiter.api.extension.ExtendWith
 internal class ThumbnailFileListFragmentViewModelTest {
 
     private val thumbnailListUseCase: ThumbnailListUseCase = mockk()
-    private val thumbnailListFragmentViewModel: ThumbnailListFragmentViewModel by lazy {
-        ThumbnailListFragmentViewModel(thumbnailListUseCase)
+    private val thumbnailListViewModel: ThumbnailListViewModel by lazy {
+        ThumbnailListViewModel(thumbnailListUseCase)
     }
 
     @ExperimentalCoroutinesApi
@@ -44,10 +44,10 @@ internal class ThumbnailFileListFragmentViewModelTest {
         coEvery { thumbnailListUseCase.getImageBytes(any()) } returns result
 
         runBlocking {
-            thumbnailListFragmentViewModel.getImageBytes(domainCameraFile)
+            thumbnailListViewModel.getImageBytes(domainCameraFile)
             Assert.assertEquals(
                 result,
-                thumbnailListFragmentViewModel.thumbnailListLiveData.value?.getContent()
+                thumbnailListViewModel.thumbnailListLiveData.value?.getContent()
             )
         }
 
@@ -63,8 +63,8 @@ internal class ThumbnailFileListFragmentViewModelTest {
             Result.Success(mockk())
 
         runBlocking {
-            thumbnailListFragmentViewModel.getImageBytes(domainCameraFile)
-            Assert.assertTrue(thumbnailListFragmentViewModel.thumbnailListLiveData.value?.getContent() is Result.Success)
+            thumbnailListViewModel.getImageBytes(domainCameraFile)
+            Assert.assertTrue(thumbnailListViewModel.thumbnailListLiveData.value?.getContent() is Result.Success)
         }
     }
 
@@ -76,16 +76,16 @@ internal class ThumbnailFileListFragmentViewModelTest {
         coEvery { thumbnailListUseCase.getImageBytes(any()) } returns Result.Error(mockk())
 
         runBlocking {
-            thumbnailListFragmentViewModel.getImageBytes(domainCameraFile)
+            thumbnailListViewModel.getImageBytes(domainCameraFile)
             delay(2000)
-            Assert.assertTrue(thumbnailListFragmentViewModel.thumbnailListLiveData.value?.getContent() is Result.Error)
+            Assert.assertTrue(thumbnailListViewModel.thumbnailListLiveData.value?.getContent() is Result.Error)
         }
     }
 
     @Test
     fun testGetImageListFlow() {
         coEvery { thumbnailListUseCase.getSnapshotList() } returns Result.Success(mockk())
-        runBlocking { thumbnailListFragmentViewModel.getSnapshotList() }
+        runBlocking { thumbnailListViewModel.getSnapshotList() }
         coVerify { thumbnailListUseCase.getSnapshotList() }
     }
 
@@ -93,8 +93,8 @@ internal class ThumbnailFileListFragmentViewModelTest {
     fun testGetImageListSuccess() {
         coEvery { thumbnailListUseCase.getSnapshotList() } returns Result.Success(mockk(relaxed = true))
         runBlocking {
-            thumbnailListFragmentViewModel.getSnapshotList()
-            thumbnailListFragmentViewModel.imageListLiveData.value as Result.Success
+            thumbnailListViewModel.getSnapshotList()
+            thumbnailListViewModel.imageListLiveData.value as Result.Success
         }
     }
 
@@ -102,8 +102,8 @@ internal class ThumbnailFileListFragmentViewModelTest {
     fun testGetImageListError() {
         coEvery { thumbnailListUseCase.getSnapshotList() } returns Result.Error(Exception(""))
         runBlocking {
-            thumbnailListFragmentViewModel.getSnapshotList()
-            val result = thumbnailListFragmentViewModel.imageListLiveData.value
+            thumbnailListViewModel.getSnapshotList()
+            val result = thumbnailListViewModel.imageListLiveData.value
             Assert.assertTrue(result is Result.Error)
         }
     }

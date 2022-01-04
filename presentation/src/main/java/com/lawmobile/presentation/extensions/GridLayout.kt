@@ -4,7 +4,8 @@ import android.widget.GridLayout
 import com.lawmobile.presentation.widgets.CustomFilterDialog
 
 fun GridLayout.createFilterDialog(
-    onApplyClick: (Boolean) -> Unit
+    onApplyClick: (Boolean) -> Unit,
+    onCloseClick: () -> Unit
 ): CustomFilterDialog {
-    return CustomFilterDialog(this, onApplyClick)
+    return CustomFilterDialog(this, onApplyClick, onCloseClick)
 }
