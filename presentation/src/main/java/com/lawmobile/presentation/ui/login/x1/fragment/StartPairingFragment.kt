@@ -27,14 +27,15 @@ import com.lawmobile.presentation.security.IIsolatedService
 import com.lawmobile.presentation.security.IsolatedService
 import com.lawmobile.presentation.ui.base.BaseActivity
 import com.lawmobile.presentation.ui.base.BaseFragment
-import com.lawmobile.presentation.ui.login.model.LoginState
+import com.lawmobile.presentation.ui.login.shared.Instructions
 import com.lawmobile.presentation.ui.login.shared.PairingViewModel
+import com.lawmobile.presentation.ui.login.shared.StartPairing
 import com.lawmobile.presentation.ui.login.x1.LoginX1ViewModel
 import com.safefleet.mobile.kotlin_commons.extensions.doIfError
 import com.safefleet.mobile.kotlin_commons.extensions.doIfSuccess
 import com.safefleet.mobile.kotlin_commons.helpers.Result
 
-class StartPairingFragment : BaseFragment() {
+class StartPairingFragment : BaseFragment(), Instructions, StartPairing {
 
     private var _binding: FragmentStartPairingBinding? = null
     private val binding get() = _binding!!
@@ -44,6 +45,9 @@ class StartPairingFragment : BaseFragment() {
 
     private lateinit var serviceBinder: IIsolatedService
     private var isServiceBounded = false
+
+    override var onInstructionsClick: (() -> Unit)? = null
+    override var onStartPairingClick: (() -> Unit)? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -78,7 +82,7 @@ class StartPairingFragment : BaseFragment() {
 
     private fun FragmentStartPairingBinding.buttonInstructionsListener() {
         buttonInstructionsToLinkCamera.setOnClickListener {
-            activityViewModel.isInstructionsOpen = true
+            onInstructionsClick?.invoke()
         }
     }
 
@@ -128,7 +132,7 @@ class StartPairingFragment : BaseFragment() {
             pairingViewModel.isConnectionPossible()
             return
         }
-        activityViewModel.setLoginState(LoginState.PairingResult)
+        onStartPairingClick?.invoke()
     }
 
     private fun showAlertToNavigateToPermissions() {
@@ -161,7 +165,7 @@ class StartPairingFragment : BaseFragment() {
 
     private fun manageIsPossibleConnection(result: Result<Unit>) {
         with(result) {
-            doIfSuccess { activityViewModel.setLoginState(LoginState.PairingResult) }
+            doIfSuccess { onStartPairingClick?.invoke() }
             doIfError {
                 binding.layoutStartPairing.showErrorSnackBar(getString(R.string.verify_camera_wifi))
             }

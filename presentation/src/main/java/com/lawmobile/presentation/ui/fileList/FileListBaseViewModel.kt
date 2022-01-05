@@ -9,6 +9,7 @@ import com.safefleet.mobile.kotlin_commons.helpers.Result
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -18,7 +19,7 @@ class FileListBaseViewModel @Inject constructor(
     private val fileListUseCase: FileListUseCase
 ) : BaseViewModel() {
 
-    val associationResult: MutableSharedFlow<Result<Unit>> get() = _associationResult
+    val associationResult: SharedFlow<Result<Unit>> get() = _associationResult
     private val _associationResult by lazy { MutableSharedFlow<Result<Unit>>() }
 
     val fileListState: StateFlow<FileListState?> get() = _fileListState
@@ -30,7 +31,7 @@ class FileListBaseViewModel @Inject constructor(
 
     var filesToAssociate: List<DomainCameraFile>? = null
 
-    fun setFileListState(state: FileListState) {
+    fun setFileListState(state: FileListState?) {
         _fileListState.value = state
     }
 

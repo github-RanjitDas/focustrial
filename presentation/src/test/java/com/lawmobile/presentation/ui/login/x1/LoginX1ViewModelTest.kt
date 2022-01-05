@@ -41,14 +41,14 @@ internal class LoginX1ViewModelTest {
 
     @Test
     fun getOfficerPasswordFromCameraWhenNull() {
-        Assert.assertEquals("", viewModel.getOfficerPasswordFromCamera())
+        Assert.assertEquals("", viewModel.officerPasswordFromCamera)
     }
 
     @Test
     fun setOfficerPasswordFromCamera() {
         val password = "123"
-        viewModel.setOfficerPasswordFromCamera(password)
-        Assert.assertEquals(password, viewModel.getOfficerPasswordFromCamera())
+        viewModel.officerPasswordFromCamera = password
+        Assert.assertEquals(password, viewModel.officerPasswordFromCamera)
     }
 
     @Test

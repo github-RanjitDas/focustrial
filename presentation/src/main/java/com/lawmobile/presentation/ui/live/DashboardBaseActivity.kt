@@ -8,6 +8,7 @@ import androidx.annotation.IdRes
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.extensions.attachFragment
 import com.lawmobile.presentation.extensions.runWithDelay
+import com.lawmobile.presentation.extensions.toggleDeXFullScreen
 import com.lawmobile.presentation.ui.base.BaseActivity
 import com.lawmobile.presentation.ui.base.BaseFragment
 import com.lawmobile.presentation.ui.base.appBar.x2.AppBarX2Fragment
@@ -15,6 +16,7 @@ import com.lawmobile.presentation.ui.live.controls.ControlsBaseFragment
 import com.lawmobile.presentation.ui.live.controls.x1.ControlsX1Fragment
 import com.lawmobile.presentation.ui.live.model.DashboardState
 import com.lawmobile.presentation.ui.live.navigation.x1.NavigationX1Fragment
+import com.lawmobile.presentation.ui.live.shared.LiveStream
 import com.lawmobile.presentation.ui.live.statusBar.StatusBarBaseFragment
 import com.lawmobile.presentation.ui.live.stream.LiveStreamFragment
 import com.lawmobile.presentation.utils.EspressoIdlingResource
@@ -23,13 +25,19 @@ import kotlinx.coroutines.Dispatchers
 abstract class DashboardBaseActivity : BaseActivity() {
     private val viewModel: DashboardBaseViewModel by viewModels()
 
-    private val state: DashboardState get() = viewModel.getDashboardState()
+    private var state: DashboardState
+        get() = viewModel.getDashboardState()
+        set(value) {
+            viewModel.setDashboardState(value)
+        }
 
     lateinit var appBarFragment: BaseFragment
     lateinit var statusBarFragment: StatusBarBaseFragment
     private lateinit var liveStreamFragment: LiveStreamFragment
     lateinit var controlsFragment: ControlsBaseFragment
     lateinit var navigationFragment: BaseFragment
+
+    private lateinit var liveStream: LiveStream
 
     private var isFirstOpen = true
 
@@ -150,11 +158,23 @@ abstract class DashboardBaseActivity : BaseActivity() {
 
     private fun setStreamFragment(@IdRes containerId: Int) {
         liveStreamFragment = LiveStreamFragment()
+        liveStream = liveStreamFragment
+        setFullScreenListener()
         supportFragmentManager.attachFragment(
             containerId = containerId,
             fragment = liveStreamFragment,
             tag = LiveStreamFragment.TAG
         )
+    }
+
+    private fun setFullScreenListener() {
+        liveStream.onFullScreenClick = {
+            toggleDeXFullScreen()
+            with(state) {
+                onDefault { state = DashboardState.Fullscreen }
+                onFullscreen { state = DashboardState.Default }
+            }
+        }
     }
 
     open fun setStatusBarFragment() {

@@ -12,20 +12,27 @@ import com.lawmobile.presentation.extensions.showErrorSnackBar
 import com.lawmobile.presentation.extensions.verifyForAskingPermission
 import com.lawmobile.presentation.extensions.verifySessionBeforeAction
 import com.lawmobile.presentation.ui.base.BaseActivity
+import com.lawmobile.presentation.ui.login.model.LoginState
+import com.lawmobile.presentation.ui.login.shared.Instructions
+import com.lawmobile.presentation.ui.login.shared.OfficerPassword
 import com.lawmobile.presentation.ui.login.shared.PairingResultFragment
+import com.lawmobile.presentation.ui.login.shared.StartPairing
 import com.safefleet.mobile.android_commons.extensions.hideKeyboard
 
 abstract class LoginBaseActivity : BaseActivity() {
 
     lateinit var binding: ActivityLoginBinding
 
+    protected abstract var state: LoginState
     protected abstract var isInstructionsOpen: Boolean
 
     private val sheetBehavior: BottomSheetBehavior<CardView> by lazy {
-        BottomSheetBehavior.from(
-            binding.bottomSheetInstructions.bottomSheetInstructions
-        )
+        BottomSheetBehavior.from(binding.bottomSheetInstructions.bottomSheetInstructions)
     }
+
+    protected abstract val instructions: Instructions
+    protected abstract val startPairing: StartPairing
+    protected abstract val officerPassword: OfficerPassword
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,13 +42,25 @@ abstract class LoginBaseActivity : BaseActivity() {
         configureBottomSheet()
     }
 
-    private fun configureBottomSheet() {
-        sheetBehavior.isDraggable = false
-        binding.bottomSheetInstructions.buttonDismissInstructions.setOnClickListener {
-            closeInstructions()
+    protected fun setInstructionsListener() {
+        instructions.onInstructionsClick = {
+            isInstructionsOpen = true
         }
-        binding.bottomSheetInstructions.buttonCloseInstructions.setOnClickListener {
-            closeInstructions()
+    }
+
+    protected fun setStartPairingListener() {
+        startPairing.onStartPairingClick = {
+            state = LoginState.PairingResult
+        }
+    }
+
+    private fun configureBottomSheet() = with(binding) {
+        sheetBehavior.isDraggable = false
+        bottomSheetInstructions.buttonDismissInstructions.setOnClickListener {
+            isInstructionsOpen = false
+        }
+        bottomSheetInstructions.buttonCloseInstructions.setOnClickListener {
+            isInstructionsOpen = false
         }
     }
 
@@ -76,8 +95,6 @@ abstract class LoginBaseActivity : BaseActivity() {
             verifySessionBeforeAction { getUserFromCamera() }
         }
     }
-
-    abstract val closeInstructions: () -> Unit
 
     abstract fun getUserFromCamera()
 

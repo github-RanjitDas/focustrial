@@ -1,6 +1,5 @@
 package com.lawmobile.presentation.ui.live.stream
 
-import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,18 +10,16 @@ import com.lawmobile.presentation.R
 import com.lawmobile.presentation.databinding.FragmentLiveStreamBinding
 import com.lawmobile.presentation.extensions.setOnClickListenerCheckConnection
 import com.lawmobile.presentation.ui.base.BaseFragment
-import com.lawmobile.presentation.ui.live.DashboardBaseViewModel
-import com.lawmobile.presentation.ui.live.model.DashboardState
+import com.lawmobile.presentation.ui.live.shared.LiveStream
 
-class LiveStreamFragment : BaseFragment() {
+class LiveStreamFragment : BaseFragment(), LiveStream {
 
     private val viewModel: LiveStreamViewModel by activityViewModels()
-    private val activityViewModel: DashboardBaseViewModel by activityViewModels()
-
-    private val dashboardState: DashboardState get() = activityViewModel.getDashboardState()
 
     private val binding: FragmentLiveStreamBinding get() = _binding!!
     private var _binding: FragmentLiveStreamBinding? = null
+
+    override var onFullScreenClick: (() -> Unit)? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -70,34 +67,7 @@ class LiveStreamFragment : BaseFragment() {
 
     private fun setListeners() {
         binding.toggleFullScreenLiveView.setOnClickListenerCheckConnection {
-            changeOrientationLive()
-        }
-    }
-
-    private fun changeOrientationLive() {
-        if (!isDeXEnabled()) {
-            activity?.requestedOrientation =
-                if (isInPortraitMode()) ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
-                else ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-        }
-        with(dashboardState) {
-            onDefault {
-                activityViewModel.setDashboardState(DashboardState.Fullscreen)
-            }
-            onFullscreen {
-                activityViewModel.setDashboardState(DashboardState.Default)
-            }
-        }
-    }
-
-    private fun isDeXEnabled(): Boolean {
-        val config = resources.configuration
-        return try {
-            val configClass = config::class.java
-            configClass.getField(DESKTOP_MODE_ENABLED).getInt(configClass) ==
-                configClass.getField(SEM_DESKTOP_MODE_ENABLED).getInt(config)
-        } catch (e: Exception) {
-            false
+            onFullScreenClick?.invoke()
         }
     }
 
@@ -112,8 +82,6 @@ class LiveStreamFragment : BaseFragment() {
     }
 
     companion object {
-        private const val DESKTOP_MODE_ENABLED = "SEM_DESKTOP_MODE_ENABLED"
-        private const val SEM_DESKTOP_MODE_ENABLED = "semDesktopModeEnabled"
         val TAG: String = LiveStreamFragment::class.java.simpleName
     }
 }
