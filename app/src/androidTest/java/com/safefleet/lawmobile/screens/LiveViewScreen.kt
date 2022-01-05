@@ -139,4 +139,9 @@ open class LiveViewScreen : BaseScreen() {
             assertContains(R.id.textViewStorageLevels, "$percent% available")
         }
     }
+
+    fun isLowSignalPopUpDisplayed() {
+        assertDisplayed(R.string.low_signal_title)
+        assertDisplayed(R.string.low_signal_message)
+    }
 }

@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.flow
 class WifiHelperMock : WifiHelper {
 
     override val isWifiSignalLow: Flow<Boolean>
-        get() = flow { emit(false) }
+        get() = flow { emit(MockUtils.wifiSignalLow) }
 
     override fun isWifiEnable(): Boolean {
         return if (MockUtils.wifiEnabled) {
