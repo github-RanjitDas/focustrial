@@ -300,7 +300,9 @@ class ThumbnailFileListFragment : FileListBaseFragment() {
     private fun uploadImageInAdapter(subList: List<DomainInformationImage>) {
         isLoading = true
         val imageToLoad =
-            subList.firstOrNull { !imagesFailedToLoad.contains(it.domainCameraFile.name) }?.domainCameraFile
+            subList.firstOrNull {
+                !imagesFailedToLoad.contains(it.domainCameraFile.name)
+            }?.domainCameraFile
 
         imageToLoad?.let {
             val file = ImageFilesPathManager.getImageIfExist(it.name)
@@ -338,6 +340,11 @@ class ThumbnailFileListFragment : FileListBaseFragment() {
     override fun onDestroy() {
         super.onDestroy()
         _binding = null
+    }
+
+    override fun onStop() {
+        super.onStop()
+        viewModel.cancelGetImageBytes()
     }
 
     private fun checkIfFileExist(path: String) = File(path).exists()

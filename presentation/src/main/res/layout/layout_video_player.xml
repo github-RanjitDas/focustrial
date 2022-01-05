@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/layoutVideoPlayback"
+    android:background="@color/white">
+
+    <SurfaceView
+        android:id="@+id/surfaceVideoPlayback"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/no_dp"
+        app:layout_constraintBottom_toTopOf="@id/layoutPlaybackControls"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layoutPlaybackControls"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/black"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintVertical_bias="1.0">
+
+        <SeekBar
+            android:id="@+id/seekProgressVideo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:progressTint="@color/white"
+            android:scaleY="2"
+            android:thumb="@color/transparent"
+            app:layout_constraintTop_toTopOf="@id/layoutPlaybackControls" />
+
+        <ImageButton
+            android:id="@+id/buttonPlay"
+            style="@style/buttonPlayBackVideo"
+            android:layout_marginStart="@dimen/video_playback_button_play_margin_sides"
+            android:contentDescription="@string/play_pause_playback_button_description"
+            android:src="@drawable/ic_media_pause"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/seekProgressVideo" />
+
+        <TextView
+            android:id="@+id/textViewPlayerTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/video_playback_text_view_player_time_margin_sides"
+            android:fontFamily="@font/jura_medium"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_p2"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/buttonPlay"
+            app:layout_constraintTop_toBottomOf="@id/seekProgressVideo"
+            tools:text="@string/video_default_time" />
+
+        <TextView
+            android:id="@+id/textViewDivider"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/video_playback_text_view_player_length_margin_sides"
+            android:fontFamily="@font/jura_medium"
+            android:text="@string/time_divider"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_p2"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/textViewPlayerTime"
+            app:layout_constraintTop_toBottomOf="@id/seekProgressVideo" />
+
+        <ImageButton
+            android:id="@+id/buttonFullScreen"
+            style="@style/buttonPlayBackVideo"
+            android:layout_marginEnd="@dimen/video_playback_button_full_screen_margin_sides"
+            android:contentDescription="@string/image_description_full_screen_size"
+            android:src="@drawable/ic_media_fullscreen_shrink"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/seekProgressVideo" />
+
+        <ImageButton
+            android:id="@+id/buttonAspect"
+            style="@style/buttonPlayBackVideo"
+            android:layout_marginEnd="@dimen/video_playback_button_aspect_margin_sides"
+            android:contentDescription="@string/aspect_video_playback_description"
+            android:src="@drawable/ic_media_aspect"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/buttonFullScreen"
+            app:layout_constraintTop_toBottomOf="@id/seekProgressVideo" />
+
+        <TextView
+            android:id="@+id/textViewPlayerDuration"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/video_playback_text_view_player_length_margin_sides"
+            android:fontFamily="@font/jura_medium"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_p2"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/textViewDivider"
+            app:layout_constraintTop_toBottomOf="@id/seekProgressVideo"
+            tools:text="@string/video_default_time" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

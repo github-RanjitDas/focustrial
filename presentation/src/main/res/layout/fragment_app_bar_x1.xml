@@ -23,7 +23,7 @@
             android:id="@+id/textViewTitle"
             android:layout_width="@dimen/no_dp"
             android:layout_height="wrap_content"
-            tools:text="Snapshots"
+            tools:text="Title"
             android:textColor="@color/colorWhite"
             android:textSize="@dimen/file_list_title_size"
             android:paddingHorizontal="@dimen/padding_10dp"

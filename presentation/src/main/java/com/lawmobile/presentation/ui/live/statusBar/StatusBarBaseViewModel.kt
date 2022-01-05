@@ -58,9 +58,7 @@ class StatusBarBaseViewModel @Inject constructor(
         viewModelScope.launch {
             val batteryLevel: Result<Int> =
                 getResultWithAttempts(RETRY_ATTEMPTS) { liveStreamingUseCase.getBatteryLevel() }
-            _batteryLevel.postValue(
-                Event(batteryLevel)
-            )
+            _batteryLevel.postValue(Event(batteryLevel))
         }
     }
 

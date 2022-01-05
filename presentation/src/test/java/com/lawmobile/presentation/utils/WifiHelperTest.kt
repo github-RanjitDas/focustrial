@@ -116,7 +116,8 @@ class WifiHelperTest {
         every { getSDKVersion() } returns Build.VERSION_CODES.R
         every { CameraInfo.isOfficerLogged } returns true
         every { wifiManager.connectionInfo.rssi } returns 4
-        every { wifiManager.calculateSignalLevel(any()) } returns 4
+        every { wifiManager.calculateSignalLevel(any()) } returns 0 andThen 4
+        Assert.assertTrue(wifiHelper.isWifiSignalLow.first())
         Assert.assertFalse(wifiHelper.isWifiSignalLow.first())
         verify { wifiManager.calculateSignalLevel(any()) }
         verify { wifiManager.connectionInfo.rssi }

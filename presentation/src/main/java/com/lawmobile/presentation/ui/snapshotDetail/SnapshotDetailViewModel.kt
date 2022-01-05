@@ -1,17 +1,19 @@
 package com.lawmobile.presentation.ui.snapshotDetail
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.viewModelScope
 import com.lawmobile.domain.entities.DomainCameraFile
 import com.lawmobile.domain.entities.DomainInformationImageMetadata
 import com.lawmobile.domain.usecase.snapshotDetail.SnapshotDetailUseCase
-import com.lawmobile.presentation.extensions.postEventValueWithTimeout
+import com.lawmobile.presentation.extensions.emitValueWithTimeout
 import com.lawmobile.presentation.ui.base.BaseViewModel
-import com.safefleet.mobile.kotlin_commons.helpers.Event
+import com.lawmobile.presentation.ui.snapshotDetail.model.SnapshotDetailState
 import com.safefleet.mobile.kotlin_commons.helpers.Result
 import com.safefleet.mobile.kotlin_commons.helpers.getResultWithAttempts
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -20,44 +22,50 @@ class SnapshotDetailViewModel @Inject constructor(
     private val snapshotDetailUseCase: SnapshotDetailUseCase
 ) : BaseViewModel() {
 
-    private val imageBytesMediator: MediatorLiveData<Event<Result<ByteArray>>> = MediatorLiveData()
-    val imageBytesLiveData: LiveData<Event<Result<ByteArray>>> get() = imageBytesMediator
+    var isAssociateDialogOpen = false
 
-    private val savePartnerIdMediator: MediatorLiveData<Event<Result<Unit>>> = MediatorLiveData()
-    val savePartnerIdLiveData: LiveData<Event<Result<Unit>>> get() = savePartnerIdMediator
+    private val _state = MutableStateFlow<SnapshotDetailState>(SnapshotDetailState.Default)
+    val state = _state.asStateFlow()
 
-    private val informationVideoMediator: MediatorLiveData<Event<Result<DomainInformationImageMetadata>>> =
-        MediatorLiveData()
-    val informationImageLiveData: LiveData<Event<Result<DomainInformationImageMetadata>>> get() = informationVideoMediator
+    private val _imageBytes = MutableSharedFlow<Result<ByteArray>>()
+    val imageBytes = _imageBytes.asSharedFlow()
+
+    private val _associationResult = MutableSharedFlow<Result<Unit>>()
+    val associationResult = _associationResult.asSharedFlow()
+
+    private val _imageInformation = MutableSharedFlow<Result<DomainInformationImageMetadata>>()
+    val imageInformation = _imageInformation.asSharedFlow()
+
+    fun getState() = _state.value
+
+    fun setState(state: SnapshotDetailState) {
+        _state.value = state
+    }
 
     fun getImageBytes(domainCameraFile: DomainCameraFile) {
         viewModelScope.launch {
-            imageBytesMediator.postEventValueWithTimeout(getLoadingTimeOut()) {
-                Event(
-                    getResultWithAttempts(ATTEMPTS_TO_GET_BYTES) {
-                        snapshotDetailUseCase.getImageBytes(domainCameraFile)
-                    }
-                )
+            _imageBytes.emitValueWithTimeout(getLoadingTimeOut()) {
+                getResultWithAttempts(ATTEMPTS_TO_GET_BYTES) {
+                    snapshotDetailUseCase.getImageBytes(domainCameraFile)
+                }
             }
         }
     }
 
     fun savePartnerId(domainCameraFile: DomainCameraFile, partnerId: String) {
         viewModelScope.launch {
-            savePartnerIdMediator.postEventValueWithTimeout(getLoadingTimeOut()) {
-                Event(snapshotDetailUseCase.savePartnerIdSnapshot(domainCameraFile, partnerId))
+            _associationResult.emitValueWithTimeout(getLoadingTimeOut()) {
+                snapshotDetailUseCase.savePartnerIdSnapshot(domainCameraFile, partnerId)
             }
         }
     }
 
-    fun getInformationImageMetadata(domainCameraFile: DomainCameraFile) {
+    fun getImageInformation(domainCameraFile: DomainCameraFile) {
         viewModelScope.launch {
-            informationVideoMediator.postEventValueWithTimeout(getLoadingTimeOut()) {
-                Event(
-                    getResultWithAttempts(ATTEMPTS_TO_GET_INFORMATION, DELAY_BETWEEN_ATTEMPTS) {
-                        snapshotDetailUseCase.getInformationOfPhoto(domainCameraFile)
-                    }
-                )
+            _imageInformation.emitValueWithTimeout(getLoadingTimeOut()) {
+                getResultWithAttempts(ATTEMPTS_TO_GET_INFORMATION, DELAY_BETWEEN_ATTEMPTS) {
+                    snapshotDetailUseCase.getInformationOfPhoto(domainCameraFile)
+                }
             }
         }
     }

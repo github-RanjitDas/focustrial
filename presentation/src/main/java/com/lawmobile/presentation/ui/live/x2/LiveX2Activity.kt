@@ -53,13 +53,11 @@ class LiveX2Activity : DashboardBaseActivity() {
         binding.appBarContainer.startAnimation(appBarAnimation)
     }
 
-    override fun animateContainer() {
-        with(binding) {
-            statusBarContainer.startAnimation(containerAnimation)
-            streamContainer.startAnimation(containerAnimation)
-            controlsContainer.startAnimation(containerAnimation)
-            navigationContainer.startAnimation(containerAnimation)
-        }
+    override fun animateContainer() = with(binding) {
+        statusBarContainer.startAnimation(containerAnimation)
+        streamContainer.startAnimation(containerAnimation)
+        controlsContainer.startAnimation(containerAnimation)
+        navigationContainer.startAnimation(containerAnimation)
     }
 
     override fun setListeners() {

@@ -1,7 +1,10 @@
 package com.lawmobile.presentation.extensions
 
 import android.annotation.SuppressLint
+import android.app.Activity
+import android.content.pm.ActivityInfo
 import android.content.pm.PackageManager
+import android.content.res.Configuration
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
@@ -55,10 +58,37 @@ fun BaseActivity.runWithDelay(
     }
 }
 
-fun <T> BaseActivity.collectFlow(flow: Flow<T>, callback: (T) -> Unit) {
+fun <T> BaseActivity.activityCollect(flow: Flow<T>, callback: (T) -> Unit) {
     lifecycleScope.launch {
         repeatOnLifecycle(Lifecycle.State.STARTED) {
             flow.collect { callback(it) }
         }
     }
 }
+
+fun Activity.isDeXEnabled(): Boolean {
+    val config = resources.configuration
+    return try {
+        val configClass = config::class.java
+        configClass.getField(DESKTOP_MODE_ENABLED).getInt(configClass) ==
+            configClass.getField(SEM_DESKTOP_MODE_ENABLED).getInt(config)
+    } catch (e: Exception) {
+        false
+    }
+}
+
+fun Activity.changeOrientation() {
+    requestedOrientation =
+        if (isInPortraitMode()) ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+        else ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+}
+
+fun Activity.isInPortraitMode(): Boolean =
+    resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT
+
+fun Activity.toggleDeXFullScreen() {
+    if (!isDeXEnabled()) changeOrientation()
+}
+
+private const val DESKTOP_MODE_ENABLED = "SEM_DESKTOP_MODE_ENABLED"
+private const val SEM_DESKTOP_MODE_ENABLED = "semDesktopModeEnabled"

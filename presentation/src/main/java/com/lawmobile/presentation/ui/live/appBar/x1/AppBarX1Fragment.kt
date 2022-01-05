@@ -46,7 +46,7 @@ class AppBarX1Fragment : BaseFragment() {
 
     private fun setListeners() {
         binding.buttonLogout.setOnClickListenerCheckConnection {
-            requireContext().createAlertConfirmAppExit(::logout)
+            context?.createAlertConfirmAppExit(::logout)
         }
     }
 
@@ -62,6 +62,6 @@ class AppBarX1Fragment : BaseFragment() {
     }
 
     companion object {
-        val TAG = AppBarX1Fragment::class.java.simpleName
+        val TAG: String = AppBarX1Fragment::class.java.simpleName
     }
 }

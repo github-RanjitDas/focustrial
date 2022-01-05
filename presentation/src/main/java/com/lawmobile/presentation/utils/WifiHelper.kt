@@ -12,11 +12,16 @@ import java.net.Inet4Address
 
 open class WifiHelper(private val wifiManager: WifiManager) {
 
+    private var isWifiSignalStateLow = false
+
     val isWifiSignalLow = flow {
         while (CameraInfo.isOfficerLogged) {
             delay(DELAY_ON_READING_SIGNAL)
             val isSignalLevelLow = getSignalLevel() == LOW_SIGNAL_LEVEL
-            emit(isSignalLevelLow)
+            if (isSignalLevelLow != isWifiSignalStateLow) {
+                isWifiSignalStateLow = isSignalLevelLow
+                emit(isSignalLevelLow)
+            }
         }
     }
 

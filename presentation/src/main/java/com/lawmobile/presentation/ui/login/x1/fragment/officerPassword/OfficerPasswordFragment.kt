@@ -20,21 +20,22 @@ import com.lawmobile.presentation.ui.base.BaseActivity
 import com.lawmobile.presentation.ui.base.BaseFragment
 import com.lawmobile.presentation.ui.live.x1.LiveX1Activity
 import com.lawmobile.presentation.ui.live.x2.LiveX2Activity
-import com.lawmobile.presentation.ui.login.x1.LoginX1ViewModel
+import com.lawmobile.presentation.ui.login.shared.OfficerPassword
 import com.lawmobile.presentation.utils.EncodePassword
 import com.lawmobile.presentation.utils.EspressoIdlingResource
 import com.safefleet.mobile.android_commons.extensions.hideKeyboard
 
-class OfficerPasswordFragment : BaseFragment() {
+class OfficerPasswordFragment : BaseFragment(), OfficerPassword {
 
     private var _binding: FragmentOfficerPasswordBinding? = null
     private val binding get() = _binding!!
 
-    private val activityViewModel: LoginX1ViewModel by activityViewModels()
     private val viewModel: OfficerPasswordViewModel by activityViewModels()
 
-    private val officerPasswordFromCamera: String get() = activityViewModel.getOfficerPasswordFromCamera()
-    private val officerPassword: String get() = viewModel.getOfficerPassword()
+    private val officerPassword: String get() = viewModel.officerPassword
+
+    override var passwordFromCamera: String = ""
+    override var onEmptyPassword: (() -> Unit)? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -63,7 +64,7 @@ class OfficerPasswordFragment : BaseFragment() {
 
     private fun FragmentOfficerPasswordBinding.editTextOfficerPasswordListener() {
         editTextOfficerPassword.addTextChangedListener {
-            viewModel.setOfficerPassword(it.toString())
+            viewModel.officerPassword = it.toString()
         }
     }
 
@@ -76,7 +77,7 @@ class OfficerPasswordFragment : BaseFragment() {
     }
 
     private fun validateOfficerPassword() {
-        if (officerPasswordFromCamera.isEmpty()) showUserInformationError()
+        if (passwordFromCamera.isEmpty()) showUserInformationError()
         else {
             if (isCorrectPassword()) startLiveViewActivity()
             else {
@@ -103,7 +104,7 @@ class OfficerPasswordFragment : BaseFragment() {
             Snackbar.LENGTH_INDEFINITE
         ) {
             context?.verifySessionBeforeAction {
-                activityViewModel.getUserFromCamera()
+                onEmptyPassword?.invoke()
             }
         }
     }
@@ -111,7 +112,7 @@ class OfficerPasswordFragment : BaseFragment() {
     private fun isCorrectPassword(): Boolean {
         val inputPassword = binding.textInputOfficerPassword.text()
         val sha256Password = EncodePassword.encodePasswordOfficer(inputPassword)
-        return sha256Password.isNotEmpty() && sha256Password == officerPasswordFromCamera
+        return sha256Password.isNotEmpty() && sha256Password == passwordFromCamera
     }
 
     override fun onDestroy() {

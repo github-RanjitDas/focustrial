@@ -9,8 +9,8 @@ import com.google.android.material.snackbar.Snackbar
 import com.lawmobile.domain.entities.DomainCameraFile
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.databinding.ActivityFileListBinding
+import com.lawmobile.presentation.extensions.activityCollect
 import com.lawmobile.presentation.extensions.attachFragment
-import com.lawmobile.presentation.extensions.collectFlow
 import com.lawmobile.presentation.extensions.setOnClickListenerCheckConnection
 import com.lawmobile.presentation.extensions.showErrorSnackBar
 import com.lawmobile.presentation.extensions.showSuccessSnackBar
@@ -77,7 +77,9 @@ abstract class FileListBaseActivity : BaseActivity() {
         BottomSheetBehavior.from(binding.bottomSheetAssociateOfficer.bottomSheetAssociateOfficer)
     }
 
-    protected val state: FileListState? get() = viewModel.getFileListState()
+    private var state: FileListState?
+        get() = viewModel.getFileListState()
+        set(value) = viewModel.setFileListState(value)
 
     protected abstract fun attachAppBarFragment()
     protected abstract fun attachFilterSectionFragment()
@@ -118,7 +120,7 @@ abstract class FileListBaseActivity : BaseActivity() {
     private fun buttonThumbnailListListener() {
         listTypeButtons.onThumbnailsClick = {
             if (state is FileListState.Simple) {
-                viewModel.setFileListState(FileListState.Thumbnail)
+                state = FileListState.Thumbnail
                 isSelectActive = false
             }
         }
@@ -127,7 +129,7 @@ abstract class FileListBaseActivity : BaseActivity() {
     private fun buttonSimpleListListener() {
         listTypeButtons.onSimpleClick = {
             if (state is FileListState.Thumbnail) {
-                viewModel.setFileListState(FileListState.Simple)
+                state = FileListState.Simple
                 isSelectActive = false
             }
         }
@@ -156,8 +158,8 @@ abstract class FileListBaseActivity : BaseActivity() {
         setFragmentArguments()
         if (state == null) {
             when (listType) {
-                Constants.SNAPSHOT_LIST -> viewModel.setFileListState(FileListState.Thumbnail)
-                Constants.VIDEO_LIST -> viewModel.setFileListState(FileListState.Simple)
+                Constants.SNAPSHOT_LIST -> state = FileListState.Thumbnail
+                Constants.VIDEO_LIST -> state = FileListState.Simple
             }
         }
     }
@@ -179,7 +181,7 @@ abstract class FileListBaseActivity : BaseActivity() {
     }
 
     private fun FileListBaseViewModel.observeFileListState() {
-        collectFlow(fileListState) {
+        activityCollect(fileListState) {
             it?.run {
                 onSimple {
                     listTypeButtons.toggleListType(true)
@@ -231,7 +233,7 @@ abstract class FileListBaseActivity : BaseActivity() {
     }
 
     private fun observeAssociationResult() {
-        collectFlow(viewModel.associationResult) { result ->
+        activityCollect(viewModel.associationResult) { result ->
             with(result) {
                 doIfSuccess {
                     binding.root.showSuccessSnackBar(getString(R.string.file_list_associate_partner_id_success))

@@ -13,7 +13,7 @@ import com.schibsted.spain.barista.interaction.BaristaScrollInteractions.safelyS
 
 class VideoPlaybackScreen : BaseScreen() {
 
-    fun clickOnSave() = clickOn(R.id.saveButtonVideoPlayback)
+    fun clickOnSave() = clickOn(R.id.buttonSaveMetadata)
 
     fun clickOnBack() = clickOn(R.id.imageButtonBackArrow)
 
