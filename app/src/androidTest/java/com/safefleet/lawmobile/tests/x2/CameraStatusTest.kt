@@ -17,6 +17,7 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 class CameraStatusTest : EspressoBaseTest() {
     private val liveViewScreen = LiveViewScreen()
+    private val loginScreen = LoginScreen()
 
     @get:Rule
     var baristaRule = BaristaRule.create(LoginX2Activity::class.java)
@@ -25,7 +26,7 @@ class CameraStatusTest : EspressoBaseTest() {
     fun setUp() {
         mockUtils.setCameraType(CameraType.X2)
         baristaRule.launchActivity()
-        LoginScreen().loginWithoutSSO()
+        loginScreen.loginWithoutSSO()
     }
 
     /**
@@ -33,25 +34,27 @@ class CameraStatusTest : EspressoBaseTest() {
      */
     @Test
     fun verifyBatteryIndicator() {
-        mockUtils.setBatteryProgressCamera(100)
-        liveViewScreen.refreshCameraStatus()
-        liveViewScreen.isBatteryIndicatorTextDisplayed("100")
-        liveViewScreen.isBatteryStatusDisplayed()
+        with(liveViewScreen) {
+            mockUtils.setBatteryProgressCamera(100)
+            refreshCameraStatus()
+            isBatteryIndicatorTextDisplayed("100")
+            isBatteryStatusDisplayed()
 
-        mockUtils.setBatteryProgressCamera(34)
-        liveViewScreen.refreshCameraStatus()
-        liveViewScreen.isBatteryIndicatorTextDisplayed("34")
-        liveViewScreen.isBatteryStatusDisplayed()
+            mockUtils.setBatteryProgressCamera(34)
+            refreshCameraStatus()
+            isBatteryIndicatorTextDisplayed("34")
+            isBatteryStatusDisplayed()
 
-        mockUtils.setBatteryProgressCamera(5)
-        liveViewScreen.refreshCameraStatus()
-        liveViewScreen.isBatteryIndicatorTextDisplayed("5")
-        liveViewScreen.isBatteryStatusDisplayed()
+            mockUtils.setBatteryProgressCamera(5)
+            refreshCameraStatus()
+            isBatteryIndicatorTextDisplayed("5")
+            isBatteryStatusDisplayed()
 
-        mockUtils.setBatteryProgressCamera(0)
-        liveViewScreen.refreshCameraStatus()
-        liveViewScreen.isBatteryIndicatorTextDisplayed("0")
-        liveViewScreen.isBatteryStatusDisplayed()
+            mockUtils.setBatteryProgressCamera(0)
+            refreshCameraStatus()
+            isBatteryIndicatorTextDisplayed("0")
+            isBatteryStatusDisplayed()
+        }
     }
 
     /**
@@ -59,19 +62,33 @@ class CameraStatusTest : EspressoBaseTest() {
      */
     @Test
     fun verifyStorageIndicator() {
-        mockUtils.setStorageProgressCamera(60000000, 60000000)
-        liveViewScreen.refreshCameraStatus()
-        liveViewScreen.isMemoryStorageIndicatorTextDisplayed("100")
-        liveViewScreen.isMemoryStorageStatusDisplayed()
+        with(liveViewScreen) {
+            mockUtils.setStorageProgressCamera(60000000, 60000000)
+            refreshCameraStatus()
+            isMemoryStorageIndicatorTextDisplayed("100")
+            isMemoryStorageStatusDisplayed()
 
-        mockUtils.setStorageProgressCamera(60000000, 10000000)
-        liveViewScreen.refreshCameraStatus()
-        liveViewScreen.isMemoryStorageIndicatorTextDisplayed("16")
-        liveViewScreen.isMemoryStorageStatusDisplayed()
+            mockUtils.setStorageProgressCamera(60000000, 10000000)
+            refreshCameraStatus()
+            isMemoryStorageIndicatorTextDisplayed("16")
+            isMemoryStorageStatusDisplayed()
 
-        mockUtils.setStorageProgressCamera(60000000, 0)
-        liveViewScreen.refreshCameraStatus()
-        liveViewScreen.isMemoryStorageIndicatorTextDisplayed("0")
-        liveViewScreen.isMemoryStorageStatusDisplayed()
+            mockUtils.setStorageProgressCamera(60000000, 0)
+            refreshCameraStatus()
+            isMemoryStorageIndicatorTextDisplayed("0")
+            isMemoryStorageStatusDisplayed()
+        }
+    }
+
+    /**
+     * Test case: https://safefleet.atlassian.net/browse/FMA-2933
+     */
+    @Test
+    fun verifyLowSignalNotification() {
+        with(liveViewScreen) {
+            mockUtils.setWifiSignalLowOn()
+            openSnapshotList()
+            isLowSignalPopUpDisplayed()
+        }
     }
 }

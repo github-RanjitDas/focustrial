@@ -24,6 +24,15 @@ class MockUtils {
         var freeStorageCamera = 50000000
         var cameraConnectServiceX1Mock = CameraConnectServiceMock()
         var suggestWifiConnected = true
+        var wifiSignalLow = false
+    }
+
+    fun setWifiSignalLowOn() {
+        wifiSignalLow = true
+    }
+
+    fun setWifiSignalLowOff() {
+        wifiSignalLow = false
     }
 
     fun disconnectCamera() {
