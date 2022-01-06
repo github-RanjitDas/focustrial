@@ -201,4 +201,6 @@ open class FileListScreen : BaseScreen() {
         }
         return true
     }
+
+    fun isFileListNotDisplayed() = assertNotDisplayed(recyclerView)
 }

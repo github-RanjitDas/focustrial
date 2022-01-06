@@ -43,6 +43,7 @@ class CameraConnectServiceMock : CameraService {
         var result: Result<Int> = Result.Success(100)
         var eventList: MutableList<LogEvent> = CameraEventsData.DEFAULT.value
         var isVideoUpdated = false
+        var isRecordingVideoSuccess = true
     }
 
     override suspend fun disconnectCamera(): Result<Unit> {
@@ -205,12 +206,16 @@ class CameraConnectServiceMock : CameraService {
     }
 
     override suspend fun startRecordVideo(): Result<Unit> {
-        videoList.items.add(CameraFilesData.EXTRA_VIDEO_LIST.value.items[takenVideos])
-        if (takenVideos < CameraFilesData.EXTRA_VIDEO_LIST.value.items.size)
-            takenVideos++
-        else
-            takenVideos = 0
-        return Result.Success(Unit)
+        if (isRecordingVideoSuccess) {
+            videoList.items.add(CameraFilesData.EXTRA_VIDEO_LIST.value.items[takenVideos])
+            if (takenVideos < CameraFilesData.EXTRA_VIDEO_LIST.value.items.size)
+                takenVideos++
+            else
+                takenVideos = 0
+            return Result.Success(Unit)
+        }
+
+        return Result.Error(mockk())
     }
 
     override suspend fun stopRecordVideo(): Result<Unit> {
@@ -256,6 +261,10 @@ class CameraConnectServiceMock : CameraService {
 
     fun setIsVideoUpdated(value: Boolean) {
         isVideoUpdated = value
+    }
+
+    fun setIsRecordingVideoSuccess(value: Boolean) {
+        isRecordingVideoSuccess = value
     }
 
     override suspend fun getAudioBytes(cameraFile: CameraFile): Result<ByteArray> {
