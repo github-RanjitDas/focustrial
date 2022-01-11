@@ -245,9 +245,9 @@
     <string name="body_worn_diagnosis_success_text">Success</string>
     <string name="body_worn_diagnosis_error_text">Error</string>
     <string name="body_worn_icon_result_description">Result</string>
-    <string name="body_worn_icon_error_is_not_possible_get_diagnosis">Error occurred when retrieving Body Camera Diagnosis. Please try again.</string>
-    <string name="body_worn_result_success_description">Your Body Camera hardware is operating properly with no issues found.</string>
-    <string name="body_worn_result_failed_description">One or more issues were detected with your Body Camera hardware which will prevent it from working properly.\n\nPlease contact your administrator and report this issue.</string>
+    <string name="error_trying_to_diagnose">Error occurred when retrieving Body Camera Diagnosis. Please try again.</string>
+    <string name="diagnosis_success_message">Your Body Camera hardware is operating properly with no issues found.</string>
+    <string name="diagnosis_failed_message">One or more issues were detected with your Body Camera hardware which will prevent it from working properly.\n\nPlease contact your administrator and report this issue.</string>
     <string name="no_notifications_found">No notifications</string>
     <string name="notification_list_error">Failed to retrieve the notification list. Please retry or check the Body Camera.</string>
     <string name="low_signal_title">Your mobile device is too far away from the Body Camera.</string>

@@ -25,7 +25,7 @@ import com.lawmobile.presentation.extensions.toggleDeXFullScreen
 import com.lawmobile.presentation.extensions.verifySessionBeforeAction
 import com.lawmobile.presentation.ui.base.BaseActivity
 import com.lawmobile.presentation.ui.fileList.thumbnailList.ThumbnailFileListFragment.Companion.PATH_ERROR_IN_PHOTO
-import com.lawmobile.presentation.ui.snapshotDetail.model.SnapshotDetailState
+import com.lawmobile.presentation.ui.snapshotDetail.state.SnapshotDetailState
 import com.lawmobile.presentation.utils.Constants
 import com.safefleet.mobile.android_commons.extensions.hideKeyboard
 import com.safefleet.mobile.kotlin_commons.extensions.doIfError

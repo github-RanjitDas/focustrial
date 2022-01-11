@@ -1,23 +1,27 @@
 package com.lawmobile.presentation.ui.bodyWornDiagnosis
 
 import com.lawmobile.domain.usecase.bodyWornDiagnosis.BodyWornDiagnosisUseCase
-import com.lawmobile.presentation.InstantExecutorExtension
+import com.lawmobile.presentation.ui.bodyWornDiagnosis.state.DiagnosisState
 import com.safefleet.mobile.kotlin_commons.helpers.Result
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.test.TestCoroutineDispatcher
+import kotlinx.coroutines.test.TestCoroutineScope
 import kotlinx.coroutines.test.setMain
 import org.junit.Assert
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
-import org.junit.jupiter.api.extension.ExtendWith
 
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@ExtendWith(InstantExecutorExtension::class)
+@ExperimentalCoroutinesApi
+@TestInstance(TestInstance.Lifecycle.PER_METHOD)
 internal class BodyWornDiagnosisViewModelTest {
 
     private val useCaseDiagnosis: BodyWornDiagnosisUseCase = mockk()
@@ -25,19 +29,31 @@ internal class BodyWornDiagnosisViewModelTest {
         BodyWornDiagnosisViewModel(useCaseDiagnosis)
     }
 
-    @ExperimentalCoroutinesApi
+    private val dispatcher = TestCoroutineDispatcher()
+    private val job by lazy {
+        Job()
+    }
+    private val testScope by lazy {
+        TestCoroutineScope(job + dispatcher)
+    }
+
     @BeforeEach
     fun setUp() {
-        Dispatchers.setMain(Dispatchers.Unconfined)
+        Dispatchers.setMain(dispatcher)
+    }
+
+    @AfterEach
+    fun clean() {
+        job.cancel()
     }
 
     @Test
     fun testIsDiagnosisResponseTrue() {
         coEvery { useCaseDiagnosis.isDiagnosisSuccess() } returns Result.Success(true)
 
-        runBlocking {
+        testScope.launch {
             viewModel.getDiagnosis()
-            val response = viewModel.diagnosisCameraLiveData.value
+            val response = viewModel.diagnosisResult.first()
             Assert.assertEquals(response, Result.Success(true))
         }
 
@@ -48,9 +64,9 @@ internal class BodyWornDiagnosisViewModelTest {
     fun testIsDiagnosisResponseFalse() {
         coEvery { useCaseDiagnosis.isDiagnosisSuccess() } returns Result.Success(false)
 
-        runBlocking {
+        testScope.launch {
             viewModel.getDiagnosis()
-            val response = viewModel.diagnosisCameraLiveData.value
+            val response = viewModel.diagnosisResult.first()
             Assert.assertEquals(response, Result.Success(false))
         }
 
@@ -61,12 +77,24 @@ internal class BodyWornDiagnosisViewModelTest {
     fun testIsDiagnosisError() {
         coEvery { useCaseDiagnosis.isDiagnosisSuccess() } returns Result.Error(Exception(""))
 
-        runBlocking {
+        testScope.launch {
             viewModel.getDiagnosis()
-            val response = viewModel.diagnosisCameraLiveData.value
+            val response = viewModel.diagnosisResult.first()
             Assert.assertTrue(response is Result.Error)
         }
 
         coVerify { useCaseDiagnosis.isDiagnosisSuccess() }
+    }
+
+    @Test
+    fun setDiagnosisState() {
+        val state = DiagnosisState.Progress
+        viewModel.setDiagnosisState(state)
+        Assert.assertEquals(state, viewModel.diagnosisState.value)
+    }
+
+    @Test
+    fun getDiagnosisState() {
+        Assert.assertEquals(DiagnosisState.Start, viewModel.diagnosisState.value)
     }
 }

@@ -5,7 +5,7 @@ import com.lawmobile.domain.entities.CameraInfo
 import com.lawmobile.domain.usecase.typeOfCamera.TypeOfCameraUseCase
 import com.lawmobile.domain.usecase.validatePasswordOfficer.ValidatePasswordOfficerUseCase
 import com.lawmobile.presentation.ui.login.LoginBaseViewModel
-import com.lawmobile.presentation.ui.login.model.LoginState
+import com.lawmobile.presentation.ui.login.state.LoginState
 import com.safefleet.mobile.kotlin_commons.extensions.doIfSuccess
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher

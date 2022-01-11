@@ -12,11 +12,11 @@ import com.lawmobile.presentation.extensions.showErrorSnackBar
 import com.lawmobile.presentation.extensions.verifyForAskingPermission
 import com.lawmobile.presentation.extensions.verifySessionBeforeAction
 import com.lawmobile.presentation.ui.base.BaseActivity
-import com.lawmobile.presentation.ui.login.model.LoginState
 import com.lawmobile.presentation.ui.login.shared.Instructions
 import com.lawmobile.presentation.ui.login.shared.OfficerPassword
 import com.lawmobile.presentation.ui.login.shared.PairingResultFragment
 import com.lawmobile.presentation.ui.login.shared.StartPairing
+import com.lawmobile.presentation.ui.login.state.LoginState
 import com.safefleet.mobile.android_commons.extensions.hideKeyboard
 
 abstract class LoginBaseActivity : BaseActivity() {

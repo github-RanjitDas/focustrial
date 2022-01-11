@@ -2,7 +2,7 @@ package com.lawmobile.presentation.ui.snapshotDetail
 
 import com.lawmobile.domain.entities.DomainCameraFile
 import com.lawmobile.domain.usecase.snapshotDetail.SnapshotDetailUseCase
-import com.lawmobile.presentation.ui.snapshotDetail.model.SnapshotDetailState
+import com.lawmobile.presentation.ui.snapshotDetail.state.SnapshotDetailState
 import com.safefleet.mobile.kotlin_commons.helpers.Result
 import io.mockk.coEvery
 import io.mockk.coVerify
