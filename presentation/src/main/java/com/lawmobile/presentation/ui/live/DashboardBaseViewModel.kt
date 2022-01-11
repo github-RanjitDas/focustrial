@@ -3,7 +3,7 @@ package com.lawmobile.presentation.ui.live
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.lawmobile.presentation.ui.base.BaseViewModel
-import com.lawmobile.presentation.ui.live.model.DashboardState
+import com.lawmobile.presentation.ui.live.state.DashboardState
 
 class DashboardBaseViewModel : BaseViewModel() {
     val dashboardState: LiveData<DashboardState> get() = _dashboardState

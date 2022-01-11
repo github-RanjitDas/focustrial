@@ -6,7 +6,7 @@ import com.lawmobile.domain.entities.DomainInformationImageMetadata
 import com.lawmobile.domain.usecase.snapshotDetail.SnapshotDetailUseCase
 import com.lawmobile.presentation.extensions.emitValueWithTimeout
 import com.lawmobile.presentation.ui.base.BaseViewModel
-import com.lawmobile.presentation.ui.snapshotDetail.model.SnapshotDetailState
+import com.lawmobile.presentation.ui.snapshotDetail.state.SnapshotDetailState
 import com.safefleet.mobile.kotlin_commons.helpers.Result
 import com.safefleet.mobile.kotlin_commons.helpers.getResultWithAttempts
 import dagger.hilt.android.lifecycle.HiltViewModel

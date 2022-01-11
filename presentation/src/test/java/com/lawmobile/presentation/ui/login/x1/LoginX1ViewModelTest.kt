@@ -5,7 +5,7 @@ import com.lawmobile.domain.enums.CameraType
 import com.lawmobile.domain.usecase.typeOfCamera.TypeOfCameraUseCase
 import com.lawmobile.domain.usecase.validatePasswordOfficer.ValidatePasswordOfficerUseCase
 import com.lawmobile.presentation.InstantExecutorExtension
-import com.lawmobile.presentation.ui.login.model.LoginState
+import com.lawmobile.presentation.ui.login.state.LoginState
 import com.safefleet.mobile.kotlin_commons.helpers.Result
 import io.mockk.Runs
 import io.mockk.coEvery

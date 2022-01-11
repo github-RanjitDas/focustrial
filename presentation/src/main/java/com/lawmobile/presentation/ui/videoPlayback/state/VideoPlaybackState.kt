@@ -1,4 +1,4 @@
-package com.lawmobile.presentation.ui.videoPlayback.model
+package com.lawmobile.presentation.ui.videoPlayback.state
 
 sealed class VideoPlaybackState {
     object Default : VideoPlaybackState()

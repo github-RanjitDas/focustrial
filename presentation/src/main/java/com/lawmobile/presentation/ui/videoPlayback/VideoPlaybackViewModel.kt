@@ -6,7 +6,7 @@ import com.lawmobile.domain.entities.DomainInformationVideo
 import com.lawmobile.domain.entities.DomainVideoMetadata
 import com.lawmobile.domain.usecase.videoPlayback.VideoPlaybackUseCase
 import com.lawmobile.presentation.ui.base.BaseViewModel
-import com.lawmobile.presentation.ui.videoPlayback.model.VideoPlaybackState
+import com.lawmobile.presentation.ui.videoPlayback.state.VideoPlaybackState
 import com.lawmobile.presentation.utils.VLCMediaPlayer
 import com.safefleet.mobile.kotlin_commons.helpers.Result
 import dagger.hilt.android.lifecycle.HiltViewModel

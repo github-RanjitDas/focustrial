@@ -1,7 +1,7 @@
 package com.lawmobile.presentation.ui.live
 
 import com.lawmobile.presentation.InstantExecutorExtension
-import com.lawmobile.presentation.ui.live.model.DashboardState
+import com.lawmobile.presentation.ui.live.state.DashboardState
 import org.junit.Assert
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance

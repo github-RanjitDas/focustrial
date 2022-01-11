@@ -35,7 +35,7 @@ import com.lawmobile.presentation.extensions.showToast
 import com.lawmobile.presentation.extensions.toggleDeXFullScreen
 import com.lawmobile.presentation.ui.associateSnapshots.AssociateSnapshotsFragment
 import com.lawmobile.presentation.ui.base.BaseActivity
-import com.lawmobile.presentation.ui.videoPlayback.model.VideoPlaybackState
+import com.lawmobile.presentation.ui.videoPlayback.state.VideoPlaybackState
 import com.lawmobile.presentation.utils.Constants.DOMAIN_CAMERA_FILE
 import com.safefleet.mobile.android_commons.extensions.hideKeyboard
 import com.safefleet.mobile.kotlin_commons.extensions.doIfError

@@ -1,4 +1,4 @@
-package com.lawmobile.presentation.ui.snapshotDetail.model
+package com.lawmobile.presentation.ui.snapshotDetail.state
 
 sealed class SnapshotDetailState {
     object Default : SnapshotDetailState()

@@ -15,12 +15,12 @@ import com.lawmobile.presentation.extensions.setOnClickListenerCheckConnection
 import com.lawmobile.presentation.extensions.showErrorSnackBar
 import com.lawmobile.presentation.extensions.showSuccessSnackBar
 import com.lawmobile.presentation.ui.base.BaseActivity
-import com.lawmobile.presentation.ui.fileList.model.FileListState
 import com.lawmobile.presentation.ui.fileList.shared.FileList
 import com.lawmobile.presentation.ui.fileList.shared.FileSelection
 import com.lawmobile.presentation.ui.fileList.shared.FilterSection
 import com.lawmobile.presentation.ui.fileList.shared.ListTypeButtons
 import com.lawmobile.presentation.ui.fileList.simpleList.SimpleFileListFragment
+import com.lawmobile.presentation.ui.fileList.state.FileListState
 import com.lawmobile.presentation.ui.fileList.thumbnailList.ThumbnailFileListFragment
 import com.lawmobile.presentation.utils.Constants
 import com.lawmobile.presentation.utils.VLCMediaPlayer

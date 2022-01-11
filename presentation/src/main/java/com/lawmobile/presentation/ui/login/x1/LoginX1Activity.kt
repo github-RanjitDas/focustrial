@@ -12,10 +12,10 @@ import com.lawmobile.presentation.extensions.attachFragmentWithAnimation
 import com.lawmobile.presentation.extensions.isAnimationsEnabled
 import com.lawmobile.presentation.extensions.runWithDelay
 import com.lawmobile.presentation.ui.login.LoginBaseActivity
-import com.lawmobile.presentation.ui.login.model.LoginState
 import com.lawmobile.presentation.ui.login.shared.Instructions
 import com.lawmobile.presentation.ui.login.shared.OfficerPassword
 import com.lawmobile.presentation.ui.login.shared.StartPairing
+import com.lawmobile.presentation.ui.login.state.LoginState
 import com.lawmobile.presentation.ui.login.x1.fragment.StartPairingFragment
 import com.lawmobile.presentation.ui.login.x1.fragment.officerPassword.OfficerPasswordFragment
 import com.safefleet.mobile.kotlin_commons.extensions.doIfError

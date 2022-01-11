@@ -1,4 +1,4 @@
-package com.lawmobile.presentation.ui.login.model
+package com.lawmobile.presentation.ui.login.state
 
 sealed class LoginState {
     sealed class X1 : LoginState() {

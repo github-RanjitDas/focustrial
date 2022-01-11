@@ -4,7 +4,7 @@ import androidx.lifecycle.viewModelScope
 import com.lawmobile.domain.entities.DomainCameraFile
 import com.lawmobile.domain.usecase.fileList.FileListUseCase
 import com.lawmobile.presentation.ui.base.BaseViewModel
-import com.lawmobile.presentation.ui.fileList.model.FileListState
+import com.lawmobile.presentation.ui.fileList.state.FileListState
 import com.safefleet.mobile.kotlin_commons.helpers.Result
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow

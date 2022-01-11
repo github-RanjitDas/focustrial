@@ -1,4 +1,4 @@
-package com.lawmobile.presentation.ui.fileList.model
+package com.lawmobile.presentation.ui.fileList.state
 
 sealed class FileListState {
     object Thumbnail : FileListState()

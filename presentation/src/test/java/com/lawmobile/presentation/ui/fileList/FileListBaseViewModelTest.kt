@@ -1,7 +1,7 @@
 package com.lawmobile.presentation.ui.fileList
 
 import com.lawmobile.domain.usecase.fileList.FileListUseCase
-import com.lawmobile.presentation.ui.fileList.model.FileListState
+import com.lawmobile.presentation.ui.fileList.state.FileListState
 import com.safefleet.mobile.kotlin_commons.helpers.Result
 import io.mockk.coEvery
 import io.mockk.coVerify

@@ -15,9 +15,9 @@ import com.lawmobile.presentation.ui.base.BaseFragment
 import com.lawmobile.presentation.ui.base.appBar.x2.AppBarX2Fragment
 import com.lawmobile.presentation.ui.live.controls.ControlsBaseFragment
 import com.lawmobile.presentation.ui.live.controls.x1.ControlsX1Fragment
-import com.lawmobile.presentation.ui.live.model.DashboardState
 import com.lawmobile.presentation.ui.live.navigation.x1.NavigationX1Fragment
 import com.lawmobile.presentation.ui.live.shared.LiveStream
+import com.lawmobile.presentation.ui.live.state.DashboardState
 import com.lawmobile.presentation.ui.live.statusBar.StatusBarBaseFragment
 import com.lawmobile.presentation.ui.live.stream.LiveStreamFragment
 import com.lawmobile.presentation.utils.EspressoIdlingResource

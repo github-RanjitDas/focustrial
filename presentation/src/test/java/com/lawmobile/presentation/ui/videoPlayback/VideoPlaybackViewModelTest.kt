@@ -2,7 +2,7 @@ package com.lawmobile.presentation.ui.videoPlayback
 
 import com.lawmobile.domain.entities.DomainCameraFile
 import com.lawmobile.domain.usecase.videoPlayback.VideoPlaybackUseCase
-import com.lawmobile.presentation.ui.videoPlayback.model.VideoPlaybackState
+import com.lawmobile.presentation.ui.videoPlayback.state.VideoPlaybackState
 import com.lawmobile.presentation.utils.VLCMediaPlayer
 import com.safefleet.mobile.kotlin_commons.helpers.Result
 import io.mockk.coEvery

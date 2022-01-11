@@ -1,4 +1,4 @@
-package com.lawmobile.presentation.ui.live.model
+package com.lawmobile.presentation.ui.live.state
 
 sealed class DashboardState {
     object Default : DashboardState()
