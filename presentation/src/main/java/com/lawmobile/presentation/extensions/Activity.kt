@@ -78,9 +78,16 @@ fun Activity.isDeXEnabled(): Boolean {
 }
 
 fun Activity.changeOrientation() {
-    requestedOrientation =
-        if (isInPortraitMode()) ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
-        else ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+    if (isInPortraitMode()) setLandscapeOrientation()
+    else setPortraitOrientation()
+}
+
+fun Activity.setLandscapeOrientation() {
+    requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+}
+
+fun Activity.setPortraitOrientation() {
+    requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
 }
 
 fun Activity.isInPortraitMode(): Boolean =

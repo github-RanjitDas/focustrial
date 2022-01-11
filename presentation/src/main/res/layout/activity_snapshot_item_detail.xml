@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -9,8 +8,7 @@
         android:id="@+id/constraintLayoutDetail"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/white"
-        tools:context=".ui.snapshotDetail.SnapshotDetailActivity">
+        android:background="@color/white">
 
         <include
             android:id="@+id/layoutCustomAppBar"
@@ -22,8 +20,8 @@
             android:id="@+id/imageViewSnapshot"
             android:layout_width="@dimen/no_dp"
             android:layout_height="@dimen/snapshot_detail_height_image"
+            android:background="@color/black"
             android:contentDescription="@string/snapshot_item_detail_photo_content_description"
-            android:scaleType="fitXY"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/layoutCustomAppBar" />
@@ -199,10 +197,10 @@
             android:id="@+id/imageViewFullScreenSnapshot"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="@color/black"
             android:clickable="true"
             android:contentDescription="@string/snapshot_item_detail_photo_content_description"
             android:focusable="true"
-            android:scaleType="fitXY"
             android:visibility="gone" />
 
         <ImageView

@@ -28,6 +28,7 @@ import com.lawmobile.presentation.extensions.createAlertDialogUnsavedChanges
 import com.lawmobile.presentation.extensions.detachFragment
 import com.lawmobile.presentation.extensions.milliSecondsToString
 import com.lawmobile.presentation.extensions.setOnClickListenerCheckConnection
+import com.lawmobile.presentation.extensions.setPortraitOrientation
 import com.lawmobile.presentation.extensions.showErrorSnackBar
 import com.lawmobile.presentation.extensions.showSuccessSnackBar
 import com.lawmobile.presentation.extensions.showToast
@@ -204,6 +205,7 @@ class VideoPlaybackActivity : BaseActivity() {
         activityCollect(viewModel.state) {
             with(it) {
                 onDefault {
+                    if (!isInPortraitMode()) setPortraitOrientation()
                     setFullscreenVisibility(false)
                     setViews()
                     setListeners()
