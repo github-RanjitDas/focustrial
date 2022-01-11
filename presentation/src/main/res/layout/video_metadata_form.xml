@@ -6,7 +6,7 @@
     android:id="@+id/layoutMetadataForm"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingBottom="@dimen/margin_30dp"
+    android:paddingBottom="@dimen/margin_5dp"
     android:paddingHorizontal="@dimen/padding_40dp"
     android:paddingTop="@dimen/padding_25dp">
 

@@ -196,4 +196,6 @@
     <dimen name="margin_4dp">4dp</dimen>
     <dimen name="padding_20dp">20dp</dimen>
     <dimen name="_2dp">2dp</dimen>
+    <dimen name="_60dp">60dp</dimen>
+    <dimen name="_75dp">75dp</dimen>
 </resources>

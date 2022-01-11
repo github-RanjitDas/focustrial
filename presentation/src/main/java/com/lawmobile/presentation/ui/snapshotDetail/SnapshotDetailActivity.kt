@@ -18,6 +18,7 @@ import com.lawmobile.presentation.extensions.activityCollect
 import com.lawmobile.presentation.extensions.getPathFromTemporalFile
 import com.lawmobile.presentation.extensions.imageHasCorrectFormat
 import com.lawmobile.presentation.extensions.setOnClickListenerCheckConnection
+import com.lawmobile.presentation.extensions.setPortraitOrientation
 import com.lawmobile.presentation.extensions.showErrorSnackBar
 import com.lawmobile.presentation.extensions.showSuccessSnackBar
 import com.lawmobile.presentation.extensions.toggleDeXFullScreen
@@ -174,6 +175,7 @@ class SnapshotDetailActivity : BaseActivity() {
         activityCollect(viewModel.state) {
             with(it) {
                 onDefault {
+                    if (!isInPortraitMode()) setPortraitOrientation()
                     binding.setAppBar()
                     setInformationOfSnapshot()
                     setFullscreenVisibility(false)

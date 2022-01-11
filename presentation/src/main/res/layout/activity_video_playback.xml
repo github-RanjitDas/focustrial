@@ -14,7 +14,7 @@
             android:id="@+id/scrollView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginBottom="75dp"
+            android:layout_marginBottom="@dimen/_75dp"
             app:layout_constraintBottom_toTopOf="@id/buttonSaveMetadata"
             app:layout_constraintTop_toTopOf="parent">
 
@@ -44,7 +44,7 @@
                     android:id="@+id/layoutNormalPlayback"
                     layout="@layout/layout_video_player"
                     android:layout_width="match_parent"
-                    android:layout_height="250dp"
+                    android:layout_height="260dp"
                     app:layout_constraintTop_toBottomOf="@id/layoutAppBar" />
 
                 <include

@@ -8,6 +8,7 @@ import androidx.annotation.IdRes
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.extensions.attachFragment
 import com.lawmobile.presentation.extensions.runWithDelay
+import com.lawmobile.presentation.extensions.setPortraitOrientation
 import com.lawmobile.presentation.extensions.toggleDeXFullScreen
 import com.lawmobile.presentation.ui.base.BaseActivity
 import com.lawmobile.presentation.ui.base.BaseFragment
@@ -28,6 +29,7 @@ abstract class DashboardBaseActivity : BaseActivity() {
     private var state: DashboardState
         get() = viewModel.getDashboardState()
         set(value) {
+            toggleDeXFullScreen()
             viewModel.setDashboardState(value)
         }
 
@@ -38,8 +40,6 @@ abstract class DashboardBaseActivity : BaseActivity() {
     lateinit var navigationFragment: BaseFragment
 
     private lateinit var liveStream: LiveStream
-
-    private var isFirstOpen = true
 
     val appBarAnimation: Animation by lazy {
         AnimationUtils.loadAnimation(this, R.anim.top_to_bottom_anim)
@@ -68,6 +68,7 @@ abstract class DashboardBaseActivity : BaseActivity() {
         viewModel.dashboardState.observe(this) {
             with(it) {
                 onDefault {
+                    if (!isInPortraitMode()) setPortraitOrientation()
                     setFullscreenVisibility(false)
                     setFragments()
                     getInformationAfterAnimation()
@@ -77,7 +78,7 @@ abstract class DashboardBaseActivity : BaseActivity() {
                 }
                 onFullscreen {
                     setFullscreenVisibility(true)
-                    setFullscreenStream()
+                    setStreamFragment(R.id.fullStreamContainer)
                 }
             }
         }
@@ -123,14 +124,6 @@ abstract class DashboardBaseActivity : BaseActivity() {
         liveStreamFragment.setStreamVisibility(isActive)
     }
 
-    private fun setFullscreenStream() {
-        if (isFirstOpen) {
-            setStreamFragment(R.id.fullStreamContainer)
-            isFirstOpen = false
-        }
-        setStreamFragment(R.id.fullStreamContainer)
-    }
-
     open fun setFragments() {
         setAppBarFragment()
         setStatusBarFragment()
@@ -169,7 +162,6 @@ abstract class DashboardBaseActivity : BaseActivity() {
 
     private fun setFullScreenListener() {
         liveStream.onFullScreenClick = {
-            toggleDeXFullScreen()
             with(state) {
                 onDefault { state = DashboardState.Fullscreen }
                 onFullscreen { state = DashboardState.Default }
