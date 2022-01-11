@@ -7,6 +7,7 @@ import com.safefleet.lawmobile.R
 import com.safefleet.lawmobile.helpers.CustomAssertionActions.waitUntil
 import com.safefleet.lawmobile.helpers.isActivated
 import com.safefleet.lawmobile.helpers.isNotActivated
+import com.schibsted.spain.barista.assertion.BaristaImageViewAssertions.assertHasDrawable
 import com.schibsted.spain.barista.assertion.BaristaVisibilityAssertions.assertContains
 import com.schibsted.spain.barista.assertion.BaristaVisibilityAssertions.assertDisplayed
 import com.schibsted.spain.barista.assertion.BaristaVisibilityAssertions.assertNotDisplayed
@@ -26,6 +27,8 @@ open class LiveViewScreen : BaseScreen() {
     open fun openSnapshotList() = waitUntil { clickOn(R.id.buttonSnapshotList) }
 
     open fun openVideoList() = waitUntil { clickOn(R.id.buttonVideoList) }
+
+    open fun closeErrorMessage() = clickOn(R.id.closeSnackBarButton)
 
     fun openHelpPage() = clickOn(R.id.buttonOpenHelpPage)
 
@@ -143,5 +146,32 @@ open class LiveViewScreen : BaseScreen() {
     fun isLowSignalPopUpDisplayed() {
         assertDisplayed(R.string.low_signal_title)
         assertDisplayed(R.string.low_signal_message)
+    }
+
+    fun isVideoRecordingErrorDisplayed() {
+        waitUntil { assertDisplayed(R.string.error_saving_video) }
+    }
+
+    fun isStartingRecordingDisplayed() = waitUntil { assertDisplayed(R.string.starting_recording) }
+
+    fun isVideoRecording() {
+        waitUntil { assertDisplayed(R.string.video_recording) }
+        waitUntil {
+            assertHasDrawable(
+                R.id.imageViewCustomRecord,
+                R.drawable.ic_record_active
+            )
+        }
+        waitUntil {
+            assertHasDrawable(
+                R.id.imageRecordingIndicator,
+                R.drawable.ic_recording_circle
+            )
+        }
+    }
+
+    fun isVideoNotRecording() {
+        waitUntil { assertNotDisplayed(R.string.video_recording) }
+        waitUntil { assertHasDrawable(R.id.imageViewCustomRecord, R.drawable.ic_video) }
     }
 }
