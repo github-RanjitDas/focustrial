@@ -21,6 +21,8 @@ class LiveStreamFragment : BaseFragment(), LiveStream {
 
     override var onFullScreenClick: (() -> Unit)? = null
 
+    private var isButtonFullscreenActivated = false
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -33,11 +35,16 @@ class LiveStreamFragment : BaseFragment(), LiveStream {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setListeners()
+        setFullscreenButtonActivated()
     }
 
     override fun onResume() {
         super.onResume()
         startLiveStream()
+    }
+
+    private fun setFullscreenButtonActivated() {
+        binding.toggleFullScreenLiveView.isActivated = isButtonFullscreenActivated
     }
 
     fun showLoadingState(message: String) {
@@ -84,5 +91,10 @@ class LiveStreamFragment : BaseFragment(), LiveStream {
 
     companion object {
         val TAG: String = LiveStreamFragment::class.java.simpleName
+        fun createInstance(isFullscreen: Boolean): LiveStreamFragment {
+            return LiveStreamFragment().apply {
+                isButtonFullscreenActivated = isFullscreen
+            }
+        }
     }
 }

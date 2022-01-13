@@ -198,4 +198,5 @@
     <dimen name="_2dp">2dp</dimen>
     <dimen name="_60dp">60dp</dimen>
     <dimen name="_75dp">75dp</dimen>
+    <dimen name="_12dp">12dp</dimen>
 </resources>

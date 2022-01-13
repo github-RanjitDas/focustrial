@@ -150,7 +150,7 @@ abstract class DashboardBaseActivity : BaseActivity() {
     }
 
     private fun setStreamFragment(@IdRes containerId: Int) {
-        liveStreamFragment = LiveStreamFragment()
+        liveStreamFragment = LiveStreamFragment.createInstance(state is DashboardState.Fullscreen)
         liveStream = liveStreamFragment
         setFullScreenListener()
         supportFragmentManager.attachFragment(
@@ -162,10 +162,8 @@ abstract class DashboardBaseActivity : BaseActivity() {
 
     private fun setFullScreenListener() {
         liveStream.onFullScreenClick = {
-            with(state) {
-                onDefault { state = DashboardState.Fullscreen }
-                onFullscreen { state = DashboardState.Default }
-            }
+            if (state is DashboardState.Default) state = DashboardState.Fullscreen
+            else state = DashboardState.Default
         }
     }
 

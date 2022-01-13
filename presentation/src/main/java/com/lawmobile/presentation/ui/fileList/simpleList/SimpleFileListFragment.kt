@@ -180,11 +180,14 @@ class SimpleFileListFragment : FileListBaseFragment() {
 
     private fun fillAdapter(listItems: MutableList<DomainInformationFile>) {
         listAdapter.apply {
-            updateFileList(
-                listItems.sortedByDescending {
-                    it.domainCameraFile.getDateDependingOnNameLength()
-                } as MutableList
-            )
+            val sortedList = listItems.sortedByDescending {
+                it.domainCameraFile.getDateDependingOnNameLength()
+            } as MutableList
+
+            when (listType) {
+                SNAPSHOT_LIST -> addOnlyNewItemsToList(sortedList)
+                VIDEO_LIST -> updateItems(sortedList)
+            }
             showCheckBoxes = isSelectionActive
             listBackup = fileList
         }

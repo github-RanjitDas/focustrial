@@ -32,8 +32,8 @@ class VideoPlaybackViewModel @Inject constructor(
     private val _mediaInformation = MutableStateFlow<Result<DomainInformationVideo>?>(null)
     val mediaInformation = _mediaInformation.asStateFlow()
 
-    private val _metadataUpdateResult = MutableSharedFlow<Result<Unit>>()
-    val metadataUpdateResult = _metadataUpdateResult.asSharedFlow()
+    private val _updateMetadataResult = MutableSharedFlow<Result<Unit>>()
+    val updateMetadataResult = _updateMetadataResult.asSharedFlow()
 
     private val _videoInformation = MutableStateFlow<Result<DomainVideoMetadata>?>(null)
     val videoInformation = _videoInformation.asStateFlow()
@@ -55,7 +55,7 @@ class VideoPlaybackViewModel @Inject constructor(
 
     fun saveVideoInformation(domainVideoMetadata: DomainVideoMetadata) {
         viewModelScope.launch {
-            _metadataUpdateResult.emit(videoPlaybackUseCase.saveVideoMetadata(domainVideoMetadata))
+            _updateMetadataResult.emit(videoPlaybackUseCase.saveVideoMetadata(domainVideoMetadata))
         }
     }
 

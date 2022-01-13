@@ -23,10 +23,10 @@ class SimpleFileListAdapter(
     private val onFileCheck: ((Int) -> Unit)?
 ) : RecyclerView.Adapter<SimpleFileListAdapter.SimpleListViewHolder>() {
 
-    var showCheckBoxes = false
-
     private var isSortedAscendingByDateAndTime = true
     private var isSortedAscendingByEvent = false
+
+    var showCheckBoxes = false
     var fileList = mutableListOf<DomainInformationFile>()
         set(value) {
             field = value
@@ -59,36 +59,53 @@ class SimpleFileListAdapter(
     }
 
     fun sortByDateAndTime() {
-        if (isSortedAscendingByDateAndTime) {
-            fileList =
-                fileList.sortedBy { it.domainCameraFile.getDateDependingOnNameLength() } as MutableList
-            isSortedAscendingByDateAndTime = false
-        } else {
-            fileList =
-                fileList.sortedByDescending { it.domainCameraFile.getDateDependingOnNameLength() } as MutableList
-            isSortedAscendingByDateAndTime = true
+        if (fileList.isNotEmpty()) {
+            if (isSortedAscendingByDateAndTime) {
+                fileList =
+                    fileList.sortedBy { it.domainCameraFile.getDateDependingOnNameLength() } as MutableList
+                isSortedAscendingByDateAndTime = false
+            } else {
+                fileList =
+                    fileList.sortedByDescending { it.domainCameraFile.getDateDependingOnNameLength() } as MutableList
+                isSortedAscendingByDateAndTime = true
+            }
         }
     }
 
     fun sortByEvent() {
-        if (isSortedAscendingByEvent) {
-            fileList =
-                fileList.sortedByDescending { it.domainVideoMetadata?.metadata?.event?.name } as MutableList
-            isSortedAscendingByEvent = false
-        } else {
-            fileList =
-                fileList.sortedBy { it.domainVideoMetadata?.metadata?.event?.name } as MutableList
-            isSortedAscendingByEvent = true
+        if (fileList.isNotEmpty()) {
+            if (isSortedAscendingByEvent) {
+                fileList =
+                    fileList.sortedByDescending { it.domainVideoMetadata?.metadata?.event?.name } as MutableList
+                isSortedAscendingByEvent = false
+            } else {
+                fileList =
+                    fileList.sortedBy { it.domainVideoMetadata?.metadata?.event?.name } as MutableList
+                isSortedAscendingByEvent = true
+            }
         }
     }
 
-    fun updateFileList(newList: MutableList<DomainInformationFile>) {
+    fun addOnlyNewItemsToList(newList: MutableList<DomainInformationFile>) {
         if (fileList.isEmpty()) fileList = newList
         else {
             val newElementsCount = newList.size - fileList.size
             if (newElementsCount > 0) {
                 fileList.addAll(newList.takeLast(newElementsCount))
                 notifyDataSetChanged()
+            }
+        }
+    }
+
+    fun updateItems(newList: MutableList<DomainInformationFile>) {
+        if (fileList.isEmpty()) fileList = newList
+        else {
+            fileList.forEachIndexed { index, file ->
+                try {
+                    if (file != newList[index]) fileList[index] = newList[index]
+                } catch (e: Exception) {
+                    // empty block, no need to use the exception
+                }
             }
         }
     }
