@@ -198,7 +198,7 @@ class VideoPlaybackActivity : BaseActivity() {
         collectVideoPlaybackState()
         collectMediaInformation()
         collectVideoInformation()
-        collectMetadataUpdateResult()
+        collectUpdateMetadataResult()
     }
 
     private fun collectVideoPlaybackState() {
@@ -257,8 +257,8 @@ class VideoPlaybackActivity : BaseActivity() {
         }
     }
 
-    private fun collectMetadataUpdateResult() {
-        activityCollect(viewModel.metadataUpdateResult) { result ->
+    private fun collectUpdateMetadataResult() {
+        activityCollect(viewModel.updateMetadataResult) { result ->
             when (result) {
                 is Result.Success -> {
                     this.showToast(
@@ -359,17 +359,21 @@ class VideoPlaybackActivity : BaseActivity() {
         }
     }
 
-    private fun buttonFullScreenListener() {
-        binding.layoutNormalPlayback.buttonFullScreen.setOnClickListenerCheckConnection {
-            state = VideoPlaybackState.FullScreen
+    private fun buttonFullScreenListener() =
+        with(binding.layoutNormalPlayback.buttonFullScreen) {
+            isActivated = false
+            setOnClickListenerCheckConnection {
+                state = VideoPlaybackState.FullScreen
+            }
         }
-    }
 
-    private fun buttonNormalScreenListener() {
-        binding.layoutFullScreenPlayback.buttonFullScreen.setOnClickListenerCheckConnection {
-            state = VideoPlaybackState.Default
+    private fun buttonNormalScreenListener() =
+        with(binding.layoutFullScreenPlayback.buttonFullScreen) {
+            isActivated = true
+            setOnClickListenerCheckConnection {
+                state = VideoPlaybackState.Default
+            }
         }
-    }
 
     private fun stopVideoWhenScrolling() = with(binding) {
         scrollView.viewTreeObserver.addOnScrollChangedListener {
@@ -465,6 +469,7 @@ class VideoPlaybackActivity : BaseActivity() {
     }
 
     private fun updateVideoInformationInCamera() = with(binding) {
+        viewModel.mediaPlayer.pause()
         hideKeyboard()
         if (layoutMetadataForm.eventValue.selectedItem == eventList[0]) {
             layoutVideoPlayback.showErrorSnackBar(getString(R.string.event_mandatory))

@@ -76,7 +76,7 @@
             style="@style/buttonPlayBackVideo"
             android:layout_marginEnd="@dimen/video_playback_button_full_screen_margin_sides"
             android:contentDescription="@string/image_description_full_screen_size"
-            android:src="@drawable/ic_media_fullscreen_shrink"
+            android:src="@drawable/selector_fullscreen_button"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/seekProgressVideo" />

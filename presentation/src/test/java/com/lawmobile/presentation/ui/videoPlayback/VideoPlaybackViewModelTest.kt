@@ -102,7 +102,7 @@ class VideoPlaybackViewModelTest {
         coEvery { videoPlaybackUseCase.saveVideoMetadata(any()) } returns Result.Success(mockk())
         testScope.launch {
             viewModel.saveVideoInformation(mockk())
-            Assert.assertTrue(viewModel.metadataUpdateResult.first() is Result.Success)
+            Assert.assertTrue(viewModel.updateMetadataResult.first() is Result.Success)
         }
         coVerify { videoPlaybackUseCase.saveVideoMetadata(any()) }
     }
@@ -112,7 +112,7 @@ class VideoPlaybackViewModelTest {
         coEvery { videoPlaybackUseCase.saveVideoMetadata(any()) } returns Result.Success(mockk())
         testScope.launch {
             viewModel.saveVideoInformation(mockk())
-            Assert.assertTrue(viewModel.metadataUpdateResult.first() is Result.Success)
+            Assert.assertTrue(viewModel.updateMetadataResult.first() is Result.Success)
         }
         coVerify { videoPlaybackUseCase.saveVideoMetadata(any()) }
     }

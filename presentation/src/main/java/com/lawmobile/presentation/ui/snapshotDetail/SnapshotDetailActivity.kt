@@ -74,7 +74,6 @@ class SnapshotDetailActivity : BaseActivity() {
         isImageLoaded = false
         getFileFromIntent()
         setCollectors()
-        toggleAssociateDialog(isAssociateDialogOpen)
         binding.setListeners()
     }
 
@@ -114,7 +113,9 @@ class SnapshotDetailActivity : BaseActivity() {
         fileSaved?.let {
             if (it.absolutePath != PATH_ERROR_IN_PHOTO && File(it.absolutePath).exists()) {
                 setImageWithPath(it.absolutePath)
-                viewModel.getImageInformation(file)
+                if (state is SnapshotDetailState.Default && domainInformationImageMetadata == null) {
+                    viewModel.getImageInformation(file)
+                } else hideLoadingDialog()
                 return
             }
         }
@@ -144,16 +145,22 @@ class SnapshotDetailActivity : BaseActivity() {
 
     private fun ActivitySnapshotItemDetailBinding.buttonAssociateListener() {
         buttonAssociateOfficer.setOnClickListenerCheckConnection {
-            toggleAssociateDialog(true)
+            isAssociateDialogOpen = true
         }
     }
 
     private fun ActivitySnapshotItemDetailBinding.buttonFullScreenListener() {
-        buttonFullScreen.setOnClickListenerCheckConnection {
-            state = SnapshotDetailState.FullScreen
+        buttonFullScreen.apply {
+            isActivated = false
+            setOnClickListenerCheckConnection {
+                state = SnapshotDetailState.FullScreen
+            }
         }
-        buttonNormalScreen.setOnClickListenerCheckConnection {
-            state = SnapshotDetailState.Default
+        buttonNormalScreen.apply {
+            isActivated = true
+            setOnClickListenerCheckConnection {
+                state = SnapshotDetailState.Default
+            }
         }
     }
 
@@ -186,6 +193,7 @@ class SnapshotDetailActivity : BaseActivity() {
                     setFullScreenViews()
                 }
             }
+            toggleAssociateDialog(isAssociateDialogOpen)
             getSnapshotBytes()
         }
     }
@@ -215,8 +223,8 @@ class SnapshotDetailActivity : BaseActivity() {
 
     private fun collectAssociationResult() = with(binding) {
         activityCollect(viewModel.associationResult) {
-            hideLoadingDialog()
             with(it) {
+                hideLoadingDialog()
                 doIfSuccess {
                     constraintLayoutDetail.showSuccessSnackBar(
                         getString(R.string.file_list_associate_partner_id_success)
@@ -234,9 +242,9 @@ class SnapshotDetailActivity : BaseActivity() {
     }
 
     private fun collectImageInformation() {
-        activityCollect(viewModel.imageInformation) {
-            hideLoadingDialog()
-            with(it) {
+        activityCollect(viewModel.imageInformation) { result ->
+            result?.run {
+                hideLoadingDialog()
                 doIfSuccess { domainInformation ->
                     domainInformationImageMetadata = domainInformation
                     setSnapshotMetadata()
@@ -259,7 +267,7 @@ class SnapshotDetailActivity : BaseActivity() {
 
     private fun collectImageBytes() {
         activityCollect(viewModel.imageBytes) { result ->
-            with(result) {
+            result?.run {
                 doIfSuccess {
                     val path = it.getPathFromTemporalFile(applicationContext, file.name)
                     setImageWithPath(path)
@@ -267,10 +275,10 @@ class SnapshotDetailActivity : BaseActivity() {
                 doIfError {
                     imageReload.isVisible = true
                 }
-            }
 
-            if (domainInformationImageMetadata == null) viewModel.getImageInformation(file)
-            else hideLoadingDialog()
+                if (domainInformationImageMetadata == null) viewModel.getImageInformation(file)
+                else hideLoadingDialog()
+            }
         }
     }
 
@@ -285,7 +293,6 @@ class SnapshotDetailActivity : BaseActivity() {
                 bottomSheetAssociateOfficer.editTextAssignToOfficer.text.toString()
             associatePartnerId(currentAssociatedOfficerId)
             hideKeyboard()
-            cleanPartnerIdField()
         }
 
         bottomSheetAssociateOfficer.buttonClose.setOnClickListenerCheckConnection {

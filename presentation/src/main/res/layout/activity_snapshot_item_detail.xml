@@ -59,7 +59,7 @@
             android:background="@color/blackTransparent"
             android:contentDescription="@string/image_description_full_screen_size"
             android:padding="@dimen/margin_10dp"
-            android:src="@drawable/ic_full_size"
+            android:src="@drawable/selector_fullscreen_button"
             app:layout_constraintBottom_toBottomOf="@+id/imageViewSnapshot"
             app:layout_constraintStart_toStartOf="parent" />
 
@@ -228,7 +228,7 @@
             android:background="@color/blackTransparent"
             android:contentDescription="@string/image_description_full_screen_size"
             android:padding="@dimen/margin_10dp"
-            android:src="@drawable/ic_full_size"
+            android:src="@drawable/selector_fullscreen_button"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="@+id/imageViewFullScreenSnapshot"
             app:layout_constraintStart_toStartOf="parent" />

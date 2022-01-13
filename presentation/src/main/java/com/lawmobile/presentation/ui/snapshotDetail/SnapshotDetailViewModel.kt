@@ -27,14 +27,14 @@ class SnapshotDetailViewModel @Inject constructor(
     private val _state = MutableStateFlow<SnapshotDetailState>(SnapshotDetailState.Default)
     val state = _state.asStateFlow()
 
-    private val _imageBytes = MutableSharedFlow<Result<ByteArray>>()
-    val imageBytes = _imageBytes.asSharedFlow()
+    private val _imageBytes = MutableStateFlow<Result<ByteArray>?>(null)
+    val imageBytes = _imageBytes.asStateFlow()
 
     private val _associationResult = MutableSharedFlow<Result<Unit>>()
     val associationResult = _associationResult.asSharedFlow()
 
-    private val _imageInformation = MutableSharedFlow<Result<DomainInformationImageMetadata>>()
-    val imageInformation = _imageInformation.asSharedFlow()
+    private val _imageInformation = MutableStateFlow<Result<DomainInformationImageMetadata>?>(null)
+    val imageInformation = _imageInformation.asStateFlow()
 
     fun getState() = _state.value
 

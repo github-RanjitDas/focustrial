@@ -7,23 +7,27 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
     <application
         android:name=".BaseApplication"
         android:allowBackup="true"
         android:fullBackupContent="true"
         android:icon="@mipmap/ic_launcher"
-        android:roundIcon="@mipmap/ic_launcher_rounded"
         android:label="@string/app_name"
+        android:resizeableActivity="true"
+        android:roundIcon="@mipmap/ic_launcher_rounded"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme"
-        android:resizeableActivity="true">
+        android:theme="@style/AppTheme">
 
         <!-- Version < 3.0. DeX Mode and Screen Mirroring support -->
-        <meta-data android:name="com.samsung.android.keepalive.density" android:value="true"/>
+        <meta-data
+            android:name="com.samsung.android.keepalive.density"
+            android:value="true" />
         <!-- Version >= 3.0. DeX Dual Mode support -->
-        <meta-data android:name="com.samsung.android.multidisplay.keep_process_alive" android:value="true"/>
+        <meta-data
+            android:name="com.samsung.android.multidisplay.keep_process_alive"
+            android:value="true" />
 
         <activity
             android:name="com.lawmobile.presentation.ui.login.x1.LoginX1Activity"
@@ -35,6 +39,12 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <!--suppress AndroidElementNotAllowed -->
+            <layout
+                android:defaultWidth="400dp"
+                android:defaultHeight="700dp"
+                android:minWidth="320dp"
+                android:minHeight="500dp" />
         </activity>
 
         <activity
@@ -79,15 +89,17 @@
             android:theme="@style/AppTheme.NoActionBar"
             tools:ignore="LockedOrientationActivity" />
 
-        <activity android:name="com.lawmobile.presentation.ui.fileList.x1.FileListX1Activity"
+        <activity
+            android:name="com.lawmobile.presentation.ui.fileList.x1.FileListX1Activity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
-            tools:ignore="LockedOrientationActivity"/>
+            tools:ignore="LockedOrientationActivity" />
 
-        <activity android:name="com.lawmobile.presentation.ui.fileList.x2.FileListX2Activity"
+        <activity
+            android:name="com.lawmobile.presentation.ui.fileList.x2.FileListX2Activity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
-            tools:ignore="LockedOrientationActivity"/>
+            tools:ignore="LockedOrientationActivity" />
 
         <service
             android:name="com.lawmobile.presentation.security.IsolatedService"
