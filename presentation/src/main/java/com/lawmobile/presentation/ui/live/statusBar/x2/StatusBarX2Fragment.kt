@@ -38,6 +38,8 @@ class StatusBarX2Fragment : StatusBarBaseFragment() {
     private lateinit var storageBarColors: SafeFleetLinearProgressBarColors
 
     private val wasLowStorageShowed: Boolean get() = sharedViewModel.wasLowStorageShowed()
+    private var currentBatteryPercent = 100
+    private var currentStoragePercent = 100.0
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -60,6 +62,12 @@ class StatusBarX2Fragment : StatusBarBaseFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         getCameraStatus(isViewLoaded)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        manageBatteryLevel(currentBatteryPercent)
+        manageStorageLevel(currentStoragePercent)
     }
 
     private fun setObservers() {
@@ -153,6 +161,7 @@ class StatusBarX2Fragment : StatusBarBaseFragment() {
 
     private fun manageStorageLevel(availablePercent: Double) {
         activity?.runOnUiThread {
+            currentStoragePercent = availablePercent
             setColorInStorageLevel(availablePercent)
             setTextStorageLevel(availablePercent)
             checkPercentToShowNotification(availablePercent)
@@ -213,6 +222,7 @@ class StatusBarX2Fragment : StatusBarBaseFragment() {
 
     override fun manageBatteryLevel(batteryPercent: Int) {
         activity?.runOnUiThread {
+            currentBatteryPercent = batteryPercent
             if (batteryPercent >= 0) {
                 progressBarBattery.setProgress(batteryPercent)
                 setColorInBattery(batteryPercent)
