@@ -94,6 +94,7 @@ class SnapshotDetailViewModelTest {
 
         testScope.launch {
             viewModel.savePartnerId(mockk(relaxed = true), "partnerId")
+            dispatcher.advanceTimeBy(5100)
             val valueLiveData = viewModel.associationResult.first()
             Assert.assertTrue(valueLiveData is Result.Error)
         }

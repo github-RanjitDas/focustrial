@@ -10,7 +10,6 @@ import com.lawmobile.domain.entities.FileList
 import com.lawmobile.domain.repository.snapshotDetail.SnapshotDetailRepository
 import com.safefleet.mobile.external_hardware.cameras.entities.PhotoInformation
 import com.safefleet.mobile.external_hardware.cameras.entities.PhotoMetadata
-import com.safefleet.mobile.kotlin_commons.extensions.doIfError
 import com.safefleet.mobile.kotlin_commons.extensions.doIfSuccess
 import com.safefleet.mobile.kotlin_commons.helpers.Result
 import kotlinx.coroutines.delay
@@ -28,14 +27,10 @@ class SnapshotDetailRepositoryImpl(private val snapshotDetailRemoteDataSource: S
         partnerId: String
     ): Result<Unit> {
         val photoMetadataList = mutableListOf<PhotoInformation>()
-        val errorsInFiles = mutableListOf<String>()
 
-        when (
-            val resultGetMetadataOfPhotos =
-                snapshotDetailRemoteDataSource.getSavedPhotosMetadata()
-        ) {
-            is Result.Success -> photoMetadataList.addAll(resultGetMetadataOfPhotos.data)
-            is Result.Error -> return resultGetMetadataOfPhotos
+        when (val photosMetadataResult = snapshotDetailRemoteDataSource.getSavedPhotosMetadata()) {
+            is Result.Success -> photoMetadataList.addAll(photosMetadataResult.data)
+            is Result.Error -> return photosMetadataResult
         }
 
         val partnerMetadata = PhotoMetadata(partnerID = partnerId)
@@ -48,13 +43,13 @@ class SnapshotDetailRepositoryImpl(private val snapshotDetailRemoteDataSource: S
             nameFolder = domainCameraFile.nameFolder
         )
 
-        delay(150)
+        delay(1000)
 
         photoMetadataList.removeAll { it.fileName == domainCameraFile.name }
         photoMetadataList.add(cameraPhotoMetadata)
 
-        with(snapshotDetailRemoteDataSource.savePartnerIdSnapshot(cameraPhotoMetadata)) {
-            doIfSuccess {
+        when (val saveResult = snapshotDetailRemoteDataSource.savePartnerIdSnapshot(cameraPhotoMetadata)) {
+            is Result.Success -> {
                 val item = FileList.getMetadataOfImageInList(domainCameraFile.name)
                 val domainPhotoMetadata =
                     PhotoMetadataMapper.cameraToDomain(cameraPhotoMetadata)
@@ -62,21 +57,12 @@ class SnapshotDetailRepositoryImpl(private val snapshotDetailRemoteDataSource: S
                     DomainInformationImageMetadata(domainPhotoMetadata, item?.videosAssociated)
                 FileList.updateItemInImageMetadataList(newItemPhoto)
             }
-            doIfError {
-                errorsInFiles.add(cameraPhotoMetadata.fileName)
-            }
+            is Result.Error -> return saveResult
         }
 
-        delay(300)
+        delay(1000)
 
-        with(snapshotDetailRemoteDataSource.savePartnerIdInAllSnapshots(photoMetadataList)) {
-            doIfSuccess {
-                return if (errorsInFiles.isEmpty()) Result.Success(Unit)
-                else Result.Error(Exception("Partner ID could not be associated to: $errorsInFiles"))
-            }
-        }
-
-        return Result.Error(Exception("Partner ID could not be associated"))
+        return snapshotDetailRemoteDataSource.savePartnerIdInAllSnapshots(photoMetadataList)
     }
 
     override suspend fun getInformationOfPhoto(domainCameraFile: DomainCameraFile): Result<DomainInformationImageMetadata> {

@@ -55,7 +55,9 @@ class SnapshotDetailViewModel @Inject constructor(
     fun savePartnerId(domainCameraFile: DomainCameraFile, partnerId: String) {
         viewModelScope.launch {
             _associationResult.emitValueWithTimeout(getLoadingTimeOut()) {
-                snapshotDetailUseCase.savePartnerIdSnapshot(domainCameraFile, partnerId)
+                getResultWithAttempts(ATTEMPTS_TO_GET_INFORMATION, DELAY_BETWEEN_ATTEMPTS) {
+                    snapshotDetailUseCase.savePartnerIdSnapshot(domainCameraFile, partnerId)
+                }
             }
         }
     }
