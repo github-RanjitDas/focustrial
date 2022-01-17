@@ -49,10 +49,9 @@ object Dependencies {
 
     object Firebase {
         const val analytics = "com.google.firebase:firebase-analytics-ktx"
-        const val bom = "com.google.firebase:firebase-bom:25.12.0"
-        const val core = "com.google.firebase:firebase-core:18.0.0"
+        const val bom = "com.google.firebase:firebase-bom:29.0.3"
         const val crashlytics = "com.google.firebase:firebase-crashlytics"
-        const val crashlyticsGradle = "com.google.firebase:firebase-crashlytics-gradle:2.4.1"
+        const val crashlyticsGradle = "com.google.firebase:firebase-crashlytics-gradle:2.8.1"
     }
 
     object Fragment {
@@ -67,7 +66,7 @@ object Dependencies {
 
     object Google {
         const val gson = "com.google.code.gson:gson:2.8.6"
-        const val services = "com.google.gms:google-services:4.3.4"
+        const val services = "com.google.gms:google-services:4.3.10"
         const val findBugs = "com.google.code.findbugs:jsr305:3.0.2"
         const val flexBox = "com.google.android.flexbox:flexbox:3.0.0"
     }

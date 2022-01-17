@@ -27,6 +27,7 @@ import com.lawmobile.presentation.extensions.attachFragment
 import com.lawmobile.presentation.extensions.createAlertDialogUnsavedChanges
 import com.lawmobile.presentation.extensions.detachFragment
 import com.lawmobile.presentation.extensions.milliSecondsToString
+import com.lawmobile.presentation.extensions.onItemSelected
 import com.lawmobile.presentation.extensions.setOnClickListenerCheckConnection
 import com.lawmobile.presentation.extensions.setPortraitOrientation
 import com.lawmobile.presentation.extensions.showErrorSnackBar
@@ -50,8 +51,26 @@ class VideoPlaybackActivity : BaseActivity() {
     private val viewModel: VideoPlaybackViewModel by viewModels()
 
     private val eventList = mutableListOf<String>()
-    private val raceList = mutableListOf<String>()
     private val genderList = mutableListOf<String>()
+    private val raceList = mutableListOf<String>()
+
+    private var eventSelection
+        get() = viewModel.eventSelection
+        set(value) {
+            viewModel.eventSelection = value
+        }
+
+    private var genderSelection
+        get() = viewModel.genderSelection
+        set(value) {
+            viewModel.genderSelection = value
+        }
+
+    private var raceSelection
+        get() = viewModel.raceSelection
+        set(value) {
+            viewModel.raceSelection = value
+        }
 
     private var currentAttempts = 0
     private var isVideoMetadataChangesSaved = false
@@ -210,6 +229,7 @@ class VideoPlaybackActivity : BaseActivity() {
                     setViews()
                     setListeners()
                     setDefaultViews()
+                    restoreSpinnersSelection()
                 }
                 onFullScreen {
                     setFullscreenVisibility(true)
@@ -220,6 +240,12 @@ class VideoPlaybackActivity : BaseActivity() {
             }
             domainInformationVideo?.run { createVideoPlayer(this) }
         }
+    }
+
+    private fun restoreSpinnersSelection() = with(binding.layoutMetadataForm) {
+        eventValue.setSelection(if (eventSelection != -1) eventSelection else 0)
+        genderValue.setSelection(if (genderSelection != -1) genderSelection else 0)
+        raceValue.setSelection(if (raceSelection != -1) raceSelection else 0)
     }
 
     private fun setFullScreenViews() {
@@ -315,6 +341,13 @@ class VideoPlaybackActivity : BaseActivity() {
         onAssociateSnapshots()
         onPlayingListener()
         stopVideoWhenScrolling()
+        spinnerListeners()
+    }
+
+    private fun spinnerListeners() = with(binding.layoutMetadataForm) {
+        eventValue.onItemSelected { eventSelection = it }
+        genderValue.onItemSelected { genderSelection = it }
+        raceValue.onItemSelected { raceSelection = it }
     }
 
     private fun bottomSheetListeners() {
@@ -389,7 +422,13 @@ class VideoPlaybackActivity : BaseActivity() {
     private fun setVideoMetadata(videoMetadata: DomainVideoMetadata) =
         with(binding.layoutMetadataForm) {
             videoMetadata.metadata?.let {
-                eventValue.setSelection(getSpinnerSelection(eventList, it.event?.name))
+                val eventPosition = getSpinnerSelection(eventList, it.event?.name)
+                val genderPosition = getSpinnerSelection(genderList, it.gender)
+                val racePosition = getSpinnerSelection(raceList, it.race)
+
+                saveSpinnersCurrentSelection(eventPosition, genderPosition, racePosition)
+
+                eventValue.setSelection(eventPosition)
                 partnerIdValue.setText(it.partnerID)
                 ticket1Value.setText(it.ticketNumber)
                 ticket2Value.setText(it.ticketNumber2)
@@ -401,8 +440,8 @@ class VideoPlaybackActivity : BaseActivity() {
                 notesValue.setText(it.remarks)
                 firstNameValue.setText(it.firstName)
                 lastNameValue.setText(it.lastName)
-                genderValue.setSelection(getSpinnerSelection(genderList, it.gender))
-                raceValue.setSelection(getSpinnerSelection(raceList, it.race))
+                genderValue.setSelection(genderPosition)
+                raceValue.setSelection(racePosition)
                 driverLicenseValue.setText(it.driverLicense)
                 licensePlateValue.setText(it.licensePlate)
             }
@@ -416,9 +455,22 @@ class VideoPlaybackActivity : BaseActivity() {
             hideLoadingDialog()
         }
 
+    private fun saveSpinnersCurrentSelection(
+        eventPosition: Int,
+        genderPosition: Int,
+        racePosition: Int
+    ) {
+        if (eventSelection == -1) eventSelection = eventPosition
+        if (genderSelection == -1) genderSelection = genderPosition
+        if (raceSelection == -1) raceSelection = racePosition
+    }
+
     private fun getSpinnerSelection(list: List<String>, value: String?): Int {
         return if (value == null || value.isEmpty()) 0
-        else list.indexOfFirst { it == value }
+        else {
+            val index = list.indexOfFirst { it == value }
+            if (index == -1) 0 else index
+        }
     }
 
     private fun verifyIfSelectedVideoWasChanged() {

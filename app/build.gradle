@@ -113,10 +113,9 @@ dependencies {
     kapt Dependencies.Hilt.hiltCompiler
 
     // Import the Firebase BoM
-    debugApi platform(Dependencies.Firebase.bom)
+    /*debugApi platform(Dependencies.Firebase.bom)
     debugApi Dependencies.Firebase.analytics
-    debugApi Dependencies.Firebase.core
-    debugApi Dependencies.Firebase.crashlytics
+    debugApi Dependencies.Firebase.crashlytics*/
 
     //Base repository
     implementation Dependencies.Base.externalHardware
