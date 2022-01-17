@@ -143,4 +143,37 @@ class VideoPlaybackViewModelTest {
     fun getMediaPlayer() {
         Assert.assertEquals(vlcMediaPlayer, viewModel.mediaPlayer)
     }
+
+    @Test
+    fun getEventSelection() {
+        Assert.assertEquals(-1, viewModel.eventSelection)
+    }
+
+    @Test
+    fun setEventSelection() {
+        viewModel.eventSelection = 2
+        Assert.assertEquals(2, viewModel.eventSelection)
+    }
+
+    @Test
+    fun getGenderSelection() {
+        Assert.assertEquals(-1, viewModel.genderSelection)
+    }
+
+    @Test
+    fun setGenderSelection() {
+        viewModel.genderSelection = 1
+        Assert.assertEquals(1, viewModel.genderSelection)
+    }
+
+    @Test
+    fun getRaceSelection() {
+        Assert.assertEquals(-1, viewModel.raceSelection)
+    }
+
+    @Test
+    fun setRaceSelection() {
+        viewModel.genderSelection = 0
+        Assert.assertEquals(0, viewModel.genderSelection)
+    }
 }

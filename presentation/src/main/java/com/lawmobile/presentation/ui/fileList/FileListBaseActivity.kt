@@ -242,7 +242,7 @@ abstract class FileListBaseActivity : BaseActivity() {
                 }
                 doIfError {
                     binding.root.showErrorSnackBar(
-                        it.message ?: getString(R.string.file_list_associate_partner_id_error),
+                        getString(R.string.file_list_associate_partner_id_error),
                         Snackbar.LENGTH_INDEFINITE
                     )
                 }

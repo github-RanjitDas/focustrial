@@ -24,6 +24,10 @@ class VideoPlaybackViewModel @Inject constructor(
     val mediaPlayer: VLCMediaPlayer
 ) : BaseViewModel() {
 
+    var eventSelection = -1
+    var genderSelection = -1
+    var raceSelection = -1
+
     var isAssociateDialogOpen = false
 
     private val _state = MutableStateFlow<VideoPlaybackState>(VideoPlaybackState.Default)
