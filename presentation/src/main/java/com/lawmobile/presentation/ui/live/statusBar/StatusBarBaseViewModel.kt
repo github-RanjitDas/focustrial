@@ -2,7 +2,6 @@ package com.lawmobile.presentation.ui.live.statusBar
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.lawmobile.domain.entities.MetadataEvent
 import com.lawmobile.domain.usecase.liveStreaming.LiveStreamingUseCase
@@ -22,8 +21,8 @@ class StatusBarBaseViewModel @Inject constructor(
     private val liveStreamingUseCase: LiveStreamingUseCase
 ) : BaseViewModel() {
 
-    private val wasLowStorageShowed = MutableLiveData<Boolean>().apply { value = false }
-    private val wasLowBatteryShowed = MutableLiveData<Boolean>().apply { value = false }
+    var wasLowStorageShowed = false
+    var wasLowBatteryShowed = false
 
     private val _metadataEvents = MediatorLiveData<Result<List<MetadataEvent>>>()
     val metadataEvents: LiveData<Result<List<MetadataEvent>>> get() = _metadataEvents
@@ -33,18 +32,6 @@ class StatusBarBaseViewModel @Inject constructor(
 
     private val _storageLevel = MediatorLiveData<Event<Result<List<Double>>>>()
     val storageLevel: LiveData<Event<Result<List<Double>>>> get() = _storageLevel
-
-    fun setLowStorageShowed(wasShowed: Boolean) {
-        wasLowStorageShowed.value = wasShowed
-    }
-
-    fun wasLowStorageShowed(): Boolean = wasLowStorageShowed.value ?: false
-
-    fun setLowBatteryShowed(wasShowed: Boolean) {
-        wasLowBatteryShowed.value = wasShowed
-    }
-
-    fun wasLowBatteryShowed(): Boolean = wasLowBatteryShowed.value ?: false
 
     fun getMetadataEvents() {
         viewModelScope.launch {

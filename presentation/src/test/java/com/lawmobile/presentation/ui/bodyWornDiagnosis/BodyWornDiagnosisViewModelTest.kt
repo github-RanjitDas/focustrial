@@ -91,10 +91,12 @@ internal class BodyWornDiagnosisViewModelTest {
         val state = DiagnosisState.Progress
         viewModel.setDiagnosisState(state)
         Assert.assertEquals(state, viewModel.diagnosisState.value)
+        Assert.assertEquals(state, viewModel.getDiagnosisState())
     }
 
     @Test
     fun getDiagnosisState() {
         Assert.assertEquals(DiagnosisState.Start, viewModel.diagnosisState.value)
+        Assert.assertEquals(DiagnosisState.Start, viewModel.getDiagnosisState())
     }
 }

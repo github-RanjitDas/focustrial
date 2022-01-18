@@ -23,7 +23,7 @@ import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.api.extension.ExtendWith
 
 @ExperimentalCoroutinesApi
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@TestInstance(TestInstance.Lifecycle.PER_METHOD)
 @ExtendWith(InstantExecutorExtension::class)
 internal class LoginX1ViewModelTest {
 
@@ -77,5 +77,10 @@ internal class LoginX1ViewModelTest {
         coEvery { typeOfCameraUseCase.getTypeOfCamera() } returns Result.Error(Exception(""))
         viewModel.setCameraType()
         Assert.assertEquals(CameraInfo.cameraType, CameraType.X1)
+    }
+
+    @Test
+    fun getLoginState() {
+        Assert.assertEquals(LoginState.X1.SplashAnimation, viewModel.getLoginState())
     }
 }

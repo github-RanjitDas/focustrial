@@ -115,8 +115,8 @@ class ThumbnailFileListFragment : FileListBaseFragment() {
             as MutableList<DomainInformationImage>
         loadNewImage()
         manageFragmentContent(
-            binding.fileListRecycler,
-            binding.noFilesTextView
+            _binding?.fileListRecycler,
+            _binding?.noFilesTextView
         )
     }
 

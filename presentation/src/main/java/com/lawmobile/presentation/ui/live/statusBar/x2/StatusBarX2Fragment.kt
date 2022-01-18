@@ -1,7 +1,6 @@
 package com.lawmobile.presentation.ui.live.statusBar.x2
 
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import android.text.Html
 import android.util.Range
@@ -37,7 +36,11 @@ class StatusBarX2Fragment : StatusBarBaseFragment() {
     private lateinit var storageBarRanges: SafeFleetLinearProgressBarRanges
     private lateinit var storageBarColors: SafeFleetLinearProgressBarColors
 
-    private val wasLowStorageShowed: Boolean get() = sharedViewModel.wasLowStorageShowed()
+    private var wasLowStorageShowed: Boolean
+        get() = sharedViewModel.wasLowStorageShowed
+        set(value) {
+            sharedViewModel.wasLowStorageShowed = value
+        }
     private var currentBatteryPercent = 100
     private var currentStoragePercent = 100.0
 
@@ -174,9 +177,9 @@ class StatusBarX2Fragment : StatusBarBaseFragment() {
                 activity?.runOnUiThread {
                     context?.createNotificationDialog(LowStorageEvent.event)
                 }
-                sharedViewModel.setLowStorageShowed(true)
+                wasLowStorageShowed = true
             }
-        } else sharedViewModel.setLowStorageShowed(false)
+        } else wasLowStorageShowed = false
     }
 
     private fun getAvailableStoragePercent(information: List<Double>): Double {
@@ -201,9 +204,7 @@ class StatusBarX2Fragment : StatusBarBaseFragment() {
         val availablePercentage = if (availablePercent > 99.6) 100 else availablePercent.toInt()
         val usedStorageString = getString(R.string.storage_level_x2, availablePercentage)
 
-        val textToStorage = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            Html.fromHtml(usedStorageString, 0)
-        } else usedStorageString
+        val textToStorage = Html.fromHtml(usedStorageString, 0)
 
         binding.textViewStorageLevels.text = textToStorage
     }
@@ -242,16 +243,13 @@ class StatusBarX2Fragment : StatusBarBaseFragment() {
     }
 
     private fun setJustPercentInBatteryText(batteryPercent: Int) {
-        val textBatteryPercent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
+        val textBatteryPercent =
             Html.fromHtml(getString(R.string.battery_percent_x2_just_percent, batteryPercent), 0)
-        else getString(R.string.battery_percent_x2_just_percent, batteryPercent)
         textViewBattery.text = textBatteryPercent
     }
 
     private fun setJustTimeInBatteryText(batteryPercent: Int) {
-        val textBatteryPercent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
-            Html.fromHtml(getStringMinutesBatteryLevel(batteryPercent), 0)
-        else getStringMinutesBatteryLevel(batteryPercent)
+        val textBatteryPercent = Html.fromHtml(getStringMinutesBatteryLevel(batteryPercent), 0)
         textViewBattery.text = textBatteryPercent
     }
 

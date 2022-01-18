@@ -6,6 +6,7 @@ import com.lawmobile.domain.usecase.fileList.FileListUseCase
 import com.lawmobile.presentation.ui.base.BaseViewModel
 import com.lawmobile.presentation.ui.fileList.state.FileListState
 import com.safefleet.mobile.kotlin_commons.helpers.Result
+import com.safefleet.mobile.kotlin_commons.helpers.getResultWithAttempts
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -40,7 +41,9 @@ class FileListBaseViewModel @Inject constructor(
     fun associateOfficerToVideos(partnerId: String) {
         viewModelScope.launch {
             if (!filesToAssociate.isNullOrEmpty()) {
-                val result = fileListUseCase.savePartnerIdVideos(filesToAssociate!!, partnerId)
+                val result = getResultWithAttempts(RETRY_ATTEMPTS) {
+                    fileListUseCase.savePartnerIdVideos(filesToAssociate!!, partnerId)
+                }
                 _associationResult.emit(result)
             }
         }
@@ -49,9 +52,15 @@ class FileListBaseViewModel @Inject constructor(
     fun associateOfficerToSnapshots(partnerId: String) {
         viewModelScope.launch {
             if (!filesToAssociate.isNullOrEmpty()) {
-                val result = fileListUseCase.savePartnerIdSnapshot(filesToAssociate!!, partnerId)
+                val result = getResultWithAttempts(RETRY_ATTEMPTS) {
+                    fileListUseCase.savePartnerIdSnapshot(filesToAssociate!!, partnerId)
+                }
                 _associationResult.emit(result)
             }
         }
+    }
+
+    companion object {
+        private const val RETRY_ATTEMPTS = 3
     }
 }

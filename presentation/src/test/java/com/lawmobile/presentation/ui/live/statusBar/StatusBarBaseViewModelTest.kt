@@ -135,24 +135,24 @@ internal class StatusBarBaseViewModelTest {
     }
 
     @Test
-    fun getLowStorageShowedWhenNull() {
-        Assert.assertFalse(viewModel.wasLowStorageShowed())
+    fun getLowStorageShowed() {
+        Assert.assertFalse(viewModel.wasLowStorageShowed)
     }
 
     @Test
     fun setAndGetLowStorageShowed() {
-        viewModel.setLowStorageShowed(true)
-        Assert.assertTrue(viewModel.wasLowStorageShowed())
+        viewModel.wasLowStorageShowed = true
+        Assert.assertTrue(viewModel.wasLowStorageShowed)
     }
 
     @Test
-    fun getLowBatteryShowedWhenNull() {
-        Assert.assertFalse(viewModel.wasLowBatteryShowed())
+    fun getLowBatteryShowed() {
+        Assert.assertFalse(viewModel.wasLowBatteryShowed)
     }
 
     @Test
     fun setAndGetLowBatteryShowed() {
-        viewModel.setLowBatteryShowed(true)
-        Assert.assertTrue(viewModel.wasLowBatteryShowed())
+        viewModel.wasLowBatteryShowed = true
+        Assert.assertTrue(viewModel.wasLowBatteryShowed)
     }
 }

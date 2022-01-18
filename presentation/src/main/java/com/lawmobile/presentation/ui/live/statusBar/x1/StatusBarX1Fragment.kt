@@ -1,7 +1,6 @@
 package com.lawmobile.presentation.ui.live.statusBar.x1
 
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import android.text.Html
 import android.util.Range
@@ -32,8 +31,17 @@ class StatusBarX1Fragment : StatusBarBaseFragment() {
     private lateinit var storageBarRanges: SafeFleetLinearProgressBarRanges
     private lateinit var storageBarColors: SafeFleetLinearProgressBarColors
 
-    private val wasLowStorageShowed: Boolean get() = sharedViewModel.wasLowStorageShowed()
-    private val wasLowBatteryShowed: Boolean get() = sharedViewModel.wasLowBatteryShowed()
+    private var wasLowStorageShowed: Boolean
+        get() = sharedViewModel.wasLowStorageShowed
+        set(value) {
+            sharedViewModel.wasLowStorageShowed = value
+        }
+
+    private var wasLowBatteryShowed: Boolean
+        get() = sharedViewModel.wasLowBatteryShowed
+        set(value) {
+            sharedViewModel.wasLowBatteryShowed = value
+        }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -78,7 +86,7 @@ class StatusBarX1Fragment : StatusBarBaseFragment() {
                 R.string.battery_alert_title,
                 R.string.battery_alert_description
             )
-            sharedViewModel.setLowBatteryShowed(true)
+            wasLowBatteryShowed = true
         }
     }
 
@@ -149,7 +157,7 @@ class StatusBarX1Fragment : StatusBarBaseFragment() {
         }
 
         if (remainingPercent >= PERCENT_TO_SHOW_ALERT_MEMORY_CAPACITY && !wasLowStorageShowed) {
-            sharedViewModel.setLowStorageShowed(true)
+            wasLowBatteryShowed = true
             createAlertForInformationCamera(
                 R.string.storage_alert_title,
                 R.string.storage_alert_description
@@ -158,10 +166,7 @@ class StatusBarX1Fragment : StatusBarBaseFragment() {
     }
 
     private fun setTextStorageLevel(information: List<Double>) {
-        val textToStorage = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            Html.fromHtml(getStringStorageLevel(information), 0)
-        } else getStringStorageLevel(information)
-
+        val textToStorage = Html.fromHtml(getStringStorageLevel(information), 0)
         binding.textViewStorageLevels.text = textToStorage
     }
 

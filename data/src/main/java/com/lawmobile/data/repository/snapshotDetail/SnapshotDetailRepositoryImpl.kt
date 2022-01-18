@@ -12,6 +12,7 @@ import com.safefleet.mobile.external_hardware.cameras.entities.PhotoInformation
 import com.safefleet.mobile.external_hardware.cameras.entities.PhotoMetadata
 import com.safefleet.mobile.kotlin_commons.extensions.doIfSuccess
 import com.safefleet.mobile.kotlin_commons.helpers.Result
+import com.safefleet.mobile.kotlin_commons.helpers.getResultWithAttempts
 import kotlinx.coroutines.delay
 
 class SnapshotDetailRepositoryImpl(private val snapshotDetailRemoteDataSource: SnapshotDetailRemoteDataSource) :
@@ -28,7 +29,11 @@ class SnapshotDetailRepositoryImpl(private val snapshotDetailRemoteDataSource: S
     ): Result<Unit> {
         val photoMetadataList = mutableListOf<PhotoInformation>()
 
-        when (val photosMetadataResult = snapshotDetailRemoteDataSource.getSavedPhotosMetadata()) {
+        val photosMetadataResult = getResultWithAttempts(ATTEMPTS_ON_OPERATION) {
+            snapshotDetailRemoteDataSource.getSavedPhotosMetadata()
+        }
+
+        when (photosMetadataResult) {
             is Result.Success -> photoMetadataList.addAll(photosMetadataResult.data)
             is Result.Error -> return photosMetadataResult
         }
@@ -43,12 +48,16 @@ class SnapshotDetailRepositoryImpl(private val snapshotDetailRemoteDataSource: S
             nameFolder = domainCameraFile.nameFolder
         )
 
-        delay(1000)
+        delay(DELAY_BETWEEN_OPERATION)
 
         photoMetadataList.removeAll { it.fileName == domainCameraFile.name }
         photoMetadataList.add(cameraPhotoMetadata)
 
-        when (val saveResult = snapshotDetailRemoteDataSource.savePartnerIdSnapshot(cameraPhotoMetadata)) {
+        val saveResult = getResultWithAttempts(ATTEMPTS_ON_OPERATION) {
+            snapshotDetailRemoteDataSource.savePartnerIdSnapshot(cameraPhotoMetadata)
+        }
+
+        when (saveResult) {
             is Result.Success -> {
                 val item = FileList.getMetadataOfImageInList(domainCameraFile.name)
                 val domainPhotoMetadata =
@@ -60,9 +69,11 @@ class SnapshotDetailRepositoryImpl(private val snapshotDetailRemoteDataSource: S
             is Result.Error -> return saveResult
         }
 
-        delay(1000)
+        delay(DELAY_BETWEEN_OPERATION)
 
-        return snapshotDetailRemoteDataSource.savePartnerIdInAllSnapshots(photoMetadataList)
+        return getResultWithAttempts(ATTEMPTS_ON_OPERATION) {
+            snapshotDetailRemoteDataSource.savePartnerIdInAllSnapshots(photoMetadataList)
+        }
     }
 
     override suspend fun getInformationOfPhoto(domainCameraFile: DomainCameraFile): Result<DomainInformationImageMetadata> {
@@ -87,5 +98,7 @@ class SnapshotDetailRepositoryImpl(private val snapshotDetailRemoteDataSource: S
 
     companion object {
         private var thereIsErrorInMetadataVideo = false
+        private const val ATTEMPTS_ON_OPERATION = 3
+        private const val DELAY_BETWEEN_OPERATION = 200L
     }
 }
