@@ -99,7 +99,9 @@ class FileListRepositoryImpl(private val fileListRemoteDataSource: FileListRemot
         domainFileList: List<DomainCameraFile>,
         partnerID: String
     ): Result<Unit> {
-        val photoMetadataResult = fileListRemoteDataSource.getSavedPhotosMetadata()
+        val photoMetadataResult = getResultWithAttempts(ASSOCIATE_PARTNER_ATTEMPTS) {
+            fileListRemoteDataSource.getSavedPhotosMetadata()
+        }
         if (photoMetadataResult is Result.Error) return photoMetadataResult
 
         val photoMetadataList = (photoMetadataResult as Result.Success).data.toMutableList()
