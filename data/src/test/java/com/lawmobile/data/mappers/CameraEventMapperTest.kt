@@ -219,6 +219,44 @@ internal class CameraEventMapperTest {
     }
 
     @Test
+    fun localToDomainListReadEvent() {
+        val localEvent = listOf(
+            LocalCameraEvent(
+                name = "Low battery",
+                date = "20/12/2020",
+                eventType = "Camera",
+                eventTag = "",
+                value = "Charge your camera",
+                isRead = 1
+            )
+        )
+        val domainList = CameraEventMapper.localToDomainList(localEvent)
+
+        domainList.forEachIndexed { index, domain ->
+            localEvent.let { camera ->
+                Assert.assertEquals(
+                    domain.value, camera[index].value
+                )
+                Assert.assertEquals(
+                    domain.date, camera[index].date
+                )
+                Assert.assertEquals(
+                    domain.isRead, camera[index].isRead == 1L
+                )
+                Assert.assertEquals(
+                    domain.name, camera[index].name
+                )
+                Assert.assertEquals(
+                    domain.eventType.value, camera[index].eventType
+                )
+                Assert.assertEquals(
+                    domain.eventTag.value, camera[index].eventTag
+                )
+            }
+        }
+    }
+
+    @Test
     fun domainToLocalList() {
         val domainList = listOf(
             CameraEvent(

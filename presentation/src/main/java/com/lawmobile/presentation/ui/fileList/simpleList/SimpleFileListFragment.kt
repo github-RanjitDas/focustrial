@@ -78,8 +78,8 @@ class SimpleFileListFragment : FileListBaseFragment() {
             filter?.filteredList?.filterIsInstance<DomainInformationFile>()
             as MutableList<DomainInformationFile>
         manageFragmentContent(
-            binding.fileListRecycler,
-            binding.noFilesTextView
+            _binding?.fileListRecycler,
+            _binding?.noFilesTextView
         )
     }
 

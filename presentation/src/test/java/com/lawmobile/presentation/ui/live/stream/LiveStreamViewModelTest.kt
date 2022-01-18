@@ -11,6 +11,7 @@ import io.mockk.verify
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.setMain
+import org.junit.Assert
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
@@ -44,5 +45,10 @@ internal class LiveStreamViewModelTest {
     fun testGetUrlForLiveStreamVerifyFlow() {
         liveStreamViewModel.getUrlLive()
         verify { liveStreamingUseCase.getUrlForLiveStream() }
+    }
+
+    @Test
+    fun getMediaPlayer() {
+        Assert.assertEquals(vlcMediaPlayer, liveStreamViewModel.mediaPlayer)
     }
 }
