@@ -74,7 +74,7 @@ open class StatusBarBaseFragment : BaseFragment() {
             doIfSuccess { catalogInfoList ->
                 val eventNames =
                     catalogInfoList.filter { it.type == CatalogTypes.EVENT.value }
-                CameraInfo.metadataEvents.addAll(eventNames)
+                CameraInfo.metadataEvents = eventNames as MutableList<MetadataEvent>
             }
             doIfError {
                 parentLayout.showErrorSnackBar(
