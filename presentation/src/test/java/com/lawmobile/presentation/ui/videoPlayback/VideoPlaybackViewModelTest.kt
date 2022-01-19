@@ -29,9 +29,10 @@ class VideoPlaybackViewModelTest {
 
     private val videoPlaybackUseCase: VideoPlaybackUseCase = mockk()
     private val vlcMediaPlayer: VLCMediaPlayer = mockk()
+    private val informationManager: VideoInformationManager = mockk()
 
     private val viewModel by lazy {
-        VideoPlaybackViewModel(videoPlaybackUseCase, vlcMediaPlayer)
+        VideoPlaybackViewModel(videoPlaybackUseCase, vlcMediaPlayer, informationManager)
     }
 
     private val dispatcher = TestCoroutineDispatcher()
@@ -145,35 +146,7 @@ class VideoPlaybackViewModelTest {
     }
 
     @Test
-    fun getEventSelection() {
-        Assert.assertEquals(-1, viewModel.eventSelection)
-    }
-
-    @Test
-    fun setEventSelection() {
-        viewModel.eventSelection = 2
-        Assert.assertEquals(2, viewModel.eventSelection)
-    }
-
-    @Test
-    fun getGenderSelection() {
-        Assert.assertEquals(-1, viewModel.genderSelection)
-    }
-
-    @Test
-    fun setGenderSelection() {
-        viewModel.genderSelection = 1
-        Assert.assertEquals(1, viewModel.genderSelection)
-    }
-
-    @Test
-    fun getRaceSelection() {
-        Assert.assertEquals(-1, viewModel.raceSelection)
-    }
-
-    @Test
-    fun setRaceSelection() {
-        viewModel.genderSelection = 0
-        Assert.assertEquals(0, viewModel.genderSelection)
+    fun getInformationManager() {
+        Assert.assertEquals(informationManager, viewModel.informationManager)
     }
 }

@@ -59,7 +59,8 @@ object Exclusions {
         "**/WifiHelper.**",
         "**/RunWithDelay.**",
         "**/Build.**",
-        "**/ConnectionHelperImpl.**"
+        "**/ConnectionHelperImpl.**",
+        "**/VideoInformationManager.**"
     )
     val pitest = mutableSetOf(
         //Dagger 2

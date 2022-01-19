@@ -7,6 +7,7 @@ import com.lawmobile.data.utils.CameraServiceFactory
 import com.lawmobile.domain.repository.videoPlayback.VideoPlaybackRepository
 import com.lawmobile.domain.usecase.videoPlayback.VideoPlaybackUseCase
 import com.lawmobile.domain.usecase.videoPlayback.VideoPlaybackUseCaseImpl
+import com.lawmobile.presentation.ui.videoPlayback.VideoInformationManager
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -17,7 +18,6 @@ import dagger.hilt.components.SingletonComponent
 abstract class VideoPlaybackModule {
 
     companion object {
-
         @Provides
         fun provideVideoPlaybackRemoteDataSource(cameraService: CameraServiceFactory): VideoPlaybackRemoteDataSource =
             VideoPlaybackRemoteDataSourceImpl(cameraService)
@@ -29,5 +29,8 @@ abstract class VideoPlaybackModule {
         @Provides
         fun provideVideoPlaybackUseCase(videoPlaybackRepository: VideoPlaybackRepository): VideoPlaybackUseCase =
             VideoPlaybackUseCaseImpl(videoPlaybackRepository)
+
+        @Provides
+        fun provideVideoMetadataManager() = VideoInformationManager()
     }
 }
