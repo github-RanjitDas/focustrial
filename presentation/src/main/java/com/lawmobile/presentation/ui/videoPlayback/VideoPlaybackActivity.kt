@@ -2,9 +2,7 @@ package com.lawmobile.presentation.ui.videoPlayback
 
 import android.graphics.Rect
 import android.os.Bundle
-import android.text.InputFilter
 import android.view.SurfaceView
-import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.cardview.widget.CardView
@@ -14,9 +12,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.lawmobile.domain.entities.CameraInfo
 import com.lawmobile.domain.entities.DomainCameraFile
 import com.lawmobile.domain.entities.DomainInformationVideo
-import com.lawmobile.domain.entities.DomainMetadata
 import com.lawmobile.domain.entities.DomainVideoMetadata
-import com.lawmobile.domain.entities.MetadataEvent
 import com.lawmobile.domain.extensions.getDateDependingOnNameLength
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.databinding.ActivityVideoPlaybackBinding
@@ -27,7 +23,7 @@ import com.lawmobile.presentation.extensions.attachFragment
 import com.lawmobile.presentation.extensions.createAlertDialogUnsavedChanges
 import com.lawmobile.presentation.extensions.detachFragment
 import com.lawmobile.presentation.extensions.milliSecondsToString
-import com.lawmobile.presentation.extensions.onItemSelected
+import com.lawmobile.presentation.extensions.runWithDelay
 import com.lawmobile.presentation.extensions.setOnClickListenerCheckConnection
 import com.lawmobile.presentation.extensions.setPortraitOrientation
 import com.lawmobile.presentation.extensions.showErrorSnackBar
@@ -43,6 +39,7 @@ import com.safefleet.mobile.kotlin_commons.extensions.doIfError
 import com.safefleet.mobile.kotlin_commons.extensions.doIfSuccess
 import com.safefleet.mobile.kotlin_commons.helpers.Result
 import com.safefleet.mobile.safefleet_ui.widgets.SafeFleetFilterTag
+import kotlinx.coroutines.Dispatchers
 
 class VideoPlaybackActivity : BaseActivity() {
 
@@ -50,31 +47,13 @@ class VideoPlaybackActivity : BaseActivity() {
 
     private val viewModel: VideoPlaybackViewModel by viewModels()
 
-    private val eventList = mutableListOf<String>()
-    private val genderList = mutableListOf<String>()
-    private val raceList = mutableListOf<String>()
-
-    private var eventSelection
-        get() = viewModel.eventSelection
-        set(value) {
-            viewModel.eventSelection = value
-        }
-
-    private var genderSelection
-        get() = viewModel.genderSelection
-        set(value) {
-            viewModel.genderSelection = value
-        }
-
-    private var raceSelection
-        get() = viewModel.raceSelection
-        set(value) {
-            viewModel.raceSelection = value
-        }
+    private val metadataManager get() = viewModel.informationManager
+    private val editedVideoInformation: DomainVideoMetadata
+        get() = metadataManager.getEditedInformation(currentVideoInformation)
 
     private var currentAttempts = 0
     private var isVideoMetadataChangesSaved = false
-    private lateinit var currentMetadata: DomainVideoMetadata
+    private lateinit var currentVideoInformation: DomainVideoMetadata
 
     private var associateSnapshotsFragment = AssociateSnapshotsFragment()
     private val bottomSheetBehavior: BottomSheetBehavior<CardView> by lazy {
@@ -104,13 +83,14 @@ class VideoPlaybackActivity : BaseActivity() {
         binding = ActivityVideoPlaybackBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        metadataManager.setup(binding.layoutMetadataForm, getCameraConnectFileFromIntent())
         toggleAssociateDialog(isAssociateDialogOpen)
         setObservers()
         setCollectors()
         verifyIfSelectedVideoWasChanged()
         showLoadingDialog()
 
-        if (domainInformationVideo != null) setVideoInformation()
+        if (videoMediaInformation != null) setVideoInformation()
         else getMediaInformation()
 
         getVideoInformation()
@@ -136,8 +116,6 @@ class VideoPlaybackActivity : BaseActivity() {
 
     private fun setViews() {
         setAppBar()
-        setCatalogLists()
-        addEditTextFilter()
         hideKeyboard()
     }
 
@@ -152,58 +130,8 @@ class VideoPlaybackActivity : BaseActivity() {
         buttonThumbnailList.isVisible = false
     }
 
-    private fun addEditTextFilter() = with(binding.layoutMetadataForm) {
-        ticket1Value.filters = getFiltersWithLength(20)
-        ticket2Value.filters = getFiltersWithLength(20)
-        case1Value.filters = getFiltersWithLength(50)
-        case2Value.filters = getFiltersWithLength(50)
-        dispatch1Value.filters = getFiltersWithLength(30)
-        dispatch2Value.filters = getFiltersWithLength(30)
-        locationValue.filters = getFiltersWithLength(30)
-        notesValue.filters = getFiltersWithLength(100)
-        firstNameValue.filters = getFiltersWithLength(30)
-        lastNameValue.filters = getFiltersWithLength(30)
-        driverLicenseValue.filters = getFiltersWithLength(30)
-        licensePlateValue.filters = getFiltersWithLength(30)
-    }
-
-    private fun getFiltersWithLength(length: Int): Array<InputFilter> {
-        val lengthFilter = InputFilter.LengthFilter(length)
-        val charactersFilter = InputFilter { source, _, _, _, _, _ ->
-            if (source != null && containsNotAllowedCharacters(source)) ""
-            else null
-        }
-
-        return arrayOf(lengthFilter, charactersFilter)
-    }
-
-    private fun containsNotAllowedCharacters(source: CharSequence): Boolean {
-        val comma = ","
-        val ampersand = "&"
-        val quotes = "\""
-        return comma.contains("" + source) ||
-            ampersand.contains("" + source) ||
-            quotes.contains("" + source)
-    }
-
     private fun verifyEventEmpty() {
         if (CameraInfo.metadataEvents.isEmpty()) showErrorInEvents()
-    }
-
-    private fun setCatalogLists() {
-        eventList.add(getString(R.string.select))
-        eventList.addAll(CameraInfo.metadataEvents.map { it.name })
-        raceList.addAll(resources.getStringArray(R.array.race_spinner))
-        genderList.addAll(resources.getStringArray(R.array.gender_spinner))
-
-        with(binding.layoutMetadataForm) {
-            eventValue.adapter =
-                ArrayAdapter(this@VideoPlaybackActivity, R.layout.spinner_item, eventList)
-            raceValue.adapter =
-                ArrayAdapter(this@VideoPlaybackActivity, R.layout.spinner_item, raceList)
-            genderValue.adapter =
-                ArrayAdapter(this@VideoPlaybackActivity, R.layout.spinner_item, genderList)
-        }
     }
 
     private fun showErrorInEvents() {
@@ -229,7 +157,6 @@ class VideoPlaybackActivity : BaseActivity() {
                     setViews()
                     setListeners()
                     setDefaultViews()
-                    restoreSpinnersSelection()
                 }
                 onFullScreen {
                     setFullscreenVisibility(true)
@@ -238,14 +165,8 @@ class VideoPlaybackActivity : BaseActivity() {
                     setFullScreenViews()
                 }
             }
-            domainInformationVideo?.run { createVideoPlayer(this) }
+            videoMediaInformation?.run { createVideoPlayer(this) }
         }
-    }
-
-    private fun restoreSpinnersSelection() = with(binding.layoutMetadataForm) {
-        eventValue.setSelection(if (eventSelection != -1) eventSelection else 0)
-        genderValue.setSelection(if (genderSelection != -1) genderSelection else 0)
-        raceValue.setSelection(if (raceSelection != -1) raceSelection else 0)
     }
 
     private fun setFullScreenViews() {
@@ -267,11 +188,7 @@ class VideoPlaybackActivity : BaseActivity() {
     private fun collectVideoInformation() {
         activityCollect(viewModel.videoInformation) { result ->
             result?.run {
-                doIfSuccess {
-                    currentMetadata = it
-                    setVideoMetadata(it)
-                    CameraInfo.areNewChanges = true
-                }
+                doIfSuccess(::setVideoMetadata)
                 doIfError {
                     this@VideoPlaybackActivity.showToast(
                         getString(R.string.get_video_metadata_error),
@@ -287,11 +204,12 @@ class VideoPlaybackActivity : BaseActivity() {
         activityCollect(viewModel.updateMetadataResult) { result ->
             when (result) {
                 is Result.Success -> {
+                    CameraInfo.areNewChanges = true
                     this.showToast(
                         getString(R.string.video_metadata_saved_success),
                         Toast.LENGTH_SHORT
                     )
-                    onBackPressed()
+                    runWithDelay(dispatcher = Dispatchers.Main.immediate) { onBackPressed() }
                 }
                 is Result.Error -> this.showToast(
                     getString(R.string.video_metadata_save_error),
@@ -306,7 +224,7 @@ class VideoPlaybackActivity : BaseActivity() {
         activityCollect(viewModel.mediaInformation) { result ->
             result?.run {
                 doIfSuccess {
-                    domainInformationVideo = it
+                    videoMediaInformation = it
                     createVideoPlayer(it)
                     setVideoInformation()
                 }
@@ -341,13 +259,6 @@ class VideoPlaybackActivity : BaseActivity() {
         onAssociateSnapshots()
         onPlayingListener()
         stopVideoWhenScrolling()
-        spinnerListeners()
-    }
-
-    private fun spinnerListeners() = with(binding.layoutMetadataForm) {
-        eventValue.onItemSelected { eventSelection = it }
-        genderValue.onItemSelected { genderSelection = it }
-        raceValue.onItemSelected { raceSelection = it }
     }
 
     private fun bottomSheetListeners() {
@@ -388,7 +299,7 @@ class VideoPlaybackActivity : BaseActivity() {
 
     private fun saveButtonListener() {
         binding.buttonSaveMetadata.setOnClickListenerCheckConnection {
-            updateVideoInformationInCamera()
+            saveVideoInformation()
         }
     }
 
@@ -419,59 +330,18 @@ class VideoPlaybackActivity : BaseActivity() {
     private fun ActivityVideoPlaybackBinding.videoIsNotVisible(scrollBounds: Rect) =
         (!fakeSurfaceVideoPlayback.getLocalVisibleRect(scrollBounds) && viewModel.mediaPlayer.isPlaying)
 
-    private fun setVideoMetadata(videoMetadata: DomainVideoMetadata) =
+    private fun setVideoMetadata(videoInformation: DomainVideoMetadata) =
         with(binding.layoutMetadataForm) {
-            videoMetadata.metadata?.let {
-                val eventPosition = getSpinnerSelection(eventList, it.event?.name)
-                val genderPosition = getSpinnerSelection(genderList, it.gender)
-                val racePosition = getSpinnerSelection(raceList, it.race)
-
-                saveSpinnersCurrentSelection(eventPosition, genderPosition, racePosition)
-
-                eventValue.setSelection(eventPosition)
-                partnerIdValue.setText(it.partnerID)
-                ticket1Value.setText(it.ticketNumber)
-                ticket2Value.setText(it.ticketNumber2)
-                case1Value.setText(it.caseNumber)
-                case2Value.setText(it.caseNumber2)
-                dispatch1Value.setText(it.dispatchNumber)
-                dispatch2Value.setText(it.dispatchNumber2)
-                locationValue.setText(it.location)
-                notesValue.setText(it.remarks)
-                firstNameValue.setText(it.firstName)
-                lastNameValue.setText(it.lastName)
-                genderValue.setSelection(genderPosition)
-                raceValue.setSelection(racePosition)
-                driverLicenseValue.setText(it.driverLicense)
-                licensePlateValue.setText(it.licensePlate)
-            }
-
-            videoMetadata.associatedFiles?.let {
-                FilesAssociatedByUser.setTemporalValue(it as MutableList)
-                FilesAssociatedByUser.setFinalValue(it)
-                associateSnapshotsFragment.setSnapshotsAssociatedFromMetadata(it)
+            if (!this@VideoPlaybackActivity::currentVideoInformation.isInitialized) {
+                currentVideoInformation = videoInformation
+                metadataManager.setInformation(videoInformation)
+                videoInformation.associatedFiles?.let {
+                    associateSnapshotsFragment.setSnapshotsAssociatedFromMetadata(it as MutableList)
+                }
             }
 
             hideLoadingDialog()
         }
-
-    private fun saveSpinnersCurrentSelection(
-        eventPosition: Int,
-        genderPosition: Int,
-        racePosition: Int
-    ) {
-        if (eventSelection == -1) eventSelection = eventPosition
-        if (genderSelection == -1) genderSelection = genderPosition
-        if (raceSelection == -1) raceSelection = racePosition
-    }
-
-    private fun getSpinnerSelection(list: List<String>, value: String?): Int {
-        return if (value == null || value.isEmpty()) 0
-        else {
-            val index = list.indexOfFirst { it == value }
-            if (index == -1) 0 else index
-        }
-    }
 
     private fun verifyIfSelectedVideoWasChanged() {
         val videoWasChanged = getCameraConnectFileFromIntent() != currentVideo
@@ -520,16 +390,17 @@ class VideoPlaybackActivity : BaseActivity() {
         FilesAssociatedByUser.setTemporalValue(FilesAssociatedByUser.value)
     }
 
-    private fun updateVideoInformationInCamera() = with(binding) {
+    private fun saveVideoInformation() = with(binding) {
         viewModel.mediaPlayer.pause()
         hideKeyboard()
-        if (layoutMetadataForm.eventValue.selectedItem == eventList[0]) {
+
+        if (!metadataManager.isEventSelected()/*layoutMetadataForm.eventValue.selectedItem == eventList[0]*/) {
             layoutVideoPlayback.showErrorSnackBar(getString(R.string.event_mandatory))
             return
         }
         CameraInfo.areNewChanges = true
         showLoadingDialog()
-        viewModel.saveVideoInformation(getNewMetadataFromForm())
+        viewModel.saveVideoInformation(editedVideoInformation)
         isVideoMetadataChangesSaved = true
     }
 
@@ -554,7 +425,7 @@ class VideoPlaybackActivity : BaseActivity() {
     private fun setVideoInformation() = with(binding.layoutMetadataForm) {
         videoNameValue.text = currentVideo?.name
         startTimeValue.text = currentVideo?.getDateDependingOnNameLength()
-        val durationText = domainInformationVideo?.duration?.toLong()?.times(1000)
+        val durationText = videoMediaInformation?.duration?.toLong()?.times(1000)
             ?.milliSecondsToString()
         durationValue.text = durationText
     }
@@ -596,71 +467,18 @@ class VideoPlaybackActivity : BaseActivity() {
 
     private fun theMetadataWasEdited(): Boolean {
         if (!isVideoMetadataChangesSaved) {
-            val newMetadata = getNewMetadataFromForm().metadata
-            val oldMetadata = currentMetadata.metadata?.apply { convertNullParamsToEmpty() }
-                ?: return newMetadata?.hasAnyInformation() ?: false
+            val newMetadata = editedVideoInformation.metadata
+            val oldMetadata = currentVideoInformation.metadata?.apply { convertNullParamsToEmpty() }
+                ?: return newMetadata?.hasAnyInformation() == true
 
-            return currentMetadata.associatedFiles ?: emptyList() != FilesAssociatedByUser.value ||
+            return currentVideoInformation.associatedFiles ?: emptyList() != FilesAssociatedByUser.value ||
                 newMetadata?.isDifferentFrom(oldMetadata) ?: false
         }
         return false
     }
 
-    private fun getNewMetadataFromForm(): DomainVideoMetadata = binding.layoutMetadataForm.run {
-        var gender = ""
-        var race = ""
-        val event = if (eventValue.selectedItemPosition != 0)
-            CameraInfo.metadataEvents[eventValue.selectedItemPosition - 1]
-        else MetadataEvent("", "", "")
-
-        if (genderValue.selectedItem != genderList[0]) {
-            gender = genderValue.selectedItem.toString()
-        }
-
-        if (raceValue.selectedItem != raceList[0]) {
-            race = raceValue.selectedItem.toString()
-        }
-
-        return DomainVideoMetadata(
-            fileName = videoNameValue.text.toString(),
-            metadata = DomainMetadata(
-                event = event,
-                partnerID = partnerIdValue.text.toString(),
-                ticketNumber = ticket1Value.text.toString(),
-                ticketNumber2 = ticket2Value.text.toString(),
-                caseNumber = case1Value.text.toString(),
-                caseNumber2 = case2Value.text.toString(),
-                dispatchNumber = dispatch1Value.text.toString(),
-                dispatchNumber2 = dispatch2Value.text.toString(),
-                location = locationValue.text.toString(),
-                remarks = notesValue.text.toString(),
-                firstName = firstNameValue.text.toString(),
-                lastName = lastNameValue.text.toString(),
-                gender = gender,
-                race = race,
-                driverLicense = driverLicenseValue.text.toString(),
-                licensePlate = licensePlateValue.text.toString()
-            ),
-            nameFolder = currentVideo?.nameFolder,
-            officerId = CameraInfo.officerId,
-            path = currentMetadata.path ?: currentVideo?.path,
-            associatedFiles = FilesAssociatedByUser.value,
-            annotations = currentMetadata.annotations,
-            serialNumber = CameraInfo.serialNumber,
-            endTime = currentMetadata.endTime,
-            gmtOffset = currentMetadata.gmtOffset,
-            hash = currentMetadata.hash,
-            preEvent = currentMetadata.preEvent,
-            startTime = currentMetadata.startTime,
-            videoSpecs = currentMetadata.videoSpecs,
-            trigger = currentMetadata.trigger,
-            x2sn = currentMetadata.x2sn,
-            x1sn = currentMetadata.x1sn
-        )
-    }
-
     private fun restartObjectOfCompanion() {
-        domainInformationVideo = null
+        videoMediaInformation = null
     }
 
     override fun onBackPressed() {
@@ -680,7 +498,7 @@ class VideoPlaybackActivity : BaseActivity() {
 
     companion object {
         private var currentVideo: DomainCameraFile? = null
-        private var domainInformationVideo: DomainInformationVideo? = null
+        private var videoMediaInformation: DomainInformationVideo? = null
         const val ATTEMPTS_ALLOWED = 2
     }
 }

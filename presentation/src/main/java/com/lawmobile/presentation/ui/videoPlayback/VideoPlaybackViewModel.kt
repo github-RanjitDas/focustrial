@@ -21,12 +21,9 @@ import javax.inject.Inject
 @HiltViewModel
 class VideoPlaybackViewModel @Inject constructor(
     private val videoPlaybackUseCase: VideoPlaybackUseCase,
-    val mediaPlayer: VLCMediaPlayer
+    val mediaPlayer: VLCMediaPlayer,
+    val informationManager: VideoInformationManager
 ) : BaseViewModel() {
-
-    var eventSelection = -1
-    var genderSelection = -1
-    var raceSelection = -1
 
     var isAssociateDialogOpen = false
 
