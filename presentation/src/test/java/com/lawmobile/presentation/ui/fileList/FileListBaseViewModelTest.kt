@@ -116,4 +116,11 @@ class FileListBaseViewModelTest {
             Assert.assertTrue(viewModel.fileListState.first() is FileListState.Simple)
         }
     }
+
+    @Test
+    fun getCurrentFilters() {
+        Assert.assertTrue(viewModel.currentFilters.isEmpty())
+        viewModel.currentFilters = mutableListOf("event")
+        Assert.assertTrue(viewModel.currentFilters.contains("event"))
+    }
 }

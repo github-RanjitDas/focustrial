@@ -51,9 +51,7 @@ class SimpleFileListAdapter(
 
     fun uncheckAllItems() {
         val tmpList = fileList
-        tmpList.forEach {
-            it.isSelected = false
-        }
+        tmpList.forEach { it.isSelected = false }
         onFileCheck?.invoke(0)
         fileList = tmpList
     }

@@ -83,7 +83,7 @@ abstract class FileListBaseFragment : BaseFragment(), FileList {
 
     fun getFilteredList(listToFilter: List<DomainInformationForList>): List<DomainInformationForList> {
         filter?.run {
-            if (!currentFilters.isNullOrEmpty()) {
+            if (currentFilters.isNotEmpty()) {
                 this.listToFilter = listToFilter
                 applyFiltersToLists()
                 return filteredList
