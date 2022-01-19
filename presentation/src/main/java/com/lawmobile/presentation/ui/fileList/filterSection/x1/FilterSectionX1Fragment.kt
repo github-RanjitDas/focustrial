@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
-import com.lawmobile.domain.entities.DomainInformationForList
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.databinding.FragmentFilterSectionListX1Binding
 import com.lawmobile.presentation.extensions.buttonFilterState
@@ -68,25 +67,7 @@ class FilterSectionX1Fragment : BaseFragment(), FileSelection, FilterSection {
         binding.textViewSelectedItems.isVisible = isVisible
     }
 
-    override fun showFilterDialog(
-        listToFilter: List<DomainInformationForList>,
-        enableEvents: Boolean,
-        onApplyFilter: () -> Unit,
-        onCloseFilter: () -> Unit
-    ): CustomFilterDialog {
-        return createFilterDialog(onApplyFilter, onCloseFilter).configure(listToFilter, enableEvents)
-    }
-
-    private fun CustomFilterDialog.configure(
-        listToFilter: List<DomainInformationForList>,
-        enableEvents: Boolean
-    ): CustomFilterDialog = apply {
-        this.listToFilter = listToFilter
-        show()
-        isEventSpinnerFilterVisible(enableEvents)
-    }
-
-    private fun createFilterDialog(
+    override fun createFilterDialog(
         onApplyFilter: () -> Unit,
         onCloseFilter: () -> Unit
     ): CustomFilterDialog =

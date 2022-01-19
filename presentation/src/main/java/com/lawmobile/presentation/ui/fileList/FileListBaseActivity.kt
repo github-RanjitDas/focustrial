@@ -24,6 +24,7 @@ import com.lawmobile.presentation.ui.fileList.state.FileListState
 import com.lawmobile.presentation.ui.fileList.thumbnailList.ThumbnailFileListFragment
 import com.lawmobile.presentation.utils.Constants
 import com.lawmobile.presentation.utils.VLCMediaPlayer
+import com.lawmobile.presentation.widgets.CustomFilterDialog
 import com.safefleet.mobile.android_commons.extensions.hideKeyboard
 import com.safefleet.mobile.kotlin_commons.extensions.doIfError
 import com.safefleet.mobile.kotlin_commons.extensions.doIfSuccess
@@ -43,6 +44,12 @@ abstract class FileListBaseActivity : BaseActivity() {
     protected abstract val filterSection: FilterSection
 
     private lateinit var fileList: FileList
+
+    private var currentFilters
+        get() = viewModel.currentFilters
+        set(value) {
+            viewModel.currentFilters = value
+        }
 
     private var isSelectActive: Boolean
         get() = viewModel.isSelectActive
@@ -218,12 +225,26 @@ abstract class FileListBaseActivity : BaseActivity() {
     }
 
     private fun showFilterDialog() {
-        filterSection.showFilterDialog(
-            fileList.listBackup,
-            isVideoList(),
-            fileList::applyFiltersToList,
+        fileList.filter?.apply {
+            listToFilter = fileList.listBackup
+            show()
+            isEventSpinnerFilterVisible(isVideoList())
+        }
+    }
+
+    private fun createFilterDialog(): CustomFilterDialog {
+        return filterSection.createFilterDialog(
+            ::onApplyFilters,
             ::onCloseFilter
-        ).also { fileList.filter = it }
+        ).also {
+            it.currentFilters = currentFilters
+            fileList.filter = it
+        }
+    }
+
+    private fun onApplyFilters() {
+        currentFilters = fileList.filter?.currentFilters ?: mutableListOf()
+        fileList.applyFiltersToList()
     }
 
     private fun isVideoList(): Boolean = listType == Constants.VIDEO_LIST
@@ -242,7 +263,7 @@ abstract class FileListBaseActivity : BaseActivity() {
                 }
                 doIfError {
                     binding.root.showErrorSnackBar(
-                        getString(R.string.file_list_associate_partner_id_error),
+                        it.message ?: getString(R.string.file_list_associate_partner_id_error),
                         Snackbar.LENGTH_INDEFINITE
                     )
                 }
@@ -253,7 +274,7 @@ abstract class FileListBaseActivity : BaseActivity() {
 
     private fun attachSimpleFileListFragment() {
         fileList = simpleFileListFragment
-        setFileCheckboxListener()
+        configureFileList()
         supportFragmentManager.attachFragment(
             R.id.fragmentListHolder,
             simpleFileListFragment,
@@ -263,12 +284,17 @@ abstract class FileListBaseActivity : BaseActivity() {
 
     private fun attachThumbnailListFragment() {
         fileList = thumbnailFileListFragment
-        setFileCheckboxListener()
+        configureFileList()
         supportFragmentManager.attachFragment(
             R.id.fragmentListHolder,
             thumbnailFileListFragment,
             Constants.THUMBNAIL_FILE_LIST
         )
+    }
+
+    private fun configureFileList() {
+        fileList.filter = createFilterDialog()
+        setFileCheckboxListener()
     }
 
     private fun setFileCheckboxListener() {

@@ -64,6 +64,16 @@ class ThumbnailFileListFragment : FileListBaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setViews()
+        configureLayoutManager()
+    }
+
+    private fun configureLayoutManager() {
+        flexLayoutManager = FlexboxLayoutManager(context).apply {
+            flexDirection = FlexDirection.ROW
+            alignItems = AlignItems.FLEX_START
+            justifyContent = JustifyContent.CENTER
+        }
+        binding.fileListRecycler.layoutManager = flexLayoutManager
     }
 
     override fun onResume() {
@@ -87,13 +97,12 @@ class ThumbnailFileListFragment : FileListBaseFragment() {
     private fun fillAdapter(listItems: MutableList<DomainInformationFile>) {
         listAdapter.apply {
             showCheckBoxes = isSelectionActive
-            listItems.forEach {
-                val domainInformationImage = DomainInformationImage(it.domainCameraFile)
-                listAdapter.addItemToList(domainInformationImage)
-            }
-            listBackup = fileList
+            val imageList = listItems.map { DomainInformationImage(it.domainCameraFile) }
+            imageList.forEach { listAdapter.addItemToList(it) }
+            listBackup = imageList.toMutableList()
         }
 
+        restoreFilters()
         setRecyclerView()
         startRetrievingImages()
     }
@@ -109,15 +118,12 @@ class ThumbnailFileListFragment : FileListBaseFragment() {
     }
 
     override fun applyFiltersToList() {
-        viewModel.cancelGetImageBytes()
-        listAdapter.fileList =
-            filter?.filteredList?.filterIsInstance<DomainInformationImage>()
-            as MutableList<DomainInformationImage>
-        loadNewImage()
-        manageFragmentContent(
-            _binding?.fileListRecycler,
-            _binding?.noFilesTextView
-        )
+        if (activity != null) viewModel.cancelGetImageBytes()
+        val filteredList = filter?.filteredList?.filterIsInstance<DomainInformationImage>()
+            as MutableList<DomainInformationImage>?
+        filteredList?.let { listAdapter.fileList = it }
+        manageFragmentContent(_binding?.fileListRecycler, _binding?.noFilesTextView)
+        if (activity != null) loadNewImage()
     }
 
     override fun getListOfSelectedItems(): List<DomainCameraFile> =
@@ -125,8 +131,7 @@ class ThumbnailFileListFragment : FileListBaseFragment() {
 
     private fun restoreFilters() {
         listAdapter.fileList =
-            listAdapter.fileList.let { getFilteredList(it) }
-            .filterIsInstance<DomainInformationImage>() as MutableList
+            getFilteredList(listBackup).filterIsInstance<DomainInformationImage>() as MutableList
     }
 
     private fun onImageClick(file: DomainInformationImage) {
@@ -143,15 +148,8 @@ class ThumbnailFileListFragment : FileListBaseFragment() {
     }
 
     private fun setRecyclerView() {
-        restoreFilters()
         _binding?.fileListRecycler?.apply {
             setHasFixedSize(true)
-            flexLayoutManager = FlexboxLayoutManager(context).apply {
-                flexDirection = FlexDirection.ROW
-                alignItems = AlignItems.FLEX_START
-                justifyContent = JustifyContent.CENTER
-            }
-            layoutManager = flexLayoutManager
             adapter = listAdapter
             addOnScrollListener(scrollListenerForPagination())
         }

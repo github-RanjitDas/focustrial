@@ -74,13 +74,10 @@ class SimpleFileListFragment : FileListBaseFragment() {
     }
 
     override fun applyFiltersToList() {
-        listAdapter.fileList =
-            filter?.filteredList?.filterIsInstance<DomainInformationFile>()
-            as MutableList<DomainInformationFile>
-        manageFragmentContent(
-            _binding?.fileListRecycler,
-            _binding?.noFilesTextView
-        )
+        val filteredList = filter?.filteredList?.filterIsInstance<DomainInformationFile>()
+            as MutableList<DomainInformationFile>?
+        filteredList?.let { listAdapter.fileList = it }
+        manageFragmentContent(_binding?.fileListRecycler, _binding?.noFilesTextView)
     }
 
     override fun getListOfSelectedItems(): List<DomainCameraFile> =
@@ -88,8 +85,7 @@ class SimpleFileListFragment : FileListBaseFragment() {
 
     private fun restoreFilters() {
         listAdapter.fileList =
-            listAdapter.fileList.let { getFilteredList(it) }
-            .filterIsInstance<DomainInformationFile>() as MutableList
+            getFilteredList(listBackup).filterIsInstance<DomainInformationFile>() as MutableList
     }
 
     private fun setListeners() {
@@ -107,7 +103,6 @@ class SimpleFileListFragment : FileListBaseFragment() {
     }
 
     fun setRecyclerView() {
-        restoreFilters()
         _binding?.fileListRecycler?.apply {
             setHasFixedSize(true)
             layoutManager = LinearLayoutManager(requireContext())
@@ -125,20 +120,12 @@ class SimpleFileListFragment : FileListBaseFragment() {
     private fun handleFileListResult(result: Result<DomainInformationFileResponse>) {
         with(result) {
             doIfSuccess {
-                if (it.errors.isNotEmpty()) {
-                    handleErrors(it.errors)
-                }
+                if (it.errors.isNotEmpty()) handleErrors(it.errors)
                 if (it.items.isNotEmpty()) {
-                    showFileListRecycler(
-                        binding.fileListRecycler,
-                        binding.noFilesTextView
-                    )
+                    showFileListRecycler(binding.fileListRecycler, binding.noFilesTextView)
                     fillAdapter(it.items)
                 } else {
-                    showEmptyListMessage(
-                        binding.fileListRecycler,
-                        binding.noFilesTextView
-                    )
+                    showEmptyListMessage(binding.fileListRecycler, binding.noFilesTextView)
                 }
             }
             doIfError {
@@ -189,8 +176,9 @@ class SimpleFileListFragment : FileListBaseFragment() {
                 VIDEO_LIST -> updateItems(sortedList)
             }
             showCheckBoxes = isSelectionActive
-            listBackup = fileList
+            listBackup = listItems
         }
+        restoreFilters()
         setRecyclerView()
     }
 

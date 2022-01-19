@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
-import com.lawmobile.domain.entities.DomainInformationForList
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.databinding.FragmentFilterSectionListX2Binding
 import com.lawmobile.presentation.extensions.buttonFilterState
@@ -74,25 +73,7 @@ class FilterSectionX2Fragment : BaseFragment(), ListTypeButtons, FileSelection, 
 
     private fun isButtonSelectToAssociateActive() = binding.buttonSelectToAssociate.isActivated
 
-    override fun showFilterDialog(
-        listToFilter: List<DomainInformationForList>,
-        enableEvents: Boolean,
-        onApplyFilter: () -> Unit,
-        onCloseFilter: () -> Unit
-    ): CustomFilterDialog {
-        return createFilterDialog(onApplyFilter, onCloseFilter).configure(listToFilter, enableEvents)
-    }
-
-    private fun CustomFilterDialog.configure(
-        listToFilter: List<DomainInformationForList>,
-        enableEvents: Boolean
-    ): CustomFilterDialog = apply {
-        this.listToFilter = listToFilter
-        show()
-        isEventSpinnerFilterVisible(enableEvents)
-    }
-
-    private fun createFilterDialog(
+    override fun createFilterDialog(
         onApplyFilter: () -> Unit,
         onCloseFilter: () -> Unit
     ): CustomFilterDialog =
@@ -104,21 +85,21 @@ class FilterSectionX2Fragment : BaseFragment(), ListTypeButtons, FileSelection, 
             onCloseFilter
         )
 
-    private fun updateFilterButtonState(isActive: Boolean) {
-        binding.scrollFilterTags.isVisible = isActive
-        binding.buttonOpenFilters.buttonFilterState(isActive)
+    private fun updateFilterButtonState(isActive: Boolean) = with(binding) {
+        scrollFilterTags.isVisible = isActive
+        buttonOpenFilters.buttonFilterState(isActive)
     }
 
-    override fun toggleListType(isSimple: Boolean) {
-        binding.buttonSimpleList.isActivated = isSimple
-        binding.buttonThumbnailList.isActivated = !isSimple
+    override fun toggleListType(isSimple: Boolean) = with(binding) {
+        buttonSimpleList.isActivated = isSimple
+        buttonThumbnailList.isActivated = !isSimple
     }
 
-    private fun setListener() {
-        binding.buttonSelectToAssociate.setOnClickListenerCheckConnection { onButtonSelectClick() }
-        binding.buttonOpenFilters.setOnClickListenerCheckConnection { onButtonFilterClick() }
-        binding.buttonSimpleListListener()
-        binding.buttonThumbnailListListener()
+    private fun setListener() = with(binding) {
+        buttonSelectToAssociate.setOnClickListenerCheckConnection { onButtonSelectClick() }
+        buttonOpenFilters.setOnClickListenerCheckConnection { onButtonFilterClick() }
+        buttonSimpleListListener()
+        buttonThumbnailListListener()
     }
 
     private fun FragmentFilterSectionListX2Binding.buttonThumbnailListListener() {
