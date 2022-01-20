@@ -1,6 +1,5 @@
 package com.lawmobile.presentation.ui.live.statusBar
 
-import android.os.Build
 import android.text.Html
 import android.widget.ImageView
 import android.widget.TextView
@@ -165,9 +164,8 @@ open class StatusBarBaseFragment : BaseFragment() {
             if (hoursLeftNumber < 1) (hoursLeftNumber * 60).toInt().toString() + " minutes"
             else "$hoursLeftText hours"
 
-        val textBatteryPercent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
+        val textBatteryPercent =
             Html.fromHtml(getString(R.string.battery_percent, batteryPercent, hoursLeftText), 0)
-        else getString(R.string.battery_percent, batteryPercent, hoursLeftText)
         textViewBattery.text = textBatteryPercent
     }
 

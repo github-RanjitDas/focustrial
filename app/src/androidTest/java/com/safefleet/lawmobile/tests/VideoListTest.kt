@@ -5,6 +5,7 @@ import androidx.test.filters.LargeTest
 import androidx.test.filters.MediumTest
 import com.lawmobile.presentation.ui.login.x1.LoginX1Activity
 import com.safefleet.lawmobile.R
+import com.safefleet.lawmobile.helpers.CustomAssertionActions.waitUntil
 import com.safefleet.lawmobile.screens.FileListScreen
 import com.safefleet.lawmobile.screens.FilterDialogScreen
 import com.safefleet.lawmobile.screens.LiveViewScreen
@@ -159,7 +160,7 @@ class VideoListTest : EspressoStartActivityBaseTest<LoginX1Activity>(LoginX1Acti
         liveViewScreen.openVideoList()
 
         with(fileListScreen) {
-            scrollListToPosition(videosQuantity - 1)
+            waitUntil { scrollListToPosition(videosQuantity - 1) }
             scrollListToPosition(0)
             scrollListToPosition(videosQuantity - 1)
             scrollListToPosition(0)

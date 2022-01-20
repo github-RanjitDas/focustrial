@@ -211,7 +211,7 @@ class VideoPlaybackActivity : BaseActivity() {
                     )
                     runWithDelay(dispatcher = Dispatchers.Main.immediate) { onBackPressed() }
                 }
-                is Result.Error -> this.showToast(
+                is Result.Error -> showToast(
                     getString(R.string.video_metadata_save_error),
                     Toast.LENGTH_SHORT
                 )
@@ -233,7 +233,7 @@ class VideoPlaybackActivity : BaseActivity() {
                         currentAttempts += 1
                         currentVideo?.let(viewModel::getMediaInformation)
                     } else {
-                        baseContext.showToast(
+                        showToast(
                             getString(R.string.error_get_information_metadata),
                             Toast.LENGTH_SHORT
                         )
@@ -394,7 +394,7 @@ class VideoPlaybackActivity : BaseActivity() {
         viewModel.mediaPlayer.pause()
         hideKeyboard()
 
-        if (!metadataManager.isEventSelected()/*layoutMetadataForm.eventValue.selectedItem == eventList[0]*/) {
+        if (!metadataManager.isEventSelected()) {
             layoutVideoPlayback.showErrorSnackBar(getString(R.string.event_mandatory))
             return
         }

@@ -25,6 +25,7 @@ import dagger.hilt.components.SingletonComponent
 import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.flowOf
 import org.videolan.libvlc.LibVLC
 import org.videolan.libvlc.MediaPlayer
 import javax.inject.Singleton
@@ -77,6 +78,7 @@ class AppModule {
                 every { isWifiEnable() } returns false andThen true
             }
             every { getSSIDWiFi() } returns cameraSSID
+            every { isWifiSignalLow } returns flowOf(false)
         }
 
         @Provides

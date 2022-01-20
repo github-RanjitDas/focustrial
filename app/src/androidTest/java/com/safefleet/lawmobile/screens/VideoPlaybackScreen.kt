@@ -1,5 +1,6 @@
 package com.safefleet.lawmobile.screens
 
+import com.lawmobile.presentation.utils.Build
 import com.safefleet.lawmobile.R
 import com.safefleet.lawmobile.helpers.Alert
 import com.safefleet.lawmobile.helpers.CustomAssertionActions.waitUntil
@@ -77,12 +78,15 @@ class VideoPlaybackScreen : BaseScreen() {
         assertNotDisplayed(R.id.licensePlateValue, "")
     }
 
-    fun isSavedSuccessDisplayed() =
-        ToastMessage.isToastDisplayed(R.string.video_metadata_saved_success)
+    fun isSavedSuccessDisplayed() {
+        if (Build.getSDKVersion() < android.os.Build.VERSION_CODES.R) { // this is because there is an open issue with Android 11 https://github.com/android/android-test/issues/751
+            ToastMessage.isToastDisplayed(R.string.video_metadata_saved_success)
+        }
+    }
 
     fun isEventMandatoryDisplayed() {
         ToastMessage.isToastDisplayed(R.string.event_mandatory)
-        waitUntil { ToastMessage.isToastNotDisplayed(R.string.event_mandatory) }
+        waitUntil(8000) { ToastMessage.isToastNotDisplayed(R.string.event_mandatory) }
     }
 
     fun isMetadataChangesAlertDisplayed() = Alert.isMetadataChangesDisplayed()
