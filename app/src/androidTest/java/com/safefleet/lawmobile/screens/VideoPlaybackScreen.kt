@@ -80,7 +80,7 @@ class VideoPlaybackScreen : BaseScreen() {
 
     fun isSavedSuccessDisplayed() {
         if (Build.getSDKVersion() < android.os.Build.VERSION_CODES.R) { // this is because there is an open issue with Android 11 https://github.com/android/android-test/issues/751
-            ToastMessage.isToastDisplayed(R.string.video_metadata_saved_success)
+            waitUntil { ToastMessage.isToastDisplayed(R.string.video_metadata_saved_success) }
         }
     }
 

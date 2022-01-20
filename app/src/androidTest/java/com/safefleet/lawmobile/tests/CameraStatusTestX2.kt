@@ -14,7 +14,7 @@ import org.junit.runner.RunWith
 
 @LargeTest
 @RunWith(AndroidJUnit4::class)
-class CameraStatusTest : EspressoBaseTest() {
+class CameraStatusTestX2 : EspressoBaseTest() {
     private val liveViewScreen = LiveViewScreen()
 
     @get:Rule
@@ -22,7 +22,7 @@ class CameraStatusTest : EspressoBaseTest() {
 
     @Before
     fun setUp() {
-        mockUtils.setCameraType(CameraType.X1)
+        mockUtils.setCameraType(CameraType.X2)
         baristaRule.launchActivity()
         LoginScreen().login()
     }
@@ -32,25 +32,24 @@ class CameraStatusTest : EspressoBaseTest() {
      */
     @Test
     fun verifyBatteryIndicator() {
-        mockUtils.setBatteryProgressCamera(100)
-        liveViewScreen.refreshCameraStatusX1()
-        liveViewScreen.isBatteryIndicatorTextDisplayedX1("100")
+        mockUtils.setBatteryProgressCameraX2(100)
+        liveViewScreen.isBatteryIndicatorTextDisplayed("100")
         liveViewScreen.isBatteryStatusDisplayed()
 
-        mockUtils.setBatteryProgressCamera(34)
-        liveViewScreen.refreshCameraStatusX1()
-        liveViewScreen.isBatteryIndicatorTextDisplayedX1("34")
+        liveViewScreen.refreshCameraStatus()
+        mockUtils.setBatteryProgressCameraX2(34)
+        liveViewScreen.closeHelpView()
+        liveViewScreen.isBatteryIndicatorTextDisplayed("34")
         liveViewScreen.isBatteryStatusDisplayed()
 
-        mockUtils.setBatteryProgressCamera(5)
-        liveViewScreen.refreshCameraStatusX1()
-        liveViewScreen.clickOkButton()
-        liveViewScreen.isBatteryIndicatorTextDisplayedX1("5")
+        mockUtils.setBatteryProgressCameraX2(5)
+        liveViewScreen.isBatteryIndicatorTextDisplayed("5")
         liveViewScreen.isBatteryStatusDisplayed()
 
-        mockUtils.setBatteryProgressCamera(0)
-        liveViewScreen.refreshCameraStatusX1()
-        liveViewScreen.isBatteryIndicatorNotAvailableDisplayedX1()
+        liveViewScreen.refreshCameraStatus()
+        mockUtils.setBatteryProgressCameraX2(0)
+        liveViewScreen.closeHelpView()
+        liveViewScreen.isBatteryIndicatorTextDisplayed("0")
         liveViewScreen.isBatteryStatusDisplayed()
     }
 
@@ -59,20 +58,19 @@ class CameraStatusTest : EspressoBaseTest() {
      */
     @Test
     fun verifyStorageIndicator() {
-        mockUtils.setStorageProgressCamera(60_000_000, 60_000_000)
-        liveViewScreen.refreshCameraStatusX1()
-        liveViewScreen.isMemoryStorageIndicatorTextDisplayedX1("0 MB")
+        mockUtils.setStorageProgressCameraX2(100)
+        liveViewScreen.isMemoryStorageIndicatorTextDisplayed("100")
         liveViewScreen.isMemoryStorageStatusDisplayed()
 
-        mockUtils.setStorageProgressCamera(60_000_000, 10_000_000)
-        liveViewScreen.refreshCameraStatusX1()
-        liveViewScreen.isMemoryStorageIndicatorTextDisplayedX1("47.7 GB")
+        mockUtils.setStorageProgressCameraX2(84)
+        liveViewScreen.isMemoryStorageIndicatorTextDisplayed("84")
         liveViewScreen.isMemoryStorageStatusDisplayed()
 
-        mockUtils.setStorageProgressCamera(60_000_000, 0)
-        liveViewScreen.refreshCameraStatusX1()
-        liveViewScreen.clickOkButton()
-        liveViewScreen.isMemoryStorageIndicatorTextDisplayedX1("57.2 GB")
+        liveViewScreen.refreshCameraStatus()
+        mockUtils.setStorageProgressCameraX2(0)
+        liveViewScreen.closeHelpView()
+        liveViewScreen.isLowStorageNotificationDisplayed()
+        liveViewScreen.isMemoryStorageIndicatorTextDisplayed("0")
         liveViewScreen.isMemoryStorageStatusDisplayed()
     }
 }

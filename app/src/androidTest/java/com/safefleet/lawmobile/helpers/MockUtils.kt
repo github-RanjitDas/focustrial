@@ -6,6 +6,7 @@ import com.safefleet.lawmobile.di.mocksServiceCameras.CameraConnectServiceMock
 import com.safefleet.lawmobile.testData.CameraFilesData
 import com.safefleet.lawmobile.testData.TestLoginData
 import com.safefleet.mobile.external_hardware.cameras.entities.FileResponseWithErrors
+import com.safefleet.mobile.external_hardware.cameras.entities.NotificationResponse
 import com.safefleet.mobile.kotlin_commons.helpers.Result
 import io.mockk.every
 import io.mockk.mockk
@@ -84,6 +85,24 @@ class MockUtils {
 
     fun setBatteryProgressCamera(progress: Int) {
         progressBatteryCamera = Result.Success(progress)
+    }
+
+    fun setBatteryProgressCameraX2(progress: Int) {
+        val notification = NotificationResponse(
+            "7",
+            "battery_level",
+            progress.toString()
+        )
+        cameraConnectServiceX1Mock.sendPushNotification(notification)
+    }
+
+    fun setStorageProgressCameraX2(percentage: Int) {
+        val notification = NotificationResponse(
+            "7",
+            "storage_remain",
+            percentage.toString()
+        )
+        cameraConnectServiceX1Mock.sendPushNotification(notification)
     }
 
     fun setStorageProgressCamera(totalStorage: Int, freeStorage: Int) {

@@ -37,7 +37,7 @@ open class FileListScreen : BaseScreen() {
     var targetCheckBox: Int = 0
 
     fun scrollListToPosition(position: Int) {
-        BaristaListInteractions.scrollListToPosition(recyclerView, position)
+        waitUntil { BaristaListInteractions.scrollListToPosition(recyclerView, position) }
     }
 
     fun selectCheckboxOnPosition(position: Int) {
