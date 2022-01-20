@@ -67,8 +67,8 @@ class VideoPlaybackTest : EspressoStartActivityBaseTest<LoginX1Activity>(LoginX1
             selectEvent(defaultMetadata)
             clickOnSave()
             isSavedSuccessDisplayed()
-            fileListScreen.isFileListDisplayed()
         }
+        fileListScreen.isFileListDisplayed()
     }
 
     /**

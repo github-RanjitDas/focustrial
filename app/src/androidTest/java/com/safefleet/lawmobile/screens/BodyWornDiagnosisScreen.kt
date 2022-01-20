@@ -48,7 +48,7 @@ class BodyWornDiagnosisScreen : BaseScreen() {
         assertDisplayed(R.id.textDescriptionDiagnosis, R.string.diagnosis_failed_message)
 
     fun isErrorBodyWornDiagnosisMessageDisplayed() =
-        assertContains(R.string.error_trying_to_diagnose)
+        waitUntil { assertContains(R.string.error_trying_to_diagnose) }
 
     fun isCloseButtonDisplayed() = assertDisplayed(R.id.imageButtonBackArrow)
 }

@@ -48,7 +48,7 @@ open class FileListScreen : BaseScreen() {
         )
     }
 
-    fun clickOnBack() = clickOn(R.id.imageButtonBackArrow)
+    fun clickOnBack() = waitUntil { clickOn(R.id.imageButtonBackArrow) }
 
     fun clickOnItemInPosition(position: Int) =
         waitUntil { clickListItem(recyclerView, position) }
