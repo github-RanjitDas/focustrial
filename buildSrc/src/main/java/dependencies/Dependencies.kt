@@ -123,6 +123,10 @@ object Dependencies {
         const val mockkAndroid = "io.mockk:mockk-android:$VERSION"
     }
 
+    object NewRelic {
+        const val android = "com.newrelic.agent.android:android-agent:6.3.1"
+    }
+
     object PDF {
         private const val VERSION = "3.2.0-beta.1"
         const val pdfViewer = "com.github.barteksc:android-pdf-viewer:$VERSION"
