@@ -224,7 +224,7 @@ class MenuFragment : BaseFragment() {
         CameraInfo.cleanInfo()
         menuViewModel.disconnectCamera()
         val intent =
-            context?.getCameraTypeIntent(LoginX1Activity::class.java, LoginX2Activity::class.java)
+            context?.getIntentForCameraType(LoginX1Activity::class.java, LoginX2Activity::class.java)
         startActivity(intent)
         activity?.finish()
     }

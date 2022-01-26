@@ -32,7 +32,7 @@ class BodyWornDiagnosisActivity : BaseActivity() {
         setObservers()
     }
 
-    private fun setCustomAppBar() = with(binding) {
+    private fun setCustomAppBar() = with(binding.diagnosisAppBar) {
         textViewTitle.text = getString(R.string.live_view_menu_item_diagnose)
         imageButtonBackArrow.setImageResource(R.drawable.ic_cancel)
         imageButtonBackArrow.setOnClickListener { onBackPressed() }
@@ -40,7 +40,7 @@ class BodyWornDiagnosisActivity : BaseActivity() {
 
     private fun configureListeners() = with(binding) {
         buttonStartDiagnosis.setOnClickListenerCheckConnection { state = DiagnosisState.Progress }
-        imageButtonBackArrow.setOnClickListenerCheckConnection { onBackPressed() }
+        diagnosisAppBar.imageButtonBackArrow.setOnClickListenerCheckConnection { onBackPressed() }
         buttonOkFinishedDiagnosis.setOnClickListenerCheckConnection { finish() }
     }
 

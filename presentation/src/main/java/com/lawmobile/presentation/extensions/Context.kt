@@ -17,7 +17,6 @@ import com.lawmobile.domain.enums.CameraType
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.entities.AlertInformation
 import com.lawmobile.presentation.ui.base.BaseActivity
-import com.lawmobile.presentation.ui.base.BaseActivity.Companion.checkIfSessionIsExpired
 import com.lawmobile.presentation.utils.CameraHelper
 import com.lawmobile.presentation.utils.checkIfSessionIsExpired
 import com.lawmobile.presentation.widgets.CustomNotificationDialog
@@ -168,16 +167,16 @@ fun Context.isAnimationsEnabled() =
         Settings.Global.TRANSITION_ANIMATION_SCALE,
         0F
     ) != 0F &&
-        Settings.System.getFloat(
-        contentResolver,
-        Settings.Global.WINDOW_ANIMATION_SCALE,
-        0F
-    ) != 0F &&
-        Settings.System.getFloat(
-        contentResolver,
-        Settings.Global.ANIMATOR_DURATION_SCALE,
-        0F
-    ) != 0F
+            Settings.System.getFloat(
+                contentResolver,
+                Settings.Global.WINDOW_ANIMATION_SCALE,
+                0F
+            ) != 0F &&
+            Settings.System.getFloat(
+                contentResolver,
+                Settings.Global.ANIMATOR_DURATION_SCALE,
+                0F
+            ) != 0F
 
 fun Context.createNotificationDialog(
     cameraEvent: CameraEvent,

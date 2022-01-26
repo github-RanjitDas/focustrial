@@ -24,12 +24,8 @@ import com.lawmobile.presentation.extensions.createLowWifiSignalAlert
 import com.lawmobile.presentation.extensions.createMobileDataAlert
 import com.lawmobile.presentation.extensions.createNotificationDialog
 import com.lawmobile.presentation.security.RootedHelper
-import com.lawmobile.presentation.ui.login.x1.LoginX1Activity
 import com.lawmobile.presentation.utils.CameraHelper
 import com.lawmobile.presentation.utils.EspressoIdlingResource
-import com.lawmobile.presentation.utils.MobileDataStatus
-import com.lawmobile.presentation.utils.WifiHelper
-import com.lawmobile.presentation.utils.WifiStatus
 import com.lawmobile.presentation.utils.checkIfSessionIsExpired
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
@@ -237,10 +233,5 @@ open class BaseActivity : AppCompatActivity() {
 
         const val PERMISSION_FOR_LOCATION = 100
         const val MAX_TIME_SESSION = 300000
-
-        fun checkIfSessionIsExpired(): Boolean {
-            val timeNow = Timestamp(System.currentTimeMillis())
-            return (timeNow.time - lastInteraction.time) > MAX_TIME_SESSION
-        }
     }
 }

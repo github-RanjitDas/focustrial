@@ -54,7 +54,6 @@ class AssociateFilesFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        checkableListInit = true
         setListType()
         setExtras()
         setListeners()
@@ -157,10 +156,10 @@ class AssociateFilesFragment : BaseFragment() {
     private fun showFilterDialog() {
         var listToFilter = listOf<DomainInformationForList>()
 
-        when (actualFragment) {
+        /*when (actualFragment) {
             SIMPLE_FILE_LIST -> listToFilter = simpleFileListFragment.fileListBackup
             THUMBNAIL_FILE_LIST -> listToFilter = thumbnailFileListFragment.fileListBackup
-        }
+        }*/
 
         if (filterDialog == null) {
             filterDialog =

@@ -24,11 +24,16 @@ class WifiHelperImpl(
     private val connectivityManager: ConnectivityManager
 ) : WifiHelper {
 
+    private var isWifiSignalStateLow = false
+
     override val isWifiSignalLow = flow {
         while (CameraInfo.isOfficerLogged) {
             delay(DELAY_ON_READING_SIGNAL)
             val isSignalLevelLow = getSignalLevel() == LOW_SIGNAL_LEVEL
-            emit(isSignalLevelLow)
+            if (isSignalLevelLow != isWifiSignalStateLow) {
+                isWifiSignalStateLow = isSignalLevelLow
+                emit(isSignalLevelLow)
+            }
         }
     }
 
@@ -56,6 +61,8 @@ class WifiHelperImpl(
         }
     }
 
+    @SuppressLint("NewApi")
+    @Suppress("DEPRECATION")
     private fun getSignalLevel(): Int {
         val connectionInfo = wifiManager.connectionInfo
         return if (getSDKVersion() >= Build.VERSION_CODES.R) {

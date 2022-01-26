@@ -534,4 +534,44 @@
         android:visibility="gone"
         app:layout_constraintTop_toBottomOf="@id/buttonAssociateSnapshots" />
 
+    <TextView
+        android:id="@+id/associateAudioTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/video_playback_metadata_spacing"
+        android:text="@string/associate_audios_to_video"
+        android:textSize="@dimen/video_playback_metadata_text_size"
+        android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@+id/layoutAssociatedSnapshots"
+        tools:ignore="Autofill,LabelFor" />
+
+    <Button
+        android:id="@+id/buttonAssociateAudios"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_5dp"
+        android:background="@drawable/shape_add_images"
+        android:contentDescription="@string/button_link_audios_description"
+        android:drawableStart="@drawable/ic_plus"
+        android:paddingHorizontal="@dimen/padding_50dp"
+        android:text="@string/add_audios"
+        android:textAllCaps="false"
+        android:textColor="@color/lightBlue"
+        android:textSize="@dimen/text_size_16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/associateAudioTitle" />
+
+    <GridLayout
+        android:id="@+id/layoutAssociatedAudios"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/video_playback_metadata_spacing"
+        android:background="@drawable/shape_unchecked_box"
+        android:columnCount="1"
+        android:paddingHorizontal="@dimen/padding_50dp"
+        android:paddingVertical="@dimen/padding_5dp"
+        android:useDefaultMargins="true"
+        app:layout_constraintTop_toBottomOf="@id/buttonAssociateAudios" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

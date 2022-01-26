@@ -10,14 +10,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.3"/>
+        app:layout_constraintGuide_percent="0.3" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/bottomGuideline"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.7"/>
+        app:layout_constraintGuide_percent="0.7" />
 
     <TextView
         android:id="@+id/textViewConnectToCamera"
@@ -27,10 +27,10 @@
         android:text="@string/waiting_for_camera"
         android:textColor="@color/white"
         android:textSize="@dimen/text_h3"
-        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="@id/topGuideline"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/buttonGo"
@@ -40,39 +40,40 @@
         android:text="@string/go"
         android:textColor="@color/white"
         android:textSize="@dimen/button_go_text_size"
-        app:layout_constraintBottom_toTopOf="@id/buttonInstructionsToLinkCamera"
+        app:layout_constraintBottom_toTopOf="@id/buttonChangeCamera"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/textViewConnectToCamera" />
 
-        <Button
-            android:id="@+id/buttonInstructionsToLinkCamera"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_20dp"
-            android:background="@drawable/background_button_border_white"
-            android:text="@string/instructions_to_link_camera"
-            android:textAllCaps="false"
-            android:textColor="@color/white"
-            android:textSize="@dimen/button_instructions_text_size"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/buttonChangeCamera"
+    <Button
+        android:id="@+id/buttonChangeCamera"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/background_button_border_white"
+        android:text="@string/change_camera_type"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:textSize="@dimen/button_instructions_text_size"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/buttonInstructionsToLinkCamera"
+        app:layout_constraintTop_toTopOf="@id/bottomGuideline" />
 
-        <Button
-            android:id="@+id/buttonChangeCamera"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/change_camera_type"
-            android:textAllCaps="false"
-            android:background="@drawable/background_button_border_white"
-            android:textColor="@color/white"
-            android:textSize="@dimen/button_instructions_text_size"
-            android:layout_marginTop="@dimen/button_instructions_margin_top"
-            app:layout_constraintTop_toBottomOf="@id/buttonGo"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+    <Button
+        android:id="@+id/buttonInstructionsToLinkCamera"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/background_button_border_white"
+        android:paddingHorizontal="@dimen/padding_30dp"
+        android:text="@string/instructions_to_link_camera"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:textSize="@dimen/button_instructions_text_size"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/buttonChangeCamera"
+        app:layout_constraintBottom_toBottomOf="parent"/>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

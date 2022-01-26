@@ -60,9 +60,8 @@ class SnapshotDetailRepositoryImpl(
 
         when (saveResult) {
             is Result.Success -> {
-                val item = FileList.getMetadataOfImageInList(domainCameraFile.name)
-                val domainPhotoMetadata =
-                    PhotoMetadataMapper.cameraToDomain(cameraPhotoMetadata)
+                val item = FileList.findAndGetImageMetadata(domainCameraFile.name)
+                val domainPhotoMetadata = cameraPhotoMetadata.toDomain()
                 val newItemPhoto =
                     DomainInformationImageMetadata(domainPhotoMetadata, item?.videosAssociated)
                 FileList.updateItemInImageMetadataList(newItemPhoto)
@@ -98,7 +97,6 @@ class SnapshotDetailRepositoryImpl(
     }
 
     companion object {
-        private var thereIsErrorInMetadataVideo = false
         private const val ATTEMPTS_ON_OPERATION = 3
         private const val DELAY_BETWEEN_OPERATION = 200L
     }
