@@ -12,6 +12,10 @@ enum class CameraType {
         }
     };
 
+    fun isX1() = this == X1
+
+    fun isX2() = this == X2
+
     open fun getPossibleStringsToIdentifySSID(): List<String> = emptyList()
 
     open fun reviewIfIsThisTypeOfCamera(serialNumber: String): Boolean {

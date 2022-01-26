@@ -9,7 +9,7 @@ import com.schibsted.spain.barista.interaction.BaristaEditTextInteractions.write
 
 class SnapshotDetailScreen : BaseScreen() {
 
-    fun goBack() = clickOn(R.id.imageButtonBackArrow)
+    fun goBack() = waitUntil { clickOn(R.id.imageButtonBackArrow) }
 
     fun clickAssociateOfficer() = waitUntil { clickOn(R.id.buttonAssociatePartnerIdList) }
 

@@ -6,6 +6,7 @@ import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.matcher.RootMatchers.isPlatformPopup
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import com.safefleet.lawmobile.R
+import com.safefleet.lawmobile.helpers.CustomAssertionActions.waitUntil
 import com.schibsted.spain.barista.interaction.BaristaClickInteractions.clickOn
 import com.schibsted.spain.barista.interaction.BaristaPickerInteractions.setDateOnPicker
 
@@ -30,7 +31,7 @@ class FilterDialogScreen {
 
     fun applyFilter() = clickOn(R.id.buttonApplyFilter)
 
-    fun clearStartDate() = clickOn(R.id.buttonClearStartDate)
+    fun clearStartDate() = waitUntil { clickOn(R.id.buttonClearStartDate) }
 
     fun selectEvent(@StringRes event: Int) {
         clickOn(R.id.eventsSpinnerFilter)

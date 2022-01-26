@@ -17,6 +17,8 @@ open class LoginBaseViewModel(
     private val ioDispatcher: CoroutineDispatcher
 ) : BaseViewModel() {
 
+    var isInstructionsOpen = false
+
     val userFromCameraResult: LiveData<Result<User>> get() = _userFromCameraResult
     private val _userFromCameraResult by lazy { MediatorLiveData<Result<User>>() }
 

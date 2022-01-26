@@ -9,18 +9,18 @@ import com.lawmobile.presentation.databinding.FragmentAppBarX1Binding
 import com.lawmobile.presentation.extensions.setClickListenerCheckConnection
 import com.lawmobile.presentation.extensions.setOnClickListenerCheckConnection
 import com.lawmobile.presentation.ui.base.BaseFragment
+import com.lawmobile.presentation.ui.fileList.shared.ListTypeButtons
 
-class AppBarX1Fragment : BaseFragment() {
+class AppBarX1Fragment : BaseFragment(), ListTypeButtons {
 
     private val binding: FragmentAppBarX1Binding get() = _binding!!
     private var _binding: FragmentAppBarX1Binding? = null
 
     lateinit var onBackPressed: () -> Unit
-    lateinit var onTapThumbnail: () -> Unit
-    lateinit var onTapSimpleList: () -> Unit
-    private lateinit var title: String
+    override lateinit var onThumbnailsClick: () -> Unit
+    override lateinit var onSimpleClick: () -> Unit
+
     private var showNavigationList: Boolean = false
-    private var isViewCreated: Boolean = false
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -35,7 +35,6 @@ class AppBarX1Fragment : BaseFragment() {
         super.onViewCreated(view, savedInstanceState)
         configureView()
         setListeners()
-        isViewCreated = true
     }
 
     private fun configureView() {
@@ -45,15 +44,30 @@ class AppBarX1Fragment : BaseFragment() {
     }
 
     private fun setListeners() {
-        binding.buttonSimpleList.setClickListenerCheckConnection { onTapSimpleList() }
-        binding.buttonThumbnailList.setClickListenerCheckConnection { onTapThumbnail() }
+        binding.buttonSimpleListListener()
+        binding.buttonThumbnailListListener()
         binding.imageButtonBackArrow.setOnClickListenerCheckConnection { onBackPressed() }
     }
 
-    fun isSimpleListActivity(isActive: Boolean) {
-        if (!isViewCreated) return
-        binding.buttonSimpleList.isActivated = isActive
-        binding.buttonThumbnailList.isActivated = !isActive
+    private fun FragmentAppBarX1Binding.buttonThumbnailListListener() {
+        buttonThumbnailList.setClickListenerCheckConnection {
+            it.isActivated = true
+            buttonSimpleList.isActivated = false
+            onThumbnailsClick()
+        }
+    }
+
+    private fun FragmentAppBarX1Binding.buttonSimpleListListener() {
+        buttonSimpleList.setClickListenerCheckConnection {
+            it.isActivated = true
+            buttonThumbnailList.isActivated = false
+            onSimpleClick()
+        }
+    }
+
+    override fun toggleListType(isSimple: Boolean) {
+        binding.buttonSimpleList.isActivated = isSimple
+        binding.buttonThumbnailList.isActivated = !isSimple
     }
 
     override fun onDestroy() {
@@ -62,10 +76,11 @@ class AppBarX1Fragment : BaseFragment() {
     }
 
     companion object {
-        val TAG = AppBarX1Fragment::class.java.simpleName
+        private lateinit var title: String
+        val TAG: String = AppBarX1Fragment::class.java.simpleName
         fun createInstance(title: String, showNavigationList: Boolean = false): AppBarX1Fragment {
+            this.title = title
             return AppBarX1Fragment().apply {
-                this.title = title
                 this.showNavigationList = showNavigationList
             }
         }

@@ -10,9 +10,9 @@ import com.lawmobile.domain.entities.FileList
 import com.lawmobile.domain.repository.snapshotDetail.SnapshotDetailRepository
 import com.safefleet.mobile.external_hardware.cameras.entities.PhotoInformation
 import com.safefleet.mobile.external_hardware.cameras.entities.PhotoMetadata
-import com.safefleet.mobile.kotlin_commons.extensions.doIfError
 import com.safefleet.mobile.kotlin_commons.extensions.doIfSuccess
 import com.safefleet.mobile.kotlin_commons.helpers.Result
+import com.safefleet.mobile.kotlin_commons.helpers.getResultWithAttempts
 import kotlinx.coroutines.delay
 
 class SnapshotDetailRepositoryImpl(
@@ -28,78 +28,54 @@ class SnapshotDetailRepositoryImpl(
         domainCameraFile: DomainCameraFile,
         partnerId: String
     ): Result<Unit> {
-        return try {
-            val errorsInFiles = mutableListOf<String>()
-            val cameraSnapshotMetadata = buildPhotoInformation(domainCameraFile, partnerId)
-            savePartnerIdOnSnapshotMetadata(cameraSnapshotMetadata, errorsInFiles)
-            val photoMetadataList = getAllSnapshotInformation(cameraSnapshotMetadata)
-            Result.Success(updateAllSnapshotMetadata(photoMetadataList, errorsInFiles))
-        } catch (e: Exception) {
-            Result.Error(e)
-        }
-    }
-
-    private suspend fun updateAllSnapshotMetadata(
-        photoMetadataList: MutableList<PhotoInformation>,
-        errorsInFiles: MutableList<String>
-    ) {
-        snapshotDetailRemoteDataSource.savePartnerIdInAllSnapshots(photoMetadataList).run {
-            doIfSuccess {
-                if (errorsInFiles.isEmpty()) return
-                else throw Exception("Partner ID could not be associated to: $errorsInFiles")
-            }
-            doIfError { throw Exception("Partner ID could not be associated") }
-        }
-    }
-
-    private suspend fun savePartnerIdOnSnapshotMetadata(
-        cameraPhotoMetadata: PhotoInformation,
-        errorsInFiles: MutableList<String>
-    ) {
-        snapshotDetailRemoteDataSource.savePartnerIdSnapshot(cameraPhotoMetadata).run {
-            doIfSuccess { updateSnapshotMetadataInCache(cameraPhotoMetadata) }
-            doIfError { errorsInFiles.add(cameraPhotoMetadata.fileName) }
-        }
-
-        delay(SAVE_SNAPSHOT_METADATA_DELAY)
-    }
-
-    private fun updateSnapshotMetadataInCache(
-        cameraPhotoMetadata: PhotoInformation
-    ) {
-        val videosAssociated =
-            FileList.findAndGetImageMetadata(cameraPhotoMetadata.fileName)?.videosAssociated
-        val domainPhotoMetadata = cameraPhotoMetadata.toDomain()
-        val newItemPhoto = DomainInformationImageMetadata(domainPhotoMetadata, videosAssociated)
-        FileList.updateItemInImageMetadataList(newItemPhoto)
-    }
-
-    private suspend fun getAllSnapshotInformation(cameraPhotoMetadata: PhotoInformation): MutableList<PhotoInformation> {
         val photoMetadataList = mutableListOf<PhotoInformation>()
 
-        snapshotDetailRemoteDataSource.getSavedPhotosMetadata().run {
-            doIfSuccess { photoMetadataList.addAll(it) }
-            doIfError { throw it }
+        val photosMetadataResult = getResultWithAttempts(ATTEMPTS_ON_OPERATION) {
+            snapshotDetailRemoteDataSource.getSavedPhotosMetadata()
         }
 
-        delay(GET_ALL_SNAPSHOT_METADATA_DELAY)
+        when (photosMetadataResult) {
+            is Result.Success -> photoMetadataList.addAll(photosMetadataResult.data)
+            is Result.Error -> return photosMetadataResult
+        }
 
-        photoMetadataList.removeAll { it.fileName == cameraPhotoMetadata.fileName }
+        val partnerMetadata = PhotoMetadata(partnerID = partnerId)
+        val cameraPhotoMetadata = PhotoInformation(
+            fileName = domainCameraFile.name,
+            officerId = CameraInfo.officerId,
+            path = domainCameraFile.path,
+            x1sn = CameraInfo.serialNumber,
+            metadata = partnerMetadata,
+            nameFolder = domainCameraFile.nameFolder
+        )
+
+        delay(DELAY_BETWEEN_OPERATION)
+
+        photoMetadataList.removeAll { it.fileName == domainCameraFile.name }
         photoMetadataList.add(cameraPhotoMetadata)
-        return photoMetadataList
-    }
 
-    private fun buildPhotoInformation(
-        domainCameraFile: DomainCameraFile,
-        partnerId: String
-    ) = PhotoInformation(
-        fileName = domainCameraFile.name,
-        officerId = CameraInfo.officerId,
-        path = domainCameraFile.path,
-        x1sn = CameraInfo.serialNumber,
-        metadata = PhotoMetadata(partnerId),
-        nameFolder = domainCameraFile.nameFolder
-    )
+        val saveResult = getResultWithAttempts(ATTEMPTS_ON_OPERATION) {
+            snapshotDetailRemoteDataSource.savePartnerIdSnapshot(cameraPhotoMetadata)
+        }
+
+        when (saveResult) {
+            is Result.Success -> {
+                val item = FileList.getMetadataOfImageInList(domainCameraFile.name)
+                val domainPhotoMetadata =
+                    PhotoMetadataMapper.cameraToDomain(cameraPhotoMetadata)
+                val newItemPhoto =
+                    DomainInformationImageMetadata(domainPhotoMetadata, item?.videosAssociated)
+                FileList.updateItemInImageMetadataList(newItemPhoto)
+            }
+            is Result.Error -> return saveResult
+        }
+
+        delay(DELAY_BETWEEN_OPERATION)
+
+        return getResultWithAttempts(ATTEMPTS_ON_OPERATION) {
+            snapshotDetailRemoteDataSource.savePartnerIdInAllSnapshots(photoMetadataList)
+        }
+    }
 
     override suspend fun getInformationOfPhoto(domainCameraFile: DomainCameraFile): Result<DomainInformationImageMetadata> {
         val item = FileList.findAndGetImageMetadata(domainCameraFile.name)
@@ -122,7 +98,8 @@ class SnapshotDetailRepositoryImpl(
     }
 
     companion object {
-        private const val SAVE_SNAPSHOT_METADATA_DELAY = 300L
-        private const val GET_ALL_SNAPSHOT_METADATA_DELAY = 150L
+        private var thereIsErrorInMetadataVideo = false
+        private const val ATTEMPTS_ON_OPERATION = 3
+        private const val DELAY_BETWEEN_OPERATION = 200L
     }
 }

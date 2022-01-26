@@ -1,9 +1,7 @@
 package com.lawmobile.presentation.ui.snapshotDetail
 
-import android.content.pm.ActivityInfo
-import android.content.res.Configuration
 import android.os.Bundle
-import android.view.View
+import android.widget.ImageView
 import androidx.activity.viewModels
 import androidx.cardview.widget.CardView
 import androidx.core.view.isVisible
@@ -16,55 +14,92 @@ import com.lawmobile.presentation.R
 import com.lawmobile.presentation.databinding.ActivitySnapshotDetailBinding
 import com.lawmobile.presentation.entities.ImageFilesPathManager
 import com.lawmobile.presentation.entities.ImageWithPathSaved
+import com.lawmobile.presentation.extensions.activityCollect
 import com.lawmobile.presentation.extensions.getPathFromTemporalFile
 import com.lawmobile.presentation.extensions.imageHasCorrectFormat
 import com.lawmobile.presentation.extensions.setOnClickListenerCheckConnection
+import com.lawmobile.presentation.extensions.setPortraitOrientation
 import com.lawmobile.presentation.extensions.showErrorSnackBar
 import com.lawmobile.presentation.extensions.showSuccessSnackBar
+import com.lawmobile.presentation.extensions.toggleDeXFullScreen
 import com.lawmobile.presentation.extensions.verifySessionBeforeAction
 import com.lawmobile.presentation.ui.base.BaseActivity
 import com.lawmobile.presentation.ui.fileList.thumbnailList.ThumbnailFileListFragment.Companion.PATH_ERROR_IN_PHOTO
+import com.lawmobile.presentation.ui.snapshotDetail.state.SnapshotDetailState
 import com.lawmobile.presentation.utils.Constants
 import com.lawmobile.presentation.utils.FeatureSupportHelper
 import com.safefleet.mobile.android_commons.extensions.hideKeyboard
 import com.safefleet.mobile.kotlin_commons.extensions.doIfError
 import com.safefleet.mobile.kotlin_commons.extensions.doIfSuccess
-import com.safefleet.mobile.kotlin_commons.helpers.Event
-import com.safefleet.mobile.kotlin_commons.helpers.Result
 import java.io.File
 
 class SnapshotDetailActivity : BaseActivity() {
 
     private lateinit var binding: ActivitySnapshotDetailBinding
 
-    private val snapshotDetailViewModel: SnapshotDetailViewModel by viewModels()
+    private lateinit var imageContainer: ImageView
+    private lateinit var imageReload: ImageView
+    private lateinit var imageFailed: ImageView
+
+    private val viewModel: SnapshotDetailViewModel by viewModels()
+
+    private var state: SnapshotDetailState
+        get() = viewModel.getState()
+        set(value) {
+            toggleDeXFullScreen()
+            viewModel.setState(value)
+        }
+
+    private var isAssociateDialogOpen: Boolean
+        get() = viewModel.isAssociateDialogOpen
+        set(value) {
+            viewModel.isAssociateDialogOpen = value
+            toggleAssociateDialog(value)
+        }
+
     private lateinit var file: DomainCameraFile
     private var domainInformationImageMetadata: DomainInformationImageMetadata? = null
     private lateinit var currentAssociatedOfficerId: String
 
+    private var isImageLoaded = false
+
     private val sheetBehavior: BottomSheetBehavior<CardView> by lazy {
-        BottomSheetBehavior.from(
-            binding.bottomSheetPartnerId!!.bottomSheetPartnerId
-        )
+        BottomSheetBehavior.from(binding.bottomSheetAssociateOfficer.bottomSheetAssociateOfficer)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySnapshotDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        setAppBar()
-        getInformationFromIntent()
-        setInformationOfSnapshot()
-        setObservers()
+
+        isImageLoaded = false
+        getFileFromIntent()
+        setCollectors()
         setFeatures()
-        configureListeners()
-        configureBottomSheet()
+        binding.setListeners()
+    }
+
+    private fun getFileFromIntent() {
+        val cameraFile =
+            intent.getSerializableExtra(Constants.DOMAIN_CAMERA_FILE) as? DomainCameraFile
+        cameraFile?.let { file = it }
+    }
+
+    private fun toggleAssociateDialog(isOpen: Boolean) {
+        binding.shadowDetailView.isVisible = isOpen
+        sheetBehavior.state =
+            if (isOpen) BottomSheetBehavior.STATE_EXPANDED
+            else {
+                hideKeyboard()
+                cleanPartnerIdField()
+                BottomSheetBehavior.STATE_HIDDEN
+            }
     }
 
     override fun onResume() {
         super.onResume()
         restartVisibility()
-        getSnapshotBytes()
+        if (!isImageLoaded) getSnapshotBytes()
         hideKeyboard()
     }
 
@@ -73,101 +108,185 @@ class SnapshotDetailActivity : BaseActivity() {
             FeatureSupportHelper.supportAssociateOfficerID
     }
 
+    override fun onPause() {
+        super.onPause()
+        isImageLoaded = false
+    }
+
     private fun getSnapshotBytes() {
+        isImageLoaded = true
         showLoadingDialog()
         val fileSaved = ImageFilesPathManager.getImageIfExist(file.name)
         fileSaved?.let {
             if (it.absolutePath != PATH_ERROR_IN_PHOTO && File(it.absolutePath).exists()) {
                 setImageWithPath(it.absolutePath)
-                snapshotDetailViewModel.getSnapshotInformation(file)
+                if (state is SnapshotDetailState.Default && domainInformationImageMetadata == null) {
+                    viewModel.getImageInformation(file)
+                } else hideLoadingDialog()
                 return
             }
         }
 
-        snapshotDetailViewModel.getImageBytes(file)
+        viewModel.getImageBytes(file)
     }
 
-    private fun getInformationFromIntent() {
-        val fileIntent =
-            intent.getSerializableExtra(Constants.DOMAIN_CAMERA_FILE) as? DomainCameraFile
-        fileIntent?.let { file = it }
+    private fun ActivitySnapshotItemDetailBinding.setAppBar() {
+        layoutCustomAppBar.textViewTitle.text = getString(R.string.snapshot_item_detail_title)
+        layoutCustomAppBar.buttonSimpleList.isVisible = false
+        layoutCustomAppBar.buttonThumbnailList.isVisible = false
     }
 
-    private fun setAppBar() {
-        binding.layoutCustomAppBar?.textViewTitle?.text =
-            getString(R.string.snapshot_item_detail_title)
-        binding.layoutCustomAppBar?.buttonSimpleList?.isVisible = false
-        binding.layoutCustomAppBar?.buttonThumbnailList?.isVisible =
-            false
+    private fun ActivitySnapshotItemDetailBinding.setListeners() {
+        bottomSheetListeners()
+        buttonFullScreenListener()
+        imageReloadListener()
+        buttonAssociateListener()
+        buttonBackListener()
     }
 
-    private fun configureListeners() {
-        binding.buttonAssociatePartnerIdList.setOnClickListenerCheckConnection {
-            showAssignToOfficerBottomSheet()
+    private fun ActivitySnapshotItemDetailBinding.buttonBackListener() {
+        layoutCustomAppBar.imageButtonBackArrow.setOnClickListenerCheckConnection {
+            onBackPressed()
         }
-        binding.layoutCustomAppBar?.imageButtonBackArrow?.setOnClickListenerCheckConnection { onBackPressed() }
-        binding.buttonFullScreen.setOnClickListenerCheckConnection { changeOrientationInView() }
-        binding.imageReload.setOnClickListenerCheckConnection {
+    }
+
+    private fun ActivitySnapshotItemDetailBinding.buttonAssociateListener() {
+        buttonAssociateOfficer.setOnClickListenerCheckConnection {
+            isAssociateDialogOpen = true
+        }
+    }
+
+    private fun ActivitySnapshotItemDetailBinding.buttonFullScreenListener() {
+        buttonFullScreen.apply {
+            isActivated = false
+            setOnClickListenerCheckConnection {
+                state = SnapshotDetailState.FullScreen
+            }
+        }
+        buttonNormalScreen.apply {
+            isActivated = true
+            setOnClickListenerCheckConnection {
+                state = SnapshotDetailState.Default
+            }
+        }
+    }
+
+    private fun ActivitySnapshotItemDetailBinding.imageReloadListener() {
+        imageViewReload.setOnClickListenerCheckConnection {
             showLoadingDialog()
-            snapshotDetailViewModel.getImageBytes(file)
+            viewModel.getImageBytes(file)
         }
     }
 
-    private fun changeOrientationInView() {
-        if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
-            requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
-            return
+    private fun setCollectors() {
+        collectState()
+        collectImageBytes()
+        collectImageInformation()
+        collectAssociationResult()
+    }
+
+    private fun collectState() {
+        activityCollect(viewModel.state) {
+            with(it) {
+                onDefault {
+                    if (!isInPortraitMode()) setPortraitOrientation()
+                    binding.setAppBar()
+                    setInformationOfSnapshot()
+                    setFullscreenVisibility(false)
+                    setDefaultViews()
+                }
+                onFullScreen {
+                    setFullscreenVisibility(true)
+                    setFullScreenViews()
+                }
+            }
+            toggleAssociateDialog(isAssociateDialogOpen)
+            getSnapshotBytes()
         }
-        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
     }
 
-    private fun setObservers() {
-        snapshotDetailViewModel.imageBytesResult.observe(this, ::manageGetBytesImage)
-        snapshotDetailViewModel.snapshotInformationResult.observe(this, ::manageSnapshotInformation)
-        snapshotDetailViewModel.savePartnerIdResult.observe(this, ::manageSavePartnerId)
+    private fun setFullScreenViews() = with(binding) {
+        imageContainer = imageViewFullScreenSnapshot
+        imageReload = imageViewFullScreenReload
+        imageFailed = imageViewFullScreenFailed
     }
 
-    private fun manageGetBytesImage(event: Event<Result<ByteArray>>) {
-        event.getContentIfNotHandled()?.run {
-            with(this) {
+    private fun setDefaultViews() = with(binding) {
+        imageContainer = imageViewSnapshot
+        imageReload = imageViewReload
+        imageFailed = imageViewFailed
+    }
+
+    private fun setFullscreenVisibility(isVisible: Boolean) = with(binding) {
+        imageViewFullScreenSnapshot.isVisible = isVisible
+        buttonNormalScreen.isVisible = isVisible
+        layoutCustomAppBar.layoutCustomAppBar.isVisible = !isVisible
+        imageViewSnapshot.isVisible = !isVisible
+        buttonFullScreen.isVisible = !isVisible
+        scrollLayoutInformation.isVisible = !isVisible
+        buttonAssociateOfficer.isVisible = !isVisible
+        bottomSheetAssociateOfficer.bottomSheetAssociateOfficer.isVisible = !isVisible
+    }
+
+    private fun collectAssociationResult() = with(binding) {
+        activityCollect(viewModel.associationResult) {
+            with(it) {
+                hideLoadingDialog()
                 doIfSuccess {
-                    val path = it.getPathFromTemporalFile(
-                        context = applicationContext,
-                        name = file.name
+                    constraintLayoutDetail.showSuccessSnackBar(
+                        getString(R.string.file_list_associate_partner_id_success)
                     )
-                    setImageWithPath(path)
+                    isAssociateDialogOpen = false
+                    setCurrentOfficerAssociatedInView()
                 }
                 doIfError {
-                    binding.imageReload.isVisible = true
+                    constraintLayoutDetail.showErrorSnackBar(
+                        getString(R.string.file_list_associate_partner_id_error)
+                    )
                 }
             }
         }
-
-        if (domainInformationImageMetadata == null)
-            snapshotDetailViewModel.getSnapshotInformation(file)
-        else hideLoadingDialog()
     }
 
-    private fun manageSnapshotInformation(event: Event<Result<DomainInformationImageMetadata>>) {
-        event.getContentIfNotHandled()?.run {
-            doIfSuccess {
-                domainInformationImageMetadata = it
-                setSnapshotMetadata()
-            }
-            doIfError {
-                showMetadataNotAvailable()
-                binding.constraintLayoutDetail.showErrorSnackBar(
-                    getString(R.string.snapshot_detail_metadata_error),
-                    SNAPSHOT_DETAIL_ERROR_ANIMATION_DURATION
-                ) {
-                    this@SnapshotDetailActivity.verifySessionBeforeAction {
-                        showLoadingDialog()
-                        snapshotDetailViewModel.getSnapshotInformation(file)
+    private fun collectImageInformation() {
+        activityCollect(viewModel.imageInformation) { result ->
+            result?.run {
+                hideLoadingDialog()
+                doIfSuccess { domainInformation ->
+                    domainInformationImageMetadata = domainInformation
+                    setSnapshotMetadata()
+                }
+                doIfError {
+                    showMetadataNotAvailable()
+                    binding.constraintLayoutDetail.showErrorSnackBar(
+                        getString(R.string.snapshot_detail_metadata_error),
+                        SNAPSHOT_DETAIL_ERROR_ANIMATION_DURATION
+                    ) {
+                        this@SnapshotDetailActivity.verifySessionBeforeAction {
+                            showLoadingDialog()
+                            viewModel.getImageInformation(file)
+                        }
                     }
                 }
             }
         }
-        hideLoadingDialog()
+    }
+
+    private fun collectImageBytes() {
+        activityCollect(viewModel.imageBytes) { result ->
+            result?.run {
+                doIfSuccess {
+                    val path = it.getPathFromTemporalFile(applicationContext, file.name)
+                    setImageWithPath(path)
+                }
+                doIfError {
+                    imageReload.isVisible = true
+                }
+
+                if (domainInformationImageMetadata == null) viewModel.getImageInformation(file)
+                else hideLoadingDialog()
+            }
+        }
     }
 
     private fun showMetadataNotAvailable() {
@@ -175,61 +294,21 @@ class SnapshotDetailActivity : BaseActivity() {
         binding.videosAssociatedValue.text = getString(R.string.not_available)
     }
 
-    private fun manageSavePartnerId(result: Event<Result<Unit>>) {
-        hideLoadingDialog()
-        result.getContentIfNotHandled()?.run {
-            doIfSuccess {
-                binding.constraintLayoutDetail.showSuccessSnackBar(
-                    getString(R.string.file_list_associate_partner_id_success)
-                )
-                sheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
-                setCurrentOfficerAssociatedInView()
-            }
-            doIfError {
-                binding.constraintLayoutDetail.showErrorSnackBar(
-                    getString(R.string.file_list_associate_partner_id_error)
-                )
-            }
-        }
-    }
-
-    private fun configureBottomSheet() {
-        sheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
-        binding.bottomSheetPartnerId?.buttonAssignToOfficer?.setOnClickListenerCheckConnection {
+    private fun ActivitySnapshotItemDetailBinding.bottomSheetListeners() {
+        bottomSheetAssociateOfficer.buttonAssignToOfficer.setOnClickListenerCheckConnection {
             currentAssociatedOfficerId =
-                binding.bottomSheetPartnerId?.editTextAssignToOfficer?.text.toString()
+                bottomSheetAssociateOfficer.editTextAssignToOfficer.text.toString()
             associatePartnerId(currentAssociatedOfficerId)
             hideKeyboard()
-            cleanPartnerIdField()
         }
-        binding.bottomSheetPartnerId?.buttonCloseAssignToOfficer?.setOnClickListenerCheckConnection {
-            hideKeyboard()
-            cleanPartnerIdField()
-            sheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
-        }
-        sheetBehavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
-            override fun onSlide(bottomSheet: View, slideOffset: Float) {
-                // The interface requires to implement this method but not needed
-            }
 
-            override fun onStateChanged(bottomSheet: View, newState: Int) {
-                when (newState) {
-                    BottomSheetBehavior.STATE_HIDDEN -> {
-                        hideKeyboard()
-                        binding.shadowDetailView.isVisible = false
-                    }
-                    else -> binding.shadowDetailView.isVisible = true
-                }
-            }
-        })
+        bottomSheetAssociateOfficer.buttonClose.setOnClickListenerCheckConnection {
+            isAssociateDialogOpen = false
+        }
     }
 
     private fun cleanPartnerIdField() {
-        binding.bottomSheetPartnerId?.editTextAssignToOfficer?.text?.clear()
-    }
-
-    private fun showAssignToOfficerBottomSheet() {
-        sheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+        binding.bottomSheetAssociateOfficer.editTextAssignToOfficer.text?.clear()
     }
 
     private fun associatePartnerId(partnerId: String) {
@@ -238,22 +317,21 @@ class SnapshotDetailActivity : BaseActivity() {
             return
         }
         showLoadingDialog()
-        snapshotDetailViewModel.savePartnerId(file, partnerId)
+        viewModel.savePartnerId(file, partnerId)
     }
 
     private fun setImageWithPath(path: String) {
         if (path.imageHasCorrectFormat()) {
             try {
                 ImageFilesPathManager.saveImageWithPath(ImageWithPathSaved(file.name, path))
-                Glide.with(this).load(File(path))
-                    .into(binding.photoItemDetailHolder)
-                binding.imageReload.isVisible = false
+                Glide.with(binding.root).load(File(path)).into(imageContainer)
+                imageReload.isVisible = false
             } catch (e: Exception) {
-                binding.imageFailed?.isVisible = true
+                imageFailed.isVisible = true
                 showFailedLoadImageError()
             }
         } else {
-            binding.imageFailed?.isVisible = true
+            imageFailed.isVisible = true
             showFailedLoadImageError()
         }
     }
@@ -263,7 +341,7 @@ class SnapshotDetailActivity : BaseActivity() {
             getString(R.string.snapshot_detail_load_failed),
             SNAPSHOT_DETAIL_ERROR_ANIMATION_DURATION
         ) {
-            this.verifySessionBeforeAction { snapshotDetailViewModel.getImageBytes(file) }
+            this.verifySessionBeforeAction { viewModel.getImageBytes(file) }
         }
     }
 
@@ -311,17 +389,18 @@ class SnapshotDetailActivity : BaseActivity() {
     }
 
     override fun onBackPressed() {
-        if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            changeOrientationInView()
+        if (state is SnapshotDetailState.FullScreen) {
+            state = SnapshotDetailState.Default
         } else {
             super.onBackPressed()
         }
     }
 
-    private fun restartVisibility() {
-        binding.photoItemDetailHolder.isVisible = true
-        binding.imageReload.isVisible = false
-        binding.imageFailed?.isVisible = false
+    private fun restartVisibility() = with(binding) {
+        imageViewSnapshot.isVisible = state is SnapshotDetailState.Default
+        imageViewFullScreenSnapshot.isVisible = state is SnapshotDetailState.FullScreen
+        imageViewReload.isVisible = false
+        imageViewFailed.isVisible = false
     }
 
     companion object {

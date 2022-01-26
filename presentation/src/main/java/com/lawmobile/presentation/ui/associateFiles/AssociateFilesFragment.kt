@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import com.lawmobile.domain.entities.DomainAssociatedFile
+import com.lawmobile.domain.entities.DomainInformationFile
 import com.lawmobile.domain.entities.DomainInformationForList
 import com.lawmobile.domain.entities.FilesAssociatedByUser
 import com.lawmobile.presentation.R
@@ -17,7 +18,6 @@ import com.lawmobile.presentation.extensions.setClickListenerCheckConnection
 import com.lawmobile.presentation.extensions.setOnClickListenerCheckConnection
 import com.lawmobile.presentation.extensions.showErrorSnackBar
 import com.lawmobile.presentation.ui.base.BaseFragment
-import com.lawmobile.presentation.ui.fileList.FileListBaseFragment.Companion.checkableListInit
 import com.lawmobile.presentation.ui.fileList.simpleList.SimpleFileListFragment
 import com.lawmobile.presentation.ui.fileList.thumbnailList.ThumbnailFileListFragment
 import com.lawmobile.presentation.utils.Constants.AUDIO_LIST
@@ -85,6 +85,23 @@ class AssociateFilesFragment : BaseFragment() {
         listType = arguments?.getString(FILE_LIST_TYPE)
     }
 
+    override fun onResume() {
+        super.onResume()
+        setAssociatedRecyclerView()
+    }
+
+    private fun setAssociatedRecyclerView() {
+        simpleFileListFragment.toggleCheckBoxes(true)
+        simpleFileListFragment.listAdapter.run {
+            fileList.let { completeList ->
+                fileList = FilesAssociatedByUser
+                    .getListOfImagesAssociatedToVideo(completeList)
+                    .filterIsInstance<DomainInformationFile>() as MutableList
+            }
+        }
+        simpleFileListFragment.setRecyclerView()
+    }
+
     private fun setExtras() {
         simpleFileListFragment.arguments =
             Bundle().apply { putString(FILE_LIST_TYPE, listType) }
@@ -102,10 +119,10 @@ class AssociateFilesFragment : BaseFragment() {
     }
 
     private fun setListeners() {
-        simpleFileListFragment.onFileCheck = { _, it ->
+        simpleFileListFragment.onFileCheck = { it ->
             showSelectedItemsCount(it)
         }
-        thumbnailFileListFragment.onImageCheck = { _, it ->
+        thumbnailFileListFragment.onFileCheck = { it ->
             showSelectedItemsCount(it)
         }
         binding.buttonFilterFiles.setOnClickListenerCheckConnection {
@@ -147,7 +164,7 @@ class AssociateFilesFragment : BaseFragment() {
 
         if (filterDialog == null) {
             filterDialog =
-                binding.layoutAssociateFilterTags.createFilterDialog(::handleOnApplyFilterClick)
+                binding.layoutAssociateFilterTags.createFilterDialog(::handleOnApplyFilterClick) {}
         }
 
         filterDialog?.apply {
@@ -219,12 +236,11 @@ class AssociateFilesFragment : BaseFragment() {
     }
 
     override fun onDestroy() {
-        checkableListInit = false
         super.onDestroy()
         _binding = null
     }
 
     companion object {
-        val TAG = AssociateFilesFragment::class.java.simpleName
+        val TAG: String = AssociateFilesFragment::class.java.simpleName
     }
 }

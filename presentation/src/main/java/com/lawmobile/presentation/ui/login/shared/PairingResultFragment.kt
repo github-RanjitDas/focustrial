@@ -8,10 +8,11 @@ import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.isVisible
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
 import com.lawmobile.domain.entities.CameraInfo
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.databinding.FragmentPairingResultBinding
+import com.lawmobile.presentation.extensions.runWithDelay
 import com.lawmobile.presentation.ui.base.BaseFragment
 import com.safefleet.mobile.kotlin_commons.helpers.Result
 
@@ -20,7 +21,7 @@ class PairingResultFragment : BaseFragment() {
     private var _binding: FragmentPairingResultBinding? = null
     private val binding get() = _binding!!
 
-    private val pairingViewModel: PairingViewModel by viewModels()
+    private val pairingViewModel: PairingViewModel by activityViewModels()
     lateinit var onConnectionSuccessful: () -> Unit
     private lateinit var animation: Animation
 
@@ -29,18 +30,16 @@ class PairingResultFragment : BaseFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding =
-            FragmentPairingResultBinding.inflate(inflater, container, false)
+        _binding = FragmentPairingResultBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        pairingViewModel.resetProgress()
         setObservers()
         setListeners()
         setAnimation()
-        startConnectionToHotspotCamera()
+        pairingViewModel.connectWithCamera()
     }
 
     private fun setAnimation() {
@@ -51,6 +50,7 @@ class PairingResultFragment : BaseFragment() {
 
     private fun setListeners() {
         binding.buttonRetry.setOnClickListener {
+            pairingViewModel.resetProgress()
             startConnectionToHotspotCamera()
         }
     }
@@ -72,18 +72,12 @@ class PairingResultFragment : BaseFragment() {
     }
 
     private fun verifyConnectionWithTheCamera() {
-        activity?.runOnUiThread {
-            verifyProgressConnectionWithTheCamera()
-        }
-    }
-
-    private fun verifyProgressConnectionWithTheCamera() {
-        pairingViewModel.getProgressConnectionWithTheCamera()
+        activity?.runOnUiThread { pairingViewModel.connectWithCamera() }
     }
 
     private fun setProgressInViewOfProgress(progress: Int) {
         val percent = "$progress%"
-        binding.textViewProgressConnection.text = percent
+        _binding?.textViewProgressConnection?.text = percent
         if (progress == PERCENT_TOTAL_CONNECTION_CAMERA) {
             saveSerialNumber()
             showSuccessResult()
@@ -91,17 +85,10 @@ class PairingResultFragment : BaseFragment() {
     }
 
     private fun setObservers() {
-        pairingViewModel.cameraPairingProgress = ::manageResponseProgressInConnectionCamera
-        pairingViewModel.isWaitFinishedLiveData.observe(
-            viewLifecycleOwner
-        ) {
-            it.getContentIfNotHandled()?.run {
-                if (this) onConnectionSuccessful()
-            }
-        }
+        pairingViewModel.connectionProgress.observe(viewLifecycleOwner, ::handleConnectionProgress)
     }
 
-    private fun manageResponseProgressInConnectionCamera(result: Result<Int>) {
+    private fun handleConnectionProgress(result: Result<Int>) {
         when (result) {
             is Result.Success -> setProgressInViewOfProgress(result.data)
             is Result.Error -> showErrorResult()
@@ -121,7 +108,11 @@ class PairingResultFragment : BaseFragment() {
         )
         binding.textViewResultPairing.setText(R.string.success_connection_to_camera)
         binding.pairingResultLayout.startAnimation(animation)
-        pairingViewModel.waitToFinish(ANIMATION_DURATION)
+        waitToFinishAnimation()
+    }
+
+    private fun waitToFinishAnimation() {
+        runWithDelay(ANIMATION_DURATION) { onConnectionSuccessful() }
     }
 
     private fun showErrorResult() {
@@ -145,7 +136,7 @@ class PairingResultFragment : BaseFragment() {
     }
 
     companion object {
-        val TAG = PairingResultFragment::class.java.simpleName
+        val TAG: String = PairingResultFragment::class.java.simpleName
         private const val PERCENT_TOTAL_CONNECTION_CAMERA = 100
         private const val ANIMATION_DURATION = 1200L
 

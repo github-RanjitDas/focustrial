@@ -17,25 +17,25 @@ enum class CameraEventsData(val value: MutableList<LogEvent>) {
         mutableListOf(
             LogEvent(
                 name = "Notification",
-                date = "18/05/2021 19:53:25",
+                date = "2022/01/19 19:53:25",
                 type = "warn: low battery",
                 value = "please charge your camera"
             ),
             LogEvent(
                 name = "Notification",
-                date = "18/05/2021 19:53:50",
+                date = "2022/01/19 19:53:50",
                 type = "warn: low battery",
                 value = "please charge your camera"
             ),
             LogEvent(
                 name = "Notification",
-                date = "18/05/2021 19:53:35",
+                date = "2022/01/19 19:53:35",
                 type = "warn: low battery",
                 value = "please charge your camera"
             ),
             LogEvent(
                 name = "Notification",
-                date = "18/05/2021 19:53:45",
+                date = "2022/01/19 19:53:45",
                 type = "warn: low battery",
                 value = "please charge your camera"
             )

@@ -13,12 +13,14 @@ import com.schibsted.spain.barista.assertion.BaristaVisibilityAssertions.assertD
 import com.schibsted.spain.barista.assertion.BaristaVisibilityAssertions.assertNotDisplayed
 import com.schibsted.spain.barista.assertion.BaristaVisibilityAssertions.assertNotExist
 import com.schibsted.spain.barista.interaction.BaristaClickInteractions.clickOn
+import com.schibsted.spain.barista.interaction.BaristaSleepInteractions
 import com.schibsted.spain.barista.interaction.BaristaSleepInteractions.sleep
 
 open class LiveViewScreen : BaseScreen() {
 
     private val mainMenuScreen = MainMenuScreen()
     private val helPageScreen = HelpPageScreen()
+    private val notificationViewScreen = NotificationViewScreen()
 
     fun switchLiveViewToggle() = clickOn(R.id.buttonSwitchLiveView)
 
@@ -33,10 +35,27 @@ open class LiveViewScreen : BaseScreen() {
     fun openHelpPage() = clickOn(R.id.buttonOpenHelpPage)
 
     fun refreshCameraStatus() {
-        mainMenuScreen.clickOnMainMenu()
+        waitUntil { mainMenuScreen.clickOnMainMenu() }
         mainMenuScreen.clickOnViewHelp()
         sleep(500)
-        helPageScreen.goBack()
+    }
+
+    fun closeHelpView() = helPageScreen.goBack()
+
+    fun refreshCameraStatusX1() {
+        waitUntil { clickOn(R.id.buttonOpenHelpPage) }
+        sleep(500)
+        closeHelpView()
+    }
+
+    fun clickOkButton() = waitUntil { clickOn(R.string.OK) }
+
+    fun isLowStorageNotificationDisplayed() {
+        notificationViewScreen.isLowStorageTitleDisplayed()
+        notificationViewScreen.isDateDisplayed()
+        notificationViewScreen.isLowStorageDescriptionDisplayed()
+        notificationViewScreen.isDismissButtonDisplayed()
+        notificationViewScreen.clickOnDismissButton()
     }
 
     open fun takeSnapshot() {
@@ -132,14 +151,33 @@ open class LiveViewScreen : BaseScreen() {
     }
 
     fun isBatteryIndicatorTextDisplayed(percent: String) {
+        BaristaSleepInteractions.sleep(1000)
         waitUntil {
             assertContains(R.id.textViewBatteryPercent, "$percent %")
+        }
+    }
+
+    fun isBatteryIndicatorTextDisplayedX1(percent: String) {
+        waitUntil {
+            assertContains(R.id.textViewBatteryPercent, "$percent%")
+        }
+    }
+
+    fun isBatteryIndicatorNotAvailableDisplayedX1() {
+        waitUntil {
+            assertContains(R.id.textViewBatteryPercent, R.string.not_available)
         }
     }
 
     fun isMemoryStorageIndicatorTextDisplayed(percent: String) {
         waitUntil {
             assertContains(R.id.textViewStorageLevels, "$percent% available")
+        }
+    }
+
+    fun isMemoryStorageIndicatorTextDisplayedX1(storage: String) {
+        waitUntil {
+            assertContains(R.id.textViewStorageLevels, storage)
         }
     }
 

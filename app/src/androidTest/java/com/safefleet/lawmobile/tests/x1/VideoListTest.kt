@@ -8,6 +8,7 @@ import com.lawmobile.presentation.utils.FeatureSupportHelper
 import com.safefleet.lawmobile.R
 import com.safefleet.lawmobile.helpers.MockUtils.Companion.cameraConnectServiceX1Mock
 import com.safefleet.lawmobile.helpers.SmokeTest
+import com.safefleet.lawmobile.helpers.CustomAssertionActions.waitUntil
 import com.safefleet.lawmobile.screens.FileListScreen
 import com.safefleet.lawmobile.screens.FilterDialogScreen
 import com.safefleet.lawmobile.screens.LiveViewScreen
@@ -211,7 +212,7 @@ class VideoListTest : EspressoStartActivityBaseTest<LoginX1Activity>(LoginX1Acti
         liveViewScreen.openVideoList()
 
         with(fileListScreen) {
-            scrollListToPosition(videosQuantity - 1)
+            waitUntil { scrollListToPosition(videosQuantity - 1) }
             scrollListToPosition(0)
             scrollListToPosition(videosQuantity - 1)
             scrollListToPosition(0)

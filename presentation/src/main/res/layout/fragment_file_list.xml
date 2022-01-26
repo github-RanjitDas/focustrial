@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout android:id="@+id/fileListLayout"
+<androidx.constraintlayout.widget.ConstraintLayout
+    android:id="@+id/fileListLayout"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -26,13 +27,12 @@
         android:layout_height="wrap_content"
         android:drawablePadding="@dimen/padding_10dp"
         android:text="@string/event"
+        android:layout_marginStart="@dimen/margin_15dp"
         android:textColor="@color/black"
         android:textSize="@dimen/text_size_16sp"
         android:textStyle="bold"
         android:paddingBottom="@dimen/margin_16dp"
         app:layout_constraintBottom_toBottomOf="@+id/textViewDateAndTime"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.55"
         app:layout_constraintStart_toStartOf="@+id/guidelineFileList3"
         app:layout_constraintTop_toTopOf="@+id/textViewDateAndTime"
         app:drawableEndCompat="@drawable/ic_order" />
@@ -68,6 +68,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.5" />
+        app:layout_constraintGuide_percent="0.65" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

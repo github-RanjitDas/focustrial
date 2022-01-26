@@ -1,5 +1,6 @@
 package com.lawmobile.presentation.extensions
 
+import android.graphics.Rect
 import android.view.View
 import android.view.animation.Animation
 import com.google.android.material.snackbar.Snackbar
@@ -103,5 +104,15 @@ fun View.showSuccessSnackBar(message: String) {
 fun View.startAnimationIfEnabled(animation: Animation) {
     if (context.isAnimationsEnabled()) {
         startAnimation(animation)
+    }
+}
+
+fun View.onSizeChange(callback: () -> Unit) {
+    addOnLayoutChangeListener { _, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom ->
+        val rect = Rect(left, top, right, bottom)
+        val oldRect = Rect(oldLeft, oldTop, oldRight, oldBottom)
+        if (rect.width() != oldRect.width() || rect.height() != oldRect.height()) {
+            callback()
+        }
     }
 }

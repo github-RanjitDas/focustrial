@@ -98,6 +98,7 @@ class SystemNotificationTest : EspressoBaseTest() {
             "8"
         )
         cameraConnectServiceX1Mock.sendPushNotification(notification)
+
         liveViewScreen.isTextBatteryIndicatorContained("8 %")
 
         notification = NotificationResponse(
@@ -106,6 +107,7 @@ class SystemNotificationTest : EspressoBaseTest() {
             "7"
         )
         cameraConnectServiceX1Mock.sendPushNotification(notification)
+
         liveViewScreen.isTextBatteryIndicatorContained("7 %")
 
         notification = NotificationResponse(

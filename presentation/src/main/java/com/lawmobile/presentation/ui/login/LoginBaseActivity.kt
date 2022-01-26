@@ -12,18 +12,27 @@ import com.lawmobile.presentation.extensions.showErrorSnackBar
 import com.lawmobile.presentation.extensions.verifyForAskingPermission
 import com.lawmobile.presentation.extensions.verifySessionBeforeAction
 import com.lawmobile.presentation.ui.base.BaseActivity
+import com.lawmobile.presentation.ui.login.shared.Instructions
+import com.lawmobile.presentation.ui.login.shared.OfficerPassword
 import com.lawmobile.presentation.ui.login.shared.PairingResultFragment
+import com.lawmobile.presentation.ui.login.shared.StartPairing
+import com.lawmobile.presentation.ui.login.state.LoginState
 import com.safefleet.mobile.android_commons.extensions.hideKeyboard
 
 abstract class LoginBaseActivity : BaseActivity() {
 
     lateinit var binding: ActivityLoginBinding
 
-    val sheetBehavior: BottomSheetBehavior<CardView> by lazy {
-        BottomSheetBehavior.from(
-            binding.bottomSheetInstructions.bottomSheetInstructions
-        )
+    protected abstract var state: LoginState
+    protected abstract var isInstructionsOpen: Boolean
+
+    private val sheetBehavior: BottomSheetBehavior<CardView> by lazy {
+        BottomSheetBehavior.from(binding.bottomSheetInstructions.bottomSheetInstructions)
     }
+
+    protected abstract val instructions: Instructions
+    protected abstract val startPairing: StartPairing
+    protected abstract val officerPassword: OfficerPassword
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,15 +42,31 @@ abstract class LoginBaseActivity : BaseActivity() {
         configureBottomSheet()
     }
 
-    private fun configureBottomSheet() {
+    protected fun setInstructionsListener() {
+        instructions.onInstructionsClick = {
+            isInstructionsOpen = true
+        }
+    }
+
+    protected fun setStartPairingListener() {
+        startPairing.onStartPairingClick = {
+            state = LoginState.PairingResult
+        }
+    }
+
+    private fun configureBottomSheet() = with(binding) {
         sheetBehavior.isDraggable = false
-        sheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
-        binding.bottomSheetInstructions.buttonDismissInstructions.setOnClickListener {
-            sheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+        bottomSheetInstructions.buttonDismissInstructions.setOnClickListener {
+            isInstructionsOpen = false
         }
-        binding.bottomSheetInstructions.buttonCloseInstructions.setOnClickListener {
-            sheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+        bottomSheetInstructions.buttonCloseInstructions.setOnClickListener {
+            isInstructionsOpen = false
         }
+    }
+
+    fun toggleInstructionsBottomSheet(isOpen: Boolean) {
+        if (isOpen) sheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+        else sheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
     }
 
     fun verifyLocationPermission() {

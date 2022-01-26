@@ -29,7 +29,19 @@ internal class LoginBaseViewModelTest {
         every { isEqualsValueWithSSID(PairingViewModelTest.DEFAULT_SSID) } returns true
         every { isEqualsValueWithSSID("X") } returns false
     }
-    private val loginBaseViewModel = LoginBaseViewModel(getUserFromCamera, wifiHelper, dispatcher)
+    private val baseViewModel = LoginBaseViewModel(useCase, dispatcher)
+
+    @Test
+    fun setInstructionsOpenTrue() {
+        baseViewModel.isInstructionsOpen = true
+        Assert.assertTrue(baseViewModel.isInstructionsOpen)
+    }
+
+    @Test
+    fun setInstructionsOpenFalse() {
+        baseViewModel.isInstructionsOpen = false
+        Assert.assertFalse(baseViewModel.isInstructionsOpen)
+    }
 
     @Test
     fun testGetUserFromCameraFlow() {
@@ -60,5 +72,4 @@ internal class LoginBaseViewModelTest {
         every { wifiHelper.suggestWiFiNetwork(any(), any(), any()) } returns Unit
         loginBaseViewModel.suggestWiFiNetwork("", "") {}
         verify { wifiHelper.suggestWiFiNetwork(any(), any(), any()) }
-    }
-}
+    }}

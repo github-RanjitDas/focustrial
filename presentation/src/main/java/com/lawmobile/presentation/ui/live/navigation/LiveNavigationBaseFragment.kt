@@ -1,7 +1,7 @@
 package com.lawmobile.presentation.ui.live.navigation
 
 import android.widget.Button
-import com.lawmobile.presentation.extensions.getCameraTypeIntent
+import com.lawmobile.presentation.extensions.getIntentForCameraType
 import com.lawmobile.presentation.extensions.setOnClickListenerCheckConnection
 import com.lawmobile.presentation.ui.base.BaseFragment
 import com.lawmobile.presentation.ui.base.menu.MenuFragment.Companion.currentListView
@@ -26,11 +26,10 @@ open class LiveNavigationBaseFragment : BaseFragment() {
     }
 
     private fun startFileListIntent(fileType: String) {
-        val fileListIntent =
-            activity?.getCameraTypeIntent(
-                FileListX1Activity::class.java,
-                FileListX2Activity::class.java
-            )
+        val fileListIntent = activity?.getIntentForCameraType(
+            FileListX1Activity::class.java,
+            FileListX2Activity::class.java
+        )
         fileListIntent?.putExtra(Constants.FILE_LIST_SELECTOR, fileType)
         startActivity(fileListIntent)
         currentListView = fileType

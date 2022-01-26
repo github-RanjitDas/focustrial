@@ -7,6 +7,7 @@ import com.lawmobile.data.utils.CameraServiceFactory
 import com.lawmobile.domain.repository.videoPlayback.VideoPlaybackRepository
 import com.lawmobile.domain.usecase.videoPlayback.VideoPlaybackUseCase
 import com.lawmobile.domain.usecase.videoPlayback.VideoPlaybackUseCaseImpl
+import com.lawmobile.presentation.ui.videoPlayback.VideoInformationManager
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -27,5 +28,8 @@ class VideoPlaybackModule {
         @Provides
         fun provideVideoPlaybackUseCase(videoPlaybackRepository: VideoPlaybackRepository): VideoPlaybackUseCase =
             VideoPlaybackUseCaseImpl(videoPlaybackRepository)
+
+        @Provides
+        fun provideVideoMetadataManager() = VideoInformationManager()
     }
 }

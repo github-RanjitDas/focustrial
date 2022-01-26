@@ -40,23 +40,20 @@ class AppBarX2Fragment : BaseFragment() {
         savedInstanceState: Bundle?
     ): View {
         callPendingNotification = false
-        _binding =
-            FragmentAppBarX2Binding.inflate(inflater, container, false)
+        _binding = FragmentAppBarX2Binding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        if (isInPortraitMode()) {
-            setListeners()
-            setObservers()
-            configureView()
-        }
+        setListeners()
+        setObservers()
+        configureView()
     }
 
     override fun onResume() {
         super.onResume()
-        if (isInPortraitMode()) setCurrentNotificationCount()
+        setCurrentNotificationCount()
     }
 
     private fun setCurrentNotificationCount() {
@@ -122,7 +119,7 @@ class AppBarX2Fragment : BaseFragment() {
     }
 
     companion object {
-        val TAG = AppBarX2Fragment::class.java.simpleName
+        val TAG: String = AppBarX2Fragment::class.java.simpleName
         fun createInstance(
             isLogoActive: Boolean = false,
             title: String,

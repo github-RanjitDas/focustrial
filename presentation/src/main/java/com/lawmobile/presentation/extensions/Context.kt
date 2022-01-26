@@ -19,6 +19,7 @@ import com.lawmobile.presentation.entities.AlertInformation
 import com.lawmobile.presentation.ui.base.BaseActivity
 import com.lawmobile.presentation.ui.base.BaseActivity.Companion.checkIfSessionIsExpired
 import com.lawmobile.presentation.utils.CameraHelper
+import com.lawmobile.presentation.utils.checkIfSessionIsExpired
 import com.lawmobile.presentation.widgets.CustomNotificationDialog
 import com.safefleet.mobile.safefleet_ui.widgets.SafeFleetConfirmationDialog
 import kotlin.system.exitProcess
@@ -190,7 +191,7 @@ fun Context.createNotificationDialog(
     builder?.invoke(this)
 }
 
-fun Context.getCameraTypeIntent(
+fun Context.getIntentForCameraType(
     activityForX1: Class<out BaseActivity>,
     activityForX2: Class<out BaseActivity>
 ): Intent {

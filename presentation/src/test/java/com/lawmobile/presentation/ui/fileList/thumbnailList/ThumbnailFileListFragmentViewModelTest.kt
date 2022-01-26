@@ -26,8 +26,8 @@ import org.junit.jupiter.api.extension.ExtendWith
 internal class ThumbnailFileListFragmentViewModelTest {
 
     private val thumbnailListUseCase: ThumbnailListUseCase = mockk()
-    private val thumbnailListFragmentViewModel: ThumbnailListFragmentViewModel by lazy {
-        ThumbnailListFragmentViewModel(thumbnailListUseCase)
+    private val thumbnailListViewModel: ThumbnailListViewModel by lazy {
+        ThumbnailListViewModel(thumbnailListUseCase)
     }
 
     private val dispatcher = TestCoroutineDispatcher()
@@ -46,10 +46,10 @@ internal class ThumbnailFileListFragmentViewModelTest {
         val result = Result.Success(mockk<DomainInformationImage>())
         coEvery { thumbnailListUseCase.getImageBytes(any()) } returns result
 
-        thumbnailListFragmentViewModel.getImageBytes(domainCameraFile)
+        thumbnailListViewModel.getImageBytes(domainCameraFile)
         Assert.assertEquals(
             result,
-            thumbnailListFragmentViewModel.thumbnailListLiveData.value?.getContent()
+            thumbnailListViewModel.thumbnailListLiveData.value?.getContent()
         )
 
         coVerify { thumbnailListUseCase.getImageBytes(any()) }
@@ -63,8 +63,8 @@ internal class ThumbnailFileListFragmentViewModelTest {
         coEvery { thumbnailListUseCase.getImageBytes(any()) } returns
             Result.Success(mockk())
 
-        thumbnailListFragmentViewModel.getImageBytes(domainCameraFile)
-        Assert.assertTrue(thumbnailListFragmentViewModel.thumbnailListLiveData.value?.getContent() is Result.Success)
+        thumbnailListViewModel.getImageBytes(domainCameraFile)
+        Assert.assertTrue(thumbnailListViewModel.thumbnailListLiveData.value?.getContent() is Result.Success)
     }
 
     @Test
@@ -74,30 +74,30 @@ internal class ThumbnailFileListFragmentViewModelTest {
 
         coEvery { thumbnailListUseCase.getImageBytes(any()) } returns Result.Error(mockk())
 
-        thumbnailListFragmentViewModel.getImageBytes(domainCameraFile)
+        thumbnailListViewModel.getImageBytes(domainCameraFile)
         dispatcher.advanceTimeBy(2000)
-        Assert.assertTrue(thumbnailListFragmentViewModel.thumbnailListLiveData.value?.getContent() is Result.Error)
+        Assert.assertTrue(thumbnailListViewModel.thumbnailListLiveData.value?.getContent() is Result.Error)
     }
 
     @Test
     fun testGetImageListFlow() = runBlockingTest {
         coEvery { thumbnailListUseCase.getSnapshotList() } returns Result.Success(mockk())
-        thumbnailListFragmentViewModel.getSnapshotList()
+        thumbnailListViewModel.getSnapshotList()
         coVerify { thumbnailListUseCase.getSnapshotList() }
     }
 
     @Test
     fun testGetImageListSuccess() = runBlockingTest {
         coEvery { thumbnailListUseCase.getSnapshotList() } returns Result.Success(mockk(relaxed = true))
-        thumbnailListFragmentViewModel.getSnapshotList()
-        thumbnailListFragmentViewModel.imageListLiveData.value as Result.Success
+        thumbnailListViewModel.getSnapshotList()
+        thumbnailListViewModel.imageListLiveData.value as Result.Success
     }
 
     @Test
     fun testGetImageListError() = runBlockingTest {
         coEvery { thumbnailListUseCase.getSnapshotList() } returns Result.Error(Exception(""))
-        thumbnailListFragmentViewModel.getSnapshotList()
-        val result = thumbnailListFragmentViewModel.imageListLiveData.value
+        thumbnailListViewModel.getSnapshotList()
+        val result = thumbnailListViewModel.imageListLiveData.value
         Assert.assertTrue(result is Result.Error)
     }
 }

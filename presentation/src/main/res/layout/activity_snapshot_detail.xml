@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -9,97 +8,92 @@
         android:id="@+id/constraintLayoutDetail"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/white"
-        tools:context=".ui.snapshotDetail.SnapshotDetailActivity">
+        android:background="@color/white">
 
         <include
             android:id="@+id/layoutCustomAppBar"
-            layout="@layout/custom_app_bar"
+            layout="@layout/fragment_app_bar_x1"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="@dimen/live_view_app_bar_height" />
 
         <ImageView
-            android:id="@+id/photoItemDetailHolder"
+            android:id="@+id/imageViewSnapshot"
             android:layout_width="@dimen/no_dp"
-            android:scaleType="fitXY"
             android:layout_height="@dimen/snapshot_detail_height_image"
-            android:layout_marginTop="@dimen/live_view_app_bar_height"
+            android:background="@color/black"
             android:contentDescription="@string/snapshot_item_detail_photo_content_description"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@id/layoutCustomAppBar" />
 
         <ImageView
-            android:id="@+id/imageReload"
-            android:visibility="gone"
+            android:id="@+id/image_view_reload"
             style="@style/buttonPlayBackVideo"
-            android:src="@drawable/ic_refresh"
             android:layout_marginTop="@dimen/live_view_app_bar_height"
             android:contentDescription="@string/snapshot_item_detail_photo_content_description"
-            app:layout_constraintBottom_toBottomOf="@+id/photoItemDetailHolder"
+            android:src="@drawable/ic_refresh"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@+id/imageViewSnapshot"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
-            android:visibility="gone"
-            android:id="@+id/imageFailed"
-            android:layout_height="@dimen/snapshot_detail_height_image"
+            android:id="@+id/image_view_failed"
             android:layout_width="@dimen/live_view_app_bar_height"
-            app:tint="@color/black"
-            android:src="@drawable/ic_failed_image"
+            android:layout_height="@dimen/snapshot_detail_height_image"
             android:layout_marginTop="@dimen/live_view_app_bar_height"
             android:contentDescription="@string/snapshot_item_detail_photo_content_description"
-            app:layout_constraintBottom_toBottomOf="@+id/photoItemDetailHolder"
+            android:src="@drawable/ic_failed_image"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@+id/imageViewSnapshot"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="@color/black" />
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/layoutDetailControls"
+        <ImageButton
+            android:id="@+id/buttonFullScreen"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@color/blackTransparent"
-            android:padding="@dimen/snapshot_detail_padding_button_full_size"
-            app:layout_constraintBottom_toBottomOf="@+id/photoItemDetailHolder"
-            app:layout_constraintStart_toStartOf="parent">
-
-            <ImageButton
-                android:id="@+id/buttonFullScreen"
-                android:layout_width="@dimen/video_playback_size_buttons"
-                android:layout_height="@dimen/video_playback_size_buttons"
-                android:background="@color/transparent"
-                android:contentDescription="@string/image_description_full_screen_size"
-                android:src="@drawable/ic_full_size"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
+            android:contentDescription="@string/image_description_full_screen_size"
+            android:padding="@dimen/margin_10dp"
+            android:src="@drawable/selector_fullscreen_button"
+            app:layout_constraintBottom_toBottomOf="@+id/imageViewSnapshot"
+            app:layout_constraintStart_toStartOf="parent" />
 
         <Button
-            android:id="@+id/buttonAssociatePartnerIdList"
-            android:layout_width="match_parent"
+            android:id="@+id/buttonAssociateOfficer"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/margin_30dp"
             android:background="@drawable/background_button_accept"
             android:contentDescription="@string/associate_partner_to_file_button_description"
+            android:paddingHorizontal="@dimen/margin_30dp"
             android:text="@string/associate_with_an_officer"
             android:textAllCaps="false"
             android:textColor="@color/colorWhite"
             android:textSize="@dimen/text_size_20sp"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toBottomOf="@id/bottomGuideline"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/bottomGuideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.98" />
+
         <ScrollView
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toTopOf="@+id/buttonAssociatePartnerIdList"
+            android:id="@+id/scrollLayoutInformation"
             android:layout_width="match_parent"
+            android:layout_height="@dimen/no_dp"
             android:layout_marginBottom="@dimen/snapshot_detail_margin_bottom_scroll"
-            app:layout_constraintTop_toBottomOf="@+id/photoItemDetailHolder"
-            android:layout_height="@dimen/no_dp">
+            app:layout_constraintBottom_toTopOf="@+id/buttonAssociateOfficer"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imageViewSnapshot">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -107,21 +101,21 @@
 
                 <TextView
                     android:id="@+id/photoNameTitle"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/snapshot_detail_margin_start_text"
                     android:layout_marginTop="@dimen/margin_25dp"
                     android:fontFamily="sans-serif-light"
+                    android:paddingHorizontal="@dimen/snapshot_detail_margin_start_text"
                     android:text="@string/snapshot_item_detail_photo_name_title"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
                     android:id="@+id/photoNameValue"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/snapshot_detail_margin_start_text"
                     android:layout_marginTop="@dimen/snapshot_detail_margin_top_text"
+                    android:paddingHorizontal="@dimen/snapshot_detail_margin_start_text"
                     android:text="@string/snapshot_item_detail_photo_name_value"
                     android:textStyle="bold"
                     app:layout_constraintStart_toStartOf="parent"
@@ -129,21 +123,21 @@
 
                 <TextView
                     android:id="@+id/dateTimeTitle"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/snapshot_detail_margin_start_text"
                     android:layout_marginTop="@dimen/snapshot_detail_margin_top_title"
                     android:fontFamily="sans-serif-light"
+                    android:paddingHorizontal="@dimen/snapshot_detail_margin_start_text"
                     android:text="@string/snapshot_item_detail_date_time_title"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/photoNameValue" />
 
                 <TextView
                     android:id="@+id/dateTimeValue"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/snapshot_detail_margin_start_text"
                     android:layout_marginTop="@dimen/snapshot_detail_margin_top_text"
+                    android:paddingHorizontal="@dimen/snapshot_detail_margin_start_text"
                     android:text="@string/snapshot_item_detail_date_time_value"
                     android:textStyle="bold"
                     app:layout_constraintStart_toStartOf="parent"
@@ -156,8 +150,8 @@
                     android:layout_marginStart="@dimen/snapshot_detail_margin_start_text"
                     android:layout_marginTop="@dimen/snapshot_detail_margin_top_title"
                     android:fontFamily="sans-serif-light"
-                    android:visibility="gone"
                     android:text="@string/snapshot_item_detail_video_assigned_title"
+                    android:visibility="gone"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/dateTimeValue" />
 
@@ -168,28 +162,28 @@
                     android:layout_marginStart="@dimen/snapshot_detail_margin_start_text"
                     android:layout_marginTop="@dimen/snapshot_detail_margin_top_text"
                     android:text="@string/none"
-                    android:visibility="gone"
                     android:textStyle="bold"
+                    android:visibility="gone"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/videosAssociatedTitle" />
 
                 <TextView
                     android:id="@+id/officerTitle"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/snapshot_detail_margin_start_text"
                     android:layout_marginTop="@dimen/snapshot_detail_margin_top_title"
                     android:fontFamily="sans-serif-light"
+                    android:paddingHorizontal="@dimen/snapshot_detail_margin_start_text"
                     android:text="@string/snapshot_item_detail_officer_assigned_title"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/videosAssociatedValue" />
 
                 <TextView
                     android:id="@+id/officerValue"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/snapshot_detail_margin_start_text"
                     android:layout_marginTop="@dimen/snapshot_detail_margin_top_text"
+                    android:paddingHorizontal="@dimen/snapshot_detail_margin_start_text"
                     android:text="@string/none"
                     android:textStyle="bold"
                     app:layout_constraintStart_toStartOf="parent"
@@ -198,6 +192,46 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </ScrollView>
+
+        <ImageView
+            android:id="@+id/imageViewFullScreenSnapshot"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/black"
+            android:clickable="true"
+            android:contentDescription="@string/snapshot_item_detail_photo_content_description"
+            android:focusable="true"
+            android:visibility="gone" />
+
+        <ImageView
+            android:id="@+id/imageViewFullScreenReload"
+            style="@style/buttonPlayBackVideo"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:contentDescription="@string/snapshot_item_detail_photo_content_description"
+            android:src="@drawable/ic_refresh"
+            android:visibility="gone" />
+
+        <ImageView
+            android:id="@+id/imageViewFullScreenFailed"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:contentDescription="@string/snapshot_item_detail_photo_content_description"
+            android:src="@drawable/ic_failed_image"
+            android:visibility="gone"
+            app:tint="@color/black" />
+
+        <ImageButton
+            android:id="@+id/buttonNormalScreen"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/blackTransparent"
+            android:contentDescription="@string/image_description_full_screen_size"
+            android:padding="@dimen/margin_10dp"
+            android:src="@drawable/selector_fullscreen_button"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@+id/imageViewFullScreenSnapshot"
+            app:layout_constraintStart_toStartOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -213,7 +247,7 @@
         app:layout_anchorGravity="center" />
 
     <include
-        android:id="@+id/bottomSheetPartnerId"
+        android:id="@+id/bottomSheetAssociateOfficer"
         layout="@layout/bottom_sheet_assign_to_officer" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

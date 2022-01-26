@@ -11,6 +11,7 @@ import com.lawmobile.domain.entities.DomainInformationForList
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.ui.audioDetail.AudioDetailActivity
 import com.lawmobile.presentation.ui.base.BaseFragment
+import com.lawmobile.presentation.ui.fileList.shared.FileList
 import com.lawmobile.presentation.ui.snapshotDetail.SnapshotDetailActivity
 import com.lawmobile.presentation.ui.videoPlayback.VideoPlaybackActivity
 import com.lawmobile.presentation.utils.Constants
@@ -19,11 +20,16 @@ import com.lawmobile.presentation.utils.Constants.SNAPSHOT_LIST
 import com.lawmobile.presentation.utils.Constants.VIDEO_LIST
 import com.lawmobile.presentation.widgets.CustomFilterDialog
 
-open class FileListBaseFragment : BaseFragment() {
+abstract class FileListBaseFragment : BaseFragment(), FileList {
 
     var listType: String? = null
     var isLoadedOnCreate = false
-    var filter: CustomFilterDialog? = null
+
+    override var filter: CustomFilterDialog? = null
+    override var onFileCheck: ((Int) -> Unit)? = null
+    override var listBackup: MutableList<out DomainInformationForList> = mutableListOf()
+
+    var isSelectionActive = false
 
     fun showFileListRecycler(fileListRecycler: RecyclerView?, noFilesTextView: TextView?) {
         fileListRecycler?.isVisible = true
@@ -82,16 +88,12 @@ open class FileListBaseFragment : BaseFragment() {
 
     fun getFilteredList(listToFilter: List<DomainInformationForList>): List<DomainInformationForList> {
         filter?.run {
-            if (!currentFilters.isNullOrEmpty()) {
+            if (currentFilters.isNotEmpty()) {
                 this.listToFilter = listToFilter
                 applyFiltersToLists()
                 return filteredList
             }
         }
         return listToFilter
-    }
-
-    companion object {
-        var checkableListInit = false
     }
 }

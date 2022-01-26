@@ -50,9 +50,9 @@ class FileListRepositoryImpl(private val fileListRemoteDataSource: FileListRemot
         cameraConnectFileList.forEach {
             val videoInformation = getVideoInformationFromCache(it, partnerID)
 
-            delay(ASSOCIATE_VIDEOS_DELAY)
+            delay(DELAY_BETWEEN_OPERATION)
 
-            val result = getResultWithAttempts(ASSOCIATE_PARTNER_ATTEMPTS) {
+            val result = getResultWithAttempts(ATTEMPTS_ON_OPERATION) {
                 fileListRemoteDataSource.savePartnerIdVideos(videoInformation)
             }
 
@@ -104,7 +104,10 @@ class FileListRepositoryImpl(private val fileListRemoteDataSource: FileListRemot
         domainFileList: List<DomainCameraFile>,
         partnerID: String
     ): Result<Unit> {
-        val photoMetadataResult = fileListRemoteDataSource.getSavedPhotosMetadata()
+        val photoMetadataResult = getResultWithAttempts(ATTEMPTS_ON_OPERATION) {
+            fileListRemoteDataSource.getSavedPhotosMetadata()
+        }
+
         if (photoMetadataResult is Result.Error) return photoMetadataResult
 
         val photoMetadataList = (photoMetadataResult as Result.Success).data.toMutableList()
@@ -112,9 +115,9 @@ class FileListRepositoryImpl(private val fileListRemoteDataSource: FileListRemot
         val errorsInFiles =
             associateToSnapshotsAndGetErrors(domainFileList, photoMetadataList, partnerID)
 
-        delay(ASSOCIATE_ALL_SNAPSHOTS_DELAY)
+        delay(DELAY_BETWEEN_OPERATION * 2)
 
-        val resultJSONOnly = getResultWithAttempts(ASSOCIATE_PARTNER_ATTEMPTS) {
+        val resultJSONOnly = getResultWithAttempts(ATTEMPTS_ON_OPERATION) {
             fileListRemoteDataSource.savePartnerIdInAllSnapshots(photoMetadataList)
         }
 
@@ -138,9 +141,9 @@ class FileListRepositoryImpl(private val fileListRemoteDataSource: FileListRemot
             val partnerMetadata = PhotoMetadata(partnerID = partnerID)
             val cameraPhotoMetadata = buildPhotoInformation(fileItem, partnerMetadata)
 
-            delay(ASSOCIATE_SNAPSHOTS_DELAY)
+            delay(DELAY_BETWEEN_OPERATION)
 
-            val saveResult = getResultWithAttempts(ASSOCIATE_PARTNER_ATTEMPTS) {
+            val saveResult = getResultWithAttempts(ATTEMPTS_ON_OPERATION) {
                 fileListRemoteDataSource.savePartnerIdSnapshot(cameraPhotoMetadata)
             }
 
@@ -199,9 +202,9 @@ class FileListRepositoryImpl(private val fileListRemoteDataSource: FileListRemot
             val partnerMetadata = AudioMetadata(partnerID = partnerID)
             val cameraAudioInformation = buildAudioInformation(fileItem, partnerMetadata)
 
-            delay(ASSOCIATE_AUDIOS_DELAY)
+            delay(DELAY_BETWEEN_OPERATION)
 
-            val saveResult = getResultWithAttempts(ASSOCIATE_PARTNER_ATTEMPTS) {
+            val saveResult = getResultWithAttempts(ATTEMPTS_ON_OPERATION) {
                 fileListRemoteDataSource.savePartnerIdAudios(cameraAudioInformation)
             }
 
@@ -238,11 +241,8 @@ class FileListRepositoryImpl(private val fileListRemoteDataSource: FileListRemot
     }
 
     companion object {
-        private const val ASSOCIATE_VIDEOS_DELAY = 200L
-        private const val ASSOCIATE_SNAPSHOTS_DELAY = 150L
-        private const val ASSOCIATE_AUDIOS_DELAY = 150L
-        private const val ASSOCIATE_ALL_SNAPSHOTS_DELAY = 300L
-        private const val ASSOCIATE_PARTNER_ATTEMPTS = 3
+        private const val ATTEMPTS_ON_OPERATION = 3
+        private const val DELAY_BETWEEN_OPERATION = 200L
 
         private const val ASSOCIATE_PARTNER_ERROR = "Partner ID could not be associated"
     }

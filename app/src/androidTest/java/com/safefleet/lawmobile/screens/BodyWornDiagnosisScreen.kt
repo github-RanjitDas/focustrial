@@ -36,7 +36,7 @@ class BodyWornDiagnosisScreen : BaseScreen() {
     fun isSuccessMessageBodyDisplayed() =
         assertDisplayed(
             R.id.textDescriptionDiagnosis,
-            R.string.body_worn_result_success_description
+            R.string.diagnosis_success_message
         )
 
     fun isOkButtonDisplayed() = assertDisplayed(R.id.buttonOkFinishedDiagnosis, R.string.OK)
@@ -48,10 +48,10 @@ class BodyWornDiagnosisScreen : BaseScreen() {
     }
 
     fun isFailMessageBodyDisplayed() =
-        assertDisplayed(R.id.textDescriptionDiagnosis, R.string.body_worn_result_failed_description)
+        assertDisplayed(R.id.textDescriptionDiagnosis, R.string.diagnosis_failed_message)
 
     fun isErrorBodyWornDiagnosisMessageDisplayed() =
-        assertContains(R.string.body_worn_icon_error_is_not_possible_get_diagnosis)
+        waitUntil { assertContains(R.string.error_trying_to_diagnose) }
 
     fun isCloseButtonDisplayed() = assertDisplayed(R.id.imageButtonBackArrow)
 }
