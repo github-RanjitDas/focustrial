@@ -10,6 +10,7 @@ plugins {
     id 'com.google.gms.google-services'
     id 'com.google.firebase.crashlytics'
     id 'com.squareup.sqldelight'
+    id 'newrelic'
 }
 
 check.dependsOn ktlint
@@ -124,6 +125,8 @@ dependencies {
 
     implementation Dependencies.SqlDelight.androidDriver
     implementation Dependencies.SqlDelight.sqlDelightDriver
+
+    implementation Dependencies.NewRelic.android
 
     implementation project(path: Modules.presentation)
     implementation project(path: Modules.data)
