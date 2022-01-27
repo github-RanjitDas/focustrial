@@ -15,10 +15,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.viewModels
-import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.lawmobile.domain.enums.CameraType
 import com.lawmobile.presentation.R
-import com.lawmobile.presentation.databinding.FragmentStartPairingX1Binding
+import com.lawmobile.presentation.databinding.FragmentStartPairingBinding
 import com.lawmobile.presentation.entities.AlertInformation
 import com.lawmobile.presentation.extensions.createAlertInformation
 import com.lawmobile.presentation.extensions.isPermissionGranted
@@ -27,30 +26,33 @@ import com.lawmobile.presentation.security.IIsolatedService
 import com.lawmobile.presentation.security.IsolatedService
 import com.lawmobile.presentation.ui.base.BaseActivity
 import com.lawmobile.presentation.ui.base.BaseFragment
+import com.lawmobile.presentation.ui.login.shared.Instructions
 import com.lawmobile.presentation.ui.login.shared.PairingViewModel
-import com.lawmobile.presentation.ui.login.x1.LoginX1Activity
+import com.lawmobile.presentation.ui.login.shared.StartPairing
 import com.lawmobile.presentation.ui.selectCamera.SelectCameraActivity
 import com.safefleet.mobile.kotlin_commons.extensions.doIfError
 import com.safefleet.mobile.kotlin_commons.extensions.doIfSuccess
 import com.safefleet.mobile.kotlin_commons.helpers.Result
 
-class StartPairingFragment : BaseFragment() {
+class StartPairingFragment : BaseFragment(), Instructions, StartPairing {
 
-    private var _binding: FragmentStartPairingX1Binding? = null
+    private var _binding: FragmentStartPairingBinding? = null
     private val binding get() = _binding!!
 
     private val pairingViewModel: PairingViewModel by viewModels()
-    lateinit var onValidRequirements: () -> Unit
 
     private lateinit var serviceBinder: IIsolatedService
     private var isServiceBounded = false
+
+    override var onInstructionsClick: (() -> Unit)? = null
+    override var onStartPairingClick: (() -> Unit)? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentStartPairingX1Binding.inflate(inflater, container, false)
+        _binding = FragmentStartPairingBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -71,23 +73,23 @@ class StartPairingFragment : BaseFragment() {
         )
     }
 
-    private fun FragmentStartPairingX1Binding.setListeners() {
+    private fun FragmentStartPairingBinding.setListeners() {
         buttonGoListener()
         buttonInstructionsListener()
         changeCameraListener()
     }
 
-    private fun FragmentStartPairingX1Binding.changeCameraListener() {
+    private fun FragmentStartPairingBinding.changeCameraListener() {
         buttonChangeCamera.setOnClickListener { goToSelectCamera() }
     }
 
-    private fun FragmentStartPairingX1Binding.buttonInstructionsListener() {
+    private fun FragmentStartPairingBinding.buttonInstructionsListener() {
         buttonInstructionsToLinkCamera.setOnClickListener {
-            showBottomSheet()
+            onInstructionsClick?.invoke()
         }
     }
 
-    private fun FragmentStartPairingX1Binding.buttonGoListener() {
+    private fun FragmentStartPairingBinding.buttonGoListener() {
         buttonGo.setOnClickListener {
             if (!verifyMagiskInPhone()) {
                 verifyPermissionsToStartPairing()
@@ -102,16 +104,12 @@ class StartPairingFragment : BaseFragment() {
     }
 
     private fun PairingViewModel.setObservers() {
-        validateConnectionLiveData.observe(viewLifecycleOwner, ::manageIsPossibleConnection)
-    }
-
-    private fun showBottomSheet() {
-        (activity as LoginX1Activity).sheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+        isConnectionPossible.observe(viewLifecycleOwner, ::manageIsPossibleConnection)
     }
 
     private fun verifyPermissionsToStartPairing() {
         if (arePermissionsGranted()) {
-            if (isGPSActive()) startPairingResultFragment() else showAlertToGPSEnable()
+            if (isGPSActive()) startPairing() else showAlertToGPSEnable()
         } else {
             showAlertToNavigateToPermissions()
         }
@@ -133,17 +131,17 @@ class StartPairingFragment : BaseFragment() {
         return gpsEnable
     }
 
-    private fun startPairingResultFragment() {
+    private fun startPairing() {
         if (!pairingViewModel.isWifiEnable()) {
             createAlertToNavigateWifiSettings()
             return
         }
         val serialNumberCamera = pairingViewModel.getNetworkName()
         if (!CameraType.isValidBodyCameraNumber(serialNumberCamera)) {
-            pairingViewModel.isPossibleConnection()
+            pairingViewModel.isConnectionPossible()
             return
         }
-        onValidRequirements()
+        onStartPairingClick?.invoke()
     }
 
     private fun showAlertToNavigateToPermissions() {
@@ -176,7 +174,7 @@ class StartPairingFragment : BaseFragment() {
 
     private fun manageIsPossibleConnection(result: Result<Unit>) {
         with(result) {
-            doIfSuccess { onValidRequirements() }
+            doIfSuccess { onStartPairingClick?.invoke() }
             doIfError {
                 binding.layoutStartPairing.showErrorSnackBar(getString(R.string.verify_camera_wifi))
             }
@@ -228,8 +226,6 @@ class StartPairingFragment : BaseFragment() {
     }
 
     companion object {
-        val TAG = StartPairingFragment::class.java.simpleName
-        fun createInstance(onValidRequirements: () -> Unit): StartPairingFragment =
-            StartPairingFragment().apply { this.onValidRequirements = onValidRequirements }
+        val TAG: String = StartPairingFragment::class.java.simpleName
     }
 }

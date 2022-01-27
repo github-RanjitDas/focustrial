@@ -11,7 +11,7 @@ import androidx.fragment.app.viewModels
 import com.lawmobile.domain.entities.CameraInfo
 import com.lawmobile.presentation.databinding.FragmentLiveMenuX2Binding
 import com.lawmobile.presentation.extensions.createAlertConfirmAppExit
-import com.lawmobile.presentation.extensions.getCameraTypeIntent
+import com.lawmobile.presentation.extensions.getIntentForCameraType
 import com.lawmobile.presentation.extensions.setOnClickListenerCheckConnection
 import com.lawmobile.presentation.extensions.setOnSwipeRightListener
 import com.lawmobile.presentation.extensions.setOnTouchListenerCheckConnection
@@ -183,7 +183,10 @@ class MenuFragment : BaseFragment() {
         isInMainScreen = true
         if (activity is LiveX2Activity) return
         val intent =
-            activity?.getCameraTypeIntent(LiveX1Activity::class.java, LiveX2Activity::class.java)
+            activity?.getIntentForCameraType(
+                LiveX1Activity::class.java,
+                LiveX2Activity::class.java
+            )
         startActivity(intent)
     }
 
@@ -192,7 +195,7 @@ class MenuFragment : BaseFragment() {
         currentListView = fileType
         (activity as BaseActivity).updateLiveOrPlaybackActive(false)
         val fileListIntent =
-            context?.getCameraTypeIntent(
+            activity?.getIntentForCameraType(
                 FileListX1Activity::class.java,
                 FileListX2Activity::class.java
             )
@@ -221,7 +224,7 @@ class MenuFragment : BaseFragment() {
         CameraInfo.cleanInfo()
         menuViewModel.disconnectCamera()
         val intent =
-            context?.getCameraTypeIntent(LoginX1Activity::class.java, LoginX2Activity::class.java)
+            context?.getIntentForCameraType(LoginX1Activity::class.java, LoginX2Activity::class.java)
         startActivity(intent)
         activity?.finish()
     }
@@ -242,6 +245,6 @@ class MenuFragment : BaseFragment() {
     companion object {
         var currentListView = ""
         var isInMainScreen = true
-        val TAG = MenuFragment::class.java.simpleName
+        val TAG: String = MenuFragment::class.java.simpleName
     }
 }

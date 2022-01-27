@@ -7,7 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
 import com.lawmobile.domain.entities.customEvents.BluetoothErrorEvent
 import com.lawmobile.domain.entities.customEvents.InternetErrorEvent
 import com.lawmobile.presentation.R
@@ -20,13 +20,20 @@ import com.safefleet.mobile.android_commons.extensions.hideKeyboard
 
 class OfficerIdFragment : BaseFragment() {
 
-    private val viewModel: OfficerIdViewModel by viewModels()
+    private val viewModel: OfficerIdViewModel by activityViewModels()
 
     private var _binding: FragmentValidateOfficerIdBinding? = null
     private val binding get() = _binding!!
 
     private lateinit var onContinueClick: (Boolean, String) -> Unit
-    private lateinit var officerId: String
+
+    private var wereConnectivityRequirementsChecked: Boolean
+        get() = viewModel.wereConnectivityRequirementsChecked
+        set(value) {
+            viewModel.wereConnectivityRequirementsChecked = value
+        }
+
+    var officerId: String = ""
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -39,18 +46,26 @@ class OfficerIdFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        verifyInternetConnection()
-        verifyBluetoothConnection()
-        binding.setOfficerId()
+        verifyConnectivityRequirements()
         binding.setListeners()
     }
 
-    private fun FragmentValidateOfficerIdBinding.setOfficerId() {
-        editTextOfficerId.setText(officerId)
+    override fun onResume() {
+        super.onResume()
+        if (viewModel.officerId.isEmpty()) viewModel.officerId = officerId
+        binding.setOfficerId()
     }
 
-    private fun verifyBluetoothConnection() {
-        viewModel.verifyBluetoothConnection {
+    private fun verifyConnectivityRequirements() {
+        if (wereConnectivityRequirementsChecked.not()) {
+            verifyInternetConnection()
+            verifyBluetoothEnabled()
+            wereConnectivityRequirementsChecked = true
+        }
+    }
+
+    private fun verifyBluetoothEnabled() {
+        viewModel.verifyBluetoothEnabled {
             if (!it) showBluetoothOffDialog()
         }
     }
@@ -77,6 +92,10 @@ class OfficerIdFragment : BaseFragment() {
         }
     }
 
+    private fun FragmentValidateOfficerIdBinding.setOfficerId() {
+        editTextOfficerId.setText(viewModel.officerId)
+    }
+
     private fun FragmentValidateOfficerIdBinding.setListeners() {
         editTextOfficerIdListener()
         buttonContinueListener()
@@ -86,6 +105,7 @@ class OfficerIdFragment : BaseFragment() {
 
     private fun FragmentValidateOfficerIdBinding.editTextOfficerIdListener() {
         editTextOfficerId.addTextChangedListener {
+            viewModel.officerId = it.toString()
             setButtonContinueEnable(it.toString().isNotEmpty())
         }
     }
@@ -112,21 +132,21 @@ class OfficerIdFragment : BaseFragment() {
     }
 
     private fun FragmentValidateOfficerIdBinding.buttonContinueListener() {
-        setButtonContinueEnable(officerId.isNotEmpty())
+        setButtonContinueEnable(viewModel.officerId.isNotEmpty())
         buttonContinue.setOnClickListener {
             setButtonContinueEnable(false)
             validateOfficerId()
         }
     }
 
-    private fun FragmentValidateOfficerIdBinding.validateOfficerId() {
+    private fun validateOfficerId() {
         (activity as AppCompatActivity).hideKeyboard()
-        val officerId = editTextOfficerId.text.toString()
         viewModel.verifyInternetConnection {
             if (it) {
-                val isEmail = officerId.contains("@") && officerId.contains(".")
-                onContinueClick(isEmail, officerId)
-            } else onContinueClick(it, officerId)
+                val isEmail = viewModel.officerId.contains("@") && viewModel.officerId.contains(".")
+                onContinueClick(isEmail, viewModel.officerId)
+            } else onContinueClick(it, viewModel.officerId)
+            wereConnectivityRequirementsChecked = false
         }
     }
 
@@ -142,13 +162,11 @@ class OfficerIdFragment : BaseFragment() {
     }
 
     companion object {
-        val TAG = OfficerIdFragment::class.java.simpleName
+        val TAG: String = OfficerIdFragment::class.java.simpleName
 
         fun createInstance(
-            onContinueClick: (Boolean, String) -> Unit,
-            officerId: String
+            onContinueClick: (Boolean, String) -> Unit
         ) = OfficerIdFragment().apply {
-            this.officerId = officerId
             this.onContinueClick = onContinueClick
         }
     }

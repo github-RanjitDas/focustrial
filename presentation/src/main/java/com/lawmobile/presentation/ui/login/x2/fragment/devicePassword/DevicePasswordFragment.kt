@@ -15,8 +15,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
-import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.lawmobile.domain.entities.customEvents.WrongCredentialsEvent
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.databinding.FragmentStartPairingX2Binding
@@ -29,24 +29,36 @@ import com.lawmobile.presentation.security.IIsolatedService
 import com.lawmobile.presentation.security.IsolatedService
 import com.lawmobile.presentation.ui.base.BaseActivity
 import com.lawmobile.presentation.ui.base.BaseFragment
+import com.lawmobile.presentation.ui.login.shared.Instructions
 import com.lawmobile.presentation.ui.login.shared.PairingViewModel
+import com.lawmobile.presentation.ui.login.shared.StartPairing
 import com.lawmobile.presentation.ui.login.x1.fragment.StartPairingFragment
-import com.lawmobile.presentation.ui.login.x2.LoginX2Activity
 import com.safefleet.mobile.android_commons.extensions.hideKeyboard
 import com.safefleet.mobile.kotlin_commons.extensions.doIfError
 import com.safefleet.mobile.kotlin_commons.extensions.doIfSuccess
 import com.safefleet.mobile.kotlin_commons.helpers.Result
 
-class DevicePasswordFragment : BaseFragment() {
+class DevicePasswordFragment : BaseFragment(), Instructions, StartPairing {
     private var _binding: FragmentStartPairingX2Binding? = null
     private val binding get() = _binding!!
 
     private val pairingViewModel: PairingViewModel by viewModels()
-
-    private lateinit var fragmentListener: DevicePasswordFragmentListener
+    private val viewModel: DevicePasswordViewModel by activityViewModels()
 
     private lateinit var serviceBinder: IIsolatedService
     private var isServiceBounded = false
+
+    override var onInstructionsClick: (() -> Unit)? = null
+    override var onStartPairingClick: (() -> Unit)? = null
+    private lateinit var onEditOfficerId: (String) -> Unit
+
+    var officerId: String = ""
+
+    private var officerPassword: String
+        get() = viewModel.officerPassword
+        set(value) {
+            viewModel.officerPassword = value
+        }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -59,10 +71,15 @@ class DevicePasswordFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.setOfficerId()
         binding.setListeners()
         pairingViewModel.setObservers()
         pairingViewModel.cleanCacheFiles()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (viewModel.officerId.isEmpty()) viewModel.officerId = officerId
+        binding.setOfficerId()
     }
 
     override fun onStart() {
@@ -76,7 +93,7 @@ class DevicePasswordFragment : BaseFragment() {
     }
 
     private fun FragmentStartPairingX2Binding.setOfficerId() {
-        editTextOfficerId.setText(fragmentListener.officerId)
+        editTextOfficerId.setText(viewModel.officerId)
     }
 
     private fun FragmentStartPairingX2Binding.setListeners() {
@@ -87,7 +104,9 @@ class DevicePasswordFragment : BaseFragment() {
     }
 
     private fun FragmentStartPairingX2Binding.editTextDevicePasswordListener() {
+        editTextDevicePassword.setText(officerPassword)
         editTextDevicePassword.addTextChangedListener {
+            officerPassword = it.toString()
             buttonConnect.isEnabled = it.toString().isNotEmpty()
             buttonConnect.isActivated = it.toString().isNotEmpty()
         }
@@ -95,12 +114,13 @@ class DevicePasswordFragment : BaseFragment() {
 
     private fun FragmentStartPairingX2Binding.buttonEditOfficerIdListener() {
         buttonEditOfficerId.setOnClickListener {
-            fragmentListener.onEditOfficerId(editTextOfficerId.text.toString())
+            editTextDevicePassword.setText("")
+            onEditOfficerId(viewModel.officerId)
         }
     }
 
     private fun FragmentStartPairingX2Binding.instructionsToLinkListener() {
-        textViewInstructionsToLinkCamera.setOnClickListener { showBottomSheet() }
+        textViewInstructionsToLinkCamera.setOnClickListener { onInstructionsClick?.invoke() }
     }
 
     private fun FragmentStartPairingX2Binding.buttonConnectListener() {
@@ -113,11 +133,7 @@ class DevicePasswordFragment : BaseFragment() {
     }
 
     private fun PairingViewModel.setObservers() {
-        validateConnectionLiveData.observe(viewLifecycleOwner, ::manageIsPossibleConnection)
-    }
-
-    private fun showBottomSheet() {
-        (activity as LoginX2Activity).sheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+        isConnectionPossible.observe(viewLifecycleOwner, ::manageIsPossibleConnection)
     }
 
     private fun verifyPermissionsToStartPairing() {
@@ -153,14 +169,15 @@ class DevicePasswordFragment : BaseFragment() {
         val passwordName = editTextDevicePassword.text.toString()
 
         pairingViewModel.suggestWiFiNetwork(networkName, passwordName) { isConnected ->
-            if (isConnected) fragmentListener.onValidRequirements()
+            if (isConnected) onStartPairingClick?.invoke()
             else showWrongCredentialsNotification()
         }
     }
 
     private fun showWrongCredentialsNotification() {
         val cameraEvent = WrongCredentialsEvent.event
-        context?.createNotificationDialog(cameraEvent)?.setButtonText(resources.getString(R.string.OK))
+        context?.createNotificationDialog(cameraEvent)
+            ?.setButtonText(resources.getString(R.string.OK))
     }
 
     private fun showAlertToNavigateToPermissions() {
@@ -193,7 +210,7 @@ class DevicePasswordFragment : BaseFragment() {
 
     private fun manageIsPossibleConnection(result: Result<Unit>) {
         with(result) {
-            doIfSuccess { fragmentListener.onValidRequirements() }
+            doIfSuccess { onStartPairingClick?.invoke() }
             doIfError {
                 binding.layoutStartPairing.showErrorSnackBar(getString(R.string.verify_camera_wifi))
             }
@@ -243,12 +260,11 @@ class DevicePasswordFragment : BaseFragment() {
     }
 
     companion object {
-        val TAG = StartPairingFragment::class.java.simpleName
-        fun createInstance(
-            fragmentListener: DevicePasswordFragmentListener,
-        ): DevicePasswordFragment =
-            DevicePasswordFragment().apply {
-                this.fragmentListener = fragmentListener
+        val TAG: String = StartPairingFragment::class.java.simpleName
+        fun createInstance(onEditOfficerId: (String) -> Unit): DevicePasswordFragment {
+            return DevicePasswordFragment().apply {
+                this.onEditOfficerId = onEditOfficerId
             }
+        }
     }
 }

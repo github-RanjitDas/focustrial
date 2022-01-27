@@ -7,21 +7,25 @@ import android.view.ViewGroup
 import androidx.core.view.isVisible
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.databinding.FragmentFilterSectionListX1Binding
+import com.lawmobile.presentation.extensions.buttonFilterState
 import com.lawmobile.presentation.extensions.createFilterDialog
 import com.lawmobile.presentation.extensions.setOnClickListenerCheckConnection
 import com.lawmobile.presentation.ui.base.BaseFragment
-import com.lawmobile.presentation.utils.Constants
+import com.lawmobile.presentation.ui.fileList.shared.FileSelection
+import com.lawmobile.presentation.ui.fileList.shared.FilterSection
 import com.lawmobile.presentation.utils.FeatureSupportHelper
 import com.lawmobile.presentation.widgets.CustomFilterDialog
 
-class FilterSectionX1Fragment : BaseFragment() {
+class FilterSectionX1Fragment : BaseFragment(), FileSelection, FilterSection {
 
     private var _binding: FragmentFilterSectionListX1Binding? = null
     private val binding: FragmentFilterSectionListX1Binding get() = _binding!!
 
-    lateinit var onTapButtonSelectSnapshotAssociate: () -> Unit
-    lateinit var onTapButtonOpenFilters: () -> Unit
-    private var isViewCreated: Boolean = false
+    override lateinit var onButtonSelectClick: () -> Unit
+    override lateinit var onButtonFilterClick: () -> Unit
+
+    private var selectButtonTitle = ""
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -33,9 +37,8 @@ class FilterSectionX1Fragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setListener()
+        binding.setListener()
         setFeatures()
-        isViewCreated = true
     }
 
     private fun setFeatures() {
@@ -43,63 +46,54 @@ class FilterSectionX1Fragment : BaseFragment() {
             binding.buttonSelectToAssociate.visibility = View.INVISIBLE
     }
 
-    fun resetButtonAssociateSnapshot(listType: String?) {
-        if (!isViewCreated) return
-        with(binding.buttonSelectToAssociate) {
-            isActivated = false
-            text = when (listType) {
-                Constants.VIDEO_LIST -> getString(R.string.select_videos_to_associate)
-                else -> getString(R.string.select_snapshots_to_associate)
-            }
+    override fun toggleSelection(isActive: Boolean) {
+        toggleButtonSelect(isActive)
+        setSelectedItemsCountVisibility(isActive)
+    }
+
+    override fun onFileSelected(selectedCount: Int) {
+        updateSelectedItemsCount(selectedCount)
+    }
+
+    private fun toggleButtonSelect(isActive: Boolean) {
+        binding.buttonSelectToAssociate.apply {
+            isActivated = isActive
+            text = if (isActive) getString(R.string.cancel)
+            else selectButtonTitle
         }
     }
 
-    fun changeTextSelectedItems(selectedItems: Int) {
-        binding.textViewSelectedItems.run {
-            isTextSelectedVisible(selectedItems > 0)
+    private fun updateSelectedItemsCount(selectedItems: Int) {
+        binding.textViewSelectedItems.apply {
+            setSelectedItemsCountVisibility(selectedItems > 0)
             text = getString(R.string.items_selected, selectedItems)
         }
     }
 
-    fun isTextSelectedVisible(isVisible: Boolean) {
-        if (!isViewCreated) return
+    private fun setSelectedItemsCountVisibility(isVisible: Boolean) {
         binding.textViewSelectedItems.isVisible = isVisible
     }
 
-    fun isButtonSelectedSnapshotActive() = binding.buttonSelectToAssociate.isActivated
+    override fun createFilterDialog(
+        onApplyFilter: () -> Unit,
+        onCloseFilter: () -> Unit
+    ): CustomFilterDialog =
+        binding.layoutFilterTags.createFilterDialog(
+            {
+                updateFilterButtonState(it)
+                onApplyFilter()
+            },
+            onCloseFilter
+        )
 
-    fun activateButtonAssociate() {
-        if (!isViewCreated) return
-        with(binding.buttonSelectToAssociate) {
-            isActivated = true
-            text = getString(R.string.cancel)
-        }
+    private fun updateFilterButtonState(isActive: Boolean) {
+        binding.scrollFilterTags.isVisible = isActive
+        binding.buttonOpenFilters.buttonFilterState(isActive)
     }
 
-    fun createFilterDialog(onApplyClick: (Boolean) -> Unit): CustomFilterDialog = binding.layoutFilterTags.createFilterDialog(onApplyClick)
-
-    fun updateFilterButtonState(isVisible: Boolean) {
-        binding.scrollFilterTags.isVisible = isVisible
-        with(binding.buttonOpenFilters) {
-            background = if (isVisible) {
-                setImageResource(R.drawable.ic_filter_white)
-                androidx.core.content.ContextCompat.getDrawable(
-                    context,
-                    R.drawable.background_button_blue
-                )
-            } else {
-                setImageResource(R.drawable.ic_filter)
-                androidx.core.content.ContextCompat.getDrawable(
-                    context,
-                    R.drawable.border_rounded_blue
-                )
-            }
-        }
-    }
-
-    private fun setListener() {
-        binding.buttonSelectToAssociate.setOnClickListenerCheckConnection { onTapButtonSelectSnapshotAssociate() }
-        binding.buttonOpenFilters.setOnClickListenerCheckConnection { onTapButtonOpenFilters() }
+    private fun FragmentFilterSectionListX1Binding.setListener() {
+        buttonSelectToAssociate.setOnClickListenerCheckConnection { onButtonSelectClick() }
+        buttonOpenFilters.setOnClickListenerCheckConnection { onButtonFilterClick() }
     }
 
     override fun onDestroy() {
@@ -108,6 +102,9 @@ class FilterSectionX1Fragment : BaseFragment() {
     }
 
     companion object {
-        val TAG = FilterSectionX1Fragment::class.java.simpleName
+        val TAG: String = FilterSectionX1Fragment::class.java.simpleName
+        fun createInstance(selectButtonTitle: String) = FilterSectionX1Fragment().apply {
+            this.selectButtonTitle = selectButtonTitle
+        }
     }
 }

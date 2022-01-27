@@ -5,11 +5,11 @@ import org.gradle.api.JavaVersion
 object AppConfig {
     const val applicationId = "com.cobantch.focusx1"
     const val compileSdkVersion = 30
-    const val minSdkVersion = 23
+    const val minSdkVersion = 24
     const val targetSdkVersion = 30
-    const val buildVersion = 101
+    const val buildVersion = 117
     const val major = 3
-    const val minor = 7
+    const val minor = 8
     const val patch = 0
     const val versionName = "$major.$minor.$patch"
 

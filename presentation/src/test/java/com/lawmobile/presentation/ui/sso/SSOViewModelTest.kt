@@ -1,6 +1,6 @@
 package com.lawmobile.presentation.ui.sso
 
-import com.safefleet.mobile.android_commons.helpers.network_manager.ListenableNetworkManager
+import com.safefleet.mobile.kotlin_commons.helpers.network_manager.ListenableNetworkManager
 import io.mockk.mockk
 import org.junit.Assert
 import org.junit.jupiter.api.Test

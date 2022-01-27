@@ -38,6 +38,8 @@ object Exclusions {
         "**/enums/**",
         "**/security/**",
         "**/models/**",
+        "**/state/**",
+        "**/utils/**",
         "**/app/**",
         "**/adapters/**",
         "**/widgets/**",
@@ -69,7 +71,9 @@ object Exclusions {
         "**/EspressoIdlingResource.**",
         "**/RequestInterceptor.**",
         "**/LoginUseCases.**",
-        "**/PreferencesManagerImpl.**" //here since could not found a way to mock datastore.edit
+        "**/PreferencesManagerImpl.**", //here since could not found a way to mock datastore.edit
+        "**/ConnectionHelperImpl.**",
+        "**/VideoInformationManager.**"
     )
     val pitest = mutableSetOf(
         //Dagger 2

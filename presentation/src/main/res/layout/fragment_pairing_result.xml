@@ -3,8 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.lawmobile.presentation.ui.login.shared.PairingResultFragment">
+    android:layout_height="match_parent">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/pairingProgressLayout"
@@ -34,6 +33,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.45"
             app:lottie_autoPlay="true"
             app:lottie_loop="true"
             app:lottie_rawRes="@raw/circular_loading" />
@@ -45,10 +45,10 @@
             android:fontFamily="@font/jura_semi_bold"
             android:textColor="@color/white"
             android:textSize="@dimen/text_h5"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="@id/circularProgressbar"
+            app:layout_constraintEnd_toEndOf="@id/circularProgressbar"
+            app:layout_constraintStart_toStartOf="@id/circularProgressbar"
+            app:layout_constraintTop_toTopOf="@id/circularProgressbar"
             tools:text="0%" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
@@ -67,12 +67,12 @@
             android:id="@+id/imageViewResultPairing"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/margin_bottom_image_view_result_pairing"
+            android:layout_marginBottom="@dimen/margin_20dp"
             android:background="@drawable/shape_button_white"
             android:contentDescription="@string/result_pairing_description"
             android:padding="@dimen/result_pairing_image_padding"
             android:src="@drawable/ic_successful_green"
-            app:layout_constraintBottom_toTopOf="@id/textViewResultPairing"
+            app:layout_constraintBottom_toTopOf="@id/midGuideline"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
@@ -85,23 +85,32 @@
             android:text="@string/success_connection_to_camera"
             android:textColor="@color/white"
             android:textSize="@dimen/text_h5"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="@id/midGuideline" />
 
         <Button
             android:id="@+id/buttonRetry"
-            android:layout_width="match_parent"
+            android:layout_width="@dimen/no_dp"
+            app:layout_constraintStart_toStartOf="@id/textViewResultPairing"
+            app:layout_constraintEnd_toEndOf="@id/textViewResultPairing"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_top_button_retry"
             android:background="@drawable/shape_button_white"
             android:text="@string/try_again_button_pairing"
             android:textAllCaps="false"
             android:textColor="@color/blue"
             android:textSize="@dimen/button_retry_text_size"
             android:visibility="gone"
-            app:layout_constraintTop_toBottomOf="@id/textViewResultPairing" />
+            app:layout_constraintVertical_bias="0.2"
+            app:layout_constraintTop_toBottomOf="@id/textViewResultPairing"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/midGuideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.5"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

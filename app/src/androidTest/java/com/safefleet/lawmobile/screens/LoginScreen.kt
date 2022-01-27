@@ -41,7 +41,7 @@ open class LoginScreen : BaseScreen() {
 
     fun clickOnCameraInstructions() = clickOn(R.id.buttonInstructionsToLinkCamera)
 
-    fun clickOnGotIt() = clickOn(R.id.buttonDismissInstructions)
+    fun clickOnGotIt() = waitUntil { clickOn(R.id.buttonDismissInstructions) }
 
     fun clickOnCloseInstructions() = clickOn(R.id.buttonCloseInstructions)
 

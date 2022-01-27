@@ -182,7 +182,7 @@
 
     <!-- Body Worn Diagnosis -->
     <dimen name="body_worn_diagnosis_button_text_size">42sp</dimen>
-    <dimen name="body_worn_diagnosis_margin_top_loading_text">25dp</dimen>
+    <dimen name="body_worn_diagnosis_margin_top_loading_text">10dp</dimen>
     <dimen name="body_worn_diagnosis_size_icon_result">50dp</dimen>
     <dimen name="corner_main_menu">7dp</dimen>
     <dimen name="battery_level_height_x2">15dp</dimen>
@@ -203,4 +203,9 @@
     <dimen name="body_worn_status_bar_height_arrow">30dp</dimen>
     <dimen name="padding_11dp">11dp</dimen>
     <dimen name="live_stream_height">208dp</dimen>
+
+    <dimen name="_2dp">2dp</dimen>
+    <dimen name="_60dp">60dp</dimen>
+    <dimen name="_75dp">75dp</dimen>
+    <dimen name="_12dp">12dp</dimen>
 </resources>

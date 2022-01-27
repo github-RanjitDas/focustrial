@@ -10,8 +10,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.lifecycleScope
 import com.lawmobile.domain.entities.CameraEvent
 import com.lawmobile.domain.entities.CameraInfo
-import com.lawmobile.domain.entities.CameraInfo.isOfficerLogged
-import com.lawmobile.domain.enums.CameraType
 import com.lawmobile.domain.enums.EventType
 import com.lawmobile.domain.enums.NotificationType
 import com.lawmobile.domain.usecase.events.EventsUseCase
@@ -26,9 +24,9 @@ import com.lawmobile.presentation.extensions.createLowWifiSignalAlert
 import com.lawmobile.presentation.extensions.createMobileDataAlert
 import com.lawmobile.presentation.extensions.createNotificationDialog
 import com.lawmobile.presentation.security.RootedHelper
-import com.lawmobile.presentation.ui.login.x1.LoginX1Activity
 import com.lawmobile.presentation.utils.CameraHelper
 import com.lawmobile.presentation.utils.EspressoIdlingResource
+import com.lawmobile.presentation.utils.checkIfSessionIsExpired
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
@@ -99,7 +97,7 @@ open class BaseActivity : AppCompatActivity() {
     }
 
     private fun setEventsListener() {
-        if (isOfficerLogged && CameraInfo.cameraType == CameraType.X2)
+        if (CameraInfo.isOfficerLogged && CameraInfo.cameraType.isX2())
             cameraHelper.onCameraEvent(::manageCameraEvent)
     }
 
@@ -188,12 +186,12 @@ open class BaseActivity : AppCompatActivity() {
 
     override fun onRestart() {
         super.onRestart()
-        if (checkIfSessionIsExpired() && this !is LoginX1Activity) this.createAlertSessionExpired()
+        if (checkIfSessionIsExpired() && CameraInfo.isOfficerLogged) this.createAlertSessionExpired()
     }
 
     override fun onUserInteraction() {
         super.onUserInteraction()
-        if (!isLiveVideoOrPlaybackActive && !isRecordingVideo && checkIfSessionIsExpired() && this !is LoginX1Activity) {
+        if (!isLiveVideoOrPlaybackActive && !isRecordingVideo && checkIfSessionIsExpired() && CameraInfo.isOfficerLogged) {
             return
         }
         updateLastInteraction()
@@ -235,10 +233,5 @@ open class BaseActivity : AppCompatActivity() {
 
         const val PERMISSION_FOR_LOCATION = 100
         const val MAX_TIME_SESSION = 300000
-
-        fun checkIfSessionIsExpired(): Boolean {
-            val timeNow = Timestamp(System.currentTimeMillis())
-            return (timeNow.time - lastInteraction.time) > MAX_TIME_SESSION
-        }
     }
 }

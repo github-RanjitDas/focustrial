@@ -10,10 +10,12 @@ import com.lawmobile.presentation.BuildConfig
 import com.lawmobile.presentation.authentication.AuthStateManagerFactory
 import com.lawmobile.presentation.connectivity.WifiHelper
 import com.lawmobile.presentation.ui.login.LoginBaseViewModel
+import com.lawmobile.presentation.ui.login.state.LoginState
 import com.safefleet.mobile.authentication.AuthStateManager
 import com.safefleet.mobile.kotlin_commons.helpers.Result
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import net.openid.appauth.AuthorizationRequest
 import net.openid.appauth.AuthorizationResponse
@@ -28,6 +30,10 @@ class LoginX2ViewModel @Inject constructor(
     private val ioDispatcher: CoroutineDispatcher,
     wifiHelper: WifiHelper
 ) : LoginBaseViewModel(loginUseCases.getUserFromCamera, wifiHelper, ioDispatcher) {
+
+    var officerId: String = ""
+
+    override val _loginState by lazy { MutableStateFlow<LoginState>(LoginState.X2.OfficerId) }
 
     private lateinit var authStateManager: AuthStateManager
 

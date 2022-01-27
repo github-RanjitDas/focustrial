@@ -47,7 +47,7 @@ object VideoMetadataMapper :
             officerId = officerId,
             path = path,
             nameFolder = nameFolder,
-            x1sn = null,
+            x1sn = x1sn,
             metadata = metadata?.toCamera(),
             associatedFiles = associatedFiles?.toCameraList(),
             endTime = endTime,

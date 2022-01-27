@@ -33,7 +33,7 @@ class AudioDetailActivity : BaseActivity() {
     private lateinit var currentAssociatedOfficerId: String
 
     private val sheetBehavior: BottomSheetBehavior<CardView> by lazy {
-        BottomSheetBehavior.from(binding.bottomSheetPartnerId.bottomSheetPartnerId)
+        BottomSheetBehavior.from(binding.bottomSheetPartnerId.bottomSheetAssociateOfficer)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -189,7 +189,7 @@ class AudioDetailActivity : BaseActivity() {
             hideKeyboard()
             cleanPartnerIdField()
         }
-        binding.bottomSheetPartnerId.buttonCloseAssignToOfficer.setOnClickListenerCheckConnection {
+        binding.bottomSheetPartnerId.buttonClose.setOnClickListenerCheckConnection {
             hideKeyboard()
             cleanPartnerIdField()
             sheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN

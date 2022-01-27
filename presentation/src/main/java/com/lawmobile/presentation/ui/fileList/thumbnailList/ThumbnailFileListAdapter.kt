@@ -9,13 +9,12 @@ import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.airbnb.lottie.LottieAnimationView
 import com.bumptech.glide.Glide
+import com.lawmobile.domain.entities.DomainCameraFile
 import com.lawmobile.domain.entities.DomainInformationImage
-import com.lawmobile.domain.entities.FilesAssociatedByUser
 import com.lawmobile.domain.extensions.getDateDependingOnNameLength
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.extensions.imageHasCorrectFormat
 import com.lawmobile.presentation.extensions.setOnClickListenerCheckConnection
-import com.lawmobile.presentation.ui.fileList.FileListBaseFragment
 import com.lawmobile.presentation.ui.fileList.thumbnailList.ThumbnailFileListFragment.Companion.PATH_ERROR_IN_PHOTO
 import com.safefleet.mobile.android_commons.extensions.inflate
 import com.safefleet.mobile.safefleet_ui.widgets.SafeFleetCheckBox2
@@ -23,7 +22,7 @@ import java.io.File
 
 class ThumbnailFileListAdapter(
     private val onImageClick: ((DomainInformationImage) -> Unit),
-    private val onImageCheck: ((Boolean, Int) -> Unit)?
+    private val onImageCheck: ((Int) -> Unit)?
 ) : RecyclerView.Adapter<ThumbnailFileListAdapter.ThumbnailListViewHolder>() {
 
     var showCheckBoxes = false
@@ -54,7 +53,7 @@ class ThumbnailFileListAdapter(
         tmpList.forEach {
             it.isSelected = false
         }
-        onImageCheck?.invoke(false, 0)
+        onImageCheck?.invoke(0)
         fileList = tmpList
     }
 
@@ -68,7 +67,7 @@ class ThumbnailFileListAdapter(
 
     fun addItemToList(domainInformationImage: DomainInformationImage) {
         val indexOfFirst =
-            fileList.indexOfFirst { it.domainCameraFile.name == domainInformationImage.domainCameraFile.name }
+            fileList.indexOfFirst { it.domainCameraFile == domainInformationImage.domainCameraFile }
         if (indexOfFirst >= 0) {
             fileList[indexOfFirst] =
                 domainInformationImage.apply {
@@ -84,10 +83,19 @@ class ThumbnailFileListAdapter(
     fun isImageInAdapter(image: DomainInformationImage) =
         fileList.indexOfFirst { it.domainCameraFile.name == image.domainCameraFile.name } != -1
 
+    fun setSelectedFiles(selectedFiles: List<DomainCameraFile>) {
+        val tmpList = fileList
+        fileList.forEach {
+            it.isSelected = selectedFiles.contains(it.domainCameraFile)
+        }
+        onImageCheck?.invoke(selectedFiles.size)
+        fileList = tmpList
+    }
+
     inner class ThumbnailListViewHolder(
         private val thumbnailView: View,
         private val onImageClick: ((DomainInformationImage) -> Unit),
-        private val onImageCheck: ((Boolean, Int) -> Unit)?
+        private val onImageCheck: ((Int) -> Unit)?
     ) : RecyclerView.ViewHolder(thumbnailView) {
 
         private lateinit var photoImageBackground: ImageView
@@ -100,7 +108,6 @@ class ThumbnailFileListAdapter(
 
         fun bind(imageFile: DomainInformationImage) {
             getViews()
-            onImageCheck?.invoke(isAnyFileChecked(), selectedItemsSize())
             setDataToViews(imageFile)
             enableCheckBoxes(imageFile)
             setListener(imageFile)
@@ -184,14 +191,9 @@ class ThumbnailFileListAdapter(
             val index =
                 fileList.indexOfFirst { it.domainCameraFile.name == thumbnailFile.domainCameraFile.name }
             fileList[index].isSelected = isChecked
-            if (FileListBaseFragment.checkableListInit) {
-                FilesAssociatedByUser.updateAssociatedSnapshots(thumbnailFile.domainCameraFile)
-            }
-            onImageCheck?.invoke(isAnyFileChecked(), selectedItemsSize())
+            onImageCheck?.invoke(selectedItemsSize())
         }
 
         private fun selectedItemsSize() = fileList.filter { it.isSelected }.size
-
-        private fun isAnyFileChecked() = fileList.any { it.isSelected }
     }
 }

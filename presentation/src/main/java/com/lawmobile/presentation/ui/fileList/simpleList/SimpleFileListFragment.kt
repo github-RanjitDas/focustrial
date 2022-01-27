@@ -9,9 +9,9 @@ import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import com.lawmobile.domain.entities.CameraInfo
+import com.lawmobile.domain.entities.DomainCameraFile
 import com.lawmobile.domain.entities.DomainInformationFile
 import com.lawmobile.domain.entities.DomainInformationFileResponse
-import com.lawmobile.domain.entities.FilesAssociatedByUser
 import com.lawmobile.domain.enums.RequestError
 import com.lawmobile.domain.extensions.getDateDependingOnNameLength
 import com.lawmobile.presentation.R
@@ -34,9 +34,10 @@ class SimpleFileListFragment : FileListBaseFragment() {
     private val binding get() = _binding!!
 
     private val simpleListViewModel: SimpleListViewModel by activityViewModels()
-    var simpleFileListAdapter: SimpleFileListAdapter? = null
-    var onFileCheck: ((Boolean, Int) -> Unit)? = null
-    var fileListBackup = mutableListOf<DomainInformationFile>()
+
+    val listAdapter: SimpleFileListAdapter by lazy {
+        SimpleFileListAdapter(::onFileClick, onFileCheck)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -75,56 +76,44 @@ class SimpleFileListFragment : FileListBaseFragment() {
         }
     }
 
-    private fun setAssociatedRecyclerView() {
-        simpleFileListAdapter?.run {
-            fileList.let { completeList ->
-                fileList = FilesAssociatedByUser
-                    .getListOfImagesAssociatedToVideo(completeList)
-                    .filterIsInstance<DomainInformationFile>() as MutableList
-            }
-        }
-        setRecyclerView()
+    override fun setSelectedFiles(selectedFiles: List<DomainCameraFile>) {
+        listAdapter.setSelectedFiles(selectedFiles)
     }
 
-    fun applyFiltersToList() {
-        simpleFileListAdapter?.fileList =
-            filter?.filteredList?.filterIsInstance<DomainInformationFile>()
-            as MutableList<DomainInformationFile>
-        manageFragmentContent(
-            binding.fileListRecycler,
-            binding.noFilesTextView
-        )
+    override fun applyFiltersToList() {
+        val filteredList = filter?.filteredList?.filterIsInstance<DomainInformationFile>()
+            as MutableList<DomainInformationFile>?
+        filteredList?.let { listAdapter.fileList = it }
+        manageFragmentContent(_binding?.fileListRecycler, _binding?.noFilesTextView)
     }
+
+    override fun getListOfSelectedItems(): List<DomainCameraFile> =
+        listAdapter.fileList.filter { it.isSelected }.map { it.domainCameraFile }
 
     private fun restoreFilters() {
-        simpleFileListAdapter?.fileList =
-            simpleFileListAdapter?.fileList?.let { getFilteredList(it) }
-            ?.filterIsInstance<DomainInformationFile>() as MutableList
+        listAdapter.fileList =
+            getFilteredList(listBackup).filterIsInstance<DomainInformationFile>() as MutableList
     }
 
     private fun setListeners() {
-        binding.textViewDateAndTime.setOnClickListenerCheckConnection { simpleFileListAdapter?.sortByDateAndTime() }
-        binding.textViewEvent.setOnClickListenerCheckConnection { simpleFileListAdapter?.sortByEvent() }
+        binding.textViewDateAndTime.setOnClickListenerCheckConnection { listAdapter.sortByDateAndTime() }
+        binding.textViewEvent.setOnClickListenerCheckConnection { listAdapter.sortByEvent() }
     }
 
-    fun reviewIfShowCheckBoxes() {
-        if (simpleFileListAdapter?.showCheckBoxes == true) showCheckBoxes()
-    }
-
-    fun showCheckBoxes() {
-        simpleFileListAdapter?.run {
-            showCheckBoxes = !showCheckBoxes
-            if (!showCheckBoxes) uncheckAllItems()
+    override fun toggleCheckBoxes(show: Boolean) {
+        isSelectionActive = show
+        listAdapter.run {
+            showCheckBoxes = show
+            if (!show) uncheckAllItems()
         }
         setRecyclerView()
     }
 
-    private fun setRecyclerView() {
-        restoreFilters()
-        binding.fileListRecycler.apply {
+    fun setRecyclerView() {
+        _binding?.fileListRecycler?.apply {
             setHasFixedSize(true)
             layoutManager = LinearLayoutManager(requireContext())
-            adapter = simpleFileListAdapter
+            adapter = listAdapter
         }
     }
 
@@ -138,12 +127,17 @@ class SimpleFileListFragment : FileListBaseFragment() {
                 if (it.errors.isNotEmpty()) showErrors(it.errors)
                 if (it.items.isNotEmpty()) {
                     showFileListRecycler(binding.fileListRecycler, binding.noFilesTextView)
-                    setAdapter(it.items)
-                } else showEmptyListMessage(binding.fileListRecycler, binding.noFilesTextView)
+                    fillAdapter(it.items)
+                } else {
+                    showEmptyListMessage(binding.fileListRecycler, binding.noFilesTextView)
+                }
             }
             doIfError {
                 val errorMessage =
-                    RequestError.getErrorMessage(getString(R.string.file_list_failed_load_files), it)
+                    RequestError.getErrorMessage(
+                        getString(R.string.file_list_failed_load_files),
+                        it
+                    )
                 binding.fileListLayout.showErrorSnackBar(
                     errorMessage,
                     Snackbar.LENGTH_INDEFINITE
@@ -175,19 +169,21 @@ class SimpleFileListFragment : FileListBaseFragment() {
         showFailedFoldersInLog(errors)
     }
 
-    private fun setAdapter(listItems: MutableList<DomainInformationFile>) {
-        simpleFileListAdapter =
-            SimpleFileListAdapter(
-                ::onFileClick,
-                onFileCheck
-            ).apply {
-                showCheckBoxes = checkableListInit
-                fileList =
-                    listItems.sortedByDescending { it.domainCameraFile.getDateDependingOnNameLength() } as MutableList
-                fileListBackup = fileList
+    private fun fillAdapter(listItems: MutableList<DomainInformationFile>) {
+        listAdapter.apply {
+            val sortedList = listItems.sortedByDescending {
+                it.domainCameraFile.getDateDependingOnNameLength()
+            } as MutableList
+
+            when (listType) {
+                SNAPSHOT_LIST, AUDIO_LIST -> addOnlyNewItemsToList(sortedList)
+                VIDEO_LIST -> updateItems(sortedList)
             }
-        if (checkableListInit) setAssociatedRecyclerView()
-        else setRecyclerView()
+            showCheckBoxes = isSelectionActive
+            listBackup = listItems
+        }
+        restoreFilters()
+        setRecyclerView()
     }
 
     private fun onFileClick(file: DomainInformationFile) {

@@ -9,51 +9,55 @@
         android:id="@+id/appBarContainer"
         android:layout_width="match_parent"
         android:layout_height="@dimen/live_view_app_bar_height"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="spread" />
 
     <FrameLayout
         android:id="@+id/settingsBarContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/appBarContainer"/>
+        app:layout_constraintTop_toBottomOf="@id/appBarContainer" />
 
     <FrameLayout
         android:id="@+id/statusBarContainer"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/settingsBarContainer" />
+        android:layout_height="@dimen/no_dp"
+        android:paddingVertical="@dimen/_2dp"
+        app:layout_constraintBottom_toTopOf="@id/streamContainer"
+        app:layout_constraintTop_toBottomOf="@id/settingsBarContainer"
+        app:layout_constraintVertical_weight="0.12" />
 
     <FrameLayout
         android:id="@+id/streamContainer"
         android:layout_width="match_parent"
         android:layout_height="@dimen/no_dp"
+        app:layout_constraintBottom_toTopOf="@id/controlsContainer"
         app:layout_constraintTop_toBottomOf="@id/statusBarContainer"
-        app:layout_constraintVertical_weight="0.3"
-        app:layout_constraintHeight_min="@dimen/live_stream_height"/>
+        app:layout_constraintVertical_weight="0.3" />
 
     <FrameLayout
         android:id="@+id/controlsContainer"
         android:layout_width="match_parent"
         android:layout_height="@dimen/no_dp"
-        app:layout_constraintBottom_toBottomOf="@id/guidelineBottom"
-        app:layout_constraintTop_toBottomOf="@id/streamContainer" />
+        app:layout_constraintBottom_toTopOf="@id/navigationContainer"
+        app:layout_constraintTop_toBottomOf="@id/streamContainer"
+        app:layout_constraintVertical_weight="0.38" />
 
     <FrameLayout
         android:id="@+id/navigationContainer"
         android:layout_width="match_parent"
         android:layout_height="@dimen/no_dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/guidelineBottom" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guidelineBottom"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.90" />
+        app:layout_constraintTop_toBottomOf="@id/controlsContainer"
+        app:layout_constraintVertical_weight="0.1" />
 
     <include
         android:id="@+id/layoutCustomMenu"
-        layout="@layout/custom_frame_menu"/>
+        layout="@layout/custom_frame_menu" />
+
+    <FrameLayout
+        android:id="@+id/fullStreamContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

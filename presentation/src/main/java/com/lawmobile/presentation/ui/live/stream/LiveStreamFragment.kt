@@ -1,6 +1,5 @@
 package com.lawmobile.presentation.ui.live.stream
 
-import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,14 +11,20 @@ import com.lawmobile.presentation.databinding.FragmentLiveStreamBinding
 import com.lawmobile.presentation.extensions.setOnClickListenerCheckConnection
 import com.lawmobile.presentation.extensions.startAnimationIfEnabled
 import com.lawmobile.presentation.ui.base.BaseFragment
+import com.lawmobile.presentation.ui.live.shared.LiveStream
+import com.lawmobile.presentation.ui.live.statusBar.StatusBarBaseFragment.Companion.BLINK_ANIMATION_DURATION
 import com.safefleet.mobile.safefleet_ui.animations.Animations
 
-class LiveStreamFragment : BaseFragment() {
+class LiveStreamFragment : BaseFragment(), LiveStream {
 
     private val viewModel: LiveStreamViewModel by activityViewModels()
 
     private val binding: FragmentLiveStreamBinding get() = _binding!!
     private var _binding: FragmentLiveStreamBinding? = null
+
+    override var onFullScreenClick: (() -> Unit)? = null
+
+    private var isButtonFullscreenActivated = false
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -30,11 +35,19 @@ class LiveStreamFragment : BaseFragment() {
         return binding.root
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        setListeners()
+        setFullscreenButtonActivated()
+    }
+
     override fun onResume() {
         super.onResume()
-        setUrlLive()
-        startLiveVideoView()
-        setListeners()
+        startLiveStream()
+    }
+
+    private fun setFullscreenButtonActivated() {
+        binding.toggleFullScreenLiveView.isActivated = isButtonFullscreenActivated
     }
 
     fun showLoadingState(message: String) {
@@ -57,38 +70,27 @@ class LiveStreamFragment : BaseFragment() {
     }
 
     fun showRecordingAudio(isVisible: Boolean) {
-        binding.imageAudio?.isVisible = isVisible
-        binding.imageBackgroundDisable?.isVisible = isVisible
+        binding.imageAudio.isVisible = isVisible
+        binding.imageBackgroundDisable.isVisible = isVisible
         if (isVisible) {
             val animation = Animations.createBlinkAnimation(BLINK_ANIMATION_DURATION)
-            binding.imageAudio?.startAnimationIfEnabled(animation)
+            binding.imageAudio.startAnimationIfEnabled(animation)
         } else {
-            binding.imageAudio?.clearAnimation()
+            binding.imageAudio.clearAnimation()
         }
     }
 
-    private fun setUrlLive() {
+    private fun startLiveStream() {
+        if (viewModel.mediaPlayer.isPlaying) viewModel.mediaPlayer.stop()
         val url = viewModel.getUrlLive()
         viewModel.mediaPlayer.create(url, binding.liveStreamingView)
-    }
-
-    private fun startLiveVideoView() {
         viewModel.mediaPlayer.play()
     }
 
     private fun setListeners() {
         binding.toggleFullScreenLiveView.setOnClickListenerCheckConnection {
-            changeOrientationLive()
+            onFullScreenClick?.invoke()
         }
-    }
-
-    private fun changeOrientationLive() {
-        requireActivity().requestedOrientation =
-            if (isInPortraitMode()) {
-                ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
-            } else {
-                ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-            }
     }
 
     override fun onStop() {
@@ -102,7 +104,11 @@ class LiveStreamFragment : BaseFragment() {
     }
 
     companion object {
-        val TAG = LiveStreamFragment::class.java.simpleName
-        private const val BLINK_ANIMATION_DURATION = 1000L
+        val TAG: String = LiveStreamFragment::class.java.simpleName
+        fun createInstance(isFullscreen: Boolean): LiveStreamFragment {
+            return LiveStreamFragment().apply {
+                isButtonFullscreenActivated = isFullscreen
+            }
+        }
     }
 }

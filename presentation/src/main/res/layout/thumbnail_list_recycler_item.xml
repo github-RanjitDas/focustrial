@@ -1,90 +1,98 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/imageListLayout"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginHorizontal="@dimen/margin_10dp"
-    android:layout_marginBottom="@dimen/margin_10dp"
-    android:elevation="@dimen/no_dp"
-    app:cardBackgroundColor="@color/backgroundCardView"
-    app:cardCornerRadius="@dimen/margin_5dp">
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
+    <androidx.cardview.widget.CardView xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/imageListLayout"
+        android:layout_width="150dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/item_file_bottom_margin"
-        android:orientation="horizontal">
+        android:layout_marginHorizontal="@dimen/margin_10dp"
+        android:layout_marginBottom="@dimen/margin_10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:elevation="@dimen/no_dp"
+        app:cardBackgroundColor="@color/backgroundCardView"
+        app:cardCornerRadius="@dimen/margin_5dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-        <ImageView
-            android:id="@+id/photoImageBackground"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/snapshot_link_item_height"
-            android:contentDescription="@string/file_item_image_description"
-            android:src="@color/white"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <ImageView
-            android:id="@+id/imageErrorThumbnail"
-            android:layout_width="@dimen/file_list_item_height"
-            android:layout_height="@dimen/file_list_item_height"
-            android:background="@color/transparent"
-            android:contentDescription="@string/image_error_thumbnail"
-            android:scaleType="fitXY"
-            android:src="@drawable/ic_failed_image"
-            app:layout_constraintBottom_toBottomOf="@+id/photoImageBackground"
-            app:layout_constraintEnd_toEndOf="@+id/photoImageBackground"
-            app:layout_constraintStart_toStartOf="@+id/photoImageBackground"
-            app:layout_constraintTop_toTopOf="@+id/photoImageBackground" />
-
-        <ImageView
-            android:id="@+id/photoImageListItem"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/snapshot_link_item_height"
-            android:contentDescription="@string/file_item_image_description"
-            android:visibility="invisible"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <com.airbnb.lottie.LottieAnimationView
-            android:id="@+id/photoImageLoading"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/snapshot_link_item_height"
-            android:background="@color/white"
-            android:backgroundTint="@color/white"
-            android:contentDescription="@string/file_item_image_description"
-            android:visibility="invisible"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:lottie_autoPlay="true"
-            app:lottie_loop="true"
-            app:lottie_rawRes="@raw/circular_loading_black" />
-
-        <com.safefleet.mobile.safefleet_ui.widgets.SafeFleetCheckBox2
-            android:id="@+id/checkboxImageListItem"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="@dimen/padding_5dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/dateImageListItem"
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            android:padding="@dimen/padding_10dp"
-            android:text="@string/file_list_date_default"
-            android:textColor="@color/black"
-            android:textSize="@dimen/text_size_12sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/photoImageBackground" />
+            android:layout_marginBottom="@dimen/item_file_bottom_margin"
+            android:orientation="horizontal">
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <ImageView
+                android:id="@+id/photoImageBackground"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/snapshot_link_item_height"
+                android:contentDescription="@string/file_item_image_description"
+                android:src="@color/white"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-</androidx.cardview.widget.CardView>
+            <ImageView
+                android:id="@+id/imageErrorThumbnail"
+                android:layout_width="@dimen/file_list_item_height"
+                android:layout_height="@dimen/file_list_item_height"
+                android:background="@color/transparent"
+                android:contentDescription="@string/image_error_thumbnail"
+                android:scaleType="fitXY"
+                android:src="@drawable/ic_failed_image"
+                app:layout_constraintBottom_toBottomOf="@+id/photoImageBackground"
+                app:layout_constraintEnd_toEndOf="@+id/photoImageBackground"
+                app:layout_constraintStart_toStartOf="@+id/photoImageBackground"
+                app:layout_constraintTop_toTopOf="@+id/photoImageBackground" />
+
+            <ImageView
+                android:id="@+id/photoImageListItem"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/snapshot_link_item_height"
+                android:contentDescription="@string/file_item_image_description"
+                android:visibility="invisible"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.airbnb.lottie.LottieAnimationView
+                android:id="@+id/photoImageLoading"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/snapshot_link_item_height"
+                android:background="@color/white"
+                android:backgroundTint="@color/white"
+                android:contentDescription="@string/file_item_image_description"
+                android:visibility="invisible"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:lottie_autoPlay="true"
+                app:lottie_loop="true"
+                app:lottie_rawRes="@raw/circular_loading_black" />
+
+            <com.safefleet.mobile.safefleet_ui.widgets.SafeFleetCheckBox2
+                android:id="@+id/checkboxImageListItem"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/padding_5dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/dateImageListItem"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:padding="@dimen/padding_10dp"
+                android:text="@string/file_list_date_default"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_size_12sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/photoImageBackground" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.cardview.widget.CardView>
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <androidx.cardview.widget.CardView
-        android:id="@+id/bottomSheetPartnerId"
+        android:id="@+id/bottomSheetAssociateOfficer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:behavior_hideable="true"
@@ -28,7 +28,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <ImageButton
-                android:id="@+id/buttonCloseAssignToOfficer"
+                android:id="@+id/buttonClose"
                 android:layout_width="@dimen/button_close_instructions_size"
                 android:layout_height="@dimen/button_close_instructions_size"
                 android:layout_marginEnd="@dimen/button_close_instructions_margin_end"
@@ -76,12 +76,12 @@
 
             <Button
                 android:id="@+id/buttonAssignToOfficer"
-                android:layout_width="@dimen/no_dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/button_dismiss_instructions_spacing"
-                android:layout_marginVertical="@dimen/margin_30dp"
+                android:layout_marginVertical="@dimen/margin_20dp"
                 android:background="@drawable/background_button_accept"
                 android:text="@string/associate_with_an_officer"
+                android:paddingHorizontal="@dimen/padding_30dp"
                 android:textAllCaps="false"
                 android:textColor="@color/white"
                 android:textSize="@dimen/text_size_20sp"

@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/layoutLiveControls"
+    android:layout_marginBottom="@dimen/margin_5dp"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <TextView
@@ -12,7 +13,7 @@
         android:text="@string/live_view_label"
         android:textAlignment="center"
         android:textSize="@dimen/live_view_label_text_size"
-        app:layout_constraintBottom_toBottomOf="@id/guidelineMidHorizontal_controls"
+        app:layout_constraintBottom_toTopOf="@id/midGuideline1"
         app:layout_constraintStart_toStartOf="@id/buttonSnapshot"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -20,10 +21,10 @@
         android:id="@+id/buttonSwitchLiveView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/switch_margin"
+        android:layout_marginHorizontal="@dimen/switch_margin"
         android:clickable="true"
         android:focusable="true"
-        app:layout_constraintBottom_toTopOf="@id/guidelineMidHorizontal_controls"
+        app:layout_constraintBottom_toTopOf="@id/midGuideline1"
         app:layout_constraintStart_toEndOf="@id/textLiveViewSwitch"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -58,31 +59,30 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/live_view_divider_height"
         android:background="@color/grey"
-        app:layout_constraintTop_toBottomOf="@id/guidelineMidHorizontal_controls" />
+        app:layout_constraintBottom_toTopOf="@id/buttonSnapshot"
+        app:layout_constraintTop_toBottomOf="@id/textLiveViewSwitch" />
 
     <com.lawmobile.presentation.widgets.CustomSnapshotButton
         android:id="@+id/buttonSnapshot"
         android:layout_width="@dimen/no_dp"
         android:layout_height="@dimen/no_dp"
-        android:layout_marginVertical="@dimen/live_view_buttons_margin_vertical"
         android:layout_marginHorizontal="@dimen/live_view_buttons_margin_horizontal"
         android:contentDescription="@string/button_snapshot"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/guidelineMidVertical_controls"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guidelineMidHorizontal_controls" />
+        app:layout_constraintTop_toTopOf="@+id/midGuideline" />
 
     <com.lawmobile.presentation.widgets.CustomRecordButton
         android:id="@+id/buttonRecord"
         android:layout_width="@dimen/no_dp"
         android:layout_height="@dimen/no_dp"
-        android:layout_marginVertical="@dimen/live_view_buttons_margin_vertical"
         android:layout_marginHorizontal="@dimen/live_view_buttons_margin_horizontal"
         android:contentDescription="@string/button_record_description"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/guidelineMidVertical_controls"
-        app:layout_constraintTop_toTopOf="@+id/guidelineMidHorizontal_controls" />
+        app:layout_constraintTop_toTopOf="@+id/midGuideline" />
 
     <View
         android:id="@+id/viewDisableButtons"
@@ -107,13 +107,24 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guidelineMidHorizontal_controls"
+        android:id="@+id/midGuideline1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintGuide_percent="0.20"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/midGuideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintGuide_percent="0.25"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

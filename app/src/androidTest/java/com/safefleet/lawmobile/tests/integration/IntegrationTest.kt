@@ -22,6 +22,7 @@ import org.junit.runner.RunWith
 import org.junit.runners.MethodSorters
 
 @LargeTest
+@Suppress
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @RunWith(AndroidJUnit4::class)
 class IntegrationTest : EspressoStartActivityBaseTest<LoginX1Activity>(LoginX1Activity::class.java) {

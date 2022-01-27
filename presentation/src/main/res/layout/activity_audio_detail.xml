@@ -14,32 +14,30 @@
 
         <include
             android:id="@+id/layoutCustomAppBar"
-            layout="@layout/custom_app_bar"
+            layout="@layout/fragment_app_bar_x1"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="@dimen/live_view_app_bar_height" />
 
         <ImageView
             android:id="@+id/photoItemDetailHolder"
             android:layout_width="@dimen/no_dp"
             android:scaleType="fitXY"
             android:layout_height="@dimen/snapshot_detail_height_image"
-            android:layout_marginTop="@dimen/live_view_app_bar_height"
             android:contentDescription="@string/snapshot_item_detail_photo_content_description"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@id/layoutCustomAppBar"/>
 
         <ImageView
             android:id="@+id/imageReload"
             android:visibility="gone"
             style="@style/buttonPlayBackVideo"
             android:src="@drawable/ic_refresh"
-            android:layout_marginTop="@dimen/live_view_app_bar_height"
             android:contentDescription="@string/snapshot_item_detail_photo_content_description"
             app:layout_constraintBottom_toBottomOf="@+id/photoItemDetailHolder"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@id/layoutCustomAppBar" />
 
         <ImageView
             android:id="@+id/imageAudio"
@@ -47,13 +45,12 @@
             android:layout_width="match_parent"
             android:padding="@dimen/padding_audio_icon_background"
             android:src="@drawable/ic_audio"
-            android:layout_marginTop="@dimen/live_view_app_bar_height"
             android:background="@color/grayBackgroundAudio"
             android:contentDescription="@string/snapshot_item_detail_photo_content_description"
             app:layout_constraintBottom_toBottomOf="@+id/photoItemDetailHolder"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@id/layoutCustomAppBar" />
 
         <Button
             android:id="@+id/buttonAssociatePartnerIdList"
