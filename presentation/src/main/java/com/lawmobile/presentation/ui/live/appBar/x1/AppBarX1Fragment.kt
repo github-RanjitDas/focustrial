@@ -15,7 +15,7 @@ import com.lawmobile.presentation.ui.login.x1.LoginX1Activity
 
 class AppBarX1Fragment : BaseFragment() {
 
-    private val viewModel: LiveAppBarX1ViewModel by activityViewModels()
+    private val viewModel: AppBarX1ViewModel by activityViewModels()
 
     private var _binding: FragmentLiveAppBarX1Binding? = null
     private val binding get() = _binding!!

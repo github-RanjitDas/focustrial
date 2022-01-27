@@ -13,10 +13,10 @@ import com.lawmobile.domain.entities.CameraInfo
 import com.lawmobile.domain.entities.DomainCameraFile
 import com.lawmobile.domain.entities.DomainInformationVideo
 import com.lawmobile.domain.entities.DomainVideoMetadata
+import com.lawmobile.domain.entities.FilesAssociatedByUser
 import com.lawmobile.domain.extensions.getDateDependingOnNameLength
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.databinding.ActivityVideoPlaybackBinding
-import com.lawmobile.presentation.entities.FilesAssociatedByUser
 import com.lawmobile.presentation.entities.MediaPlayerControls
 import com.lawmobile.presentation.extensions.activityCollect
 import com.lawmobile.presentation.extensions.attachFragment
@@ -30,7 +30,7 @@ import com.lawmobile.presentation.extensions.showErrorSnackBar
 import com.lawmobile.presentation.extensions.showSuccessSnackBar
 import com.lawmobile.presentation.extensions.showToast
 import com.lawmobile.presentation.extensions.toggleDeXFullScreen
-import com.lawmobile.presentation.ui.associateSnapshots.AssociateSnapshotsFragment
+import com.lawmobile.presentation.ui.associateFiles.AssociateFilesFragment
 import com.lawmobile.presentation.ui.base.BaseActivity
 import com.lawmobile.presentation.ui.videoPlayback.state.VideoPlaybackState
 import com.lawmobile.presentation.utils.Constants.DOMAIN_CAMERA_FILE
@@ -55,7 +55,7 @@ class VideoPlaybackActivity : BaseActivity() {
     private var isVideoMetadataChangesSaved = false
     private lateinit var currentVideoInformation: DomainVideoMetadata
 
-    private var associateSnapshotsFragment = AssociateSnapshotsFragment()
+    private var associateSnapshotsFragment = AssociateFilesFragment()
     private val bottomSheetBehavior: BottomSheetBehavior<CardView> by lazy {
         BottomSheetBehavior.from(binding.bottomSheetAssociate.bottomSheetAssociate)
     }
@@ -263,7 +263,7 @@ class VideoPlaybackActivity : BaseActivity() {
 
     private fun bottomSheetListeners() {
         bottomSheetBehavior.isDraggable = false
-        binding.bottomSheetAssociate.buttonCloseAssociateSnapshots.setOnClickListener {
+        binding.bottomSheetAssociate.buttonCloseAssociateFiles.setOnClickListener {
             isAssociateDialogOpen = false
         }
     }
@@ -276,9 +276,9 @@ class VideoPlaybackActivity : BaseActivity() {
     }
 
     private fun onAssociateSnapshots() {
-        associateSnapshotsFragment.onAssociateSnapshots = {
+        associateSnapshotsFragment.onAssociateFiles = {
             isAssociateDialogOpen = false
-            associateSnapshotsFragment.setSnapshotsAssociatedFromMetadata(FilesAssociatedByUser.temporal)
+            associateSnapshotsFragment.setFilesAssociatedFromMetadata(FilesAssociatedByUser.temporal)
             FilesAssociatedByUser.setFinalValue(FilesAssociatedByUser.temporal)
             showSnapshotsAssociated()
             binding.layoutVideoPlayback.showSuccessSnackBar(getString(R.string.snapshots_added_success))
@@ -336,7 +336,7 @@ class VideoPlaybackActivity : BaseActivity() {
                 currentVideoInformation = videoInformation
                 metadataManager.setInformation(videoInformation)
                 videoInformation.associatedFiles?.let {
-                    associateSnapshotsFragment.setSnapshotsAssociatedFromMetadata(it as MutableList)
+                    associateSnapshotsFragment.setFilesAssociatedFromMetadata(it as MutableList)
                 }
             }
 
@@ -376,7 +376,7 @@ class VideoPlaybackActivity : BaseActivity() {
         if (index >= 0) {
             FilesAssociatedByUser.value.removeAt(index)
             FilesAssociatedByUser.setTemporalValue(FilesAssociatedByUser.value)
-            associateSnapshotsFragment.setSnapshotsAssociatedFromMetadata(FilesAssociatedByUser.value)
+            associateSnapshotsFragment.setFilesAssociatedFromMetadata(FilesAssociatedByUser.value)
         }
     }
 
@@ -385,7 +385,7 @@ class VideoPlaybackActivity : BaseActivity() {
         supportFragmentManager.attachFragment(
             R.id.fragmentAssociateHolder,
             associateSnapshotsFragment,
-            AssociateSnapshotsFragment.TAG
+            AssociateFilesFragment.TAG
         )
         FilesAssociatedByUser.setTemporalValue(FilesAssociatedByUser.value)
     }

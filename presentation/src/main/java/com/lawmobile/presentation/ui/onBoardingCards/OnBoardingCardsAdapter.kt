@@ -34,7 +34,7 @@ class OnBoardingCardsAdapter(private val onBoardingCardContents: List<OnBoarding
         private val imageIcon = view.findViewById<ImageView>(R.id.imageSlideIcon)
 
         fun bind(onBoardingCardContent: OnBoardingCardContent) {
-            val text = Html.fromHtml(onBoardingCardContent.description)
+            val text = Html.fromHtml(onBoardingCardContent.description, Html.FROM_HTML_MODE_LEGACY)
             textDescription.text = text
             imageIcon.setImageResource(onBoardingCardContent.icon)
         }

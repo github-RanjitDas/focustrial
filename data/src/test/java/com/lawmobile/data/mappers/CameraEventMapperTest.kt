@@ -232,7 +232,7 @@ internal class CameraEventMapperTest {
                 isRead = 1
             )
         )
-        val domainList = CameraEventMapper.localToDomainList(localEvent)
+        val domainList = localEvent.toDomainList()
 
         domainList.forEachIndexed { index, domain ->
             localEvent.let { camera ->

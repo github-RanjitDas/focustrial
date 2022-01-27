@@ -13,6 +13,7 @@ import com.lawmobile.presentation.extensions.setOnSwipeRightListener
 import com.lawmobile.presentation.ui.base.appBar.x2.AppBarX2Fragment
 import com.lawmobile.presentation.ui.base.menu.MenuFragment
 import com.lawmobile.presentation.ui.base.menu.MenuFragment.Companion.isInMainScreen
+import com.lawmobile.presentation.ui.base.settingsBar.SettingsBarFragment
 import com.lawmobile.presentation.ui.live.DashboardBaseActivity
 import com.lawmobile.presentation.ui.live.controls.x1.ControlsX1Fragment
 import com.lawmobile.presentation.ui.live.statusBar.x2.StatusBarX2Fragment
@@ -122,6 +123,14 @@ class LiveX2Activity : DashboardBaseActivity() {
             containerId = R.id.menuContainer,
             fragment = menuFragment,
             tag = MenuFragment.TAG
+        )
+    }
+
+    private fun setStatusBarSettingsFragment() {
+        supportFragmentManager.attachFragment(
+            containerId = R.id.settingsBarContainer,
+            fragment = statusBarSettingsFragment,
+            tag = SettingsBarFragment.TAG
         )
     }
 

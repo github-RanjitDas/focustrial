@@ -1,6 +1,5 @@
 package com.lawmobile.presentation.ui.fileList.simpleList
 
-import android.os.Build
 import android.text.Html
 import android.view.View
 import android.view.ViewGroup
@@ -10,7 +9,6 @@ import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.lawmobile.domain.entities.DomainCameraFile
 import com.lawmobile.domain.entities.DomainInformationFile
-import com.lawmobile.domain.entities.FilesAssociatedByUser
 import com.lawmobile.domain.extensions.getDateDependingOnNameLength
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.extensions.setCheckedListenerCheckConnection
@@ -146,11 +144,8 @@ class SimpleFileListAdapter(
         private fun setDataToViews(remoteCameraFile: DomainInformationFile) {
             with(remoteCameraFile) {
                 dateSimpleListItem.text =
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
-                        Html.fromHtml(domainCameraFile.getDateDependingOnNameLength(), 0)
-                    else domainCameraFile.getDateDependingOnNameLength()
-                eventSimpleListItem.text =
-                    domainVideoMetadata?.metadata?.event?.name ?: ""
+                    Html.fromHtml(domainCameraFile.getDateDependingOnNameLength(), 0)
+                eventSimpleListItem.text = domainVideoMetadata?.metadata?.event?.name ?: ""
             }
         }
 

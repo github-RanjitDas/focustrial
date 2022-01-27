@@ -18,12 +18,12 @@ import org.junit.jupiter.api.extension.ExtendWith
 @ExperimentalCoroutinesApi
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @ExtendWith(InstantExecutorExtension::class)
-internal class LiveAppBarX1ViewModelTest {
+internal class AppBarX1ViewModelTest {
 
     private val liveStreamingUseCase: LiveStreamingUseCase = mockk()
 
-    private val liveAppBarX1ViewModel: LiveAppBarX1ViewModel by lazy {
-        LiveAppBarX1ViewModel(liveStreamingUseCase)
+    private val appBarX1ViewModel: AppBarX1ViewModel by lazy {
+        AppBarX1ViewModel(liveStreamingUseCase)
     }
 
     private val dispatcher = TestCoroutineDispatcher()
@@ -36,7 +36,7 @@ internal class LiveAppBarX1ViewModelTest {
     @Test
     fun disconnectCameraFlow() {
         coEvery { liveStreamingUseCase.disconnectCamera() } returns Result.Success(Unit)
-        liveAppBarX1ViewModel.disconnectCamera()
+        appBarX1ViewModel.disconnectCamera()
         coVerify { liveStreamingUseCase.disconnectCamera() }
     }
 }

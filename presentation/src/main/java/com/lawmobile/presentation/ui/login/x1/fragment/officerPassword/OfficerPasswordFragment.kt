@@ -20,12 +20,11 @@ import com.lawmobile.presentation.ui.base.BaseActivity
 import com.lawmobile.presentation.ui.base.BaseFragment
 import com.lawmobile.presentation.ui.live.x1.LiveX1Activity
 import com.lawmobile.presentation.ui.live.x2.LiveX2Activity
-import com.lawmobile.presentation.ui.login.shared.OfficerPassword
 import com.lawmobile.presentation.utils.EncodePassword
 import com.lawmobile.presentation.utils.EspressoIdlingResource
 import com.safefleet.mobile.android_commons.extensions.hideKeyboard
 
-class OfficerPasswordFragment : BaseFragment(), OfficerPassword {
+class OfficerPasswordFragment : BaseFragment() {
 
     private var _binding: FragmentOfficerPasswordBinding? = null
     private val binding get() = _binding!!
@@ -34,8 +33,8 @@ class OfficerPasswordFragment : BaseFragment(), OfficerPassword {
 
     private val officerPassword: String get() = viewModel.officerPassword
 
-    override var passwordFromCamera: String = ""
-    override var onEmptyPassword: (() -> Unit)? = null
+    var passwordFromCamera: String = ""
+    var onEmptyPassword: (() -> Unit)? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,

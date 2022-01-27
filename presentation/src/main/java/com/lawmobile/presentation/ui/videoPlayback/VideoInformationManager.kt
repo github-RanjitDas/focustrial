@@ -7,10 +7,10 @@ import com.lawmobile.domain.entities.CameraInfo
 import com.lawmobile.domain.entities.DomainCameraFile
 import com.lawmobile.domain.entities.DomainMetadata
 import com.lawmobile.domain.entities.DomainVideoMetadata
+import com.lawmobile.domain.entities.FilesAssociatedByUser
 import com.lawmobile.domain.entities.MetadataEvent
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.databinding.VideoMetadataFormBinding
-import com.lawmobile.presentation.entities.FilesAssociatedByUser
 import com.lawmobile.presentation.extensions.onItemSelected
 
 class VideoInformationManager {

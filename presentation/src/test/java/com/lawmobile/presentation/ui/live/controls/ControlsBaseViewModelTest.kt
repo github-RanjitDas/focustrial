@@ -25,13 +25,13 @@ import org.junit.jupiter.api.extension.ExtendWith
 @ExperimentalCoroutinesApi
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @ExtendWith(InstantExecutorExtension::class)
-internal class LiveControlsBaseViewModelTest {
+internal class ControlsBaseViewModelTest {
 
     private val mediaActionSound: MediaActionSound = mockk()
     private val liveStreamingUseCase: LiveStreamingUseCase = mockk()
 
-    private val liveControlsBaseViewModel: LiveControlsBaseViewModel by lazy {
-        LiveControlsBaseViewModel(liveStreamingUseCase, mediaActionSound)
+    private val controlsBaseViewModel: ControlsBaseViewModel by lazy {
+        ControlsBaseViewModel(liveStreamingUseCase, mediaActionSound)
     }
 
     private val dispatcher = TestCoroutineDispatcher()
@@ -45,10 +45,10 @@ internal class LiveControlsBaseViewModelTest {
     fun testStartRecordVideoSuccess() {
         val result = Result.Success(Unit)
         coEvery { liveStreamingUseCase.startRecordVideo() } returns result
-        liveControlsBaseViewModel.startRecordVideo()
+        controlsBaseViewModel.startRecordVideo()
         Assert.assertEquals(
             result,
-            liveControlsBaseViewModel.resultRecordVideoLiveData.value?.getContent()
+            controlsBaseViewModel.resultRecordVideoLiveData.value?.getContent()
         )
         coVerify { liveStreamingUseCase.startRecordVideo() }
     }
@@ -57,10 +57,10 @@ internal class LiveControlsBaseViewModelTest {
     fun testStartRecordVideoError() {
         val result = Result.Error(Exception())
         coEvery { liveStreamingUseCase.startRecordVideo() } returns result
-        liveControlsBaseViewModel.startRecordVideo()
+        controlsBaseViewModel.startRecordVideo()
         Assert.assertEquals(
             result,
-            liveControlsBaseViewModel.resultRecordVideoLiveData.value?.getContent()
+            controlsBaseViewModel.resultRecordVideoLiveData.value?.getContent()
         )
         coVerify { liveStreamingUseCase.startRecordVideo() }
     }
@@ -70,10 +70,10 @@ internal class LiveControlsBaseViewModelTest {
         val result = Result.Success(Unit)
         coEvery { liveStreamingUseCase.stopRecordVideo() } returns result
         runBlocking {
-            liveControlsBaseViewModel.stopRecordVideo()
+            controlsBaseViewModel.stopRecordVideo()
             Assert.assertEquals(
                 result,
-                liveControlsBaseViewModel.resultStopVideoLiveData.value?.getContent()
+                controlsBaseViewModel.resultStopVideoLiveData.value?.getContent()
             )
         }
         coVerify { liveStreamingUseCase.stopRecordVideo() }
@@ -84,10 +84,10 @@ internal class LiveControlsBaseViewModelTest {
         val result = Result.Error(Exception())
         coEvery { liveStreamingUseCase.stopRecordVideo() } returns result
         runBlocking {
-            liveControlsBaseViewModel.stopRecordVideo()
+            controlsBaseViewModel.stopRecordVideo()
             Assert.assertEquals(
                 result,
-                liveControlsBaseViewModel.resultStopVideoLiveData.value?.getContent()
+                controlsBaseViewModel.resultStopVideoLiveData.value?.getContent()
             )
         }
         coVerify { liveStreamingUseCase.stopRecordVideo() }
@@ -97,10 +97,10 @@ internal class LiveControlsBaseViewModelTest {
     fun testTakePhotoFlow() {
         val result = Result.Success(Unit)
         coEvery { liveStreamingUseCase.takePhoto() } returns result
-        liveControlsBaseViewModel.takePhoto()
+        controlsBaseViewModel.takePhoto()
         Assert.assertEquals(
             result,
-            liveControlsBaseViewModel.resultTakePhotoLiveData.value?.getContent()
+            controlsBaseViewModel.resultTakePhotoLiveData.value?.getContent()
         )
         coVerify { liveStreamingUseCase.takePhoto() }
     }
@@ -108,7 +108,7 @@ internal class LiveControlsBaseViewModelTest {
     @Test
     fun playSoundTakePhoto() {
         every { mediaActionSound.play(any()) } just Runs
-        liveControlsBaseViewModel.playSoundTakePhoto()
+        controlsBaseViewModel.playSoundTakePhoto()
         verify { mediaActionSound.play(MediaActionSound.SHUTTER_CLICK) }
     }
 
@@ -117,10 +117,10 @@ internal class LiveControlsBaseViewModelTest {
         val result = Result.Success(Unit)
 
         runBlocking {
-            liveControlsBaseViewModel.startRecordAudio()
+            controlsBaseViewModel.startRecordAudio()
             Assert.assertEquals(
                 result,
-                liveControlsBaseViewModel.resultRecordAudioLiveData.value?.getContent()
+                controlsBaseViewModel.resultRecordAudioLiveData.value?.getContent()
             )
         }
     }
@@ -130,10 +130,10 @@ internal class LiveControlsBaseViewModelTest {
         val result = Result.Success(Unit)
 
         runBlocking {
-            liveControlsBaseViewModel.stopRecordAudio()
+            controlsBaseViewModel.stopRecordAudio()
             Assert.assertEquals(
                 result,
-                liveControlsBaseViewModel.resultStopAudioLiveData.value?.getContent()
+                controlsBaseViewModel.resultStopAudioLiveData.value?.getContent()
             )
         }
     }

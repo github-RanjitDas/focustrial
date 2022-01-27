@@ -3,7 +3,7 @@ package com.safefleet.lawmobile.tests.x2
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
 import com.lawmobile.domain.enums.CameraType
-import com.lawmobile.presentation.ui.login.x2.LoginX2Activity
+import com.lawmobile.presentation.ui.login.x1.LoginX1Activity
 import com.safefleet.lawmobile.screens.LiveViewScreen
 import com.safefleet.lawmobile.screens.LoginScreen
 import com.safefleet.lawmobile.tests.EspressoBaseTest
@@ -20,13 +20,13 @@ class CameraStatusTest : EspressoBaseTest() {
     private val loginScreen = LoginScreen()
 
     @get:Rule
-    var baristaRule = BaristaRule.create(LoginX2Activity::class.java)
+    var baristaRule = BaristaRule.create(LoginX1Activity::class.java)
 
     @Before
     fun setUp() {
         mockUtils.setCameraType(CameraType.X2)
         baristaRule.launchActivity()
-        loginScreen.loginWithoutSSO()
+        loginScreen.login()
     }
 
     /**
@@ -34,27 +34,25 @@ class CameraStatusTest : EspressoBaseTest() {
      */
     @Test
     fun verifyBatteryIndicator() {
-        with(liveViewScreen) {
-            mockUtils.setBatteryProgressCamera(100)
-            refreshCameraStatus()
-            isBatteryIndicatorTextDisplayed("100")
-            isBatteryStatusDisplayed()
+        mockUtils.setBatteryProgressCameraX2(100)
+        liveViewScreen.isBatteryIndicatorTextDisplayed("100")
+        liveViewScreen.isBatteryStatusDisplayed()
 
-            mockUtils.setBatteryProgressCamera(34)
-            refreshCameraStatus()
-            isBatteryIndicatorTextDisplayed("34")
-            isBatteryStatusDisplayed()
+        liveViewScreen.refreshCameraStatus()
+        mockUtils.setBatteryProgressCameraX2(34)
+        liveViewScreen.closeHelpView()
+        liveViewScreen.isBatteryIndicatorTextDisplayed("34")
+        liveViewScreen.isBatteryStatusDisplayed()
 
-            mockUtils.setBatteryProgressCamera(5)
-            refreshCameraStatus()
-            isBatteryIndicatorTextDisplayed("5")
-            isBatteryStatusDisplayed()
+        mockUtils.setBatteryProgressCameraX2(5)
+        liveViewScreen.isBatteryIndicatorTextDisplayed("5")
+        liveViewScreen.isBatteryStatusDisplayed()
 
-            mockUtils.setBatteryProgressCamera(0)
-            refreshCameraStatus()
-            isBatteryIndicatorTextDisplayed("0")
-            isBatteryStatusDisplayed()
-        }
+        liveViewScreen.refreshCameraStatus()
+        mockUtils.setBatteryProgressCameraX2(0)
+        liveViewScreen.closeHelpView()
+        liveViewScreen.isBatteryIndicatorTextDisplayed("0")
+        liveViewScreen.isBatteryStatusDisplayed()
     }
 
     /**
@@ -62,22 +60,20 @@ class CameraStatusTest : EspressoBaseTest() {
      */
     @Test
     fun verifyStorageIndicator() {
-        with(liveViewScreen) {
-            mockUtils.setStorageProgressCamera(60000000, 60000000)
-            refreshCameraStatus()
-            isMemoryStorageIndicatorTextDisplayed("100")
-            isMemoryStorageStatusDisplayed()
+        mockUtils.setStorageProgressCameraX2(100)
+        liveViewScreen.isMemoryStorageIndicatorTextDisplayed("100")
+        liveViewScreen.isMemoryStorageStatusDisplayed()
 
-            mockUtils.setStorageProgressCamera(60000000, 10000000)
-            refreshCameraStatus()
-            isMemoryStorageIndicatorTextDisplayed("16")
-            isMemoryStorageStatusDisplayed()
+        mockUtils.setStorageProgressCameraX2(84)
+        liveViewScreen.isMemoryStorageIndicatorTextDisplayed("84")
+        liveViewScreen.isMemoryStorageStatusDisplayed()
 
-            mockUtils.setStorageProgressCamera(60000000, 0)
-            refreshCameraStatus()
-            isMemoryStorageIndicatorTextDisplayed("0")
-            isMemoryStorageStatusDisplayed()
-        }
+        liveViewScreen.refreshCameraStatus()
+        mockUtils.setStorageProgressCameraX2(0)
+        liveViewScreen.closeHelpView()
+        liveViewScreen.isLowStorageNotificationDisplayed()
+        liveViewScreen.isMemoryStorageIndicatorTextDisplayed("0")
+        liveViewScreen.isMemoryStorageStatusDisplayed()
     }
 
     /**

@@ -23,7 +23,7 @@ import com.lawmobile.presentation.utils.PreferencesManagerImpl
 import com.lawmobile.presentation.utils.VLCMediaPlayer
 import com.safefleet.lawmobile.helpers.SimpleTestNetworkManager
 import com.safefleet.lawmobile.helpers.WifiHelperMock
-import com.safefleet.mobile.android_commons.helpers.network_manager.ListenableNetworkManager
+import com.safefleet.mobile.kotlin_commons.helpers.network_manager.ListenableNetworkManager
 import com.squareup.sqldelight.android.AndroidSqliteDriver
 import com.squareup.sqldelight.db.SqlDriver
 import dagger.Module
@@ -38,6 +38,7 @@ import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import org.videolan.libvlc.LibVLC
 import org.videolan.libvlc.MediaPlayer
 import javax.inject.Singleton
@@ -82,6 +83,9 @@ class AppModule {
         fun provideBackgroundDispatcher() = Dispatchers.IO
 
         @Provides
+        fun provideJob(): Job = Job()
+
+        @Provides
         @Singleton
         fun provideSqlDriver(@ApplicationContext context: Context): SqlDriver =
             AndroidSqliteDriver(
@@ -105,8 +109,18 @@ class AppModule {
         @Singleton
         fun provideConnectivityManager(@ApplicationContext context: Context): ConnectivityManager =
             mockk(relaxed = true) {
-                every { registerNetworkCallback(any<NetworkRequest>(), any<ConnectivityManager.NetworkCallback>()) } just Runs
-                every { requestNetwork(any<NetworkRequest>(), any<ConnectivityManager.NetworkCallback>()) } just Runs
+                every {
+                    registerNetworkCallback(
+                        any<NetworkRequest>(),
+                        any<ConnectivityManager.NetworkCallback>()
+                    )
+                } just Runs
+                every {
+                    requestNetwork(
+                        any<NetworkRequest>(),
+                        any<ConnectivityManager.NetworkCallback>()
+                    )
+                } just Runs
                 every { bindProcessToNetwork(any()) } returns true
             }
 

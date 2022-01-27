@@ -337,7 +337,7 @@ abstract class FileListBaseActivity : BaseActivity() {
         when (listType) {
             Constants.SNAPSHOT_LIST -> viewModel.associateOfficerToSnapshots(partnerId)
             Constants.VIDEO_LIST -> viewModel.associateOfficerToVideos(partnerId)
-            Constants.AUDIO_LIST -> viewModel.associatePartnerIdToAudioList(partnerId)
+            Constants.AUDIO_LIST -> viewModel.associatePartnerIdToAudios(partnerId)
         }
     }
 

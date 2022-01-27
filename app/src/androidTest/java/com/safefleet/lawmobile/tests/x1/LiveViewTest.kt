@@ -4,6 +4,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
 import com.lawmobile.presentation.ui.base.BaseActivity
 import com.lawmobile.presentation.ui.login.x1.LoginX1Activity
+import com.lawmobile.presentation.utils.checkIfSessionIsExpired
 import com.safefleet.lawmobile.helpers.DeviceUtils
 import com.safefleet.lawmobile.helpers.SmokeTest
 import com.safefleet.lawmobile.screens.LiveViewScreen
@@ -83,7 +84,7 @@ class LiveViewTest : EspressoStartActivityBaseTest<LoginX1Activity>(LoginX1Activ
     fun verifyDisconnectionDueInactivity() {
         with(liveViewScreen) {
             mockkObject(BaseActivity)
-            every { BaseActivity.checkIfSessionIsExpired() } returns true
+            every { checkIfSessionIsExpired() } returns true
             switchLiveViewToggle()
             isDisconnectionDueInactivityAlertDisplayed()
         }

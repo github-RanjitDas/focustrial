@@ -13,9 +13,9 @@ import com.lawmobile.presentation.extensions.toggleDeXFullScreen
 import com.lawmobile.presentation.ui.base.BaseActivity
 import com.lawmobile.presentation.ui.base.BaseFragment
 import com.lawmobile.presentation.ui.base.appBar.x2.AppBarX2Fragment
+import com.lawmobile.presentation.ui.live.bottomNavigation.x1.BottomNavigationX1Fragment
 import com.lawmobile.presentation.ui.live.controls.ControlsBaseFragment
 import com.lawmobile.presentation.ui.live.controls.x1.ControlsX1Fragment
-import com.lawmobile.presentation.ui.live.navigation.x1.NavigationX1Fragment
 import com.lawmobile.presentation.ui.live.shared.LiveStream
 import com.lawmobile.presentation.ui.live.state.DashboardState
 import com.lawmobile.presentation.ui.live.statusBar.StatusBarBaseFragment
@@ -133,11 +133,11 @@ abstract class DashboardBaseActivity : BaseActivity() {
     }
 
     private fun setNavigationFragment() {
-        navigationFragment = NavigationX1Fragment()
+        navigationFragment = BottomNavigationX1Fragment()
         supportFragmentManager.attachFragment(
             containerId = R.id.navigationContainer,
             fragment = navigationFragment,
-            tag = NavigationX1Fragment.TAG
+            tag = BottomNavigationX1Fragment.TAG
         )
     }
 

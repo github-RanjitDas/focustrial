@@ -7,15 +7,27 @@ import com.lawmobile.domain.entities.User
 import com.lawmobile.domain.usecase.getUserFromCamera.GetUserFromCamera
 import com.lawmobile.presentation.connectivity.WifiHelper
 import com.lawmobile.presentation.ui.base.BaseViewModel
+import com.lawmobile.presentation.ui.login.state.LoginState
 import com.safefleet.mobile.kotlin_commons.helpers.Result
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-open class LoginBaseViewModel(
+abstract class LoginBaseViewModel(
     private val getUserFromCameraUseCase: GetUserFromCamera,
     private val wifiHelper: WifiHelper,
     private val ioDispatcher: CoroutineDispatcher
 ) : BaseViewModel() {
+
+    val loginState: StateFlow<LoginState> get() = _loginState
+    protected abstract val _loginState: MutableStateFlow<LoginState>
+
+    fun setLoginState(state: LoginState) {
+        _loginState.value = state
+    }
+
+    fun getLoginState(): LoginState = _loginState.value
 
     var isInstructionsOpen = false
 

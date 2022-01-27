@@ -9,6 +9,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
 import com.lawmobile.domain.entities.CameraInfo
 import com.lawmobile.domain.entities.MetadataEvent
+import com.lawmobile.domain.enums.CatalogTypes
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.entities.AlertInformation
 import com.lawmobile.presentation.extensions.createAlertInformation

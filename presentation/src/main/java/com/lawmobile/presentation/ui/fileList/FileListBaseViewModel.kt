@@ -60,6 +60,17 @@ class FileListBaseViewModel @Inject constructor(
         }
     }
 
+    fun associatePartnerIdToAudios(partnerId: String) {
+        viewModelScope.launch {
+            if (!filesToAssociate.isNullOrEmpty()) {
+                val result = getResultWithAttempts(RETRY_ATTEMPTS) {
+                    fileListUseCase.savePartnerIdAudios(filesToAssociate!!, partnerId)
+                }
+                _associationResult.emit(result)
+            }
+        }
+    }
+
     companion object {
         private const val RETRY_ATTEMPTS = 3
     }

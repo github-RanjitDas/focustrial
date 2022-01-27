@@ -2,7 +2,7 @@ package com.lawmobile.presentation.ui.login.x2.fragment.officerId
 
 import android.bluetooth.BluetoothAdapter
 import com.lawmobile.presentation.InstantExecutorExtension
-import com.safefleet.mobile.android_commons.helpers.network_manager.ListenableNetworkManager
+import com.safefleet.mobile.kotlin_commons.helpers.network_manager.ListenableNetworkManager
 import io.mockk.Runs
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -37,7 +37,7 @@ OfficerIdViewModelTest {
     @Test
     fun verifyBluetoothConnectionTrue() = runBlockingTest {
         coEvery { bluetoothAdapter.isEnabled } returns true
-        viewModel.verifyBluetoothConnection {
+        viewModel.verifyBluetoothEnabled {
             Assert.assertTrue(it)
         }
         coVerify { bluetoothAdapter.isEnabled }
@@ -46,9 +46,32 @@ OfficerIdViewModelTest {
     @Test
     fun verifyBluetoothConnectionFalse() = runBlockingTest {
         coEvery { bluetoothAdapter.isEnabled } returns false
-        viewModel.verifyBluetoothConnection {
+        viewModel.verifyBluetoothEnabled {
             Assert.assertFalse(it)
         }
         coVerify { bluetoothAdapter.isEnabled }
+    }
+
+    @Test
+    fun testGetOfficerId() {
+        Assert.assertEquals("", viewModel.officerId)
+    }
+
+    @Test
+    fun testSetOfficerID() {
+        val officerId = "123"
+        viewModel.officerId = officerId
+        Assert.assertEquals(officerId, viewModel.officerId)
+    }
+
+    @Test
+    fun getWereConnectivityRequirementsChecked() {
+        Assert.assertFalse(viewModel.wereConnectivityRequirementsChecked)
+    }
+
+    @Test
+    fun setWereConnectivityRequirementsChecked() {
+        viewModel.wereConnectivityRequirementsChecked = true
+        Assert.assertTrue(viewModel.wereConnectivityRequirementsChecked)
     }
 }

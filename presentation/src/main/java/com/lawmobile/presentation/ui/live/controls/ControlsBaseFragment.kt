@@ -24,7 +24,7 @@ import com.safefleet.mobile.safefleet_ui.animations.Animations
 import com.safefleet.mobile.safefleet_ui.widgets.SafeFleetSwitch
 
 open class ControlsBaseFragment : BaseFragment() {
-    private val sharedViewModel: LiveControlsBaseViewModel by activityViewModels()
+    private val sharedViewModel: ControlsBaseViewModel by activityViewModels()
 
     var onLiveStreamSwitchClick: ((Boolean) -> Unit)? = null
     var onCameraOperation: ((String) -> Unit)? = null

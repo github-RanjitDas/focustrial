@@ -13,7 +13,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class LiveControlsBaseViewModel @Inject constructor(
+class ControlsBaseViewModel @Inject constructor(
     private val liveStreamingUseCase: LiveStreamingUseCase,
     private val mediaActionSound: MediaActionSound
 ) : BaseViewModel() {

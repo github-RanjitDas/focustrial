@@ -15,8 +15,8 @@ import com.lawmobile.presentation.ui.base.BaseFragment
 import com.lawmobile.presentation.ui.fileList.shared.FileSelection
 import com.lawmobile.presentation.ui.fileList.shared.FilterSection
 import com.lawmobile.presentation.ui.fileList.shared.ListTypeButtons
-import com.lawmobile.presentation.widgets.CustomFilterDialog
 import com.lawmobile.presentation.utils.FeatureSupportHelper
+import com.lawmobile.presentation.widgets.CustomFilterDialog
 
 class FilterSectionX2Fragment : BaseFragment(), ListTypeButtons, FileSelection, FilterSection {
 

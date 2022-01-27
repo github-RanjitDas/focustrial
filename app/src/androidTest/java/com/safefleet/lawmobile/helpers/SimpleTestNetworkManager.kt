@@ -1,6 +1,6 @@
 package com.safefleet.lawmobile.helpers
 
-import com.safefleet.mobile.android_commons.helpers.network_manager.ListenableNetworkManager
+import com.safefleet.mobile.kotlin_commons.helpers.network_manager.ListenableNetworkManager
 
 class SimpleTestNetworkManager : ListenableNetworkManager() {
 

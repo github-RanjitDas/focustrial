@@ -13,7 +13,6 @@ import com.lawmobile.presentation.extensions.setOnClickListenerCheckConnection
 import com.lawmobile.presentation.ui.base.BaseFragment
 import com.lawmobile.presentation.ui.fileList.shared.FileSelection
 import com.lawmobile.presentation.ui.fileList.shared.FilterSection
-import com.lawmobile.presentation.utils.Constants
 import com.lawmobile.presentation.utils.FeatureSupportHelper
 import com.lawmobile.presentation.widgets.CustomFilterDialog
 

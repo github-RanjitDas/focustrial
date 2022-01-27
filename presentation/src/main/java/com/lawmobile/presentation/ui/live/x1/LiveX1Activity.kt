@@ -2,7 +2,7 @@ package com.lawmobile.presentation.ui.live.x1
 
 import android.os.Bundle
 import androidx.core.view.isVisible
-import com.lawmobile.presentation.databinding.ActivityLiveViewBinding
+import com.lawmobile.presentation.databinding.ActivityLiveViewX1Binding
 import com.lawmobile.presentation.ui.live.DashboardBaseActivity
 import com.lawmobile.presentation.ui.live.appBar.x1.AppBarX1Fragment
 import com.lawmobile.presentation.ui.live.controls.x1.ControlsX1Fragment

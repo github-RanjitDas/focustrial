@@ -8,7 +8,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class LiveAppBarX1ViewModel @Inject constructor(
+class AppBarX1ViewModel @Inject constructor(
     private val liveStreamingUseCase: LiveStreamingUseCase
 ) : BaseViewModel() {
     fun disconnectCamera() {

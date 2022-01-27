@@ -80,6 +80,24 @@ class FileListBaseViewModelTest {
     }
 
     @Test
+    fun testAssociatePartnerIdToAudioListSuccess() = runBlockingTest {
+        val result = Result.Success(Unit)
+        coEvery { fileListUseCase.savePartnerIdAudios(any(), any()) } returns result
+        viewModel.associatePartnerIdToAudios("")
+        testScope.launch { Assert.assertEquals(viewModel.associationResult.first(), result) }
+        coVerify { fileListUseCase.savePartnerIdAudios(any(), any()) }
+    }
+
+    @Test
+    fun testAssociatePartnerIdToAudioListError() = runBlockingTest {
+        val result = Result.Error(mockk())
+        coEvery { fileListUseCase.savePartnerIdAudios(any(), any()) } returns result
+        viewModel.associatePartnerIdToAudios("")
+        testScope.launch { Assert.assertEquals(viewModel.associationResult.first(), result) }
+        coVerify { fileListUseCase.savePartnerIdAudios(any(), any()) }
+    }
+
+    @Test
     fun setSelectActive() {
         viewModel.isSelectActive = true
         Assert.assertTrue(viewModel.isSelectActive)

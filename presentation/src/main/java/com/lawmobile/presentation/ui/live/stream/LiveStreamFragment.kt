@@ -12,6 +12,7 @@ import com.lawmobile.presentation.extensions.setOnClickListenerCheckConnection
 import com.lawmobile.presentation.extensions.startAnimationIfEnabled
 import com.lawmobile.presentation.ui.base.BaseFragment
 import com.lawmobile.presentation.ui.live.shared.LiveStream
+import com.lawmobile.presentation.ui.live.statusBar.StatusBarBaseFragment.Companion.BLINK_ANIMATION_DURATION
 import com.safefleet.mobile.safefleet_ui.animations.Animations
 
 class LiveStreamFragment : BaseFragment(), LiveStream {
@@ -69,13 +70,13 @@ class LiveStreamFragment : BaseFragment(), LiveStream {
     }
 
     fun showRecordingAudio(isVisible: Boolean) {
-        binding.imageAudio?.isVisible = isVisible
-        binding.imageBackgroundDisable?.isVisible = isVisible
+        binding.imageAudio.isVisible = isVisible
+        binding.imageBackgroundDisable.isVisible = isVisible
         if (isVisible) {
             val animation = Animations.createBlinkAnimation(BLINK_ANIMATION_DURATION)
-            binding.imageAudio?.startAnimationIfEnabled(animation)
+            binding.imageAudio.startAnimationIfEnabled(animation)
         } else {
-            binding.imageAudio?.clearAnimation()
+            binding.imageAudio.clearAnimation()
         }
     }
 

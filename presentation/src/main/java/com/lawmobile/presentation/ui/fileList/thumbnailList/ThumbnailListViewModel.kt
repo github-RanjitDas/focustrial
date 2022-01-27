@@ -19,8 +19,10 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class ThumbnailListViewModel @Inject constructor(private val thumbnailListUseCase: ThumbnailListUseCase) :
-    BaseViewModel() {
+class ThumbnailListViewModel @Inject constructor(
+    private val thumbnailListUseCase: ThumbnailListUseCase,
+    private var job: Job? = null
+) : BaseViewModel() {
 
     private val thumbnailBytesListMediatorLiveData =
         MediatorLiveData<Event<Result<DomainInformationImage>>>()
@@ -29,8 +31,6 @@ class ThumbnailListViewModel @Inject constructor(private val thumbnailListUseCas
     private val imageListMediatorLiveData =
         MediatorLiveData<Result<DomainInformationFileResponse>>()
     val imageListLiveData: LiveData<Result<DomainInformationFileResponse>> get() = imageListMediatorLiveData
-
-    private var job: Job? = null
 
     fun getImageBytes(domainCameraFile: DomainCameraFile) {
         job = viewModelScope.launch {

@@ -4,7 +4,9 @@ import com.lawmobile.domain.entities.User
 import com.lawmobile.domain.usecase.getUserFromCamera.GetUserFromCamera
 import com.lawmobile.presentation.InstantExecutorExtension
 import com.lawmobile.presentation.connectivity.WifiHelper
-import com.lawmobile.presentation.ui.login.pairingPhoneWithCamera.PairingViewModelTest
+import com.lawmobile.presentation.ui.login.shared.PairingViewModelTest
+import com.lawmobile.presentation.ui.login.state.LoginState
+import com.lawmobile.presentation.ui.login.x1.LoginX1ViewModel
 import com.safefleet.mobile.kotlin_commons.helpers.Result
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -29,7 +31,7 @@ internal class LoginBaseViewModelTest {
         every { isEqualsValueWithSSID(PairingViewModelTest.DEFAULT_SSID) } returns true
         every { isEqualsValueWithSSID("X") } returns false
     }
-    private val baseViewModel = LoginBaseViewModel(useCase, dispatcher)
+    private val baseViewModel = LoginX1ViewModel(getUserFromCamera, wifiHelper, dispatcher)
 
     @Test
     fun setInstructionsOpenTrue() {
@@ -45,10 +47,8 @@ internal class LoginBaseViewModelTest {
 
     @Test
     fun testGetUserFromCameraFlow() {
-        coEvery { getUserFromCamera() } returns Result.Success(
-            User("1", "", "")
-        )
-        loginBaseViewModel.getUserFromCamera()
+        coEvery { getUserFromCamera() } returns Result.Success(User("1", "", ""))
+        baseViewModel.getUserFromCamera()
         coVerify { getUserFromCamera() }
     }
 
@@ -56,20 +56,28 @@ internal class LoginBaseViewModelTest {
     fun testGetUserFromCameraSuccess() {
         val result = Result.Success(User("1", "", ""))
         coEvery { getUserFromCamera() } returns result
-        loginBaseViewModel.getUserFromCamera()
-        Assert.assertEquals(loginBaseViewModel.userFromCameraResult.value, result)
+        baseViewModel.getUserFromCamera()
+        Assert.assertEquals(baseViewModel.userFromCameraResult.value, result)
     }
 
     @Test
     fun testGetUserFromCameraError() {
         coEvery { getUserFromCamera() } returns Result.Error(Exception("Error"))
-        loginBaseViewModel.getUserFromCamera()
-        Assert.assertTrue(loginBaseViewModel.userFromCameraResult.value is Result.Error)
+        baseViewModel.getUserFromCamera()
+        Assert.assertTrue(baseViewModel.userFromCameraResult.value is Result.Error)
     }
 
     @Test
     fun suggestWiFiNetwork() {
         every { wifiHelper.suggestWiFiNetwork(any(), any(), any()) } returns Unit
-        loginBaseViewModel.suggestWiFiNetwork("", "") {}
+        baseViewModel.suggestWiFiNetwork("", "") {}
         verify { wifiHelper.suggestWiFiNetwork(any(), any(), any()) }
-    }}
+    }
+
+    @Test
+    fun setLoginState() {
+        val state = LoginState.PairingResult
+        baseViewModel.setLoginState(state)
+        Assert.assertEquals(state, baseViewModel.loginState.value)
+    }
+}

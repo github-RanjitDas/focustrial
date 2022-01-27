@@ -104,7 +104,7 @@ class SnapshotDetailActivity : BaseActivity() {
     }
 
     private fun setFeatures() {
-        binding.buttonAssociatePartnerIdList.isVisible =
+        binding.bottomSheetAssociateOfficer.buttonAssignToOfficer.isVisible =
             FeatureSupportHelper.supportAssociateOfficerID
     }
 
@@ -130,13 +130,13 @@ class SnapshotDetailActivity : BaseActivity() {
         viewModel.getImageBytes(file)
     }
 
-    private fun ActivitySnapshotItemDetailBinding.setAppBar() {
+    private fun ActivitySnapshotDetailBinding.setAppBar() {
         layoutCustomAppBar.textViewTitle.text = getString(R.string.snapshot_item_detail_title)
         layoutCustomAppBar.buttonSimpleList.isVisible = false
         layoutCustomAppBar.buttonThumbnailList.isVisible = false
     }
 
-    private fun ActivitySnapshotItemDetailBinding.setListeners() {
+    private fun ActivitySnapshotDetailBinding.setListeners() {
         bottomSheetListeners()
         buttonFullScreenListener()
         imageReloadListener()
@@ -144,19 +144,19 @@ class SnapshotDetailActivity : BaseActivity() {
         buttonBackListener()
     }
 
-    private fun ActivitySnapshotItemDetailBinding.buttonBackListener() {
+    private fun ActivitySnapshotDetailBinding.buttonBackListener() {
         layoutCustomAppBar.imageButtonBackArrow.setOnClickListenerCheckConnection {
             onBackPressed()
         }
     }
 
-    private fun ActivitySnapshotItemDetailBinding.buttonAssociateListener() {
+    private fun ActivitySnapshotDetailBinding.buttonAssociateListener() {
         buttonAssociateOfficer.setOnClickListenerCheckConnection {
             isAssociateDialogOpen = true
         }
     }
 
-    private fun ActivitySnapshotItemDetailBinding.buttonFullScreenListener() {
+    private fun ActivitySnapshotDetailBinding.buttonFullScreenListener() {
         buttonFullScreen.apply {
             isActivated = false
             setOnClickListenerCheckConnection {
@@ -171,7 +171,7 @@ class SnapshotDetailActivity : BaseActivity() {
         }
     }
 
-    private fun ActivitySnapshotItemDetailBinding.imageReloadListener() {
+    private fun ActivitySnapshotDetailBinding.imageReloadListener() {
         imageViewReload.setOnClickListenerCheckConnection {
             showLoadingDialog()
             viewModel.getImageBytes(file)
@@ -294,7 +294,7 @@ class SnapshotDetailActivity : BaseActivity() {
         binding.videosAssociatedValue.text = getString(R.string.not_available)
     }
 
-    private fun ActivitySnapshotItemDetailBinding.bottomSheetListeners() {
+    private fun ActivitySnapshotDetailBinding.bottomSheetListeners() {
         bottomSheetAssociateOfficer.buttonAssignToOfficer.setOnClickListenerCheckConnection {
             currentAssociatedOfficerId =
                 bottomSheetAssociateOfficer.editTextAssignToOfficer.text.toString()

@@ -1,4 +1,4 @@
-package com.safefleet.lawmobile.tests
+package com.safefleet.lawmobile.tests.x1
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
@@ -6,6 +6,7 @@ import com.lawmobile.domain.enums.CameraType
 import com.lawmobile.presentation.ui.login.x1.LoginX1Activity
 import com.safefleet.lawmobile.screens.LiveViewScreen
 import com.safefleet.lawmobile.screens.LoginScreen
+import com.safefleet.lawmobile.tests.EspressoBaseTest
 import com.schibsted.spain.barista.rule.BaristaRule
 import org.junit.Before
 import org.junit.Rule

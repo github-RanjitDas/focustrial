@@ -13,18 +13,12 @@
         app:layout_constraintVertical_chainStyle="spread" />
 
     <FrameLayout
-        android:id="@+id/settingsBarContainer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/appBarContainer" />
-
-    <FrameLayout
         android:id="@+id/statusBarContainer"
         android:layout_width="match_parent"
         android:layout_height="@dimen/no_dp"
         android:paddingVertical="@dimen/_2dp"
         app:layout_constraintBottom_toTopOf="@id/streamContainer"
-        app:layout_constraintTop_toBottomOf="@id/settingsBarContainer"
+        app:layout_constraintTop_toBottomOf="@id/appBarContainer"
         app:layout_constraintVertical_weight="0.12" />
 
     <FrameLayout

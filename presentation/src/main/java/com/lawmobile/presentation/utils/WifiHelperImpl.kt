@@ -73,7 +73,6 @@ class WifiHelperImpl(
     }
 
     @Suppress("DEPRECATION")
-    @SuppressLint("MissingPermission")
     override fun suggestWiFiNetwork(
         networkName: String,
         networkPassword: String,

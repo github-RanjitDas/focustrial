@@ -82,7 +82,7 @@ internal class VideoMetadataMapperTest {
             )
             every { x1sn } returns "X1"
         }
-        val cameraConnectVideoMetadata = VideoMetadataMapper.domainToCamera(domainVideoMetadata)
+        val cameraConnectVideoMetadata = domainVideoMetadata.toCamera()
         with(cameraConnectVideoMetadata) {
             domainVideoMetadata.let {
                 assertTrue(it.fileName == fileName)
@@ -139,7 +139,7 @@ internal class VideoMetadataMapperTest {
             )
             every { x2sn } returns "X2"
         }
-        val cameraConnectVideoMetadata = VideoMetadataMapper.domainToCamera(domainVideoMetadata)
+        val cameraConnectVideoMetadata = domainVideoMetadata.toCamera()
         with(cameraConnectVideoMetadata) {
             domainVideoMetadata.let {
                 assertTrue(it.fileName == fileName)

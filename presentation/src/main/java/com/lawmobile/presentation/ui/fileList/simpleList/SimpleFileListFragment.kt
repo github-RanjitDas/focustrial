@@ -12,7 +12,6 @@ import com.lawmobile.domain.entities.CameraInfo
 import com.lawmobile.domain.entities.DomainCameraFile
 import com.lawmobile.domain.entities.DomainInformationFile
 import com.lawmobile.domain.entities.DomainInformationFileResponse
-import com.lawmobile.domain.entities.FilesAssociatedByUser
 import com.lawmobile.domain.enums.RequestError
 import com.lawmobile.domain.extensions.getDateDependingOnNameLength
 import com.lawmobile.presentation.R
@@ -125,7 +124,7 @@ class SimpleFileListFragment : FileListBaseFragment() {
     private fun handleFileListResult(result: Result<DomainInformationFileResponse>) {
         with(result) {
             doIfSuccess {
-                if (it.errors.isNotEmpty()) handleErrors(it.errors)
+                if (it.errors.isNotEmpty()) showErrors(it.errors)
                 if (it.items.isNotEmpty()) {
                     showFileListRecycler(binding.fileListRecycler, binding.noFilesTextView)
                     fillAdapter(it.items)

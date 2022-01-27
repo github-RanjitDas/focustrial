@@ -14,9 +14,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
-import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.lawmobile.domain.enums.CameraType
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.databinding.FragmentStartPairingBinding
@@ -31,7 +29,6 @@ import com.lawmobile.presentation.ui.base.BaseFragment
 import com.lawmobile.presentation.ui.login.shared.Instructions
 import com.lawmobile.presentation.ui.login.shared.PairingViewModel
 import com.lawmobile.presentation.ui.login.shared.StartPairing
-import com.lawmobile.presentation.ui.login.x1.LoginX1ViewModel
 import com.lawmobile.presentation.ui.selectCamera.SelectCameraActivity
 import com.safefleet.mobile.kotlin_commons.extensions.doIfError
 import com.safefleet.mobile.kotlin_commons.extensions.doIfSuccess
@@ -43,7 +40,6 @@ class StartPairingFragment : BaseFragment(), Instructions, StartPairing {
     private val binding get() = _binding!!
 
     private val pairingViewModel: PairingViewModel by viewModels()
-    private val activityViewModel: LoginX1ViewModel by activityViewModels()
 
     private lateinit var serviceBinder: IIsolatedService
     private var isServiceBounded = false
@@ -83,7 +79,7 @@ class StartPairingFragment : BaseFragment(), Instructions, StartPairing {
         changeCameraListener()
     }
 
-    private fun FragmentStartPairingX1Binding.changeCameraListener() {
+    private fun FragmentStartPairingBinding.changeCameraListener() {
         buttonChangeCamera.setOnClickListener { goToSelectCamera() }
     }
 

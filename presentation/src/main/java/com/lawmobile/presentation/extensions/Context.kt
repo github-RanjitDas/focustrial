@@ -167,16 +167,16 @@ fun Context.isAnimationsEnabled() =
         Settings.Global.TRANSITION_ANIMATION_SCALE,
         0F
     ) != 0F &&
-            Settings.System.getFloat(
-                contentResolver,
-                Settings.Global.WINDOW_ANIMATION_SCALE,
-                0F
-            ) != 0F &&
-            Settings.System.getFloat(
-                contentResolver,
-                Settings.Global.ANIMATOR_DURATION_SCALE,
-                0F
-            ) != 0F
+        Settings.System.getFloat(
+        contentResolver,
+        Settings.Global.WINDOW_ANIMATION_SCALE,
+        0F
+    ) != 0F &&
+        Settings.System.getFloat(
+        contentResolver,
+        Settings.Global.ANIMATOR_DURATION_SCALE,
+        0F
+    ) != 0F
 
 fun Context.createNotificationDialog(
     cameraEvent: CameraEvent,

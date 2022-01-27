@@ -1,24 +1,16 @@
 package com.lawmobile.presentation.ui.login.x1
 
-import android.graphics.drawable.AnimatedVectorDrawable
 import android.os.Bundle
 import androidx.activity.viewModels
-import androidx.core.view.isVisible
-import com.lawmobile.domain.entities.CameraInfo
-import com.lawmobile.domain.entities.DomainUser
+import com.lawmobile.domain.entities.User
 import com.lawmobile.presentation.R
-import com.lawmobile.presentation.extensions.activityCollect
 import com.lawmobile.presentation.extensions.attachFragmentWithAnimation
-import com.lawmobile.presentation.extensions.isAnimationsEnabled
-import com.lawmobile.presentation.extensions.runWithDelay
 import com.lawmobile.presentation.ui.login.LoginBaseActivity
 import com.lawmobile.presentation.ui.login.shared.Instructions
-import com.lawmobile.presentation.ui.login.shared.OfficerPassword
 import com.lawmobile.presentation.ui.login.shared.StartPairing
 import com.lawmobile.presentation.ui.login.state.LoginState
 import com.lawmobile.presentation.ui.login.x1.fragment.StartPairingFragment
 import com.lawmobile.presentation.ui.login.x1.fragment.officerPassword.OfficerPasswordFragment
-import com.safefleet.mobile.kotlin_commons.extensions.doIfError
 import com.safefleet.mobile.kotlin_commons.extensions.doIfSuccess
 import com.safefleet.mobile.kotlin_commons.helpers.Result
 
@@ -26,66 +18,28 @@ class LoginX1Activity : LoginBaseActivity() {
 
     private val viewModel: LoginX1ViewModel by viewModels()
 
-    override var state: LoginState
-        get() = viewModel.getLoginState()
-        set(value) {
-            viewModel.setLoginState(value)
-        }
-
-    override var isInstructionsOpen: Boolean
-        get() = viewModel.isInstructionsOpen
-        set(value) {
-            viewModel.isInstructionsOpen = value
-            toggleInstructionsBottomSheet(value)
-        }
-
     private val startPairingFragment = StartPairingFragment()
     private val officerPasswordFragment = OfficerPasswordFragment()
 
     override val instructions: Instructions get() = startPairingFragment
     override val startPairing: StartPairing get() = startPairingFragment
-    override val officerPassword: OfficerPassword get() = officerPasswordFragment
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         overridePendingTransition(0, R.anim.fade_out)
-        toggleInstructionsBottomSheet(isInstructionsOpen)
-        viewModel.setObservers()
+        baseViewModel = viewModel
+        setCollectors()
+        restoreBottomSheetState()
     }
 
-    private fun startAnimation() {
-        if (isAnimationsEnabled()) {
-            binding.imageViewFMALogoNoAnimation.isVisible = false
-            (binding.imageViewFMALogo.drawable as AnimatedVectorDrawable).start()
-            runWithDelay(ANIMATION_DURATION) { state = LoginState.X1.StartPairing }
-        } else state = LoginState.X1.StartPairing
-    }
-
-    private fun showLoginViews() {
-        binding.imageViewFMALogoNoAnimation.isVisible = true
-        binding.imageViewFMALogo.isVisible = false
-        binding.imageViewSafeFleetFooterLogo.isVisible = true
-        binding.versionNumberTextLogin.isVisible = true
-    }
-
-    private fun LoginX1ViewModel.setObservers() {
-        activityCollect(loginState, ::handleLoginState)
-        userFromCameraResult.observe(this@LoginX1Activity, ::handleUserResult)
-    }
-
-    private fun handleLoginState(loginState: LoginState) {
+    override fun handleLoginState(loginState: LoginState) {
+        super.handleLoginState(loginState)
         with(loginState) {
-            onSplashAnimation(::startAnimation) {
-                showLoginViews()
-            }
             onStartPairing {
                 showStartPairingFragment()
                 verifyLocationPermission()
                 setInstructionsListener()
                 setStartPairingListener()
-            }
-            onPairingResult {
-                showPairingResultFragment()
             }
             onOfficerPassword {
                 showOfficerPasswordFragment()
@@ -95,24 +49,13 @@ class LoginX1Activity : LoginBaseActivity() {
     }
 
     private fun setOnEmptyPasswordListener() {
-        officerPassword.onEmptyPassword = ::getUserFromCamera
+        officerPasswordFragment.onEmptyPassword = viewModel::getUserFromCamera
     }
 
-    private fun handleUserResult(result: Result<DomainUser>) {
-        viewModel.setCameraType()
-        with(result) {
-            doIfSuccess {
-                CameraInfo.officerName = it.name
-                CameraInfo.officerId = it.id
-                officerPassword.passwordFromCamera = it.password
-            }
-            doIfError {
-                showUserInformationError()
-            }
-        }
+    override fun handleUserResult(result: Result<User>) {
+        super.handleUserResult(result)
+        result.doIfSuccess { officerPasswordFragment.passwordFromCamera = it.password ?: "" }
     }
-
-    override fun getUserFromCamera() = viewModel.getUserFromCamera()
 
     private fun showStartPairingFragment() {
         supportFragmentManager.attachFragmentWithAnimation(
@@ -135,11 +78,7 @@ class LoginX1Activity : LoginBaseActivity() {
     }
 
     override fun onConnectionSuccessful() {
-        getUserFromCamera()
+        super.onConnectionSuccessful()
         state = LoginState.X1.OfficerPassword
-    }
-
-    companion object {
-        private const val ANIMATION_DURATION = 2000L
     }
 }

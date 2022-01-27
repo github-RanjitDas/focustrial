@@ -5,8 +5,10 @@ import com.safefleet.mobile.kotlin_commons.helpers.Result
 import io.mockk.Runs
 import io.mockk.coEvery
 import io.mockk.coVerify
+import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
+import io.mockk.verify
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
@@ -15,31 +17,29 @@ import org.junit.jupiter.api.TestInstance
 class PairingPhoneWithCameraUseCaseImplTest {
 
     private val progressPairingCamera: ((Result<Int>) -> Unit) = { }
-    private val pairingPhoneWithCameraRepository: PairingPhoneWithCameraRepository = mockk {
-        coEvery { loadPairingCamera(any(), any(), any()) } just Runs
-    }
-
+    private val repository: PairingPhoneWithCameraRepository = mockk()
     private val useCase: PairingPhoneWithCameraUseCaseImpl by lazy {
-        PairingPhoneWithCameraUseCaseImpl(pairingPhoneWithCameraRepository)
+        PairingPhoneWithCameraUseCaseImpl(repository)
     }
 
     @Test
     fun testGetProgressConnectionWithTheCamera() {
-        runBlocking {
-            useCase.loadPairingCamera("", "", progressPairingCamera)
-        }
-
-        coVerify {
-            pairingPhoneWithCameraRepository.loadPairingCamera("", "", progressPairingCamera)
-        }
+        coEvery { repository.loadPairingCamera(any(), any(), any()) } just Runs
+        runBlocking { useCase.loadPairingCamera("", "", progressPairingCamera) }
+        coVerify { repository.loadPairingCamera("", "", progressPairingCamera) }
     }
 
     @Test
     fun testIsPossibleTheConnection() {
-        coEvery { pairingPhoneWithCameraRepository.isPossibleTheConnection(any()) } returns Result.Success(
-            Unit
-        )
+        coEvery { repository.isPossibleTheConnection(any()) } returns Result.Success(Unit)
         runBlocking { useCase.isPossibleTheConnection("10.10.10.4") }
-        coVerify { pairingPhoneWithCameraRepository.isPossibleTheConnection("10.10.10.4") }
+        coVerify { repository.isPossibleTheConnection("10.10.10.4") }
+    }
+
+    @Test
+    fun cleanCacheFiles() {
+        every { repository.cleanCacheFiles() } just Runs
+        useCase.cleanCacheFiles()
+        verify { repository.cleanCacheFiles() }
     }
 }

@@ -21,8 +21,8 @@ import com.lawmobile.presentation.extensions.dataStore
 import com.lawmobile.presentation.utils.PreferencesManagerImpl
 import com.lawmobile.presentation.utils.VLCMediaPlayer
 import com.lawmobile.presentation.utils.WifiHelperImpl
-import com.safefleet.mobile.android_commons.helpers.network_manager.ListenableNetworkManager
-import com.safefleet.mobile.android_commons.helpers.network_manager.SimpleNetworkManager
+import com.safefleet.mobile.kotlin_commons.helpers.network_manager.ListenableNetworkManager
+import com.safefleet.mobile.kotlin_commons.helpers.network_manager.SimpleNetworkManager
 import com.squareup.sqldelight.android.AndroidSqliteDriver
 import com.squareup.sqldelight.db.SqlDriver
 import dagger.Module
@@ -33,6 +33,7 @@ import dagger.hilt.components.SingletonComponent
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.android.Android
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import org.videolan.libvlc.LibVLC
 import org.videolan.libvlc.MediaPlayer
 import javax.inject.Singleton
@@ -71,6 +72,9 @@ class AppModule {
         @Provides
         @Singleton
         fun provideBackgroundDispatcher() = Dispatchers.IO
+
+        @Provides
+        fun provideJob(): Job = Job()
 
         @Provides
         @Singleton

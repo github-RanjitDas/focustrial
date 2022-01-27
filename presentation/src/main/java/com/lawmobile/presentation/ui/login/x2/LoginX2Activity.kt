@@ -14,8 +14,10 @@ import com.lawmobile.presentation.extensions.attachFragmentWithAnimation
 import com.lawmobile.presentation.extensions.createNotificationDialog
 import com.lawmobile.presentation.ui.live.x2.LiveX2Activity
 import com.lawmobile.presentation.ui.login.LoginBaseActivity
+import com.lawmobile.presentation.ui.login.shared.Instructions
+import com.lawmobile.presentation.ui.login.shared.StartPairing
+import com.lawmobile.presentation.ui.login.state.LoginState
 import com.lawmobile.presentation.ui.login.x2.fragment.devicePassword.DevicePasswordFragment
-import com.lawmobile.presentation.ui.login.x2.fragment.devicePassword.DevicePasswordFragmentListener
 import com.lawmobile.presentation.ui.login.x2.fragment.officerId.OfficerIdFragment
 import com.lawmobile.presentation.ui.sso.SSOActivity
 import com.safefleet.mobile.kotlin_commons.extensions.doIfError
@@ -28,17 +30,29 @@ import net.openid.appauth.AuthorizationRequest
 import net.openid.appauth.AuthorizationResponse
 import net.openid.appauth.TokenResponse
 
-class LoginX2Activity : LoginBaseActivity(), DevicePasswordFragmentListener {
+class LoginX2Activity : LoginBaseActivity() {
 
     private val viewModel: LoginX2ViewModel by viewModels()
-    override var officerId: String = ""
+
     private lateinit var authRequest: AuthorizationRequest
-    private lateinit var officerIdFragment: OfficerIdFragment
+    private val officerIdFragment = OfficerIdFragment.createInstance(::onContinueClick)
+    private val devicePasswordFragment = DevicePasswordFragment.createInstance(::onEditOfficerId)
+
+    override val instructions: Instructions get() = devicePasswordFragment
+    override val startPairing: StartPairing get() = devicePasswordFragment
+
+    var officerId: String
+        get() = viewModel.officerId
+        set(value) {
+            viewModel.officerId = value
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setLoginViews()
+        baseViewModel = viewModel
+        setCollectors()
         viewModel.setObservers()
+        restoreBottomSheetState()
     }
 
     private fun LoginX2ViewModel.setObservers() {
@@ -46,6 +60,21 @@ class LoginX2Activity : LoginBaseActivity(), DevicePasswordFragmentListener {
         authRequestResult.observe(this@LoginX2Activity, ::handleAuthRequestResult)
         devicePasswordResult.observe(this@LoginX2Activity, ::handleDevicePasswordResult)
         userFromCameraResult.observe(this@LoginX2Activity, ::handleUserResult)
+    }
+
+    override fun handleLoginState(loginState: LoginState) {
+        super.handleLoginState(loginState)
+        with(loginState) {
+            onOfficerId {
+                showOfficerIdFragment()
+                verifyLocationPermission()
+            }
+            onDevicePassword {
+                showDevicePasswordFragment()
+                setInstructionsListener()
+                setStartPairingListener()
+            }
+        }
     }
 
     private fun handleAuthEndpointsResult(result: Result<AuthorizationEndpoints>) {
@@ -68,8 +97,8 @@ class LoginX2Activity : LoginBaseActivity(), DevicePasswordFragmentListener {
                 val hotspotName = "X" + officerId.substringBefore("@")
                 val hotspotPassword = it.substring(0..14)
                 viewModel.suggestWiFiNetwork(hotspotName, hotspotPassword) { isConnected ->
-                    if (isConnected) showPairingResultFragment()
-                    else showDevicePasswordFragment()
+                    state = if (isConnected) LoginState.PairingResult
+                    else LoginState.X2.DevicePassword
                 }
                 waitToEnableContinue()
             }
@@ -92,29 +121,16 @@ class LoginX2Activity : LoginBaseActivity(), DevicePasswordFragmentListener {
         val errorEvent = LoginRequestErrorEvent.event
         createNotificationDialog(errorEvent) {
             setButtonText(resources.getString(R.string.OK))
-            onConfirmationClick = ::showDevicePasswordFragment
+            onConfirmationClick = {
+                state = LoginState.X2.DevicePassword
+            }
         }
         officerIdFragment.setButtonContinueEnable(true)
     }
 
-    private fun handleUserResult(result: Result<User>) {
-        with(result) {
-            doIfSuccess {
-                CameraInfo.officerName = it.name ?: ""
-                CameraInfo.officerId = it.id ?: ""
-                startLiveViewActivity()
-            }
-            doIfError {
-                showUserInformationError()
-            }
-        }
-    }
-
-    override fun getUserFromCamera() = viewModel.getUserFromCamera()
-
-    private fun setLoginViews() {
-        showValidateOfficerIdFragment()
-        verifyLocationPermission()
+    override fun handleUserResult(result: Result<User>) {
+        super.handleUserResult(result)
+        result.doIfSuccess { startLiveViewActivity() }
     }
 
     private fun startLiveViewActivity() {
@@ -124,8 +140,8 @@ class LoginX2Activity : LoginBaseActivity(), DevicePasswordFragmentListener {
         finish()
     }
 
-    private fun showValidateOfficerIdFragment(officerId: String = "") {
-        officerIdFragment = OfficerIdFragment.createInstance(::onContinueClick, officerId)
+    private fun showOfficerIdFragment() {
+        officerIdFragment.officerId = officerId
         supportFragmentManager.attachFragmentWithAnimation(
             containerId = R.id.fragmentContainer,
             fragment = officerIdFragment,
@@ -136,21 +152,20 @@ class LoginX2Activity : LoginBaseActivity(), DevicePasswordFragmentListener {
     }
 
     private fun showDevicePasswordFragment() {
-        val devicePasswordFragment = DevicePasswordFragment.createInstance(this)
-        val fragmentTag = DevicePasswordFragment.TAG
-
+        devicePasswordFragment.officerId = officerId
         supportFragmentManager.attachFragmentWithAnimation(
             containerId = R.id.fragmentContainer,
             fragment = devicePasswordFragment,
-            tag = fragmentTag,
+            tag = DevicePasswordFragment.TAG,
             animationIn = android.R.anim.fade_in,
             animationOut = android.R.anim.fade_out
         )
     }
 
-    override fun onValidRequirements() = showPairingResultFragment()
-
-    override fun onEditOfficerId(officerId: String) = showValidateOfficerIdFragment(officerId)
+    private fun onEditOfficerId(officerId: String) {
+        this.officerId = officerId
+        state = LoginState.X2.OfficerId
+    }
 
     private fun onContinueClick(isEmail: Boolean, officerId: String) {
         this.officerId = officerId
@@ -158,14 +173,14 @@ class LoginX2Activity : LoginBaseActivity(), DevicePasswordFragmentListener {
             showLoadingDialog()
             viewModel.getAuthorizationEndpoints()
         }
-        else showDevicePasswordFragment()
+        else state = LoginState.X2.DevicePassword
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
         if (resultCode == RestrictionsManager.RESULT_ERROR_INTERNAL) {
-            showDevicePasswordFragment()
+            state = LoginState.X2.DevicePassword
         }
 
         if (!viewModel.isUserAuthorized() && data != null) {
@@ -210,8 +225,6 @@ class LoginX2Activity : LoginBaseActivity(), DevicePasswordFragmentListener {
         startActivityForResult(intent, 100)
         hideLoadingDialog()
     }
-
-    override fun onConnectionSuccessful() = getUserFromCamera()
 
     companion object {
         private const val ENABLE_CONTINUE_DELAY = 1000L
