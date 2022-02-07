@@ -5,8 +5,10 @@ import android.net.wifi.WifiManager
 import android.os.Build
 import com.lawmobile.domain.entities.CameraInfo
 import com.lawmobile.presentation.utils.Build.getSDKVersion
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 import java.math.BigInteger
 import java.net.Inet4Address
 
@@ -17,13 +19,13 @@ open class WifiHelper(private val wifiManager: WifiManager) {
     val isWifiSignalLow = flow {
         while (CameraInfo.isOfficerLogged) {
             delay(DELAY_ON_READING_SIGNAL)
-            val isSignalLevelLow = getSignalLevel() == LOW_SIGNAL_LEVEL
+            val isSignalLevelLow = getSignalLevel() <= LOW_SIGNAL_LEVEL
             if (isSignalLevelLow != isWifiSignalStateLow) {
                 isWifiSignalStateLow = isSignalLevelLow
                 emit(isSignalLevelLow)
             }
         }
-    }
+    }.flowOn(Dispatchers.IO)
 
     fun isWifiEnable(): Boolean = wifiManager.isWifiEnabled
 
@@ -49,6 +51,7 @@ open class WifiHelper(private val wifiManager: WifiManager) {
         }
     }
 
+    @SuppressLint("NewApi")
     @Suppress("DEPRECATION")
     private fun getSignalLevel(): Int {
         val connectionInfo = wifiManager.connectionInfo
@@ -70,7 +73,7 @@ open class WifiHelper(private val wifiManager: WifiManager) {
 
     companion object {
         private const val SIGNAL_LEVELS = 5
-        private const val LOW_SIGNAL_LEVEL = 0
+        private const val LOW_SIGNAL_LEVEL = 1
         private const val DELAY_ON_READING_SIGNAL = 1000L
     }
 }
