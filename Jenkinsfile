@@ -88,7 +88,7 @@ node('jenkins-builds-slave') {
                     waitForQualityGate abortPipeline: true
                 }
             }
-            if(env.BRANCH_NAME == 'develop') {
+            if(env.BRANCH_NAME == 'develop' || env.BRANCH_NAME == 'master' || env.BRANCH_NAME.startsWith('release/')) {
                 stage('Generate APK Debug and testing'){
                     logger.stage()
                     timeout(10){
