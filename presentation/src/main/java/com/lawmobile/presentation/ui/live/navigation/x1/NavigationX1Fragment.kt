@@ -37,7 +37,10 @@ class NavigationX1Fragment : LiveNavigationBaseFragment() {
         _binding = null
     }
 
+    override val viewTag: String
+        get() = TAG
+
     companion object {
-        val TAG = NavigationX1Fragment::class.java.simpleName
+        val TAG: String = NavigationX1Fragment::class.java.simpleName
     }
 }

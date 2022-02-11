@@ -120,6 +120,9 @@ class OfficerPasswordFragment : BaseFragment(), OfficerPassword {
         _binding = null
     }
 
+    override val viewTag: String
+        get() = TAG
+
     companion object {
         val TAG: String = OfficerPasswordFragment::class.java.simpleName
     }

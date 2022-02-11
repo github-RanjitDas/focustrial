@@ -43,6 +43,9 @@ import kotlinx.coroutines.Dispatchers
 
 class VideoPlaybackActivity : BaseActivity() {
 
+    override val parentTag: String
+        get() = this::class.java.simpleName
+
     private lateinit var binding: ActivityVideoPlaybackBinding
 
     private val viewModel: VideoPlaybackViewModel by viewModels()

@@ -60,7 +60,8 @@ object Exclusions {
         "**/RunWithDelay.**",
         "**/Build.**",
         "**/ConnectionHelperImpl.**",
-        "**/VideoInformationManager.**"
+        "**/VideoInformationManager.**",
+        "**/NewRelicLogger.**"
     )
     val pitest = mutableSetOf(
         //Dagger 2

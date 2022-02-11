@@ -199,4 +199,11 @@ class SimpleFileListFragment : FileListBaseFragment() {
         super.onDestroy()
         _binding = null
     }
+
+    override val viewTag: String
+        get() = TAG
+
+    companion object {
+        val TAG: String = SimpleFileListFragment::class.java.simpleName
+    }
 }

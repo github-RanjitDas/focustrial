@@ -208,6 +208,9 @@ class AssociateSnapshotsFragment : BaseFragment() {
         _binding = null
     }
 
+    override val viewTag: String
+        get() = TAG
+
     companion object {
         val TAG: String = AssociateSnapshotsFragment::class.java.simpleName
     }

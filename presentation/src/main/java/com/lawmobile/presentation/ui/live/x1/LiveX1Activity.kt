@@ -4,11 +4,14 @@ import android.os.Bundle
 import androidx.core.view.isVisible
 import com.lawmobile.presentation.databinding.ActivityLiveViewBinding
 import com.lawmobile.presentation.ui.live.DashboardBaseActivity
-import com.lawmobile.presentation.ui.live.appBar.x1.AppBarX1Fragment
+import com.lawmobile.presentation.ui.live.appBar.x1.LiveX1AppBarFragment
 import com.lawmobile.presentation.ui.live.controls.x1.ControlsX1Fragment
 import com.lawmobile.presentation.ui.live.statusBar.x1.StatusBarX1Fragment
 
 class LiveX1Activity : DashboardBaseActivity() {
+
+    override val parentTag: String
+        get() = this::class.java.simpleName
 
     private lateinit var binding: ActivityLiveViewBinding
 
@@ -51,7 +54,7 @@ class LiveX1Activity : DashboardBaseActivity() {
     }
 
     override fun setAppBarFragment() {
-        appBarFragment = AppBarX1Fragment()
+        appBarFragment = LiveX1AppBarFragment()
         super.setAppBarFragment()
     }
 
