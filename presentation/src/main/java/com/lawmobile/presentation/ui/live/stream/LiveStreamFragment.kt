@@ -10,6 +10,7 @@ import com.lawmobile.presentation.R
 import com.lawmobile.presentation.databinding.FragmentLiveStreamBinding
 import com.lawmobile.presentation.extensions.setOnClickListenerCheckConnection
 import com.lawmobile.presentation.ui.base.BaseFragment
+import com.lawmobile.presentation.ui.fileList.simpleList.SimpleFileListFragment
 import com.lawmobile.presentation.ui.live.shared.LiveStream
 
 class LiveStreamFragment : BaseFragment(), LiveStream {
@@ -88,6 +89,9 @@ class LiveStreamFragment : BaseFragment(), LiveStream {
         super.onDestroy()
         _binding = null
     }
+
+    override val viewTag: String
+        get() = SimpleFileListFragment.TAG
 
     companion object {
         val TAG: String = LiveStreamFragment::class.java.simpleName

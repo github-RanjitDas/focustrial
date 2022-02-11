@@ -13,6 +13,9 @@ import com.lawmobile.presentation.utils.Constants
 
 class FileListX1Activity : FileListBaseActivity() {
 
+    override val parentTag: String
+        get() = this::class.java.simpleName
+
     private lateinit var appBarFragment: AppBarX1Fragment
     private lateinit var filterSectionFragment: FilterSectionX1Fragment
 

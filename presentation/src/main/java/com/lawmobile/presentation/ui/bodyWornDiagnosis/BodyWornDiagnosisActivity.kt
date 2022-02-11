@@ -16,6 +16,9 @@ import com.safefleet.mobile.kotlin_commons.helpers.Result
 
 class BodyWornDiagnosisActivity : BaseActivity() {
 
+    override val parentTag: String
+        get() = this::class.java.simpleName
+
     private lateinit var binding: ActivityBodyWornDiagnosisBinding
     private val viewModel: BodyWornDiagnosisViewModel by viewModels()
 

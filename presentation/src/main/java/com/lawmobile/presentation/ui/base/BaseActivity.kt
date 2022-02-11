@@ -25,6 +25,7 @@ import com.lawmobile.presentation.security.RootedHelper
 import com.lawmobile.presentation.utils.CameraHelper
 import com.lawmobile.presentation.utils.EspressoIdlingResource
 import com.lawmobile.presentation.utils.MobileDataStatus
+import com.lawmobile.presentation.utils.NewRelicLogger
 import com.lawmobile.presentation.utils.WifiHelper
 import com.lawmobile.presentation.utils.WifiStatus
 import com.lawmobile.presentation.utils.checkIfSessionIsExpired
@@ -33,7 +34,7 @@ import java.sql.Timestamp
 import javax.inject.Inject
 
 @AndroidEntryPoint
-open class BaseActivity : AppCompatActivity() {
+abstract class BaseActivity : AppCompatActivity() {
 
     private val baseViewModel: BaseViewModel by viewModels()
 
@@ -51,6 +52,8 @@ open class BaseActivity : AppCompatActivity() {
 
     @Inject
     lateinit var cameraHelper: CameraHelper
+
+    abstract val parentTag: String
 
     private var isLiveVideoOrPlaybackActive: Boolean = false
     var isNetworkAlertShowing = MutableLiveData<Boolean>()
@@ -72,6 +75,11 @@ open class BaseActivity : AppCompatActivity() {
         updateLastInteraction()
         setEventsUseCase()
         setEventsListener()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        NewRelicLogger.updateActiveParent(parentTag)
     }
 
     private fun createCameraHelper() {

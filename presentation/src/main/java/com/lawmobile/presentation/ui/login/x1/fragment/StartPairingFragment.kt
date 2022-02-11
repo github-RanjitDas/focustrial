@@ -216,6 +216,9 @@ class StartPairingFragment : BaseFragment(), Instructions, StartPairing {
         _binding = null
     }
 
+    override val viewTag: String
+        get() = TAG
+
     companion object {
         val TAG: String = StartPairingFragment::class.java.simpleName
     }

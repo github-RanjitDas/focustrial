@@ -44,7 +44,10 @@ class ControlsX1Fragment : ControlsBaseFragment() {
         _binding = null
     }
 
+    override val viewTag: String
+        get() = TAG
+
     companion object {
-        val TAG = ControlsX1Fragment::class.java.simpleName
+        val TAG: String = ControlsX1Fragment::class.java.simpleName
     }
 }

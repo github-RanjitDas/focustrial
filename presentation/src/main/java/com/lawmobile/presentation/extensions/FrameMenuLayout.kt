@@ -7,18 +7,18 @@ import com.lawmobile.presentation.R
 import com.lawmobile.presentation.entities.MenuInformation
 
 fun FrameLayout.openMenuButton(menuInformation: MenuInformation) {
-    this.isVisible = true
+    isVisible = true
     menuInformation.shadowOpenMenuView?.isVisible = true
     val animation = AnimationUtils.loadAnimation(menuInformation.context, R.anim.slide_in_right)
-    this.startAnimation(animation)
-    menuInformation.menuFragment.openMenu()
+    startAnimation(animation)
+    menuInformation.menuFragment.updateNotificationCount()
 }
 
 fun FrameLayout.closeMenuButton(menuInformation: MenuInformation) {
     val animation = AnimationUtils.loadAnimation(menuInformation.context, R.anim.slide_out_right)
     val animationShadow = AnimationUtils.loadAnimation(menuInformation.context, R.anim.fade_out)
-    this.startAnimation(animation)
+    startAnimation(animation)
     menuInformation.shadowOpenMenuView?.startAnimation(animationShadow)
-    this.isVisible = false
+    isVisible = false
     menuInformation.shadowOpenMenuView?.isVisible = false
 }
