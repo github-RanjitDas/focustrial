@@ -24,8 +24,4 @@ object NewRelicLogger : Logger {
     fun updateActiveParent(parentName: String) {
         NewRelic.setAttribute(PARENT_NAME, parentName)
     }
-
-    fun setUserId(name: String) {
-        NewRelic.setUserId(name)
-    }
 }

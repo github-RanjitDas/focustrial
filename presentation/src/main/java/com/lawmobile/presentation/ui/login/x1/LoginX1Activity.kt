@@ -18,7 +18,6 @@ import com.lawmobile.presentation.ui.login.shared.StartPairing
 import com.lawmobile.presentation.ui.login.state.LoginState
 import com.lawmobile.presentation.ui.login.x1.fragment.StartPairingFragment
 import com.lawmobile.presentation.ui.login.x1.fragment.officerPassword.OfficerPasswordFragment
-import com.lawmobile.presentation.utils.NewRelicLogger
 import com.safefleet.mobile.kotlin_commons.extensions.doIfError
 import com.safefleet.mobile.kotlin_commons.extensions.doIfSuccess
 import com.safefleet.mobile.kotlin_commons.helpers.Result
@@ -109,7 +108,6 @@ class LoginX1Activity : LoginBaseActivity() {
                 CameraInfo.officerName = it.name
                 CameraInfo.officerId = it.id
                 officerPassword.passwordFromCamera = it.password
-                NewRelicLogger.setUserId(it.id + it.name)
             }
             doIfError {
                 showUserInformationError()
