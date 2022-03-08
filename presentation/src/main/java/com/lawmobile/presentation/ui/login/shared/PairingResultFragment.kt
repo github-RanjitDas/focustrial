@@ -135,6 +135,9 @@ class PairingResultFragment : BaseFragment() {
         _binding = null
     }
 
+    override val viewTag: String
+        get() = TAG
+
     companion object {
         val TAG: String = PairingResultFragment::class.java.simpleName
         private const val PERCENT_TOTAL_CONNECTION_CAMERA = 100

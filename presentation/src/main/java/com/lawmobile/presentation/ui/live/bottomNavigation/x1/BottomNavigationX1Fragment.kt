@@ -37,7 +37,10 @@ class BottomNavigationX1Fragment : BottomNavigationBaseFragment() {
         _binding = null
     }
 
+    override val viewTag: String
+        get() = TAG
+
     companion object {
-        val TAG = BottomNavigationX1Fragment::class.java.simpleName
+        val TAG: String = BottomNavigationX1Fragment::class.java.simpleName
     }
 }

@@ -130,6 +130,9 @@ class FilterSectionX2Fragment : BaseFragment(), ListTypeButtons, FileSelection, 
         _binding = null
     }
 
+    override val viewTag: String
+        get() = TAG
+
     companion object {
         val TAG: String = FilterSectionX2Fragment::class.java.simpleName
         fun createInstance(isNavigationActive: Boolean = false): FilterSectionX2Fragment {

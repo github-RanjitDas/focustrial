@@ -13,7 +13,10 @@ class WifiStatus @Inject constructor(private val connectivityManager: Connectivi
 
     private val networkCallback = object : ConnectivityManager.NetworkCallback() {
         override fun onLost(network: Network) {
-            if (CameraInfo.isOfficerLogged) postValue(false)
+            if (CameraInfo.isOfficerLogged) {
+                postValue(false)
+                NewRelicLogger.updateWifiStatus(false)
+            }
         }
     }
 
@@ -23,5 +26,7 @@ class WifiStatus @Inject constructor(private val connectivityManager: Connectivi
         val builder = NetworkRequest.Builder()
             .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
         connectivityManager.registerNetworkCallback(builder.build(), networkCallback)
+
+        NewRelicLogger.updateWifiStatus(true)
     }
 }

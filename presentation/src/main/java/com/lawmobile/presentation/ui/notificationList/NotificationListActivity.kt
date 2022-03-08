@@ -28,6 +28,9 @@ import com.safefleet.mobile.kotlin_commons.helpers.Result
 
 class NotificationListActivity : BaseActivity() {
 
+    override val parentTag: String
+        get() = this::class.java.simpleName
+
     private val viewModel: NotificationListViewModel by viewModels()
 
     private val menuFragment = MenuFragment()

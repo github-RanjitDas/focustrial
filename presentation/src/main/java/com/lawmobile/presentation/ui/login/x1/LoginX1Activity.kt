@@ -16,6 +16,9 @@ import com.safefleet.mobile.kotlin_commons.helpers.Result
 
 class LoginX1Activity : LoginBaseActivity() {
 
+    override val parentTag: String
+        get() = this::class.java.simpleName
+
     private val viewModel: LoginX1ViewModel by viewModels()
 
     private val startPairingFragment = StartPairingFragment()

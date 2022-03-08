@@ -9,6 +9,7 @@ plugins {
     id 'kotlin-android'
     id 'kotlin-kapt'
     id 'dagger.hilt.android.plugin'
+    id 'newrelic'
 }
 
 check.dependsOn ktlint
@@ -149,6 +150,8 @@ dependencies {
 
     api Dependencies.Coroutines.coroutinesAndroid
     api Dependencies.Coroutines.coroutinesCore
+
+    implementation Dependencies.NewRelic.android
 
     implementation Dependencies.Base.androidCommons
     implementation Dependencies.Base.safeFleetUI

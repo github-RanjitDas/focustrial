@@ -239,6 +239,9 @@ class AssociateFilesFragment : BaseFragment() {
         _binding = null
     }
 
+    override val viewTag: String
+        get() = TAG
+
     companion object {
         val TAG: String = AssociateFilesFragment::class.java.simpleName
     }

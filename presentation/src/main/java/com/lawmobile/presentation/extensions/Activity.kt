@@ -86,6 +86,7 @@ fun Activity.setLandscapeOrientation() {
     requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
 }
 
+@SuppressLint("SourceLockedOrientationActivity")
 fun Activity.setPortraitOrientation() {
     requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
 }
@@ -95,6 +96,16 @@ fun Activity.isInPortraitMode(): Boolean =
 
 fun Activity.toggleDeXFullScreen() {
     if (!isDeXEnabled()) changeOrientation()
+}
+
+fun Activity.checkActivityBeforeDialog(show: () -> Unit) {
+    if (!isFinishing) {
+        try {
+            show()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
 }
 
 private const val DESKTOP_MODE_ENABLED = "SEM_DESKTOP_MODE_ENABLED"

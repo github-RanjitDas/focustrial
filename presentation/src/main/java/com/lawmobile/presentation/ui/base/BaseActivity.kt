@@ -7,7 +7,6 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.lifecycleScope
 import com.lawmobile.domain.entities.CameraEvent
 import com.lawmobile.domain.entities.CameraInfo
 import com.lawmobile.domain.enums.EventType
@@ -17,6 +16,8 @@ import com.lawmobile.presentation.BuildConfig
 import com.lawmobile.presentation.connectivity.MobileDataStatus
 import com.lawmobile.presentation.connectivity.WifiHelper
 import com.lawmobile.presentation.connectivity.WifiStatus
+import com.lawmobile.presentation.extensions.activityCollect
+import com.lawmobile.presentation.extensions.checkActivityBeforeDialog
 import com.lawmobile.presentation.extensions.createAlertErrorConnection
 import com.lawmobile.presentation.extensions.createAlertProgress
 import com.lawmobile.presentation.extensions.createAlertSessionExpired
@@ -26,16 +27,14 @@ import com.lawmobile.presentation.extensions.createNotificationDialog
 import com.lawmobile.presentation.security.RootedHelper
 import com.lawmobile.presentation.utils.CameraHelper
 import com.lawmobile.presentation.utils.EspressoIdlingResource
+import com.lawmobile.presentation.utils.NewRelicLogger
 import com.lawmobile.presentation.utils.checkIfSessionIsExpired
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.withContext
 import java.sql.Timestamp
 import javax.inject.Inject
 
 @AndroidEntryPoint
-open class BaseActivity : AppCompatActivity() {
+abstract class BaseActivity : AppCompatActivity() {
 
     private val baseViewModel: BaseViewModel by viewModels()
 
@@ -53,6 +52,8 @@ open class BaseActivity : AppCompatActivity() {
 
     @Inject
     lateinit var cameraHelper: CameraHelper
+
+    abstract val parentTag: String
 
     private var isLiveVideoOrPlaybackActive: Boolean = false
     var isNetworkAlertShowing = MutableLiveData<Boolean>()
@@ -74,6 +75,11 @@ open class BaseActivity : AppCompatActivity() {
         updateLastInteraction()
         setEventsUseCase()
         setEventsListener()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        NewRelicLogger.updateActiveParent(parentTag)
     }
 
     private fun setCameraHelper() {
@@ -113,7 +119,7 @@ open class BaseActivity : AppCompatActivity() {
             NotificationType.LOW_STORAGE.value -> onLowStorage?.invoke()
         }
         runOnUiThread {
-            if (!isFinishing) createNotificationDialog(cameraEvent)
+            checkActivityBeforeDialog { createNotificationDialog(cameraEvent) }
         }
     }
 
@@ -140,41 +146,29 @@ open class BaseActivity : AppCompatActivity() {
     private fun setBaseObservers() {
         mobileDataStatus.observe(this, ::showMobileDataDialog)
         wifiStatus.observe(this, ::showWifiOffDialog)
-        observeWifiSignalLevel()
-    }
-
-    private fun observeWifiSignalLevel() {
-        lifecycleScope.launchWhenResumed {
-            withContext(Dispatchers.IO) {
-                wifiHelper.isWifiSignalLow.collect {
-                    showLowWifiSignalAlert(it)
-                }
-            }
-        }
+        activityCollect(wifiHelper.isWifiSignalLow, ::showLowWifiSignalAlert)
     }
 
     private fun showLowWifiSignalAlert(isLow: Boolean) {
-        runOnUiThread {
-            if (!isWifiAlertShowing) {
-                isNetworkAlertShowing.postValue(isLow)
-                if (isLow) lowSignalDialog.show()
-                else lowSignalDialog.hide()
-            } else lowSignalDialog.hide()
-        }
+        if (!isWifiAlertShowing) {
+            isNetworkAlertShowing.postValue(isLow)
+            if (isLow) checkActivityBeforeDialog(lowSignalDialog::show)
+            else lowSignalDialog.hide()
+        } else lowSignalDialog.hide()
     }
 
     private fun showWifiOffDialog(active: Boolean) {
         if (!active && !isWifiAlertShowing) {
             isWifiAlertShowing = true
             isNetworkAlertShowing.postValue(true)
-            createAlertErrorConnection()
+            checkActivityBeforeDialog(::createAlertErrorConnection)
         }
     }
 
     private fun showMobileDataDialog(active: Boolean) {
         if (!isWifiAlertShowing) {
             isNetworkAlertShowing.postValue(active)
-            if (active) mobileDataDialog.show()
+            if (active) checkActivityBeforeDialog(mobileDataDialog::show)
             else mobileDataDialog.dismiss()
         }
     }
@@ -186,7 +180,7 @@ open class BaseActivity : AppCompatActivity() {
 
     override fun onRestart() {
         super.onRestart()
-        if (checkIfSessionIsExpired() && CameraInfo.isOfficerLogged) this.createAlertSessionExpired()
+        if (checkIfSessionIsExpired() && CameraInfo.isOfficerLogged) createAlertSessionExpired()
     }
 
     override fun onUserInteraction() {
