@@ -19,6 +19,9 @@ import com.lawmobile.presentation.utils.FeatureSupportHelper
 
 class FileListX2Activity : FileListBaseActivity() {
 
+    override val parentTag: String
+        get() = this::class.java.simpleName
+
     private val menuFragment = MenuFragment()
     private lateinit var menuInformation: MenuInformation
     private lateinit var appBarFragment: AppBarX2Fragment

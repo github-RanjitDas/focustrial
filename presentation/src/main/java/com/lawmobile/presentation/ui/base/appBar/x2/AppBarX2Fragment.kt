@@ -118,6 +118,9 @@ class AppBarX2Fragment : BaseFragment() {
         _binding = null
     }
 
+    override val viewTag: String
+        get() = TAG
+
     companion object {
         val TAG: String = AppBarX2Fragment::class.java.simpleName
         fun createInstance(

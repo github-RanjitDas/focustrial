@@ -13,8 +13,10 @@ import androidx.annotation.RequiresApi
 import com.lawmobile.domain.entities.CameraInfo
 import com.lawmobile.presentation.connectivity.WifiHelper
 import com.lawmobile.presentation.utils.Build.getSDKVersion
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 import java.lang.Thread.sleep
 import java.math.BigInteger
 import java.net.Inet4Address
@@ -27,15 +29,17 @@ class WifiHelperImpl(
     private var isWifiSignalStateLow = false
 
     override val isWifiSignalLow = flow {
+        NewRelicLogger.updateLowWifiSignal(isWifiSignalStateLow)
         while (CameraInfo.isOfficerLogged) {
             delay(DELAY_ON_READING_SIGNAL)
-            val isSignalLevelLow = getSignalLevel() == LOW_SIGNAL_LEVEL
+            val isSignalLevelLow = getSignalLevel() <= LOW_SIGNAL_LEVEL
             if (isSignalLevelLow != isWifiSignalStateLow) {
                 isWifiSignalStateLow = isSignalLevelLow
                 emit(isSignalLevelLow)
+                NewRelicLogger.updateLowWifiSignal(isSignalLevelLow)
             }
         }
-    }
+    }.flowOn(Dispatchers.IO)
 
     override fun isWifiEnable(): Boolean = wifiManager.isWifiEnabled
 
@@ -137,7 +141,7 @@ class WifiHelperImpl(
 
     companion object {
         private const val SIGNAL_LEVELS = 5
-        private const val LOW_SIGNAL_LEVEL = 0
+        private const val LOW_SIGNAL_LEVEL = 1
         private const val DELAY_ON_READING_SIGNAL = 1000L
     }
 }

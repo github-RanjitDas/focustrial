@@ -4,6 +4,7 @@ ext {
     hilt_version = '2.33-beta'
     jacoco_version = '0.8.6'
     kotlin_version = '1.4.32'
+    new_relic = '6.3.1'
     pitest_android_plugin_version = '0.2.5'
     pitest_plugin_version = '1.4.7'
     pitest_junit5_plugin_version = "0.9" //pitest run fails for versions higher than 0.9

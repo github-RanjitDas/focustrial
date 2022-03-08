@@ -73,7 +73,8 @@ object Exclusions {
         "**/LoginUseCases.**",
         "**/PreferencesManagerImpl.**", //here since could not found a way to mock datastore.edit
         "**/ConnectionHelperImpl.**",
-        "**/VideoInformationManager.**"
+        "**/VideoInformationManager.**",
+        "**/NewRelicLogger.**"
     )
     val pitest = mutableSetOf(
         //Dagger 2

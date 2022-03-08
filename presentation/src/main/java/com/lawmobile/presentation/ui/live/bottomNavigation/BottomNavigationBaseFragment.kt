@@ -10,7 +10,7 @@ import com.lawmobile.presentation.ui.fileList.x1.FileListX1Activity
 import com.lawmobile.presentation.ui.fileList.x2.FileListX2Activity
 import com.lawmobile.presentation.utils.Constants
 
-open class BottomNavigationBaseFragment : BaseFragment() {
+abstract class BottomNavigationBaseFragment : BaseFragment() {
 
     lateinit var buttonSnapshotList: Button
     lateinit var buttonVideoList: Button

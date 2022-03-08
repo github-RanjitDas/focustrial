@@ -28,9 +28,9 @@
         app:imageButton="@drawable/ic_grid_custom_selector"
         android:layout_marginEnd="@dimen/margin_16dp"
         android:contentDescription="@string/focus_mobile_app_logo_description"
-        app:layout_constraintBottom_toBottomOf="@+id/buttonSelectToAssociate"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/buttonSimpleList"
-        app:layout_constraintTop_toTopOf="@+id/buttonSelectToAssociate" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <com.safefleet.mobile.safefleet_ui.widgets.SafeFleetListButton
         android:id="@+id/buttonSimpleList"
@@ -39,9 +39,9 @@
         android:layout_marginEnd="@dimen/margin_16dp"
         android:contentDescription="@string/focus_mobile_app_logo_description"
         app:imageButton="@drawable/ic_list_custom_selector"
-        app:layout_constraintBottom_toBottomOf="@+id/buttonSelectToAssociate"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/buttonOpenFilters"
-        app:layout_constraintTop_toTopOf="@+id/buttonSelectToAssociate" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageButton
         android:id="@+id/buttonOpenFilters"
@@ -52,9 +52,9 @@
         android:contentDescription="@string/associate_partner_id_content_description"
         android:padding="@dimen/padding_15dp"
         android:src="@drawable/ic_filter"
-        app:layout_constraintBottom_toBottomOf="@+id/buttonSelectToAssociate"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/buttonSelectToAssociate" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ScrollView
         android:id="@+id/scrollFilterTags"

@@ -25,7 +25,7 @@ import com.safefleet.mobile.safefleet_ui.widgets.linearProgressBar.SafeFleetLine
 import com.safefleet.mobile.safefleet_ui.widgets.linearProgressBar.SafeFleetLinearProgressBarColors
 import com.safefleet.mobile.safefleet_ui.widgets.linearProgressBar.SafeFleetLinearProgressBarRanges
 
-open class StatusBarBaseFragment : BaseFragment() {
+abstract class StatusBarBaseFragment : BaseFragment() {
 
     val sharedViewModel: StatusBarBaseViewModel by activityViewModels()
     val blinkAnimation = Animations.createBlinkAnimation(BLINK_ANIMATION_DURATION)

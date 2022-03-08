@@ -5,12 +5,14 @@ import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import com.lawmobile.presentation.extensions.createAlertProgress
 import com.lawmobile.presentation.utils.EspressoIdlingResource
+import com.lawmobile.presentation.utils.NewRelicLogger
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-open class BaseFragment : Fragment() {
+abstract class BaseFragment : Fragment() {
 
     private var loadingDialog: AlertDialog? = null
+    abstract val viewTag: String?
 
     fun showLoadingDialog() {
         EspressoIdlingResource.increment()
@@ -30,4 +32,11 @@ open class BaseFragment : Fragment() {
 
     fun isInPortraitMode() =
         resources.configuration.orientation == ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+
+    override fun onResume() {
+        super.onResume()
+        viewTag?.let {
+            NewRelicLogger.updateActiveView(it)
+        }
+    }
 }

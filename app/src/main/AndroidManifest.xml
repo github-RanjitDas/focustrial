@@ -34,7 +34,9 @@
             android:name="com.samsung.android.multidisplay.keep_process_alive"
             android:value="true" />
 
-        <activity android:name="net.openid.appauth.RedirectUriReceiverActivity">
+        <activity
+            android:name="net.openid.appauth.RedirectUriReceiverActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -47,6 +49,7 @@
 
         <activity
             android:name="com.lawmobile.presentation.ui.splash.SplashActivity"
+            android:exported="true"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
             tools:ignore="LockedOrientationActivity">

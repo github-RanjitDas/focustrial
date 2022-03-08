@@ -17,6 +17,9 @@ import kotlinx.coroutines.launch
 
 class SelectCameraActivity : BaseActivity() {
 
+    override val parentTag: String
+        get() = this::class.java.simpleName
+
     private lateinit var binding: ActivitySelectCameraBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {

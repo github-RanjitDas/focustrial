@@ -34,6 +34,7 @@ import com.lawmobile.presentation.ui.associateFiles.AssociateFilesFragment
 import com.lawmobile.presentation.ui.base.BaseActivity
 import com.lawmobile.presentation.ui.videoPlayback.state.VideoPlaybackState
 import com.lawmobile.presentation.utils.Constants.DOMAIN_CAMERA_FILE
+import com.lawmobile.presentation.utils.FeatureSupportHelper
 import com.safefleet.mobile.android_commons.extensions.hideKeyboard
 import com.safefleet.mobile.kotlin_commons.extensions.doIfError
 import com.safefleet.mobile.kotlin_commons.extensions.doIfSuccess
@@ -42,6 +43,9 @@ import com.safefleet.mobile.safefleet_ui.widgets.SafeFleetFilterTag
 import kotlinx.coroutines.Dispatchers
 
 class VideoPlaybackActivity : BaseActivity() {
+
+    override val parentTag: String
+        get() = this::class.java.simpleName
 
     private lateinit var binding: ActivityVideoPlaybackBinding
 
@@ -85,6 +89,7 @@ class VideoPlaybackActivity : BaseActivity() {
 
         metadataManager.setup(binding.layoutMetadataForm, getCameraConnectFileFromIntent())
         toggleAssociateDialog(isAssociateDialogOpen)
+        setFeatures()
         setObservers()
         setCollectors()
         verifyIfSelectedVideoWasChanged()
@@ -94,6 +99,12 @@ class VideoPlaybackActivity : BaseActivity() {
         else getMediaInformation()
 
         getVideoInformation()
+    }
+
+    private fun setFeatures() {
+        binding.layoutMetadataForm.associateAudioTitle.isVisible = FeatureSupportHelper.supportAudioAssociation
+        binding.layoutMetadataForm.layoutAssociatedAudios.isVisible = FeatureSupportHelper.supportAudioAssociation
+        binding.layoutMetadataForm.buttonAssociateAudios.isVisible = FeatureSupportHelper.supportAudioAssociation
     }
 
     private fun toggleAssociateDialog(isOpen: Boolean) {

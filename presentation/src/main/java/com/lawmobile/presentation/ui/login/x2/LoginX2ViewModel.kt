@@ -33,7 +33,7 @@ class LoginX2ViewModel @Inject constructor(
 
     var officerId: String = ""
 
-    override val _loginState by lazy { MutableStateFlow<LoginState>(LoginState.X2.OfficerId) }
+    override val mutableLoginState by lazy { MutableStateFlow<LoginState>(LoginState.X2.OfficerId) }
 
     private lateinit var authStateManager: AuthStateManager
 

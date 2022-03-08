@@ -28,7 +28,7 @@ object Dependencies {
 
     object Base {
         const val androidCommons = "com.safefleet.mobile:android-commons:2.4.1-SNAPSHOT@aar"
-        const val externalHardware = "com.safefleet.mobile:external-hardware:5.13.8-SNAPSHOT@jar"
+        const val externalHardware = "com.safefleet.mobile:external-hardware:5.13.9-SNAPSHOT@jar"
         const val kotlinCommons = "com.safefleet.mobile:kotlin-commons:2.4.0-SNAPSHOT@jar"
         const val safeFleetUI = "com.safefleet.mobile:safefleet-ui:1.4.3@aar"
         const val authentication = "com.safefleet.mobile:authentication:2.5.5-SNAPSHOT@aar"
@@ -136,6 +136,10 @@ object Dependencies {
     object OpenId {
         private const val VERSION = "0.7.1"
         const val appAuth = "net.openid:appauth:$VERSION"
+    }
+
+    object NewRelic {
+        const val android = "com.newrelic.agent.android:android-agent:6.3.1"
     }
 
     object PDF {

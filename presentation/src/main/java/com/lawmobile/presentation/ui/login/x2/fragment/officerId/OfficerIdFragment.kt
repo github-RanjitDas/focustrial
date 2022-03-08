@@ -161,6 +161,9 @@ class OfficerIdFragment : BaseFragment() {
         _binding = null
     }
 
+    override val viewTag: String
+        get() = TAG
+
     companion object {
         val TAG: String = OfficerIdFragment::class.java.simpleName
 

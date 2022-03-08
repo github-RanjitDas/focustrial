@@ -349,7 +349,11 @@ class ThumbnailFileListFragment : FileListBaseFragment() {
 
     private fun isLastPage(): Boolean = listAdapter.getItemsWithImageToLoading().isEmpty()
 
+    override val viewTag: String
+        get() = TAG
+
     companion object {
+        val TAG: String = ThumbnailFileListFragment::class.java.simpleName
         const val PATH_ERROR_IN_PHOTO = "errorPath"
     }
 }

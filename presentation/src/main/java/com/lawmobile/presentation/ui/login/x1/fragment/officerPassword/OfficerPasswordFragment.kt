@@ -41,8 +41,7 @@ class OfficerPasswordFragment : BaseFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding =
-            FragmentOfficerPasswordBinding.inflate(inflater, container, false)
+        _binding = FragmentOfficerPasswordBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -118,6 +117,9 @@ class OfficerPasswordFragment : BaseFragment() {
         super.onDestroy()
         _binding = null
     }
+
+    override val viewTag: String
+        get() = TAG
 
     companion object {
         val TAG: String = OfficerPasswordFragment::class.java.simpleName

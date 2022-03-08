@@ -265,6 +265,9 @@ class StatusBarX2Fragment : StatusBarBaseFragment() {
         _binding = null
     }
 
+    override val viewTag: String
+        get() = TAG
+
     companion object {
         val TAG: String = StatusBarX2Fragment::class.java.simpleName
         private var wasNotificationArriveForLowBattery = false

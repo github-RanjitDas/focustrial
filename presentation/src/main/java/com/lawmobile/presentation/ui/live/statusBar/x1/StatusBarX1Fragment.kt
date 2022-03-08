@@ -187,8 +187,11 @@ class StatusBarX1Fragment : StatusBarBaseFragment() {
         _binding = null
     }
 
+    override val viewTag: String
+        get() = TAG
+
     companion object {
-        val TAG = StatusBarX1Fragment::class.java.simpleName
+        val TAG: String = StatusBarX1Fragment::class.java.simpleName
         private const val PERCENT_TO_SHOW_ALERT_MEMORY_CAPACITY = 95
     }
 }

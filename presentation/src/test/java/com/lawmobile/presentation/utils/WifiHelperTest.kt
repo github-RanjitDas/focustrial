@@ -11,14 +11,24 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkObject
 import io.mockk.verify
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.test.TestCoroutineDispatcher
+import kotlinx.coroutines.test.TestCoroutineScope
+import kotlinx.coroutines.test.runBlockingTest
+import kotlinx.coroutines.test.setMain
 import org.junit.Assert
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@ExperimentalCoroutinesApi
+@TestInstance(TestInstance.Lifecycle.PER_METHOD)
 class WifiHelperTest {
 
     companion object {
@@ -43,8 +53,16 @@ class WifiHelperTest {
 
     private val wifiHelper = WifiHelperImpl(wifiManager, connectivityManager)
 
+    private val dispatcher = TestCoroutineDispatcher()
+    private val job by lazy { Job() }
+    private val testScope by lazy { TestCoroutineScope() }
+
+    @AfterEach
+    fun clean() = job.cancel()
+
     @BeforeEach
     fun setUp() {
+        Dispatchers.setMain(dispatcher)
         dhcpInfoMock.gateway = IP_NUMBER
     }
 
@@ -99,31 +117,51 @@ class WifiHelperTest {
     }
 
     @Test
-    fun isWifiSignalLowTrue() = runBlocking {
-        mockkObject(CameraInfo)
-        mockkObject(Build)
-        every { getSDKVersion() } returns Build.VERSION_CODES.R
-        every { CameraInfo.isOfficerLogged } returns true
-        every { wifiManager.connectionInfo.rssi } returns 4
-        every { wifiManager.calculateSignalLevel(any()) } returns 0
-        Assert.assertTrue(wifiHelper.isWifiSignalLow.first())
-        verify { wifiManager.calculateSignalLevel(any()) }
-        verify { wifiManager.connectionInfo.rssi }
-        verify { CameraInfo.isOfficerLogged }
+    fun isWifiSignalLowTrue() = runBlockingTest {
+        testScope.launch {
+            mockkObject(CameraInfo)
+            mockkObject(Build)
+
+            every { getSDKVersion() } returns Build.VERSION_CODES.R
+            every { CameraInfo.isOfficerLogged } returns true
+            every { wifiManager.connectionInfo.rssi } returns 4
+            every { wifiManager.calculateSignalLevel(any()) } returns 1
+
+            dispatcher.advanceTimeBy(1002)
+
+            Assert.assertTrue(wifiHelper.isWifiSignalLow.first())
+
+            verify {
+                getSDKVersion()
+                wifiManager.calculateSignalLevel(any())
+                wifiManager.connectionInfo.rssi
+                CameraInfo.isOfficerLogged
+            }
+        }
+        delay(1000)
     }
 
     @Test
-    fun isWifiSignalLowFalse() = runBlocking {
-        mockkObject(CameraInfo)
-        mockkObject(Build)
-        every { getSDKVersion() } returns Build.VERSION_CODES.R
-        every { CameraInfo.isOfficerLogged } returns true
-        every { wifiManager.connectionInfo.rssi } returns 4
-        every { wifiManager.calculateSignalLevel(any()) } returns 0 andThen 4
-        Assert.assertTrue(wifiHelper.isWifiSignalLow.first())
-        Assert.assertFalse(wifiHelper.isWifiSignalLow.first())
-        verify { wifiManager.calculateSignalLevel(any()) }
-        verify { wifiManager.connectionInfo.rssi }
-        verify { CameraInfo.isOfficerLogged }
+    fun isWifiSignalLowFalse() = runBlockingTest {
+        testScope.launch {
+            mockkObject(CameraInfo)
+            mockkObject(Build)
+
+            every { getSDKVersion() } returns Build.VERSION_CODES.R
+            every { CameraInfo.isOfficerLogged } returns true
+            every { wifiManager.connectionInfo.rssi } returns 4
+            every { wifiManager.calculateSignalLevel(any()) } returns 1 andThen 4
+
+            dispatcher.advanceTimeBy(1002)
+            Assert.assertTrue(wifiHelper.isWifiSignalLow.first())
+            Assert.assertFalse(wifiHelper.isWifiSignalLow.first())
+
+            verify {
+                wifiManager.calculateSignalLevel(any())
+                wifiManager.connectionInfo.rssi
+                CameraInfo.isOfficerLogged
+            }
+        }
+        delay(1000)
     }
 }

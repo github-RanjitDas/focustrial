@@ -12,6 +12,9 @@ import com.lawmobile.presentation.ui.base.BaseActivity
 
 class HelpPageActivity : BaseActivity() {
 
+    override val parentTag: String
+        get() = this::class.java.simpleName
+
     private lateinit var activityHelpPageBinding: ActivityHelpPageBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -35,6 +35,9 @@ import java.io.File
 
 class SnapshotDetailActivity : BaseActivity() {
 
+    override val parentTag: String
+        get() = this::class.java.simpleName
+
     private lateinit var binding: ActivitySnapshotDetailBinding
 
     private lateinit var imageContainer: ImageView
@@ -104,7 +107,7 @@ class SnapshotDetailActivity : BaseActivity() {
     }
 
     private fun setFeatures() {
-        binding.bottomSheetAssociateOfficer.buttonAssignToOfficer.isVisible =
+        binding.buttonAssociateOfficer.isVisible =
             FeatureSupportHelper.supportAssociateOfficerID
     }
 

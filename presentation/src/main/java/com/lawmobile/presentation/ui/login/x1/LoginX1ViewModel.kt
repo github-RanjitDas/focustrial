@@ -16,5 +16,5 @@ class LoginX1ViewModel @Inject constructor(
     ioDispatcher: CoroutineDispatcher
 ) : LoginBaseViewModel(getUserFromCamera, wifiHelper, ioDispatcher) {
     var officerPasswordFromCamera: String = ""
-    override val _loginState by lazy { MutableStateFlow<LoginState>(LoginState.X1.StartPairing) }
+    override val mutableLoginState by lazy { MutableStateFlow<LoginState>(LoginState.X1.StartPairing) }
 }

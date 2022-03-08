@@ -233,7 +233,7 @@ class MenuFragment : BaseFragment() {
         startActivity(Intent(context, BodyWornSettingsActivity::class.java))
     }
 
-    fun openMenu() {
+    fun updateNotificationCount() {
         menuViewModel.getPendingNotificationsCount()
     }
 
@@ -241,6 +241,8 @@ class MenuFragment : BaseFragment() {
         super.onDestroy()
         _binding = null
     }
+
+    override val viewTag: String? = null
 
     companion object {
         var currentListView = ""

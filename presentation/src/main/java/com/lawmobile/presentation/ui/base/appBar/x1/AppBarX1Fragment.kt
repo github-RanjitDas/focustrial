@@ -75,6 +75,9 @@ class AppBarX1Fragment : BaseFragment(), ListTypeButtons {
         _binding = null
     }
 
+    override val viewTag: String
+        get() = TAG
+
     companion object {
         private lateinit var title: String
         val TAG: String = AppBarX1Fragment::class.java.simpleName

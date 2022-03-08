@@ -20,6 +20,9 @@ import com.lawmobile.presentation.ui.live.statusBar.x2.StatusBarX2Fragment
 
 class LiveX2Activity : DashboardBaseActivity() {
 
+    override val parentTag: String
+        get() = this::class.java.simpleName
+
     private lateinit var binding: ActivityLiveViewX2Binding
 
     private val appBarX2Fragment = AppBarX2Fragment.createInstance(true, "")

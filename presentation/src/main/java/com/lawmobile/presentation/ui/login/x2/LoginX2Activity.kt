@@ -32,6 +32,9 @@ import net.openid.appauth.TokenResponse
 
 class LoginX2Activity : LoginBaseActivity() {
 
+    override val parentTag: String
+        get() = this::class.java.simpleName
+
     private val viewModel: LoginX2ViewModel by viewModels()
 
     private lateinit var authRequest: AuthorizationRequest

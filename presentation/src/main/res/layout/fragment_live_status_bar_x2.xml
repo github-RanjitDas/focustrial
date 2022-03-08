@@ -2,32 +2,43 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layoutStatusBar"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:id="@+id/layoutStatusBar">
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/textViewCameraStatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/camera_status_margin_horizontal"
+        android:text="@string/camera_status"
+        android:textColor="@color/black"
+        app:layout_constraintBottom_toBottomOf="@id/guidelineMidHorizontal"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:id="@+id/imageViewBattery"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/camera_status_margin_horizontal"
         android:background="@drawable/ic_battery"
         android:contentDescription="@string/battery_level"
-        android:layout_marginHorizontal="@dimen/camera_status_margin_horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="@id/guidelineMidHorizontal" />
+        app:layout_constraintTop_toTopOf="@id/guidelineMidHorizontal" />
 
     <TextView
         android:id="@+id/textViewBatteryPercent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:paddingBottom="@dimen/margin_4dp"
         android:text="@string/battery_percent_placeholder"
         android:textSize="@dimen/battery_percent_text_size"
-        android:paddingBottom="@dimen/margin_4dp"
-        app:layout_constraintStart_toStartOf="@id/progressBatteryLevel"
         app:layout_constraintBottom_toTopOf="@id/progressBatteryLevel"
-        tools:ignore="SmallSp"
-        app:layout_constraintEnd_toEndOf="@+id/progressBatteryLevel" />
+        app:layout_constraintEnd_toEndOf="@+id/progressBatteryLevel"
+        app:layout_constraintStart_toStartOf="@id/progressBatteryLevel"
+        tools:ignore="SmallSp" />
 
     <com.safefleet.mobile.safefleet_ui.widgets.linearProgressBar.SafeFleetLinearProgressBar
         android:id="@+id/progressBatteryLevel"
@@ -53,9 +64,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingEnd="@dimen/storage_levels_padding_end"
+        android:paddingBottom="@dimen/margin_4dp"
         android:text="@string/storage_level_placeholder_x2"
         android:textSize="@dimen/storage_levels_text_size"
-        android:paddingBottom="@dimen/margin_4dp"
         app:layout_constraintBottom_toTopOf="@+id/progressStorageLevel"
         app:layout_constraintEnd_toEndOf="@+id/progressStorageLevel"
         app:layout_constraintStart_toStartOf="@id/progressStorageLevel"

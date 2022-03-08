@@ -25,6 +25,9 @@ import com.safefleet.mobile.kotlin_commons.helpers.Result
 
 class AudioDetailActivity : BaseActivity() {
 
+    override val parentTag: String
+        get() = this::class.java.simpleName
+
     private lateinit var binding: ActivityAudioDetailBinding
 
     private val audioDetailViewModel: AudioDetailViewModel by viewModels()
