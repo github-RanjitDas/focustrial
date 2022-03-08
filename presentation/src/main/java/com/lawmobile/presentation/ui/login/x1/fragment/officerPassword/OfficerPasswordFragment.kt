@@ -41,8 +41,7 @@ class OfficerPasswordFragment : BaseFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding =
-            FragmentOfficerPasswordBinding.inflate(inflater, container, false)
+        _binding = FragmentOfficerPasswordBinding.inflate(inflater, container, false)
         return binding.root
     }
 

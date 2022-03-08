@@ -12,6 +12,9 @@ import com.lawmobile.presentation.ui.base.BaseActivity
 
 class SplashActivity : BaseActivity() {
 
+    override val parentTag: String
+        get() = this::class.java.simpleName
+
     private val viewModel: SplashViewModel by viewModels()
     private lateinit var binding: ActivitySplashBinding
 

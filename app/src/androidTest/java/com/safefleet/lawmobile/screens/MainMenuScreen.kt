@@ -31,7 +31,9 @@ class MainMenuScreen : BaseScreen() {
 
     fun clickOnLogout() = clickOn(R.id.viewLogout)
 
-    fun swipeRightMainMenu() = onView(withId(R.id.layoutMenu)).perform(customSwipeRight())
+    fun swipeRightMainMenu() {
+        onView(withId(R.id.layoutMenu)).perform(customSwipeRight())
+    }
 
     fun isViewSnapshotsDisplayed() =
         assertDisplayed(R.id.text_view_snapshots, R.string.live_view_menu_item_view_snapshots)

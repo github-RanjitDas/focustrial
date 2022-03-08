@@ -14,7 +14,7 @@ plugins {
 
 def artifactId = 'database'
 def groupId = 'com.safefleet.lawmobile'
-def versionVariant = "1.0.0"
+def versionVariant = "1.0.1"
 
 if (!"$System.env.VARIANT".contains("RELEASE")) {
     versionVariant += "-SNAPSHOT"
@@ -73,11 +73,11 @@ pitest {
     targetTests = ["com.lawmobile.database.*"]
     //noinspection GrFinalVariableAccess,GroovyAccessibility
     excludedClasses = Exclusions.pitest
-    testPlugin = 'junit5'
-    threads = Runtime.getRuntime().availableProcessors()
-    outputFormats = ['XML', 'HTML']
-    enableDefaultIncrementalAnalysis =  true
-    timestampedReports = false
+    testPlugin.set('junit5')
+    threads.set(Runtime.getRuntime().availableProcessors())
+    outputFormats.set(['XML', 'HTML'])
+    enableDefaultIncrementalAnalysis.set(true)
+    timestampedReports.set(false)
 }
 
 // comment the below code when using maven local

@@ -12,6 +12,9 @@ import com.safefleet.mobile.authentication.sso.SSOLoginFragment
 
 class SSOActivity : BaseActivity() {
 
+    override val parentTag: String
+        get() = this::class.java.simpleName
+
     private val viewModel: SSOViewModel by viewModels()
 
     private lateinit var binding: ActivitySsoLoginBinding

@@ -173,10 +173,10 @@ pitest {
     targetTests = ["com.lawmobile.presentation.*"]
     //noinspection GrFinalVariableAccess,GroovyAccessibility
     excludedClasses = Exclusions.pitest
-    testPlugin = 'junit5'
-    threads = Runtime.getRuntime().availableProcessors()
-    outputFormats = ["HTML", "XML"]
-    avoidCallsTo = ["kotlin.jvm.internal", "kotlin/ResultKt"] //Stabilizes mutation run for Android
-    enableDefaultIncrementalAnalysis = true
-    timestampedReports = false //Overwrite past mutation report
+    testPlugin.set('junit5')
+    threads.set(Runtime.getRuntime().availableProcessors())
+    outputFormats.set(["HTML", "XML"])
+    avoidCallsTo.set(["kotlin.jvm.internal", "kotlin/ResultKt"]) //Stabilizes mutation run for Android
+    enableDefaultIncrementalAnalysis.set(true)
+    timestampedReports.set(false) //Overwrite past mutation report
 }

@@ -107,7 +107,7 @@ class SnapshotDetailActivity : BaseActivity() {
     }
 
     private fun setFeatures() {
-        binding.bottomSheetAssociateOfficer.buttonAssignToOfficer.isVisible =
+        binding.buttonAssociateOfficer.isVisible =
             FeatureSupportHelper.supportAssociateOfficerID
     }
 

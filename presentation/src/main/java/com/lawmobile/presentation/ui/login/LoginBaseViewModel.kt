@@ -20,14 +20,14 @@ abstract class LoginBaseViewModel(
     private val ioDispatcher: CoroutineDispatcher
 ) : BaseViewModel() {
 
-    val loginState: StateFlow<LoginState> get() = _loginState
-    protected abstract val _loginState: MutableStateFlow<LoginState>
+    val loginState: StateFlow<LoginState> get() = mutableLoginState
+    protected abstract val mutableLoginState: MutableStateFlow<LoginState>
 
     fun setLoginState(state: LoginState) {
-        _loginState.value = state
+        mutableLoginState.value = state
     }
 
-    fun getLoginState(): LoginState = _loginState.value
+    fun getLoginState(): LoginState = mutableLoginState.value
 
     var isInstructionsOpen = false
 

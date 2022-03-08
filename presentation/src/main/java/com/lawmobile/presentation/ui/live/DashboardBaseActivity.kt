@@ -37,7 +37,7 @@ abstract class DashboardBaseActivity : BaseActivity() {
     lateinit var statusBarFragment: StatusBarBaseFragment
     private lateinit var liveStreamFragment: LiveStreamFragment
     lateinit var controlsFragment: ControlsBaseFragment
-    lateinit var navigationFragment: BaseFragment
+    private lateinit var navigationFragment: BaseFragment
 
     private lateinit var liveStream: LiveStream
 
@@ -162,8 +162,8 @@ abstract class DashboardBaseActivity : BaseActivity() {
 
     private fun setFullScreenListener() {
         liveStream.onFullScreenClick = {
-            if (state is DashboardState.Default) state = DashboardState.Fullscreen
-            else state = DashboardState.Default
+            state = if (state is DashboardState.Default) DashboardState.Fullscreen
+            else DashboardState.Default
         }
     }
 

@@ -50,10 +50,7 @@ class SettingsBarFragment : BaseFragment() {
     }
 
     private fun setFeatures() {
-        if (!FeatureSupportHelper.supportBodyWornSettings) {
-            binding.constraintHideStatusBar.visibility = View.GONE
-            binding.cameraStatusTitle.visibility = View.VISIBLE
-        }
+        binding.constraintHideStatusBar.isVisible = FeatureSupportHelper.supportBodyWornSettings
     }
 
     private fun getSettingsInformation() {
@@ -180,8 +177,11 @@ class SettingsBarFragment : BaseFragment() {
         }
     }
 
+    override val viewTag: String
+        get() = TAG
+
     companion object {
-        val TAG = SettingsBarFragment::class.java.simpleName
+        val TAG: String = SettingsBarFragment::class.java.simpleName
         fun createInstance(): SettingsBarFragment {
             return SettingsBarFragment()
         }

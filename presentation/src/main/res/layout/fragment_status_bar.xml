@@ -136,18 +136,4 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <TextView
-        android:id="@+id/cameraStatusTitle"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/no_dp"
-        android:layout_margin="@dimen/margin_10dp"
-        android:text="@string/camera_status"
-        android:textSize="@dimen/text_size_14sp"
-        android:visibility="gone"
-        android:textColor="@color/black"
-        android:fontFamily="@font/roboto_regular"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
 </androidx.constraintlayout.widget.ConstraintLayout>

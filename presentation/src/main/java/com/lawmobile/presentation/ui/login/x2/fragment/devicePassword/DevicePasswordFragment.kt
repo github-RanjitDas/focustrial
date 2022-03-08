@@ -116,6 +116,7 @@ class DevicePasswordFragment : BaseFragment(), Instructions, StartPairing {
         buttonEditOfficerId.setOnClickListener {
             editTextDevicePassword.setText("")
             onEditOfficerId(viewModel.officerId)
+            viewModel.officerId = ""
         }
     }
 
@@ -258,6 +259,9 @@ class DevicePasswordFragment : BaseFragment(), Instructions, StartPairing {
         super.onDestroy()
         _binding = null
     }
+
+    override val viewTag: String
+        get() = TAG
 
     companion object {
         val TAG: String = StartPairingFragment::class.java.simpleName

@@ -6,6 +6,7 @@ import android.net.NetworkCapabilities
 import android.net.NetworkRequest
 import androidx.lifecycle.LiveData
 import com.lawmobile.domain.entities.CameraInfo
+import com.lawmobile.presentation.utils.NewRelicLogger
 import javax.inject.Inject
 
 class WifiStatus @Inject constructor(private val connectivityManager: ConnectivityManager) :

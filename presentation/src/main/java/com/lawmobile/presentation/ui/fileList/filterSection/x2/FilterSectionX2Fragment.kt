@@ -47,8 +47,7 @@ class FilterSectionX2Fragment : BaseFragment(), ListTypeButtons, FileSelection, 
     }
 
     private fun setFeatures() {
-        if (!FeatureSupportHelper.supportAssociateOfficerID)
-            binding.buttonSelectToAssociate.visibility = View.INVISIBLE
+        binding.buttonSelectToAssociate.isVisible = FeatureSupportHelper.supportAssociateOfficerID
     }
 
     private fun configureView() {

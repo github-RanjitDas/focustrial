@@ -22,6 +22,9 @@ import kotlinx.coroutines.launch
 
 class OnBoardingCardsActivity : BaseActivity() {
 
+    override val parentTag: String
+        get() = this::class.java.simpleName
+
     private lateinit var adapter: OnBoardingCardsAdapter
     private lateinit var binding: ActivityOnBoardingCardsBinding
 

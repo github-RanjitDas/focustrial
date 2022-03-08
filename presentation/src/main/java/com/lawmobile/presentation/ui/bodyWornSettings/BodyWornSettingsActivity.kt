@@ -15,6 +15,9 @@ import com.safefleet.mobile.kotlin_commons.helpers.Result
 
 class BodyWornSettingsActivity : BaseActivity() {
 
+    override val parentTag: String
+        get() = this::class.java.simpleName
+
     private lateinit var binding: ActivityBodyWornSettingsBinding
     private val viewModel: BodyWornSettingsViewModel by viewModels()
     private var currentSettingChanged: TypesOfBodyWornSettings = TypesOfBodyWornSettings.CovertMode
