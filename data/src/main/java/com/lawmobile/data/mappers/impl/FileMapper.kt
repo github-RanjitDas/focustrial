@@ -1,9 +1,9 @@
 package com.lawmobile.data.mappers.impl
 
+import com.lawmobile.body_cameras.entities.CameraFile
 import com.lawmobile.data.mappers.CameraMapper
 import com.lawmobile.data.mappers.DomainMapper
 import com.lawmobile.domain.entities.DomainCameraFile
-import com.safefleet.mobile.external_hardware.cameras.entities.CameraFile
 
 object FileMapper :
     DomainMapper<CameraFile, DomainCameraFile>,

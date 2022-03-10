@@ -1,13 +1,13 @@
 package com.lawmobile.data.repository.fileList
 
+import com.lawmobile.body_cameras.entities.VideoInformation
+import com.lawmobile.body_cameras.entities.VideoMetadata
 import com.lawmobile.data.datasource.remote.fileList.FileListRemoteDataSource
 import com.lawmobile.domain.entities.DomainCameraFile
 import com.lawmobile.domain.entities.DomainMetadata
 import com.lawmobile.domain.entities.DomainVideoMetadata
 import com.lawmobile.domain.entities.RemoteVideoMetadata
 import com.lawmobile.domain.entities.VideoListMetadata
-import com.safefleet.mobile.external_hardware.cameras.entities.VideoInformation
-import com.safefleet.mobile.external_hardware.cameras.entities.VideoMetadata
 import com.safefleet.mobile.kotlin_commons.helpers.Result
 import io.mockk.clearAllMocks
 import io.mockk.coEvery

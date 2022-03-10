@@ -1,10 +1,10 @@
 package com.lawmobile.data.repository.snapshotDetail
 
+import com.lawmobile.body_cameras.entities.CameraFile
+import com.lawmobile.body_cameras.entities.PhotoInformation
 import com.lawmobile.data.datasource.remote.snapshotDetail.SnapshotDetailRemoteDataSource
 import com.lawmobile.data.mappers.impl.FileMapper.toDomain
 import com.lawmobile.domain.entities.FileList
-import com.safefleet.mobile.external_hardware.cameras.entities.CameraFile
-import com.safefleet.mobile.external_hardware.cameras.entities.PhotoInformation
 import com.safefleet.mobile.kotlin_commons.helpers.Result
 import io.mockk.coEvery
 import io.mockk.coVerify

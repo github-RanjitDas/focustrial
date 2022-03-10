@@ -1,6 +1,12 @@
 package com.safefleet.lawmobile.di.cameraService
 
 import com.google.gson.Gson
+import com.lawmobile.body_cameras.CameraService
+import com.lawmobile.body_cameras.socket.SocketHelper
+import com.lawmobile.body_cameras.utils.CommandHelper
+import com.lawmobile.body_cameras.utils.FileInformationHelper
+import com.lawmobile.body_cameras.utils.MetadataHelper
+import com.lawmobile.body_cameras.utils.NotificationCameraHelper
 import com.lawmobile.data.utils.CameraServiceFactory
 import com.lawmobile.data.utils.CameraServiceFactoryImpl
 import com.lawmobile.data.utils.ConnectionHelperImpl
@@ -8,12 +14,6 @@ import com.lawmobile.domain.utils.ConnectionHelper
 import com.lawmobile.presentation.connectivity.WifiHelper
 import com.lawmobile.presentation.utils.CameraHelper
 import com.safefleet.lawmobile.helpers.MockUtils
-import com.safefleet.mobile.external_hardware.cameras.CameraService
-import com.safefleet.mobile.external_hardware.cameras.utils.CommandHelper
-import com.safefleet.mobile.external_hardware.cameras.utils.FileInformationHelper
-import com.safefleet.mobile.external_hardware.cameras.utils.MetadataHelper
-import com.safefleet.mobile.external_hardware.cameras.utils.NotificationCameraHelper
-import com.safefleet.mobile.kotlin_commons.socket.SocketHelper
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

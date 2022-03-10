@@ -1,6 +1,6 @@
 package com.lawmobile.data.datasource.remote.simpleList
 
-import com.safefleet.mobile.external_hardware.cameras.entities.FileResponseWithErrors
+import com.lawmobile.body_cameras.entities.FileResponseWithErrors
 import com.safefleet.mobile.kotlin_commons.helpers.Result
 
 interface SimpleListRemoteDataSource {

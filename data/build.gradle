@@ -72,9 +72,8 @@ dependencies {
     implementation Dependencies.Ktor.clientSerialization
     implementation Dependencies.Ktor.clientMock
 
-    implementation Dependencies.Base.externalHardware
-
     implementation project(path: Modules.domain)
+    implementation project(path: Modules.body_cameras)
 }
 
 pitest {

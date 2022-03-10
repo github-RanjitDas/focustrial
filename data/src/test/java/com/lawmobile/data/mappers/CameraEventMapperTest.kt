@@ -1,12 +1,12 @@
 package com.lawmobile.data.mappers
 
+import com.lawmobile.body_cameras.entities.LogEvent
 import com.lawmobile.data.dao.entities.LocalCameraEvent
 import com.lawmobile.data.mappers.impl.CameraEventMapper.toDomainList
 import com.lawmobile.data.mappers.impl.CameraEventMapper.toLocalList
 import com.lawmobile.domain.entities.CameraEvent
 import com.lawmobile.domain.enums.EventTag
 import com.lawmobile.domain.enums.EventType
-import com.safefleet.mobile.external_hardware.cameras.entities.LogEvent
 import org.junit.Assert
 import org.junit.jupiter.api.Test
 

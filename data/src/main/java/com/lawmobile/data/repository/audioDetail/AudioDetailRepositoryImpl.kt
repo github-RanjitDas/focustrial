@@ -1,5 +1,7 @@
 package com.lawmobile.data.repository.audioDetail
 
+import com.lawmobile.body_cameras.entities.AudioInformation
+import com.lawmobile.body_cameras.entities.AudioMetadata
 import com.lawmobile.data.datasource.remote.audioDetail.AudioDetailRemoteDataSource
 import com.lawmobile.data.mappers.impl.AudioMetadataMapper.toDomain
 import com.lawmobile.data.mappers.impl.FileMapper.toCamera
@@ -9,8 +11,6 @@ import com.lawmobile.domain.entities.DomainCameraFile
 import com.lawmobile.domain.entities.DomainInformationAudioMetadata
 import com.lawmobile.domain.entities.FileList
 import com.lawmobile.domain.repository.audioDetail.AudioDetailRepository
-import com.safefleet.mobile.external_hardware.cameras.entities.AudioInformation
-import com.safefleet.mobile.external_hardware.cameras.entities.AudioMetadata
 import com.safefleet.mobile.kotlin_commons.extensions.doIfSuccess
 import com.safefleet.mobile.kotlin_commons.helpers.Result
 

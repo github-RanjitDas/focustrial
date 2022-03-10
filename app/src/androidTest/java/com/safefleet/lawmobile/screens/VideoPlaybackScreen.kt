@@ -1,11 +1,11 @@
 package com.safefleet.lawmobile.screens
 
+import com.lawmobile.body_cameras.entities.VideoInformation
 import com.lawmobile.presentation.utils.Build
 import com.safefleet.lawmobile.R
 import com.safefleet.lawmobile.helpers.Alert
 import com.safefleet.lawmobile.helpers.CustomAssertionActions.waitUntil
 import com.safefleet.lawmobile.helpers.ToastMessage
-import com.safefleet.mobile.external_hardware.cameras.entities.VideoInformation
 import com.schibsted.spain.barista.assertion.BaristaVisibilityAssertions.assertDisplayed
 import com.schibsted.spain.barista.assertion.BaristaVisibilityAssertions.assertNotDisplayed
 import com.schibsted.spain.barista.interaction.BaristaClickInteractions.clickOn

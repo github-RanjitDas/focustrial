@@ -1,9 +1,9 @@
 package com.lawmobile.data.utils
 
+import com.lawmobile.body_cameras.x1.X1CameraServiceImpl
+import com.lawmobile.body_cameras.x2.X2CameraServiceImpl
 import com.lawmobile.domain.entities.CameraInfo
 import com.lawmobile.domain.enums.CameraType
-import com.safefleet.mobile.external_hardware.cameras.x1.X1CameraServiceImpl
-import com.safefleet.mobile.external_hardware.cameras.x2.X2CameraServiceImpl
 import io.mockk.mockk
 import org.junit.Assert
 import org.junit.jupiter.api.Test

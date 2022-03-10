@@ -36,14 +36,13 @@ abstract class FileListBaseActivity : BaseActivity() {
 
     protected var listType: String? = null
 
+    private lateinit var fileList: FileList
     private val simpleFileListFragment by lazy { SimpleFileListFragment() }
     private val thumbnailFileListFragment by lazy { ThumbnailFileListFragment() }
 
     protected abstract val listTypeButtons: ListTypeButtons
     protected abstract val fileSelection: FileSelection
     protected abstract val filterSection: FilterSection
-
-    private lateinit var fileList: FileList
 
     private var currentFilters
         get() = viewModel.currentFilters

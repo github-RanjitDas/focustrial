@@ -1,25 +1,25 @@
 package com.safefleet.lawmobile.di.mocksServiceCameras
 
+import com.lawmobile.body_cameras.CameraService
+import com.lawmobile.body_cameras.entities.AudioInformation
+import com.lawmobile.body_cameras.entities.CameraCatalog
+import com.lawmobile.body_cameras.entities.CameraFile
+import com.lawmobile.body_cameras.entities.CameraUser
+import com.lawmobile.body_cameras.entities.FileResponseWithErrors
+import com.lawmobile.body_cameras.entities.LogEvent
+import com.lawmobile.body_cameras.entities.NotificationResponse
+import com.lawmobile.body_cameras.entities.PhotoInformation
+import com.lawmobile.body_cameras.entities.SetupConfiguration
+import com.lawmobile.body_cameras.entities.VideoFileInfo
+import com.lawmobile.body_cameras.entities.VideoInformation
+import com.lawmobile.body_cameras.entities.VideoMetadata
+import com.lawmobile.body_cameras.enums.CameraType
 import com.lawmobile.domain.entities.FileList
 import com.safefleet.lawmobile.helpers.MockUtils
 import com.safefleet.lawmobile.helpers.MockUtils.Companion.bodyWornDiagnosisResult
 import com.safefleet.lawmobile.testData.CameraEventsData
 import com.safefleet.lawmobile.testData.CameraFilesData
 import com.safefleet.lawmobile.testData.TestLoginData
-import com.safefleet.mobile.external_hardware.cameras.CameraService
-import com.safefleet.mobile.external_hardware.cameras.entities.AudioInformation
-import com.safefleet.mobile.external_hardware.cameras.entities.CameraCatalog
-import com.safefleet.mobile.external_hardware.cameras.entities.CameraFile
-import com.safefleet.mobile.external_hardware.cameras.entities.CameraUser
-import com.safefleet.mobile.external_hardware.cameras.entities.FileResponseWithErrors
-import com.safefleet.mobile.external_hardware.cameras.entities.LogEvent
-import com.safefleet.mobile.external_hardware.cameras.entities.NotificationResponse
-import com.safefleet.mobile.external_hardware.cameras.entities.PhotoInformation
-import com.safefleet.mobile.external_hardware.cameras.entities.SetupConfiguration
-import com.safefleet.mobile.external_hardware.cameras.entities.VideoFileInfo
-import com.safefleet.mobile.external_hardware.cameras.entities.VideoInformation
-import com.safefleet.mobile.external_hardware.cameras.entities.VideoMetadata
-import com.safefleet.mobile.external_hardware.cameras.enums.CameraType
 import com.safefleet.mobile.kotlin_commons.helpers.Result
 import io.mockk.mockk
 
@@ -188,6 +188,8 @@ class CameraConnectServiceMock : CameraService {
     }
 
     override fun reviewIfArriveNotificationInCMDSocket() = Unit
+
+    override suspend fun isRecording(): Boolean = false
 
     override suspend fun saveAllPhotoMetadata(list: List<PhotoInformation>): Result<Unit> {
         return Result.Success(Unit)

@@ -1,9 +1,9 @@
 package com.lawmobile.data.mappers
 
+import com.lawmobile.body_cameras.entities.CameraFile
+import com.lawmobile.body_cameras.entities.FileResponseWithErrors
 import com.lawmobile.data.extensions.getDateDependingOnNameLength
 import com.lawmobile.data.mappers.impl.FileResponseMapper.toDomain
-import com.safefleet.mobile.external_hardware.cameras.entities.CameraFile
-import com.safefleet.mobile.external_hardware.cameras.entities.FileResponseWithErrors
 import io.mockk.every
 import io.mockk.mockk
 import org.junit.jupiter.api.Assertions.assertTrue

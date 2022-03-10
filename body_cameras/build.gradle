@@ -1,0 +1,102 @@
+import dependencies.AppConfig
+import dependencies.Dependencies
+
+plugins {
+    id 'java-library'
+    id 'kotlin'
+    id 'maven'
+    //id 'maven-publish'
+}
+
+def artifactId = 'body-cameras'
+def groupId = 'com.safefleet.lawmobile'
+def versionVariant = "1.0.0"
+
+if (!"$System.env.VARIANT".contains("RELEASE")) {
+    versionVariant += "-SNAPSHOT"
+}
+
+tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
+    kotlinOptions { jvmTarget = "1.8" }
+}
+
+check.dependsOn ktlint
+
+java {
+    sourceCompatibility = AppConfig.jvmTarget
+    targetCompatibility = AppConfig.jvmTarget
+}
+
+//apply from: '../jacoco.gradle'
+
+task testDebugUnitTest {
+    group = 'Verification'
+    dependsOn test
+}
+
+/*test {
+    useJUnitPlatform()
+    jacoco {
+        destinationFile = file("$buildDir/jacoco/testDebugUnitTest.exec")
+        includeNoLocationClasses = true
+        excludes = ['jdk.internal.*']
+    }
+}*/ // pending to configure
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation Dependencies.Kotlin.standardLibrary
+
+    testImplementation Dependencies.JUnit.junit
+    testImplementation Dependencies.JUnit5.jupiterApi
+    testRuntimeOnly Dependencies.JUnit5.jupiterEngine
+    testImplementation Dependencies.JUnit5.jupiterParams
+    testImplementation Dependencies.Coroutines.coroutinesTest
+    testImplementation Dependencies.Mockk.mockk
+
+    implementation Dependencies.Coroutines.coroutinesAndroid
+    implementation Dependencies.Coroutines.coroutinesCore
+
+    implementation Dependencies.Google.gson
+
+    implementation Dependencies.Base.kotlinCommons
+}
+
+//Uncomment the below code when using localMaven
+/*project.afterEvaluate {
+    publishing {
+        publications {
+            mavenJava(MavenPublication) {
+                setGroupId groupId
+                setArtifactId artifactId
+                version versionVariant
+
+                from components.java
+            }
+        }
+    }
+}
+repositories {
+    mavenCentral()
+}*/
+
+// comment the below code when using localMaven
+def sonaTypeRepositoryUrl
+if (!versionVariant.contains("SNAPSHOT")) {
+    sonaTypeRepositoryUrl = "${nexusUrl}/repository/maven-releases/"
+} else {
+    sonaTypeRepositoryUrl = "${nexusUrl}/repository/maven-snapshots/"
+}
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            repository(url: sonaTypeRepositoryUrl) {
+                authentication(userName: nexusUsername, password: nexusPassword)
+                pom.groupId = groupId
+                pom.artifactId = artifactId
+                pom.version = versionVariant
+            }
+        }
+    }
+}

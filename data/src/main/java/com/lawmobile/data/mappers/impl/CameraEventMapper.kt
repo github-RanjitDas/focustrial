@@ -1,5 +1,6 @@
 package com.lawmobile.data.mappers.impl
 
+import com.lawmobile.body_cameras.entities.LogEvent
 import com.lawmobile.data.dao.entities.LocalCameraEvent
 import com.lawmobile.data.mappers.DomainMapper
 import com.lawmobile.data.mappers.LocalMapper
@@ -7,7 +8,6 @@ import com.lawmobile.domain.entities.CameraEvent
 import com.lawmobile.domain.enums.EventTag
 import com.lawmobile.domain.enums.EventType
 import com.lawmobile.domain.extensions.simpleDateFormat
-import com.safefleet.mobile.external_hardware.cameras.entities.LogEvent
 
 object CameraEventMapper :
     DomainMapper<Any, CameraEvent>,

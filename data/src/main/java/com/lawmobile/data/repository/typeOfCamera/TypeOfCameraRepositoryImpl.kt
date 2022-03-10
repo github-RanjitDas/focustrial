@@ -1,11 +1,11 @@
 package com.lawmobile.data.repository.typeOfCamera
 
+import com.lawmobile.body_cameras.enums.CameraType.X2
 import com.lawmobile.data.datasource.remote.typeOfCamera.TypeOfCameraRemoteDataSource
 import com.lawmobile.domain.enums.CameraType
 import com.lawmobile.domain.repository.typeOfCamera.TypeOfCameraRepository
 import com.safefleet.mobile.kotlin_commons.extensions.doIfSuccess
 import com.safefleet.mobile.kotlin_commons.helpers.Result
-import com.safefleet.mobile.external_hardware.cameras.enums.CameraType.X2 as X2
 
 class TypeOfCameraRepositoryImpl(
     private val typeOfCameraRemoteDataSource: TypeOfCameraRemoteDataSource

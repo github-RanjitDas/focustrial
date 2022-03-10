@@ -1,5 +1,9 @@
 package com.lawmobile.data.mappers.impl
 
+import com.lawmobile.body_cameras.entities.AssociatedFile
+import com.lawmobile.body_cameras.entities.HashMetadataFile
+import com.lawmobile.body_cameras.entities.VideoInformation
+import com.lawmobile.body_cameras.entities.VideoMetadata
 import com.lawmobile.data.mappers.CameraMapper
 import com.lawmobile.data.mappers.DomainMapper
 import com.lawmobile.data.mappers.impl.CatalogMapper.toCamera
@@ -10,10 +14,6 @@ import com.lawmobile.domain.entities.DomainHashVideo
 import com.lawmobile.domain.entities.DomainMetadata
 import com.lawmobile.domain.entities.DomainVideoMetadata
 import com.lawmobile.domain.enums.CameraType
-import com.safefleet.mobile.external_hardware.cameras.entities.AssociatedFile
-import com.safefleet.mobile.external_hardware.cameras.entities.HashMetadataFile
-import com.safefleet.mobile.external_hardware.cameras.entities.VideoInformation
-import com.safefleet.mobile.external_hardware.cameras.entities.VideoMetadata
 
 object VideoMetadataMapper :
     DomainMapper<VideoInformation, DomainVideoMetadata>,

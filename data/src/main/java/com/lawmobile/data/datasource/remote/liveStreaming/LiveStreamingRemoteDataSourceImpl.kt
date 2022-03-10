@@ -1,7 +1,7 @@
 package com.lawmobile.data.datasource.remote.liveStreaming
 
+import com.lawmobile.body_cameras.entities.CameraCatalog
 import com.lawmobile.data.utils.CameraServiceFactory
-import com.safefleet.mobile.external_hardware.cameras.entities.CameraCatalog
 import com.safefleet.mobile.kotlin_commons.helpers.Result
 
 class LiveStreamingRemoteDataSourceImpl(cameraServiceFactory: CameraServiceFactory) :

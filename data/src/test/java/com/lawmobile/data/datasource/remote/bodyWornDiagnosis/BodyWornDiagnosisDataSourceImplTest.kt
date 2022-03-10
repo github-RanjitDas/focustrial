@@ -1,7 +1,7 @@
 package com.lawmobile.data.datasource.remote.bodyWornDiagnosis
 
+import com.lawmobile.body_cameras.CameraService
 import com.lawmobile.data.utils.CameraServiceFactory
-import com.safefleet.mobile.external_hardware.cameras.CameraService
 import com.safefleet.mobile.kotlin_commons.helpers.Result
 import io.mockk.coEvery
 import io.mockk.every
@@ -19,7 +19,8 @@ class BodyWornDiagnosisDataSourceImplTest {
         every { create() } returns cameraService
     }
 
-    private val bodyWornDiagnosisDataSourceImpl = BodyWornDiagnosisDataSourceImpl(cameraServiceFactory)
+    private val bodyWornDiagnosisDataSourceImpl =
+        BodyWornDiagnosisDataSourceImpl(cameraServiceFactory)
 
     @Test
     fun testIsDiagnosisSuccess() {
@@ -32,7 +33,9 @@ class BodyWornDiagnosisDataSourceImplTest {
 
     @Test
     fun testIsDiagnosisSuccessFail() {
-        coEvery { bodyWornDiagnosisDataSourceImpl.isDiagnosisSuccess() } returns Result.Success(false)
+        coEvery { bodyWornDiagnosisDataSourceImpl.isDiagnosisSuccess() } returns Result.Success(
+            false
+        )
         runBlocking {
             val firstAttempt = bodyWornDiagnosisDataSourceImpl.isDiagnosisSuccess()
             Assert.assertTrue(firstAttempt is Result.Success)
