@@ -1,11 +1,11 @@
 package com.lawmobile.data.mappers.impl
 
+import com.lawmobile.body_cameras.entities.NotificationResponse
 import com.lawmobile.data.mappers.DomainMapper
 import com.lawmobile.domain.entities.CameraEvent
 import com.lawmobile.domain.enums.EventTag
 import com.lawmobile.domain.enums.NotificationType
 import com.lawmobile.domain.utils.DateHelper
-import com.safefleet.mobile.external_hardware.cameras.entities.NotificationResponse
 
 object NotificationResponseMapper : DomainMapper<NotificationResponse, CameraEvent> {
     override fun NotificationResponse.toDomain(): CameraEvent {

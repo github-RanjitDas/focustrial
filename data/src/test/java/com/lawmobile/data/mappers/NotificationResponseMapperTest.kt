@@ -1,11 +1,11 @@
 package com.lawmobile.data.mappers
 
+import com.lawmobile.body_cameras.entities.NotificationResponse
 import com.lawmobile.data.mappers.impl.NotificationResponseMapper.toDomain
 import com.lawmobile.domain.entities.CameraEvent
 import com.lawmobile.domain.enums.EventTag
 import com.lawmobile.domain.enums.EventType
 import com.lawmobile.domain.utils.DateHelper
-import com.safefleet.mobile.external_hardware.cameras.entities.NotificationResponse
 import io.mockk.every
 import io.mockk.mockkObject
 import org.junit.Assert

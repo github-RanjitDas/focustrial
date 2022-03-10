@@ -1,7 +1,7 @@
 package com.lawmobile.data.datasource.remote.snapshotDetail
 
-import com.safefleet.mobile.external_hardware.cameras.entities.CameraFile
-import com.safefleet.mobile.external_hardware.cameras.entities.PhotoInformation
+import com.lawmobile.body_cameras.entities.CameraFile
+import com.lawmobile.body_cameras.entities.PhotoInformation
 import com.safefleet.mobile.kotlin_commons.helpers.Result
 
 interface SnapshotDetailRemoteDataSource {

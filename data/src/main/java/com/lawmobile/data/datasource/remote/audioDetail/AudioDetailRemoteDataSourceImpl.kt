@@ -1,8 +1,8 @@
 package com.lawmobile.data.datasource.remote.audioDetail
 
+import com.lawmobile.body_cameras.entities.AudioInformation
+import com.lawmobile.body_cameras.entities.CameraFile
 import com.lawmobile.data.utils.CameraServiceFactory
-import com.safefleet.mobile.external_hardware.cameras.entities.AudioInformation
-import com.safefleet.mobile.external_hardware.cameras.entities.CameraFile
 import com.safefleet.mobile.kotlin_commons.helpers.Result
 
 class AudioDetailRemoteDataSourceImpl(cameraServiceFactory: CameraServiceFactory) :

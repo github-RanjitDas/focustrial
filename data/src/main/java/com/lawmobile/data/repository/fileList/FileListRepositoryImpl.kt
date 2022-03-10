@@ -1,5 +1,12 @@
 package com.lawmobile.data.repository.fileList
 
+import com.lawmobile.body_cameras.entities.AudioInformation
+import com.lawmobile.body_cameras.entities.AudioMetadata
+import com.lawmobile.body_cameras.entities.CameraFile
+import com.lawmobile.body_cameras.entities.PhotoInformation
+import com.lawmobile.body_cameras.entities.PhotoMetadata
+import com.lawmobile.body_cameras.entities.VideoInformation
+import com.lawmobile.body_cameras.entities.VideoMetadata
 import com.lawmobile.data.datasource.remote.fileList.FileListRemoteDataSource
 import com.lawmobile.data.extensions.getDateDependingOnNameLength
 import com.lawmobile.data.mappers.impl.AudioMetadataMapper.toDomain
@@ -16,13 +23,6 @@ import com.lawmobile.domain.entities.FileList
 import com.lawmobile.domain.entities.RemoteVideoMetadata
 import com.lawmobile.domain.entities.VideoListMetadata
 import com.lawmobile.domain.repository.fileList.FileListRepository
-import com.safefleet.mobile.external_hardware.cameras.entities.AudioInformation
-import com.safefleet.mobile.external_hardware.cameras.entities.AudioMetadata
-import com.safefleet.mobile.external_hardware.cameras.entities.CameraFile
-import com.safefleet.mobile.external_hardware.cameras.entities.PhotoInformation
-import com.safefleet.mobile.external_hardware.cameras.entities.PhotoMetadata
-import com.safefleet.mobile.external_hardware.cameras.entities.VideoInformation
-import com.safefleet.mobile.external_hardware.cameras.entities.VideoMetadata
 import com.safefleet.mobile.kotlin_commons.extensions.doIfSuccess
 import com.safefleet.mobile.kotlin_commons.helpers.Result
 import com.safefleet.mobile.kotlin_commons.helpers.getResultWithAttempts

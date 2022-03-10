@@ -1,7 +1,7 @@
 package com.lawmobile.data.datasource.remote.pairingPhoneWithCamera
 
+import com.lawmobile.body_cameras.CameraService
 import com.lawmobile.data.utils.CameraServiceFactory
-import com.safefleet.mobile.external_hardware.cameras.CameraService
 import com.safefleet.mobile.kotlin_commons.helpers.Result
 import io.mockk.Runs
 import io.mockk.coEvery

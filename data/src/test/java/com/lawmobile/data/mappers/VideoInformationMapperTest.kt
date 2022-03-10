@@ -1,7 +1,7 @@
 package com.lawmobile.data.mappers
 
+import com.lawmobile.body_cameras.entities.VideoFileInfo
 import com.lawmobile.data.mappers.impl.VideoInformationMapper.toDomain
-import com.safefleet.mobile.external_hardware.cameras.entities.VideoFileInfo
 import io.mockk.mockk
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test

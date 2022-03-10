@@ -1,8 +1,8 @@
 package com.lawmobile.data.mappers
 
+import com.lawmobile.body_cameras.entities.CameraUser
 import com.lawmobile.data.dto.entities.UserDto
 import com.lawmobile.data.mappers.impl.UserMapper.toDomain
-import com.safefleet.mobile.external_hardware.cameras.entities.CameraUser
 import io.mockk.mockk
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test

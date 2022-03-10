@@ -1,9 +1,9 @@
 package com.lawmobile.data.repository.typeOfCamera
 
+import com.lawmobile.body_cameras.enums.CameraType
 import com.lawmobile.data.datasource.remote.typeOfCamera.TypeOfCameraRemoteDataSource
 import com.lawmobile.domain.enums.CameraType.X1
 import com.lawmobile.domain.enums.CameraType.X2
-import com.safefleet.mobile.external_hardware.cameras.enums.CameraType
 import com.safefleet.mobile.kotlin_commons.helpers.Result
 import io.mockk.clearAllMocks
 import io.mockk.coEvery

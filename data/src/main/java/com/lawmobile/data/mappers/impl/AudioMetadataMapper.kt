@@ -1,9 +1,9 @@
 package com.lawmobile.data.mappers.impl
 
+import com.lawmobile.body_cameras.entities.AudioInformation
 import com.lawmobile.data.mappers.DomainMapper
 import com.lawmobile.domain.entities.DomainAudioMetadata
 import com.lawmobile.domain.entities.DomainMetadata
-import com.safefleet.mobile.external_hardware.cameras.entities.AudioInformation
 
 object AudioMetadataMapper : DomainMapper<AudioInformation, DomainAudioMetadata> {
     override fun AudioInformation.toDomain(): DomainAudioMetadata =

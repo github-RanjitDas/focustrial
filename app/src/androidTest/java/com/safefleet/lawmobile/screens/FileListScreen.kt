@@ -5,6 +5,7 @@ import androidx.annotation.StringRes
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.matcher.ViewMatchers
+import com.lawmobile.body_cameras.entities.CameraFile
 import com.lawmobile.data.extensions.getDateDependingOnNameLength
 import com.safefleet.lawmobile.R
 import com.safefleet.lawmobile.helpers.CustomAssertionActions.waitUntil
@@ -12,7 +13,6 @@ import com.safefleet.lawmobile.helpers.CustomCheckboxAction
 import com.safefleet.lawmobile.helpers.RecyclerViewHelper
 import com.safefleet.lawmobile.helpers.isActivated
 import com.safefleet.lawmobile.helpers.isNotActivated
-import com.safefleet.mobile.external_hardware.cameras.entities.CameraFile
 import com.schibsted.spain.barista.assertion.BaristaImageViewAssertions.assertHasDrawable
 import com.schibsted.spain.barista.assertion.BaristaListAssertions.assertCustomAssertionAtPosition
 import com.schibsted.spain.barista.assertion.BaristaListAssertions.assertDisplayedAtPosition

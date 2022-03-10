@@ -2,6 +2,7 @@ package com.safefleet.lawmobile.tests.x2
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
+import com.lawmobile.body_cameras.entities.NotificationResponse
 import com.lawmobile.domain.enums.CameraType
 import com.lawmobile.presentation.ui.login.x2.LoginX2Activity
 import com.safefleet.lawmobile.di.mocksServiceCameras.CameraConnectServiceMock
@@ -12,7 +13,6 @@ import com.safefleet.lawmobile.screens.LoginScreen
 import com.safefleet.lawmobile.screens.NotificationViewScreen
 import com.safefleet.lawmobile.testData.CameraEventsData
 import com.safefleet.lawmobile.tests.EspressoBaseTest
-import com.safefleet.mobile.external_hardware.cameras.entities.NotificationResponse
 import com.schibsted.spain.barista.rule.BaristaRule
 import org.junit.Before
 import org.junit.Rule

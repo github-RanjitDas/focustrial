@@ -1,13 +1,13 @@
 package com.safefleet.lawmobile.helpers
 
+import com.lawmobile.body_cameras.entities.FileResponseWithErrors
+import com.lawmobile.body_cameras.entities.NotificationResponse
 import com.lawmobile.domain.entities.CameraInfo
 import com.lawmobile.domain.enums.CameraType
 import com.lawmobile.presentation.utils.CameraHelper
 import com.safefleet.lawmobile.di.mocksServiceCameras.CameraConnectServiceMock
 import com.safefleet.lawmobile.testData.CameraFilesData
 import com.safefleet.lawmobile.testData.TestLoginData
-import com.safefleet.mobile.external_hardware.cameras.entities.FileResponseWithErrors
-import com.safefleet.mobile.external_hardware.cameras.entities.NotificationResponse
 import com.safefleet.mobile.kotlin_commons.helpers.Result
 import io.mockk.every
 import io.mockk.mockk

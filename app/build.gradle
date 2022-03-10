@@ -169,7 +169,6 @@ dependencies {
     kapt Dependencies.Hilt.hiltCompiler
 
     //Base repository
-    implementation Dependencies.Base.externalHardware
     implementation Dependencies.Base.androidCommons
     implementation Dependencies.Base.safeFleetUI
     implementation Dependencies.Base.authentication
@@ -193,4 +192,5 @@ dependencies {
     implementation project(path: Modules.data)
     implementation project(path: Modules.domain)
     implementation project(path: Modules.database)
+    implementation project(path: Modules.body_cameras)
 }

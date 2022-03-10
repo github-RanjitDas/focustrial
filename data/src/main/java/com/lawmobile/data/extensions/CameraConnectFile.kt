@@ -1,6 +1,6 @@
 package com.lawmobile.data.extensions
 
-import com.safefleet.mobile.external_hardware.cameras.entities.CameraFile
+import com.lawmobile.body_cameras.entities.CameraFile
 
 fun CameraFile.getDateDependingOnNameLength(): String {
     return if (name.length >= 15) getCreationDateWhenSerial()

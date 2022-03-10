@@ -74,7 +74,8 @@ object Exclusions {
         "**/PreferencesManagerImpl.**", //here since could not found a way to mock datastore.edit
         "**/ConnectionHelperImpl.**",
         "**/VideoInformationManager.**",
-        "**/NewRelicLogger.**"
+        "**/NewRelicLogger.**",
+        "**/body_cameras/**" // pending to add to coverage
     )
     val pitest = mutableSetOf(
         //Dagger 2

@@ -1,8 +1,8 @@
 package com.lawmobile.data.datasource.remote.fileList
 
-import com.safefleet.mobile.external_hardware.cameras.entities.AudioInformation
-import com.safefleet.mobile.external_hardware.cameras.entities.PhotoInformation
-import com.safefleet.mobile.external_hardware.cameras.entities.VideoInformation
+import com.lawmobile.body_cameras.entities.AudioInformation
+import com.lawmobile.body_cameras.entities.PhotoInformation
+import com.lawmobile.body_cameras.entities.VideoInformation
 import com.safefleet.mobile.kotlin_commons.helpers.Result
 
 interface FileListRemoteDataSource {

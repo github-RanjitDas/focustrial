@@ -1,5 +1,7 @@
 package com.lawmobile.data.repository.videoPlayback
 
+import com.lawmobile.body_cameras.entities.VideoFileInfo
+import com.lawmobile.body_cameras.entities.VideoInformation
 import com.lawmobile.data.datasource.remote.videoPlayback.VideoPlaybackRemoteDataSource
 import com.lawmobile.data.mappers.impl.VideoInformationMapper
 import com.lawmobile.data.mappers.impl.VideoInformationMapper.toDomain
@@ -8,8 +10,6 @@ import com.lawmobile.domain.entities.DomainCameraFile
 import com.lawmobile.domain.entities.DomainInformationVideo
 import com.lawmobile.domain.entities.DomainVideoMetadata
 import com.lawmobile.domain.entities.VideoListMetadata
-import com.safefleet.mobile.external_hardware.cameras.entities.VideoFileInfo
-import com.safefleet.mobile.external_hardware.cameras.entities.VideoInformation
 import com.safefleet.mobile.kotlin_commons.helpers.Result
 import io.mockk.clearAllMocks
 import io.mockk.coEvery

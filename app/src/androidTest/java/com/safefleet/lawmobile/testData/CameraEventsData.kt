@@ -1,6 +1,6 @@
 package com.safefleet.lawmobile.testData
 
-import com.safefleet.mobile.external_hardware.cameras.entities.LogEvent
+import com.lawmobile.body_cameras.entities.LogEvent
 
 enum class CameraEventsData(val value: MutableList<LogEvent>) {
     DEFAULT(

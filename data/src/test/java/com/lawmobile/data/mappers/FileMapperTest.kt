@@ -1,10 +1,10 @@
 package com.lawmobile.data.mappers
 
+import com.lawmobile.body_cameras.entities.CameraFile
 import com.lawmobile.data.mappers.impl.FileMapper.toCamera
 import com.lawmobile.data.mappers.impl.FileMapper.toCameraList
 import com.lawmobile.data.mappers.impl.FileMapper.toDomain
 import com.lawmobile.domain.entities.DomainCameraFile
-import com.safefleet.mobile.external_hardware.cameras.entities.CameraFile
 import io.mockk.mockk
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test

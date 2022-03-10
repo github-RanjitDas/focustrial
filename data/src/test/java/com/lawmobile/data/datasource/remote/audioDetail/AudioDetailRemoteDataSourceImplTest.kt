@@ -1,8 +1,8 @@
 package com.lawmobile.data.datasource.remote.audioDetail
 
+import com.lawmobile.body_cameras.CameraService
+import com.lawmobile.body_cameras.entities.CameraFile
 import com.lawmobile.data.utils.CameraServiceFactory
-import com.safefleet.mobile.external_hardware.cameras.CameraService
-import com.safefleet.mobile.external_hardware.cameras.entities.CameraFile
 import com.safefleet.mobile.kotlin_commons.helpers.Result
 import io.mockk.coEvery
 import io.mockk.coVerify

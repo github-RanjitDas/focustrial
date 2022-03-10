@@ -1,10 +1,10 @@
 package com.lawmobile.data.datasource.remote.user
 
+import com.lawmobile.body_cameras.CameraService
+import com.lawmobile.body_cameras.entities.CameraUser
 import com.lawmobile.data.dto.api.user.UserApi
 import com.lawmobile.data.dto.entities.UserDto
 import com.lawmobile.data.utils.CameraServiceFactory
-import com.safefleet.mobile.external_hardware.cameras.CameraService
-import com.safefleet.mobile.external_hardware.cameras.entities.CameraUser
 import com.safefleet.mobile.kotlin_commons.helpers.Result
 import io.mockk.coEvery
 import io.mockk.coVerify

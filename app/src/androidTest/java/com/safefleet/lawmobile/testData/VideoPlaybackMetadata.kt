@@ -1,8 +1,8 @@
 package com.safefleet.lawmobile.testData
 
-import com.safefleet.mobile.external_hardware.cameras.entities.CameraCatalog
-import com.safefleet.mobile.external_hardware.cameras.entities.VideoInformation
-import com.safefleet.mobile.external_hardware.cameras.entities.VideoMetadata
+import com.lawmobile.body_cameras.entities.CameraCatalog
+import com.lawmobile.body_cameras.entities.VideoInformation
+import com.lawmobile.body_cameras.entities.VideoMetadata
 
 enum class VideoPlaybackMetadata(val value: VideoInformation) {
     DEFAULT_VIDEO_METADATA(
