@@ -107,6 +107,7 @@
 
         <ImageView
             android:id="@+id/imageViewGPS"
+            android:visibility="gone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_gps"
@@ -117,6 +118,7 @@
 
         <TextView
             android:id="@+id/textViewGPS"
+            android:visibility="gone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/roboto_regular"
@@ -129,6 +131,7 @@
 
         <com.safefleet.mobile.safefleet_ui.widgets.SafeFleetSwitch
             android:id="@+id/switchGPS"
+            android:visibility="gone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="@+id/textViewGPS"

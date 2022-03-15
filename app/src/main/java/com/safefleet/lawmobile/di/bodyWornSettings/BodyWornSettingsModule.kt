@@ -3,6 +3,7 @@ package com.safefleet.lawmobile.di.bodyWornSettings
 import com.lawmobile.data.datasource.remote.bodyWornSettings.BodyWornSettingsDataSource
 import com.lawmobile.data.datasource.remote.bodyWornSettings.BodyWornSettingsDataSourceImpl
 import com.lawmobile.data.repository.bodyWornSettings.BodyWornSettingsRepositoryImpl
+import com.lawmobile.data.utils.CameraServiceFactory
 import com.lawmobile.domain.repository.bodyWornSettings.BodyWornSettingsRepository
 import com.lawmobile.domain.usecase.bodyWornSettings.BodyWornSettingsUseCase
 import com.lawmobile.domain.usecase.bodyWornSettings.BodyWornSettingsUseCaseImpl
@@ -16,8 +17,8 @@ import dagger.hilt.components.SingletonComponent
 class BodyWornSettingsModule {
     companion object {
         @Provides
-        fun provideBodyWornSettingsDataSource(): BodyWornSettingsDataSource =
-            BodyWornSettingsDataSourceImpl()
+        fun provideBodyWornSettingsDataSource(cameraFactory: CameraServiceFactory): BodyWornSettingsDataSource =
+            BodyWornSettingsDataSourceImpl(cameraFactory)
 
         @Provides
         fun provideBodyWornSettingsRepository(bodyWornSettingsDataSource: BodyWornSettingsDataSource): BodyWornSettingsRepository =

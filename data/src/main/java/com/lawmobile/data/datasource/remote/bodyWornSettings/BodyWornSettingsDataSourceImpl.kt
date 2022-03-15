@@ -1,16 +1,21 @@
 package com.lawmobile.data.datasource.remote.bodyWornSettings
 
+import com.lawmobile.data.utils.CameraServiceFactory
 import com.lawmobile.domain.entities.ParametersBodyWornSettings
 import com.lawmobile.domain.enums.TypesOfBodyWornSettings
+import com.safefleet.mobile.kotlin_commons.extensions.doIfSuccess
 import com.safefleet.mobile.kotlin_commons.helpers.Result
 
-class BodyWornSettingsDataSourceImpl : BodyWornSettingsDataSource {
+class BodyWornSettingsDataSourceImpl(private val bodyCameraFactory: CameraServiceFactory) : BodyWornSettingsDataSource {
+
+    private val bodyCamera by lazy {
+        bodyCameraFactory.create()
+    }
 
     override suspend fun changeStatusSettings(typesOfBodyWornSettings: TypesOfBodyWornSettings, isEnable: Boolean): Result<Unit> {
         return when (typesOfBodyWornSettings) {
             TypesOfBodyWornSettings.CovertMode -> changeCovertModeEnable(isEnable)
             TypesOfBodyWornSettings.Bluetooth -> changeBluetoothEnable(isEnable)
-            TypesOfBodyWornSettings.GPS -> changeGPSEnable(isEnable)
         }
     }
 
@@ -25,22 +30,18 @@ class BodyWornSettingsDataSourceImpl : BodyWornSettingsDataSource {
         )
     }
 
-    private fun changeCovertModeEnable(isEnable: Boolean): Result<Unit> {
-        // Change this with cameraService
-        isCovertModeEnable = isEnable
-        return Result.Success(Unit)
+    private suspend fun changeCovertModeEnable(isEnable: Boolean): Result<Unit> {
+        val result = if (isEnable) bodyCamera.startCovertMode()
+        else bodyCamera.stopCovertMode()
+        result.doIfSuccess { isCovertModeEnable = isEnable }
+        return result
     }
 
-    private fun changeBluetoothEnable(isEnable: Boolean): Result<Unit> {
-        // Change this with cameraService
-        isBluetoothEnable = isEnable
-        return Result.Success(Unit)
-    }
-
-    private fun changeGPSEnable(isEnable: Boolean): Result<Unit> {
-        // Change this with cameraService
-        isGPSEnable = isEnable
-        return Result.Success(Unit)
+    private suspend fun changeBluetoothEnable(isEnable: Boolean): Result<Unit> {
+        val result = if (isEnable) bodyCamera.turnOnBluetooth()
+        else bodyCamera.turnOffBluetooth()
+        result.doIfSuccess { isBluetoothEnable = isEnable }
+        return result
     }
 
     companion object {

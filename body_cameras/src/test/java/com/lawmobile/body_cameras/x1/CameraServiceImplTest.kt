@@ -794,4 +794,48 @@ internal class CameraServiceImplTest {
         runBlocking { Assert.assertFalse(x1CameraService.isRecording()) }
         coVerify { commandHelper.getResponseParam(any()) }
     }
+
+    @Test
+    fun startCovertModeTest() {
+        coEvery { commandHelper.isCommandSuccess(any()) } returns Result.Success(Unit)
+
+        runBlocking { x1CameraService.startCovertMode() }
+
+        coVerify {
+            commandHelper.isCommandSuccess(any())
+        }
+    }
+
+    @Test
+    fun stopCovertModeTest() {
+        coEvery { commandHelper.isCommandSuccess(any()) } returns Result.Success(Unit)
+
+        runBlocking { x1CameraService.stopCovertMode() }
+
+        coVerify {
+            commandHelper.isCommandSuccess(any())
+        }
+    }
+
+    @Test
+    fun turnOnBluetoothTest() {
+        coEvery { commandHelper.isCommandSuccess(any()) } returns Result.Success(Unit)
+
+        runBlocking { x1CameraService.turnOnBluetooth() }
+
+        coVerify {
+            commandHelper.isCommandSuccess(any())
+        }
+    }
+
+    @Test
+    fun turnOffBluetoothTest() {
+        coEvery { commandHelper.isCommandSuccess(any()) } returns Result.Success(Unit)
+
+        runBlocking { x1CameraService.turnOffBluetooth() }
+
+        coVerify {
+            commandHelper.isCommandSuccess(any())
+        }
+    }
 }

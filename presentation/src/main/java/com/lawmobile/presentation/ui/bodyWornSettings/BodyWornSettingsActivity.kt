@@ -64,10 +64,6 @@ class BodyWornSettingsActivity : BaseActivity() {
                 binding.switchBluetooth.isActivated
             )
         }
-
-        binding.switchGPS.setClickListenerCheckConnection {
-            changeBodyWornSettings(TypesOfBodyWornSettings.GPS, binding.switchGPS.isActivated)
-        }
     }
 
     private fun changeBodyWornSettings(
@@ -92,9 +88,6 @@ class BodyWornSettingsActivity : BaseActivity() {
             }
             TypesOfBodyWornSettings.Bluetooth -> {
                 binding.switchBluetooth.isActivated = !binding.switchBluetooth.isActivated
-            }
-            TypesOfBodyWornSettings.GPS -> {
-                binding.switchGPS.isActivated = !binding.switchGPS.isActivated
             }
         }
     }

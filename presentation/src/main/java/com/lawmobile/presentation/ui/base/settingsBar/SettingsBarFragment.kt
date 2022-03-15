@@ -129,14 +129,6 @@ class SettingsBarFragment : BaseFragment() {
 
     private fun setListenersForChangeTheStatus() {
 
-        binding.imageButtonGPS.setOnClickListenerCheckConnection {
-            binding.imageButtonGPS.isActivated = !binding.imageButtonGPS.isActivated
-            changeBodyWornSettings(
-                TypesOfBodyWornSettings.GPS,
-                binding.imageButtonGPS.isActivated
-            )
-        }
-
         binding.imageButtonBluetooth.setOnClickListenerCheckConnection {
             binding.imageButtonBluetooth.isActivated = !binding.imageButtonBluetooth.isActivated
             changeBodyWornSettings(
@@ -170,9 +162,6 @@ class SettingsBarFragment : BaseFragment() {
             }
             TypesOfBodyWornSettings.Bluetooth -> {
                 binding.imageButtonBluetooth.isActivated = !binding.imageButtonBluetooth.isActivated
-            }
-            TypesOfBodyWornSettings.GPS -> {
-                binding.imageButtonGPS.isActivated = !binding.imageButtonGPS.isActivated
             }
         }
     }

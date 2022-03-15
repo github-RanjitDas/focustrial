@@ -63,36 +63,6 @@ class BodyWornSettingsRepositoryImplTest {
     }
 
     @Test
-    fun testChangeStatusSettingsGPSTrue() {
-        coEvery { bodyWornSettingsDataSource.changeStatusSettings(any(), any()) } returns Result.Success(Unit)
-        runBlocking {
-            val response = bodyWornSettingsRepositoryImpl.changeStatusSettings(TypesOfBodyWornSettings.GPS, true)
-            Assert.assertTrue(response is Result.Success)
-        }
-        coVerify { bodyWornSettingsDataSource.changeStatusSettings(TypesOfBodyWornSettings.GPS, true) }
-    }
-
-    @Test
-    fun testChangeStatusSettingsGPSFalse() {
-        coEvery { bodyWornSettingsDataSource.changeStatusSettings(any(), any()) } returns Result.Success(Unit)
-        runBlocking {
-            val response = bodyWornSettingsRepositoryImpl.changeStatusSettings(TypesOfBodyWornSettings.GPS, false)
-            Assert.assertTrue(response is Result.Success)
-        }
-        coVerify { bodyWornSettingsDataSource.changeStatusSettings(TypesOfBodyWornSettings.GPS, false) }
-    }
-
-    @Test
-    fun testChangeStatusSettingsErrorInChange() {
-        coEvery { bodyWornSettingsDataSource.changeStatusSettings(any(), any()) } returns Result.Error(Exception(""))
-        runBlocking {
-            val response = bodyWornSettingsRepositoryImpl.changeStatusSettings(TypesOfBodyWornSettings.GPS, false)
-            Assert.assertTrue(response is Result.Error)
-        }
-        coVerify { bodyWornSettingsDataSource.changeStatusSettings(TypesOfBodyWornSettings.GPS, false) }
-    }
-
-    @Test
     fun testGetParametersEnableSuccess() {
         coEvery { bodyWornSettingsDataSource.getParametersEnable() } returns Result.Success(mockk(relaxed = true))
         runBlocking {

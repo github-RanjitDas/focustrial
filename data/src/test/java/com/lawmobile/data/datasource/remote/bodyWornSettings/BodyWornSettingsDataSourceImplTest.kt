@@ -1,7 +1,12 @@
 package com.lawmobile.data.datasource.remote.bodyWornSettings
 
+import com.lawmobile.body_cameras.CameraService
+import com.lawmobile.data.utils.CameraServiceFactory
 import com.lawmobile.domain.enums.TypesOfBodyWornSettings
 import com.safefleet.mobile.kotlin_commons.helpers.Result
+import io.mockk.coEvery
+import io.mockk.every
+import io.mockk.mockk
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert
 import org.junit.jupiter.api.Test
@@ -10,11 +15,16 @@ import org.junit.jupiter.api.TestInstance
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class BodyWornSettingsDataSourceImplTest {
 
-    private val bodyWornSettingsDataSourceImpl = BodyWornSettingsDataSourceImpl()
+    private val cameraService: CameraService = mockk()
+    private val cameraServiceFactory: CameraServiceFactory = mockk {
+        every { create() } returns cameraService
+    }
+    private val bodyWornSettingsDataSourceImpl = BodyWornSettingsDataSourceImpl(cameraServiceFactory)
 
     @Test
     fun testChangeStatusSettingsCovertModeEnable() {
-        // Change this test when with cameraService call
+        coEvery { cameraService.startCovertMode() } returns Result.Success(Unit)
+        coEvery { cameraService.stopCovertMode() } returns Result.Success(Unit)
         runBlocking {
             val response = bodyWornSettingsDataSourceImpl.changeStatusSettings(TypesOfBodyWornSettings.CovertMode, true)
             Assert.assertTrue(response is Result.Success)
@@ -26,25 +36,14 @@ class BodyWornSettingsDataSourceImplTest {
 
     @Test
     fun testChangeStatusSettingsBluetoothEnable() {
-        // Change this test when with cameraService call
+        coEvery { cameraService.turnOnBluetooth() } returns Result.Success(Unit)
+        coEvery { cameraService.turnOffBluetooth() } returns Result.Success(Unit)
         runBlocking {
             val response = bodyWornSettingsDataSourceImpl.changeStatusSettings(TypesOfBodyWornSettings.Bluetooth, true)
             Assert.assertTrue(response is Result.Success)
             Assert.assertTrue(BodyWornSettingsDataSourceImpl.isBluetoothEnable)
             bodyWornSettingsDataSourceImpl.changeStatusSettings(TypesOfBodyWornSettings.Bluetooth, false)
             Assert.assertFalse(BodyWornSettingsDataSourceImpl.isBluetoothEnable)
-        }
-    }
-
-    @Test
-    fun testChangeStatusSettingsGPSEnable() {
-        // Change this test when with cameraService call
-        runBlocking {
-            val response = bodyWornSettingsDataSourceImpl.changeStatusSettings(TypesOfBodyWornSettings.GPS, true)
-            Assert.assertTrue(response is Result.Success)
-            Assert.assertTrue(BodyWornSettingsDataSourceImpl.isGPSEnable)
-            bodyWornSettingsDataSourceImpl.changeStatusSettings(TypesOfBodyWornSettings.GPS, false)
-            Assert.assertFalse(BodyWornSettingsDataSourceImpl.isGPSEnable)
         }
     }
 
