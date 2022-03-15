@@ -1,7 +1,7 @@
 package com.lawmobile.presentation.utils
 
 object FeatureSupportHelper {
-    var supportBodyWornSettings = false
+    var supportBodyWornSettings = true
     var supportAssociateOfficerID = false
     var supportAudios = false
     var supportSnapshotAssociation = false

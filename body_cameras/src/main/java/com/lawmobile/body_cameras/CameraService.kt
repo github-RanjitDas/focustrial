@@ -72,4 +72,10 @@ interface CameraService {
     // Other operations
     suspend fun setSetupConfiguration(setupConfiguration: SetupConfiguration): Result<Unit>
     fun cleanCacheFiles()
+
+    // Camera Status features
+    suspend fun startCovertMode(): Result<Unit>
+    suspend fun stopCovertMode(): Result<Unit>
+    suspend fun turnOnBluetooth(): Result<Unit>
+    suspend fun turnOffBluetooth(): Result<Unit>
 }

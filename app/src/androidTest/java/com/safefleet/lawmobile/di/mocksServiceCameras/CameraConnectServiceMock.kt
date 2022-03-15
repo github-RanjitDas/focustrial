@@ -30,6 +30,22 @@ class CameraConnectServiceMock : CameraService {
 
     override fun cleanCacheFiles() = Unit
 
+    override suspend fun startCovertMode(): Result<Unit> {
+        return Result.Success(Unit)
+    }
+
+    override suspend fun stopCovertMode(): Result<Unit> {
+        return Result.Success(Unit)
+    }
+
+    override suspend fun turnOnBluetooth(): Result<Unit> {
+        return Result.Success(Unit)
+    }
+
+    override suspend fun turnOffBluetooth(): Result<Unit> {
+        return Result.Success(Unit)
+    }
+
     override suspend fun deleteFile(fileName: String): Result<Unit> {
         return Result.Success(Unit)
     }

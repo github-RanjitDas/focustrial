@@ -464,6 +464,26 @@ open class CameraServiceImpl(
         return Result.Success(associatedVideos)
     }
 
+    override suspend fun startCovertMode(): Result<Unit> {
+        val command = XCameraCommand.Builder().addMsgId(XCameraCommandCodes.COVERT_MODE_START.commandValue).build()
+        return commandHelper.isCommandSuccess(command)
+    }
+
+    override suspend fun stopCovertMode(): Result<Unit> {
+        val command = XCameraCommand.Builder().addMsgId(XCameraCommandCodes.COVER_MODE_STOP.commandValue).build()
+        return commandHelper.isCommandSuccess(command)
+    }
+
+    override suspend fun turnOnBluetooth(): Result<Unit> {
+        val command = XCameraCommand.Builder().addMsgId(XCameraCommandCodes.TURN_ON_BLUETOOTH.commandValue).build()
+        return commandHelper.isCommandSuccess(command)
+    }
+
+    override suspend fun turnOffBluetooth(): Result<Unit> {
+        val command = XCameraCommand.Builder().addMsgId(XCameraCommandCodes.TURN_OFF_BLUETOOTH.commandValue).build()
+        return commandHelper.isCommandSuccess(command)
+    }
+
     companion object {
         private var numberOfPhotosInCamera = 0
         private const val ATTEMPTS_IN_RETRY = 5

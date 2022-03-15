@@ -80,33 +80,6 @@ class BodyWornSettingsViewModelTest {
     }
 
     @Test
-    fun testChangeBodyWornSettingBluetoothFalse() {
-        coEvery { useCaseSettings.changeStatusSettings(any(), any()) } returns Result.Success(Unit)
-        viewModel.changeBodyWornSetting(TypesOfBodyWornSettings.Bluetooth, false)
-        val response = viewModel.changeStatusSettingLiveData.value
-        Assert.assertTrue(response is Result.Success)
-        coVerify { useCaseSettings.changeStatusSettings(TypesOfBodyWornSettings.Bluetooth, false) }
-    }
-
-    @Test
-    fun testChangeBodyWornSettingGPSTrue() {
-        coEvery { useCaseSettings.changeStatusSettings(any(), any()) } returns Result.Success(Unit)
-        viewModel.changeBodyWornSetting(TypesOfBodyWornSettings.GPS, true)
-        val response = viewModel.changeStatusSettingLiveData.value
-        Assert.assertTrue(response is Result.Success)
-        coVerify { useCaseSettings.changeStatusSettings(TypesOfBodyWornSettings.GPS, true) }
-    }
-
-    @Test
-    fun testChangeBodyWornSettingGPSFalse() {
-        coEvery { useCaseSettings.changeStatusSettings(any(), any()) } returns Result.Success(Unit)
-        viewModel.changeBodyWornSetting(TypesOfBodyWornSettings.GPS, false)
-        val response = viewModel.changeStatusSettingLiveData.value
-        Assert.assertTrue(response is Result.Success)
-        coVerify { useCaseSettings.changeStatusSettings(TypesOfBodyWornSettings.GPS, false) }
-    }
-
-    @Test
     fun testChangeBodyWornSettingError() {
         coEvery { useCaseSettings.changeStatusSettings(any(), any()) } returns Result.Error(
             Exception("")

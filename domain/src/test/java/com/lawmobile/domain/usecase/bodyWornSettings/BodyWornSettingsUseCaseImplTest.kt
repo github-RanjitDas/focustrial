@@ -71,42 +71,6 @@ class BodyWornSettingsUseCaseImplTest {
     }
 
     @Test
-    fun testChangeStatusSettingsGPSTrue() {
-        coEvery { bodyWornSettingsRepository.changeStatusSettings(any(), any()) } returns Result.Success(Unit)
-        runBlocking {
-            val response = bodyWornSettingsUseCaseImpl.changeStatusSettings(
-                TypesOfBodyWornSettings.GPS, true
-            )
-            Assert.assertTrue(response is Result.Success)
-        }
-        coVerify { bodyWornSettingsRepository.changeStatusSettings(TypesOfBodyWornSettings.GPS, true) }
-    }
-
-    @Test
-    fun testChangeStatusSettingsGPSFalse() {
-        coEvery { bodyWornSettingsRepository.changeStatusSettings(any(), any()) } returns Result.Success(Unit)
-        runBlocking {
-            val response = bodyWornSettingsUseCaseImpl.changeStatusSettings(
-                TypesOfBodyWornSettings.GPS, false
-            )
-            Assert.assertTrue(response is Result.Success)
-        }
-        coVerify { bodyWornSettingsRepository.changeStatusSettings(TypesOfBodyWornSettings.GPS, false) }
-    }
-
-    @Test
-    fun testChangeStatusSettingsErrorInChange() {
-        coEvery { bodyWornSettingsRepository.changeStatusSettings(any(), any()) } returns Result.Error(Exception(""))
-        runBlocking {
-            val response = bodyWornSettingsUseCaseImpl.changeStatusSettings(
-                TypesOfBodyWornSettings.GPS, false
-            )
-            Assert.assertTrue(response is Result.Error)
-        }
-        coVerify { bodyWornSettingsRepository.changeStatusSettings(TypesOfBodyWornSettings.GPS, false) }
-    }
-
-    @Test
     fun testGetParametersEnableSuccess() {
         coEvery { bodyWornSettingsRepository.getParametersEnable() } returns Result.Success(mockk(relaxed = true))
         runBlocking {
