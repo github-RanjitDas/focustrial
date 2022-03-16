@@ -30,8 +30,8 @@ class ControlsX1Fragment : ControlsBaseFragment() {
     }
 
     private fun setViews() {
-        buttonSnapshot = binding.buttonSnapshot
-        buttonRecord = binding.buttonRecord
+        buttonTakeSnapshot = binding.buttonSnapshot
+        buttonRecordVideo = binding.buttonRecord
         buttonSwitchLiveView = binding.buttonSwitchLiveView
         parentLayout = binding.layoutLiveControls
         viewDisableButtons = binding.viewDisableButtons

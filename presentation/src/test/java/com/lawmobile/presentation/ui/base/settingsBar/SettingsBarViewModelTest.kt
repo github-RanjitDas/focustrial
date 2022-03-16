@@ -38,7 +38,7 @@ class SettingsBarViewModelTest {
     fun testGetBodyWornSettingsSuccess() {
         coEvery { useCaseSettings.getParametersEnable() } returns Result.Success(mockk(relaxed = true))
         viewModel.getBodyWornSettings()
-        val response = viewModel.bodyWornSettingsLiveData.value
+        val response = viewModel.bodyCameraSettings.value
         Assert.assertTrue(response is Result.Success)
         coVerify { useCaseSettings.getParametersEnable() }
     }
@@ -47,7 +47,7 @@ class SettingsBarViewModelTest {
     fun testGetBodyWornSettingsError() {
         coEvery { useCaseSettings.getParametersEnable() } returns Result.Error(Exception(""))
         viewModel.getBodyWornSettings()
-        val response = viewModel.bodyWornSettingsLiveData.value
+        val response = viewModel.bodyCameraSettings.value
         Assert.assertTrue(response is Result.Error)
         coVerify { useCaseSettings.getParametersEnable() }
     }

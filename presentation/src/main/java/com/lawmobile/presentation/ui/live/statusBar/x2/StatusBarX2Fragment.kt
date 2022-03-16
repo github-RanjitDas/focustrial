@@ -7,7 +7,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
-import com.lawmobile.domain.entities.CameraInfo
 import com.lawmobile.domain.entities.customEvents.LowStorageEvent
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.databinding.FragmentLiveStatusBarX2Binding
@@ -46,7 +45,6 @@ class StatusBarX2Fragment : StatusBarBaseFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        setSharedObservers()
         setObservers()
         _binding = FragmentLiveStatusBarX2Binding.inflate(inflater, container, false)
         return binding.root
@@ -57,11 +55,6 @@ class StatusBarX2Fragment : StatusBarBaseFragment() {
         configureProgressBars()
         setSharedViews()
         setListeners()
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        getCameraStatus(isViewLoaded)
     }
 
     override fun onResume() {
@@ -146,12 +139,7 @@ class StatusBarX2Fragment : StatusBarBaseFragment() {
                 parentLayout.showErrorSnackBar(getString(R.string.storage_level_error))
             }
         }
-        onInformationLoaded()
         EspressoIdlingResource.decrement()
-    }
-
-    private fun onInformationLoaded() {
-        CameraInfo.onReadyToGetNotifications?.invoke()
     }
 
     private fun manageStorageLevel(availablePercent: Double) {
@@ -209,7 +197,6 @@ class StatusBarX2Fragment : StatusBarBaseFragment() {
             doIfError {
                 showBatteryLevelNotAvailable()
             }
-            sharedViewModel.getStorageLevels()
         }
     }
 

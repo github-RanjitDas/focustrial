@@ -8,11 +8,11 @@ import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.lawmobile.domain.entities.CameraEvent
-import com.lawmobile.domain.entities.CameraInfo
 import com.lawmobile.domain.enums.NotificationType
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.databinding.ActivityNotificationListBinding
 import com.lawmobile.presentation.entities.MenuInformation
+import com.lawmobile.presentation.extensions.activityLaunch
 import com.lawmobile.presentation.extensions.attachFragment
 import com.lawmobile.presentation.extensions.closeMenuButton
 import com.lawmobile.presentation.extensions.openMenuButton
@@ -22,7 +22,6 @@ import com.lawmobile.presentation.ui.base.appBar.x2.AppBarX2Fragment
 import com.lawmobile.presentation.ui.base.menu.MenuFragment
 import com.lawmobile.presentation.ui.base.settingsBar.SettingsBarFragment
 import com.lawmobile.presentation.utils.FeatureSupportHelper
-import com.safefleet.mobile.kotlin_commons.extensions.doIfError
 import com.safefleet.mobile.kotlin_commons.extensions.doIfSuccess
 import com.safefleet.mobile.kotlin_commons.helpers.Result
 
@@ -38,7 +37,7 @@ class NotificationListActivity : BaseActivity() {
     private lateinit var appBarFragment: AppBarX2Fragment
     private lateinit var binding: ActivityNotificationListBinding
     private lateinit var notificationListAdapter: NotificationListAdapter
-    private val statusBarSettingsFragment = SettingsBarFragment()
+    private val settingsBarFragment = SettingsBarFragment()
 
     private val bottomSheetBehavior: BottomSheetBehavior<CardView> by lazy {
         BottomSheetBehavior.from(binding.bottomSheetNotification.bottomSheetNotification)
@@ -71,39 +70,21 @@ class NotificationListActivity : BaseActivity() {
     }
 
     private fun setObservers() {
-        viewModel.cameraEventsResult.observe(this, ::manageCameraEventsResult)
         viewModel.notificationEventsResult.observe(this, ::manageNotificationEventsResult)
     }
 
     private fun getNotificationList() {
-        showLoadingDialog()
-        viewModel.getCameraEvents()
-    }
-
-    private fun manageCameraEventsResult(result: Result<List<CameraEvent>>) {
-        with(result) {
-            doIfSuccess {
-                viewModel.getNotificationEvents()
-            }
-            doIfError {
-                hideLoadingDialog()
-                binding.textViewEmptyList.isVisible = true
-            }
+        activityLaunch {
+            showLoadingDialog()
+            viewModel.getNotificationEvents()
+            appBarFragment.getUnreadNotificationCount()
+            if (FeatureSupportHelper.supportBodyWornSettings) settingsBarFragment.getBodyCameraSettings()
+            hideLoadingDialog()
         }
-        CameraInfo.onReadyToGetSettings?.invoke()
     }
 
     private fun manageNotificationEventsResult(result: Result<List<CameraEvent>>) {
-        with(result) {
-            doIfSuccess {
-                notificationListAdapter.notificationList = it as MutableList
-            }
-            doIfError {
-                binding.textViewEmptyList.isVisible = true
-            }
-        }
-        hideLoadingDialog()
-        setAllNotificationsAsRead()
+        result.doIfSuccess { notificationListAdapter.notificationList = it as MutableList }
         binding.textViewEmptyList.isVisible = notificationListAdapter.notificationList.isEmpty()
     }
 
@@ -219,14 +200,9 @@ class NotificationListActivity : BaseActivity() {
         if (FeatureSupportHelper.supportBodyWornSettings) {
             supportFragmentManager.attachFragment(
                 containerId = R.id.statusBarFragment,
-                fragment = statusBarSettingsFragment,
+                fragment = settingsBarFragment,
                 tag = SettingsBarFragment.TAG
             )
         }
-    }
-
-    private fun setAllNotificationsAsRead() {
-        CameraInfo.currentNotificationCount = 0
-        viewModel.setAllNotificationsAsRead()
     }
 }

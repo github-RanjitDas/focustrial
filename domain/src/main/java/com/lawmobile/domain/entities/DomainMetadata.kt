@@ -26,6 +26,7 @@ data class DomainMetadata(
             !ticketNumber.isNullOrEmpty() ||
             !ticketNumber2.isNullOrEmpty() ||
             !caseNumber.isNullOrEmpty() ||
+            !caseNumber2.isNullOrEmpty() ||
             !dispatchNumber.isNullOrEmpty() ||
             !dispatchNumber2.isNullOrEmpty() ||
             !location.isNullOrEmpty() ||
@@ -39,7 +40,11 @@ data class DomainMetadata(
     }
 
     fun isDifferentFrom(metadata: DomainMetadata): Boolean {
-        return metadata.event?.name != event?.name ||
+        val eventName = CameraInfo.metadataEvents.map { it.name }.find { it == metadata.event?.name }
+        val isEventOnCamera = eventName != null
+        val isEventDifferent = if (isEventOnCamera) metadata.event?.name != event?.name else false
+
+        return isEventDifferent ||
             metadata.partnerID != partnerID ||
             metadata.ticketNumber != ticketNumber ||
             metadata.ticketNumber2 != ticketNumber2 ||
@@ -57,7 +62,7 @@ data class DomainMetadata(
             metadata.race != race
     }
 
-    fun convertNullParamsToEmpty() {
+    fun convertNullParamsToEmpty(): DomainMetadata {
         event = handleNullEvent(event)
         event?.id = handleNullParameter(event?.id)
         event?.name = handleNullParameter(event?.name)
@@ -77,6 +82,7 @@ data class DomainMetadata(
         licensePlate = handleNullParameter(licensePlate)
         gender = handleNullParameter(gender)
         race = handleNullParameter(race)
+        return this
     }
 
     private fun handleNullEvent(event: MetadataEvent?) = event ?: MetadataEvent("", "", "")

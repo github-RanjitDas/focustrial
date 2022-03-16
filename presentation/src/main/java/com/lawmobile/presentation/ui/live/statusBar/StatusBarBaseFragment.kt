@@ -8,13 +8,10 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
 import com.lawmobile.domain.entities.CameraInfo
-import com.lawmobile.domain.entities.MetadataEvent
-import com.lawmobile.domain.enums.CatalogTypes
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.entities.AlertInformation
 import com.lawmobile.presentation.extensions.createAlertInformation
 import com.lawmobile.presentation.extensions.showErrorSnackBar
-import com.lawmobile.presentation.extensions.verifySessionBeforeAction
 import com.lawmobile.presentation.ui.base.BaseFragment
 import com.safefleet.mobile.kotlin_commons.extensions.doIfError
 import com.safefleet.mobile.kotlin_commons.extensions.doIfSuccess
@@ -45,59 +42,12 @@ abstract class StatusBarBaseFragment : BaseFragment() {
     @ColorRes
     var highRangeColor: Int = 0
 
-    fun setSharedObservers() {
-        sharedViewModel.metadataEvents.observe(viewLifecycleOwner, ::setCatalogInfo)
-    }
-
-    fun getCameraStatus(isViewLoaded: Boolean) {
-        if (isViewLoaded) {
-            showLoadingDialog()
-            hideLoadingAfterTimeout()
-            if (CameraInfo.metadataEvents.isEmpty()) {
-                sharedViewModel.getMetadataEvents()
-            } else sharedViewModel.getBatteryLevel()
-        }
-    }
-
-    private fun hideLoadingAfterTimeout() {
-        Thread {
-            Thread.sleep(2000)
-            activity?.runOnUiThread {
-                hideLoadingDialog()
-            }
-        }.start()
-    }
-
-    private fun setCatalogInfo(metadataEventList: Result<List<MetadataEvent>>) {
-        with(metadataEventList) {
-            doIfSuccess { catalogInfoList ->
-                val eventNames =
-                    catalogInfoList.filter { it.type == CatalogTypes.EVENT.value }
-                CameraInfo.metadataEvents = eventNames as MutableList<MetadataEvent>
-            }
-            doIfError {
-                parentLayout.showErrorSnackBar(
-                    getString(R.string.catalog_error),
-                    CATALOG_ERROR_ANIMATION_DURATION
-                ) {
-                    requireContext().verifySessionBeforeAction {
-                        sharedViewModel.getMetadataEvents()
-                    }
-                }
-            }
-        }
-        sharedViewModel.getBatteryLevel()
-    }
+    suspend fun getCameraStatus() = sharedViewModel.getCameraStatus()
 
     open fun setBatteryLevel(result: Event<Result<Int>>) {
         result.getContentIfNotHandled()?.run {
-            doIfSuccess {
-                manageBatteryLevel(it)
-            }
-            doIfError {
-                showBatteryLevelNotAvailable()
-            }
-            sharedViewModel.getStorageLevels()
+            doIfSuccess(::manageBatteryLevel)
+            doIfError { showBatteryLevelNotAvailable() }
         }
     }
 
@@ -181,7 +131,6 @@ abstract class StatusBarBaseFragment : BaseFragment() {
     }
 
     companion object {
-        const val CATALOG_ERROR_ANIMATION_DURATION = 7000
         const val BLINK_ANIMATION_DURATION = 1000L
 
         const val SCALE_BYTES = 1024

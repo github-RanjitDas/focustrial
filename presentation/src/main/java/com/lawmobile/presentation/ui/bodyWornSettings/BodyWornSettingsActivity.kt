@@ -46,7 +46,7 @@ class BodyWornSettingsActivity : BaseActivity() {
     }
 
     private fun setObservers() {
-        viewModel.bodyWornSettingsLiveData.observe(this, ::resultBodyWornSettings)
+        viewModel.bodyCameraSettings.observe(this, ::resultBodyCameraSettings)
         viewModel.changeStatusSettingLiveData.observe(this, ::resultChangeStatusSetting)
     }
 
@@ -92,7 +92,7 @@ class BodyWornSettingsActivity : BaseActivity() {
         }
     }
 
-    private fun resultBodyWornSettings(result: Result<ParametersBodyWornSettings>) {
+    private fun resultBodyCameraSettings(result: Result<ParametersBodyWornSettings>) {
         with(result) {
             doIfSuccess {
                 setBodyWornSettings(it)

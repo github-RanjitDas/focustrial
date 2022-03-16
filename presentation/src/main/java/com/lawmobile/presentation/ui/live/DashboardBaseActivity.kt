@@ -6,8 +6,8 @@ import android.view.animation.AnimationUtils
 import androidx.activity.viewModels
 import androidx.annotation.IdRes
 import com.lawmobile.presentation.R
+import com.lawmobile.presentation.extensions.activityLaunch
 import com.lawmobile.presentation.extensions.attachFragment
-import com.lawmobile.presentation.extensions.runWithDelay
 import com.lawmobile.presentation.extensions.setPortraitOrientation
 import com.lawmobile.presentation.extensions.toggleDeXFullScreen
 import com.lawmobile.presentation.ui.base.BaseActivity
@@ -21,7 +21,7 @@ import com.lawmobile.presentation.ui.live.state.DashboardState
 import com.lawmobile.presentation.ui.live.statusBar.StatusBarBaseFragment
 import com.lawmobile.presentation.ui.live.stream.LiveStreamFragment
 import com.lawmobile.presentation.utils.EspressoIdlingResource
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 
 abstract class DashboardBaseActivity : BaseActivity() {
     private val viewModel: DashboardBaseViewModel by viewModels()
@@ -36,7 +36,7 @@ abstract class DashboardBaseActivity : BaseActivity() {
     lateinit var appBarFragment: BaseFragment
     lateinit var statusBarFragment: StatusBarBaseFragment
     private lateinit var liveStreamFragment: LiveStreamFragment
-    lateinit var controlsFragment: ControlsBaseFragment
+    protected lateinit var controlsFragment: ControlsBaseFragment
     private lateinit var navigationFragment: BaseFragment
 
     private lateinit var liveStream: LiveStream
@@ -71,7 +71,7 @@ abstract class DashboardBaseActivity : BaseActivity() {
                     if (!isInPortraitMode()) setPortraitOrientation()
                     setFullscreenVisibility(false)
                     setFragments()
-                    getInformationAfterAnimation()
+                    getCameraStatusAfterAnimation()
                     animateAppBar()
                     animateContainer()
                     setListeners()
@@ -86,18 +86,27 @@ abstract class DashboardBaseActivity : BaseActivity() {
 
     abstract fun setFullscreenVisibility(isVisible: Boolean)
 
-    private fun getInformationAfterAnimation() {
-        runWithDelay(VIEW_LOADING_TIME, Dispatchers.Main.immediate) {
-            statusBarFragment.getCameraStatus(true)
-            statusBarFragment.isViewLoaded = true
+    private fun getCameraStatusAfterAnimation() {
+        activityLaunch {
+            delay(VIEW_LOADING_TIME)
+            showLoadingDialog()
+            statusBarFragment.getCameraStatus()
+            delay(TIME_BETWEEN_REQUESTS)
+            controlsFragment.checkCameraIsRecordingVideo()
+            onStatusRetrieved()
+            hideLoadingDialog()
         }
+    }
+
+    protected open suspend fun onStatusRetrieved() {
+        // open to override
     }
 
     abstract fun animateAppBar()
 
     abstract fun animateContainer()
 
-    open fun setListeners() {
+    protected open fun setListeners() {
         controlsFragment.cameraOperationListener()
         controlsFragment.liveStreamSwitchListener()
     }
@@ -124,7 +133,7 @@ abstract class DashboardBaseActivity : BaseActivity() {
         liveStreamFragment.setStreamVisibility(isActive)
     }
 
-    open fun setFragments() {
+    protected open fun setFragments() {
         setAppBarFragment()
         setStatusBarFragment()
         setStreamFragment(R.id.streamContainer)
@@ -141,7 +150,7 @@ abstract class DashboardBaseActivity : BaseActivity() {
         )
     }
 
-    open fun setControlsFragment() {
+    protected open fun setControlsFragment() {
         supportFragmentManager.attachFragment(
             containerId = R.id.controlsContainer,
             fragment = controlsFragment,
@@ -167,7 +176,7 @@ abstract class DashboardBaseActivity : BaseActivity() {
         }
     }
 
-    open fun setStatusBarFragment() {
+    protected open fun setStatusBarFragment() {
         supportFragmentManager.attachFragment(
             containerId = R.id.statusBarContainer,
             fragment = statusBarFragment,
@@ -175,7 +184,7 @@ abstract class DashboardBaseActivity : BaseActivity() {
         )
     }
 
-    open fun setAppBarFragment() {
+    protected open fun setAppBarFragment() {
         supportFragmentManager.attachFragment(
             containerId = R.id.appBarContainer,
             fragment = appBarFragment,
@@ -185,5 +194,6 @@ abstract class DashboardBaseActivity : BaseActivity() {
 
     companion object {
         private const val VIEW_LOADING_TIME = 800L
+        const val TIME_BETWEEN_REQUESTS = 500L
     }
 }

@@ -8,6 +8,7 @@ import io.mockk.coVerify
 import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.TestCoroutineDispatcher
+import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Assert
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
@@ -26,17 +27,17 @@ internal class AppBarX2ViewModelTest {
     }
 
     @Test
-    fun getNumberOfPendingNotificationFlow() {
+    fun getNumberOfPendingNotificationFlow() = runBlockingTest {
         coEvery { eventsUseCase.getPendingNotificationsCount() } returns Result.Success(1)
-        appBarX2ViewModel.getPendingNotificationsCount()
+        appBarX2ViewModel.getUnreadNotificationCount()
         coVerify { eventsUseCase.getPendingNotificationsCount() }
     }
 
     @Test
-    fun getNumberOfPendingNotificationSuccess() {
+    fun getNumberOfPendingNotificationSuccess() = runBlockingTest {
         val result = Result.Success(1)
         coEvery { eventsUseCase.getPendingNotificationsCount() } returns result
-        appBarX2ViewModel.getPendingNotificationsCount()
+        appBarX2ViewModel.getUnreadNotificationCount()
         Assert.assertEquals(
             result,
             appBarX2ViewModel.pendingNotificationCountResult.value
@@ -44,10 +45,10 @@ internal class AppBarX2ViewModelTest {
     }
 
     @Test
-    fun getNumberOfPendingNotificationError() {
+    fun getNumberOfPendingNotificationError() = runBlockingTest {
         val result = Result.Error(Exception())
         coEvery { eventsUseCase.getPendingNotificationsCount() } returns result
-        appBarX2ViewModel.getPendingNotificationsCount()
+        appBarX2ViewModel.getUnreadNotificationCount()
         Assert.assertEquals(
             result,
             appBarX2ViewModel.pendingNotificationCountResult.value

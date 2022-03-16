@@ -30,7 +30,6 @@ class VideoInformationManager {
         this.binding = binding
         this.cameraFile = cameraFile
         context = binding.root.context
-        setSpinners()
         addEditTextFilter()
         setSpinnerListeners()
     }
@@ -61,7 +60,7 @@ class VideoInformationManager {
         }
     }
 
-    fun getEditedInformation(currentInformation: DomainVideoMetadata): DomainVideoMetadata =
+    fun getEditedInformation(currentInformation: DomainVideoMetadata?): DomainVideoMetadata =
         binding.run {
             DomainVideoMetadata(
                 fileName = cameraFile.name,
@@ -85,26 +84,25 @@ class VideoInformationManager {
                 ),
                 nameFolder = cameraFile.nameFolder,
                 officerId = CameraInfo.officerId,
-                path = currentInformation.path ?: cameraFile.path,
+                path = currentInformation?.path ?: cameraFile.path,
                 associatedFiles = FilesAssociatedByUser.value,
-                annotations = currentInformation.annotations,
+                annotations = currentInformation?.annotations,
                 serialNumber = CameraInfo.serialNumber,
-                endTime = currentInformation.endTime,
-                gmtOffset = currentInformation.gmtOffset,
-                hash = currentInformation.hash,
-                preEvent = currentInformation.preEvent,
-                startTime = currentInformation.startTime,
-                videoSpecs = currentInformation.videoSpecs,
-                trigger = currentInformation.trigger
+                endTime = currentInformation?.endTime,
+                gmtOffset = currentInformation?.gmtOffset,
+                hash = currentInformation?.hash,
+                preEvent = currentInformation?.preEvent,
+                startTime = currentInformation?.startTime,
+                videoSpecs = currentInformation?.videoSpecs,
+                trigger = currentInformation?.trigger
             )
         }
 
     fun isEventSelected() = eventInput != 0
 
-    private fun setSpinners() = with(binding) {
-        eventList = mutableListOf(context.getString(R.string.select)).apply {
-            addAll(getMetadataEventsList())
-        }
+    fun setSpinners() = with(binding) {
+        eventList =
+            mutableListOf(context.getString(R.string.select)).apply { addAll(getMetadataEventsList()) }
         raceList = context.resources.getStringArray(R.array.race_spinner).toMutableList()
         genderList = context.resources.getStringArray(R.array.gender_spinner).toMutableList()
 

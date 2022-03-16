@@ -3,8 +3,8 @@ package com.lawmobile.presentation.ui.snapshotDetail
 import androidx.lifecycle.viewModelScope
 import com.lawmobile.domain.entities.DomainCameraFile
 import com.lawmobile.domain.entities.DomainInformationImageMetadata
+import com.lawmobile.domain.extensions.emitValueWithTimeout
 import com.lawmobile.domain.usecase.snapshotDetail.SnapshotDetailUseCase
-import com.lawmobile.presentation.extensions.emitValueWithTimeout
 import com.lawmobile.presentation.ui.base.BaseViewModel
 import com.lawmobile.presentation.ui.snapshotDetail.state.SnapshotDetailState
 import com.safefleet.mobile.kotlin_commons.helpers.Result

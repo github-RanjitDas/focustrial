@@ -17,17 +17,20 @@ open class BodyWornSettingsViewModel @Inject constructor(
     private val bodyWornSettingsUseCase: BodyWornSettingsUseCase
 ) : BaseViewModel() {
 
-    private val resultParametersSettingsMediator: MediatorLiveData<Result<ParametersBodyWornSettings>> =
-        MediatorLiveData()
-    val bodyWornSettingsLiveData: LiveData<Result<ParametersBodyWornSettings>> get() = resultParametersSettingsMediator
+    private val _bodyCameraSettings = MediatorLiveData<Result<ParametersBodyWornSettings>>()
+    val bodyCameraSettings: LiveData<Result<ParametersBodyWornSettings>> get() = _bodyCameraSettings
 
     private val changeStatusSettingMediator: MediatorLiveData<Result<Unit>> = MediatorLiveData()
     val changeStatusSettingLiveData: LiveData<Result<Unit>> get() = changeStatusSettingMediator
 
     fun getBodyWornSettings() {
         viewModelScope.launch {
-            resultParametersSettingsMediator.postValue(bodyWornSettingsUseCase.getParametersEnable())
+            _bodyCameraSettings.postValue(bodyWornSettingsUseCase.getParametersEnable())
         }
+    }
+
+    suspend fun getBodyCameraSettings() {
+        _bodyCameraSettings.postValue(bodyWornSettingsUseCase.getParametersEnable())
     }
 
     fun changeBodyWornSetting(typeOfSettings: TypesOfBodyWornSettings, isEnable: Boolean) {

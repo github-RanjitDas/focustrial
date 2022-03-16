@@ -66,6 +66,10 @@ fun <T> BaseActivity.activityCollect(flow: Flow<T>, callback: (T) -> Unit) {
     }
 }
 
+fun BaseActivity.activityLaunch(callback: suspend () -> Unit) {
+    lifecycleScope.launch { callback() }
+}
+
 fun Activity.isDeXEnabled(): Boolean {
     val config = resources.configuration
     return try {

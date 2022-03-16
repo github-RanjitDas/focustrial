@@ -13,7 +13,6 @@ import com.google.android.flexbox.FlexDirection
 import com.google.android.flexbox.FlexboxLayoutManager
 import com.google.android.flexbox.JustifyContent
 import com.google.android.material.snackbar.Snackbar
-import com.lawmobile.domain.entities.CameraInfo
 import com.lawmobile.domain.entities.DomainCameraFile
 import com.lawmobile.domain.entities.DomainInformationFile
 import com.lawmobile.domain.entities.DomainInformationFileResponse
@@ -263,8 +262,7 @@ class ThumbnailFileListFragment : FileListBaseFragment() {
             val firstVisibleItemPosition =
                 (recyclerView.layoutManager as FlexboxLayoutManager).findFirstVisibleItemPosition()
             if (!isLoading && !isLastPage()) {
-                listAdapter.itemWithImagesLoaded().size.let { itemWithImagesLoaded ->
-                    val items = itemWithImagesLoaded
+                listAdapter.itemWithImagesLoaded().size.let { items ->
                     if (visibleItemCount + firstVisibleItemPosition >= items && firstVisibleItemPosition >= 0) {
                         loadNewImage()
                     }
@@ -289,10 +287,7 @@ class ThumbnailFileListFragment : FileListBaseFragment() {
 
     private fun loadNewImage() {
         val subList = getVisibleSubListToLoad()
-
-        if (!subList.isNullOrEmpty()) {
-            uploadImageInAdapter(subList)
-        } else onInformationLoaded()
+        if (!subList.isNullOrEmpty()) uploadImageInAdapter(subList)
     }
 
     private fun uploadImageInAdapter(subList: List<DomainInformationImage>) {
@@ -329,10 +324,6 @@ class ThumbnailFileListFragment : FileListBaseFragment() {
                 loadNewImage()
             }
         }
-    }
-
-    private fun onInformationLoaded() {
-        CameraInfo.onReadyToGetNotifications?.invoke()
     }
 
     override fun onDestroy() {

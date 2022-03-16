@@ -17,6 +17,8 @@ import com.lawmobile.presentation.ui.base.settingsBar.SettingsBarFragment
 import com.lawmobile.presentation.ui.live.DashboardBaseActivity
 import com.lawmobile.presentation.ui.live.controls.x1.ControlsX1Fragment
 import com.lawmobile.presentation.ui.live.statusBar.x2.StatusBarX2Fragment
+import com.lawmobile.presentation.utils.FeatureSupportHelper
+import kotlinx.coroutines.delay
 
 class LiveX2Activity : DashboardBaseActivity() {
 
@@ -27,11 +29,21 @@ class LiveX2Activity : DashboardBaseActivity() {
 
     private val appBarX2Fragment = AppBarX2Fragment.createInstance(true, "")
     private val menuFragment = MenuFragment()
-    private val statusBarSettingsFragment = SettingsBarFragment.createInstance()
+    private val statusBarSettingsFragment = SettingsBarFragment()
     private var isMenuOpen = false
 
     private val menuInformation: MenuInformation by lazy {
         MenuInformation(this, menuFragment, binding.layoutCustomMenu.shadowOpenMenuView)
+    }
+
+    override suspend fun onStatusRetrieved() {
+        super.onStatusRetrieved()
+        delay(TIME_BETWEEN_REQUESTS)
+        appBarX2Fragment.getUnreadNotificationCount()
+        if (FeatureSupportHelper.supportBodyWornSettings) {
+            delay(TIME_BETWEEN_REQUESTS)
+            statusBarSettingsFragment.getBodyCameraSettings()
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -103,7 +115,7 @@ class LiveX2Activity : DashboardBaseActivity() {
     override fun setFragments() {
         super.setFragments()
         setMenuFragment()
-        setStatusBarSettingsFragment()
+        setSettingsBarFragment()
     }
 
     override fun setControlsFragment() {
@@ -129,12 +141,14 @@ class LiveX2Activity : DashboardBaseActivity() {
         )
     }
 
-    private fun setStatusBarSettingsFragment() {
-        supportFragmentManager.attachFragment(
-            containerId = R.id.settingsBarContainer,
-            fragment = statusBarSettingsFragment,
-            tag = SettingsBarFragment.TAG
-        )
+    private fun setSettingsBarFragment() {
+        if (FeatureSupportHelper.supportBodyWornSettings) {
+            supportFragmentManager.attachFragment(
+                containerId = R.id.settingsBarContainer,
+                fragment = statusBarSettingsFragment,
+                tag = SettingsBarFragment.TAG
+            )
+        }
     }
 
     override fun onBackPressed() {

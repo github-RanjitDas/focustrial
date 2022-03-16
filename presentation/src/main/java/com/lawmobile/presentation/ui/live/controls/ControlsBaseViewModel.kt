@@ -4,18 +4,22 @@ import android.media.MediaActionSound
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.viewModelScope
+import com.lawmobile.domain.usecase.checkCameraRecordingVideo.CheckCameraRecordingVideo
 import com.lawmobile.domain.usecase.liveStreaming.LiveStreamingUseCase
 import com.lawmobile.presentation.ui.base.BaseViewModel
 import com.safefleet.mobile.kotlin_commons.helpers.Event
 import com.safefleet.mobile.kotlin_commons.helpers.Result
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class ControlsBaseViewModel @Inject constructor(
     private val liveStreamingUseCase: LiveStreamingUseCase,
-    private val mediaActionSound: MediaActionSound
+    private val mediaActionSound: MediaActionSound,
+    private val checkCameraRecordingVideo: CheckCameraRecordingVideo
 ) : BaseViewModel() {
 
     private val resultRecordVideoMediator: MediatorLiveData<Event<Result<Unit>>> =
@@ -34,6 +38,9 @@ class ControlsBaseViewModel @Inject constructor(
 
     private val resultTakePhotoMediatorLiveData = MediatorLiveData<Event<Result<Unit>>>()
     val resultTakePhotoLiveData: LiveData<Event<Result<Unit>>> get() = resultTakePhotoMediatorLiveData
+
+    private val _isCameraRecordingVideo = MutableSharedFlow<Boolean>()
+    val isCameraRecordingVideo = _isCameraRecordingVideo.asSharedFlow()
 
     fun takePhoto() {
         viewModelScope.launch {
@@ -67,5 +74,9 @@ class ControlsBaseViewModel @Inject constructor(
         viewModelScope.launch {
             resultStopAudioMediator.postValue(Event(Result.Success(Unit)))
         }
+    }
+
+    suspend fun checkCameraIsRecordingVideo() {
+        _isCameraRecordingVideo.emit(checkCameraRecordingVideo())
     }
 }

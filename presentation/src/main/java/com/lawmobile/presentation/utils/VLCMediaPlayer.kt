@@ -6,10 +6,10 @@ import android.view.SurfaceView
 import android.widget.SeekBar
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
+import com.lawmobile.domain.extensions.milliSecondsToString
 import com.lawmobile.domain.helpers.runWithDelay
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.entities.MediaPlayerControls
-import com.lawmobile.presentation.extensions.milliSecondsToString
 import com.lawmobile.presentation.extensions.setOnClickListenerCheckConnection
 import org.videolan.libvlc.LibVLC
 import org.videolan.libvlc.Media
