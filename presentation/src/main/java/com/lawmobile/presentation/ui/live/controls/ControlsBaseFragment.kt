@@ -106,6 +106,8 @@ abstract class ControlsBaseFragment : BaseFragment() {
         buttonSwitchLiveView.setClickListenerCheckConnection {
             onLiveStreamSwitchClick?.invoke(buttonSwitchLiveView.isActivated)
         }
+
+        BaseActivity.onVideoRecordingStatus = ::updateVideoRecordingStatus
     }
 
     private fun manageRecordingVideo() {

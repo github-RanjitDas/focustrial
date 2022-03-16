@@ -188,7 +188,7 @@ class VideoPlaybackActivity : BaseActivity() {
 
     private fun collectVideoInformation() {
         activityCollect(viewModel.videoInformation) { result ->
-            result?.let { setVideoInformation(it) }
+            result?.let(::setVideoInformation)
         }
     }
 
@@ -213,7 +213,10 @@ class VideoPlaybackActivity : BaseActivity() {
                         getString(R.string.video_metadata_saved_success),
                         Toast.LENGTH_SHORT
                     )
-                    runWithDelay(dispatcher = Dispatchers.Main.immediate) { finish() }
+                    runWithDelay(
+                        dispatcher = Dispatchers.Main.immediate,
+                        callback = ::finish
+                    )
                 }
                 is Result.Error -> showToast(
                     getString(R.string.video_metadata_save_error),
