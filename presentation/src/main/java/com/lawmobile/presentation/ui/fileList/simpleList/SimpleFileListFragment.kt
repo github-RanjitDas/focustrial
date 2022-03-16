@@ -147,11 +147,6 @@ class SimpleFileListFragment : FileListBaseFragment() {
             }
         }
         hideLoadingDialog()
-        onInformationLoaded()
-    }
-
-    private fun onInformationLoaded() {
-        CameraInfo.onReadyToGetNotifications?.invoke()
     }
 
     private fun showErrors(errors: MutableList<String>) {

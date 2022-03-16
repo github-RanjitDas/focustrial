@@ -8,13 +8,14 @@ import androidx.activity.viewModels
 import androidx.cardview.widget.CardView
 import androidx.core.view.isVisible
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.android.material.snackbar.Snackbar
 import com.lawmobile.domain.entities.CameraInfo
 import com.lawmobile.domain.entities.DomainCameraFile
 import com.lawmobile.domain.entities.DomainInformationVideo
 import com.lawmobile.domain.entities.DomainVideoMetadata
 import com.lawmobile.domain.entities.FilesAssociatedByUser
 import com.lawmobile.domain.extensions.getDateDependingOnNameLength
+import com.lawmobile.domain.extensions.getDurationMinutesLong
+import com.lawmobile.domain.extensions.getDurationMinutesString
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.databinding.ActivityVideoPlaybackBinding
 import com.lawmobile.presentation.entities.MediaPlayerControls
@@ -22,7 +23,6 @@ import com.lawmobile.presentation.extensions.activityCollect
 import com.lawmobile.presentation.extensions.attachFragment
 import com.lawmobile.presentation.extensions.createAlertDialogUnsavedChanges
 import com.lawmobile.presentation.extensions.detachFragment
-import com.lawmobile.presentation.extensions.milliSecondsToString
 import com.lawmobile.presentation.extensions.runWithDelay
 import com.lawmobile.presentation.extensions.setOnClickListenerCheckConnection
 import com.lawmobile.presentation.extensions.setPortraitOrientation
@@ -36,8 +36,6 @@ import com.lawmobile.presentation.ui.videoPlayback.state.VideoPlaybackState
 import com.lawmobile.presentation.utils.Constants.DOMAIN_CAMERA_FILE
 import com.lawmobile.presentation.utils.FeatureSupportHelper
 import com.safefleet.mobile.android_commons.extensions.hideKeyboard
-import com.safefleet.mobile.kotlin_commons.extensions.doIfError
-import com.safefleet.mobile.kotlin_commons.extensions.doIfSuccess
 import com.safefleet.mobile.kotlin_commons.helpers.Result
 import com.safefleet.mobile.safefleet_ui.widgets.SafeFleetFilterTag
 import kotlinx.coroutines.Dispatchers
@@ -50,14 +48,7 @@ class VideoPlaybackActivity : BaseActivity() {
     private lateinit var binding: ActivityVideoPlaybackBinding
 
     private val viewModel: VideoPlaybackViewModel by viewModels()
-
     private val metadataManager get() = viewModel.informationManager
-    private val editedVideoInformation: DomainVideoMetadata
-        get() = metadataManager.getEditedInformation(currentVideoInformation)
-
-    private var currentAttempts = 0
-    private var isVideoMetadataChangesSaved = false
-    private lateinit var currentVideoInformation: DomainVideoMetadata
 
     private var associateSnapshotsFragment = AssociateFilesFragment()
     private val bottomSheetBehavior: BottomSheetBehavior<CardView> by lazy {
@@ -87,24 +78,29 @@ class VideoPlaybackActivity : BaseActivity() {
         binding = ActivityVideoPlaybackBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        metadataManager.setup(binding.layoutMetadataForm, getCameraConnectFileFromIntent())
-        toggleAssociateDialog(isAssociateDialogOpen)
-        setFeatures()
-        setObservers()
-        setCollectors()
-        verifyIfSelectedVideoWasChanged()
-        showLoadingDialog()
+        val videoFile = getCameraConnectFileFromIntent()
 
-        if (videoMediaInformation != null) setVideoInformation()
-        else getMediaInformation()
-
-        getVideoInformation()
+        videoFile?.let {
+            setVideoNameAndDate(it)
+            metadataManager.setup(binding.layoutMetadataForm, it)
+            toggleAssociateDialog(isAssociateDialogOpen)
+            setFeatures()
+            setObservers()
+            setCollectors()
+            showLoadingDialog()
+            viewModel.getVideoPlaybackInfo(it)
+        }
     }
 
-    private fun setFeatures() {
-        binding.layoutMetadataForm.associateAudioTitle.isVisible = FeatureSupportHelper.supportAudioAssociation
-        binding.layoutMetadataForm.layoutAssociatedAudios.isVisible = FeatureSupportHelper.supportAudioAssociation
-        binding.layoutMetadataForm.buttonAssociateAudios.isVisible = FeatureSupportHelper.supportAudioAssociation
+    private fun setVideoNameAndDate(videoFile: DomainCameraFile) {
+        binding.layoutMetadataForm.videoNameValue.text = videoFile.name
+        binding.layoutMetadataForm.startTimeValue.text = videoFile.getDateDependingOnNameLength()
+    }
+
+    private fun setFeatures() = with(binding.layoutMetadataForm) {
+        associateAudioTitle.isVisible = FeatureSupportHelper.supportAudioAssociation
+        layoutAssociatedAudios.isVisible = FeatureSupportHelper.supportAudioAssociation
+        buttonAssociateAudios.isVisible = FeatureSupportHelper.supportAudioAssociation
     }
 
     private fun toggleAssociateDialog(isOpen: Boolean) {
@@ -130,32 +126,17 @@ class VideoPlaybackActivity : BaseActivity() {
         hideKeyboard()
     }
 
-    override fun onResume() {
-        super.onResume()
-        verifyEventEmpty()
-    }
-
     private fun setAppBar() = with(binding.layoutAppBar) {
         textViewTitle.text = getString(R.string.video_detail)
         buttonSimpleList.isVisible = false
         buttonThumbnailList.isVisible = false
     }
 
-    private fun verifyEventEmpty() {
-        if (CameraInfo.metadataEvents.isEmpty()) showErrorInEvents()
-    }
-
-    private fun showErrorInEvents() {
-        binding.layoutVideoPlayback.showErrorSnackBar(
-            getString(R.string.catalog_error_video_playback),
-            Snackbar.LENGTH_LONG
-        )
-    }
-
     private fun setCollectors() {
         collectVideoPlaybackState()
         collectMediaInformation()
         collectVideoInformation()
+        collectInformationExceptions()
         collectUpdateMetadataResult()
     }
 
@@ -176,7 +157,7 @@ class VideoPlaybackActivity : BaseActivity() {
                     setFullScreenViews()
                 }
             }
-            videoMediaInformation?.run { createVideoPlayer(this) }
+            viewModel.mediaInformation.value?.let(::createVideoPlayer)
         }
     }
 
@@ -196,17 +177,29 @@ class VideoPlaybackActivity : BaseActivity() {
         buttonSaveMetadata.isVisible = !isVisible
     }
 
+    private fun collectMediaInformation() {
+        activityCollect(viewModel.mediaInformation) { result ->
+            result?.let {
+                createVideoPlayer(it)
+                setMediaInformation(it)
+            }
+        }
+    }
+
     private fun collectVideoInformation() {
         activityCollect(viewModel.videoInformation) { result ->
-            result?.run {
-                doIfSuccess(::setVideoMetadata)
-                doIfError {
-                    this@VideoPlaybackActivity.showToast(
-                        getString(R.string.get_video_metadata_error),
-                        Toast.LENGTH_SHORT
-                    )
-                    finish()
-                }
+            result?.let { setVideoInformation(it) }
+        }
+    }
+
+    private fun collectInformationExceptions() {
+        activityCollect(viewModel.videoInformationException) { exception ->
+            exception.let {
+                showToast(
+                    getString(R.string.error_get_information_metadata),
+                    Toast.LENGTH_SHORT
+                )
+                finish()
             }
         }
     }
@@ -216,11 +209,11 @@ class VideoPlaybackActivity : BaseActivity() {
             when (result) {
                 is Result.Success -> {
                     CameraInfo.areNewChanges = true
-                    this.showToast(
+                    showToast(
                         getString(R.string.video_metadata_saved_success),
                         Toast.LENGTH_SHORT
                     )
-                    runWithDelay(dispatcher = Dispatchers.Main.immediate) { onBackPressed() }
+                    runWithDelay(dispatcher = Dispatchers.Main.immediate) { finish() }
                 }
                 is Result.Error -> showToast(
                     getString(R.string.video_metadata_save_error),
@@ -228,30 +221,6 @@ class VideoPlaybackActivity : BaseActivity() {
                 )
             }
             hideLoadingDialog()
-        }
-    }
-
-    private fun collectMediaInformation() {
-        activityCollect(viewModel.mediaInformation) { result ->
-            result?.run {
-                doIfSuccess {
-                    videoMediaInformation = it
-                    createVideoPlayer(it)
-                    setVideoInformation()
-                }
-                doIfError {
-                    if (isAllowedToAttemptToGetInformation()) {
-                        currentAttempts += 1
-                        currentVideo?.let(viewModel::getMediaInformation)
-                    } else {
-                        showToast(
-                            getString(R.string.error_get_information_metadata),
-                            Toast.LENGTH_SHORT
-                        )
-                        finish()
-                    }
-                }
-            }
         }
     }
 
@@ -341,22 +310,11 @@ class VideoPlaybackActivity : BaseActivity() {
     private fun ActivityVideoPlaybackBinding.videoIsNotVisible(scrollBounds: Rect) =
         (!fakeSurfaceVideoPlayback.getLocalVisibleRect(scrollBounds) && viewModel.mediaPlayer.isPlaying)
 
-    private fun setVideoMetadata(videoInformation: DomainVideoMetadata) =
-        with(binding.layoutMetadataForm) {
-            if (!this@VideoPlaybackActivity::currentVideoInformation.isInitialized) {
-                currentVideoInformation = videoInformation
-                metadataManager.setInformation(videoInformation)
-                videoInformation.associatedFiles?.let {
-                    associateSnapshotsFragment.setFilesAssociatedFromMetadata(it as MutableList)
-                }
-            }
-
-            hideLoadingDialog()
+    private fun setVideoInformation(videoInformation: DomainVideoMetadata) {
+        videoInformation.associatedFiles?.let {
+            associateSnapshotsFragment.setFilesAssociatedFromMetadata(it as MutableList)
         }
-
-    private fun verifyIfSelectedVideoWasChanged() {
-        val videoWasChanged = getCameraConnectFileFromIntent() != currentVideo
-        if (videoWasChanged) restartObjectOfCompanion()
+        hideLoadingDialog()
     }
 
     private fun showSnapshotsAssociated() = with(binding.layoutMetadataForm) {
@@ -409,46 +367,27 @@ class VideoPlaybackActivity : BaseActivity() {
             layoutVideoPlayback.showErrorSnackBar(getString(R.string.event_mandatory))
             return
         }
-        CameraInfo.areNewChanges = true
+
         showLoadingDialog()
-        viewModel.saveVideoInformation(editedVideoInformation)
-        isVideoMetadataChangesSaved = true
-    }
-
-    private fun getMediaInformation() {
-        currentVideo = getCameraConnectFileFromIntent()
-        currentVideo?.run {
-            viewModel.getMediaInformation(this)
-        }
-    }
-
-    private fun getVideoInformation() {
-        currentVideo?.run {
-            viewModel.getVideoInformation(name, nameFolder)
-        }
+        viewModel.saveVideoMetadata()
     }
 
     private fun getCameraConnectFileFromIntent() =
-        intent?.getSerializableExtra(DOMAIN_CAMERA_FILE) as DomainCameraFile
+        intent?.getSerializableExtra(DOMAIN_CAMERA_FILE) as DomainCameraFile?
 
-    private fun isAllowedToAttemptToGetInformation() = currentAttempts <= ATTEMPTS_ALLOWED
-
-    private fun setVideoInformation() = with(binding.layoutMetadataForm) {
-        videoNameValue.text = currentVideo?.name
-        startTimeValue.text = currentVideo?.getDateDependingOnNameLength()
-        val durationText = videoMediaInformation?.duration?.toLong()?.times(1000)
-            ?.milliSecondsToString()
-        durationValue.text = durationText
+    private fun setMediaInformation(mediaInformation: DomainInformationVideo) {
+        val durationText = mediaInformation.getDurationMinutesString()
+        binding.layoutMetadataForm.durationValue.text = durationText
     }
 
-    private fun createVideoPlayer(domainInformationVideo: DomainInformationVideo) {
+    private fun createVideoPlayer(mediaInformation: DomainInformationVideo) {
         viewModel.mediaPlayer.apply {
             setControls(
                 mediaPlayerControls,
-                getVideoDurationMillis(domainInformationVideo),
+                mediaInformation.getDurationMinutesLong(),
                 lifecycle
             )
-            create(domainInformationVideo.urlVideo, videoSurface)
+            create(mediaInformation.urlVideo, videoSurface)
             if (!isEndReached && !isPaused) play()
         }
     }
@@ -473,30 +412,11 @@ class VideoPlaybackActivity : BaseActivity() {
         )
     }
 
-    private fun getVideoDurationMillis(domainInformationVideo: DomainInformationVideo) =
-        domainInformationVideo.duration.toLong().times(1000)
-
-    private fun theMetadataWasEdited(): Boolean {
-        if (!isVideoMetadataChangesSaved) {
-            val newMetadata = editedVideoInformation.metadata
-            val oldMetadata = currentVideoInformation.metadata?.apply { convertNullParamsToEmpty() }
-                ?: return newMetadata?.hasAnyInformation() == true
-
-            return currentVideoInformation.associatedFiles ?: emptyList() != FilesAssociatedByUser.value ||
-                newMetadata?.isDifferentFrom(oldMetadata) ?: false
-        }
-        return false
-    }
-
-    private fun restartObjectOfCompanion() {
-        videoMediaInformation = null
-    }
-
     override fun onBackPressed() {
         if (state is VideoPlaybackState.Default) {
             if (!isAssociateDialogOpen) {
                 viewModel.mediaPlayer.pause()
-                if (theMetadataWasEdited()) createAlertDialogUnsavedChanges()
+                if (viewModel.theMetadataWasEdited()) createAlertDialogUnsavedChanges()
                 else super.onBackPressed()
             } else isAssociateDialogOpen = false
         } else state = VideoPlaybackState.Default
@@ -505,11 +425,5 @@ class VideoPlaybackActivity : BaseActivity() {
     override fun onDestroy() {
         super.onDestroy()
         FilesAssociatedByUser.cleanList()
-    }
-
-    companion object {
-        private var currentVideo: DomainCameraFile? = null
-        private var videoMediaInformation: DomainInformationVideo? = null
-        const val ATTEMPTS_ALLOWED = 2
     }
 }

@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.databinding.FragmentLiveStatusBarX1Binding
+import com.lawmobile.presentation.extensions.fragmentLaunch
 import com.lawmobile.presentation.extensions.setOnClickListenerCheckConnection
 import com.lawmobile.presentation.extensions.showErrorSnackBar
 import com.lawmobile.presentation.extensions.startAnimationIfEnabled
@@ -48,7 +49,6 @@ class StatusBarX1Fragment : StatusBarBaseFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        setSharedObservers()
         setObservers()
         _binding = FragmentLiveStatusBarX1Binding.inflate(inflater, container, false)
         return binding.root
@@ -63,7 +63,7 @@ class StatusBarX1Fragment : StatusBarBaseFragment() {
 
     override fun onResume() {
         super.onResume()
-        getCameraStatus(isViewLoaded)
+        if (isViewLoaded) fragmentLaunch { getCameraStatus() }
     }
 
     private fun setObservers() {

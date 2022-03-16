@@ -292,8 +292,7 @@
     <string name="edit_officer_id_description">edit officer id or email</string>
 
     <!-- Body-Camera Setting and Status-->
-    <string name="body_worn_status_title">Body-Camera Status</string>
-    <string name="body_worn_settings_title">Body-Camera Settings</string>
+    <string name="body_worn_settings_title">Body Camera Settings</string>
     <string name="body_worn_settings_covert_mode">Covert Mode</string>
     <string name="body_worn_settings_bluetooth">Bluetooth</string>
     <string name="body_worn_settings_gps">GPS</string>

@@ -3,6 +3,7 @@ package com.lawmobile.presentation.extensions
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.widget.TextView
+import com.lawmobile.domain.extensions.convertMilliSecondsToDate
 
 fun TextView.showDateAndTimePickerDialog(
     hour: Int,

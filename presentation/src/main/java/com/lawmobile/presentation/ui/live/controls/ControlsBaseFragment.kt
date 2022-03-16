@@ -7,6 +7,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import com.lawmobile.presentation.R
+import com.lawmobile.presentation.extensions.fragmentCollect
 import com.lawmobile.presentation.extensions.setClickListenerCheckConnection
 import com.lawmobile.presentation.extensions.showErrorSnackBar
 import com.lawmobile.presentation.extensions.showSuccessSnackBar
@@ -30,9 +31,9 @@ abstract class ControlsBaseFragment : BaseFragment() {
     var onCameraOperation: ((String) -> Unit)? = null
     var onCameraOperationFinished: ((Boolean) -> Unit)? = null
 
-    lateinit var buttonSnapshot: CustomSnapshotButton
-    lateinit var buttonRecord: CustomRecordButton
-    var buttonAudio: CustomAudioButton ? = null
+    lateinit var buttonTakeSnapshot: CustomSnapshotButton
+    lateinit var buttonRecordVideo: CustomRecordButton
+    var buttonRecordAudio: CustomAudioButton? = null
     lateinit var buttonSwitchLiveView: SafeFleetSwitch
     lateinit var parentLayout: ConstraintLayout
     lateinit var viewDisableButtons: View
@@ -41,6 +42,10 @@ abstract class ControlsBaseFragment : BaseFragment() {
 
     private fun disableButtons() {
         viewDisableButtons.isVisible = true
+    }
+
+    suspend fun checkCameraIsRecordingVideo() {
+        sharedViewModel.checkCameraIsRecordingVideo()
     }
 
     fun setLiveViewSwitchState(isActive: Boolean = true) {
@@ -54,11 +59,19 @@ abstract class ControlsBaseFragment : BaseFragment() {
             resultRecordAudioLiveData.observe(viewLifecycleOwner, ::manageResultInRecordingAudio)
             resultStopAudioLiveData.observe(viewLifecycleOwner, ::manageResultInRecordingAudio)
             resultTakePhotoLiveData.observe(viewLifecycleOwner, ::manageResultTakePhoto)
+            fragmentCollect(isCameraRecordingVideo, ::updateVideoRecordingStatus)
         }
     }
 
+    private fun updateVideoRecordingStatus(isRecording: Boolean) {
+        BaseActivity.isRecordingVideo = isRecording
+        buttonRecordVideo.isActivated = isRecording
+        if (isRecording) textLiveViewRecording.text = getString(R.string.video_recording)
+        showRecordingIndicator(isRecording)
+    }
+
     fun setSharedListeners() {
-        buttonSnapshot.setClickListenerCheckConnection {
+        buttonTakeSnapshot.setClickListenerCheckConnection {
             disableButtons()
             onCameraOperation?.invoke(getString(R.string.taking_snapshot))
             onLiveStreamSwitchClick?.invoke(true)
@@ -66,7 +79,7 @@ abstract class ControlsBaseFragment : BaseFragment() {
             setLiveViewSwitchState()
         }
 
-        buttonRecord.setClickListenerCheckConnection {
+        buttonRecordVideo.setClickListenerCheckConnection {
             if (!BaseActivity.isRecordingVideo) {
                 disableButtons()
                 onCameraOperation?.invoke(getString(R.string.starting_recording))
@@ -79,7 +92,7 @@ abstract class ControlsBaseFragment : BaseFragment() {
             manageRecordingVideo()
         }
 
-        buttonAudio?.setClickListenerCheckConnection {
+        buttonRecordAudio?.setClickListenerCheckConnection {
             if (!BaseActivity.isRecordingAudio) {
                 disableButtons()
                 onCameraOperation?.invoke(getString(R.string.starting_recording))
@@ -96,7 +109,7 @@ abstract class ControlsBaseFragment : BaseFragment() {
     }
 
     private fun manageRecordingVideo() {
-        buttonAudio?.setEnabledState(BaseActivity.isRecordingVideo)
+        buttonRecordAudio?.setEnabledState(BaseActivity.isRecordingVideo)
         if (BaseActivity.isRecordingVideo) {
             sharedViewModel.stopRecordVideo()
         } else {
@@ -105,7 +118,7 @@ abstract class ControlsBaseFragment : BaseFragment() {
     }
 
     private fun manageRecordingAudio() {
-        buttonSnapshot.setEnabledState(BaseActivity.isRecordingAudio)
+        buttonTakeSnapshot.setEnabledState(BaseActivity.isRecordingAudio)
         if (BaseActivity.isRecordingAudio) {
             sharedViewModel.stopRecordAudio()
             return
@@ -115,13 +128,10 @@ abstract class ControlsBaseFragment : BaseFragment() {
 
     private fun manageResultInRecordingVideo(result: Event<Result<Unit>>) {
         hideLoading()
-        BaseActivity.isRecordingVideo = !BaseActivity.isRecordingVideo
-        buttonRecord.isActivated = BaseActivity.isRecordingVideo
-        textLiveViewRecording.text = getString(R.string.video_recording)
-        showRecordingIndicator(BaseActivity.isRecordingVideo)
+        updateVideoRecordingStatus(!BaseActivity.isRecordingVideo)
         result.getContentIfNotHandled()?.run {
             doIfError {
-                buttonAudio?.setEnabledState(true)
+                buttonRecordAudio?.setEnabledState(true)
                 parentLayout.showErrorSnackBar(getString(R.string.error_saving_video))
             }
         }
@@ -129,7 +139,7 @@ abstract class ControlsBaseFragment : BaseFragment() {
 
     private fun manageResultInRecordingAudio(result: Event<Result<Unit>>) {
         BaseActivity.isRecordingAudio = !BaseActivity.isRecordingAudio
-        buttonAudio?.isActivated = BaseActivity.isRecordingAudio
+        buttonRecordAudio?.isActivated = BaseActivity.isRecordingAudio
         textLiveViewRecording.text = getString(R.string.audio_recording)
         hideLoading(BaseActivity.isRecordingAudio)
         setLiveViewSwitchState(!BaseActivity.isRecordingAudio)

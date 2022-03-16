@@ -56,7 +56,6 @@ object Exclusions {
         "**/FeatureSupportHelper.**",
         "**/SimpleNetworkManager.**",
         "**/OnSwipeTouchListener.**",
-        "**/LiveActivityBaseViewModel.**",
         "**/CameraEventsManager.**",
         "**/DateHelper.**",
         "**/EspressoIdlingResource.**",

@@ -1,4 +1,4 @@
-package com.lawmobile.presentation.extensions
+package com.lawmobile.domain.extensions
 
 import com.lawmobile.domain.enums.RequestError
 import com.safefleet.mobile.kotlin_commons.helpers.Result

@@ -4,7 +4,6 @@ import com.lawmobile.body_cameras.entities.LogEvent
 import com.lawmobile.data.dao.entities.LocalCameraEvent
 import com.lawmobile.data.datasource.local.events.EventsLocalDataSource
 import com.lawmobile.data.datasource.remote.events.EventsRemoteDataSource
-import com.lawmobile.domain.entities.CameraInfo
 import com.lawmobile.domain.enums.EventType
 import com.lawmobile.domain.utils.DateHelper
 import com.safefleet.mobile.kotlin_commons.helpers.Result
@@ -15,7 +14,6 @@ import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
-import io.mockk.mockkObject
 import io.mockk.verify
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -140,6 +138,11 @@ internal class EventsRepositoryImplTest {
 
     @Test
     fun getCameraEventsSuccess() = runBlockingTest {
+        cameraEventsSuccessMock()
+        Assert.assertTrue(eventsRepositoryImpl.getCameraEvents() is Result.Success)
+    }
+
+    private fun cameraEventsSuccessMock() {
         val notificationList = listOf(
             LogEvent(
                 name = "Notification",
@@ -163,8 +166,6 @@ internal class EventsRepositoryImplTest {
         coEvery { eventsRemoteDataSource.getCameraEvents() } returns Result.Success(notificationList)
         coEvery { eventsLocalDataSource.saveAllEvents(any()) } returns Result.Success(Unit)
         coEvery { eventsLocalDataSource.clearAllEvents() } just Runs
-
-        Assert.assertTrue(eventsRepositoryImpl.getCameraEvents() is Result.Success)
     }
 
     @Test
@@ -225,8 +226,27 @@ internal class EventsRepositoryImplTest {
     }
 
     @Test
-    fun getAllNotificationEvents() = runBlockingTest {
-        mockkObject(CameraInfo)
+    fun getNotificationEventsAlreadyRetrievedFromCamera() = runBlockingTest {
+        getCameraEventsSuccess()
+        val cameraEventList = listOf<LocalCameraEvent>(
+            mockk(relaxed = true) {
+                every { eventType } returns EventType.NOTIFICATION.value
+            },
+            mockk(relaxed = true) {
+                every { eventType } returns EventType.CAMERA.value
+            }
+        )
+        coEvery { eventsLocalDataSource.getNotificationEvents(any()) } returns Result.Success(
+            cameraEventList
+        )
+
+        val result = eventsRepositoryImpl.getNotificationEvents() as Result.Success
+        Assert.assertTrue(result.data.size == 2)
+    }
+
+    @Test
+    fun getNotificationEventsNotRetrievedFromCamera() = runBlockingTest {
+        cameraEventsSuccessMock()
         val cameraEventList = listOf<LocalCameraEvent>(
             mockk(relaxed = true) {
                 every { eventType } returns EventType.NOTIFICATION.value

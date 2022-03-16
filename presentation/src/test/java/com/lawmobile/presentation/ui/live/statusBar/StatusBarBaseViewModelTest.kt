@@ -35,32 +35,24 @@ internal class StatusBarBaseViewModelTest {
         Dispatchers.setMain(dispatcher)
     }
 
-    @Test
-    fun testGetCatalogInfoSuccess() = runBlockingTest {
-        coEvery { liveStreamingUseCase.getCatalogInfo() } returns Result.Success(mockk())
-        viewModel.getMetadataEvents()
-        Assert.assertTrue(viewModel.metadataEvents.value is Result.Success)
-        coVerify { liveStreamingUseCase.getCatalogInfo() }
+    private fun storageLevelMock() {
+        val result = Result.Success("1")
+        coEvery { liveStreamingUseCase.getFreeStorage() } returns result
+        coEvery { liveStreamingUseCase.getTotalStorage() } returns result
     }
 
-    @Test
-    fun testGetCatalogInfoError() = dispatcher.runBlockingTest {
-        coEvery { liveStreamingUseCase.getCatalogInfo() } returns Result.Error(mockk())
-        viewModel.getMetadataEvents()
-        dispatcher.advanceTimeBy(1500)
-        Assert.assertTrue(viewModel.metadataEvents.value is Result.Error)
-        coVerify { liveStreamingUseCase.getCatalogInfo() }
+    private fun batteryLevelMock() {
+        coEvery { liveStreamingUseCase.getBatteryLevel() } returns Result.Success(1)
     }
 
     @Test
     fun getBatteryLevelSuccess() = runBlockingTest {
         val result = Result.Success(23)
         coEvery { liveStreamingUseCase.getBatteryLevel() } returns result
+        storageLevelMock()
 
-        viewModel.getBatteryLevel()
-        Assert.assertEquals(
-            viewModel.batteryLevel.value?.getContent(), result
-        )
+        viewModel.getCameraStatus()
+        Assert.assertEquals(viewModel.batteryLevel.value?.getContent(), result)
 
         coVerify { liveStreamingUseCase.getBatteryLevel() }
     }
@@ -69,13 +61,12 @@ internal class StatusBarBaseViewModelTest {
     fun getBatteryLevelError() = dispatcher.runBlockingTest {
         val result = Result.Error(mockk())
         coEvery { liveStreamingUseCase.getBatteryLevel() } returns result
+        storageLevelMock()
 
-        viewModel.getBatteryLevel()
+        viewModel.getCameraStatus()
         dispatcher.advanceTimeBy(1500)
 
-        Assert.assertEquals(
-            viewModel.batteryLevel.value?.getContent(), result
-        )
+        Assert.assertEquals(viewModel.batteryLevel.value?.getContent(), result)
         coVerify { liveStreamingUseCase.getBatteryLevel() }
     }
 
@@ -87,10 +78,11 @@ internal class StatusBarBaseViewModelTest {
         val usedStorage =
             (totalStorage.toDouble() / scaleByte) - (freeStorage.toDouble() / scaleByte)
 
+        batteryLevelMock()
         coEvery { liveStreamingUseCase.getFreeStorage() } returns Result.Success(freeStorage.toString())
         coEvery { liveStreamingUseCase.getTotalStorage() } returns Result.Success(totalStorage.toString())
 
-        viewModel.getStorageLevels()
+        viewModel.getCameraStatus()
         dispatcher.advanceTimeBy(500)
         val storage =
             (viewModel.storageLevel.value?.getContent() as Result.Success<List<Double>>).data
@@ -107,9 +99,10 @@ internal class StatusBarBaseViewModelTest {
     @Test
     fun getStorageLevelsFreeStorageError() = dispatcher.runBlockingTest {
         val result = Result.Error(mockk())
+        batteryLevelMock()
         coEvery { liveStreamingUseCase.getFreeStorage() } returns result
 
-        viewModel.getStorageLevels()
+        viewModel.getCameraStatus()
         dispatcher.advanceTimeBy(2000)
         Assert.assertEquals(viewModel.storageLevel.value?.getContent(), result)
 
@@ -121,10 +114,11 @@ internal class StatusBarBaseViewModelTest {
     @Test
     fun getStorageLevelsTotalStorageError() = dispatcher.runBlockingTest {
         val result = Result.Error(mockk())
+        batteryLevelMock()
         coEvery { liveStreamingUseCase.getFreeStorage() } returns Result.Success("63456789")
         coEvery { liveStreamingUseCase.getTotalStorage() } returns result
 
-        viewModel.getStorageLevels()
+        viewModel.getCameraStatus()
         dispatcher.advanceTimeBy(2000)
         Assert.assertEquals(viewModel.storageLevel.value?.getContent(), result)
 

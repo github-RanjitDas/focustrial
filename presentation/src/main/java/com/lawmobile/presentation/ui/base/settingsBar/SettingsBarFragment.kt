@@ -9,7 +9,6 @@ import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
-import com.lawmobile.domain.entities.CameraInfo
 import com.lawmobile.domain.entities.ParametersBodyWornSettings
 import com.lawmobile.domain.enums.TypesOfBodyWornSettings
 import com.lawmobile.presentation.R
@@ -17,7 +16,6 @@ import com.lawmobile.presentation.databinding.FragmentStatusBarBinding
 import com.lawmobile.presentation.extensions.setOnClickListenerCheckConnection
 import com.lawmobile.presentation.extensions.showErrorSnackBar
 import com.lawmobile.presentation.ui.base.BaseFragment
-import com.lawmobile.presentation.utils.FeatureSupportHelper
 import com.safefleet.mobile.kotlin_commons.extensions.doIfError
 import com.safefleet.mobile.kotlin_commons.extensions.doIfSuccess
 import com.safefleet.mobile.kotlin_commons.helpers.Result
@@ -26,7 +24,7 @@ class SettingsBarFragment : BaseFragment() {
 
     private var _binding: FragmentStatusBarBinding? = null
     private val binding: FragmentStatusBarBinding get() = _binding!!
-    private val settingsBarViewModel: SettingsBarViewModel by viewModels()
+    private val viewModel: SettingsBarViewModel by viewModels()
     private var currentSettingChanged: TypesOfBodyWornSettings = TypesOfBodyWornSettings.CovertMode
 
     override fun onCreateView(
@@ -41,49 +39,36 @@ class SettingsBarFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setObservers()
-        setFeatures()
         setListenersForOpenOrCloseStatusBar()
         setListenersForChangeTheStatus()
-        CameraInfo.onReadyToGetSettings = {
-            getSettingsInformation()
-        }
     }
 
-    private fun setFeatures() {
-        binding.constraintHideStatusBar.isVisible = FeatureSupportHelper.supportBodyWornSettings
-    }
-
-    private fun getSettingsInformation() {
-        settingsBarViewModel.getBodyWornSettings()
+    suspend fun getBodyCameraSettings() {
+        viewModel.getBodyCameraSettings()
     }
 
     private fun setObservers() {
-        settingsBarViewModel.bodyWornSettingsLiveData.observe(
-            requireActivity(),
-            ::manageResultBodyWornSettings
+        viewModel.bodyCameraSettings.observe(
+            viewLifecycleOwner,
+            ::manageBodyCameraSettingsResult
         )
-        settingsBarViewModel.changeStatusSettingLiveData.observe(
-            requireActivity(),
+        viewModel.changeStatusSettingLiveData.observe(
+            viewLifecycleOwner,
             ::resultChangeStatusSetting
         )
     }
 
-    private fun manageResultBodyWornSettings(result: Result<ParametersBodyWornSettings>) {
-        with(result) {
-            doIfSuccess {
-                setCurrentStatusBar(it)
-            }
-        }
-        activity?.runOnUiThread {
-            hideLoadingDialog()
-        }
+    private fun manageBodyCameraSettingsResult(result: Result<ParametersBodyWornSettings>) {
+        result.doIfSuccess(::setCurrentStatusBar)
+        activity?.runOnUiThread { hideLoadingDialog() }
     }
 
-    private fun setCurrentStatusBar(parametersBodyWornSettings: ParametersBodyWornSettings) {
-        binding.imageButtonCovertMode.isActivated = parametersBodyWornSettings.isCovertModeEnable
-        binding.imageButtonGPS.isActivated = parametersBodyWornSettings.isGPSEnable
-        binding.imageButtonBluetooth.isActivated = parametersBodyWornSettings.isBluetoothEnable
-    }
+    private fun setCurrentStatusBar(parametersBodyWornSettings: ParametersBodyWornSettings) =
+        with(binding) {
+            imageButtonCovertMode.isActivated = parametersBodyWornSettings.isCovertModeEnable
+            imageButtonGPS.isActivated = parametersBodyWornSettings.isGPSEnable
+            imageButtonBluetooth.isActivated = parametersBodyWornSettings.isBluetoothEnable
+        }
 
     @SuppressLint("ClickableViewAccessibility")
     private fun setListenersForOpenOrCloseStatusBar() {
@@ -127,21 +112,20 @@ class SettingsBarFragment : BaseFragment() {
         }
     }
 
-    private fun setListenersForChangeTheStatus() {
-
-        binding.imageButtonBluetooth.setOnClickListenerCheckConnection {
-            binding.imageButtonBluetooth.isActivated = !binding.imageButtonBluetooth.isActivated
+    private fun setListenersForChangeTheStatus() = with(binding) {
+        imageButtonBluetooth.setOnClickListenerCheckConnection {
+            imageButtonBluetooth.isActivated = !imageButtonBluetooth.isActivated
             changeBodyWornSettings(
                 TypesOfBodyWornSettings.Bluetooth,
-                binding.imageButtonBluetooth.isActivated
+                imageButtonBluetooth.isActivated
             )
         }
 
-        binding.imageButtonCovertMode.setOnClickListenerCheckConnection {
-            binding.imageButtonCovertMode.isActivated = !binding.imageButtonCovertMode.isActivated
+        imageButtonCovertMode.setOnClickListenerCheckConnection {
+            imageButtonCovertMode.isActivated = !imageButtonCovertMode.isActivated
             changeBodyWornSettings(
                 TypesOfBodyWornSettings.CovertMode,
-                binding.imageButtonCovertMode.isActivated
+                imageButtonCovertMode.isActivated
             )
         }
     }
@@ -151,28 +135,21 @@ class SettingsBarFragment : BaseFragment() {
         isEnable: Boolean
     ) {
         currentSettingChanged = typesOfBodyWornSettings
-        settingsBarViewModel.changeBodyWornSetting(typesOfBodyWornSettings, isEnable)
+        viewModel.changeBodyWornSetting(typesOfBodyWornSettings, isEnable)
     }
 
-    private fun returnStatusForErrorInChange() {
+    private fun returnStatusForErrorInChange() = with(binding) {
         when (currentSettingChanged) {
-            TypesOfBodyWornSettings.CovertMode -> {
-                binding.imageButtonCovertMode.isActivated =
-                    !binding.imageButtonCovertMode.isActivated
-            }
-            TypesOfBodyWornSettings.Bluetooth -> {
-                binding.imageButtonBluetooth.isActivated = !binding.imageButtonBluetooth.isActivated
-            }
+            TypesOfBodyWornSettings.CovertMode ->
+                imageButtonCovertMode.isActivated = !imageButtonCovertMode.isActivated
+            TypesOfBodyWornSettings.Bluetooth ->
+                imageButtonBluetooth.isActivated = !imageButtonBluetooth.isActivated
         }
     }
 
-    override val viewTag: String
-        get() = TAG
+    override val viewTag: String get() = TAG
 
     companion object {
         val TAG: String = SettingsBarFragment::class.java.simpleName
-        fun createInstance(): SettingsBarFragment {
-            return SettingsBarFragment()
-        }
     }
 }

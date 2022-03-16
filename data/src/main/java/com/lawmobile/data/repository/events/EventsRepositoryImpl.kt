@@ -43,7 +43,10 @@ class EventsRepositoryImpl(
 
                 val saveResult = saveEventsInLocal(remoteEventList)
                 return if (saveResult is Result.Error) saveResult
-                else Result.Success(remoteEventList)
+                else {
+                    areCameraEventsRetrieved = true
+                    Result.Success(remoteEventList)
+                }
             }
 
             is Result.Error -> result
@@ -51,6 +54,20 @@ class EventsRepositoryImpl(
     }
 
     override suspend fun getNotificationEvents(): Result<List<CameraEvent>> {
+        if (!areCameraEventsRetrieved) {
+            val resultRemoteEvents = getCameraEvents()
+            resultRemoteEvents.doIfSuccess {
+                areCameraEventsRetrieved = true
+                return getNotificationEventsResult()
+            }
+
+            return Result.Error(Exception("Error to retrieving camera events"))
+        }
+
+        return getNotificationEventsResult()
+    }
+
+    private suspend fun getNotificationEventsResult(): Result<List<CameraEvent>> {
         val todayDate = DateHelper.getTodayDateAtStartOfTheDay()
         return when (val result = eventsLocalDataSource.getNotificationEvents(todayDate)) {
             is Result.Success -> Result.Success(result.data.toDomainList())
@@ -60,13 +77,13 @@ class EventsRepositoryImpl(
 
     override suspend fun getPendingNotificationsCount(): Result<Int> {
         if (!areCameraEventsRetrieved) {
-            areCameraEventsRetrieved = true
             val resultRemoteEvents = getCameraEvents()
             resultRemoteEvents.doIfSuccess {
+                areCameraEventsRetrieved = true
                 return eventsLocalDataSource.getPendingNotificationsCount()
             }
 
-            return Result.Error(Exception("Error to get pending notification"))
+            return Result.Error(Exception("Error to retrieving camera events"))
         }
 
         return eventsLocalDataSource.getPendingNotificationsCount()
@@ -117,8 +134,8 @@ class EventsRepositoryImpl(
     }
 
     companion object {
-        const val ATTEMPTS_TO_GET_CAMERA_EVENTS = 3
-        const val ATTEMPTS_DELAY = 500L
-        var areCameraEventsRetrieved = false
+        private const val ATTEMPTS_TO_GET_CAMERA_EVENTS = 3
+        private const val ATTEMPTS_DELAY = 500L
+        private var areCameraEventsRetrieved = false
     }
 }

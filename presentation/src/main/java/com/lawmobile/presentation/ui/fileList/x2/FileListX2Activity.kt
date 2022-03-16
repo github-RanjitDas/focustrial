@@ -3,6 +3,7 @@ package com.lawmobile.presentation.ui.fileList.x2
 import android.os.Bundle
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.entities.MenuInformation
+import com.lawmobile.presentation.extensions.activityLaunch
 import com.lawmobile.presentation.extensions.attachFragment
 import com.lawmobile.presentation.extensions.closeMenuButton
 import com.lawmobile.presentation.extensions.openMenuButton
@@ -19,15 +20,14 @@ import com.lawmobile.presentation.utils.FeatureSupportHelper
 
 class FileListX2Activity : FileListBaseActivity() {
 
-    override val parentTag: String
-        get() = this::class.java.simpleName
+    override val parentTag: String get() = this::class.java.simpleName
 
     private val menuFragment = MenuFragment()
     private lateinit var menuInformation: MenuInformation
     private lateinit var appBarFragment: AppBarX2Fragment
     private lateinit var filterSectionFragment: FilterSectionX2Fragment
 
-    private val statusBarSettingsFragment = SettingsBarFragment.createInstance()
+    private val settingsBarFragment = SettingsBarFragment()
     override val listTypeButtons: ListTypeButtons get() = filterSectionFragment
     override val fileSelection: FileSelection get() = filterSectionFragment
     override val filterSection: FilterSection get() = filterSectionFragment
@@ -38,6 +38,18 @@ class FileListX2Activity : FileListBaseActivity() {
         setListeners()
         menuInformation =
             MenuInformation(this, menuFragment, binding.layoutCustomMenu.shadowOpenMenuView)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        getFragmentInformation()
+    }
+
+    private fun getFragmentInformation() {
+        activityLaunch {
+            appBarFragment.getUnreadNotificationCount()
+            if (FeatureSupportHelper.supportBodyWornSettings) settingsBarFragment.getBodyCameraSettings()
+        }
     }
 
     private fun setAndAttachFragments() {
@@ -112,7 +124,7 @@ class FileListX2Activity : FileListBaseActivity() {
         if (FeatureSupportHelper.supportBodyWornSettings) {
             supportFragmentManager.attachFragment(
                 containerId = R.id.statusBarFragment,
-                fragment = statusBarSettingsFragment,
+                fragment = settingsBarFragment,
                 tag = SettingsBarFragment.TAG
             )
         }
