@@ -124,16 +124,20 @@ abstract class BaseActivity : AppCompatActivity() {
     }
 
     private fun handleInformationEvent(cameraEvent: CameraEvent) {
-        when (cameraEvent.name) {
-            NotificationType.BATTERY_LEVEL.value -> {
-                cameraEvent.value?.toInt()?.let {
-                    onBatteryLevelChanged?.invoke(it)
+        runOnUiThread {
+            when (cameraEvent.name) {
+                NotificationType.BATTERY_LEVEL.value -> {
+                    cameraEvent.value?.toInt()?.let {
+                        onBatteryLevelChanged?.invoke(it)
+                    }
                 }
-            }
-            NotificationType.STORAGE_REMAIN.value -> {
-                cameraEvent.value?.toDouble()?.let { availableStorage ->
-                    onStorageLevelChanged?.invoke(availableStorage)
+                NotificationType.STORAGE_REMAIN.value -> {
+                    cameraEvent.value?.toDouble()?.let { availableStorage ->
+                        onStorageLevelChanged?.invoke(availableStorage)
+                    }
                 }
+                NotificationType.VIDEO_RECORDING_STARTED.value -> onVideoRecordingStatus?.invoke(true)
+                NotificationType.VIDEO_RECORDING_STOPPED.value -> onVideoRecordingStatus?.invoke(false)
             }
         }
     }
@@ -212,6 +216,9 @@ abstract class BaseActivity : AppCompatActivity() {
         EspressoIdlingResource.decrement()
     }
 
+    fun isRecordingNotification() {
+    }
+
     fun isInPortraitMode() =
         resources.configuration.orientation == ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
 
@@ -220,6 +227,8 @@ abstract class BaseActivity : AppCompatActivity() {
         var onStorageLevelChanged: ((Double) -> Unit)? = null
         var onLowBattery: ((Int?) -> Unit)? = null
         var onLowStorage: (() -> Unit)? = null
+
+        var onVideoRecordingStatus: ((Boolean) -> Unit)? = null
 
         lateinit var lastInteraction: Timestamp
         var isRecordingVideo: Boolean = false

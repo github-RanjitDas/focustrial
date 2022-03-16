@@ -143,12 +143,10 @@ class StatusBarX2Fragment : StatusBarBaseFragment() {
     }
 
     private fun manageStorageLevel(availablePercent: Double) {
-        activity?.runOnUiThread {
-            currentStoragePercent = availablePercent
-            setColorInStorageLevel(availablePercent)
-            setTextStorageLevel(availablePercent)
-            checkPercentToShowNotification(availablePercent)
-        }
+        currentStoragePercent = availablePercent
+        setColorInStorageLevel(availablePercent)
+        setTextStorageLevel(availablePercent)
+        checkPercentToShowNotification(availablePercent)
     }
 
     private fun checkPercentToShowNotification(availablePercent: Double) {
@@ -201,15 +199,13 @@ class StatusBarX2Fragment : StatusBarBaseFragment() {
     }
 
     override fun manageBatteryLevel(batteryPercent: Int) {
-        activity?.runOnUiThread {
-            currentBatteryPercent = batteryPercent
-            if (batteryPercent >= 0) {
-                progressBarBattery.setProgress(batteryPercent)
-                setColorInBattery(batteryPercent)
-                setTextInProgressBattery(batteryPercent)
-                currentPercentInBattery = batteryPercent
-            } else showBatteryLevelNotAvailable()
-        }
+        currentBatteryPercent = batteryPercent
+        if (batteryPercent >= 0) {
+            progressBarBattery.setProgress(batteryPercent)
+            setColorInBattery(batteryPercent)
+            setTextInProgressBattery(batteryPercent)
+            currentPercentInBattery = batteryPercent
+        } else showBatteryLevelNotAvailable()
     }
 
     override fun setTextInProgressBattery(batteryPercent: Int) {

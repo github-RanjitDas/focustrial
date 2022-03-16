@@ -53,12 +53,12 @@ enum class NotificationType(
             return EventType.NOTIFICATION
         }
     },
-    VIDEO_RECORD_COMPLETE("video_record_complete") {
+    VIDEO_RECORDING_STOPPED("video_record_complete") {
         override fun getTypeOfEvent(): EventType {
             return EventType.CAMERA
         }
     },
-    STARTING_VIDEO_RECORD("starting_video_record") {
+    VIDEO_RECORDING_STARTED("starting_video_record") {
         override fun getTypeOfEvent(): EventType {
             return EventType.CAMERA
         }
@@ -124,8 +124,8 @@ enum class NotificationType(
                 DIAGNOSIS.value -> DIAGNOSIS
                 LOW_BATTERY.value -> LOW_BATTERY
                 LOW_STORAGE.value -> LOW_STORAGE
-                VIDEO_RECORD_COMPLETE.value -> VIDEO_RECORD_COMPLETE
-                STARTING_VIDEO_RECORD.value -> STARTING_VIDEO_RECORD
+                VIDEO_RECORDING_STARTED.value -> VIDEO_RECORDING_STARTED
+                VIDEO_RECORDING_STOPPED.value -> VIDEO_RECORDING_STOPPED
                 GPS_SIGNAL_LOST.value -> GPS_SIGNAL_LOST
                 INTERNET_CONNECTION_ISSUES.value -> INTERNET_CONNECTION_ISSUES
                 BLUETOOTH_CONNECTION_ISSUES.value -> BLUETOOTH_CONNECTION_ISSUES
