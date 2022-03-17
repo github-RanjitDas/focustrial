@@ -308,4 +308,5 @@
     <string name="body_worn_status_hide_or_show_status_bar">Hide or Show Status Bar</string>
     <string name="associate_audios_to_video">Associate audios to video</string>
     <string name="return_to_regular_login">Login using Device Password</string>
+    <string name="video_still_recording">You cannot access this file at the moment because it is still being recorded</string>
 </resources>

@@ -116,6 +116,13 @@ class SimpleFileListAdapter(
         fileList = tmpList
     }
 
+    fun isTheMostRecentFile(file: DomainInformationFile): Boolean {
+        return fileList.find {
+            it.domainCameraFile.getDateDependingOnNameLength() >
+                file.domainCameraFile.getDateDependingOnNameLength()
+        } == null
+    }
+
     inner class SimpleListViewHolder(
         private val fileView: View,
         private val onFileClick: (DomainInformationFile) -> Unit,

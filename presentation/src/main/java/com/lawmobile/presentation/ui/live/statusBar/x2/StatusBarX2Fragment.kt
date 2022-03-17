@@ -111,21 +111,17 @@ class StatusBarX2Fragment : StatusBarBaseFragment() {
     }
 
     private fun manageLowStorage() {
-        activity?.runOnUiThread {
-            binding.imageViewStorage.startAnimationIfEnabled(blinkAnimation)
-        }
+        binding.imageViewStorage.startAnimationIfEnabled(blinkAnimation)
     }
 
     private fun manageLowBattery(value: Int?) {
-        activity?.runOnUiThread {
-            wasNotificationArriveForLowBattery = true
-            value?.let {
-                if (currentMinutesAfterNotifications == 0) currentMinutesAfterNotifications = value
-                manageBatteryLevel(getPercentLeftAfterNotification(it))
-                currentMinutesAfterNotifications = value
-            }
-            imageViewBattery.startAnimationIfEnabled(blinkAnimation)
+        wasNotificationArriveForLowBattery = true
+        value?.let {
+            if (currentMinutesAfterNotifications == 0) currentMinutesAfterNotifications = value
+            manageBatteryLevel(getPercentLeftAfterNotification(it))
+            currentMinutesAfterNotifications = value
         }
+        imageViewBattery.startAnimationIfEnabled(blinkAnimation)
     }
 
     private fun setStorageLevels(result: Event<Result<List<Double>>>) {
@@ -189,12 +185,8 @@ class StatusBarX2Fragment : StatusBarBaseFragment() {
 
     override fun setBatteryLevel(result: Event<Result<Int>>) {
         result.getContentIfNotHandled()?.run {
-            doIfSuccess {
-                manageBatteryLevel(it)
-            }
-            doIfError {
-                showBatteryLevelNotAvailable()
-            }
+            doIfSuccess(::manageBatteryLevel)
+            doIfError { showBatteryLevelNotAvailable() }
         }
     }
 

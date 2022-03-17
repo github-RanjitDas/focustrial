@@ -108,8 +108,11 @@ abstract class BaseActivity : AppCompatActivity() {
     }
 
     private fun manageCameraEvent(cameraEvent: CameraEvent) {
-        if (cameraEvent.eventType == EventType.NOTIFICATION) handleNotificationEvent(cameraEvent)
-        else handleInformationEvent(cameraEvent)
+        runOnUiThread {
+            if (cameraEvent.eventType == EventType.NOTIFICATION) handleNotificationEvent(cameraEvent)
+            else handleInformationEvent(cameraEvent)
+        }
+
         baseViewModel.saveNotificationEvent(cameraEvent)
     }
 
@@ -118,27 +121,23 @@ abstract class BaseActivity : AppCompatActivity() {
             NotificationType.LOW_BATTERY.value -> onLowBattery?.invoke(cameraEvent.value?.toInt())
             NotificationType.LOW_STORAGE.value -> onLowStorage?.invoke()
         }
-        runOnUiThread {
-            checkActivityBeforeDialog { createNotificationDialog(cameraEvent) }
-        }
+        checkActivityBeforeDialog { createNotificationDialog(cameraEvent) }
     }
 
     private fun handleInformationEvent(cameraEvent: CameraEvent) {
-        runOnUiThread {
-            when (cameraEvent.name) {
-                NotificationType.BATTERY_LEVEL.value -> {
-                    cameraEvent.value?.toInt()?.let {
-                        onBatteryLevelChanged?.invoke(it)
-                    }
+        when (cameraEvent.name) {
+            NotificationType.BATTERY_LEVEL.value -> {
+                cameraEvent.value?.toInt()?.let {
+                    onBatteryLevelChanged?.invoke(it)
                 }
-                NotificationType.STORAGE_REMAIN.value -> {
-                    cameraEvent.value?.toDouble()?.let { availableStorage ->
-                        onStorageLevelChanged?.invoke(availableStorage)
-                    }
-                }
-                NotificationType.VIDEO_RECORDING_STARTED.value -> onVideoRecordingStatus?.invoke(true)
-                NotificationType.VIDEO_RECORDING_STOPPED.value -> onVideoRecordingStatus?.invoke(false)
             }
+            NotificationType.STORAGE_REMAIN.value -> {
+                cameraEvent.value?.toDouble()?.let { availableStorage ->
+                    onStorageLevelChanged?.invoke(availableStorage)
+                }
+            }
+            NotificationType.VIDEO_RECORDING_STARTED.value -> onVideoRecordingStatus?.invoke(true)
+            NotificationType.VIDEO_RECORDING_STOPPED.value -> onVideoRecordingStatus?.invoke(false)
         }
     }
 
@@ -214,9 +213,6 @@ abstract class BaseActivity : AppCompatActivity() {
         loadingDialog?.dismiss()
         loadingDialog = null
         EspressoIdlingResource.decrement()
-    }
-
-    fun isRecordingNotification() {
     }
 
     fun isInPortraitMode() =
