@@ -19,6 +19,7 @@ import com.lawmobile.presentation.databinding.FragmentFileListBinding
 import com.lawmobile.presentation.extensions.setOnClickListenerCheckConnection
 import com.lawmobile.presentation.extensions.showErrorSnackBar
 import com.lawmobile.presentation.extensions.verifySessionBeforeAction
+import com.lawmobile.presentation.ui.base.BaseActivity
 import com.lawmobile.presentation.ui.fileList.FileListBaseFragment
 import com.lawmobile.presentation.utils.Constants.AUDIO_LIST
 import com.lawmobile.presentation.utils.Constants.FILE_LIST_TYPE
@@ -182,8 +183,15 @@ class SimpleFileListFragment : FileListBaseFragment() {
     }
 
     private fun onFileClick(file: DomainInformationFile) {
-        startFileListIntent(file.domainCameraFile)
+        if (isFileBeingRecorded(file))
+            binding.root.showErrorSnackBar(getString(R.string.video_still_recording))
+        else startFileListIntent(file.domainCameraFile)
     }
+
+    private fun isFileBeingRecorded(file: DomainInformationFile) =
+        BaseActivity.isRecordingVideo &&
+            listType == VIDEO_LIST &&
+            listAdapter.isTheMostRecentFile(file)
 
     override fun onResume() {
         super.onResume()
