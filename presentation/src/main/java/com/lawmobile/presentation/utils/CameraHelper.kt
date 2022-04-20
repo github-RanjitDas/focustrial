@@ -37,4 +37,10 @@ class CameraHelper(
             connectionHelper.disconnectCamera()
         }
     }
+
+    fun resetViewFinder() {
+        CoroutineScope(dispatcher).launch {
+            connectionHelper.resetViewFinder(wifiHelper.getIpAddress())
+        }
+    }
 }

@@ -64,7 +64,7 @@ open class CameraServiceImpl(
         CameraConstants.PROGRESS_DEVICE_INFO, ipAddressClient
     )
 
-    private suspend fun resetViewFinder(
+    override suspend fun resetViewFinder(
         ipAddressClient: String
     ): Boolean {
         return if (!isRecording()) {

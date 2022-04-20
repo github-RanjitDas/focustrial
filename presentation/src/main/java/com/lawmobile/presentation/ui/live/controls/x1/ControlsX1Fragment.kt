@@ -4,6 +4,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
+import com.lawmobile.presentation.BuildConfig
 import com.lawmobile.presentation.databinding.FragmentLiveControlsX1Binding
 import com.lawmobile.presentation.ui.live.controls.ControlsBaseFragment
 
@@ -25,14 +27,20 @@ class ControlsX1Fragment : ControlsBaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setViews()
+        setFeatures()
         setSharedListeners()
         setLiveViewSwitchState()
+    }
+
+    private fun setFeatures() {
+        binding.buttonResetViewFinder.isVisible = BuildConfig.DEBUG
     }
 
     private fun setViews() {
         buttonTakeSnapshot = binding.buttonSnapshot
         buttonRecordVideo = binding.buttonRecord
         buttonSwitchLiveView = binding.buttonSwitchLiveView
+        buttonResetViewFinder = binding.buttonResetViewFinder
         parentLayout = binding.layoutLiveControls
         viewDisableButtons = binding.viewDisableButtons
         imageRecordingIndicator = binding.imageRecordingIndicator

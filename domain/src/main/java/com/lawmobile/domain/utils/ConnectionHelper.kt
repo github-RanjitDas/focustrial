@@ -8,4 +8,5 @@ interface ConnectionHelper {
     fun onCameraEvent(callback: (CameraEvent) -> Unit)
     suspend fun disconnectCamera(): Result<Unit>
     fun reviewIfArriveNotificationInCMDSocket()
+    suspend fun resetViewFinder(ipAddressClient: String): Boolean
 }

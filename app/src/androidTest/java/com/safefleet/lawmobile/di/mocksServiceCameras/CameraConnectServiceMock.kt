@@ -207,6 +207,8 @@ class CameraConnectServiceMock : CameraService {
 
     override suspend fun isRecording(): Boolean = false
 
+    override suspend fun resetViewFinder(ipAddressClient: String): Boolean = true
+
     override suspend fun saveAllPhotoMetadata(list: List<PhotoInformation>): Result<Unit> {
         return Result.Success(Unit)
     }

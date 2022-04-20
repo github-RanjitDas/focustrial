@@ -1,6 +1,7 @@
 package com.lawmobile.presentation.ui.live.controls
 
 import android.view.View
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -14,6 +15,7 @@ import com.lawmobile.presentation.extensions.showSuccessSnackBar
 import com.lawmobile.presentation.extensions.startAnimationIfEnabled
 import com.lawmobile.presentation.ui.base.BaseActivity
 import com.lawmobile.presentation.ui.base.BaseFragment
+import com.lawmobile.presentation.utils.CameraHelper
 import com.lawmobile.presentation.widgets.CustomAudioButton
 import com.lawmobile.presentation.widgets.CustomRecordButton
 import com.lawmobile.presentation.widgets.CustomSnapshotButton
@@ -33,6 +35,7 @@ abstract class ControlsBaseFragment : BaseFragment() {
 
     lateinit var buttonTakeSnapshot: CustomSnapshotButton
     lateinit var buttonRecordVideo: CustomRecordButton
+    lateinit var buttonResetViewFinder: Button
     var buttonRecordAudio: CustomAudioButton? = null
     lateinit var buttonSwitchLiveView: SafeFleetSwitch
     lateinit var parentLayout: ConstraintLayout
@@ -71,6 +74,11 @@ abstract class ControlsBaseFragment : BaseFragment() {
     }
 
     fun setSharedListeners() {
+
+        buttonResetViewFinder.setOnClickListener {
+            CameraHelper.getInstance().resetViewFinder()
+        }
+
         buttonTakeSnapshot.setClickListenerCheckConnection {
             disableButtons()
             onCameraOperation?.invoke(getString(R.string.taking_snapshot))

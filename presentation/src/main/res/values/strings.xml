@@ -309,4 +309,5 @@
     <string name="associate_audios_to_video">Associate audios to video</string>
     <string name="return_to_regular_login">Login using Device Password</string>
     <string name="video_still_recording">You cannot access this file at the moment because it is still being recorded</string>
+    <string name="reset">Reset</string>
 </resources>
