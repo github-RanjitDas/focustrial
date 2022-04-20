@@ -32,6 +32,7 @@ interface CameraService {
     fun getCanReadNotification(): Boolean
     fun reviewIfArriveNotificationInCMDSocket()
     suspend fun isRecording(): Boolean
+    suspend fun resetViewFinder(ipAddressClient: String): Boolean
 
     // File lists
     suspend fun getListOfVideos(): Result<FileResponseWithErrors>

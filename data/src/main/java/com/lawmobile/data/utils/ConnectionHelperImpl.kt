@@ -9,6 +9,7 @@ import com.safefleet.mobile.kotlin_commons.helpers.Result
 class ConnectionHelperImpl(private val cameraServiceFactory: CameraServiceFactory) :
     ConnectionHelper {
     private var cameraService: CameraService = cameraServiceFactory.create()
+
     override fun isCameraConnected(ipAddress: String) = cameraService.isCameraConnected(ipAddress)
     override fun onCameraEvent(callback: (CameraEvent) -> Unit) {
         cameraService.arriveNotificationFromCamera = {
@@ -23,5 +24,9 @@ class ConnectionHelperImpl(private val cameraServiceFactory: CameraServiceFactor
     override fun reviewIfArriveNotificationInCMDSocket() {
         cameraService = cameraServiceFactory.create()
         cameraService.reviewIfArriveNotificationInCMDSocket()
+    }
+
+    override suspend fun resetViewFinder(ipAddressClient: String): Boolean {
+        return cameraService.resetViewFinder(ipAddressClient)
     }
 }

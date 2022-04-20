@@ -27,6 +27,19 @@
         app:layout_constraintStart_toEndOf="@id/textLiveViewSwitch"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <Button
+        android:id="@+id/buttonResetViewFinder"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/switch_margin"
+        android:layout_marginHorizontal="@dimen/live_view_buttons_margin_horizontal"
+        android:layout_marginVertical="@dimen/live_view_buttons_margin_vertical"
+        android:contentDescription="@string/button_snapshot"
+        android:text="@string/reset"
+        app:layout_constraintEnd_toStartOf="@+id/imageRecordingIndicator"
+        app:layout_constraintStart_toEndOf="@+id/buttonSwitchLiveView"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <ImageView
         android:id="@+id/imageRecordingIndicator"
         android:layout_width="wrap_content"
