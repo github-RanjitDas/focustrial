@@ -1,3 +1,4 @@
+@file:JvmName("SessionExpired")
 package com.lawmobile.presentation.utils
 
 import com.lawmobile.presentation.ui.base.BaseActivity

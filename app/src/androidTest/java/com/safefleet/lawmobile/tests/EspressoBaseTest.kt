@@ -4,7 +4,6 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
 import androidx.test.filters.Suppress
 import androidx.test.rule.GrantPermissionRule
-import com.lawmobile.domain.enums.CameraType
 import com.safefleet.lawmobile.di.mocksServiceCameras.CameraConnectServiceMock
 import com.safefleet.lawmobile.helpers.MockUtils
 import org.junit.After
@@ -28,11 +27,10 @@ open class EspressoBaseTest {
     @After
     fun restoreData() {
         mockUtils.restoreCameraConnection()
-        mockUtils.restoreSnapshotsOnX1()
-        mockUtils.restoreVideosOnX1()
+        mockUtils.restoreSnapshotsOnBodyCamera()
+        mockUtils.restoreVideosOnBodyCamera()
         mockUtils.turnWifiOn()
         CameraConnectServiceMock.takenPhotos = 0
         CameraConnectServiceMock.takenVideos = 0
-        mockUtils.setCameraType(CameraType.X1)
     }
 }

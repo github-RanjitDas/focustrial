@@ -38,6 +38,7 @@ class BodyWornDiagnosisActivity : BaseActivity() {
     private fun setCustomAppBar() = with(binding.diagnosisAppBar) {
         textViewTitle.text = getString(R.string.live_view_menu_item_diagnose)
         imageButtonBackArrow.setImageResource(R.drawable.ic_cancel)
+        imageButtonBackArrow.tag = R.drawable.ic_cancel
         imageButtonBackArrow.setOnClickListener { onBackPressed() }
     }
 
@@ -88,6 +89,7 @@ class BodyWornDiagnosisActivity : BaseActivity() {
         titleBackgroundSolid.setBackgroundResource(R.drawable.background_solid_body_worn_diagnosis_error)
         titleBackgroundStroke.setBackgroundResource(R.drawable.background_stroke_body_worn_diagnosis_error)
         imageIconResult.setImageResource(R.drawable.ic_error_diagnosis_icon)
+        imageIconResult.tag = R.drawable.ic_error_diagnosis_icon
         textTitleDiagnosis.text = getString(R.string.body_worn_diagnosis_error_text)
         textTitleDiagnosis.setTextColor(getColor(R.color.white))
         textDescriptionDiagnosis.text = getString(R.string.diagnosis_failed_message)
@@ -97,6 +99,7 @@ class BodyWornDiagnosisActivity : BaseActivity() {
         titleBackgroundSolid.setBackgroundResource(R.drawable.background_solid_body_worn_diagnosis_success)
         titleBackgroundStroke.setBackgroundResource(R.drawable.background_stroke_body_worn_diagnosis_success)
         imageIconResult.setImageResource(R.drawable.ic_success_icon)
+        imageIconResult.tag = R.drawable.ic_success_icon
         textTitleDiagnosis.text = getString(R.string.body_worn_diagnosis_success_text)
         textTitleDiagnosis.setTextColor(getColor(R.color.white))
         textDescriptionDiagnosis.text = getString(R.string.diagnosis_success_message)

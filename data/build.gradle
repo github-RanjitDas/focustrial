@@ -1,7 +1,7 @@
 import dependencies.AppConfig
 import dependencies.Dependencies
-import dependencies.Modules
 import dependencies.Exclusions
+import dependencies.Modules
 
 plugins {
     id 'java-library'

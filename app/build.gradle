@@ -1,7 +1,7 @@
 import dependencies.AppConfig
+import dependencies.Build
 import dependencies.Dependencies
 import dependencies.Modules
-import dependencies.Build
 
 plugins {
     id 'com.android.application'

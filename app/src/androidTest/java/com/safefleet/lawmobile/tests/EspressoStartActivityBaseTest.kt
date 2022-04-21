@@ -1,11 +1,11 @@
 package com.safefleet.lawmobile.tests
 
 import android.app.Activity
-import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
 import androidx.test.filters.Suppress
-import com.safefleet.lawmobile.rules.EspressoIdlingResourceRule
+import com.schibsted.spain.barista.rule.BaristaRule
+import org.junit.Before
 import org.junit.Rule
 import org.junit.runner.RunWith
 
@@ -15,21 +15,20 @@ import org.junit.runner.RunWith
 open class EspressoStartActivityBaseTest<T : Activity>(testActivityClass: Class<T>) :
     EspressoBaseTest() {
 
+//    @Rule
+//    @JvmField
+//    val espressoIdlingResourcesRule = EspressoIdlingResourceRule()
     @Rule
     @JvmField
-    val espressoIdlingResourcesRule = EspressoIdlingResourceRule()
+    var baristaRule = BaristaRule.create(testActivityClass)
 
-    // @Rule
-    // @JvmField
-    // var baristaRule = BaristaRule.create(testActivityClass)
-
-    @Rule
+  /*  @Rule
     @JvmField
     val activityRule = ActivityScenarioRule(testActivityClass)
-
+*/
     // Comment this @Before statement if you want to disable barista defaults
-    /* @Before
+    @Before
     fun startActivity() {
         baristaRule.launchActivity()
-    } */
+    }
 }

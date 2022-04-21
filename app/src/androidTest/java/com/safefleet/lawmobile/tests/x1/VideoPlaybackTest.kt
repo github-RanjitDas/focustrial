@@ -2,6 +2,7 @@ package com.safefleet.lawmobile.tests.x1
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
+import com.lawmobile.domain.enums.CameraType
 import com.lawmobile.presentation.ui.login.x1.LoginX1Activity
 import com.safefleet.lawmobile.R
 import com.safefleet.lawmobile.screens.FileListScreen
@@ -10,13 +11,15 @@ import com.safefleet.lawmobile.screens.LoginScreen
 import com.safefleet.lawmobile.screens.VideoPlaybackScreen
 import com.safefleet.lawmobile.testData.VideoPlaybackMetadata
 import com.safefleet.lawmobile.tests.EspressoStartActivityBaseTest
+import com.schibsted.spain.barista.rule.flaky.AllowFlaky
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 
 @LargeTest
 @RunWith(AndroidJUnit4::class)
-class VideoPlaybackTest : EspressoStartActivityBaseTest<LoginX1Activity>(LoginX1Activity::class.java) {
+class VideoPlaybackTest :
+    EspressoStartActivityBaseTest<LoginX1Activity>(LoginX1Activity::class.java) {
 
     companion object {
         private val fileListScreen = FileListScreen()
@@ -27,7 +30,8 @@ class VideoPlaybackTest : EspressoStartActivityBaseTest<LoginX1Activity>(LoginX1
     }
 
     @Before
-    fun login() {
+    fun setUp() {
+        mockUtils.setCameraType(CameraType.X1)
         LoginScreen().login()
         setSimpleRecyclerView()
     }
@@ -43,6 +47,7 @@ class VideoPlaybackTest : EspressoStartActivityBaseTest<LoginX1Activity>(LoginX1
      * Test case: https://safefleet.atlassian.net/browse/FMA-722
      */
     @Test
+    @AllowFlaky(attempts = 2)
     fun verifySaveVideoMetadataSuccess() {
         liveViewScreen.openVideoList()
         fileListScreen.clickOnItemInPosition(3)
@@ -59,6 +64,7 @@ class VideoPlaybackTest : EspressoStartActivityBaseTest<LoginX1Activity>(LoginX1
      */
     @LargeTest
     @Test
+    @AllowFlaky(attempts = 1)
     fun verifyEventMandatory() {
         liveViewScreen.openVideoList()
         fileListScreen.clickOnItemInPosition(3)
@@ -76,6 +82,7 @@ class VideoPlaybackTest : EspressoStartActivityBaseTest<LoginX1Activity>(LoginX1
      * Test case: https://safefleet.atlassian.net/browse/FMA-728
      */
     @Test
+    @AllowFlaky(attempts = 2)
     fun verifySaveWhenDisconnectionOnPlayback() {
         liveViewScreen.openVideoList()
         fileListScreen.clickOnItemInPosition(3)
@@ -91,6 +98,7 @@ class VideoPlaybackTest : EspressoStartActivityBaseTest<LoginX1Activity>(LoginX1
      * Test case: https://safefleet.atlassian.net/browse/FMA-729
      */
     @Test
+    @AllowFlaky(attempts = 2)
     fun verifyCancelWhenDisconnectionOnPlayback() {
         liveViewScreen.openVideoList()
         fileListScreen.clickOnItemInPosition(3)
@@ -106,6 +114,7 @@ class VideoPlaybackTest : EspressoStartActivityBaseTest<LoginX1Activity>(LoginX1
      */
     @LargeTest
     @Test
+    @AllowFlaky(attempts = 2)
     fun verifySaveMetadataOnPlaybackWhenRecording() {
         with(liveViewScreen) {
             startRecording()
@@ -128,6 +137,7 @@ class VideoPlaybackTest : EspressoStartActivityBaseTest<LoginX1Activity>(LoginX1
      */
     @LargeTest
     @Test
+    @AllowFlaky(attempts = 2)
     fun verifyCancelVideoMetadataOnPlayback() {
         liveViewScreen.openVideoList()
         fileListScreen.clickOnItemInPosition(3)
@@ -148,6 +158,7 @@ class VideoPlaybackTest : EspressoStartActivityBaseTest<LoginX1Activity>(LoginX1
      */
     @LargeTest
     @Test
+    @AllowFlaky(attempts = 2)
     fun updateVideoMetadataOnPlayback() {
         liveViewScreen.openVideoList()
         fileListScreen.clickOnItemInPosition(3)

@@ -15,12 +15,12 @@ import com.schibsted.spain.barista.interaction.BaristaScrollInteractions.safelyS
 
 class VideoPlaybackScreen : BaseScreen() {
 
-    fun clickOnSave() = clickOn(R.id.buttonSaveMetadata)
+    fun clickOnSave() = waitUntil { clickOn(R.id.buttonSaveMetadata) }
 
     fun clickOnAddSnapshots() = clickOn(R.id.buttonAssociateSnapshots)
 
     fun selectEvent(data: VideoInformation) {
-        clickOn(R.id.eventValue)
+        waitUntil { clickOn(R.id.eventValue) }
         data.metadata?.event?.name?.let { waitUntil { clickOn(it) } }
     }
 
@@ -37,9 +37,9 @@ class VideoPlaybackScreen : BaseScreen() {
     fun typePartnerId(data: VideoInformation) =
         data.officerId?.let { writeTo(R.id.partnerIdValue, it) }
 
-    fun updateField(inputId: Int, value: String) {
-        clearText(inputId)
-        writeTo(R.id.ticket1Value, value)
+    fun updateField(inputId: Int, value: String?) {
+        waitUntil { clearText(inputId) }
+        value?.let { waitUntil { writeTo(inputId, it) } }
     }
 
     fun fieldHasValue(inputId: Int, value: String) {
@@ -115,9 +115,8 @@ class VideoPlaybackScreen : BaseScreen() {
     }
 
     fun checkIfFieldsAreUpdated(data: VideoInformation) {
-        data.officerId?.let { checkIfFieldIsUpdated(R.id.partnerIdValue, it) }
-
         data.metadata?.run {
+            partnerID?.let { checkIfFieldIsUpdated(R.id.partnerIdValue, it) }
             ticketNumber?.let { checkIfFieldIsUpdated(R.id.ticket1Value, it) }
             ticketNumber2?.let { checkIfFieldIsUpdated(R.id.ticket2Value, it) }
             caseNumber?.let { checkIfFieldIsUpdated(R.id.case1Value, it) }
@@ -133,8 +132,8 @@ class VideoPlaybackScreen : BaseScreen() {
         }
     }
 
-    fun checkIfFieldIsUpdated(id: Int, value: String) {
+    fun checkIfFieldIsUpdated(id: Int, value: String?) {
         safelyScrollTo(id)
-        waitUntil { assertDisplayed(id, value) }
+        value?.let { waitUntil { assertDisplayed(id, it) } }
     }
 }

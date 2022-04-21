@@ -7,32 +7,28 @@ import com.lawmobile.domain.enums.CameraType
 import com.lawmobile.presentation.ui.login.x2.LoginX2Activity
 import com.safefleet.lawmobile.di.mocksServiceCameras.CameraConnectServiceMock
 import com.safefleet.lawmobile.helpers.CustomAssertionActions.waitUntil
-import com.safefleet.lawmobile.helpers.MockUtils.Companion.cameraConnectServiceX1Mock
+import com.safefleet.lawmobile.helpers.MockUtils.Companion.bodyCameraServiceMock
 import com.safefleet.lawmobile.screens.LiveViewScreen
 import com.safefleet.lawmobile.screens.LoginScreen
 import com.safefleet.lawmobile.screens.NotificationViewScreen
 import com.safefleet.lawmobile.testData.CameraEventsData
-import com.safefleet.lawmobile.tests.EspressoBaseTest
-import com.schibsted.spain.barista.rule.BaristaRule
+import com.safefleet.lawmobile.tests.EspressoStartActivityBaseTest
+import com.schibsted.spain.barista.rule.flaky.AllowFlaky
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 
 @LargeTest
 @RunWith(AndroidJUnit4::class)
-class SystemNotificationTest : EspressoBaseTest() {
+class SystemNotificationTest :
+    EspressoStartActivityBaseTest<LoginX2Activity>(LoginX2Activity::class.java) {
 
     private val notificationViewScreen = NotificationViewScreen()
     private val liveViewScreen = LiveViewScreen()
 
-    @get:Rule
-    var baristaRule = BaristaRule.create(LoginX2Activity::class.java)
-
     @Before
     fun setUp() {
         mockUtils.setCameraType(CameraType.X2)
-        baristaRule.launchActivity()
         LoginScreen().loginWithoutSSO()
     }
 
@@ -41,6 +37,7 @@ class SystemNotificationTest : EspressoBaseTest() {
      * Test case: https://safefleet.atlassian.net/browse/FMA-1794
      */
     @Test
+    @AllowFlaky(attempts = 1)
     fun verifyPushNotificationIsShown() {
         var notification = NotificationResponse(
             "7",
@@ -48,7 +45,7 @@ class SystemNotificationTest : EspressoBaseTest() {
             "7"
         )
         mockUtils.setBatteryProgressCamera(8)
-        cameraConnectServiceX1Mock.sendPushNotification(notification)
+        bodyCameraServiceMock.sendPushNotification(notification)
 
         with(notificationViewScreen) {
             isWarningIconDisplayed()
@@ -62,7 +59,7 @@ class SystemNotificationTest : EspressoBaseTest() {
             "err:low_storage_warning",
             "95"
         )
-        cameraConnectServiceX1Mock.sendPushNotification(notification)
+        bodyCameraServiceMock.sendPushNotification(notification)
 
         with(notificationViewScreen) {
             isErrorIconDisplayed()
@@ -79,7 +76,7 @@ class SystemNotificationTest : EspressoBaseTest() {
             "low_battery_warning",
             "6"
         )
-        cameraConnectServiceX1Mock.sendPushNotification(notification)
+        bodyCameraServiceMock.sendPushNotification(notification)
 
         with(notificationViewScreen) {
             isInfoIconDisplayed()
@@ -91,13 +88,14 @@ class SystemNotificationTest : EspressoBaseTest() {
      * Test case: https://safefleet.atlassian.net/browse/FMA-2143
      */
     @Test
+    @AllowFlaky(attempts = 1)
     fun verifyChangeBatteryLevelInText() {
         var notification = NotificationResponse(
             "7",
             "battery_level",
             "8"
         )
-        cameraConnectServiceX1Mock.sendPushNotification(notification)
+        bodyCameraServiceMock.sendPushNotification(notification)
 
         liveViewScreen.isTextBatteryIndicatorContained("8 %")
 
@@ -106,7 +104,7 @@ class SystemNotificationTest : EspressoBaseTest() {
             "battery_level",
             "7"
         )
-        cameraConnectServiceX1Mock.sendPushNotification(notification)
+        bodyCameraServiceMock.sendPushNotification(notification)
 
         liveViewScreen.isTextBatteryIndicatorContained("7 %")
 
@@ -116,7 +114,7 @@ class SystemNotificationTest : EspressoBaseTest() {
             "7"
         )
 
-        cameraConnectServiceX1Mock.sendPushNotification(notification)
+        bodyCameraServiceMock.sendPushNotification(notification)
         with(notificationViewScreen) {
             isLowBatteryNotificationDisplayed("7")
             clickOnDismissButton()
@@ -128,7 +126,7 @@ class SystemNotificationTest : EspressoBaseTest() {
             "low_battery_warning",
             "6"
         )
-        cameraConnectServiceX1Mock.sendPushNotification(notification)
+        bodyCameraServiceMock.sendPushNotification(notification)
         with(notificationViewScreen) {
             isLowBatteryNotificationDisplayed("6")
             clickOnDismissButton()
@@ -141,7 +139,7 @@ class SystemNotificationTest : EspressoBaseTest() {
             "5"
         )
 
-        cameraConnectServiceX1Mock.sendPushNotification(notification)
+        bodyCameraServiceMock.sendPushNotification(notification)
         with(notificationViewScreen) {
             isLowBatteryNotificationDisplayed("5")
             clickOnDismissButton()
@@ -154,7 +152,7 @@ class SystemNotificationTest : EspressoBaseTest() {
             "battery_level",
             "4"
         )
-        cameraConnectServiceX1Mock.sendPushNotification(notification)
+        bodyCameraServiceMock.sendPushNotification(notification)
         liveViewScreen.isTextBatteryIndicatorContained("4 Mins")
 
         notification = NotificationResponse(
@@ -163,7 +161,7 @@ class SystemNotificationTest : EspressoBaseTest() {
             "1"
         )
 
-        cameraConnectServiceX1Mock.sendPushNotification(notification)
+        bodyCameraServiceMock.sendPushNotification(notification)
         with(notificationViewScreen) {
             isLowBatteryNotificationDisplayed("1")
             clickOnDismissButton()
@@ -175,6 +173,7 @@ class SystemNotificationTest : EspressoBaseTest() {
      * Test case: https://safefleet.atlassian.net/browse/FMA-1795
      */
     @Test
+    @AllowFlaky(attempts = 1)
     fun verifyCorrectNotificationNumberIsShown() {
         CameraConnectServiceMock.eventList = CameraEventsData.LOG_EVENT_LIST.value
         with(notificationViewScreen) {

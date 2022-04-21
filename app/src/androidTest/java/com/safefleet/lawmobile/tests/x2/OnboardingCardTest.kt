@@ -5,16 +5,16 @@ import androidx.test.filters.LargeTest
 import com.lawmobile.domain.enums.CameraType
 import com.lawmobile.presentation.ui.login.x2.LoginX2Activity
 import com.safefleet.lawmobile.screens.LoginScreen
-import com.safefleet.lawmobile.tests.EspressoBaseTest
-import com.schibsted.spain.barista.rule.BaristaRule
+import com.safefleet.lawmobile.tests.EspressoStartActivityBaseTest
+import com.schibsted.spain.barista.rule.flaky.AllowFlaky
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 
 @LargeTest
 @RunWith(AndroidJUnit4::class)
-class OnboardingCardTest : EspressoBaseTest() {
+class OnboardingCardTest :
+    EspressoStartActivityBaseTest<LoginX2Activity>(LoginX2Activity::class.java) {
 
     private val loginScreen = LoginScreen()
     private val description1 = "Please, turn on the Body-Camera hotspot"
@@ -22,19 +22,16 @@ class OnboardingCardTest : EspressoBaseTest() {
     private val description3 = "If you are in this screen, please enter your email and password and tap in the Login button"
     private val description4 = "If you are in this screen, please enter your device password and tap in the Connect button."
 
-    @get:Rule
-    var baristaRule = BaristaRule.create(LoginX2Activity::class.java)
-
     @Before
     fun setUp() {
         mockUtils.setCameraType(CameraType.X2)
-        baristaRule.launchActivity()
     }
 
     /**
      * Test case: https://safefleet.atlassian.net/browse/FMA-2908
      */
     @Test
+    @AllowFlaky(attempts = 1)
     fun verifyOnboardingCardsAreCorrectlyDisplayed() {
         with(loginScreen) {
             isLogoDisplayed()

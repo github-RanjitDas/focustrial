@@ -3,12 +3,12 @@ package dependencies
 object Dependencies {
     object AndroidX {
         private const val VERSION = "1.3.2"
-        private const val TEST_VERSION = "1.3.0"
+        private const val TEST_VERSION = "1.4.0"
         const val coreKTX = "androidx.core:core-ktx:$VERSION"
         const val testRunner = "androidx.test:runner:$TEST_VERSION"
         const val testRules = "androidx.test:rules:$TEST_VERSION"
         const val testExtJunit = "androidx.test.ext:junit:1.1.2"
-        const val testOrchestrator = "androidx.test:orchestrator:$TEST_VERSION"
+        const val testOrchestrator = "androidx.test:orchestrator:1.4.1"
     }
 
     object AppCompat {
@@ -22,7 +22,7 @@ object Dependencies {
     }
 
     object Barista {
-        private const val VERSION = "3.6.0"
+        private const val VERSION = "3.9.0"
         const val barista = "com.schibsted.spain:barista:$VERSION"
     }
 
@@ -50,7 +50,7 @@ object Dependencies {
     }
 
     object Espresso {
-        private const val VERSION = "3.3.0"
+        private const val VERSION = "3.4.0"
         const val espressoCore = "androidx.test.espresso:espresso-core:$VERSION"
         const val idlingResource = "androidx.test.espresso:espresso-idling-resource:$VERSION"
         const val intents = "androidx.test.espresso:espresso-intents:$VERSION"
