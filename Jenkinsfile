@@ -88,7 +88,7 @@ node('jenkins-builds-slave') {
 					waitForQualityGate abortPipeline: true
 				}
 			}
-			if(!env.BRANCH_NAME == 'develop' || !env.BRANCH_NAME == 'master' || !env.BRANCH_NAME.startsWith('release/')) {
+			if(env.BRANCH_NAME != 'develop' && env.BRANCH_NAME != 'master' && !env.BRANCH_NAME.startsWith('release/')) {
 				stage('UI tests') {
 					logger.stage()
 					def approval_value = false
