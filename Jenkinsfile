@@ -56,7 +56,7 @@ node('jenkins-builds-slave') {
                 timeout(7) {
                     sh "./gradlew testDebugUnitTestCoverage --stacktrace"
                 }
-            }
+			}
             if(env.BRANCH_NAME != 'develop' && env.BRANCH_NAME != 'master'){
                 stage('Copy Mutation results from last successful pipeline') {
                     logger.stage()
@@ -69,115 +69,119 @@ node('jenkins-builds-slave') {
                     }
                 }
             }
-            stage('Mutation Tests') {
-                logger.stage()
-                timeout(20) {
-                    sh "./gradlew pitestDebug --stacktrace"
-                    archiveArtifacts "presentation/build/pitHistory.txt"
-                    archiveArtifacts "domain/build/pitHistory.txt"
-                    archiveArtifacts "data/build/pitHistory.txt"
-                    sh "./merge_mutation_reports.sh"
-                }
-            }
-            stage('Sonar Quality') {
-                logger.stage()
-                timeout(15) {
-                    withSonarQubeEnv('Seon SonarQube') {
-                        sh "./gradlew sonarqube"
-                    }
-                    waitForQualityGate abortPipeline: true
-                }
+			stage('Mutation Tests') {
+				logger.stage()
+				timeout(20) {
+					sh "./gradlew pitestDebug --stacktrace"
+					archiveArtifacts "presentation/build/pitHistory.txt"
+					archiveArtifacts "domain/build/pitHistory.txt"
+					archiveArtifacts "data/build/pitHistory.txt"
+					sh "./merge_mutation_reports.sh"
+				}
+			}
+			stage('Sonar Quality') {
+				logger.stage()
+				timeout(15) {
+					withSonarQubeEnv('Seon SonarQube') {
+						sh "./gradlew sonarqube"
+					}
+					waitForQualityGate abortPipeline: true
+				}
+			}
+			if(!env.BRANCH_NAME == 'develop' || !env.BRANCH_NAME == 'master' || !env.BRANCH_NAME.startsWith('release/')) {
+				stage('UI tests') {
+					logger.stage()
+					def approval_value = false
+					timeout(5){
+						def input_approve = input message: 'Do you want to execute UI tests?', ok: 'Submit', parameters: [choice(choices: ['YES', 'NO'], description: 'APPROVE this build to execute UI tests ?', name: 'APPROVE_TESTS')], submitterParameter: 'approving_submitter'
+						if (input_approve.APPROVE_TESTS == 'YES') {
+							approval_value = true
+						}
+					}
+					if (approval_value == true) {
+						stage('Generate APK Debug and testing'){
+							logger.stage()
+							timeout(10){
+								sh "./gradlew assembleDebug --stacktrace"
+								sh "./gradlew assembleDebugAndroidTest --stacktrace"
+								}
+							logger.info("Archive APK")
+							timeout(10){
+                                sh "mv $WORKSPACE/app/build/outputs/apk/debug/app-debug.apk $WORKSPACE/app/build/outputs/apk/debug/app-debug-${BUILD_NUMBER}.apk"
+                                archiveArtifacts "app/build/outputs/apk/debug/app-debug-${BUILD_NUMBER}.apk"
+                            }
+						}
+						stage('Send APK to Firebase'){
+						    logger.stage()
+						    logger.info("Get Keystore")
+						    timeout(10){
+                                withVault(vaultSecrets: secrets) {
+                                    sh """cat > $WORKSPACE/keystore.jks_64 <<  EOL\n$android_keystore\nEOL"""
+                                    sh "base64 -d keystore.jks_64 > app/keystore.jks"
+                                }
+                            }
+							logger.info("Send APK Develop to Firebase")
+							timeout(10){
+								withVault(vaultSecrets: secrets) {
+									sh """cat > $WORKSPACE/firebase_distribution_develop.json_64 <<  EOL\n$firebase_distribution_develop\nEOL"""
+									sh "base64 -d firebase_distribution_develop.json_64 > app/src/debug/fma-distribution.json"
+
+									sh "./gradlew assembleDebug appDistributionUploadDebug --stacktrace"
+
+									sh "rm $WORKSPACE/app/src/debug/fma-distribution.json"
+								}
+							}
+							logger.info("Send APK Test to Firebase")
+							timeout(10){
+                                withVault(vaultSecrets: secrets) {
+                                    sh """cat > $WORKSPACE/firebase_distribution_test.json_64 <<  EOL\n$firebase_distribution_test\nEOL"""
+                                    sh "base64 -d firebase_distribution_test.json_64 > app/src/qaTest/fma-distribution.json"
+
+                                    sh "./gradlew assembleQaTest appDistributionUploadQaTest --stacktrace"
+
+                                    sh "rm $WORKSPACE/app/src/qaTest/fma-distribution.json"
+                                }
+                            }
+						}
+						stage('Sign APKs and run tests on firebase'){
+							logger.stage()
+							timeout(60){
+								def pass = ""
+								def alias = ""
+								withVault(vaultSecrets: secrets) {
+									sh """cat > $WORKSPACE/firebase_distribution_develop.json_64 <<  EOL\n$firebase_distribution_develop\nEOL"""
+									sh "base64 -d firebase_distribution_develop.json_64 > fma-service-account.json"
+									pass = "${env.KEYSTORE_PASSWORD}"
+									alias = "${env.KEYSTORE_ALIAS}"
+								}
+								withEnv(["KEYSTORE_PASSWORD=$pass", "KEYSTORE_ALIAS=$alias"]) {
+									sh "/home/user/android-sdk-linux/build-tools/28.0.3/apksigner sign --ks app/keystore.jks --ks-pass pass:$pass app/build/outputs/apk/debug/app-debug-${BUILD_NUMBER}.apk"
+									sh "/home/user/android-sdk-linux/build-tools/28.0.3/apksigner sign --ks app/keystore.jks --ks-pass pass:$pass app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk"
+									sh "gcloud auth activate-service-account --key-file=fma-service-account.json"
+									sh "gcloud config set project fma-dev-8d851"
+									sh "gcloud firebase test android run --timeout 20m --type instrumentation --app app/build/outputs/apk/debug/app-debug-${BUILD_NUMBER}.apk --test app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk --device model=x1q,version=29,locale=en,orientation=portrait --use-orchestrator --test-targets \"annotation com.safefleet.lawmobile.helpers.SmokeTest\""
+								}
+							}
+						}
+						stage('Clean credentials Keystore'){
+							logger.stage()
+							timeout(10){
+								sh "rm $WORKSPACE/keystore.jks_64"
+								sh "rm $WORKSPACE/app/keystore.jks"
+							}
+						}
+					} else {
+						exit 1
+						currentBuild.result = 'FAILURE'
+					}
+				}
             }
             if(env.BRANCH_NAME == 'develop' || env.BRANCH_NAME == 'master' || env.BRANCH_NAME.startsWith('release/')) {
-                stage('Generate APK Debug and testing'){
-                    logger.stage()
-                    timeout(10){
-                        sh "./gradlew assembleDebug --stacktrace"
-                        sh "./gradlew assembleDebugAndroidTest --stacktrace"
-                    }
-                }
-
-                stage('Archive APK'){
-                    logger.stage()
-                    timeout(10){
-                        sh "mv $WORKSPACE/app/build/outputs/apk/debug/app-debug.apk $WORKSPACE/app/build/outputs/apk/debug/app-debug-${BUILD_NUMBER}.apk"
-                        archiveArtifacts "app/build/outputs/apk/debug/app-debug-${BUILD_NUMBER}.apk"
-                    }
-                }
-
-                stage('Get Keystore'){
-                    logger.stage()
-                    timeout(10){
-                        withVault(vaultSecrets: secrets) {
-                            sh """cat > $WORKSPACE/keystore.jks_64 <<  EOL\n$android_keystore\nEOL"""
-                            sh "base64 -d keystore.jks_64 > app/keystore.jks"
-                        }
-                    }
-                }
-
-                stage('Send APK Develop to Firebase'){
-                    logger.stage()
-                    timeout(10){
-                        withVault(vaultSecrets: secrets) {
-                            sh """cat > $WORKSPACE/firebase_distribution_develop.json_64 <<  EOL\n$firebase_distribution_develop\nEOL"""
-                            sh "base64 -d firebase_distribution_develop.json_64 > app/src/debug/fma-distribution.json"
-
-                            sh "./gradlew assembleDebug appDistributionUploadDebug --stacktrace"
-
-                            sh "rm $WORKSPACE/app/src/debug/fma-distribution.json"
-                        }
-                    }
-                }
-
-                stage('Send APK Test to Firebase'){
-                    logger.stage()
-                    timeout(10){
-                        withVault(vaultSecrets: secrets) {
-                            sh """cat > $WORKSPACE/firebase_distribution_test.json_64 <<  EOL\n$firebase_distribution_test\nEOL"""
-                            sh "base64 -d firebase_distribution_test.json_64 > app/src/qaTest/fma-distribution.json"
-
-                            sh "./gradlew assembleQaTest appDistributionUploadQaTest --stacktrace"
-                            
-                            sh "rm $WORKSPACE/app/src/qaTest/fma-distribution.json"
-                        }
-                    }
-                }
-
-                
                 stage('Upload libraries'){
                     timeout(5){
                         withEnv(["VARIANT=SNAPSHOT"]) {
                             sh "./gradlew uploadArchives"
                         }
-                    }
-                }
-
-                stage('Sign APKs and run tests on firebase'){
-                    logger.stage()
-                    timeout(60){
-                        def pass = ""
-                        def alias = ""
-                        withVault(vaultSecrets: secrets) {
-                            sh """cat > $WORKSPACE/firebase_distribution_develop.json_64 <<  EOL\n$firebase_distribution_develop\nEOL"""
-                            sh "base64 -d firebase_distribution_develop.json_64 > fma-service-account.json"
-                            pass = "${env.KEYSTORE_PASSWORD}"
-                            alias = "${env.KEYSTORE_ALIAS}"
-                        }
-                        withEnv(["KEYSTORE_PASSWORD=$pass", "KEYSTORE_ALIAS=$alias"]) {
-                            sh "/home/user/android-sdk-linux/build-tools/28.0.3/apksigner sign --ks app/keystore.jks --ks-pass pass:$pass app/build/outputs/apk/debug/app-debug-${BUILD_NUMBER}.apk"
-                            sh "/home/user/android-sdk-linux/build-tools/28.0.3/apksigner sign --ks app/keystore.jks --ks-pass pass:$pass app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk"
-                            sh "gcloud auth activate-service-account --key-file=fma-service-account.json"
-                            sh "gcloud config set project fma-dev-8d851"
-                            sh "gcloud firebase test android run --timeout 20m --type instrumentation --app app/build/outputs/apk/debug/app-debug-${BUILD_NUMBER}.apk --test app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk --device model=flame,version=29,locale=en,orientation=portrait --use-orchestrator --test-targets \"annotation com.safefleet.lawmobile.helpers.SmokeTest\""
-                        }
-                    }
-                }
-
-                stage('Clean credentials Keystore'){
-                    logger.stage()
-                    timeout(10){
-                        sh "rm $WORKSPACE/keystore.jks_64"
-                        sh "rm $WORKSPACE/app/keystore.jks"
                     }
                 }
             }
@@ -192,71 +196,69 @@ node('jenkins-builds-slave') {
                         }
                     }
                 }
-                if (env.BRANCH_NAME.startsWith('release/')){
-                    
-                    stage('Send APK Staging to Firebase'){
-                        logger.stage()
-                        timeout(10){
-                            withVault(vaultSecrets: secrets) {
-                                sh """cat > $WORKSPACE/firebase_distribution_stg.json_64 <<  EOL\n$firebase_distribution_stg\nEOL"""
-                                sh "base64 -d firebase_distribution_stg.json_64 > app/src/staging/fma-distribution.json"
+				if (env.BRANCH_NAME.startsWith('release/')){
+					stage('Send APK Staging to Firebase'){
+						logger.stage()
+						timeout(10){
+							withVault(vaultSecrets: secrets) {
+								sh """cat > $WORKSPACE/firebase_distribution_stg.json_64 <<  EOL\n$firebase_distribution_stg\nEOL"""
+								sh "base64 -d firebase_distribution_stg.json_64 > app/src/staging/fma-distribution.json"
 
-                                sh "./gradlew assembleStaging appDistributionUploadStaging --stacktrace"
-                                
-                                sh "rm $WORKSPACE/app/src/staging/fma-distribution.json"
-                            }
-                        }
-                    }
+								sh "./gradlew assembleStaging appDistributionUploadStaging --stacktrace"
 
-                    stage('Update to play store internal'){
-                        logger.stage()
-                        timeout(10){
-                            withVault(vaultSecrets: secrets) {
-                                sh """cat > $WORKSPACE/credentials.json_64 <<  EOL\n$credential_google_x1\nEOL"""
-                                sh "base64 -d credentials.json_64 > app/credentials.json"
-                                sh 'fastlane deploy'
-                                slackUtils.notifyBuild("New application has been upload on internal test", slackChannel)
-                            }
-                        }
-                    }
-                    stage('Clean credentials Google'){
-                        logger.stage()
-                        timeout(10){
-                            sh "rm $WORKSPACE/credentials.json_64"
-                            sh "rm $WORKSPACE/app/credentials.json"
-                        }
-                    }
-                }
-                stage('Archive AAB'){
-                    logger.stage()
-                    timeout(10){
-                        dir("app/build/outputs/bundle") {
-                            //sh "mv release/app-release.aab release/app-release-${BUILD_NUMBER}.aab"
-                            archiveArtifacts "release/app-release.aab"
-                        }
-                    }
-                }
-                stage('Upload libraries'){
-                    timeout(5){
-                        withEnv(["VARIANT=RELEASE"]) {
-                            sh "./gradlew uploadArchives"
-                        }
-                    }
-                }
-                stage('Clean credentials Keystore'){
-                    logger.stage()
-                    timeout(10){
-                        sh "rm $WORKSPACE/keystore.jks_64"
-                        sh "rm $WORKSPACE/app/keystore.jks"
-                    }
-                }
+								sh "rm $WORKSPACE/app/src/staging/fma-distribution.json"
+							}
+						}
+					}
+					stage('Update to play store internal'){
+						logger.stage()
+						timeout(10){
+							withVault(vaultSecrets: secrets) {
+								sh """cat > $WORKSPACE/credentials.json_64 <<  EOL\n$credential_google_x1\nEOL"""
+								sh "base64 -d credentials.json_64 > app/credentials.json"
+								sh 'fastlane deploy'
+								slackUtils.notifyBuild("New application has been upload on internal test", slackChannel)
+							}
+						}
+					}
+					stage('Clean credentials Google'){
+						logger.stage()
+						timeout(10){
+							sh "rm $WORKSPACE/credentials.json_64"
+							sh "rm $WORKSPACE/app/credentials.json"
+						}
+					}
+				}
+				stage('Archive AAB'){
+					logger.stage()
+					timeout(10){
+						dir("app/build/outputs/bundle") {
+							//sh "mv release/app-release.aab release/app-release-${BUILD_NUMBER}.aab"
+							archiveArtifacts "release/app-release.aab"
+						}
+					}
+				}
+				stage('Upload libraries'){
+					timeout(5){
+						withEnv(["VARIANT=RELEASE"]) {
+							sh "./gradlew uploadArchives"
+						}
+					}
+				}
+				stage('Clean credentials Keystore'){
+					logger.stage()
+					timeout(10){
+						sh "rm $WORKSPACE/keystore.jks_64"
+						sh "rm $WORKSPACE/app/keystore.jks"
+					}
+				}
             }
         }
     } catch (e) {
         currentBuild.result = 'FAILURE'
-         if(env.BRANCH_NAME == 'develop') {
+        if(env.BRANCH_NAME == 'develop') {
             slackUtils.notifyBuild('Failed commit on develop branch', slackPSLChannel)
-         }
+        }
         throw e
     } finally {
         stage('Notify') {

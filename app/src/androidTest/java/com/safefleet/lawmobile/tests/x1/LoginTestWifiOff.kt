@@ -2,31 +2,30 @@ package com.safefleet.lawmobile.tests.x1
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
+import com.lawmobile.domain.enums.CameraType
 import com.lawmobile.presentation.ui.login.x1.LoginX1Activity
-import com.safefleet.lawmobile.tests.EspressoBaseTest
-import com.schibsted.spain.barista.rule.BaristaRule
+import com.safefleet.lawmobile.tests.EspressoStartActivityBaseTest
+import com.schibsted.spain.barista.rule.flaky.AllowFlaky
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 
 @LargeTest
 @RunWith(AndroidJUnit4::class)
-class LoginTestWifiOff : EspressoBaseTest() {
-
-    @get:Rule
-    var baristaRule = BaristaRule.create(LoginX1Activity::class.java)
+class LoginTestWifiOff :
+    EspressoStartActivityBaseTest<LoginX1Activity>(LoginX1Activity::class.java) {
 
     @Before
-    fun setupTest() {
+    fun setUp() {
+        mockUtils.setCameraType(CameraType.X1)
         mockUtils.turnWifiOff()
-        baristaRule.launchActivity()
     }
 
     /**
      * Test case: https://safefleet.atlassian.net/browse/FMA-1040
      */
     @Test
+    @AllowFlaky(attempts = 2)
     fun verifyPairingWifiOff() {
         with(LoginTest.loginScreen) {
             mockUtils.turnWifiOff()

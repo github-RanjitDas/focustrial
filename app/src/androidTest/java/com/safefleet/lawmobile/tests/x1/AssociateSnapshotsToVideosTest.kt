@@ -3,6 +3,7 @@ package com.safefleet.lawmobile.tests.x1
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
 import androidx.test.filters.Suppress
+import com.lawmobile.domain.enums.CameraType
 import com.lawmobile.presentation.ui.login.x1.LoginX1Activity
 import com.safefleet.lawmobile.R
 import com.safefleet.lawmobile.screens.AssociateSnapshotsScreen
@@ -13,6 +14,7 @@ import com.safefleet.lawmobile.screens.LoginScreen
 import com.safefleet.lawmobile.screens.VideoPlaybackScreen
 import com.safefleet.lawmobile.testData.VideoPlaybackMetadata
 import com.safefleet.lawmobile.tests.EspressoStartActivityBaseTest
+import com.schibsted.spain.barista.rule.flaky.AllowFlaky
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -25,7 +27,6 @@ class AssociateSnapshotsToVideosTest :
 
     companion object {
         private val defaultMetadata = VideoPlaybackMetadata.DEFAULT_VIDEO_METADATA.value
-
         private val fileListScreen = FileListScreen()
         private val liveViewScreen = LiveViewScreen()
         private val videoPlaybackScreen = VideoPlaybackScreen()
@@ -34,7 +35,10 @@ class AssociateSnapshotsToVideosTest :
     }
 
     @Before
-    fun login() = LoginScreen().login()
+    fun setUp() {
+        mockUtils.setCameraType(CameraType.X1)
+        LoginScreen().login()
+    }
 
     private fun setSimpleListViews() {
         with(fileListScreen) {
@@ -53,6 +57,7 @@ class AssociateSnapshotsToVideosTest :
     /**
      * Test case: https://safefleet.atlassian.net/browse/FMA-1389
      */
+    @AllowFlaky(attempts = 1)
     @Test
     fun linkThumbnailSnapshotsToVideo() {
         setThumbnailListViews()
@@ -84,6 +89,7 @@ class AssociateSnapshotsToVideosTest :
     /**
      * Test case: https://safefleet.atlassian.net/browse/FMA-1389
      */
+    @AllowFlaky(attempts = 1)
     @Test
     fun linkSimpleSnapshotsToVideo() {
         setSimpleListViews()
@@ -116,6 +122,7 @@ class AssociateSnapshotsToVideosTest :
     /**
      * Test case: https://safefleet.atlassian.net/browse/FMA-1396
      */
+    @AllowFlaky(attempts = 1)
     @Test
     fun linkSnapshotsToVideoCancel() {
         setThumbnailListViews()
@@ -148,6 +155,7 @@ class AssociateSnapshotsToVideosTest :
     /**
      * Test case: https://safefleet.atlassian.net/browse/FMA-1396
      */
+    @AllowFlaky(attempts = 1)
     @Test
     fun linkSimpleToVideoCancel() {
         setSimpleListViews()
@@ -181,6 +189,7 @@ class AssociateSnapshotsToVideosTest :
     /**
      * Test case: https://safefleet.atlassian.net/browse/FMA-1398
      */
+    @AllowFlaky(attempts = 1)
     @Test
     fun linkThumbnailSnapshotsToVideoNoSnapshots() {
         mockUtils.clearSnapshotsOnX1()
@@ -206,6 +215,7 @@ class AssociateSnapshotsToVideosTest :
     /**
      * Test case: https://safefleet.atlassian.net/browse/FMA-1398
      */
+    @AllowFlaky(attempts = 1)
     @Test
     fun linkSimpleSnapshotsToVideoNoSnapshots() {
         mockUtils.clearSnapshotsOnX1()
@@ -233,6 +243,7 @@ class AssociateSnapshotsToVideosTest :
     /**
      * Test case: https://safefleet.atlassian.net/browse/FMA-1400
      */
+    @AllowFlaky(attempts = 1)
     @Test
     fun linkThumbnailSnapshotsToVideoFilter() {
         setThumbnailListViews()
@@ -277,6 +288,7 @@ class AssociateSnapshotsToVideosTest :
     /**
      * Test case: https://safefleet.atlassian.net/browse/FMA-1400
      */
+    @AllowFlaky(attempts = 1)
     @Test
     fun linkSimpleSnapshotsToVideoFilter() {
         setSimpleListViews()

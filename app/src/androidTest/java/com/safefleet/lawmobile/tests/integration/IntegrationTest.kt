@@ -5,15 +5,18 @@ import androidx.test.filters.LargeTest
 import com.lawmobile.presentation.ui.login.x1.LoginX1Activity
 import com.safefleet.lawmobile.R
 import com.safefleet.lawmobile.helpers.CustomAssertionActions.retry
+import com.safefleet.lawmobile.helpers.MockUtils.Companion.bodyCameraServiceMock
 import com.safefleet.lawmobile.helpers.RecyclerViewHelper
 import com.safefleet.lawmobile.screens.VideoPlaybackScreen
 import com.safefleet.lawmobile.screens.integration.FileListScreen
 import com.safefleet.lawmobile.screens.integration.LiveViewScreen
 import com.safefleet.lawmobile.screens.integration.LoginScreen
+import com.safefleet.lawmobile.testData.TestLoginData
 import com.safefleet.lawmobile.tests.EspressoStartActivityBaseTest
 import com.safefleet.lawmobile.tests.x1.LoginTest.Companion.loginScreen
 import com.safefleet.lawmobile.tests.x1.VideoPlaybackTest
 import com.schibsted.spain.barista.interaction.BaristaSleepInteractions.sleep
+import com.schibsted.spain.barista.rule.flaky.AllowFlaky
 import org.hamcrest.Matchers.`is`
 import org.hamcrest.Matchers.greaterThanOrEqualTo
 import org.junit.FixMethodOrder
@@ -29,8 +32,9 @@ class IntegrationTest : EspressoStartActivityBaseTest<LoginX1Activity>(LoginX1Ac
 
     companion object {
         const val OFFICER = "murbanob"
+        val OFFICER_PASSWORD = TestLoginData.OFFICER_PASSWORD.value
         private val fileListScreen = FileListScreen()
-        private val liveViewScreen = LiveViewScreen()
+        val liveViewScreen = LiveViewScreen()
         private val videoPlaybackScreen = VideoPlaybackScreen()
     }
 
@@ -57,20 +61,20 @@ class IntegrationTest : EspressoStartActivityBaseTest<LoginX1Activity>(LoginX1Ac
     }
 
     @Test
+    @AllowFlaky(attempts = 1)
     fun a_verifyAppLogin() {
         with(loginScreen) {
+            sleep(1000)
             isPairingScreenDisplayed()
 
             clickOnGo()
-
-            retryLogin()
 
             isPairingSuccessDisplayed()
 
             sleep(1000)
             isLoginScreenDisplayed()
 
-            typePassword(OFFICER)
+            typePassword(OFFICER_PASSWORD)
             clickOnLogin()
 
             liveViewScreen.isLiveViewDisplayed()
@@ -78,8 +82,87 @@ class IntegrationTest : EspressoStartActivityBaseTest<LoginX1Activity>(LoginX1Ac
     }
 
     @Test
+    @AllowFlaky(attempts = 1)
+    fun b_associateSnapshotWithOfficer() {
+        LoginScreen().login(OFFICER_PASSWORD)
+
+        setSimpleListViews()
+
+        with(liveViewScreen) {
+            takeSnapshot()
+            takeSnapshotIntegrationTest()
+            takeSnapshotIntegrationTest()
+            openSnapshotList()
+        }
+
+        with(fileListScreen) {
+            clickOnSimpleListButton()
+
+            selectCheckboxOnPosition(0)
+            selectCheckboxOnPosition(2)
+            clickOnAssociateWithAnOfficer()
+            typeOfficerIdToAssociate(OFFICER)
+
+            clickOnButtonAssignToOfficer()
+            isAssociatePartnerSuccessMessageDisplayed()
+
+            clickOnItemInPosition(0)
+            isOfficerAssociatedDisplayed(OFFICER)
+
+            clickOnBack()
+
+            clickOnItemInPosition(2)
+            isOfficerAssociatedDisplayed(OFFICER)
+        }
+    }
+
+    @Test
+    @AllowFlaky(attempts = 1)
+    fun c_updateVideoMetadata() {
+        LoginScreen().login(OFFICER_PASSWORD)
+
+        setSimpleRecyclerView()
+
+        with(liveViewScreen) {
+            startRecording()
+            stopRecording()
+            openVideoList()
+        }
+
+        retry()
+        fileListScreen.clickOnItemInPosition(0)
+
+        with(videoPlaybackScreen) {
+            fillAllFields(VideoPlaybackTest.defaultMetadata)
+            clickOnSave()
+            isSavedSuccessDisplayed()
+            fileListScreen.checkFileEvent(VideoPlaybackTest.defaultMetadata.metadata?.event?.name)
+
+            bodyCameraServiceMock.setIsVideoUpdated(true)
+            bodyCameraServiceMock.setUpdatedMetadata(VideoPlaybackTest.defaultMetadata)
+
+            fileListScreen.clickOnItemInPosition(0)
+            fileListScreen.checkFileEvent(VideoPlaybackTest.defaultMetadata.metadata?.event?.name)
+            checkIfFieldsAreFilled()
+
+            fillAllFields(VideoPlaybackTest.extraMetadata)
+            clickOnSave()
+            isSavedSuccessDisplayed()
+
+            fileListScreen.checkFileEvent(VideoPlaybackTest.extraMetadata.metadata?.event?.name)
+            bodyCameraServiceMock.setIsVideoUpdated(true)
+            bodyCameraServiceMock.setUpdatedMetadata(VideoPlaybackTest.extraMetadata)
+
+            fileListScreen.clickOnItemInPosition(0)
+            fileListScreen.checkFileEvent(VideoPlaybackTest.extraMetadata.metadata?.event?.name)
+            checkIfFieldsAreUpdated(VideoPlaybackTest.extraMetadata)
+        }
+    }
+
+    @Test
+    @AllowFlaky(attempts = 1)
     fun d_verifyTakeASnapshot() {
-        LoginScreen().login(OFFICER)
+        LoginScreen().login(OFFICER_PASSWORD)
 
         liveViewScreen.openSnapshotList()
 
@@ -103,8 +186,9 @@ class IntegrationTest : EspressoStartActivityBaseTest<LoginX1Activity>(LoginX1Ac
     }
 
     @Test
+    @AllowFlaky(attempts = 1)
     fun e_verifyTakeAVideo() {
-        LoginScreen().login(OFFICER)
+        LoginScreen().login(OFFICER_PASSWORD)
 
         liveViewScreen.openVideoList()
 
@@ -123,74 +207,6 @@ class IntegrationTest : EspressoStartActivityBaseTest<LoginX1Activity>(LoginX1Ac
 
         with(fileListScreen) {
             reviewItemsCount(`is`(currentLength + 1))
-        }
-    }
-
-    @Test
-    fun b_associateSnapshotWithOfficer() {
-        LoginScreen().login(OFFICER)
-
-        setSimpleListViews()
-
-        with(liveViewScreen) {
-            takeSnapshot()
-            takeSnapshotIntegrationTest()
-            takeSnapshotIntegrationTest()
-            openSnapshotList()
-        }
-
-        retry()
-
-        with(fileListScreen) {
-            clickOnSimpleListButton()
-            clickOnSelectFilesToAssociate()
-
-            selectCheckboxOnPosition(0)
-            selectCheckboxOnPosition(2)
-            clickOnAssociateWithAnOfficer()
-            typeOfficerIdToAssociate(OFFICER)
-
-            clickOnButtonAssignToOfficer()
-            isAssociatePartnerSuccessMessageDisplayed()
-
-            clickOnItemInPosition(0)
-            isOfficerAssociatedDisplayed(OFFICER)
-
-            clickOnBack()
-
-            clickOnItemInPosition(2)
-            isOfficerAssociatedDisplayed(OFFICER)
-        }
-    }
-
-    @Test
-    fun c_updateVideoMetadata() {
-        LoginScreen().login(OFFICER)
-
-        setSimpleRecyclerView()
-
-        with(liveViewScreen) {
-            startRecording()
-            stopRecording()
-            openVideoList()
-        }
-
-        retry()
-        fileListScreen.clickOnItemInPosition(0)
-
-        with(videoPlaybackScreen) {
-            fillAllFields(VideoPlaybackTest.defaultMetadata)
-            clickOnSave()
-            isSavedSuccessDisplayed()
-            fileListScreen.checkFileEvent(VideoPlaybackTest.defaultMetadata.metadata?.event?.name)
-            fileListScreen.clickOnItemInPosition(0)
-            checkIfFieldsAreFilled()
-            fillAllFields(VideoPlaybackTest.extraMetadata)
-            clickOnSave()
-            isSavedSuccessDisplayed()
-            fileListScreen.clickOnItemInPosition(0)
-            fileListScreen.checkFileEvent(VideoPlaybackTest.extraMetadata.metadata?.event?.name)
-            checkIfFieldsAreUpdated(VideoPlaybackTest.extraMetadata)
         }
     }
 }

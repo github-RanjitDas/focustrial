@@ -15,16 +15,16 @@ import com.safefleet.lawmobile.screens.LiveViewScreen
 import com.safefleet.lawmobile.screens.LoginScreen
 import com.safefleet.lawmobile.screens.MainMenuScreen
 import com.safefleet.lawmobile.screens.NotificationViewScreen
-import com.safefleet.lawmobile.tests.EspressoBaseTest
-import com.schibsted.spain.barista.rule.BaristaRule
+import com.safefleet.lawmobile.tests.EspressoStartActivityBaseTest
+import com.schibsted.spain.barista.rule.flaky.AllowFlaky
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 
 @LargeTest
 @RunWith(AndroidJUnit4::class)
-class MainMenuTest : EspressoBaseTest() {
+class MainMenuTest :
+    EspressoStartActivityBaseTest<LoginX2Activity>(LoginX2Activity::class.java) {
 
     private val mainMenuScreen = MainMenuScreen()
     private val notificationViewScreen = NotificationViewScreen()
@@ -35,12 +35,8 @@ class MainMenuTest : EspressoBaseTest() {
     private val fileListScreen = FileListScreen()
     private val helpScreen = HelpPageScreen()
 
-    @get:Rule
-    var baristaRule = BaristaRule.create(LoginX2Activity::class.java)
-
     @Before
     fun setUp() {
-        baristaRule.launchActivity()
         mockUtils.setCameraType(CameraType.X2)
         LoginScreen().loginWithoutSSO()
         mainMenuScreen.clickOnMainMenu()
@@ -55,6 +51,7 @@ class MainMenuTest : EspressoBaseTest() {
      */
     @SmokeTest
     @Test
+    @AllowFlaky(attempts = 1)
     fun verifyNavigationMainMenu() {
         with(mainMenuScreen) {
             isDashboardDisplayed()
@@ -89,6 +86,7 @@ class MainMenuTest : EspressoBaseTest() {
      * Test case: https://safefleet.atlassian.net/browse/FMA-1919
      */
     @Test
+    @AllowFlaky(attempts = 1)
     fun verifyNavigationToViewSnapshots() {
         FeatureSupportHelper.supportAssociateOfficerID = true
 
@@ -103,6 +101,7 @@ class MainMenuTest : EspressoBaseTest() {
      * Test case: https://safefleet.atlassian.net/browse/FMA-1920
      */
     @Test
+    @AllowFlaky(attempts = 1)
     fun verifyNavigationToViewVideos() {
         with(mainMenuScreen) {
             isViewVideosDisplayed()
@@ -115,6 +114,7 @@ class MainMenuTest : EspressoBaseTest() {
      * Test case: https://safefleet.atlassian.net/browse/FMA-1921
      */
     @Test
+    @AllowFlaky(attempts = 1)
     fun verifyNavigationToViewNotifications() {
         with(mainMenuScreen) {
             isViewNotificationsDisplayed()
@@ -127,6 +127,7 @@ class MainMenuTest : EspressoBaseTest() {
      * Test case: https://safefleet.atlassian.net/browse/FMA-1922
      */
     @Test
+    @AllowFlaky(attempts = 1)
     fun verifyNavigationToViewDiagnosis() {
         with(mainMenuScreen) {
             isBodyWornDiagnosisDisplayed()
@@ -139,6 +140,7 @@ class MainMenuTest : EspressoBaseTest() {
      * Test case: https://safefleet.atlassian.net/browse/FMA-1763
      */
     @Test
+    @AllowFlaky(attempts = 1)
     fun verifyNavigationToViewHelp() {
         with(mainMenuScreen) {
             isViewHelpDisplayed()
@@ -151,6 +153,7 @@ class MainMenuTest : EspressoBaseTest() {
      * Test case: https://safefleet.atlassian.net/browse/FMA-1765
      */
     @Test
+    @AllowFlaky(attempts = 1)
     fun verifyCloseMainMenuFromCloseButton() {
         with(mainMenuScreen) {
             isCloseMenuButtonDisplayed()
@@ -163,6 +166,7 @@ class MainMenuTest : EspressoBaseTest() {
      * Test case: https://safefleet.atlassian.net/browse/FMA-1768
      */
     @Test
+    @AllowFlaky(attempts = 1)
     fun verifyCloseMainMenuFromSwipeRight() {
         with(mainMenuScreen) {
             swipeRightMainMenu()
@@ -175,6 +179,7 @@ class MainMenuTest : EspressoBaseTest() {
      */
     @SmokeTest
     @Test
+    @AllowFlaky(attempts = 1)
     fun verifyLogoutAndAcceptFromMainMenu() {
         with(mainMenuScreen) {
             isLogoutButtonDisplayed()
@@ -192,6 +197,7 @@ class MainMenuTest : EspressoBaseTest() {
      * Test case: https://safefleet.atlassian.net/browse/FMA-1923
      */
     @Test
+    @AllowFlaky(attempts = 1)
     fun verifyLogoutAndCancelFromMainMenu() {
         with(mainMenuScreen) {
             isLogoutButtonDisplayed()

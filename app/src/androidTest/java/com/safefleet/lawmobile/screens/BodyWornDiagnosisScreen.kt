@@ -1,11 +1,13 @@
 package com.safefleet.lawmobile.screens
 
+import androidx.test.espresso.matcher.ViewMatchers.withTagValue
 import com.safefleet.lawmobile.R
 import com.safefleet.lawmobile.helpers.CustomAssertionActions.waitUntil
-import com.schibsted.spain.barista.assertion.BaristaImageViewAssertions.assertHasDrawable
+import com.schibsted.spain.barista.assertion.BaristaImageViewAssertions.assertHasAnyDrawable
 import com.schibsted.spain.barista.assertion.BaristaVisibilityAssertions.assertContains
 import com.schibsted.spain.barista.assertion.BaristaVisibilityAssertions.assertDisplayed
 import com.schibsted.spain.barista.interaction.BaristaClickInteractions.clickOn
+import org.hamcrest.CoreMatchers.equalTo
 
 class BodyWornDiagnosisScreen : BaseScreen() {
 
@@ -28,9 +30,11 @@ class BodyWornDiagnosisScreen : BaseScreen() {
     fun containsBodyWornDiagnosisTitle() = assertContains(R.string.live_view_menu_item_diagnose)
 
     fun isSuccessTitleDisplayed() {
-        assertDisplayed(R.id.titleBackgroundSolid)
-        assertHasDrawable(R.id.imageIconResult, R.drawable.ic_success_icon)
-        assertContains(R.string.body_worn_diagnosis_success_text)
+        waitUntil { assertDisplayed(R.id.titleBackgroundSolid) }
+        waitUntil { assertDisplayed(R.id.imageIconResult) }
+        waitUntil { assertHasAnyDrawable(R.id.imageIconResult) }
+        waitUntil { assertDisplayed(withTagValue(equalTo(R.drawable.ic_success_icon))) }
+        waitUntil { assertContains(R.string.body_worn_diagnosis_success_text) }
     }
 
     fun isSuccessMessageBodyDisplayed() =
@@ -43,7 +47,9 @@ class BodyWornDiagnosisScreen : BaseScreen() {
 
     fun isFailTitleDisplayed() {
         assertDisplayed(R.id.titleBackgroundSolid)
-        assertHasDrawable(R.id.imageIconResult, R.drawable.ic_error_diagnosis_icon)
+        waitUntil { assertDisplayed(R.id.imageIconResult) }
+        waitUntil { assertHasAnyDrawable(R.id.imageIconResult) }
+        waitUntil { assertDisplayed(withTagValue(equalTo(R.drawable.ic_error_diagnosis_icon))) }
         assertContains(R.string.body_worn_diagnosis_error_text)
     }
 

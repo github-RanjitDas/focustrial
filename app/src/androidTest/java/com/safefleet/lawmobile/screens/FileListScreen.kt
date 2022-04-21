@@ -23,6 +23,7 @@ import com.schibsted.spain.barista.interaction.BaristaClickInteractions.clickOn
 import com.schibsted.spain.barista.interaction.BaristaEditTextInteractions.writeTo
 import com.schibsted.spain.barista.interaction.BaristaListInteractions
 import com.schibsted.spain.barista.interaction.BaristaListInteractions.clickListItem
+import com.schibsted.spain.barista.interaction.BaristaSleepInteractions.sleep
 import org.hamcrest.Matcher
 
 open class FileListScreen : BaseScreen() {
@@ -56,7 +57,10 @@ open class FileListScreen : BaseScreen() {
     open fun clickOnSelectFilesToAssociate() =
         waitUntil { clickOn(R.id.buttonSelectToAssociate) }
 
-    fun clickOnAssociateWithAnOfficer() = waitUntil { clickOn(R.string.associate_with_an_officer) }
+    fun clickOnAssociateWithAnOfficer() {
+        sleep(500)
+        waitUntil { clickOn(R.string.associate_with_an_officer) }
+    }
 
     fun clickOnButtonAssignToOfficer() = waitUntil { clickOn(R.id.buttonAssignToOfficer) }
 
@@ -81,7 +85,10 @@ open class FileListScreen : BaseScreen() {
 
     fun clickOnRetry() = waitUntil { clickOn(R.string.retry) }
 
-    fun checkFileEvent(event: String?) = event?.let { assertDisplayed(it) }
+    fun checkFileEvent(event: String?) {
+        sleep(500)
+        event?.let { assertDisplayed(it) }
+    }
 
     fun reviewItemsCount(matcher: Matcher<Int>) {
         waitUntil { onView(ViewMatchers.withId(recyclerView)).check(RecyclerViewHelper(matcher)) }
@@ -159,7 +166,7 @@ open class FileListScreen : BaseScreen() {
         assertHasDrawable(R.id.buttonOpenFilters, R.drawable.ic_filter)
     }
 
-    fun isNoFilesFoundDisplayed() = assertDisplayed(R.id.noFilesTextView)
+    fun isNoFilesFoundDisplayed() = waitUntil { assertDisplayed(R.id.noFilesTextView) }
 
     private fun isDateTimeHeaderDisplayed() =
         waitUntil { assertDisplayed(R.id.textViewDateAndTime, R.string.date_and_time) }

@@ -1,12 +1,14 @@
 package com.safefleet.lawmobile.screens
 
+import androidx.test.espresso.matcher.ViewMatchers.withTagValue
 import com.lawmobile.domain.enums.NotificationType
 import com.safefleet.lawmobile.R
 import com.safefleet.lawmobile.helpers.CustomAssertionActions.waitUntil
-import com.schibsted.spain.barista.assertion.BaristaImageViewAssertions.assertHasDrawable
+import com.schibsted.spain.barista.assertion.BaristaImageViewAssertions.assertHasAnyDrawable
 import com.schibsted.spain.barista.assertion.BaristaVisibilityAssertions.assertContains
 import com.schibsted.spain.barista.assertion.BaristaVisibilityAssertions.assertDisplayed
 import com.schibsted.spain.barista.interaction.BaristaClickInteractions.clickOn
+import org.hamcrest.CoreMatchers.equalTo
 
 class NotificationViewScreen : BaseScreen() {
 
@@ -33,14 +35,23 @@ class NotificationViewScreen : BaseScreen() {
         isDateTimeHeaderDisplayed()
     }
 
-    fun isWarningIconDisplayed() =
-        waitUntil { assertHasDrawable(R.id.imageViewNotificationIcon, R.drawable.ic_warning_icon) }
+    fun isWarningIconDisplayed() {
+        waitUntil { assertDisplayed(R.id.imageViewNotificationIcon) }
+        waitUntil { assertHasAnyDrawable(R.id.imageViewNotificationIcon) }
+        waitUntil { assertDisplayed(withTagValue(equalTo(R.drawable.ic_warning_icon))) }
+    }
 
-    fun isErrorIconDisplayed() =
-        waitUntil { assertHasDrawable(R.id.imageViewNotificationIcon, R.drawable.ic_error_icon) }
+    fun isErrorIconDisplayed() {
+        waitUntil { assertDisplayed(R.id.imageViewNotificationIcon) }
+        waitUntil { assertHasAnyDrawable(R.id.imageViewNotificationIcon) }
+        waitUntil { assertDisplayed(withTagValue(equalTo(R.drawable.ic_error_icon))) }
+    }
 
-    fun isInfoIconDisplayed() =
-        waitUntil { assertHasDrawable(R.id.imageViewNotificationIcon, R.drawable.ic_info_icon) }
+    fun isInfoIconDisplayed() {
+        waitUntil { assertDisplayed(R.id.imageViewNotificationIcon) }
+        waitUntil { assertHasAnyDrawable(R.id.imageViewNotificationIcon) }
+        waitUntil { assertDisplayed(withTagValue(equalTo(R.drawable.ic_info_icon))) }
+    }
 
     fun isDateDisplayed() = assertDisplayed(R.id.textViewNotificationDate)
 

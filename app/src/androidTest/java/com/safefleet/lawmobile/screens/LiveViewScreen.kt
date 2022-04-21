@@ -22,7 +22,7 @@ open class LiveViewScreen : BaseScreen() {
     private val helPageScreen = HelpPageScreen()
     private val notificationViewScreen = NotificationViewScreen()
 
-    fun switchLiveViewToggle() = clickOn(R.id.buttonSwitchLiveView)
+    fun switchLiveViewToggle() = waitUntil { clickOn(R.id.buttonSwitchLiveView) }
 
     fun switchFullScreenMode() = waitUntil { clickOn(R.id.toggleFullScreenLiveView) }
 
@@ -32,7 +32,7 @@ open class LiveViewScreen : BaseScreen() {
 
     open fun closeErrorMessage() = clickOn(R.id.closeSnackBarButton)
 
-    fun openHelpPage() = clickOn(R.id.buttonOpenHelpPage)
+    fun openHelpPage() = waitUntil { clickOn(R.id.buttonOpenHelpPage) }
 
     fun refreshCameraStatus() {
         waitUntil { mainMenuScreen.clickOnMainMenu() }
@@ -170,8 +170,9 @@ open class LiveViewScreen : BaseScreen() {
     }
 
     fun isMemoryStorageIndicatorTextDisplayed(percent: String) {
+        sleep(1000)
         waitUntil {
-            assertContains(R.id.textViewStorageLevels, "$percent% available")
+            assertContains(R.id.textViewStorageLevels, "$percent%")
         }
     }
 

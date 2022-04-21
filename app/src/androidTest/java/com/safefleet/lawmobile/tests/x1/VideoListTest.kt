@@ -3,11 +3,13 @@ package com.safefleet.lawmobile.tests.x1
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
 import androidx.test.filters.MediumTest
+import com.lawmobile.body_cameras.entities.CameraCatalog
+import com.lawmobile.domain.enums.CameraType
 import com.lawmobile.presentation.ui.login.x1.LoginX1Activity
 import com.lawmobile.presentation.utils.FeatureSupportHelper
 import com.safefleet.lawmobile.R
 import com.safefleet.lawmobile.helpers.CustomAssertionActions.waitUntil
-import com.safefleet.lawmobile.helpers.MockUtils.Companion.cameraConnectServiceX1Mock
+import com.safefleet.lawmobile.helpers.MockUtils.Companion.bodyCameraServiceMock
 import com.safefleet.lawmobile.helpers.SmokeTest
 import com.safefleet.lawmobile.screens.FileListScreen
 import com.safefleet.lawmobile.screens.FilterDialogScreen
@@ -18,18 +20,22 @@ import com.safefleet.lawmobile.testData.CameraFilesData
 import com.safefleet.lawmobile.testData.VideoPlaybackMetadata
 import com.safefleet.lawmobile.tests.EspressoStartActivityBaseTest
 import com.schibsted.spain.barista.interaction.BaristaSleepInteractions.sleep
+import com.schibsted.spain.barista.rule.flaky.AllowFlaky
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 
 @LargeTest
 @RunWith(AndroidJUnit4::class)
-class VideoListTest : EspressoStartActivityBaseTest<LoginX1Activity>(LoginX1Activity::class.java) {
+class VideoListTest :
+    EspressoStartActivityBaseTest<LoginX1Activity>(LoginX1Activity::class.java) {
+
     companion object {
         private val videoList = CameraFilesData.DEFAULT_VIDEO_LIST.value
         private val videosQuantity = videoList.items.size
         private val extraVideoList = CameraFilesData.EXTRA_VIDEO_LIST.value
         private val defaultMetadata = VideoPlaybackMetadata.DEFAULT_VIDEO_METADATA.value
+        private val extraMetadata = VideoPlaybackMetadata.EXTRA_VIDEO_METADATA.value
 
         private val fileListScreen = FileListScreen()
         private val liveViewScreen = LiveViewScreen()
@@ -38,7 +44,8 @@ class VideoListTest : EspressoStartActivityBaseTest<LoginX1Activity>(LoginX1Acti
     }
 
     @Before
-    fun setup() {
+    fun setUp() {
+        mockUtils.setCameraType(CameraType.X1)
         LoginScreen().login()
         FeatureSupportHelper.supportAssociateOfficerID = true
     }
@@ -58,9 +65,10 @@ class VideoListTest : EspressoStartActivityBaseTest<LoginX1Activity>(LoginX1Acti
      */
     @SmokeTest
     @Test
+    @AllowFlaky(attempts = 1)
     fun recordVideoAndUpdateMetadata() {
         setSimpleRecyclerView()
-        mockUtils.clearVideosOnX1()
+        mockUtils.clearVideosOnBodyCamera()
 
         with(liveViewScreen) {
             isLiveViewDisplayed()
@@ -74,24 +82,42 @@ class VideoListTest : EspressoStartActivityBaseTest<LoginX1Activity>(LoginX1Acti
 
         fileListScreen.clickOnItemInPosition(0)
 
+        defaultMetadata.metadata?.apply {
+            event = CameraCatalog("2", "Disk Clean", "Event")
+            ticketNumber = "TC001"
+            dispatchNumber = "DP001"
+            firstName = "John"
+            lastName = "Copeland"
+            location = "Miami"
+        }
+
         with(videoPlaybackScreen) {
             selectEvent(defaultMetadata)
-            updateField(R.id.ticket1Value, "TC001")
-            updateField(R.id.dispatch1Value, "DP001")
-            updateField(R.id.firstNameValue, "John")
-            updateField(R.id.lastNameValue, "Copeland")
-            updateField(R.id.locationValue, "Miami")
+            sleep(1000)
+            with(defaultMetadata.metadata) {
+                updateField(R.id.ticket1Value, this?.ticketNumber)
+                updateField(R.id.dispatch1Value, this?.dispatchNumber)
+                updateField(R.id.firstNameValue, this?.firstName)
+                updateField(R.id.lastNameValue, this?.lastName)
+                updateField(R.id.locationValue, this?.location)
+            }
             clickOnSave()
             isSavedSuccessDisplayed()
-            cameraConnectServiceX1Mock.setIsVideoUpdated(true)
+
+            bodyCameraServiceMock.setIsVideoUpdated(true)
+            bodyCameraServiceMock.setUpdatedMetadata(defaultMetadata)
 
             fileListScreen.checkFileEvent(defaultMetadata.metadata?.event?.name)
             fileListScreen.clickOnItemInPosition(0)
-            checkIfFieldIsUpdated(R.id.ticket1Value, "TC001")
-            checkIfFieldIsUpdated(R.id.dispatch1Value, "DP001")
-            checkIfFieldIsUpdated(R.id.firstNameValue, "John")
-            checkIfFieldIsUpdated(R.id.lastNameValue, "Copeland")
-            checkIfFieldIsUpdated(R.id.locationValue, "Miami")
+            fileListScreen.checkFileEvent(defaultMetadata.metadata?.event?.name)
+
+            with(defaultMetadata.metadata) {
+                checkIfFieldIsUpdated(R.id.ticket1Value, this?.ticketNumber)
+                checkIfFieldIsUpdated(R.id.dispatch1Value, this?.dispatchNumber)
+                checkIfFieldIsUpdated(R.id.firstNameValue, this?.firstName)
+                checkIfFieldIsUpdated(R.id.lastNameValue, this?.lastName)
+                checkIfFieldIsUpdated(R.id.locationValue, this?.location)
+            }
         }
     }
 
@@ -100,9 +126,10 @@ class VideoListTest : EspressoStartActivityBaseTest<LoginX1Activity>(LoginX1Acti
      */
     @MediumTest
     @Test
+    @AllowFlaky(attempts = 2)
     fun verifyNoVideosTaken() {
         setSimpleRecyclerView()
-        mockUtils.clearVideosOnX1()
+        mockUtils.clearVideosOnBodyCamera()
 
         with(liveViewScreen) {
             openVideoList()
@@ -129,6 +156,7 @@ class VideoListTest : EspressoStartActivityBaseTest<LoginX1Activity>(LoginX1Acti
      * Test case: https://safefleet.atlassian.net/browse/FMA-1179
      */
     @Test
+    @AllowFlaky(attempts = 1)
     fun verifyCheckboxWhenSnapshotsDontFit() {
         setSimpleRecyclerView()
         liveViewScreen.openVideoList()
@@ -168,6 +196,7 @@ class VideoListTest : EspressoStartActivityBaseTest<LoginX1Activity>(LoginX1Acti
      * Test case: https://safefleet.atlassian.net/browse/FMA-561
      */
     @Test
+    @AllowFlaky(attempts = 1)
     fun verifyCheckboxFunctionality() {
         setSimpleRecyclerView()
         liveViewScreen.openVideoList()
@@ -207,6 +236,7 @@ class VideoListTest : EspressoStartActivityBaseTest<LoginX1Activity>(LoginX1Acti
      * Test case: https://safefleet.atlassian.net/browse/FMA-579
      */
     @Test
+    @AllowFlaky(attempts = 1)
     fun verifyScrollWhenVideosDontFit() {
         setSimpleRecyclerView()
         liveViewScreen.openVideoList()
@@ -224,8 +254,9 @@ class VideoListTest : EspressoStartActivityBaseTest<LoginX1Activity>(LoginX1Acti
      * Test case: https://safefleet.atlassian.net/browse/FMA-578
      */
     @Test
+    @AllowFlaky(attempts = 2)
     fun verifyUpdatingVideosList() {
-        mockUtils.clearVideosOnX1()
+        mockUtils.clearVideosOnBodyCamera()
         setSimpleRecyclerView()
         val takenVideos = extraVideoList.items.subList(0, 3)
 
@@ -255,6 +286,7 @@ class VideoListTest : EspressoStartActivityBaseTest<LoginX1Activity>(LoginX1Acti
      * Test case: https://safefleet.atlassian.net/browse/FMA-580
      */
     @Test
+    @AllowFlaky(attempts = 1)
     fun verifyDisconnectionOpeningVideoList() {
         mockUtils.disconnectCamera()
 
@@ -266,6 +298,7 @@ class VideoListTest : EspressoStartActivityBaseTest<LoginX1Activity>(LoginX1Acti
      * Test case: https://safefleet.atlassian.net/browse/FMA-580
      */
     @Test
+    @AllowFlaky(attempts = 1)
     fun verifyDisconnectionGoingBackToLive() {
         liveViewScreen.openVideoList()
 
@@ -278,6 +311,7 @@ class VideoListTest : EspressoStartActivityBaseTest<LoginX1Activity>(LoginX1Acti
      * Test case: https://safefleet.atlassian.net/browse/FMA-1176
      */
     @Test
+    @AllowFlaky(attempts = 1)
     fun associateVideoToPartner() {
         setSimpleRecyclerView()
         liveViewScreen.openVideoList()
@@ -299,6 +333,7 @@ class VideoListTest : EspressoStartActivityBaseTest<LoginX1Activity>(LoginX1Acti
      */
     @SmokeTest
     @Test
+    @AllowFlaky(attempts = 2)
     fun filterVideos() {
         liveViewScreen.openVideoList()
 
@@ -308,8 +343,8 @@ class VideoListTest : EspressoStartActivityBaseTest<LoginX1Activity>(LoginX1Acti
             openFilterDialog()
 
             with(filterDialogScreen) {
-                selectEvent("Default")
-                selectStartDate(2020, 5, 20)
+                selectEvent("No event")
+                selectStartDate(2021, 5, 20)
                 clickOnOk()
                 applyFilter()
 

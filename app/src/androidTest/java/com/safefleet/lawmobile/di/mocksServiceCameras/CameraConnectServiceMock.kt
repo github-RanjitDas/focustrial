@@ -20,6 +20,7 @@ import com.safefleet.lawmobile.helpers.MockUtils.Companion.bodyWornDiagnosisResu
 import com.safefleet.lawmobile.testData.CameraEventsData
 import com.safefleet.lawmobile.testData.CameraFilesData
 import com.safefleet.lawmobile.testData.TestLoginData
+import com.safefleet.lawmobile.testData.VideoPlaybackMetadata
 import com.safefleet.mobile.kotlin_commons.helpers.Result
 import io.mockk.mockk
 
@@ -58,6 +59,7 @@ class CameraConnectServiceMock : CameraService {
         var takenVideos = 0
         var result: Result<Int> = Result.Success(100)
         var eventList: MutableList<LogEvent> = CameraEventsData.DEFAULT.value
+        var updatedMetadata = VideoPlaybackMetadata.DEFAULT_VIDEO_METADATA.value
         var isVideoUpdated = false
         var isRecordingVideoSuccess = true
     }
@@ -141,24 +143,26 @@ class CameraConnectServiceMock : CameraService {
             return Result.Success(
                 VideoInformation(
                     fileName, "kmenesesp", "/DCIM/", folderName, "X57",
-                    VideoMetadata(
-                        "1234",
-                        "1234",
-                        "DP001",
-                        "1234",
-                        "1234",
-                        "1234",
-                        null,
-                        "John",
-                        null,
-                        "Copeland",
-                        "Miami",
-                        "1234",
-                        null,
-                        "1234",
-                        "TC001",
-                        "1234"
-                    ),
+                    with(updatedMetadata) {
+                        VideoMetadata(
+                            this.metadata?.caseNumber,
+                            this.metadata?.caseNumber2,
+                            this.metadata?.dispatchNumber,
+                            this.metadata?.dispatchNumber2,
+                            this.metadata?.driverLicense,
+                            this.metadata?.licensePlate,
+                            this.metadata?.event,
+                            this.metadata?.firstName,
+                            this.metadata?.gender,
+                            this.metadata?.lastName,
+                            this.metadata?.location,
+                            this.metadata?.partnerID,
+                            this.metadata?.race,
+                            this.metadata?.remarks,
+                            this.metadata?.ticketNumber,
+                            this.metadata?.ticketNumber2,
+                        )
+                    },
                     null
                 )
             )
@@ -281,6 +285,10 @@ class CameraConnectServiceMock : CameraService {
 
     fun setIsVideoUpdated(value: Boolean) {
         isVideoUpdated = value
+    }
+
+    fun setUpdatedMetadata(value: VideoInformation) {
+        updatedMetadata = value
     }
 
     fun setIsRecordingVideoSuccess(value: Boolean) {

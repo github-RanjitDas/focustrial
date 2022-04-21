@@ -2,17 +2,21 @@ package com.safefleet.lawmobile.tests.x1
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
+import com.lawmobile.domain.enums.CameraType
 import com.lawmobile.presentation.ui.login.x1.LoginX1Activity
 import com.safefleet.lawmobile.screens.LiveViewScreen
 import com.safefleet.lawmobile.screens.LoginScreen
 import com.safefleet.lawmobile.testData.TestLoginData
 import com.safefleet.lawmobile.tests.EspressoStartActivityBaseTest
+import com.schibsted.spain.barista.rule.flaky.AllowFlaky
+import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 
 @LargeTest
 @RunWith(AndroidJUnit4::class)
-class LoginTest : EspressoStartActivityBaseTest<LoginX1Activity>(LoginX1Activity::class.java) {
+class LoginTest :
+    EspressoStartActivityBaseTest<LoginX1Activity>(LoginX1Activity::class.java) {
 
     companion object {
         val OFFICER_PASSWORD = TestLoginData.OFFICER_PASSWORD.value
@@ -20,6 +24,11 @@ class LoginTest : EspressoStartActivityBaseTest<LoginX1Activity>(LoginX1Activity
 
         val loginScreen = LoginScreen()
         val liveViewScreen = LiveViewScreen()
+    }
+
+    @Before
+    fun setUp() {
+        mockUtils.setCameraType(CameraType.X1)
     }
 
     /**
@@ -30,16 +39,11 @@ class LoginTest : EspressoStartActivityBaseTest<LoginX1Activity>(LoginX1Activity
     fun verifyAppLogin() {
         with(loginScreen) {
             isPairingScreenDisplayed()
-
             clickOnGo()
-
             isPairingSuccessDisplayed()
-
             isLoginScreenDisplayed()
-
             typePassword(OFFICER_PASSWORD)
             clickOnLogin()
-
             liveViewScreen.isLiveViewDisplayed()
         }
     }
@@ -51,18 +55,13 @@ class LoginTest : EspressoStartActivityBaseTest<LoginX1Activity>(LoginX1Activity
     fun verifyIncorrectLogin() {
         with(loginScreen) {
             clickOnGo()
-
             isPairingSuccessDisplayed()
-
             isLoginScreenDisplayed()
             clickOnLogin()
-
             isIncorrectPasswordToastDisplayed()
             liveViewScreen.isLiveViewNotDisplayed()
-
             typePassword(INVALID_OFFICER_PASSWORD)
             clickOnLogin()
-
             isIncorrectPasswordToastDisplayed()
             liveViewScreen.isLiveViewNotDisplayed()
         }
@@ -73,25 +72,21 @@ class LoginTest : EspressoStartActivityBaseTest<LoginX1Activity>(LoginX1Activity
      * Test case: https://safefleet.atlassian.net/browse/FMA-1041
      */
     @Test
+    @AllowFlaky(attempts = 1)
     fun verifyPairingDisconnectionScenario() {
         with(loginScreen) {
             mockUtils.disconnectCamera()
-
             clickOnGo()
             isPairingErrorDisplayed()
 
             mockUtils.restoreCameraConnection()
-
             retryPairing()
             isPairingSuccessDisplayed()
-
             isLoginScreenDisplayed()
 
             mockUtils.disconnectCamera()
-
             typePassword(OFFICER_PASSWORD)
             clickOnLogin()
-
             isDisconnectionAlertDisplayed()
         }
     }
@@ -103,19 +98,12 @@ class LoginTest : EspressoStartActivityBaseTest<LoginX1Activity>(LoginX1Activity
     fun verifyInstructionsToConnectCamera() {
         with(loginScreen) {
             clickOnCameraInstructions()
-
             isInstructionPopUpDisplayed()
-
             clickOnCloseInstructions()
-
             isPairingScreenDisplayed()
-
             clickOnCameraInstructions()
-
             isInstructionPopUpDisplayed()
-
             clickOnGotIt()
-
             isPairingScreenDisplayed()
             isInstructionsPopUpNotDisplayed()
         }

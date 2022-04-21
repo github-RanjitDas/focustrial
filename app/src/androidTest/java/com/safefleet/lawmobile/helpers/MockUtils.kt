@@ -23,7 +23,7 @@ class MockUtils {
         var progressBatteryCamera: Result<Int> = Result.Success(90)
         var totalStorageCamera = 60000000
         var freeStorageCamera = 50000000
-        var cameraConnectServiceX1Mock = CameraConnectServiceMock()
+        var bodyCameraServiceMock = CameraConnectServiceMock()
         var suggestWifiConnected = true
         var wifiSignalLow = false
     }
@@ -58,17 +58,17 @@ class MockUtils {
         CameraConnectServiceMock.takenPhotos = 0
     }
 
-    fun restoreSnapshotsOnX1() {
+    fun restoreSnapshotsOnBodyCamera() {
         CameraConnectServiceMock.snapshotsList =
             CameraFilesData.DEFAULT_SNAPSHOT_LIST.value
     }
 
-    fun clearVideosOnX1() {
+    fun clearVideosOnBodyCamera() {
         CameraConnectServiceMock.videoList = FileResponseWithErrors()
         CameraConnectServiceMock.takenVideos = 0
     }
 
-    fun restoreVideosOnX1() {
+    fun restoreVideosOnBodyCamera() {
         CameraConnectServiceMock.videoList =
             CameraFilesData.DEFAULT_VIDEO_LIST.value
     }
@@ -109,7 +109,7 @@ class MockUtils {
             "battery_level",
             progress.toString()
         )
-        cameraConnectServiceX1Mock.sendPushNotification(notification)
+        bodyCameraServiceMock.sendPushNotification(notification)
     }
 
     fun setStorageProgressCameraX2(percentage: Int) {
@@ -118,7 +118,7 @@ class MockUtils {
             "storage_remain",
             percentage.toString()
         )
-        cameraConnectServiceX1Mock.sendPushNotification(notification)
+        bodyCameraServiceMock.sendPushNotification(notification)
     }
 
     fun setStorageProgressCamera(totalStorage: Int, freeStorage: Int) {

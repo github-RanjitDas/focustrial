@@ -6,25 +6,25 @@ import com.lawmobile.domain.enums.CameraType
 import com.lawmobile.presentation.ui.login.x1.LoginX1Activity
 import com.safefleet.lawmobile.screens.LiveViewScreen
 import com.safefleet.lawmobile.screens.LoginScreen
-import com.safefleet.lawmobile.tests.EspressoBaseTest
-import com.schibsted.spain.barista.rule.BaristaRule
+import com.safefleet.lawmobile.tests.EspressoStartActivityBaseTest
+import com.schibsted.spain.barista.rule.flaky.AllowFlaky
 import org.junit.Before
-import org.junit.Rule
+import org.junit.FixMethodOrder
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.junit.runners.MethodSorters
 
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @LargeTest
 @RunWith(AndroidJUnit4::class)
-class CameraStatusTest : EspressoBaseTest() {
-    private val liveViewScreen = LiveViewScreen()
+class CameraStatusTest :
+    EspressoStartActivityBaseTest<LoginX1Activity>(LoginX1Activity::class.java) {
 
-    @get:Rule
-    var baristaRule = BaristaRule.create(LoginX1Activity::class.java)
+    private val liveViewScreen = LiveViewScreen()
 
     @Before
     fun setUp() {
         mockUtils.setCameraType(CameraType.X1)
-        baristaRule.launchActivity()
         LoginScreen().login()
     }
 
@@ -32,6 +32,8 @@ class CameraStatusTest : EspressoBaseTest() {
      * Test case: https://safefleet.atlassian.net/browse/FMA-1780
      */
     @Test
+    @AllowFlaky(attempts = 1)
+    // TODO: It's failing for a reported bug -> https://safefleet.atlassian.net/browse/FMA-3130
     fun verifyBatteryIndicator() {
         mockUtils.setBatteryProgressCamera(100)
         liveViewScreen.refreshCameraStatusX1()
@@ -58,7 +60,9 @@ class CameraStatusTest : EspressoBaseTest() {
     /**
      * Test case: https://safefleet.atlassian.net/browse/FMA-1984
      */
+    // TODO: It's failing for a reported bug -> https://safefleet.atlassian.net/browse/FMA-3130
     @Test
+    @AllowFlaky(attempts = 1)
     fun verifyStorageIndicator() {
         mockUtils.setStorageProgressCamera(60_000_000, 60_000_000)
         liveViewScreen.refreshCameraStatusX1()

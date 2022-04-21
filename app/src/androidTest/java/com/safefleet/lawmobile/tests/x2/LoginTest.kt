@@ -5,32 +5,29 @@ import androidx.test.filters.LargeTest
 import com.lawmobile.domain.enums.CameraType
 import com.lawmobile.presentation.ui.login.x2.LoginX2Activity
 import com.safefleet.lawmobile.screens.LoginScreen
-import com.safefleet.lawmobile.tests.EspressoBaseTest
-import com.schibsted.spain.barista.rule.BaristaRule
+import com.safefleet.lawmobile.tests.EspressoStartActivityBaseTest
+import com.schibsted.spain.barista.rule.flaky.AllowFlaky
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 
 @LargeTest
 @RunWith(AndroidJUnit4::class)
-class LoginTest : EspressoBaseTest() {
+class LoginTest :
+    EspressoStartActivityBaseTest<LoginX2Activity>(LoginX2Activity::class.java) {
 
     private val loginScreen = LoginScreen()
-
-    @get:Rule
-    var baristaRule = BaristaRule.create(LoginX2Activity::class.java)
 
     @Before
     fun setUp() {
         mockUtils.setCameraType(CameraType.X2)
-        baristaRule.launchActivity()
     }
 
     /**
      * Test case: https://safefleet.atlassian.net/browse/FMA-2914
      */
     @Test
+    @AllowFlaky(attempts = 1)
     fun verifyLoginSuccessWithoutSS0() {
         with(loginScreen) {
             areLoginLogosDisplayed()
@@ -55,6 +52,7 @@ class LoginTest : EspressoBaseTest() {
      * Test case: https://safefleet.atlassian.net/browse/FMA-2914
      */
     @Test
+    @AllowFlaky(attempts = 1)
     fun verifyLoginFailWithoutSS0() {
         with(loginScreen) {
             areLoginLogosDisplayed()

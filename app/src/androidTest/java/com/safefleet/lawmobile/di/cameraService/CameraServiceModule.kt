@@ -66,7 +66,7 @@ class CameraServiceModule {
             commandHelper: CommandHelper,
             metadataHelper: MetadataHelper
         ): CameraService {
-            return MockUtils.cameraConnectServiceX1Mock
+            return MockUtils.bodyCameraServiceMock
         }
 
         @Provides
@@ -78,7 +78,7 @@ class CameraServiceModule {
             commandHelper: CommandHelper,
             metadataHelper: MetadataHelper
         ): CameraService {
-            return MockUtils.cameraConnectServiceX1Mock
+            return MockUtils.bodyCameraServiceMock
         }
 
         @Provides
