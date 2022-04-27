@@ -2,7 +2,6 @@ package com.safefleet.lawmobile.screens
 
 import com.safefleet.lawmobile.R
 import com.safefleet.lawmobile.helpers.CustomAssertionActions.waitUntil
-import com.safefleet.lawmobile.helpers.ToastMessage.isToastDisplayed
 import com.schibsted.spain.barista.assertion.BaristaVisibilityAssertions.assertDisplayed
 import com.schibsted.spain.barista.interaction.BaristaClickInteractions.clickOn
 import com.schibsted.spain.barista.interaction.BaristaEditTextInteractions.writeTo
@@ -25,5 +24,5 @@ class SnapshotDetailScreen : BaseScreen() {
 
     fun isOfficerNameDisplayed(name: String) = waitUntil { assertDisplayed(R.id.officerValue, name) }
 
-    fun isOfficerAssociateSuccessDisplayed() = waitUntil { isToastDisplayed(R.string.file_list_associate_partner_id_success) }
+    fun isOfficerAssociateSuccessDisplayed() = waitUntil { assertDisplayed(R.string.file_list_associate_partner_id_success) }
 }

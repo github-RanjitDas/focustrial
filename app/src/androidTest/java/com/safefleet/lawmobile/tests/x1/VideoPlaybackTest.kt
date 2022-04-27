@@ -158,7 +158,7 @@ class VideoPlaybackTest :
      */
     @LargeTest
     @Test
-    @AllowFlaky(attempts = 2)
+    @AllowFlaky(attempts = 3)
     fun updateVideoMetadataOnPlayback() {
         liveViewScreen.openVideoList()
         fileListScreen.clickOnItemInPosition(3)

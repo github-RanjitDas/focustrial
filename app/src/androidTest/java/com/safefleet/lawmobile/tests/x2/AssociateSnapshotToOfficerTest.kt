@@ -59,4 +59,32 @@ class AssociateSnapshotToOfficerTest :
             isOfficerNameDisplayed(officer)
         }
     }
+
+    /**
+     * Test case: https://safefleet.atlassian.net/browse/FMA-3197
+     */
+    @Test
+    @AllowFlaky(attempts = 1)
+    fun linkSixSnapshotsToSamePoliceOfficer() {
+        with(snapshotDetailScreen) {
+            liveViewScreen.openSnapshotList()
+
+            fileListScreen.clickOnSelectFilesToAssociate()
+
+            for (item in 0..5) {
+                fileListScreen.clickOnItemInPosition(item)
+            }
+
+            clickAssociateOfficer()
+            typeOfficerIdToAssociate(officer)
+            clickOnAssociateOfficerPopUp()
+            isOfficerAssociateSuccessDisplayed()
+
+            for (item in 0..5) {
+                fileListScreen.clickOnItemInPosition(item)
+                isOfficerNameDisplayed(officer)
+                clickOnBack()
+            }
+        }
+    }
 }
