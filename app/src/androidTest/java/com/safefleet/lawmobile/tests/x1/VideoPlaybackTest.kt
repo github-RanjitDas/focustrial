@@ -175,4 +175,24 @@ class VideoPlaybackTest :
             fileListScreen.checkFileEvent(extraMetadata.metadata?.event?.name)
         }
     }
+
+    /**
+     * Test case: https://safefleet.atlassian.net/browse/FMA-3200
+     */
+    @LargeTest
+    @Test
+    @AllowFlaky(attempts = 1)
+    fun verifyVideoMetadataWhenFullScreenWasEnabledOnPlayback() {
+        liveViewScreen.openVideoList()
+        fileListScreen.clickOnItemInPosition(2)
+        with(videoPlaybackScreen) {
+            fillAllFields(extraMetadata)
+
+            clickOnFullScreen()
+            clickOnFullScreen()
+
+            checkIfDropdownsAreUpdated(extraMetadata)
+            checkIfFieldsAreUpdated(extraMetadata)
+        }
+    }
 }
