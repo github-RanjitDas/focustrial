@@ -12,10 +12,13 @@ import com.schibsted.spain.barista.interaction.BaristaClickInteractions.clickOn
 import com.schibsted.spain.barista.interaction.BaristaEditTextInteractions.clearText
 import com.schibsted.spain.barista.interaction.BaristaEditTextInteractions.writeTo
 import com.schibsted.spain.barista.interaction.BaristaScrollInteractions.safelyScrollTo
+import com.schibsted.spain.barista.interaction.BaristaSleepInteractions.sleep
 
 class VideoPlaybackScreen : BaseScreen() {
 
     fun clickOnSave() = waitUntil { clickOn(R.id.buttonSaveMetadata) }
+
+    fun clickOnFullScreen() = waitUntil { clickOn(R.id.buttonFullScreen) }
 
     fun clickOnAddSnapshots() = clickOn(R.id.buttonAssociateSnapshots)
 
@@ -135,5 +138,16 @@ class VideoPlaybackScreen : BaseScreen() {
     fun checkIfFieldIsUpdated(id: Int, value: String?) {
         safelyScrollTo(id)
         value?.let { waitUntil { assertDisplayed(id, it) } }
+    }
+
+    fun checkIfDropdownIsUpdated(event: String?) {
+        sleep(500)
+        event?.let { assertDisplayed(it) }
+    }
+
+    fun checkIfDropdownsAreUpdated(data: VideoInformation) {
+        checkIfDropdownIsUpdated(data?.metadata?.event?.name)
+        checkIfDropdownIsUpdated(data?.metadata?.race)
+        checkIfDropdownIsUpdated(data?.metadata?.gender)
     }
 }
