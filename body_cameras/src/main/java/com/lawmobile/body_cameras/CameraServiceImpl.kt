@@ -306,6 +306,9 @@ open class CameraServiceImpl(
         return commandHelper.isCommandSuccess(commandX1)
     }
 
+    override suspend fun isFolderOnCamera(folderName: String): Boolean =
+        commandHelper.isFolderOnCamera(folderName)
+
     override suspend fun getBatteryLevel(): Result<Int> {
         canReadNotification = false
         val response = fileInformationHelper.getBatteryLevelFromLog()

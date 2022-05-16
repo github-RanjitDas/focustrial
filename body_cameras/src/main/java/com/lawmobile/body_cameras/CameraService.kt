@@ -25,6 +25,7 @@ interface CameraService {
     suspend fun stopRecordVideo(): Result<Unit>
     suspend fun disconnectCamera(): Result<Unit>
     suspend fun deleteFile(fileName: String): Result<Unit>
+    suspend fun isFolderOnCamera(folderName: String): Boolean
 
     // Verifications
     fun isCameraConnected(gatewayConnection: String): Boolean

@@ -36,4 +36,7 @@ class LiveStreamingUseCaseImpl(private val liveStreamingRepository: LiveStreamin
 
     override suspend fun disconnectCamera(): Result<Unit> =
         liveStreamingRepository.disconnectCamera()
+
+    override suspend fun isFolderOnCamera(folderName: String): Boolean =
+        liveStreamingRepository.isFolderOnCamera(folderName)
 }

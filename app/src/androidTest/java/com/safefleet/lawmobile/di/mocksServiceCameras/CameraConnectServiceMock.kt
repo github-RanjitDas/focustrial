@@ -310,4 +310,8 @@ class CameraConnectServiceMock : CameraService {
     override suspend fun getAssociatedVideos(cameraFile: CameraFile): Result<List<CameraFile>> {
         return Result.Success(listOf(cameraFile))
     }
+
+    override suspend fun isFolderOnCamera(folderName: String): Boolean {
+        return true
+    }
 }

@@ -167,4 +167,18 @@ class LiveStreamingRemoteDataSourceImplTest {
         runBlocking { liveStreamingRemoteDataSourceImpl.disconnectCamera() }
         coVerify { cameraService.disconnectCamera() }
     }
+
+    @Test
+    fun testIsFolderOnCameraTrue() {
+        coEvery { cameraService.isFolderOnCamera(any()) } returns true
+        runBlocking { liveStreamingRemoteDataSourceImpl.isFolderOnCamera("SAFE") }
+        coVerify { cameraService.isFolderOnCamera(any()) }
+    }
+
+    @Test
+    fun testIsFolderOnCameraFalse() {
+        coEvery { cameraService.isFolderOnCamera(any()) } returns false
+        runBlocking { liveStreamingRemoteDataSourceImpl.isFolderOnCamera("SAFE") }
+        coVerify { cameraService.isFolderOnCamera(any()) }
+    }
 }
