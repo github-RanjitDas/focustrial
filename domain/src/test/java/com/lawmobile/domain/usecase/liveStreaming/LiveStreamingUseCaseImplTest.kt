@@ -163,4 +163,18 @@ class LiveStreamingUseCaseImplTest {
         runBlocking { liveStreamingUseCaseImpl.disconnectCamera() }
         coVerify { liveStreamingRepository.disconnectCamera() }
     }
+
+    @Test
+    fun testIsFolderOnCameraTrue() {
+        coEvery { liveStreamingRepository.isFolderOnCamera(any()) } returns true
+        runBlocking { liveStreamingUseCaseImpl.isFolderOnCamera("SAFE") }
+        coEvery { liveStreamingRepository.isFolderOnCamera(any()) }
+    }
+
+    @Test
+    fun testIsFolderOnCameraFalse() {
+        coEvery { liveStreamingRepository.isFolderOnCamera(any()) } returns false
+        runBlocking { liveStreamingUseCaseImpl.isFolderOnCamera("SAFE") }
+        coEvery { liveStreamingRepository.isFolderOnCamera(any()) }
+    }
 }

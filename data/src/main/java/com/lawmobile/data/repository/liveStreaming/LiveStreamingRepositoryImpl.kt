@@ -49,6 +49,9 @@ class LiveStreamingRepositoryImpl(
 
     override suspend fun disconnectCamera(): Result<Unit> = liveRemoteDataSource.disconnectCamera()
 
+    override suspend fun isFolderOnCamera(folderName: String): Boolean =
+        liveRemoteDataSource.isFolderOnCamera(folderName)
+
     companion object {
         const val RECORD_OPERATION_TIME = 1000L
     }

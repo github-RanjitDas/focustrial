@@ -188,6 +188,20 @@ class LiveStreamingRepositoryImplTest {
         coVerify { liveStreamingRemoteDataSource.disconnectCamera() }
     }
 
+    @Test
+    fun testIsFolderOnCameraTrue() = runBlockingTest {
+        coEvery { liveStreamingRemoteDataSource.isFolderOnCamera(any()) } returns true
+        liveStreamingRepositoryImpl.isFolderOnCamera("SAFE")
+        coVerify { liveStreamingRemoteDataSource.isFolderOnCamera(any()) }
+    }
+
+    @Test
+    fun testIsFolderOnCameraFalse() = runBlockingTest {
+        coEvery { liveStreamingRemoteDataSource.isFolderOnCamera(any()) } returns false
+        liveStreamingRepositoryImpl.isFolderOnCamera("SAFE")
+        coVerify { liveStreamingRemoteDataSource.isFolderOnCamera(any()) }
+    }
+
     companion object {
         private const val RECORD_OPERATION_TIME = 1001L
     }

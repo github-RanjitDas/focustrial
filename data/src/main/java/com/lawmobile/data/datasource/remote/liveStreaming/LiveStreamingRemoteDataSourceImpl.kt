@@ -27,4 +27,7 @@ class LiveStreamingRemoteDataSourceImpl(cameraServiceFactory: CameraServiceFacto
     override suspend fun getTotalStorage(): Result<String> = cameraService.getTotalStorage()
 
     override suspend fun disconnectCamera(): Result<Unit> = cameraService.disconnectCamera()
+
+    override suspend fun isFolderOnCamera(folderName: String): Boolean =
+        cameraService.isFolderOnCamera(folderName)
 }

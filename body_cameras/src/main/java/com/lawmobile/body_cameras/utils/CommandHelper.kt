@@ -136,6 +136,17 @@ class CommandHelper(
         return responseFilesWithErrors
     }
 
+    suspend fun isFolderOnCamera(folderName: String): Boolean {
+        var operationResult = false
+        val foldersResponse = getResultWithAttempts(ATTEMPTS_RETRY_REQUEST, DELAY_ON_RETRY) {
+            getFilesInFolder(CameraConstants.FILES_MAIN_PATH_FOLDER, folderName)
+        }
+        with(foldersResponse) {
+            doIfSuccess { if (it.isNotEmpty()) operationResult = true }
+        }
+        return operationResult
+    }
+
     private suspend fun getMediaInCamera(): Result<FileResponseWithErrors> =
         suspendCancellableCoroutine { coroutineTask ->
             CoroutineScope(Dispatchers.IO).launch {

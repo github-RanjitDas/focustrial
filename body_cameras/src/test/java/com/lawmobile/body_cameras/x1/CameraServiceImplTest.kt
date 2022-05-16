@@ -838,4 +838,11 @@ internal class CameraServiceImplTest {
             commandHelper.isCommandSuccess(any())
         }
     }
+
+    @Test
+    fun testIsFolderOnCameraTrue() {
+        coEvery { commandHelper.isFolderOnCamera(any()) } returns true
+        runBlocking { x1CameraService.isFolderOnCamera("SAFE") }
+        coVerify { commandHelper.isFolderOnCamera(any()) }
+    }
 }

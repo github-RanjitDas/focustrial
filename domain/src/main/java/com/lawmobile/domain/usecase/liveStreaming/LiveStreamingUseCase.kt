@@ -14,4 +14,5 @@ interface LiveStreamingUseCase : BaseUseCase {
     suspend fun getFreeStorage(): Result<String>
     suspend fun getTotalStorage(): Result<String>
     suspend fun disconnectCamera(): Result<Unit>
+    suspend fun isFolderOnCamera(folderName: String): Boolean
 }
