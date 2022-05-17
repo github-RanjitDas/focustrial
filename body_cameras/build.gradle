@@ -10,7 +10,7 @@ plugins {
 
 def artifactId = 'body-cameras'
 def groupId = 'com.safefleet.lawmobile'
-def versionVariant = "1.0.1"
+def versionVariant = "1.0.2"
 
 if (!"$System.env.VARIANT".contains("RELEASE")) {
     versionVariant += "-SNAPSHOT"
