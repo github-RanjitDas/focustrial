@@ -5,8 +5,8 @@ import com.lawmobile.domain.entities.CameraInfo
 import com.lawmobile.domain.enums.CameraType
 
 class CameraServiceFactoryImpl(
-    val x1CameraServiceImpl: CameraService,
-    val x2CameraServiceImpl: CameraService
+    private val x1CameraServiceImpl: CameraService,
+    private val x2CameraServiceImpl: CameraService
 ) : CameraServiceFactory {
     override fun create(): CameraService {
         return when (CameraInfo.cameraType) {

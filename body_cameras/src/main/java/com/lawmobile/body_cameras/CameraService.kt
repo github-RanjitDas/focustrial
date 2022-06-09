@@ -57,6 +57,7 @@ interface CameraService {
     // Get bytes from camera
     suspend fun getImageBytes(cameraFile: CameraFile): Result<ByteArray>
     suspend fun getAudioBytes(cameraFile: CameraFile): Result<ByteArray>
+    suspend fun getFileBytes(cameraFile: CameraFile): Result<ByteArray>
 
     // Get metadata
     suspend fun getVideoMetadata(fileName: String, folderName: String): Result<VideoInformation>
@@ -70,6 +71,7 @@ interface CameraService {
     suspend fun savePhotoMetadata(photoInformation: PhotoInformation): Result<Unit>
     suspend fun saveAudioMetadata(audioInformation: AudioInformation): Result<Unit>
     suspend fun saveAllPhotoMetadata(list: List<PhotoInformation>): Result<Unit>
+    suspend fun saveFailSafeVideo(fileBytes: ByteArray): Result<Unit>
 
     // Other operations
     suspend fun setSetupConfiguration(setupConfiguration: SetupConfiguration): Result<Unit>

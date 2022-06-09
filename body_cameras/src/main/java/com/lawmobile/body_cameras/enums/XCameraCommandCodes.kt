@@ -7,6 +7,7 @@ enum class XCameraCommandCodes(val commandValue: Int) {
     VERIFY_CLIENT_INFO(0x105),
     DOWNLOAD_FILE(0x505),
     TAKE_PHOTO(0x301),
+    PUT_FILE(0x506),
     START_RECORD_VIDEO(0x201),
     STOP_RECORD_VIDEO(0x202),
     DISCONNECT_X_CAMERA(0x102),

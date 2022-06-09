@@ -128,6 +128,17 @@ object Exclusions {
         "com.lawmobile.data.dto.api.authorization.AuthorizationApiImpl*",
         "com.lawmobile.presentation.utils.PreferencesManagerImpl*",
         "com.lawmobile.data.dto.api.user.UserApiImpl*",
-        "com.lawmobile.data.repository.audioDetail.AudioDetailRepositoryImpl*"
+        "com.lawmobile.data.repository.audioDetail.AudioDetailRepositoryImpl*",
+        "com.lawmobile.data.datasource.remote.file.FileDataSource*",
+        "com.lawmobile.data.datasource.remote.file.FileDataSourceImpl*",
+        "com.lawmobile.data.repository.file.FileRepositoryImpl*",
+        "com.lawmobile.domain.repository.file.FileRepository*",
+        "com.lawmobile.domain.repository.configuration.ConfigurationRepository*",
+        "com.lawmobile.domain.usecase.getCameraConfig.GetCameraConfig*",
+        "com.lawmobile.domain.usecase.getFileBytes.GetFileBytes*",
+        "com.lawmobile.domain.usecase.saveFileBytes.SaveFailSafeVideo*",
+        "com.safefleet.lawmobile.di.cameraService.CameraServiceModule*"
+
+
     )
 }
