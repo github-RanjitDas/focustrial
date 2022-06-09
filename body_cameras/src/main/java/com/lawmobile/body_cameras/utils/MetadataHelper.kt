@@ -198,7 +198,7 @@ class MetadataHelper(
             }
         }
 
-    private suspend fun isNotificationPutFileArriveWithAttempts(): Result<Unit> {
+    suspend fun isNotificationPutFileArriveWithAttempts(): Result<Unit> {
         var attemptsForNotification = 0
         var isPutFileNotificationArrive: Result<Boolean>
         do {

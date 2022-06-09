@@ -225,6 +225,10 @@ class CameraConnectServiceMock : CameraService {
         return Result.Success(Unit)
     }
 
+    override suspend fun saveFailSafeVideo(fileBytes: ByteArray): Result<Unit> {
+        return Result.Success(Unit)
+    }
+
     override suspend fun setSetupConfiguration(setupConfiguration: SetupConfiguration): Result<Unit> {
         return Result.Success(Unit)
     }
@@ -300,6 +304,10 @@ class CameraConnectServiceMock : CameraService {
     }
 
     override suspend fun getAudioMetadata(cameraFile: CameraFile): Result<AudioInformation> {
+        return Result.Error(mockk())
+    }
+
+    override suspend fun getFileBytes(cameraFile: CameraFile): Result<ByteArray> {
         return Result.Error(mockk())
     }
 

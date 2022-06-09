@@ -19,6 +19,7 @@ import com.lawmobile.body_cameras.enums.FileListType
 import com.lawmobile.body_cameras.enums.XCameraCommandCodes
 import com.lawmobile.body_cameras.enums.XCameraCommandTypes
 import com.lawmobile.body_cameras.enums.XCameraStatus
+import com.lawmobile.body_cameras.extensions.toMD5
 import com.lawmobile.body_cameras.utils.CommandHelper
 import com.lawmobile.body_cameras.utils.FileInformationHelper
 import com.lawmobile.body_cameras.utils.MetadataHelper
@@ -29,6 +30,8 @@ import com.safefleet.mobile.kotlin_commons.extensions.doIfError
 import com.safefleet.mobile.kotlin_commons.extensions.doIfSuccess
 import com.safefleet.mobile.kotlin_commons.helpers.Result
 import com.safefleet.mobile.kotlin_commons.helpers.getResultWithAttempts
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 open class CameraServiceImpl(
     private val fileInformationHelper: FileInformationHelper,
@@ -178,7 +181,7 @@ open class CameraServiceImpl(
     override suspend fun getImageBytes(cameraFile: CameraFile): Result<ByteArray> =
         getFileBytes(cameraFile)
 
-    private suspend fun getFileBytes(cameraFile: CameraFile): Result<ByteArray> {
+    override suspend fun getFileBytes(cameraFile: CameraFile): Result<ByteArray> {
         canReadNotification = false
         val result = getResultWithAttempts(ATTEMPTS_IN_RETRY, FILE_BYTES_ERROR_DELAY) {
             fileInformationHelper.getFileInformation(cameraFile.getCompletePath())
@@ -304,6 +307,53 @@ open class CameraServiceImpl(
             addParam(fileName)
         }
         return commandHelper.isCommandSuccess(commandX1)
+    }
+
+    override suspend fun saveFailSafeVideo(fileBytes: ByteArray): Result<Unit> {
+        val currentDate = System.currentTimeMillis()
+
+        val dateFormat = SimpleDateFormat("yyyyMMdd", Locale.ENGLISH)
+        val date = dateFormat.format(currentDate)
+
+        val timeFormat = SimpleDateFormat("HHmmss", Locale.ENGLISH)
+        val time = timeFormat.format(currentDate) + "AA"
+
+        val folderName = date.removeRange(0..1) + "000/"
+        val directory = CameraConstants.FILES_MAIN_PATH_FOLDER + folderName
+        // createDirectory(directory)
+
+        return saveFileBytes(directory, "kevin@$date-01120129-$time.MP4", fileBytes)
+    }
+
+    private suspend fun saveFileBytes(
+        path: String,
+        fileName: String,
+        fileBytes: ByteArray
+    ): Result<Unit> {
+        try {
+            val connection = fileInformationHelper.connectDataSocket()
+            if (connection is Result.Error) return connection
+
+            val command = XCameraCommand {
+                addMsgId(XCameraCommandCodes.PUT_FILE.commandValue)
+                addParam(path + fileName)
+                addSize(fileBytes.size)
+                addMD5Sum(fileBytes.toMD5())
+                addOffset(0)
+            }
+
+            val response = commandHelper.isCommandSuccess(command)
+
+            response.doIfSuccess {
+                fileInformationHelper.writeInOutputStream(fileBytes)
+                return metadataHelper.isNotificationPutFileArriveWithAttempts()
+            }
+
+            return response
+        } catch (e: Exception) {
+            e.printStackTrace()
+            return Result.Error(e)
+        }
     }
 
     override suspend fun isFolderOnCamera(folderName: String): Boolean =
@@ -468,22 +518,30 @@ open class CameraServiceImpl(
     }
 
     override suspend fun startCovertMode(): Result<Unit> {
-        val command = XCameraCommand.Builder().addMsgId(XCameraCommandCodes.COVERT_MODE_START.commandValue).build()
+        val command =
+            XCameraCommand.Builder().addMsgId(XCameraCommandCodes.COVERT_MODE_START.commandValue)
+                .build()
         return commandHelper.isCommandSuccess(command)
     }
 
     override suspend fun stopCovertMode(): Result<Unit> {
-        val command = XCameraCommand.Builder().addMsgId(XCameraCommandCodes.COVER_MODE_STOP.commandValue).build()
+        val command =
+            XCameraCommand.Builder().addMsgId(XCameraCommandCodes.COVER_MODE_STOP.commandValue)
+                .build()
         return commandHelper.isCommandSuccess(command)
     }
 
     override suspend fun turnOnBluetooth(): Result<Unit> {
-        val command = XCameraCommand.Builder().addMsgId(XCameraCommandCodes.TURN_ON_BLUETOOTH.commandValue).build()
+        val command =
+            XCameraCommand.Builder().addMsgId(XCameraCommandCodes.TURN_ON_BLUETOOTH.commandValue)
+                .build()
         return commandHelper.isCommandSuccess(command)
     }
 
     override suspend fun turnOffBluetooth(): Result<Unit> {
-        val command = XCameraCommand.Builder().addMsgId(XCameraCommandCodes.TURN_OFF_BLUETOOTH.commandValue).build()
+        val command =
+            XCameraCommand.Builder().addMsgId(XCameraCommandCodes.TURN_OFF_BLUETOOTH.commandValue)
+                .build()
         return commandHelper.isCommandSuccess(command)
     }
 
