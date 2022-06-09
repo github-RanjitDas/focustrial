@@ -14,7 +14,7 @@ plugins {
 
 def artifactId = 'data'
 def groupId = 'com.safefleet.lawmobile'
-def versionVariant = "1.0.2"
+def versionVariant = "1.0.3"
 
 if (!"$System.env.VARIANT".contains("RELEASE")) {
     versionVariant += "-SNAPSHOT"
