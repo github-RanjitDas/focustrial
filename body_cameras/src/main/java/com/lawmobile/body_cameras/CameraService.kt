@@ -4,6 +4,7 @@ import com.lawmobile.body_cameras.entities.AudioInformation
 import com.lawmobile.body_cameras.entities.CameraCatalog
 import com.lawmobile.body_cameras.entities.CameraFile
 import com.lawmobile.body_cameras.entities.CameraUser
+import com.lawmobile.body_cameras.entities.Config
 import com.lawmobile.body_cameras.entities.FileResponseWithErrors
 import com.lawmobile.body_cameras.entities.LogEvent
 import com.lawmobile.body_cameras.entities.NotificationResponse
@@ -53,6 +54,7 @@ interface CameraService {
     suspend fun getBodyWornDiagnosis(): Result<Boolean>
     suspend fun getCameraType(): Result<CameraType>
     suspend fun getUserResponse(): Result<CameraUser>
+    suspend fun getConfiguration(): Result<Config>
 
     // Get bytes from camera
     suspend fun getImageBytes(cameraFile: CameraFile): Result<ByteArray>

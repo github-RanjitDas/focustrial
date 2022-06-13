@@ -5,6 +5,7 @@ object CameraConstants {
     const val PATH_DOWNLOAD_CATALOGS = "/tmp/SD0/PreviewEvents.txt"
     const val PATH_VERSION = "/tmp/SD0/version.json"
     const val PROTOCOL_LIVE = "rtsp://"
+    const val CONFIG_JSON_PATH = "/tmp/SD0/config.json"
     const val COMPLEMENT_LIVE = "/live"
     const val FILES_MAIN_PATH_FOLDER = "/tmp/SD0/DCIM/"
     const val FILES_MAIN_PATH = "/tmp/SD0/"
