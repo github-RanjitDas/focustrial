@@ -7,6 +7,7 @@ import com.lawmobile.body_cameras.entities.BWCConnectionParams
 import com.lawmobile.body_cameras.entities.CameraCatalog
 import com.lawmobile.body_cameras.entities.CameraFile
 import com.lawmobile.body_cameras.entities.CameraUser
+import com.lawmobile.body_cameras.entities.Config
 import com.lawmobile.body_cameras.entities.FileResponseWithErrors
 import com.lawmobile.body_cameras.entities.LogEvent
 import com.lawmobile.body_cameras.entities.NotificationResponse
@@ -99,6 +100,19 @@ open class CameraServiceImpl(
         return when (fileInformation) {
             is Result.Success -> CameraUser.buildFromString(String(fileInformation.data))
             is Result.Error -> fileInformation
+        }
+    }
+
+    override suspend fun getConfiguration(): Result<Config> {
+        canReadNotification = false
+        val configBytesResult = getResultWithAttempts(ATTEMPTS_IN_RETRY) {
+            fileInformationHelper.getFileInformation(CameraConstants.CONFIG_JSON_PATH)
+        }
+        canReadNotification = true
+
+        return when (configBytesResult) {
+            is Result.Success -> String(configBytesResult.data).convertToObject()
+            is Result.Error -> configBytesResult
         }
     }
 

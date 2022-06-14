@@ -5,6 +5,7 @@ import com.lawmobile.body_cameras.entities.AudioInformation
 import com.lawmobile.body_cameras.entities.CameraCatalog
 import com.lawmobile.body_cameras.entities.CameraFile
 import com.lawmobile.body_cameras.entities.CameraUser
+import com.lawmobile.body_cameras.entities.Config
 import com.lawmobile.body_cameras.entities.FileResponseWithErrors
 import com.lawmobile.body_cameras.entities.LogEvent
 import com.lawmobile.body_cameras.entities.NotificationResponse
@@ -227,6 +228,10 @@ class CameraConnectServiceMock : CameraService {
 
     override suspend fun saveFailSafeVideo(fileBytes: ByteArray): Result<Unit> {
         return Result.Success(Unit)
+    }
+
+    override suspend fun getConfiguration(): Result<Config> {
+        return Result.Success(Config(0))
     }
 
     override suspend fun setSetupConfiguration(setupConfiguration: SetupConfiguration): Result<Unit> {
