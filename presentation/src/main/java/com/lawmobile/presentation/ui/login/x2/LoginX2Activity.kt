@@ -20,6 +20,7 @@ import com.lawmobile.presentation.ui.login.state.LoginState
 import com.lawmobile.presentation.ui.login.x2.fragment.devicePassword.DevicePasswordFragment
 import com.lawmobile.presentation.ui.login.x2.fragment.officerId.OfficerIdFragment
 import com.lawmobile.presentation.ui.sso.SSOActivity
+import com.lawmobile.presentation.utils.PreferencesManagerImpl
 import com.safefleet.mobile.kotlin_commons.extensions.doIfError
 import com.safefleet.mobile.kotlin_commons.extensions.doIfSuccess
 import com.safefleet.mobile.kotlin_commons.helpers.Result
@@ -97,8 +98,12 @@ class LoginX2Activity : LoginBaseActivity() {
     private fun handleDevicePasswordResult(result: Result<String>) {
         with(result) {
             doIfSuccess {
-                val hotspotName = "X" + officerId.substringBefore("@")
-                val hotspotPassword = it.substring(0..14)
+                // TODO: Hard coded SSID can be removed once X2 start broadcasting first part of email of before @
+                // val hotspotName = "X" + officerId.substringBefore("@")
+                // TODO: Using the hardcoded SSID for X2.
+                val hotspotName = "X" + PreferencesManagerImpl.X2_SSID
+                // WifiApPasswordMode should be 1
+                val hotspotPassword = it.takeLast(16)
                 viewModel.suggestWiFiNetwork(hotspotName, hotspotPassword) { isConnected ->
                     state = if (isConnected) LoginState.PairingResult
                     else LoginState.X2.DevicePassword

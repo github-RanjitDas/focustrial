@@ -366,7 +366,7 @@ class VideoPlaybackActivity : BaseActivity() {
         viewModel.mediaPlayer.pause()
         hideKeyboard()
 
-        if (!metadataManager.isEventSelected()) {
+        if (!CameraInfo.metadataEvents.isNullOrEmpty() && !metadataManager.isEventSelected()) {
             layoutVideoPlayback.showErrorSnackBar(getString(R.string.event_mandatory))
             return
         }

@@ -66,6 +66,7 @@ class CommandHelper(
     }
 
     suspend fun requestCommandDownloadFile(pathCamera: String): Result<X1FileResponse> {
+        println("requestCommandDownloadFile(): $pathCamera")
         val command =
             XCameraCommand.Builder().addMsgId(XCameraCommandCodes.DOWNLOAD_FILE.commandValue)
                 .addParam(pathCamera).addOffset(0).addFetchSize(0).build()

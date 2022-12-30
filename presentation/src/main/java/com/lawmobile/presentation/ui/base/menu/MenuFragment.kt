@@ -12,6 +12,7 @@ import com.lawmobile.domain.entities.CameraInfo
 import com.lawmobile.presentation.databinding.FragmentLiveMenuX2Binding
 import com.lawmobile.presentation.extensions.createAlertConfirmAppExit
 import com.lawmobile.presentation.extensions.getIntentForCameraType
+import com.lawmobile.presentation.extensions.restartApp
 import com.lawmobile.presentation.extensions.setOnClickListenerCheckConnection
 import com.lawmobile.presentation.extensions.setOnSwipeRightListener
 import com.lawmobile.presentation.extensions.setOnTouchListenerCheckConnection
@@ -24,8 +25,6 @@ import com.lawmobile.presentation.ui.fileList.x2.FileListX2Activity
 import com.lawmobile.presentation.ui.helpSection.HelpPageActivity
 import com.lawmobile.presentation.ui.live.x1.LiveX1Activity
 import com.lawmobile.presentation.ui.live.x2.LiveX2Activity
-import com.lawmobile.presentation.ui.login.x1.LoginX1Activity
-import com.lawmobile.presentation.ui.login.x2.LoginX2Activity
 import com.lawmobile.presentation.ui.notificationList.NotificationListActivity
 import com.lawmobile.presentation.utils.Constants
 import com.lawmobile.presentation.utils.FeatureSupportHelper
@@ -44,8 +43,7 @@ class MenuFragment : BaseFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding =
-            FragmentLiveMenuX2Binding.inflate(inflater, container, false)
+        _binding = FragmentLiveMenuX2Binding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -81,8 +79,7 @@ class MenuFragment : BaseFragment() {
 
     private fun setObservers() {
         menuViewModel.pendingNotificationsCountResult.observe(
-            viewLifecycleOwner,
-            ::reviewPendingNotifications
+            viewLifecycleOwner, ::reviewPendingNotifications
         )
     }
 
@@ -182,11 +179,9 @@ class MenuFragment : BaseFragment() {
     private fun startMainScreen() {
         isInMainScreen = true
         if (activity is LiveX2Activity) return
-        val intent =
-            activity?.getIntentForCameraType(
-                LiveX1Activity::class.java,
-                LiveX2Activity::class.java
-            )
+        val intent = activity?.getIntentForCameraType(
+            LiveX1Activity::class.java, LiveX2Activity::class.java
+        )
         startActivity(intent)
     }
 
@@ -194,11 +189,9 @@ class MenuFragment : BaseFragment() {
         if (activity is FileListX2Activity && currentListView == fileType) return
         currentListView = fileType
         (activity as BaseActivity).updateLiveOrPlaybackActive(false)
-        val fileListIntent =
-            activity?.getIntentForCameraType(
-                FileListX1Activity::class.java,
-                FileListX2Activity::class.java
-            )
+        val fileListIntent = activity?.getIntentForCameraType(
+            FileListX1Activity::class.java, FileListX2Activity::class.java
+        )
         fileListIntent?.putExtra(Constants.FILE_LIST_SELECTOR, fileType)
         startActivity(fileListIntent)
         if (!isInMainScreen) activity?.finish()
@@ -223,10 +216,7 @@ class MenuFragment : BaseFragment() {
     private fun logoutApplication() {
         CameraInfo.cleanInfo()
         menuViewModel.disconnectCamera()
-        val intent =
-            context?.getIntentForCameraType(LoginX1Activity::class.java, LoginX2Activity::class.java)
-        startActivity(intent)
-        activity?.finish()
+        requireContext().restartApp()
     }
 
     private fun startBodyWornSettings() {

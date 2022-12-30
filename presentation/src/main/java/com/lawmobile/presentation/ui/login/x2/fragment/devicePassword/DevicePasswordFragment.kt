@@ -166,9 +166,8 @@ class DevicePasswordFragment : BaseFragment(), Instructions, StartPairing {
     }
 
     private fun FragmentStartPairingX2Binding.suggestBodyCameraNetwork() {
-        val networkName = editTextOfficerId.text.toString()
+        val networkName = "X" + editTextOfficerId.text.toString()
         val passwordName = editTextDevicePassword.text.toString()
-
         pairingViewModel.suggestWiFiNetwork(networkName, passwordName) { isConnected ->
             if (isConnected) onStartPairingClick?.invoke()
             else showWrongCredentialsNotification()
