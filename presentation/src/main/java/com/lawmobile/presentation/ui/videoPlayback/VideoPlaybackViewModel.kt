@@ -18,6 +18,7 @@ import com.safefleet.mobile.kotlin_commons.helpers.Result
 import com.safefleet.mobile.kotlin_commons.helpers.getResultWithAttempts
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -48,7 +49,8 @@ class VideoPlaybackViewModel @Inject constructor(
     private val _videoInformation = MutableStateFlow<DomainVideoMetadata?>(null)
     val videoInformation = _videoInformation.asStateFlow()
 
-    private val _videoInformationException = MutableSharedFlow<Exception>()
+    private val _videoInformationException =
+        MutableSharedFlow<Exception>(0, 1, BufferOverflow.DROP_OLDEST)
     val videoInformationException = _videoInformationException.asSharedFlow()
 
     private val _updateMetadataResult = MutableSharedFlow<Result<Unit>>()
