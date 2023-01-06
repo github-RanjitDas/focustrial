@@ -76,15 +76,23 @@ class VideoPlaybackViewModel @Inject constructor(
 
     private suspend fun getVideoMetadataEvents() {
         if (CameraInfo.metadataEvents.isEmpty()) {
-            getResultWithAttempts(RETRY_ATTEMPTS) { liveStreamingUseCase.getCatalogInfo() }.run {
+            val supportedCatalogType = CatalogTypes.getSupportedCatalogType()
+            getResultWithAttempts(RETRY_ATTEMPTS) {
+                liveStreamingUseCase.getCatalogInfo(supportedCatalogType)
+            }.run {
                 doIfSuccess { catalogInfoList ->
-                    val events = catalogInfoList.filter { it.type == CatalogTypes.EVENT.value }
-                    CameraInfo.metadataEvents = events as MutableList
+                    if (supportedCatalogType == CatalogTypes.CATEGORIES) {
+                        val events = catalogInfoList.sortedBy { it.order }
+                        CameraInfo.metadataEvents = events as MutableList
+                    } else {
+                        CameraInfo.metadataEvents = catalogInfoList as MutableList
+                    }
                 }
                 doIfError(::setInformationException)
             }
             delay(DELAY_ON_VIDEO_INFORMATION)
         }
+
         informationManager.setSpinners()
     }
 
@@ -108,7 +116,9 @@ class VideoPlaybackViewModel @Inject constructor(
             }
         }
         _videoInformation.value = cachedVideoInformation
-        informationManager.setInformation(cachedVideoInformation)
+        viewModelScope.launch {
+            informationManager.setInformation(cachedVideoInformation)
+        }
     }
 
     private fun setInformationException(it: Exception) {

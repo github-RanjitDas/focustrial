@@ -10,6 +10,7 @@ import com.lawmobile.body_cameras.entities.CameraFile
 import com.lawmobile.body_cameras.entities.FileResponseWithErrors
 import com.lawmobile.body_cameras.entities.PhotoInformation
 import com.lawmobile.body_cameras.entities.VideoInformation
+import com.lawmobile.body_cameras.enums.CatalogTypesDto
 import com.lawmobile.body_cameras.enums.FileListType
 import com.lawmobile.body_cameras.enums.XCameraStatus
 import com.lawmobile.body_cameras.utils.CommandHelper
@@ -325,7 +326,7 @@ internal class CameraServiceImplTest {
         coEvery { commandHelper.getNumberOfSnapshots() } returns Result.Success(12)
 
         runBlocking {
-            val response = x1CameraService.getCatalogInfo()
+            val response = x1CameraService.getCatalogInfo(CatalogTypesDto.EVENT)
             Assert.assertTrue(response is Result.Success)
         }
 
@@ -340,7 +341,7 @@ internal class CameraServiceImplTest {
         coEvery { commandHelper.getNumberOfSnapshots() } returns Result.Success(12)
 
         runBlocking {
-            val response = x1CameraService.getCatalogInfo()
+            val response = x1CameraService.getCatalogInfo(CatalogTypesDto.EVENT)
             Assert.assertTrue(response is Result.Error)
         }
 

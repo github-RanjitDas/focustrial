@@ -13,6 +13,7 @@ import com.lawmobile.body_cameras.entities.SetupConfiguration
 import com.lawmobile.body_cameras.entities.VideoFileInfo
 import com.lawmobile.body_cameras.entities.VideoInformation
 import com.lawmobile.body_cameras.enums.CameraType
+import com.lawmobile.body_cameras.enums.CatalogTypesDto
 import com.safefleet.mobile.kotlin_commons.helpers.Result
 
 interface CameraService {
@@ -49,7 +50,7 @@ interface CameraService {
     // Get other information
     fun getUrlForLiveStream(): String
     suspend fun getInformationResourcesVideo(cameraFile: CameraFile): Result<VideoFileInfo>
-    suspend fun getCatalogInfo(): Result<List<CameraCatalog>>
+    suspend fun getCatalogInfo(catalogTypesDto: CatalogTypesDto): Result<List<CameraCatalog>>
     suspend fun getLogEvents(): Result<List<LogEvent>>
     suspend fun getBodyWornDiagnosis(): Result<Boolean>
     suspend fun getCameraType(): Result<CameraType>
