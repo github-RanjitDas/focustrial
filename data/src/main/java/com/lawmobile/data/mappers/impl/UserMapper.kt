@@ -3,6 +3,7 @@ package com.lawmobile.data.mappers.impl
 import com.lawmobile.body_cameras.entities.CameraUser
 import com.lawmobile.data.dto.entities.UserDto
 import com.lawmobile.data.mappers.DomainMapper
+import com.lawmobile.data.mappers.impl.CameraEventMapper.toDomain
 import com.lawmobile.domain.entities.User
 
 object UserMapper : DomainMapper<Any, User> {

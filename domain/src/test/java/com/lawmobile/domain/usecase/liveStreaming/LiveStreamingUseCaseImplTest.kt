@@ -1,5 +1,6 @@
 package com.lawmobile.domain.usecase.liveStreaming
 
+import com.lawmobile.domain.enums.CatalogTypes
 import com.lawmobile.domain.repository.liveStreaming.LiveStreamingRepository
 import com.safefleet.mobile.kotlin_commons.helpers.Result
 import io.mockk.coEvery
@@ -106,22 +107,22 @@ class LiveStreamingUseCaseImplTest {
 
     @Test
     fun testGetCatalogInfoSuccess() {
-        coEvery { liveStreamingRepository.getCatalogInfo() } returns Result.Success(mockk())
+        coEvery { liveStreamingRepository.getCatalogInfo(CatalogTypes.CATEGORIES) } returns Result.Success(mockk())
         runBlocking {
-            val result = liveStreamingUseCaseImpl.getCatalogInfo()
+            val result = liveStreamingUseCaseImpl.getCatalogInfo(CatalogTypes.CATEGORIES)
             Assert.assertTrue(result is Result.Success)
         }
-        coVerify { liveStreamingRepository.getCatalogInfo() }
+        coVerify { liveStreamingRepository.getCatalogInfo(CatalogTypes.CATEGORIES) }
     }
 
     @Test
     fun testGetCatalogInfoError() {
-        coEvery { liveStreamingRepository.getCatalogInfo() } returns Result.Error(mockk())
+        coEvery { liveStreamingRepository.getCatalogInfo(CatalogTypes.CATEGORIES) } returns Result.Error(mockk())
         runBlocking {
-            val result = liveStreamingUseCaseImpl.getCatalogInfo()
+            val result = liveStreamingUseCaseImpl.getCatalogInfo(CatalogTypes.CATEGORIES)
             Assert.assertTrue(result is Result.Error)
         }
-        coVerify { liveStreamingRepository.getCatalogInfo() }
+        coVerify { liveStreamingRepository.getCatalogInfo(CatalogTypes.CATEGORIES) }
     }
 
     @Test

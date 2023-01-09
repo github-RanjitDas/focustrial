@@ -2,7 +2,7 @@ package com.lawmobile.body_cameras.constants
 
 object CameraConstants {
     const val PATH_DOWNLOAD_OFFICER_INFO = "/tmp/SD0/OfficerPassword.txt"
-    const val PATH_DOWNLOAD_CATALOGS = "/tmp/SD0/PreviewEvents.txt"
+    const val PATH_EVENTS = "/tmp/SD0/PreviewEvents.txt"
     const val PATH_VERSION = "/tmp/SD0/version.json"
     const val PROTOCOL_LIVE = "rtsp://"
     const val CONFIG_JSON_PATH = "/tmp/SD0/config.json"
@@ -19,4 +19,5 @@ object CameraConstants {
     const val PROGRESS_CLIENT_INFO = 100
     const val ATTEMPTS_RETRY_REQUEST = 3
     const val NOTIFICATION_FILE_NAME = "warnings.log"
+    const val PATH_CATEGORIES = "/tmp/SD0/categories.json"
 }

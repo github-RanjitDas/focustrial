@@ -15,6 +15,7 @@ import com.lawmobile.body_cameras.entities.VideoFileInfo
 import com.lawmobile.body_cameras.entities.VideoInformation
 import com.lawmobile.body_cameras.entities.VideoMetadata
 import com.lawmobile.body_cameras.enums.CameraType
+import com.lawmobile.body_cameras.enums.CatalogTypesDto
 import com.lawmobile.domain.entities.FileList
 import com.safefleet.lawmobile.helpers.MockUtils
 import com.safefleet.lawmobile.helpers.MockUtils.Companion.bodyWornDiagnosisResult
@@ -94,6 +95,20 @@ class CameraConnectServiceMock : CameraService {
 
     override suspend fun getInformationResourcesVideo(cameraFile: CameraFile): Result<VideoFileInfo> {
         return Result.Success(VideoFileInfo(0, 1000, 100, "", "10", 10, "", ""))
+    }
+
+    override suspend fun getCatalogInfo(catalogTypesDto: CatalogTypesDto): Result<List<CameraCatalog>> {
+        return Result.Success(
+            listOf(
+                CameraCatalog("1", "Default", "Event"),
+                CameraCatalog("2", "Disk Clean", "Event"),
+                CameraCatalog("3", "Jenn Main", "Event"),
+                CameraCatalog("1", "Male", "Gender"),
+                CameraCatalog("2", "Female", "Gender"),
+                CameraCatalog("1", "White", "Race"),
+                CameraCatalog("2", "Black", "Race")
+            )
+        )
     }
 
     override suspend fun getListOfAudios(): Result<FileResponseWithErrors> {
@@ -262,20 +277,6 @@ class CameraConnectServiceMock : CameraService {
         else
             takenPhotos = 0
         return Result.Success(Unit)
-    }
-
-    override suspend fun getCatalogInfo(): Result<List<CameraCatalog>> {
-        return Result.Success(
-            listOf(
-                CameraCatalog("1", "Default", "Event"),
-                CameraCatalog("2", "Disk Clean", "Event"),
-                CameraCatalog("3", "Jenn Main", "Event"),
-                CameraCatalog("1", "Male", "Gender"),
-                CameraCatalog("2", "Female", "Gender"),
-                CameraCatalog("1", "White", "Race"),
-                CameraCatalog("2", "Black", "Race")
-            )
-        )
     }
 
     override suspend fun getFreeStorage(): Result<String> {

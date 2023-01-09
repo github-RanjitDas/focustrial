@@ -4,6 +4,7 @@ import com.lawmobile.data.datasource.remote.liveStreaming.LiveStreamingRemoteDat
 import com.lawmobile.data.mappers.impl.CatalogMapper.toDomainList
 import com.lawmobile.domain.entities.FileList
 import com.lawmobile.domain.entities.MetadataEvent
+import com.lawmobile.domain.enums.CatalogTypes
 import com.lawmobile.domain.repository.liveStreaming.LiveStreamingRepository
 import com.safefleet.mobile.kotlin_commons.helpers.Result
 import kotlinx.coroutines.delay
@@ -34,10 +35,21 @@ class LiveStreamingRepositoryImpl(
         return result
     }
 
-    override suspend fun getCatalogInfo(): Result<List<MetadataEvent>> {
-        return when (val result = liveRemoteDataSource.getCatalogInfo()) {
+    override suspend fun getCatalogInfo(supportedCatalogType: CatalogTypes): Result<List<MetadataEvent>> {
+        return when (val result = liveRemoteDataSource.getCatalogInfo(mapCatalogTypeEnum(supportedCatalogType))) {
             is Result.Success -> Result.Success(result.data.toDomainList())
             is Result.Error -> result
+        }
+    }
+
+    private fun mapCatalogTypeEnum(supportedCatalogType: CatalogTypes): com.lawmobile.body_cameras.enums.CatalogTypesDto {
+        return when (supportedCatalogType) {
+            CatalogTypes.CATEGORIES -> {
+                com.lawmobile.body_cameras.enums.CatalogTypesDto.CATEGORIES
+            }
+            CatalogTypes.EVENT -> {
+                com.lawmobile.body_cameras.enums.CatalogTypesDto.EVENT
+            }
         }
     }
 

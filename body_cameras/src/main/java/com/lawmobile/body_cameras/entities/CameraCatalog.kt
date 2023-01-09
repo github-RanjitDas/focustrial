@@ -6,7 +6,8 @@ import com.safefleet.mobile.kotlin_commons.helpers.Result
 class CameraCatalog(
     val id: String,
     val name: String,
-    val type: String
+    val type: String?,
+    var order: Int = 0
 ) {
     companion object {
         fun createInstanceListWithStringX1(value: String): Result<List<CameraCatalog>> {

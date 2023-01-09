@@ -9,6 +9,7 @@ import com.lawmobile.domain.entities.AuthorizationEndpoints
 import com.lawmobile.domain.entities.CameraInfo
 import com.lawmobile.domain.entities.User
 import com.lawmobile.domain.entities.customEvents.LoginRequestErrorEvent
+import com.lawmobile.domain.enums.BackOfficeType
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.extensions.attachFragmentWithAnimation
 import com.lawmobile.presentation.extensions.createNotificationDialog
@@ -178,10 +179,15 @@ class LoginX2Activity : LoginBaseActivity() {
     private fun onContinueClick(isEmail: Boolean, officerId: String) {
         this.officerId = officerId
         if (isEmail) runOnUiThread {
+            // TODO: backOfficeType should come from bluetooth command.
+            CameraInfo.backOfficeType = BackOfficeType.NEXUS
             showLoadingDialog()
             viewModel.getAuthorizationEndpoints()
         }
-        else state = LoginState.X2.DevicePassword
+        else {
+            CameraInfo.backOfficeType = BackOfficeType.COMMAND_CENTRE
+            state = LoginState.X2.DevicePassword
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

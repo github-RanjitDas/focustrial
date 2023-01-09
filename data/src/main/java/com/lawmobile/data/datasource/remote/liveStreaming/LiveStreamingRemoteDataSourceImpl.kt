@@ -1,6 +1,7 @@
 package com.lawmobile.data.datasource.remote.liveStreaming
 
 import com.lawmobile.body_cameras.entities.CameraCatalog
+import com.lawmobile.body_cameras.enums.CatalogTypesDto
 import com.lawmobile.data.utils.CameraServiceFactory
 import com.safefleet.mobile.kotlin_commons.helpers.Result
 
@@ -17,8 +18,8 @@ class LiveStreamingRemoteDataSourceImpl(cameraServiceFactory: CameraServiceFacto
 
     override suspend fun stopRecordVideo(): Result<Unit> = cameraService.stopRecordVideo()
 
-    override suspend fun getCatalogInfo(): Result<List<CameraCatalog>> =
-        cameraService.getCatalogInfo()
+    override suspend fun getCatalogInfo(supportedCatalogType: CatalogTypesDto): Result<List<CameraCatalog>> =
+        cameraService.getCatalogInfo(supportedCatalogType)
 
     override suspend fun getBatteryLevel(): Result<Int> = cameraService.getBatteryLevel()
 
