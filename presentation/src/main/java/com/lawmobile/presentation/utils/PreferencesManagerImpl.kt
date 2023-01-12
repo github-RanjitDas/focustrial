@@ -4,6 +4,7 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
+import com.lawmobile.domain.entities.CameraInfo
 import com.lawmobile.domain.utils.PreferencesManager
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
@@ -17,13 +18,13 @@ class PreferencesManagerImpl(private val dataStore: DataStore<Preferences>) : Pr
 
     override suspend fun getTenantId(): String {
         return dataStore.data.map { preferences ->
-            preferences[TENANT_ID] ?: TENANT_ID_VALUE
+            preferences[TENANT_ID] ?: CameraInfo.tenantId
         }.first()
     }
 
     override suspend fun getDiscoveryEndpointUrl(): String {
         return dataStore.data.map { preferences ->
-            preferences[DISCOVERY_ENDPOINT] ?: DISCOVERY_URL
+            preferences[DISCOVERY_ENDPOINT] ?: CameraInfo.discoveryUrl
         }.first()
     }
 
@@ -99,7 +100,8 @@ class PreferencesManagerImpl(private val dataStore: DataStore<Preferences>) : Pr
         // TODO: Hard coded TENANT_ID_VALUE
         private const val TENANT_ID_VALUE = "staging01"
         // TODO: Hard coded SSID
-        const val X2_SSID = "x2-22201760"
+        // const val X2_SSID = "x2-22201760"
+        const val X2_SSID = "X22032578"
         // TODO: Hard coded DISCOVERY_URL
         private const val DISCOVERY_URL = "https://stg.safefleetcloud.us/tenant-settings/api/hardware/discovery"
     }

@@ -9,6 +9,7 @@
     <string name="the_camera_was_disconnected">Body Camera Disconnected</string>
     <string name="the_camera_was_disconnected_description">Your Body Camera was disconnected from FOCUS Mobile App. Please tap <b>OK</b> and reconnect again.</string>
     <string name="loading_wait">Loading…</string>
+    <string name="connection_bluetooth">Connecting with bluetooth</string>
     <string name="connection_finished">Idle Session Timeout</string>
     <string name="connection_finished_description">Your Body Camera was disconnected from FOCUS Mobile App after 5 minutes of inactivity.</string>
     <string name="gps_necessary_title">Location Required</string>
