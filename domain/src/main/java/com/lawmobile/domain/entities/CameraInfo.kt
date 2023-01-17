@@ -6,6 +6,8 @@ import com.lawmobile.domain.enums.CameraType
 object CameraInfo {
     var cameraType: CameraType = CameraType.X1
     var backOfficeType: BackOfficeType = BackOfficeType.COMMAND_CENTRE
+    var discoveryUrl = ""
+    var tenantId = ""
     var metadataEvents = mutableListOf<MetadataEvent>()
     var isOfficerLogged: Boolean = false
     var officerId = ""

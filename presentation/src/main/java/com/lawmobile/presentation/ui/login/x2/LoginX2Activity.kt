@@ -1,8 +1,10 @@
 package com.lawmobile.presentation.ui.login.x2
 
+import android.Manifest
 import android.content.Intent
 import android.content.RestrictionsManager
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.lawmobile.domain.entities.AuthorizationEndpoints
@@ -13,6 +15,8 @@ import com.lawmobile.domain.enums.BackOfficeType
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.extensions.attachFragmentWithAnimation
 import com.lawmobile.presentation.extensions.createNotificationDialog
+import com.lawmobile.presentation.extensions.isPermissionGranted
+import com.lawmobile.presentation.keystore.KeystoreHandler
 import com.lawmobile.presentation.ui.live.x2.LiveX2Activity
 import com.lawmobile.presentation.ui.login.LoginBaseActivity
 import com.lawmobile.presentation.ui.login.shared.Instructions
@@ -55,9 +59,43 @@ class LoginX2Activity : LoginBaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         baseViewModel = viewModel
+        viewModel.updateConfigProgress.observe(this@LoginX2Activity, ::handleConfigResult)
+        restoreBottomSheetState()
+        if (isPermissionGranted(Manifest.permission.ACCESS_FINE_LOCATION)) {
+            val configs = KeystoreHandler.getConfigFromKeystore(this)
+            if (configs == null) {
+                initBleConnection()
+            } else {
+                Log.d(TAG, "Found Config in KeyStore...")
+                viewModel.saveConfigLocally(configs)
+                onReceivedConfigFromBluetooth()
+            }
+        } else {
+            setCollectors()
+            viewModel.setObservers()
+        }
+    }
+
+    private fun handleConfigResult(result: Result<String>?) {
+        with(result) {
+            this?.doIfSuccess { onReceivedConfigFromBluetooth() }
+            this?.doIfError {
+                hideLoadingDialog()
+                setCollectors()
+                viewModel.setObservers()
+            }
+        }
+    }
+
+    private fun initBleConnection() {
+        showLoadingDialog(R.string.connection_bluetooth)
+        viewModel.fetchConfigFromBluetooth(this)
+    }
+
+    private fun onReceivedConfigFromBluetooth() {
+        hideLoadingDialog()
         setCollectors()
         viewModel.setObservers()
-        restoreBottomSheetState()
     }
 
     private fun LoginX2ViewModel.setObservers() {
@@ -80,6 +118,15 @@ class LoginX2Activity : LoginBaseActivity() {
                 setStartPairingListener()
             }
         }
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        initBleConnection()
     }
 
     private fun handleAuthEndpointsResult(result: Result<AuthorizationEndpoints>) {
@@ -215,8 +262,7 @@ class LoginX2Activity : LoginBaseActivity() {
         }
     }
 
-    private fun getAuthorizationException(data: Intent?) =
-        AuthorizationException.fromIntent(data)
+    private fun getAuthorizationException(data: Intent?) = AuthorizationException.fromIntent(data)
 
     private fun buildAuthorizationResponse(data: Intent) =
         AuthorizationResponse.Builder(authRequest).fromUri(data.data!!).build()
@@ -242,5 +288,6 @@ class LoginX2Activity : LoginBaseActivity() {
 
     companion object {
         private const val ENABLE_CONTINUE_DELAY = 1000L
+        private const val TAG = "LoginX2Activity"
     }
 }

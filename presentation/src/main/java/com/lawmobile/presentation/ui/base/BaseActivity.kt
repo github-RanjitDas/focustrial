@@ -210,6 +210,12 @@ abstract class BaseActivity : AppCompatActivity() {
         loadingDialog?.show()
     }
 
+    fun showLoadingDialog(text: Int) {
+        EspressoIdlingResource.increment()
+        loadingDialog = createAlertProgress(text)
+        loadingDialog?.show()
+    }
+
     fun hideLoadingDialog() {
         loadingDialog?.dismiss()
         loadingDialog = null
