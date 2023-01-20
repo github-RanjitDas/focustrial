@@ -11,4 +11,5 @@ interface CameraEventsDao {
     fun setAllNotificationsAsRead()
     fun deleteOutdatedEvents(date: String)
     fun clearAllEvents()
+    fun getAllNotificationTillToday(): List<LocalCameraEvent>
 }

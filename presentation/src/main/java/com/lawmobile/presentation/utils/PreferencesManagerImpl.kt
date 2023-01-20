@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.map
 class PreferencesManagerImpl(private val dataStore: DataStore<Preferences>) : PreferencesManager {
     override suspend fun getSerialNumber(): String {
         return dataStore.data.map { preferences ->
-            preferences[SERIAL_NUMBER] ?: X2_SSID
+            preferences[SERIAL_NUMBER] ?: CameraInfo.officerId
         }.first()
     }
 
@@ -100,8 +100,8 @@ class PreferencesManagerImpl(private val dataStore: DataStore<Preferences>) : Pr
         // TODO: Hard coded TENANT_ID_VALUE
         private const val TENANT_ID_VALUE = "staging01"
         // TODO: Hard coded SSID
-        // const val X2_SSID = "x2-22201760"
-        const val X2_SSID = "X22032578"
+        const val X2_SSID = "x2-22201760"
+        // const val X2_SSID = "X22032578"
         // TODO: Hard coded DISCOVERY_URL
         private const val DISCOVERY_URL = "https://stg.safefleetcloud.us/tenant-settings/api/hardware/discovery"
     }

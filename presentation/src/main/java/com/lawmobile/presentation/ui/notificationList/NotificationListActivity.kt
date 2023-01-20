@@ -8,6 +8,7 @@ import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.lawmobile.domain.entities.CameraEvent
+import com.lawmobile.domain.entities.CameraInfo
 import com.lawmobile.domain.enums.NotificationType
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.databinding.ActivityNotificationListBinding
@@ -76,6 +77,7 @@ class NotificationListActivity : BaseActivity() {
     private fun getNotificationList() {
         activityLaunch {
             showLoadingDialog()
+            viewModel.getNotificationDictionary()
             viewModel.getNotificationEvents()
             appBarFragment.getUnreadNotificationCount()
             if (FeatureSupportHelper.supportBodyWornSettings) settingsBarFragment.getBodyCameraSettings()
@@ -170,7 +172,7 @@ class NotificationListActivity : BaseActivity() {
             textViewNotificationTitle.text = notificationType.title ?: cameraEvent.name
             imageViewNotificationIcon.setImageDependingOnEventTag(cameraEvent.eventTag)
             textViewNotificationMessage.text =
-                notificationType.getCustomMessage(cameraEvent.value) ?: cameraEvent.value
+                CameraInfo.getDescriptiveTextFromNotificationDictionary(cameraEvent.name)
             textViewNotificationDate.text = cameraEvent.date
         }
     }

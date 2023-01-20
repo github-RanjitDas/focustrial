@@ -25,7 +25,6 @@ import com.lawmobile.presentation.ui.login.state.LoginState
 import com.lawmobile.presentation.ui.login.x2.fragment.devicePassword.DevicePasswordFragment
 import com.lawmobile.presentation.ui.login.x2.fragment.officerId.OfficerIdFragment
 import com.lawmobile.presentation.ui.sso.SSOActivity
-import com.lawmobile.presentation.utils.PreferencesManagerImpl
 import com.safefleet.mobile.kotlin_commons.extensions.doIfError
 import com.safefleet.mobile.kotlin_commons.extensions.doIfSuccess
 import com.safefleet.mobile.kotlin_commons.helpers.Result
@@ -61,24 +60,13 @@ class LoginX2Activity : LoginBaseActivity() {
         baseViewModel = viewModel
         viewModel.updateConfigProgress.observe(this@LoginX2Activity, ::handleConfigResult)
         restoreBottomSheetState()
-        if (isPermissionGranted(Manifest.permission.ACCESS_FINE_LOCATION)) {
-            val configs = KeystoreHandler.getConfigFromKeystore(this)
-            if (configs == null) {
-                initBleConnection()
-            } else {
-                Log.d(TAG, "Found Config in KeyStore...")
-                viewModel.saveConfigLocally(configs)
-                onReceivedConfigFromBluetooth()
-            }
-        } else {
-            setCollectors()
-            viewModel.setObservers()
-        }
+        setCollectors()
+        viewModel.setObservers()
     }
 
     private fun handleConfigResult(result: Result<String>?) {
         with(result) {
-            this?.doIfSuccess { onReceivedConfigFromBluetooth() }
+            this?.doIfSuccess { onReceivedConfigFromBle() }
             this?.doIfError {
                 hideLoadingDialog()
                 setCollectors()
@@ -87,15 +75,20 @@ class LoginX2Activity : LoginBaseActivity() {
         }
     }
 
-    private fun initBleConnection() {
+    private fun initBleConnectionToFetchConfigs() {
         showLoadingDialog(R.string.connection_bluetooth)
-        viewModel.fetchConfigFromBluetooth(this)
+        viewModel.fetchConfigFromBle(this)
     }
 
-    private fun onReceivedConfigFromBluetooth() {
+    private fun onReceivedConfigFromBle() {
         hideLoadingDialog()
-        setCollectors()
-        viewModel.setObservers()
+        if (CameraInfo.backOfficeType == BackOfficeType.NEXUS) runOnUiThread {
+            showLoadingDialog()
+            viewModel.getAuthorizationEndpoints()
+        }
+        else {
+            state = LoginState.X2.DevicePassword
+        }
     }
 
     private fun LoginX2ViewModel.setObservers() {
@@ -120,15 +113,6 @@ class LoginX2Activity : LoginBaseActivity() {
         }
     }
 
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        initBleConnection()
-    }
-
     private fun handleAuthEndpointsResult(result: Result<AuthorizationEndpoints>) {
         with(result) {
             doIfSuccess { viewModel.getAuthorizationRequest(it) }
@@ -144,12 +128,13 @@ class LoginX2Activity : LoginBaseActivity() {
     }
 
     private fun handleDevicePasswordResult(result: Result<String>) {
+        Log.d(TAG, "SSO Completed:$result")
         with(result) {
             doIfSuccess {
                 // TODO: Hard coded SSID can be removed once X2 start broadcasting first part of email of before @
                 // val hotspotName = "X" + officerId.substringBefore("@")
                 // TODO: Using the hardcoded SSID for X2.
-                val hotspotName = "X" + PreferencesManagerImpl.X2_SSID
+                val hotspotName = "X$officerId"
                 // WifiApPasswordMode should be 1
                 val hotspotPassword = it.takeLast(16)
                 viewModel.suggestWiFiNetwork(hotspotName, hotspotPassword) { isConnected ->
@@ -159,6 +144,7 @@ class LoginX2Activity : LoginBaseActivity() {
                 waitToEnableContinue()
             }
             doIfError {
+                Log.d(TAG, "SSO Completed with Error:$it")
                 showRequestError()
             }
         }
@@ -223,18 +209,25 @@ class LoginX2Activity : LoginBaseActivity() {
         state = LoginState.X2.OfficerId
     }
 
+    private fun fetchConfigsFromBle() {
+        if (isPermissionGranted(Manifest.permission.ACCESS_FINE_LOCATION)) {
+            val configs = KeystoreHandler.getConfigFromKeystore(this)
+            if (configs == null) {
+                runOnUiThread {
+                    initBleConnectionToFetchConfigs()
+                }
+            } else {
+                Log.d(TAG, "Found Config in KeyStore...$configs")
+                viewModel.saveConfigLocally(configs)
+                onReceivedConfigFromBle()
+            }
+        }
+    }
+
     private fun onContinueClick(isEmail: Boolean, officerId: String) {
         this.officerId = officerId
-        if (isEmail) runOnUiThread {
-            // TODO: backOfficeType should come from bluetooth command.
-            CameraInfo.backOfficeType = BackOfficeType.NEXUS
-            showLoadingDialog()
-            viewModel.getAuthorizationEndpoints()
-        }
-        else {
-            CameraInfo.backOfficeType = BackOfficeType.COMMAND_CENTRE
-            state = LoginState.X2.DevicePassword
-        }
+        CameraInfo.officerId = officerId
+        fetchConfigsFromBle()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

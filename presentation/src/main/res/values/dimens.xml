@@ -177,7 +177,7 @@
     <dimen name="custom_notification_size_text_tile">18sp</dimen>
     <dimen name="custom_notification_size_text_date">12sp</dimen>
     <dimen name="custom_notification_size_text_description">16sp</dimen>
-    <dimen name="custom_notification_margin_top_date">7dp</dimen>
+    <dimen name="custom_notification_margin_top_date">5dp</dimen>
     <dimen name="custom_notification_margin_top_description">30dp</dimen>
 
     <!-- Body Worn Diagnosis -->

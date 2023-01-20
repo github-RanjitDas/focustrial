@@ -33,61 +33,32 @@ internal class CameraEventsDaoImplTest {
     fun getAllEventsResult() {
         val result = listOf(
             DbCameraEvent(
-                1,
-                "event",
-                "Camera",
-                "Information",
-                "Greetings",
-                "20/12/20",
-                1
+                1, "event", "Camera", "Information", "Greetings", "20/12/20", 1
             ),
             DbCameraEvent(
-                2,
-                "event",
-                "Camera",
-                "Information",
-                "Greetings",
-                "20/12/20",
-                0
+                2, "event", "Camera", "Information", "Greetings", "20/12/20", 0
             )
         )
         every { database.databaseQueries.getAllEvents().executeAsList() } returns result
         Assert.assertEquals(
-            result.toLocalList(),
-            cameraEventsDaoImpl.getAllEvents()
+            result.toLocalList(), cameraEventsDaoImpl.getAllEvents()
         )
     }
 
     @Test
     fun saveEventFlow() {
         val event = LocalCameraEvent(
-            1,
-            "event",
-            "Camera",
-            "Information",
-            "Greetings",
-            "20/12/20",
-            1
+            1, "event", "Camera", "Information", "Greetings", "20/12/20", 1
         )
         every {
             database.databaseQueries.saveEvent(
-                any(),
-                any(),
-                any(),
-                any(),
-                any(),
-                any()
+                any(), any(), any(), any(), any(), any()
             )
         } just Runs
         cameraEventsDaoImpl.saveEvent(event)
         verify {
             database.databaseQueries.saveEvent(
-                any(),
-                any(),
-                any(),
-                any(),
-                any(),
-                any()
+                any(), any(), any(), any(), any(), any()
             )
         }
     }
@@ -102,19 +73,24 @@ internal class CameraEventsDaoImplTest {
     @Test
     fun getAllNotificationEventsFlow() {
         val result = mockk<List<DbCameraEvent>>(relaxed = true)
-        every { database.databaseQueries.getNotificationEvents(any()).executeAsList() } returns result
+        every {
+            database.databaseQueries.getAllNotificationEventsTillToday().executeAsList()
+        } returns result
         cameraEventsDaoImpl.getNotificationEvents("")
-        verify { database.databaseQueries.getNotificationEvents(any()).executeAsList() }
+        verify { database.databaseQueries.getAllNotificationEventsTillToday().executeAsList() }
     }
 
     @Test
     fun getAllNotificationEventsResult() {
         val response = listOf(mockk<DbCameraEvent>(relaxed = true))
         val result = response.toLocalList()
-        every { database.databaseQueries.getNotificationEvents(any()).executeAsList() } returns response
+
+        every {
+            database.databaseQueries.getAllNotificationEventsTillToday().executeAsList()
+        } returns response
+
         Assert.assertEquals(
-            result,
-            cameraEventsDaoImpl.getNotificationEvents("")
+            result, cameraEventsDaoImpl.getAllNotificationTillToday()
         )
     }
 
@@ -129,8 +105,7 @@ internal class CameraEventsDaoImplTest {
     fun getEventsCountResult() {
         every { database.databaseQueries.getEventsCount().executeAsOne() } returns 1
         Assert.assertEquals(
-            1,
-            cameraEventsDaoImpl.getEventsCount()
+            1, cameraEventsDaoImpl.getEventsCount()
         )
     }
 
@@ -145,8 +120,7 @@ internal class CameraEventsDaoImplTest {
     fun getPendingNotificationsCountResult() {
         every { database.databaseQueries.getPendingNotificationsCount().executeAsOne() } returns 1
         Assert.assertEquals(
-            1,
-            cameraEventsDaoImpl.getPendingNotificationsCount()
+            1, cameraEventsDaoImpl.getPendingNotificationsCount()
         )
     }
 

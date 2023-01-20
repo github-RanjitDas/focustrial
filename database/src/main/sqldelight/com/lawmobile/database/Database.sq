@@ -17,6 +17,10 @@ SELECT *
 FROM DbCameraEvent
 WHERE eventType = "Notification" AND date >= :date;
 
+getAllNotificationEventsTillToday:
+SELECT *
+FROM DbCameraEvent ;
+
 getEventsCount:
 SELECT COUNT(*)
 FROM DbCameraEvent;
@@ -32,8 +36,7 @@ VALUES (:name, :eventType, :eventTag, :value, :date, :isRead);
 
 setAllNotificationsAsRead:
 UPDATE DbCameraEvent
-SET isRead = 1
-WHERE eventType = "Notification";
+SET isRead = 1;
 
 deleteOutdatedEvents:
 DELETE FROM DbCameraEvent

@@ -19,5 +19,6 @@ object CameraConstants {
     const val PROGRESS_CLIENT_INFO = 100
     const val ATTEMPTS_RETRY_REQUEST = 3
     const val NOTIFICATION_FILE_NAME = "warnings.log"
+    const val NOTIFICATION_DICTIONARY_FILE_NAME = "NotificationDictionary.json"
     const val PATH_CATEGORIES = "/tmp/SD0/categories.json"
 }

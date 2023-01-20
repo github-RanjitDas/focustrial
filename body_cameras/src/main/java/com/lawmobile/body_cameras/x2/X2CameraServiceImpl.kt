@@ -3,6 +3,7 @@ package com.lawmobile.body_cameras.x2
 import com.lawmobile.body_cameras.CameraServiceImpl
 import com.lawmobile.body_cameras.entities.CameraFile
 import com.lawmobile.body_cameras.entities.LogEvent
+import com.lawmobile.body_cameras.entities.NotificationDictionary
 import com.lawmobile.body_cameras.entities.NotificationResponse
 import com.lawmobile.body_cameras.entities.PhotoInformation
 import com.lawmobile.body_cameras.entities.SetupConfiguration
@@ -82,6 +83,9 @@ class X2CameraServiceImpl(
         return response
     }
 
+    override suspend fun getNotificationDictionary(): Result<List<NotificationDictionary>> {
+        return fileInformationHelper.getNotificationDictionary()
+    }
     override fun reviewIfArriveNotificationInCMDSocket() {
         notificationCameraHelper.reviewIfSocketHasBytesAvailableForNotification(
             notificationCallback = {

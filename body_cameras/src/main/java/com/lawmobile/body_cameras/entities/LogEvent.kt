@@ -15,12 +15,20 @@ data class LogEvent(
 
         fun fromCSV(csv: String): LogEvent {
             val values = csv.split(",")
-            return LogEvent(
-                date = values[DATE_INDEX],
-                name = values[NAME_INDEX],
-                type = values[TYPE_INDEX],
-                value = values[VALUE_INDEX]
-            )
+            return if (values.size > VALUE_INDEX) {
+                LogEvent(
+                    date = values[DATE_INDEX],
+                    name = values[NAME_INDEX],
+                    type = values[TYPE_INDEX],
+                    value = values[VALUE_INDEX]
+                )
+            } else {
+                LogEvent(
+                    date = values[DATE_INDEX],
+                    name = values[NAME_INDEX],
+                    type = values[TYPE_INDEX],
+                )
+            }
         }
     }
 }
