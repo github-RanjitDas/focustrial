@@ -51,7 +51,7 @@ class BodyWornSettingsDataSourceImplTest {
     fun testGetParametersEnable() {
         runBlocking {
             val response = bodyWornSettingsDataSourceImpl.getParametersEnable()
-            Assert.assertTrue(response is Result.Success)
+            Assert.assertTrue(response is Result.Error)
         }
     }
 }

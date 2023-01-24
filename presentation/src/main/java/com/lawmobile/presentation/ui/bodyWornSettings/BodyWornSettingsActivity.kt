@@ -2,6 +2,7 @@ package com.lawmobile.presentation.ui.bodyWornSettings
 
 import android.os.Bundle
 import androidx.activity.viewModels
+import com.lawmobile.domain.entities.CameraInfo
 import com.lawmobile.domain.entities.ParametersBodyWornSettings
 import com.lawmobile.domain.enums.TypesOfBodyWornSettings
 import com.lawmobile.presentation.R
@@ -30,6 +31,16 @@ class BodyWornSettingsActivity : BaseActivity() {
         setListener()
         setObservers()
         getBodyWornSettings()
+    }
+
+    private fun initWithDefault() {
+        setBodyWornSettings(
+            ParametersBodyWornSettings(
+                CameraInfo.isCovertModeEnable,
+                CameraInfo.isBluetoothEnable,
+                false
+            )
+        )
     }
 
     private fun setCustomAppBar() {
@@ -98,6 +109,7 @@ class BodyWornSettingsActivity : BaseActivity() {
                 setBodyWornSettings(it)
             }
             doIfError {
+                initWithDefault()
                 binding.rootContent.showErrorSnackBar(
                     getString(R.string.body_worn_settings_error_in_get_settings),
                     onRetryClick = {

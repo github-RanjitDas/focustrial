@@ -20,14 +20,7 @@ class BodyWornSettingsDataSourceImpl(private val bodyCameraFactory: CameraServic
     }
 
     override suspend fun getParametersEnable(): Result<ParametersBodyWornSettings> {
-        // Change this with cameraService
-        return Result.Success(
-            ParametersBodyWornSettings(
-                isCovertModeEnable,
-                isBluetoothEnable,
-                isGPSEnable
-            )
-        )
+        return Result.Error(Exception("Not Implemented"))
     }
 
     private suspend fun changeCovertModeEnable(isEnable: Boolean): Result<Unit> {
