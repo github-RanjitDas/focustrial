@@ -15,6 +15,8 @@ object CameraInfo {
     var officerName = ""
     var areNewChanges = false
     var currentNotificationCount = 0
+    var isBluetoothEnable = false
+    var isCovertModeEnable = false
 
     fun cleanInfo() {
         metadataEvents = mutableListOf()
