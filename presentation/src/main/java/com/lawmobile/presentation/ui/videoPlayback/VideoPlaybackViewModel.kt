@@ -164,5 +164,6 @@ class VideoPlaybackViewModel @Inject constructor(
 
         private const val DELAY_ON_VIDEO_INFORMATION = 250L
         private const val RETRY_ATTEMPTS = 3
+        var isVidePlayerInFullScreen = false
     }
 }

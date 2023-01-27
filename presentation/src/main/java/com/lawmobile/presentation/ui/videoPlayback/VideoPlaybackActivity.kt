@@ -2,6 +2,7 @@ package com.lawmobile.presentation.ui.videoPlayback
 
 import android.graphics.Rect
 import android.os.Bundle
+import android.util.Log
 import android.view.SurfaceView
 import android.widget.Toast
 import androidx.activity.viewModels
@@ -77,7 +78,6 @@ class VideoPlaybackActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityVideoPlaybackBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
         val videoFile = getCameraConnectFileFromIntent()
 
         videoFile?.let {
@@ -90,6 +90,25 @@ class VideoPlaybackActivity : BaseActivity() {
             showLoadingDialog()
             viewModel.getVideoPlaybackInfo(it)
         }
+        initRestoreMetaData(savedInstanceState)
+    }
+
+    private fun initRestoreMetaData(savedInstanceState: Bundle?) {
+        viewModel.informationManager.setRestoreVideoMetaDataCallback(object :
+                RestoreVideoMetaDataFromCache {
+                override fun onRestoreVideoMetaData() {
+                    if (savedInstanceState != null) {
+                        if (isInPortraitMode()) {
+                            viewModel.informationManager.restoreVideoDetailMetaDataFromCache()
+                            binding.layoutNormalPlayback.seekProgressVideo.progress =
+                                CameraInfo.videoDetailMetaDataCached.playerProgress
+                        } else {
+                            binding.layoutFullScreenPlayback.seekProgressVideo.progress =
+                                CameraInfo.videoDetailMetaDataCached.playerProgress
+                        }
+                    }
+                }
+            })
     }
 
     private fun setVideoNameAndDate(videoFile: DomainCameraFile) {
@@ -105,16 +124,15 @@ class VideoPlaybackActivity : BaseActivity() {
 
     private fun toggleAssociateDialog(isOpen: Boolean) {
         binding.shadowPlaybackView.isVisible = isOpen
-        bottomSheetBehavior.state =
-            if (isOpen) {
-                setAssociateFilesFragment()
-                BottomSheetBehavior.STATE_EXPANDED
-            } else {
-                hideKeyboard()
-                detachAssociationFragment()
-                FilesAssociatedByUser.temporal.addAll(FilesAssociatedByUser.value)
-                BottomSheetBehavior.STATE_HIDDEN
-            }
+        bottomSheetBehavior.state = if (isOpen) {
+            setAssociateFilesFragment()
+            BottomSheetBehavior.STATE_EXPANDED
+        } else {
+            hideKeyboard()
+            detachAssociationFragment()
+            FilesAssociatedByUser.temporal.addAll(FilesAssociatedByUser.value)
+            BottomSheetBehavior.STATE_HIDDEN
+        }
     }
 
     private fun detachAssociationFragment() {
@@ -196,8 +214,7 @@ class VideoPlaybackActivity : BaseActivity() {
         activityCollect(viewModel.videoInformationException) { exception ->
             exception.let {
                 showToast(
-                    getString(R.string.error_get_information_metadata),
-                    Toast.LENGTH_SHORT
+                    getString(R.string.error_get_information_metadata), Toast.LENGTH_SHORT
                 )
                 finish()
             }
@@ -210,17 +227,14 @@ class VideoPlaybackActivity : BaseActivity() {
                 is Result.Success -> {
                     CameraInfo.areNewChanges = true
                     showToast(
-                        getString(R.string.video_metadata_saved_success),
-                        Toast.LENGTH_SHORT
+                        getString(R.string.video_metadata_saved_success), Toast.LENGTH_SHORT
                     )
                     runWithDelay(
-                        dispatcher = Dispatchers.Main.immediate,
-                        callback = ::finish
+                        dispatcher = Dispatchers.Main.immediate, callback = ::finish
                     )
                 }
                 is Result.Error -> showToast(
-                    getString(R.string.video_metadata_save_error),
-                    Toast.LENGTH_SHORT
+                    getString(R.string.video_metadata_save_error), Toast.LENGTH_SHORT
                 )
             }
             hideLoadingDialog()
@@ -286,13 +300,13 @@ class VideoPlaybackActivity : BaseActivity() {
         }
     }
 
-    private fun buttonFullScreenListener() =
-        with(binding.layoutNormalPlayback.buttonFullScreen) {
-            isActivated = false
-            setOnClickListenerCheckConnection {
-                state = VideoPlaybackState.FullScreen
-            }
+    private fun buttonFullScreenListener() = with(binding.layoutNormalPlayback.buttonFullScreen) {
+        isActivated = false
+        setOnClickListenerCheckConnection {
+            state = VideoPlaybackState.FullScreen
         }
+        VideoPlaybackViewModel.isVidePlayerInFullScreen = true
+    }
 
     private fun buttonNormalScreenListener() =
         with(binding.layoutFullScreenPlayback.buttonFullScreen) {
@@ -300,6 +314,7 @@ class VideoPlaybackActivity : BaseActivity() {
             setOnClickListenerCheckConnection {
                 state = VideoPlaybackState.Default
             }
+            VideoPlaybackViewModel.isVidePlayerInFullScreen = false
         }
 
     private fun stopVideoWhenScrolling() = with(binding) {
@@ -314,6 +329,7 @@ class VideoPlaybackActivity : BaseActivity() {
         (!fakeSurfaceVideoPlayback.getLocalVisibleRect(scrollBounds) && viewModel.mediaPlayer.isPlaying)
 
     private fun setVideoInformation(videoInformation: DomainVideoMetadata) {
+        Log.d("TTT", "setVideoInformation():$videoInformation")
         videoInformation.associatedFiles?.let {
             associateSnapshotsFragment.setFilesAssociatedFromMetadata(it as MutableList)
         }
@@ -355,9 +371,7 @@ class VideoPlaybackActivity : BaseActivity() {
     private fun setAssociateFilesFragment() {
         viewModel.mediaPlayer.pause()
         supportFragmentManager.attachFragment(
-            R.id.fragmentAssociateHolder,
-            associateSnapshotsFragment,
-            AssociateFilesFragment.TAG
+            R.id.fragmentAssociateHolder, associateSnapshotsFragment, AssociateFilesFragment.TAG
         )
         FilesAssociatedByUser.setTemporalValue(FilesAssociatedByUser.value)
     }
@@ -386,9 +400,7 @@ class VideoPlaybackActivity : BaseActivity() {
     private fun createVideoPlayer(mediaInformation: DomainInformationVideo) {
         viewModel.mediaPlayer.apply {
             setControls(
-                mediaPlayerControls,
-                mediaInformation.getDurationMinutesLong(),
-                lifecycle
+                mediaPlayerControls, mediaInformation.getDurationMinutesLong(), lifecycle
             )
             create(mediaInformation.urlVideo, videoSurface)
             if (!isEndReached && !isPaused) play()
@@ -397,21 +409,13 @@ class VideoPlaybackActivity : BaseActivity() {
 
     private fun getNormalPlayerControls() = binding.layoutNormalPlayback.run {
         MediaPlayerControls(
-            buttonPlay,
-            textViewPlayerTime,
-            textViewPlayerDuration,
-            seekProgressVideo,
-            buttonAspect
+            buttonPlay, textViewPlayerTime, textViewPlayerDuration, seekProgressVideo, buttonAspect
         )
     }
 
     private fun getFullscreenPlayerControls() = binding.layoutFullScreenPlayback.run {
         MediaPlayerControls(
-            buttonPlay,
-            textViewPlayerTime,
-            textViewPlayerDuration,
-            seekProgressVideo,
-            buttonAspect
+            buttonPlay, textViewPlayerTime, textViewPlayerDuration, seekProgressVideo, buttonAspect
         )
     }
 
@@ -428,5 +432,8 @@ class VideoPlaybackActivity : BaseActivity() {
     override fun onDestroy() {
         super.onDestroy()
         FilesAssociatedByUser.cleanList()
+        if (!VideoPlaybackViewModel.isVidePlayerInFullScreen) {
+            viewModel.informationManager.saveVideoDetailMetaData(binding.layoutNormalPlayback.seekProgressVideo.progress)
+        }
     }
 }
