@@ -8,6 +8,7 @@ import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.viewModelScope
 import com.lawmobile.domain.entities.AuthorizationEndpoints
 import com.lawmobile.domain.entities.CameraInfo
+import com.lawmobile.domain.enums.BackOfficeType
 import com.lawmobile.domain.usecase.LoginUseCases
 import com.lawmobile.domain.utils.PreferencesManager
 import com.lawmobile.presentation.BuildConfig
@@ -100,7 +101,7 @@ class LoginX2ViewModel @Inject constructor(
         }
     }
 
-    internal fun fetchConfigFromBluetooth(context: Context) {
+    internal fun fetchConfigFromBle(context: Context) {
         retryCounter = 0
         bleManager.initManager(context)
         scanNConnectFromBluetooth(context, ::retryFetchConfig)
@@ -151,9 +152,18 @@ class LoginX2ViewModel @Inject constructor(
         CameraInfo.discoveryUrl = jsonObject.getString("discoveryUrl")
         CameraInfo.tenantId = jsonObject.getString("tenantId")
         val backOffice = jsonObject.getString("backoffice")
+        Log.d(TAG, "Get Configs:DiscoveryUrl:" + CameraInfo.discoveryUrl)
+        if (backOffice.equals("nexus", true)) {
+            CameraInfo.backOfficeType = BackOfficeType.NEXUS
+        } else {
+            CameraInfo.backOfficeType = BackOfficeType.COMMAND_CENTRE
+        }
+        // TODO hard coded remove later.
+        CameraInfo.backOfficeType = BackOfficeType.NEXUS
     }
 
     companion object {
         private const val MAX_RETRY_ATTEMPT = 3
+        private const val TAG = "LoginX2ViewModel"
     }
 }

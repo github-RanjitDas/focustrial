@@ -18,6 +18,7 @@ import android.os.Handler
 import android.os.Looper
 import android.os.ParcelUuid
 import android.util.Log
+import com.lawmobile.domain.entities.CameraInfo
 import java.util.UUID
 import kotlin.collections.ArrayList
 
@@ -74,7 +75,7 @@ class CameraBleManager {
             super.onScanResult(callbackType, result)
             Log.d(TAG, "Scanning Device:" + result.device.name + "," + result.device.address)
 
-            if (result.device.address == CAMERA_MAC_ADDRESS) {
+            if (result.device.name.equals("X_" + CameraInfo.officerId, true)) {
                 isCameraDetected = true
                 Log.d(TAG, "Camera FOUND:" + result.device.name + "," + result.device.address)
                 bluetoothLeScanner.stopScan(this)
@@ -90,7 +91,7 @@ class CameraBleManager {
     }
 
     fun doConnectGatt(context: Context, xBleDevice: BluetoothDevice) {
-        xBleDevice.connectGatt(context, true, bluetoothGattCallback)
+        xBleDevice.connectGatt(context, true, bluetoothGattCallback, 2)
     }
 
     private val bluetoothGattCallback: BluetoothGattCallback = object : BluetoothGattCallback() {
@@ -141,9 +142,6 @@ class CameraBleManager {
         internal const val TAG = "CameraBleManager"
         private val BLE_SERVICE_UUID = convertFromInteger(0xFFA1)
         private val BLE_CHAR_UUID = convertFromInteger(0xFFF3)
-        private const val CAMERA_MAC_ADDRESS = "08:FB:EA:06:92:3F"
-        // 08:FB:EA:06:92:3F
-        // 08:FB:EA:C2:9B:35
 
         // Stops scanning after 20 seconds.
         private const val SCAN_PERIOD: Long = 20000

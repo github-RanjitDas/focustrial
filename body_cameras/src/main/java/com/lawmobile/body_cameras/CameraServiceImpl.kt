@@ -10,6 +10,7 @@ import com.lawmobile.body_cameras.entities.CameraUser
 import com.lawmobile.body_cameras.entities.Config
 import com.lawmobile.body_cameras.entities.FileResponseWithErrors
 import com.lawmobile.body_cameras.entities.LogEvent
+import com.lawmobile.body_cameras.entities.NotificationDictionary
 import com.lawmobile.body_cameras.entities.NotificationResponse
 import com.lawmobile.body_cameras.entities.PhotoInformation
 import com.lawmobile.body_cameras.entities.SetupConfiguration
@@ -399,6 +400,10 @@ open class CameraServiceImpl(
         commandHelper.connectCMDSocket(hostnameToConnect)
 
     override suspend fun getLogEvents(): Result<List<LogEvent>> {
+        return Result.Error(Exception(FEATURE_NOT_SUPPORTED))
+    }
+
+    override suspend fun getNotificationDictionary(): Result<List<NotificationDictionary>> {
         return Result.Error(Exception(FEATURE_NOT_SUPPORTED))
     }
 

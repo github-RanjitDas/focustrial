@@ -21,7 +21,7 @@
 
                 <include
                     android:id="@+id/layoutNotificationInformation"
-                    layout="@layout/custom_notification_information" />
+                    layout="@layout/custom_notification_information_bottom_sheet" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

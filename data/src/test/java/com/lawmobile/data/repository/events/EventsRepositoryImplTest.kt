@@ -75,22 +75,19 @@ internal class EventsRepositoryImplTest {
             )
         )
 
-        coEvery { eventsLocalDataSource.deleteOutdatedEvents(any()) } returns Result.Success(Unit)
         coEvery { eventsRemoteDataSource.getCameraEvents() } returns remoteEvents
         coEvery { eventsLocalDataSource.getAllEvents() } returns localEvents
         coEvery { eventsLocalDataSource.getEventsCount() } returns 1
         coEvery { eventsLocalDataSource.clearAllEvents() } just Runs
-        coEvery { eventsLocalDataSource.saveAllEvents(any()) } returns Result.Success(Unit)
 
         eventsRepositoryImpl.getCameraEvents()
 
         coVerify {
-            eventsLocalDataSource.deleteOutdatedEvents(any())
+
             eventsLocalDataSource.getEventsCount()
             eventsLocalDataSource.getAllEvents()
             eventsRemoteDataSource.getCameraEvents()
             eventsLocalDataSource.clearAllEvents()
-            eventsLocalDataSource.saveAllEvents(any())
         }
     }
 
@@ -119,7 +116,7 @@ internal class EventsRepositoryImplTest {
             emptyList<LocalCameraEvent>()
         )
 
-        coEvery { eventsLocalDataSource.deleteOutdatedEvents(any()) } returns Result.Success(Unit)
+        coEvery { eventsLocalDataSource.clearAllEvents() } just Runs
         coEvery { eventsRemoteDataSource.getCameraEvents() } returns remoteEvents
         coEvery { eventsLocalDataSource.getAllEvents() } returns localEvents
         coEvery { eventsLocalDataSource.getEventsCount() } returns 0
@@ -128,7 +125,7 @@ internal class EventsRepositoryImplTest {
         eventsRepositoryImpl.getCameraEvents()
 
         coVerify {
-            eventsLocalDataSource.deleteOutdatedEvents(any())
+
             eventsLocalDataSource.getEventsCount()
             eventsLocalDataSource.getAllEvents()
             eventsRemoteDataSource.getCameraEvents()
@@ -209,6 +206,7 @@ internal class EventsRepositoryImplTest {
             )
         )
 
+        coEvery { eventsLocalDataSource.clearAllEvents() } just Runs
         coEvery { eventsLocalDataSource.getEventsCount() } returns 0
         coEvery { eventsLocalDataSource.deleteOutdatedEvents(any()) } returns Result.Success(Unit)
         coEvery { eventsLocalDataSource.getAllEvents() } returns mockk(relaxed = true)
@@ -220,6 +218,7 @@ internal class EventsRepositoryImplTest {
 
     @Test
     fun getCameraEventsError() = dispatcher.runBlockingTest {
+        coEvery { eventsLocalDataSource.clearAllEvents() } just Runs
         coEvery { eventsLocalDataSource.deleteOutdatedEvents(any()) } returns Result.Success(Unit)
         coEvery { eventsRemoteDataSource.getCameraEvents() } returns Result.Error(mockk(relaxed = true))
         Assert.assertTrue(eventsRepositoryImpl.getCameraEvents() is Result.Error)

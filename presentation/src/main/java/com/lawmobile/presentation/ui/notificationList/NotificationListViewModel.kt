@@ -24,6 +24,13 @@ class NotificationListViewModel @Inject constructor(private val eventsUseCase: E
         result.doIfSuccess { setAllNotificationsAsRead() }
     }
 
+    suspend fun getNotificationDictionary() {
+        val notificationDictionaryListResult = eventsUseCase.getNotificationDictionary()
+        notificationDictionaryListResult.doIfSuccess {
+            CameraInfo.notificationDictionaryList = it
+        }
+    }
+
     private suspend fun setAllNotificationsAsRead() {
         CameraInfo.currentNotificationCount = 0
         eventsUseCase.setAllNotificationsAsRead()

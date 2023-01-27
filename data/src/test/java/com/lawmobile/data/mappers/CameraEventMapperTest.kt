@@ -16,9 +16,9 @@ internal class CameraEventMapperTest {
     fun cameraToDomainListNotificationWarning() {
         val logEventList = listOf(
             LogEvent(
-                name = "Notification",
+                name = "warning",
                 date = "20/12/2020",
-                type = "warn:Low battery",
+                type = "warning:Low battery",
                 value = "Charge your camera",
                 additionalInformation = null
             )
@@ -50,9 +50,9 @@ internal class CameraEventMapperTest {
     fun cameraToDomainListNotificationError() {
         val logEventList = listOf(
             LogEvent(
-                name = "Notification",
+                name = "error",
                 date = "20/12/2020",
-                type = "err:Low battery",
+                type = "error:Low battery",
                 value = "Charge your camera",
                 additionalInformation = null
             )
@@ -84,9 +84,9 @@ internal class CameraEventMapperTest {
     fun cameraToDomainListNotificationInformation() {
         val logEventList = listOf(
             LogEvent(
-                name = "Notification",
+                name = "information",
                 date = "20/12/2020",
-                type = "inf:Low battery",
+                type = "information:Low battery",
                 value = "Charge your camera",
                 additionalInformation = null
             )
@@ -118,9 +118,9 @@ internal class CameraEventMapperTest {
     fun cameraToDomainListCameraInformation() {
         val logEventList = listOf(
             LogEvent(
-                name = "Camera",
+                name = "information",
                 date = "20/12/2020",
-                type = "inf:Low battery",
+                type = "information:Low battery",
                 value = "Charge your camera",
                 additionalInformation = null
             )
@@ -152,9 +152,9 @@ internal class CameraEventMapperTest {
     fun cameraToDomainListOtherInformation() {
         val logEventList = listOf(
             LogEvent(
-                name = "Info",
+                name = "information",
                 date = "20/12/2020",
-                type = "inf:Low battery",
+                type = "information:Low battery",
                 value = "Charge your camera",
                 additionalInformation = null
             )
@@ -189,7 +189,7 @@ internal class CameraEventMapperTest {
                 name = "Low battery",
                 date = "20/12/2020",
                 eventType = "Camera",
-                eventTag = "",
+                eventTag = "information",
                 value = "Charge your camera",
                 isRead = 0
             )
@@ -214,7 +214,7 @@ internal class CameraEventMapperTest {
                     domain.eventType.value, camera[index].eventType
                 )
                 Assert.assertEquals(
-                    domain.eventTag.value, camera[index].eventTag
+                    domain.eventTag.value, EventTag.INFORMATION.value
                 )
             }
         }
@@ -252,7 +252,7 @@ internal class CameraEventMapperTest {
                     domain.eventType.value, camera[index].eventType
                 )
                 Assert.assertEquals(
-                    domain.eventTag.value, camera[index].eventTag
+                    domain.eventTag.value, EventTag.NOTIFICATION.value
                 )
             }
         }

@@ -1,5 +1,6 @@
 package com.lawmobile.domain.entities
 
+import com.lawmobile.domain.NotificationDictionary
 import com.lawmobile.domain.enums.BackOfficeType
 import com.lawmobile.domain.enums.CameraType
 
@@ -8,6 +9,7 @@ object CameraInfo {
     var backOfficeType: BackOfficeType = BackOfficeType.COMMAND_CENTRE
     var discoveryUrl = ""
     var tenantId = ""
+    var notificationDictionaryList: List<NotificationDictionary> = ArrayList()
     var metadataEvents = mutableListOf<MetadataEvent>()
     var isOfficerLogged: Boolean = false
     var officerId = ""
@@ -26,6 +28,15 @@ object CameraInfo {
         officerName = ""
         areNewChanges = false
         currentNotificationCount = 0
+    }
+
+    fun getDescriptiveTextFromNotificationDictionary(value: String?): String? {
+        notificationDictionaryList.forEach {
+            if (it.type.equals(value, true)) {
+                return it.note
+            }
+        }
+        return ""
     }
 
     fun setCamera(cameraType: CameraType) {

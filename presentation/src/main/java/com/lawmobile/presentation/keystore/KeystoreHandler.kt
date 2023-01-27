@@ -51,10 +51,10 @@ object KeystoreHandler {
                         KeyProperties.PURPOSE_DECRYPT or KeyProperties.PURPOSE_ENCRYPT
                     )
                         .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_RSA_PKCS1) //  RSA/ECB/PKCS1Padding
-                        .setKeySize(2048) // *** Replaced: setStartDate
-                        .setKeyValidityStart(notBefore.time) // *** Replaced: setEndDate
-                        .setKeyValidityEnd(notAfter.time) // *** Replaced: setSubject
-                        .setCertificateSubject(X500Principal("CN=test")) // *** Replaced: setSerialNumber
+                        .setKeySize(4096) // Size
+                        .setKeyValidityStart(notBefore.time)
+                        .setKeyValidityEnd(notAfter.time)
+                        .setCertificateSubject(X500Principal("CN=test"))
                         .setCertificateSerialNumber(BigInteger.ONE).build()
                 )
                 val keyPair = spec.generateKeyPair()
@@ -66,17 +66,14 @@ object KeystoreHandler {
             val encryptedDataFilePath = getEncryptedFilePath(context)
             Log.v(TAG, "encryptedDataFilePath = $encryptedDataFilePath")
 
-            // *** Changed the padding type here and changed to AndroidKeyStoreBCWorkaround
             val inCipher = Cipher.getInstance("RSA/ECB/PKCS1Padding", "AndroidKeyStoreBCWorkaround")
             inCipher.init(Cipher.ENCRYPT_MODE, publicKey)
 
-            // *** Changed the padding type here and changed to AndroidKeyStoreBCWorkaround
             val outCipher =
                 Cipher.getInstance("RSA/ECB/PKCS1Padding", "AndroidKeyStoreBCWorkaround")
             outCipher.init(Cipher.DECRYPT_MODE, privateKey)
             val cipherOutputStream =
                 CipherOutputStream(FileOutputStream(encryptedDataFilePath), inCipher)
-            // *** Replaced string literal with StandardCharsets.UTF_8
             cipherOutputStream.write(plainText.toByteArray(StandardCharsets.UTF_8))
             cipherOutputStream.close()
         } catch (e: NoSuchAlgorithmException) {

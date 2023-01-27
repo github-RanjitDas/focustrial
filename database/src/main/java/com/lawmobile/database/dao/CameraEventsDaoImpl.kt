@@ -12,7 +12,7 @@ class CameraEventsDaoImpl(private val database: Database) : CameraEventsDao {
     }
 
     override fun getNotificationEvents(date: String): List<LocalCameraEvent> {
-        val dbEvents = database.databaseQueries.getNotificationEvents(date).executeAsList()
+        val dbEvents = database.databaseQueries.getAllNotificationEventsTillToday().executeAsList()
         return dbEvents.toLocalList()
     }
 
@@ -44,5 +44,10 @@ class CameraEventsDaoImpl(private val database: Database) : CameraEventsDao {
 
     override fun clearAllEvents() {
         database.databaseQueries.clearAllEvents()
+    }
+
+    override fun getAllNotificationTillToday(): List<LocalCameraEvent> {
+        return database.databaseQueries.getAllNotificationEventsTillToday().executeAsList()
+            .toLocalList()
     }
 }

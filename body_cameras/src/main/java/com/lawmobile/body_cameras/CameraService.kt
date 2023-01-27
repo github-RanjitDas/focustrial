@@ -7,6 +7,7 @@ import com.lawmobile.body_cameras.entities.CameraUser
 import com.lawmobile.body_cameras.entities.Config
 import com.lawmobile.body_cameras.entities.FileResponseWithErrors
 import com.lawmobile.body_cameras.entities.LogEvent
+import com.lawmobile.body_cameras.entities.NotificationDictionary
 import com.lawmobile.body_cameras.entities.NotificationResponse
 import com.lawmobile.body_cameras.entities.PhotoInformation
 import com.lawmobile.body_cameras.entities.SetupConfiguration
@@ -52,6 +53,7 @@ interface CameraService {
     suspend fun getInformationResourcesVideo(cameraFile: CameraFile): Result<VideoFileInfo>
     suspend fun getCatalogInfo(catalogTypesDto: CatalogTypesDto): Result<List<CameraCatalog>>
     suspend fun getLogEvents(): Result<List<LogEvent>>
+    suspend fun getNotificationDictionary(): Result<List<NotificationDictionary>>
     suspend fun getBodyWornDiagnosis(): Result<Boolean>
     suspend fun getCameraType(): Result<CameraType>
     suspend fun getUserResponse(): Result<CameraUser>
