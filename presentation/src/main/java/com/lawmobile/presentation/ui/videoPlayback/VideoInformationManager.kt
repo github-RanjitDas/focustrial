@@ -9,6 +9,7 @@ import com.lawmobile.domain.entities.DomainMetadata
 import com.lawmobile.domain.entities.DomainVideoMetadata
 import com.lawmobile.domain.entities.FilesAssociatedByUser
 import com.lawmobile.domain.entities.MetadataEvent
+import com.lawmobile.domain.entities.VideoDetailMetaDataCached
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.databinding.VideoMetadataFormBinding
 import com.lawmobile.presentation.extensions.onItemSelected
@@ -25,6 +26,11 @@ class VideoInformationManager {
     private var eventInput: Int = 0
     private var genderInput: Int = 0
     private var raceInput: Int = 0
+    private lateinit var restoreVideoMetaDataFromCache: RestoreVideoMetaDataFromCache
+
+    fun setRestoreVideoMetaDataCallback(restoreVideoMetaDataFromCache: RestoreVideoMetaDataFromCache) {
+        this.restoreVideoMetaDataFromCache = restoreVideoMetaDataFromCache
+    }
 
     fun setup(binding: VideoMetadataFormBinding, cameraFile: DomainCameraFile) {
         this.binding = binding
@@ -58,6 +64,49 @@ class VideoInformationManager {
             FilesAssociatedByUser.setTemporalValue(it as MutableList)
             FilesAssociatedByUser.setFinalValue(it)
         }
+
+        restoreVideoMetaDataFromCache.onRestoreVideoMetaData()
+    }
+
+    fun saveVideoDetailMetaData(progress: Int) {
+        CameraInfo.videoDetailMetaDataCached = VideoDetailMetaDataCached(
+            eventInput,
+            binding.partnerIdValue.text.toString(),
+            binding.ticket1Value.text.toString(),
+            binding.ticket2Value.text.toString(),
+            binding.case1Value.text.toString(),
+            binding.case2Value.text.toString(),
+            binding.dispatch1Value.text.toString(),
+            binding.dispatch2Value.text.toString(),
+            binding.locationValue.text.toString(),
+            binding.firstNameValue.text.toString(),
+            binding.lastNameValue.text.toString(),
+            genderInput,
+            raceInput,
+            binding.driverLicenseValue.text.toString(),
+            binding.licensePlateValue.text.toString(),
+            binding.notesValue.text.toString(),
+            progress
+        )
+    }
+
+    fun restoreVideoDetailMetaDataFromCache() {
+        binding.eventValue.setSelection(CameraInfo.videoDetailMetaDataCached.eventPosition)
+        binding.partnerIdValue.setText(CameraInfo.videoDetailMetaDataCached.partnerIdValue)
+        binding.ticket1Value.setText(CameraInfo.videoDetailMetaDataCached.ticket1Value)
+        binding.ticket2Value.setText(CameraInfo.videoDetailMetaDataCached.ticket2Value)
+        binding.case1Value.setText(CameraInfo.videoDetailMetaDataCached.case1Value)
+        binding.case2Value.setText(CameraInfo.videoDetailMetaDataCached.case2Value)
+        binding.dispatch1Value.setText(CameraInfo.videoDetailMetaDataCached.dispatch1Value)
+        binding.dispatch2Value.setText(CameraInfo.videoDetailMetaDataCached.dispatch2Value)
+        binding.locationValue.setText(CameraInfo.videoDetailMetaDataCached.locationValue)
+        binding.firstNameValue.setText(CameraInfo.videoDetailMetaDataCached.firstNameValue)
+        binding.lastNameValue.setText(CameraInfo.videoDetailMetaDataCached.lastNameValue)
+        binding.genderValue.setSelection(CameraInfo.videoDetailMetaDataCached.genderPosition)
+        binding.raceValue.setSelection(CameraInfo.videoDetailMetaDataCached.racePosition)
+        binding.driverLicenseValue.setText(CameraInfo.videoDetailMetaDataCached.driverLicenseValue)
+        binding.licensePlateValue.setText(CameraInfo.videoDetailMetaDataCached.licensePlateValue)
+        binding.notesValue.setText(CameraInfo.videoDetailMetaDataCached.notesValue)
     }
 
     fun getEditedInformation(currentInformation: DomainVideoMetadata?): DomainVideoMetadata =
@@ -137,9 +186,7 @@ class VideoInformationManager {
     }
 
     private fun containsNotAllowedCharacters(source: CharSequence): Boolean {
-        return COMMA.contains("" + source) ||
-            AMPERSAND.contains("" + source) ||
-            QUOTES.contains("" + source)
+        return COMMA.contains("" + source) || AMPERSAND.contains("" + source) || QUOTES.contains("" + source)
     }
 
     private fun setSpinnerListeners() = with(binding) {

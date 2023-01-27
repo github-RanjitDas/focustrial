@@ -19,6 +19,7 @@ object CameraInfo {
     var currentNotificationCount = 0
     var isBluetoothEnable = false
     var isCovertModeEnable = false
+    lateinit var videoDetailMetaDataCached: VideoDetailMetaDataCached
 
     fun cleanInfo() {
         metadataEvents = mutableListOf()
