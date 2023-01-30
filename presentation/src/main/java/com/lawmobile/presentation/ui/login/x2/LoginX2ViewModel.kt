@@ -44,7 +44,7 @@ class LoginX2ViewModel @Inject constructor(
 ) : LoginBaseViewModel(loginUseCases.getUserFromCamera, wifiHelper, ioDispatcher) {
 
     var officerId: String = ""
-    var retryCounter = 0
+    var retryCounter = 1
 
     override val mutableLoginState by lazy { MutableStateFlow<LoginState>(LoginState.X2.OfficerId) }
 
@@ -152,7 +152,14 @@ class LoginX2ViewModel @Inject constructor(
         CameraInfo.discoveryUrl = jsonObject.getString("discoveryUrl")
         CameraInfo.tenantId = jsonObject.getString("tenantId")
         val backOffice = jsonObject.getString("backoffice")
+        val userId = jsonObject.getString("UserID")
+        val wiFiAPRouterMode = jsonObject.getString("WiFiAPRouterMode")
         Log.d(TAG, "Get Configs:DiscoveryUrl:" + CameraInfo.discoveryUrl)
+        Log.d(TAG, "userId:$userId")
+        Log.d(TAG, "tenantId:" + CameraInfo.tenantId)
+        Log.d(TAG, "wiFiAPRouterMode:$wiFiAPRouterMode")
+        CameraInfo.userId = userId
+        CameraInfo.wifiApRouterMode = wiFiAPRouterMode.toInt()
         if (backOffice.equals("nexus", true)) {
             CameraInfo.backOfficeType = BackOfficeType.NEXUS
         } else {

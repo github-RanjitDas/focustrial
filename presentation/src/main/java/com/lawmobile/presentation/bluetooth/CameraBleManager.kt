@@ -144,7 +144,7 @@ class CameraBleManager {
         private val BLE_CHAR_UUID = convertFromInteger(0xFFF3)
 
         // Stops scanning after 20 seconds.
-        private const val SCAN_PERIOD: Long = 20000
+        private const val SCAN_PERIOD: Long = 30000
         private fun convertFromInteger(i: Int): UUID {
             val MSB = 0x0000000000001000L
             val LSB = -0x7fffff7fa064cb05L

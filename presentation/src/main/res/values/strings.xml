@@ -219,6 +219,7 @@
     <string name="no_event">No event</string>
     <string name="error_get_information_metadata">Failed to retrieve video information. Please try again.</string>
     <string name="error_getting_officer_information">Failed to retrieve officer information. Please retry or check the Body Camera.</string>
+    <string name="error_getting_config_bluetooth">Failed to connect with Bluetooth. Please retry or check the bluetooth settings.</string>
     <string name="associate_snapshots_to_video">Associate snapshots with video</string>
     <string name="associate_images">Associate snapshots</string>
     <string name="no_new_photo_selected_message">No new photos selected</string>
@@ -284,7 +285,8 @@
     <string name="continue_text">Continue</string>
     <string name="or">or</string>
     <string name="display">Display</string>
-    <string name="officer_id">Enter your officer ID or email</string>
+    <string name="officer_id">Enter your officer ID to connect with Bluetooth</string>
+    <string name="officer_email_id">Enter your email id</string>
     <string name="change_camera_type">Change Body-Camera type</string>
     <string name="go_to_on_boarding_cards">Go to on-boarding cards</string>
     <string name="sign_in_with_email">Sign in with Email</string>

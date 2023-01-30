@@ -68,11 +68,16 @@ class LoginX2Activity : LoginBaseActivity() {
         with(result) {
             this?.doIfSuccess { onReceivedConfigFromBle() }
             this?.doIfError {
+                showErrorSnackBar(R.string.error_getting_config_bluetooth, ::retryBleConnectionToFetchConfigs)
                 hideLoadingDialog()
                 setCollectors()
                 viewModel.setObservers()
             }
         }
+    }
+
+    private fun retryBleConnectionToFetchConfigs() {
+        initBleConnectionToFetchConfigs()
     }
 
     private fun initBleConnectionToFetchConfigs() {
@@ -128,9 +133,9 @@ class LoginX2Activity : LoginBaseActivity() {
     }
 
     private fun handleDevicePasswordResult(result: Result<String>) {
-        Log.d(TAG, "SSO Completed:$result")
         with(result) {
             doIfSuccess {
+                Log.d(TAG, "SSO Completed with Success:$result")
                 // TODO: Hard coded SSID can be removed once X2 start broadcasting first part of email of before @
                 // val hotspotName = "X" + officerId.substringBefore("@")
                 // TODO: Using the hardcoded SSID for X2.
@@ -217,7 +222,7 @@ class LoginX2Activity : LoginBaseActivity() {
                     initBleConnectionToFetchConfigs()
                 }
             } else {
-                Log.d(TAG, "Found Config in KeyStore...$configs")
+                Log.d(TAG, "Found Configs in KeyStore...$configs")
                 viewModel.saveConfigLocally(configs)
                 onReceivedConfigFromBle()
             }
@@ -263,10 +268,12 @@ class LoginX2Activity : LoginBaseActivity() {
     private fun onTokenResponse(response: Result<TokenResponse>) {
         with(response) {
             doIfSuccess {
+                Log.d(TAG, "onTokenResponse:Success")
                 viewModel.saveToken(it.accessToken.toString())
-                viewModel.getDevicePassword(officerId)
+                viewModel.getDevicePassword(CameraInfo.userId)
             }
             doIfError {
+                Log.d(TAG, "onTokenResponse:Error:$it")
                 showRequestError()
             }
         }

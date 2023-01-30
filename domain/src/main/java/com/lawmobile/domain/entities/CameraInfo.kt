@@ -9,6 +9,8 @@ object CameraInfo {
     var backOfficeType: BackOfficeType = BackOfficeType.COMMAND_CENTRE
     var discoveryUrl = ""
     var tenantId = ""
+    var userId = ""
+    var wifiApRouterMode = 1
     var notificationDictionaryList: List<NotificationDictionary> = ArrayList()
     var metadataEvents = mutableListOf<MetadataEvent>()
     var isOfficerLogged: Boolean = false

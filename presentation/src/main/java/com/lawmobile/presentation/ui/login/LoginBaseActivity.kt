@@ -137,6 +137,16 @@ abstract class LoginBaseActivity : BaseActivity() {
         }
     }
 
+    fun showErrorSnackBar(message: Int, retry: () -> Unit) {
+        hideKeyboard()
+        binding.root.showErrorSnackBar(
+            getString(message),
+            Snackbar.LENGTH_INDEFINITE
+        ) {
+            retry.invoke()
+        }
+    }
+
     protected open fun onConnectionSuccessful() {
         baseViewModel.getUserFromCamera()
     }
