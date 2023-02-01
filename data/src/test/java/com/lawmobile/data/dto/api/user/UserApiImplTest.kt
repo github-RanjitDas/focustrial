@@ -20,9 +20,9 @@ internal class UserApiImplTest {
 
     @Test
     fun getUserSuccess() = runBlocking {
-        val uuid = "kevin.menesesp@perficient.com"
+        val uuid = "e423802f-5e99-454c-a6af-95f3b5c17914"
         coEvery { preferencesManager.getUsersEndpointUrl() } returns USERS_URL
-        val response = httpClient.get<List<UserDto>>(USERS_URL).find { it.email == uuid }
+        val response = httpClient.get<List<UserDto>>(USERS_URL).find { it.uuid == uuid }
         val result = userApiImpl.getUser(uuid)
         Assert.assertEquals(response, result)
         coVerify { preferencesManager.getUsersEndpointUrl() }
