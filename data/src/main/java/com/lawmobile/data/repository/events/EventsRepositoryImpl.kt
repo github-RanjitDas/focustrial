@@ -60,7 +60,6 @@ class EventsRepositoryImpl(
                     .toList()
                     .filter { it.eventTag == EventTag.NOTIFICATION }
                     .let { manageEventsReadStatus(it) }
-                println("getCameraEvents():$remoteEventList")
                 val saveResult = saveEventsInLocal(remoteEventList)
                 return if (saveResult is Result.Error) saveResult
                 else {
@@ -74,7 +73,6 @@ class EventsRepositoryImpl(
     }
 
     override suspend fun getNotificationEvents(): Result<List<CameraEvent>> {
-        println("getNotificationEvents():areCameraEventsRetrieved:$areCameraEventsRetrieved")
         if (!areCameraEventsRetrieved) {
             val resultRemoteEvents = getCameraEvents()
             resultRemoteEvents.doIfSuccess {

@@ -37,6 +37,7 @@ import com.lawmobile.presentation.ui.videoPlayback.state.VideoPlaybackState
 import com.lawmobile.presentation.utils.Constants.DOMAIN_CAMERA_FILE
 import com.lawmobile.presentation.utils.FeatureSupportHelper
 import com.safefleet.mobile.android_commons.extensions.hideKeyboard
+import com.safefleet.mobile.android_commons.extensions.isVisible
 import com.safefleet.mobile.kotlin_commons.helpers.Result
 import com.safefleet.mobile.safefleet_ui.widgets.SafeFleetFilterTag
 import kotlinx.coroutines.Dispatchers
@@ -120,6 +121,8 @@ class VideoPlaybackActivity : BaseActivity() {
         associateAudioTitle.isVisible = FeatureSupportHelper.supportAudioAssociation
         layoutAssociatedAudios.isVisible = FeatureSupportHelper.supportAudioAssociation
         buttonAssociateAudios.isVisible = FeatureSupportHelper.supportAudioAssociation
+        partnerIdTitle.isVisible = FeatureSupportHelper.supportAssociateOfficerID
+        partnerIdValue.isVisible = FeatureSupportHelper.supportAssociateOfficerID
     }
 
     private fun toggleAssociateDialog(isOpen: Boolean) {

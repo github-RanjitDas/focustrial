@@ -14,6 +14,7 @@ import com.safefleet.mobile.kotlin_commons.helpers.Event
 import com.safefleet.mobile.kotlin_commons.helpers.Result
 import com.safefleet.mobile.kotlin_commons.helpers.getResultWithAttempts
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -50,6 +51,14 @@ class ThumbnailListViewModel @Inject constructor(
         viewModelScope.launch {
             imageListMediatorLiveData.postValueWithTimeout(LOADING_TIMEOUT_SNAPSHOT_INFORMATION) {
                 thumbnailListUseCase.getSnapshotList()
+            }
+        }
+    }
+
+    fun getVideoList() {
+        viewModelScope.launch(Dispatchers.IO) {
+            imageListMediatorLiveData.postValueWithTimeout(LOADING_TIMEOUT_SNAPSHOT_INFORMATION) {
+                thumbnailListUseCase.getVideoList()
             }
         }
     }

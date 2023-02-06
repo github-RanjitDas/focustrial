@@ -3,6 +3,7 @@ package com.lawmobile.presentation.ui.base
 import android.content.pm.ActivityInfo
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
+import com.lawmobile.presentation.R
 import com.lawmobile.presentation.extensions.createAlertProgress
 import com.lawmobile.presentation.utils.EspressoIdlingResource
 import com.lawmobile.presentation.utils.NewRelicLogger
@@ -14,9 +15,9 @@ abstract class BaseFragment : Fragment() {
     private var loadingDialog: AlertDialog? = null
     abstract val viewTag: String?
 
-    fun showLoadingDialog() {
+    fun showLoadingDialog(textResource: Int = R.string.loading_wait) {
         EspressoIdlingResource.increment()
-        loadingDialog = (activity as BaseActivity).createAlertProgress()
+        loadingDialog = (activity as BaseActivity).createAlertProgress(textResource)
         loadingDialog?.show()
     }
 

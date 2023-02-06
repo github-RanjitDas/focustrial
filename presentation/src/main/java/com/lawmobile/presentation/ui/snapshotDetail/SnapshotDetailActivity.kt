@@ -107,6 +107,9 @@ class SnapshotDetailActivity : BaseActivity() {
     }
 
     private fun setFeatures() {
+        // enable or disable features
+        binding.officerTitle.isVisible = FeatureSupportHelper.supportAssociateOfficerID
+        binding.officerValue.isVisible = FeatureSupportHelper.supportAssociateOfficerID
         binding.buttonAssociateOfficer.isVisible =
             FeatureSupportHelper.supportAssociateOfficerID
     }
@@ -227,7 +230,9 @@ class SnapshotDetailActivity : BaseActivity() {
         imageViewSnapshot.isVisible = !isVisible
         buttonFullScreen.isVisible = !isVisible
         scrollLayoutInformation.isVisible = !isVisible
-        buttonAssociateOfficer.isVisible = !isVisible
+        if (FeatureSupportHelper.supportAssociateOfficerID) {
+            buttonAssociateOfficer.isVisible = !isVisible
+        }
         bottomSheetAssociateOfficer.bottomSheetAssociateOfficer.isVisible = !isVisible
     }
 

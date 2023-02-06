@@ -1,5 +1,6 @@
 package com.lawmobile.presentation.ui.videoPlayback
 
+import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.lawmobile.domain.entities.CameraInfo
 import com.lawmobile.domain.entities.DomainCameraFile
@@ -17,6 +18,7 @@ import com.safefleet.mobile.kotlin_commons.extensions.doIfSuccess
 import com.safefleet.mobile.kotlin_commons.helpers.Result
 import com.safefleet.mobile.kotlin_commons.helpers.getResultWithAttempts
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.delay
@@ -56,6 +58,9 @@ class VideoPlaybackViewModel @Inject constructor(
     private val _updateMetadataResult = MutableSharedFlow<Result<Unit>>()
     val updateMetadataResult = _updateMetadataResult.asSharedFlow()
 
+    private val _videoMetadataResultFlow = MutableSharedFlow<Result<String>>(replay = 1)
+    val videoMetadataResultFlow = _videoMetadataResultFlow.asSharedFlow()
+
     private lateinit var job: Job
 
     fun getState(): VideoPlaybackState = _state.value
@@ -71,6 +76,33 @@ class VideoPlaybackViewModel @Inject constructor(
             getMediaInformation(videoFile)
             delay(DELAY_ON_VIDEO_INFORMATION)
             getVideoInformation(videoFile)
+        }
+    }
+
+    fun fetchVideoMetadataEvents() {
+        viewModelScope.launch(Dispatchers.IO) {
+            if (CameraInfo.metadataEvents.isEmpty()) {
+                val supportedCatalogType = CatalogTypes.getSupportedCatalogType()
+                getResultWithAttempts(RETRY_ATTEMPTS) {
+                    liveStreamingUseCase.getCatalogInfo(supportedCatalogType)
+                }.run {
+                    doIfSuccess { catalogInfoList ->
+                        if (supportedCatalogType == CatalogTypes.CATEGORIES) {
+                            val events = catalogInfoList.sortedBy { it.order }
+                            CameraInfo.metadataEvents = events as MutableList
+                        } else {
+                            CameraInfo.metadataEvents = catalogInfoList as MutableList
+                        }
+                        _videoMetadataResultFlow.emit(Result.Success("Success"))
+                    }
+                    doIfError {
+                        Log.d(TAG, "Unable to fetch video metadata events: $it")
+                        _videoMetadataResultFlow.emit(Result.Error(it))
+                    }
+                }
+            } else {
+                _videoMetadataResultFlow.emit(Result.Success("Success"))
+            }
         }
     }
 
@@ -165,5 +197,6 @@ class VideoPlaybackViewModel @Inject constructor(
         private const val DELAY_ON_VIDEO_INFORMATION = 250L
         private const val RETRY_ATTEMPTS = 3
         var isVidePlayerInFullScreen = false
+        const val TAG = "VideoPlaybackViewModel"
     }
 }

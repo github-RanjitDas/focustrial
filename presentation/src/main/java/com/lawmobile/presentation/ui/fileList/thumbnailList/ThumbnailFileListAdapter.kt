@@ -1,5 +1,6 @@
 package com.lawmobile.presentation.ui.fileList.thumbnailList
 
+import android.net.Uri
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -16,15 +17,18 @@ import com.lawmobile.presentation.R
 import com.lawmobile.presentation.extensions.imageHasCorrectFormat
 import com.lawmobile.presentation.extensions.setOnClickListenerCheckConnection
 import com.lawmobile.presentation.ui.fileList.thumbnailList.ThumbnailFileListFragment.Companion.PATH_ERROR_IN_PHOTO
+import com.lawmobile.presentation.utils.Constants.SNAPSHOT_LIST
+import com.lawmobile.presentation.utils.Constants.VIDEO_LIST
 import com.safefleet.mobile.android_commons.extensions.inflate
 import com.safefleet.mobile.safefleet_ui.widgets.SafeFleetCheckBox2
 import java.io.File
 
 class ThumbnailFileListAdapter(
-    private val onImageClick: ((DomainInformationImage) -> Unit),
+    private val onImageClick: (DomainInformationImage) -> Unit,
     private val onImageCheck: ((Int) -> Unit)?
 ) : RecyclerView.Adapter<ThumbnailFileListAdapter.ThumbnailListViewHolder>() {
 
+    var thumbnailListType: String? = null
     var showCheckBoxes = false
     var fileList = mutableListOf<DomainInformationImage>()
         set(value) {
@@ -133,7 +137,7 @@ class ThumbnailFileListAdapter(
             with(thumbnailView) {
                 photoImageListItem.setImageDrawable(null)
                 imageFile.internalPath?.let { internalPath ->
-                    if (!internalPath.imageHasCorrectFormat()) {
+                    if (thumbnailListType == SNAPSHOT_LIST && !internalPath.imageHasCorrectFormat()) {
                         imageErrorThumbnail.isVisible = true
                         photoImageLoading.isVisible = false
                         photoImageListItem.isVisible = false
@@ -144,7 +148,12 @@ class ThumbnailFileListAdapter(
                         photoImageLoading.isVisible = false
                         imageErrorThumbnail.isVisible = internalPath == PATH_ERROR_IN_PHOTO
                         if (internalPath != PATH_ERROR_IN_PHOTO) {
-                            Glide.with(this).load(File(internalPath)).into(photoImageListItem)
+                            if (thumbnailListType == SNAPSHOT_LIST) {
+                                Glide.with(this).load(File(internalPath)).into(photoImageListItem)
+                            } else if (thumbnailListType == VIDEO_LIST) {
+                                val uri: Uri = Uri.fromFile(File(internalPath))
+                                Glide.with(this).load(uri).into(photoImageListItem)
+                            }
                             photoImageListItem.isVisible = true
                         }
                     } catch (e: Exception) {

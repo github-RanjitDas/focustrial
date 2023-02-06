@@ -28,7 +28,7 @@
         app:imageButton="@drawable/ic_grid_custom_selector"
         android:layout_marginEnd="@dimen/margin_16dp"
         android:contentDescription="@string/focus_mobile_app_logo_description"
-        app:layout_constraintBottom_toBottomOf="parent"
+
         app:layout_constraintEnd_toStartOf="@+id/buttonSimpleList"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -39,7 +39,7 @@
         android:layout_marginEnd="@dimen/margin_16dp"
         android:contentDescription="@string/focus_mobile_app_logo_description"
         app:imageButton="@drawable/ic_list_custom_selector"
-        app:layout_constraintBottom_toBottomOf="parent"
+
         app:layout_constraintEnd_toStartOf="@+id/buttonOpenFilters"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -52,7 +52,7 @@
         android:contentDescription="@string/associate_partner_id_content_description"
         android:padding="@dimen/padding_15dp"
         android:src="@drawable/ic_filter"
-        app:layout_constraintBottom_toBottomOf="parent"
+
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -61,10 +61,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/margin_15dp"
-        android:layout_marginTop="@dimen/margin_11dp"
+        android:layout_marginTop="@dimen/margin_18dp"
         android:orientation="horizontal"
         android:visibility="gone"
-        app:layout_constraintTop_toBottomOf="@id/buttonSelectToAssociate">
+        app:layout_constraintTop_toBottomOf="@id/buttonThumbnailList">
 
         <HorizontalScrollView
             android:layout_width="wrap_content"

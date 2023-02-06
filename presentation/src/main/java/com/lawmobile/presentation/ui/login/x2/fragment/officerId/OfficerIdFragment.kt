@@ -111,9 +111,11 @@ class OfficerIdFragment : BaseFragment() {
     }
 
     fun setButtonContinueEnable(enable: Boolean) {
-        binding.buttonContinue.apply {
-            this.isEnabled = enable
-            isActivated = enable
+        if (binding != null) {
+            binding.buttonContinue.apply {
+                this.isEnabled = enable
+                isActivated = enable
+            }
         }
     }
 
