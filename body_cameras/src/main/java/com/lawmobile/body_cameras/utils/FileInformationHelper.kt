@@ -107,7 +107,6 @@ class FileInformationHelper(
             val gson = Gson()
             val listType: Type = object : TypeToken<List<NotificationDictionary?>?>() {}.type
             val notifications: List<NotificationDictionary> = gson.fromJson(logEventList, listType)
-            println("JsonObject:$notifications")
             return Result.Success(notifications)
         }
         response.doIfError {

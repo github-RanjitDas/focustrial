@@ -19,6 +19,7 @@ import com.lawmobile.presentation.connectivity.WifiHelper
 import com.lawmobile.presentation.keystore.KeystoreHandler
 import com.lawmobile.presentation.ui.login.LoginBaseViewModel
 import com.lawmobile.presentation.ui.login.state.LoginState
+import com.lawmobile.presentation.utils.FeatureSupportHelper
 import com.safefleet.mobile.authentication.AuthStateManager
 import com.safefleet.mobile.kotlin_commons.helpers.Result
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -167,6 +168,11 @@ class LoginX2ViewModel @Inject constructor(
         }
         // TODO hard coded remove later.
         CameraInfo.backOfficeType = BackOfficeType.NEXUS
+        enableNDisableFeaturesBasedOnBO()
+    }
+
+    private fun enableNDisableFeaturesBasedOnBO() {
+        FeatureSupportHelper.supportAssociateOfficerID = CameraInfo.backOfficeType == BackOfficeType.COMMAND_CENTRE
     }
 
     companion object {

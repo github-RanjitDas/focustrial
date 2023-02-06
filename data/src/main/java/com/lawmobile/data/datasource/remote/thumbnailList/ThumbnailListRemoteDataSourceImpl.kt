@@ -15,4 +15,8 @@ class ThumbnailListRemoteDataSourceImpl(cameraServiceFactory: CameraServiceFacto
 
     override suspend fun getSnapshotList(): Result<FileResponseWithErrors> =
         cameraService.getListOfImages()
+
+    override suspend fun getVideoList(): Result<FileResponseWithErrors> {
+        return cameraService.getListOfVideos()
+    }
 }

@@ -67,7 +67,6 @@ class NotificationListAdapter(
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(notification: CameraEvent) {
-            println("bind:$notification")
             setNotificationType(notification.eventTag)
             configureNotificationStyle(notification)
             setTextViews(notification)

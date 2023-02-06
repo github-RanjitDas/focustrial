@@ -10,7 +10,6 @@ data class X1FileResponse(
 ) {
     fun getBytesSent(): Long {
         val sizeFile = (param?.first()?.get("bytes sent") as? Double)?.toLong() ?: size ?: 0
-        println("getBytesSent Size file: $sizeFile")
         return sizeFile
     }
 

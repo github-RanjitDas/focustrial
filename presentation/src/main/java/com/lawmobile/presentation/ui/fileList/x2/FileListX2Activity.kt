@@ -1,8 +1,11 @@
 package com.lawmobile.presentation.ui.fileList.x2
 
 import android.os.Bundle
+import android.util.Log
+import androidx.activity.viewModels
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.entities.MenuInformation
+import com.lawmobile.presentation.extensions.activityCollect
 import com.lawmobile.presentation.extensions.activityLaunch
 import com.lawmobile.presentation.extensions.attachFragment
 import com.lawmobile.presentation.extensions.closeMenuButton
@@ -15,8 +18,11 @@ import com.lawmobile.presentation.ui.fileList.filterSection.x2.FilterSectionX2Fr
 import com.lawmobile.presentation.ui.fileList.shared.FileSelection
 import com.lawmobile.presentation.ui.fileList.shared.FilterSection
 import com.lawmobile.presentation.ui.fileList.shared.ListTypeButtons
+import com.lawmobile.presentation.ui.videoPlayback.VideoPlaybackViewModel
 import com.lawmobile.presentation.utils.Constants
 import com.lawmobile.presentation.utils.FeatureSupportHelper
+import com.safefleet.mobile.kotlin_commons.extensions.doIfError
+import com.safefleet.mobile.kotlin_commons.extensions.doIfSuccess
 
 class FileListX2Activity : FileListBaseActivity() {
 
@@ -31,6 +37,7 @@ class FileListX2Activity : FileListBaseActivity() {
     override val listTypeButtons: ListTypeButtons get() = filterSectionFragment
     override val fileSelection: FileSelection get() = filterSectionFragment
     override val filterSection: FilterSection get() = filterSectionFragment
+    private val videoViewModel: VideoPlaybackViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,11 +60,20 @@ class FileListX2Activity : FileListBaseActivity() {
     }
 
     private fun setAndAttachFragments() {
+        if (listType == Constants.VIDEO_LIST) {
+            fetchVideoMetaDataEventForVideoListType()
+        }
         setFragmentsDependingOnListType()
         attachAppBarFragment()
         attachFilterSectionFragment()
         attachStatusBarSettingsFragment()
         attachMenuFragment()
+    }
+
+    private fun fetchVideoMetaDataEventForVideoListType() {
+        setFetchVideoMetaDataObservers()
+        showLoadingDialog()
+        videoViewModel.fetchVideoMetadataEvents()
     }
 
     private fun setListeners() {
@@ -76,6 +92,18 @@ class FileListX2Activity : FileListBaseActivity() {
         }
     }
 
+    private fun setFetchVideoMetaDataObservers() {
+        activityCollect(videoViewModel.videoMetadataResultFlow) { result ->
+            hideLoadingDialog()
+            result.doIfSuccess {
+                Log.d(TAG, "Events loaded successfully and saved in cache")
+            }
+            result.doIfError {
+                Log.e(TAG, "Error loading Events: $it")
+            }
+        }
+    }
+
     private fun setFragmentsDependingOnListType() {
         when (listType) {
             Constants.SNAPSHOT_LIST -> {
@@ -86,7 +114,7 @@ class FileListX2Activity : FileListBaseActivity() {
             Constants.VIDEO_LIST -> {
                 appBarFragment =
                     AppBarX2Fragment.createInstance(false, getString(R.string.videos_title))
-                filterSectionFragment = FilterSectionX2Fragment.createInstance(false)
+                filterSectionFragment = FilterSectionX2Fragment.createInstance(true)
             }
             Constants.AUDIO_LIST -> {
                 appBarFragment =
@@ -128,5 +156,9 @@ class FileListX2Activity : FileListBaseActivity() {
                 tag = SettingsBarFragment.TAG
             )
         }
+    }
+
+    companion object {
+        private const val TAG = "FileListX2Activity"
     }
 }

@@ -12,7 +12,6 @@ class UserApiImpl(
     override suspend fun getUser(uuid: String): UserDto {
         val userUrl = preferencesManager.getUsersEndpointUrl()
         val userList = httpClient.get<List<UserDto>>(userUrl)
-        println("UsersList:$userList")
         return userList.find { it.uuid == uuid } ?: throw Exception("User not found")
     }
 }

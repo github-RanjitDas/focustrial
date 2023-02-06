@@ -10,6 +10,7 @@ import androidx.core.view.isVisible
 import com.lawmobile.domain.entities.CameraInfo
 import com.lawmobile.domain.entities.DomainInformationFile
 import com.lawmobile.domain.entities.DomainInformationForList
+import com.lawmobile.domain.entities.DomainInformationImage
 import com.lawmobile.domain.extensions.getDateDependingOnNameLength
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.databinding.FileListFilterDialogBinding
@@ -238,8 +239,19 @@ class CustomFilterDialog constructor(
             currentFilters[EVENT_POSITION].ifIsNotEmptyLet { event ->
                 filteringList =
                     filteringList.filter {
-                    (it as DomainInformationFile).domainVideoMetadata?.metadata?.event?.name ==
-                        if (event == NO_EVENT_TAG) null else event
+                    when (it) {
+                        is DomainInformationFile -> {
+                            it.domainVideoMetadata?.metadata?.event?.name ==
+                                if (event == NO_EVENT_TAG) null else event
+                        }
+                        is DomainInformationImage -> {
+                            it.domainVideoMetadata?.metadata?.event?.name ==
+                                if (event == NO_EVENT_TAG) null else event
+                        }
+                        else -> {
+                            false
+                        }
+                    }
                 } as MutableList
                 createTagInPosition(it.childCount, EVENT_TAG + event)
             }

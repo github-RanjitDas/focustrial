@@ -27,11 +27,13 @@ class BaseApplication : Application() {
     private fun setupActivityListener() {
         registerActivityLifecycleCallbacks(object : ActivityLifecycleCallbacks {
             override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {
-                // Disable taking screenshots.
-                activity.window.setFlags(
-                    WindowManager.LayoutParams.FLAG_SECURE,
-                    WindowManager.LayoutParams.FLAG_SECURE
-                )
+                if (BuildConfig.BUILD_TYPE == "release") {
+                    // Disable taking screenshots.
+                    activity.window.setFlags(
+                        WindowManager.LayoutParams.FLAG_SECURE,
+                        WindowManager.LayoutParams.FLAG_SECURE
+                    )
+                }
             }
 
             override fun onActivityStarted(activity: Activity) {}

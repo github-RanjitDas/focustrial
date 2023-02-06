@@ -26,7 +26,10 @@ import com.lawmobile.presentation.extensions.getPathFromTemporalFile
 import com.lawmobile.presentation.extensions.showErrorSnackBar
 import com.lawmobile.presentation.extensions.verifySessionBeforeAction
 import com.lawmobile.presentation.ui.fileList.FileListBaseFragment
+import com.lawmobile.presentation.utils.Constants.AUDIO_LIST
 import com.lawmobile.presentation.utils.Constants.FILE_LIST_TYPE
+import com.lawmobile.presentation.utils.Constants.SNAPSHOT_LIST
+import com.lawmobile.presentation.utils.Constants.VIDEO_LIST
 import com.safefleet.mobile.kotlin_commons.extensions.doIfError
 import com.safefleet.mobile.kotlin_commons.extensions.doIfSuccess
 import com.safefleet.mobile.kotlin_commons.helpers.Event
@@ -79,7 +82,20 @@ class ThumbnailFileListFragment : FileListBaseFragment() {
         super.onResume()
         viewModel.cancelGetImageBytes()
         listType = arguments?.getString(FILE_LIST_TYPE)
-        getSnapshotList()
+        getFileListBasedOnType()
+    }
+
+    private fun getFileListBasedOnType() {
+        when (listType) {
+            VIDEO_LIST -> {
+                viewModel.getVideoList()
+            }
+            SNAPSHOT_LIST -> {
+                getSnapshotList()
+            }
+            AUDIO_LIST -> {
+            }
+        }
     }
 
     private fun setViews() {
@@ -95,8 +111,9 @@ class ThumbnailFileListFragment : FileListBaseFragment() {
 
     private fun fillAdapter(listItems: MutableList<DomainInformationFile>) {
         listAdapter.apply {
+            thumbnailListType = listType
             showCheckBoxes = isSelectionActive
-            val imageList = listItems.map { DomainInformationImage(it.domainCameraFile) }
+            val imageList = listItems.map { DomainInformationImage(it.domainCameraFile, domainVideoMetadata = it.domainVideoMetadata) }
             imageList.forEach { listAdapter.addItemToList(it) }
             listBackup = imageList.toMutableList()
         }

@@ -4,7 +4,8 @@ data class DomainInformationImage(
     override val domainCameraFile: DomainCameraFile,
     var imageBytes: ByteArray? = null,
     override var isSelected: Boolean = false,
-    var internalPath: String? = null
+    var internalPath: String? = null,
+    var domainVideoMetadata: DomainVideoMetadata? = null
 ) : DomainInformationForList {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
