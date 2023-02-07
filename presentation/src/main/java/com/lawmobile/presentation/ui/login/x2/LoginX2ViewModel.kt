@@ -1,5 +1,6 @@
 package com.lawmobile.presentation.ui.login.x2
 
+import android.bluetooth.BluetoothAdapter
 import android.bluetooth.le.ScanResult
 import android.content.Context
 import android.util.Log
@@ -41,7 +42,8 @@ class LoginX2ViewModel @Inject constructor(
     private val preferencesManager: PreferencesManager,
     private val ioDispatcher: CoroutineDispatcher,
     private val bleManager: CameraBleManager,
-    wifiHelper: WifiHelper
+    wifiHelper: WifiHelper,
+    private val bluetoothAdapter: BluetoothAdapter
 ) : LoginBaseViewModel(loginUseCases.getUserFromCamera, wifiHelper, ioDispatcher) {
 
     var officerId: String = ""
@@ -172,7 +174,19 @@ class LoginX2ViewModel @Inject constructor(
     }
 
     private fun enableNDisableFeaturesBasedOnBO() {
-        FeatureSupportHelper.supportAssociateOfficerID = CameraInfo.backOfficeType == BackOfficeType.COMMAND_CENTRE
+        FeatureSupportHelper.supportAssociateOfficerID =
+            CameraInfo.backOfficeType == BackOfficeType.COMMAND_CENTRE
+    }
+
+    fun verifyBluetoothEnabled(): Boolean {
+        return bluetoothAdapter.isEnabled
+    }
+
+    fun enableBluetooth(): Boolean {
+        if (!verifyBluetoothEnabled()) {
+            return bluetoothAdapter.enable()
+        }
+        return true
     }
 
     companion object {

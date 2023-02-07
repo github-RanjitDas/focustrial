@@ -73,8 +73,12 @@ class OfficerIdFragment : BaseFragment() {
     private fun showBluetoothOffDialog() {
         activity?.runOnUiThread {
             val event = BluetoothErrorEvent.event
-            context?.createNotificationDialog(event)
-                ?.setButtonText(resources.getString(R.string.OK))
+            context?.createNotificationDialog(event, true) {
+                setButtonText(resources.getString(R.string.OK))
+                onOkButtonClick = {
+                    viewModel.enableBluetooth()
+                }
+            }
         }
     }
 

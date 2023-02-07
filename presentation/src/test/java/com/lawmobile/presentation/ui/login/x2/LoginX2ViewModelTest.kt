@@ -1,5 +1,6 @@
 package com.lawmobile.presentation.ui.login.x2
 
+import android.bluetooth.BluetoothAdapter
 import com.lawmobile.domain.entities.AuthorizationEndpoints
 import com.lawmobile.domain.usecase.LoginUseCases
 import com.lawmobile.domain.utils.PreferencesManager
@@ -45,6 +46,7 @@ internal class LoginX2ViewModelTest {
     }
     private val preferencesManager: PreferencesManager = mockk()
     private val bleManager: CameraBleManager = mockk()
+    private val bleAdapter: BluetoothAdapter = mockk()
     private val viewModel =
         LoginX2ViewModel(
             useCases,
@@ -52,7 +54,8 @@ internal class LoginX2ViewModelTest {
             preferencesManager,
             dispatcher,
             bleManager,
-            wifiHelper
+            wifiHelper,
+            bleAdapter
         )
 
     @BeforeEach
