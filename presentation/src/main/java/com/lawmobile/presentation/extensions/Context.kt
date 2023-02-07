@@ -180,11 +180,13 @@ fun Context.isAnimationsEnabled() =
 
 fun Context.createNotificationDialog(
     cameraEvent: CameraEvent,
+    doNeedOkButtonListener: Boolean = false,
     builder: (CustomNotificationDialog.() -> Unit)? = null
 ) = CustomNotificationDialog(
     this,
     false,
-    cameraEvent
+    cameraEvent,
+    doNeedOkButtonListener
 ).apply {
     show()
     builder?.invoke(this)

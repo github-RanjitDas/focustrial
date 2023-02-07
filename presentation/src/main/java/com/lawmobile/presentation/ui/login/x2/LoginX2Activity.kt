@@ -4,12 +4,15 @@ import android.Manifest
 import android.content.Intent
 import android.content.RestrictionsManager
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.lawmobile.domain.entities.AuthorizationEndpoints
 import com.lawmobile.domain.entities.CameraInfo
 import com.lawmobile.domain.entities.User
+import com.lawmobile.domain.entities.customEvents.BluetoothErrorEvent
 import com.lawmobile.domain.entities.customEvents.LoginRequestErrorEvent
 import com.lawmobile.domain.enums.BackOfficeType
 import com.lawmobile.presentation.R
@@ -41,7 +44,7 @@ class LoginX2Activity : LoginBaseActivity() {
         get() = this::class.java.simpleName
 
     private val viewModel: LoginX2ViewModel by viewModels()
-
+    private val handler = Handler(Looper.myLooper()!!)
     private lateinit var authRequest: AuthorizationRequest
     private val officerIdFragment = OfficerIdFragment.createInstance(::onContinueClick)
     private val devicePasswordFragment = DevicePasswordFragment.createInstance(::onEditOfficerId)
@@ -68,7 +71,9 @@ class LoginX2Activity : LoginBaseActivity() {
         with(result) {
             this?.doIfSuccess { onReceivedConfigFromBle() }
             this?.doIfError {
-                showErrorSnackBar(R.string.error_getting_config_bluetooth, ::retryBleConnectionToFetchConfigs)
+                showErrorSnackBar(
+                    R.string.error_getting_config_bluetooth, ::retryBleConnectionToFetchConfigs
+                )
                 hideLoadingDialog()
                 setCollectors()
                 viewModel.setObservers()
@@ -81,8 +86,33 @@ class LoginX2Activity : LoginBaseActivity() {
     }
 
     private fun initBleConnectionToFetchConfigs() {
-        showLoadingDialog(R.string.connection_bluetooth)
-        viewModel.fetchConfigFromBle(this)
+        if (viewModel.verifyBluetoothEnabled()) {
+            showLoadingDialog(R.string.connection_bluetooth)
+            viewModel.fetchConfigFromBle(this)
+        } else {
+            officerIdFragment.setButtonContinueEnable(true)
+            showBluetoothOffDialog(::initBleConnectionToFetchConfigs)
+        }
+    }
+
+    private fun showBluetoothOffDialog(callback: () -> Unit) {
+        runOnUiThread {
+            val event = BluetoothErrorEvent.event
+            createNotificationDialog(event, true) {
+                setButtonText(resources.getString(R.string.OK))
+                onOkButtonClick = {
+                    officerIdFragment.setButtonContinueEnable(false)
+                    viewModel.enableBluetooth()
+                    handler.postDelayed(
+                        {
+                            callback.invoke()
+                        },
+                        WAIT_TO_ENABLE_BLUETOOTH_DELAY
+
+                    )
+                }
+            }
+        }
     }
 
     private fun onReceivedConfigFromBle() {
@@ -288,6 +318,7 @@ class LoginX2Activity : LoginBaseActivity() {
 
     companion object {
         private const val ENABLE_CONTINUE_DELAY = 1000L
+        private const val WAIT_TO_ENABLE_BLUETOOTH_DELAY = 1000L
         private const val TAG = "LoginX2Activity"
     }
 }
