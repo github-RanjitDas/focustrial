@@ -12,6 +12,7 @@ import com.lawmobile.presentation.ui.login.shared.PairingViewModelTest
 import com.lawmobile.presentation.ui.login.state.LoginState
 import com.safefleet.mobile.authentication.AuthStateManager
 import com.safefleet.mobile.kotlin_commons.helpers.Result
+import com.safefleet.mobile.kotlin_commons.helpers.network_manager.SimpleNetworkManager
 import io.mockk.clearMocks
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -47,6 +48,7 @@ internal class LoginX2ViewModelTest {
     private val preferencesManager: PreferencesManager = mockk()
     private val bleManager: CameraBleManager = mockk()
     private val bleAdapter: BluetoothAdapter = mockk()
+    private val simpleNetworkManager: SimpleNetworkManager = mockk()
     private val viewModel =
         LoginX2ViewModel(
             useCases,
@@ -55,7 +57,8 @@ internal class LoginX2ViewModelTest {
             dispatcher,
             bleManager,
             wifiHelper,
-            bleAdapter
+            bleAdapter,
+            simpleNetworkManager
         )
 
     @BeforeEach

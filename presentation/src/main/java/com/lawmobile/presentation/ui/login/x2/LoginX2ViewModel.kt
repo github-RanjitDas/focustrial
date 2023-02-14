@@ -23,6 +23,7 @@ import com.lawmobile.presentation.ui.login.state.LoginState
 import com.lawmobile.presentation.utils.FeatureSupportHelper
 import com.safefleet.mobile.authentication.AuthStateManager
 import com.safefleet.mobile.kotlin_commons.helpers.Result
+import com.safefleet.mobile.kotlin_commons.helpers.network_manager.ListenableNetworkManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
@@ -43,7 +44,8 @@ class LoginX2ViewModel @Inject constructor(
     private val ioDispatcher: CoroutineDispatcher,
     private val bleManager: CameraBleManager,
     wifiHelper: WifiHelper,
-    private val bluetoothAdapter: BluetoothAdapter
+    private val bluetoothAdapter: BluetoothAdapter,
+    private val simpleNetworkManager: ListenableNetworkManager,
 ) : LoginBaseViewModel(loginUseCases.getUserFromCamera, wifiHelper, ioDispatcher) {
 
     var officerId: String = ""
@@ -187,6 +189,12 @@ class LoginX2ViewModel @Inject constructor(
             return bluetoothAdapter.enable()
         }
         return true
+    }
+
+    fun verifyInternetConnection(callback: (Boolean) -> Unit) {
+        viewModelScope.launch(Dispatchers.IO) {
+            simpleNetworkManager.verifyInternetConnection(callback)
+        }
     }
 
     companion object {

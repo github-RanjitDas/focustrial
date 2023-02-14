@@ -415,6 +415,10 @@ open class CameraServiceImpl(
         return Result.Error(Exception(FEATURE_NOT_SUPPORTED))
     }
 
+    override suspend fun getCameraSettings(messageId: Int): Result<Int> {
+        return Result.Error(Exception(FEATURE_NOT_SUPPORTED))
+    }
+
     override suspend fun setSetupConfiguration(setupConfiguration: SetupConfiguration): Result<Unit> {
         return Result.Error(Exception(FEATURE_NOT_SUPPORTED))
     }
