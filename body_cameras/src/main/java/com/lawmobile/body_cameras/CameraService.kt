@@ -55,6 +55,7 @@ interface CameraService {
     suspend fun getLogEvents(): Result<List<LogEvent>>
     suspend fun getNotificationDictionary(): Result<List<NotificationDictionary>>
     suspend fun getBodyWornDiagnosis(): Result<Boolean>
+    suspend fun getCameraSettings(messageId: Int): Result<Int>
     suspend fun getCameraType(): Result<CameraType>
     suspend fun getUserResponse(): Result<CameraUser>
     suspend fun getConfiguration(): Result<Config>

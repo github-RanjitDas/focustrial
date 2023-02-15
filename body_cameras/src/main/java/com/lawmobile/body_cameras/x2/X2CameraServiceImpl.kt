@@ -45,6 +45,20 @@ class X2CameraServiceImpl(
         return Result.Error(Exception("Command doesn't work"))
     }
 
+    override suspend fun getCameraSettings(messageId: Int): Result<Int> {
+        canReadNotification = false
+        val command =
+            XCameraCommand.Builder().addMsgId(messageId).build()
+
+        val response = commandHelper.getResponseParam(command)
+        canReadNotification = true
+        response.doIfSuccess {
+            return Result.Success(it.toInt())
+        }
+
+        return Result.Error(Exception("Command doesn't work"))
+    }
+
     override suspend fun getBodyWornDiagnosis(): Result<Boolean> {
         delay(DIAGNOSIS_DELAY)
         val command =
@@ -86,6 +100,7 @@ class X2CameraServiceImpl(
     override suspend fun getNotificationDictionary(): Result<List<NotificationDictionary>> {
         return fileInformationHelper.getNotificationDictionary()
     }
+
     override fun reviewIfArriveNotificationInCMDSocket() {
         notificationCameraHelper.reviewIfSocketHasBytesAvailableForNotification(
             notificationCallback = {
@@ -132,6 +147,20 @@ class X2CameraServiceImpl(
         }
 
         return responseWrite
+    }
+
+    override suspend fun turnOnBluetooth(): Result<Unit> {
+        val command =
+            XCameraCommand.Builder().addMsgId(XCameraCommandCodes.TURN_ON_BLUETOOTH.commandValue)
+                .build()
+        return commandHelper.isCommandSuccess(command)
+    }
+
+    override suspend fun turnOffBluetooth(): Result<Unit> {
+        val command =
+            XCameraCommand.Builder().addMsgId(XCameraCommandCodes.TURN_OFF_BLUETOOTH.commandValue)
+                .build()
+        return commandHelper.isCommandSuccess(command)
     }
 
     companion object {

@@ -49,9 +49,10 @@ class BodyWornSettingsDataSourceImplTest {
 
     @Test
     fun testGetParametersEnable() {
+        coEvery { cameraService.getCameraSettings(any()) } returns Result.Success(1)
         runBlocking {
             val response = bodyWornSettingsDataSourceImpl.getParametersEnable()
-            Assert.assertTrue(response is Result.Error)
+            Assert.assertTrue(response is Result.Success)
         }
     }
 }

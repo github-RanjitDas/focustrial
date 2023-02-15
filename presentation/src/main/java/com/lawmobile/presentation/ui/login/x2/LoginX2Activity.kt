@@ -117,12 +117,18 @@ class LoginX2Activity : LoginBaseActivity() {
 
     private fun onReceivedConfigFromBle() {
         hideLoadingDialog()
-        if (CameraInfo.backOfficeType == BackOfficeType.NEXUS) runOnUiThread {
-            showLoadingDialog()
-            viewModel.getAuthorizationEndpoints()
-        }
-        else {
-            state = LoginState.X2.DevicePassword
+        viewModel.verifyInternetConnection {
+            if (it) {
+                if (CameraInfo.backOfficeType == BackOfficeType.NEXUS) runOnUiThread {
+                    showLoadingDialog()
+                    viewModel.getAuthorizationEndpoints()
+                }
+                else {
+                    state = LoginState.X2.DevicePassword
+                }
+            } else {
+                state = LoginState.X2.DevicePassword
+            }
         }
     }
 

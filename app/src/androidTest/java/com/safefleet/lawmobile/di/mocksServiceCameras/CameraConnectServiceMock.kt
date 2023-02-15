@@ -79,6 +79,10 @@ class CameraConnectServiceMock : CameraService {
         return bodyWornDiagnosisResult
     }
 
+    override suspend fun getCameraSettings(messageId: Int): Result<Int> {
+        return Result.Success(1)
+    }
+
     override suspend fun getCameraType(): Result<CameraType> {
         if (MockUtils.cameraSSID == TestLoginData.SSID_X1.value) {
             return Result.Success(CameraType.X1)
