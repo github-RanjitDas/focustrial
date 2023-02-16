@@ -87,7 +87,7 @@ class LoginX2Activity : LoginBaseActivity() {
 
     private fun initBleConnectionToFetchConfigs() {
         if (viewModel.verifyBluetoothEnabled()) {
-            showLoadingDialog(R.string.connection_bluetooth)
+            showLoadingDialog()
             viewModel.fetchConfigFromBle(this)
         } else {
             officerIdFragment.setButtonContinueEnable(true)
