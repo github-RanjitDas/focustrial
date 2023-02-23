@@ -96,6 +96,8 @@ object KeystoreHandler {
             e.printStackTrace()
         } catch (e: InvalidAlgorithmParameterException) {
             e.printStackTrace()
+        } catch (e: java.lang.NullPointerException) {
+            e.printStackTrace()
         }
     }
 
@@ -137,6 +139,8 @@ object KeystoreHandler {
         } catch (e: CertificateException) {
             e.printStackTrace()
         } catch (e: IOException) {
+            e.printStackTrace()
+        } catch (e: java.lang.NullPointerException) {
             e.printStackTrace()
         }
         return null

@@ -14,7 +14,8 @@ import com.lawmobile.domain.usecase.getUserFromCamera.GetUserFromCamera
 import com.lawmobile.domain.usecase.getUserFromCamera.GetUserFromCameraImpl
 import com.lawmobile.presentation.authentication.AuthStateManagerFactory
 import com.lawmobile.presentation.authentication.AuthStateManagerFactoryImpl
-import com.lawmobile.presentation.bluetooth.CameraBleManager
+import com.lawmobile.presentation.bluetooth.FetchConfigBleManager
+import com.lawmobile.presentation.bluetooth.PasswordVerificationBleManager
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -35,7 +36,10 @@ class LoginModule {
         AuthorizationService(context)
 
     @Provides
-    fun provideSfBleManager() = CameraBleManager()
+    fun provideSfBleManager() = FetchConfigBleManager()
+
+    @Provides
+    fun providePasswordVerificationBleManager() = PasswordVerificationBleManager()
 
     @Provides
     fun provideGetAuthorizationEndpoints(

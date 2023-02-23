@@ -6,7 +6,7 @@ import com.lawmobile.domain.usecase.LoginUseCases
 import com.lawmobile.domain.utils.PreferencesManager
 import com.lawmobile.presentation.InstantExecutorExtension
 import com.lawmobile.presentation.authentication.AuthStateManagerFactory
-import com.lawmobile.presentation.bluetooth.CameraBleManager
+import com.lawmobile.presentation.bluetooth.FetchConfigBleManager
 import com.lawmobile.presentation.connectivity.WifiHelper
 import com.lawmobile.presentation.ui.login.shared.PairingViewModelTest
 import com.lawmobile.presentation.ui.login.state.LoginState
@@ -46,7 +46,7 @@ internal class LoginX2ViewModelTest {
         every { create(any()) } returns authStateManager
     }
     private val preferencesManager: PreferencesManager = mockk()
-    private val bleManager: CameraBleManager = mockk()
+    private val bleManager: FetchConfigBleManager = mockk()
     private val bleAdapter: BluetoothAdapter = mockk()
     private val simpleNetworkManager: SimpleNetworkManager = mockk()
     private val viewModel =

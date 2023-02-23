@@ -64,6 +64,12 @@ class CustomNotificationDialog(
         with(binding.layoutNotificationInformation) {
             val notificationType = NotificationType.getByValue(cameraEvent.name)
             textViewNotificationTitle.text = notificationType.title ?: cameraEvent.name
+            if (notificationType.subTitle.isNullOrEmpty()) {
+                textViewNotificationSubtitle.visibility = View.GONE
+            } else {
+                textViewNotificationSubtitle.visibility = View.VISIBLE
+                textViewNotificationSubtitle.text = notificationType.subTitle
+            }
             textViewNotificationMessage.text =
                 notificationType.getCustomMessage(cameraEvent.value) ?: cameraEvent.value
             textViewNotificationDate.isVisible = cameraEvent.date.isNotEmpty()

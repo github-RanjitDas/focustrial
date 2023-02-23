@@ -119,11 +119,15 @@ class LoginX2Activity : LoginBaseActivity() {
         hideLoadingDialog()
         viewModel.verifyInternetConnection {
             if (it) {
-                if (CameraInfo.backOfficeType == BackOfficeType.NEXUS) runOnUiThread {
-                    showLoadingDialog()
-                    viewModel.getAuthorizationEndpoints()
-                }
-                else {
+                if (CameraInfo.backOfficeType == BackOfficeType.NEXUS) {
+                    if (CameraInfo.wifiApRouterMode == 1) runOnUiThread {
+                        showLoadingDialog()
+                        viewModel.getAuthorizationEndpoints()
+                    }
+                    else {
+                        state = LoginState.X2.DevicePassword
+                    }
+                } else {
                     state = LoginState.X2.DevicePassword
                 }
             } else {
@@ -265,7 +269,7 @@ class LoginX2Activity : LoginBaseActivity() {
         }
     }
 
-    private fun onContinueClick(isEmail: Boolean, officerId: String) {
+    private fun onContinueClick(officerId: String) {
         this.officerId = officerId
         CameraInfo.officerId = officerId
         fetchConfigsFromBle()

@@ -285,7 +285,7 @@
     <string name="continue_text">Continue</string>
     <string name="or">or</string>
     <string name="display">Display</string>
-    <string name="officer_id">Enter your officer ID to connect with Bluetooth</string>
+    <string name="officer_id">Enter your officer ID</string>
     <string name="officer_email_id">Enter your email id</string>
     <string name="change_camera_type">Change Body-Camera type</string>
     <string name="go_to_on_boarding_cards">Go to on-boarding cards</string>

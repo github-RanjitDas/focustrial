@@ -97,12 +97,5 @@ class PreferencesManagerImpl(private val dataStore: DataStore<Preferences>) : Pr
         private val DISCOVERY_ENDPOINT = stringPreferencesKey("discovery_endpoint")
         private val TENANT_ID = stringPreferencesKey("tenant_id")
         private val SERIAL_NUMBER = stringPreferencesKey("serial_number")
-        // TODO: Hard coded TENANT_ID_VALUE
-        private const val TENANT_ID_VALUE = "staging01"
-        // TODO: Hard coded SSID
-        const val X2_SSID = "x2-22201760"
-        // const val X2_SSID = "X22032578"
-        // TODO: Hard coded DISCOVERY_URL
-        private const val DISCOVERY_URL = "https://stg.safefleetcloud.us/tenant-settings/api/hardware/discovery"
     }
 }
