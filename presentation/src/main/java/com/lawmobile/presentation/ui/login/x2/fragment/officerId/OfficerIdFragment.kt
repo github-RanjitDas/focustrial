@@ -17,6 +17,7 @@ import com.lawmobile.presentation.ui.base.BaseFragment
 import com.lawmobile.presentation.ui.onBoardingCards.OnBoardingCardsActivity
 import com.lawmobile.presentation.ui.selectCamera.SelectCameraActivity
 import com.safefleet.mobile.android_commons.extensions.hideKeyboard
+import kotlin.reflect.KFunction1
 
 class OfficerIdFragment : BaseFragment() {
 
@@ -25,7 +26,7 @@ class OfficerIdFragment : BaseFragment() {
     private var _binding: FragmentValidateOfficerIdBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var onContinueClick: (Boolean, String) -> Unit
+    private lateinit var onContinueClick: (String) -> Unit
 
     private var wereConnectivityRequirementsChecked: Boolean
         get() = viewModel.wereConnectivityRequirementsChecked
@@ -147,13 +148,7 @@ class OfficerIdFragment : BaseFragment() {
 
     private fun validateOfficerId() {
         (activity as AppCompatActivity).hideKeyboard()
-        viewModel.verifyInternetConnection {
-            if (it) {
-                val isEmail = viewModel.officerId.contains("@") && viewModel.officerId.contains(".")
-                onContinueClick(isEmail, viewModel.officerId)
-            } else onContinueClick(it, viewModel.officerId)
-            wereConnectivityRequirementsChecked = false
-        }
+        onContinueClick(viewModel.officerId)
     }
 
     private fun goToSelectCamera() {
@@ -174,7 +169,7 @@ class OfficerIdFragment : BaseFragment() {
         val TAG: String = OfficerIdFragment::class.java.simpleName
 
         fun createInstance(
-            onContinueClick: (Boolean, String) -> Unit
+            onContinueClick: KFunction1<String, Unit>
         ) = OfficerIdFragment().apply {
             this.onContinueClick = onContinueClick
         }

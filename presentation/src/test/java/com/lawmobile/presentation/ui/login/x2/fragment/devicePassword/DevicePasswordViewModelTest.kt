@@ -1,7 +1,9 @@
 package com.lawmobile.presentation.ui.login.x2.fragment.devicePassword
 
 import com.lawmobile.presentation.InstantExecutorExtension
+import com.lawmobile.presentation.bluetooth.PasswordVerificationBleManager
 import io.mockk.clearMocks
+import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.setMain
@@ -15,7 +17,8 @@ import org.junit.jupiter.api.extension.ExtendWith
 @ExtendWith(InstantExecutorExtension::class)
 class DevicePasswordViewModelTest {
 
-    private val viewModel = DevicePasswordViewModel()
+    private val passwordVerificationBleManager: PasswordVerificationBleManager = mockk()
+    private val viewModel = DevicePasswordViewModel(passwordVerificationBleManager)
 
     @ExperimentalCoroutinesApi
     @BeforeEach

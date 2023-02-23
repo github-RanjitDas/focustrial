@@ -14,7 +14,7 @@ import com.lawmobile.domain.usecase.LoginUseCases
 import com.lawmobile.domain.utils.PreferencesManager
 import com.lawmobile.presentation.BuildConfig
 import com.lawmobile.presentation.authentication.AuthStateManagerFactory
-import com.lawmobile.presentation.bluetooth.CameraBleManager
+import com.lawmobile.presentation.bluetooth.FetchConfigBleManager
 import com.lawmobile.presentation.bluetooth.OnBleStatusUpdates
 import com.lawmobile.presentation.connectivity.WifiHelper
 import com.lawmobile.presentation.keystore.KeystoreHandler
@@ -42,7 +42,7 @@ class LoginX2ViewModel @Inject constructor(
     private val authStateManagerFactory: AuthStateManagerFactory,
     private val preferencesManager: PreferencesManager,
     private val ioDispatcher: CoroutineDispatcher,
-    private val bleManager: CameraBleManager,
+    private val bleManager: FetchConfigBleManager,
     wifiHelper: WifiHelper,
     private val bluetoothAdapter: BluetoothAdapter,
     private val simpleNetworkManager: ListenableNetworkManager,
@@ -114,7 +114,7 @@ class LoginX2ViewModel @Inject constructor(
 
     private fun retryFetchConfig(context: Context) {
         if (MAX_RETRY_ATTEMPT >= retryCounter) {
-            Log.d(CameraBleManager.TAG, "retryFetchConfig: attempt:$retryCounter")
+            Log.d("Retry", "retryFetchConfig: attempt:$retryCounter")
             retryCounter++
             scanNConnectFromBluetooth(context, ::retryFetchConfig)
         } else {
@@ -160,7 +160,7 @@ class LoginX2ViewModel @Inject constructor(
         val userId = jsonObject.getString("UserID")
         val wiFiAPRouterMode = jsonObject.getString("WiFiAPRouterMode")
         Log.d(TAG, "Get Configs:DiscoveryUrl:" + CameraInfo.discoveryUrl)
-        Log.d(TAG, "userId:$userId")
+        Log.d(TAG, "userId :$userId")
         Log.d(TAG, "tenantId:" + CameraInfo.tenantId)
         Log.d(TAG, "wiFiAPRouterMode:$wiFiAPRouterMode")
         CameraInfo.userId = userId
@@ -170,8 +170,6 @@ class LoginX2ViewModel @Inject constructor(
         } else {
             CameraInfo.backOfficeType = BackOfficeType.COMMAND_CENTRE
         }
-        // TODO hard coded remove later.
-        CameraInfo.backOfficeType = BackOfficeType.NEXUS
         enableNDisableFeaturesBasedOnBO()
     }
 
