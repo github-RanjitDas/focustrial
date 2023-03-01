@@ -21,6 +21,7 @@ import com.lawmobile.domain.entities.CameraInfo
 import com.lawmobile.domain.entities.customEvents.IncorrectPasswordErrorEvent
 import com.lawmobile.domain.entities.customEvents.LimitOfLoginAttemptsErrorEvent
 import com.lawmobile.domain.entities.customEvents.WrongCredentialsEvent
+import com.lawmobile.domain.enums.BackOfficeType
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.databinding.FragmentStartPairingX2Binding
 import com.lawmobile.presentation.entities.AlertInformation
@@ -91,7 +92,7 @@ class DevicePasswordFragment : BaseFragment(), Instructions, StartPairing {
             val isPasswordCorrect = jsonObject.getBoolean("isSuccess")
             if (isPasswordCorrect) {
                 val hotspotPassword = jsonObject.getString("hotspotPassword")
-                binding.suggestBodyCameraNetwork(hotspotPassword)
+                binding.suggestBodyCameraNetwork(hotspotPassword.takeLast(16))
             } else {
                 if (incorrectPasswordRetryAttempt >= MAX_INCORRECT_PASSWORD_ATTEMPT) {
                     showLimitOfLoginAttemptsErrorNotification()
@@ -191,7 +192,12 @@ class DevicePasswordFragment : BaseFragment(), Instructions, StartPairing {
         if (!pairingViewModel.isWifiEnable()) {
             createAlertToNavigateWifiSettings()
         } else {
-            initPasswordVerification()
+            if (CameraInfo.backOfficeType == BackOfficeType.NEXUS && CameraInfo.wifiApRouterMode == 1) {
+                initPasswordVerification()
+            } else {
+                val hotspotPassword = binding.editTextDevicePassword.text.toString()
+                binding.suggestBodyCameraNetwork(hotspotPassword)
+            }
         }
     }
 
@@ -206,7 +212,7 @@ class DevicePasswordFragment : BaseFragment(), Instructions, StartPairing {
     private fun FragmentStartPairingX2Binding.suggestBodyCameraNetwork(hotspotPassword: String) {
         val networkName = "X" + editTextOfficerId.text.toString()
         pairingViewModel.suggestWiFiNetwork(
-            networkName, hotspotPassword.takeLast(16)
+            networkName, hotspotPassword
         ) { isConnected ->
             if (isConnected) onStartPairingClick?.invoke()
             else showWrongCredentialsNotification()

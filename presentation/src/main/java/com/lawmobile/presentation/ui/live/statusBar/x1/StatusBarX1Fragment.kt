@@ -63,7 +63,7 @@ class StatusBarX1Fragment : StatusBarBaseFragment() {
 
     override fun onResume() {
         super.onResume()
-        if (isViewLoaded) fragmentLaunch { getCameraStatus() }
+        fragmentLaunch { getCameraStatus() }
     }
 
     private fun setObservers() {
