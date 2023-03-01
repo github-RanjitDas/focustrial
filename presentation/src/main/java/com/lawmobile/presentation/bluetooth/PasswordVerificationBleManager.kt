@@ -80,7 +80,7 @@ class PasswordVerificationBleManager : BaseBleManager() {
     }
 
     fun doConnectGatt(context: Context, xBleDevice: BluetoothDevice) {
-        xBleDevice.connectGatt(context, false, bluetoothGattCallback, 2)
+        xBleDevice.connectGatt(context, false, bluetoothGattCallback, BluetoothDevice.TRANSPORT_LE)
     }
 
     private val bluetoothGattCallback: BluetoothGattCallback = object : BluetoothGattCallback() {
@@ -142,7 +142,6 @@ class PasswordVerificationBleManager : BaseBleManager() {
             Log.d(TAG, "onCharacteristicRead:" + characteristic?.getStringValue(0))
             gatt?.close()
             onBleStatusUpdates.onDataReceived(characteristic?.getStringValue(0))
-
         }
     }
 }

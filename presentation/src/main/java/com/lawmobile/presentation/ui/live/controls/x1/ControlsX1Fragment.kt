@@ -5,9 +5,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
-import com.lawmobile.presentation.BuildConfig
 import com.lawmobile.presentation.databinding.FragmentLiveControlsX1Binding
 import com.lawmobile.presentation.ui.live.controls.ControlsBaseFragment
+import com.lawmobile.presentation.utils.FeatureSupportHelper
 
 class ControlsX1Fragment : ControlsBaseFragment() {
 
@@ -33,7 +33,7 @@ class ControlsX1Fragment : ControlsBaseFragment() {
     }
 
     private fun setFeatures() {
-        binding.buttonResetViewFinder.isVisible = BuildConfig.DEBUG
+        binding.buttonResetViewFinder.isVisible = FeatureSupportHelper.isButtonResetViewFinderVisible
     }
 
     private fun setViews() {

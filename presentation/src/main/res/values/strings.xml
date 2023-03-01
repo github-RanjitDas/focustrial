@@ -219,6 +219,7 @@
     <string name="no_event">No event</string>
     <string name="error_get_information_metadata">Failed to retrieve video information. Please try again.</string>
     <string name="error_getting_officer_information">Failed to retrieve officer information. Please retry or check the Body Camera.</string>
+    <string name="verify_body_camera_hotspot" tools:ignore="ExtraTranslation">Verify your Body-Camera\'s hotspot is ON.</string>
     <string name="error_getting_config_bluetooth">Failed to connect with Bluetooth. Please retry or check the bluetooth settings.</string>
     <string name="associate_snapshots_to_video">Associate snapshots with video</string>
     <string name="associate_images">Associate snapshots</string>
