@@ -326,7 +326,7 @@ class DevicePasswordFragment : BaseFragment(), Instructions, StartPairing {
 
     companion object {
         var incorrectPasswordRetryAttempt = 1
-        const val MAX_INCORRECT_PASSWORD_ATTEMPT = 2
+        const val MAX_INCORRECT_PASSWORD_ATTEMPT = 5
         val TAG: String = StartPairingFragment::class.java.simpleName
         fun createInstance(onEditOfficerId: (String) -> Unit): DevicePasswordFragment {
             return DevicePasswordFragment().apply {

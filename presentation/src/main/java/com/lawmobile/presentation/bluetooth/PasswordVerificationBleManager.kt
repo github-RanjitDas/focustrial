@@ -80,17 +80,23 @@ class PasswordVerificationBleManager : BaseBleManager() {
     }
 
     fun doConnectGatt(context: Context, xBleDevice: BluetoothDevice) {
-        xBleDevice.connectGatt(context, true, bluetoothGattCallback, 2)
+        xBleDevice.connectGatt(context, false, bluetoothGattCallback, 2)
     }
 
     private val bluetoothGattCallback: BluetoothGattCallback = object : BluetoothGattCallback() {
         override fun onConnectionStateChange(gatt: BluetoothGatt, status: Int, newState: Int) {
-            if (newState == BluetoothProfile.STATE_CONNECTED) {
-                // successfully connected to the GATT Server
-                gatt.requestMtu(512)
-            } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
-                // disconnected from the GATT Server
-                gatt.disconnect()
+            Log.d(TAG, "onConnectionStateChange:$status,$newState")
+            if (status == BluetoothGatt.GATT_SUCCESS) {
+                if (newState == BluetoothProfile.STATE_CONNECTED) {
+                    // successfully connected to the GATT Server
+                    gatt.requestMtu(512)
+                } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
+                    // disconnected from the GATT Server
+                    gatt.disconnect()
+                }
+            } else {
+                gatt.close()
+                onBleStatusUpdates.onFailedFetchConfig()
             }
         }
 
@@ -108,6 +114,7 @@ class PasswordVerificationBleManager : BaseBleManager() {
                 Log.e(TAG, "Bluetooth Write Value:$inputPassword")
                 gatt?.writeCharacteristic(characteristic)
             } else {
+                gatt?.close()
                 Log.e(TAG, "Bluetooth Gatt Failed.")
                 onBleStatusUpdates.onFailedFetchConfig()
             }
@@ -120,7 +127,11 @@ class PasswordVerificationBleManager : BaseBleManager() {
         ) {
             super.onCharacteristicWrite(gatt, characteristic, status)
             Log.d(TAG, "onCharacteristicWrite Done:$status")
-            gatt?.readCharacteristic(characteristic)
+            if (status == BluetoothGatt.GATT_SUCCESS) {
+                gatt?.readCharacteristic(characteristic)
+            } else {
+                onBleStatusUpdates.onFailedFetchConfig()
+            }
         }
 
         override fun onCharacteristicRead(
@@ -129,9 +140,9 @@ class PasswordVerificationBleManager : BaseBleManager() {
             status: Int
         ) {
             Log.d(TAG, "onCharacteristicRead:" + characteristic?.getStringValue(0))
-
-            onBleStatusUpdates.onDataReceived(characteristic?.getStringValue(0))
             gatt?.close()
+            onBleStatusUpdates.onDataReceived(characteristic?.getStringValue(0))
+
         }
     }
 }

@@ -57,8 +57,7 @@ object KeystoreHandler {
                         .setCertificateSubject(X500Principal("CN=test"))
                         .setCertificateSerialNumber(BigInteger.ONE).build()
                 )
-                val keyPair = spec.generateKeyPair()
-                Log.i(TAG, keyPair.toString())
+                spec.generateKeyPair()
             }
 
             val privateKey = keyStore.getKey(alias, null) as PrivateKey

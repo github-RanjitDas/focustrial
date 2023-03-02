@@ -119,18 +119,26 @@ class LoginX2Activity : LoginBaseActivity() {
         hideLoadingDialog()
         viewModel.verifyInternetConnection {
             if (it) {
-                if (CameraInfo.backOfficeType == BackOfficeType.NEXUS) {
-                    if (CameraInfo.wifiApRouterMode == 1) runOnUiThread {
-                        showLoadingDialog()
-                        viewModel.getAuthorizationEndpoints()
+                when (CameraInfo.backOfficeType) {
+                    BackOfficeType.NEXUS -> {
+                        //Nexus
+                        when (CameraInfo.wifiApRouterMode) {
+                            1 -> runOnUiThread {
+                                showLoadingDialog()
+                                viewModel.getAuthorizationEndpoints()
+                            }
+                            else -> {
+                                state = LoginState.X2.DevicePassword
+                            }
+                        }
                     }
-                    else {
+                    else -> {
+                        //Not Nexus
                         state = LoginState.X2.DevicePassword
                     }
-                } else {
-                    state = LoginState.X2.DevicePassword
                 }
             } else {
+                //No Internet
                 state = LoginState.X2.DevicePassword
             }
         }
@@ -176,11 +184,7 @@ class LoginX2Activity : LoginBaseActivity() {
         with(result) {
             doIfSuccess {
                 Log.d(TAG, "SSO Completed with Success:$result")
-                // TODO: Hard coded SSID can be removed once X2 start broadcasting first part of email of before @
-                // val hotspotName = "X" + officerId.substringBefore("@")
-                // TODO: Using the hardcoded SSID for X2.
                 val hotspotName = "X$officerId"
-                // WifiApPasswordMode should be 1
                 val hotspotPassword = it.takeLast(16)
                 viewModel.suggestWiFiNetwork(hotspotName, hotspotPassword) { isConnected ->
                     state = if (isConnected) LoginState.PairingResult
@@ -308,11 +312,17 @@ class LoginX2Activity : LoginBaseActivity() {
     private fun onTokenResponse(response: Result<TokenResponse>) {
         with(response) {
             doIfSuccess {
-                Log.d(TAG, "onTokenResponse:Success")
+                Log.d(TAG, "onTokenResponse:Success:$it")
                 viewModel.saveToken(it.accessToken.toString())
-                viewModel.getDevicePassword(CameraInfo.userId)
+                handler.postDelayed(
+                    {
+                        viewModel.getDevicePassword(CameraInfo.userId)
+                    },
+                    1000
+                )
             }
             doIfError {
+                hideLoadingDialog()
                 Log.d(TAG, "onTokenResponse:Error:$it")
                 showRequestError()
             }
@@ -320,6 +330,10 @@ class LoginX2Activity : LoginBaseActivity() {
     }
 
     private fun goToSsoLogin(authRequest: AuthorizationRequest) {
+        Log.d(
+            "SSO",
+            CameraInfo.officerId + "," + CameraInfo.discoveryUrl + "," + CameraInfo.tenantId
+        )
         this.authRequest = authRequest
         val intent = Intent(baseContext, SSOActivity::class.java)
         startActivityForResult(intent, 100)

@@ -77,18 +77,24 @@ class FetchConfigBleManager : BaseBleManager() {
     }
 
     fun doConnectGatt(context: Context, xBleDevice: BluetoothDevice) {
-        xBleDevice.connectGatt(context, true, bluetoothGattCallback, 2)
+        xBleDevice.connectGatt(context, false, bluetoothGattCallback, 2)
     }
 
     private val bluetoothGattCallback: BluetoothGattCallback = object : BluetoothGattCallback() {
         override fun onConnectionStateChange(gatt: BluetoothGatt, status: Int, newState: Int) {
-            if (newState == BluetoothProfile.STATE_CONNECTED) {
-                println("onConnectionStateChange : -------------")
-                // successfully connected to the GATT Server
-                gatt.requestMtu(512)
-            } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
-                // disconnected from the GATT Server
-                gatt.disconnect()
+            if (status == BluetoothGatt.GATT_SUCCESS) {
+                if (newState == BluetoothProfile.STATE_CONNECTED) {
+                    Log.d(TAG, "Device get Connected")
+                    // successfully connected to the GATT Server
+                    gatt.requestMtu(512)
+                } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
+                    Log.d(TAG, "Device get Disconnect")
+                    // disconnected from the GATT Server
+                    gatt.disconnect()
+                }
+            } else {
+                gatt.close()
+                onBleStatusUpdates.onFailedFetchConfig()
             }
         }
 
@@ -105,6 +111,7 @@ class FetchConfigBleManager : BaseBleManager() {
                 gatt?.readCharacteristic(characteristic)
             } else {
                 Log.e(TAG, "Bluetooth Gatt Failed.")
+                gatt?.close()
                 onBleStatusUpdates.onFailedFetchConfig()
             }
         }
@@ -115,8 +122,8 @@ class FetchConfigBleManager : BaseBleManager() {
             status: Int
         ) {
             Log.d(TAG, "onCharacteristicRead:" + characteristic?.getStringValue(0))
-            onBleStatusUpdates.onDataReceived(characteristic?.getStringValue(0))
             gatt?.close()
+            onBleStatusUpdates.onDataReceived(characteristic?.getStringValue(0))
         }
     }
 }
