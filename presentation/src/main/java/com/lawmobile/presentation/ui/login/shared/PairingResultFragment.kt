@@ -9,10 +9,12 @@ import android.view.animation.AnimationUtils
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
+import com.google.android.material.snackbar.Snackbar
 import com.lawmobile.domain.entities.CameraInfo
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.databinding.FragmentPairingResultBinding
 import com.lawmobile.presentation.extensions.runWithDelay
+import com.lawmobile.presentation.extensions.showErrorSnackBar
 import com.lawmobile.presentation.ui.base.BaseFragment
 import com.safefleet.mobile.kotlin_commons.helpers.Result
 
@@ -116,6 +118,7 @@ class PairingResultFragment : BaseFragment() {
     }
 
     private fun showErrorResult() {
+        binding.root.showErrorSnackBar(getString(R.string.verify_body_camera_hotspot), Snackbar.LENGTH_LONG)
         binding.pairingProgressLayout.isVisible = false
         binding.pairingResultLayout.isVisible = true
         binding.buttonRetry.isVisible = true

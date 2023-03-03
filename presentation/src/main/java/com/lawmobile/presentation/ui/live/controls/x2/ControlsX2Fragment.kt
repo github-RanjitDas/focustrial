@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
-import com.lawmobile.presentation.BuildConfig
 import com.lawmobile.presentation.databinding.FragmentLiveControlsX2Binding
 import com.lawmobile.presentation.ui.live.controls.ControlsBaseFragment
 import com.lawmobile.presentation.ui.live.controls.x1.ControlsX1Fragment
@@ -40,7 +39,7 @@ class ControlsX2Fragment : ControlsBaseFragment() {
             binding.guidelineMidHorizontalBottom.setGuidelinePercent(1F)
         }
 
-        binding.buttonResetViewFinder.isVisible = BuildConfig.DEBUG
+        binding.buttonResetViewFinder.isVisible = FeatureSupportHelper.isButtonResetViewFinderVisible
     }
 
     private fun setViews() {

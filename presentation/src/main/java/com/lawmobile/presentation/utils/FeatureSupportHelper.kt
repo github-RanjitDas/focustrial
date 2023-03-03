@@ -6,4 +6,5 @@ object FeatureSupportHelper {
     var supportAudios = false
     var supportSnapshotAssociation = false
     var supportAudioAssociation = false
+    var isButtonResetViewFinderVisible = false
 }

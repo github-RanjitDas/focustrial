@@ -121,7 +121,7 @@ class LoginX2Activity : LoginBaseActivity() {
             if (it) {
                 when (CameraInfo.backOfficeType) {
                     BackOfficeType.NEXUS -> {
-                        //Nexus
+                        // Nexus
                         when (CameraInfo.wifiApRouterMode) {
                             1 -> runOnUiThread {
                                 showLoadingDialog()
@@ -133,12 +133,12 @@ class LoginX2Activity : LoginBaseActivity() {
                         }
                     }
                     else -> {
-                        //Not Nexus
+                        // Not Nexus
                         state = LoginState.X2.DevicePassword
                     }
                 }
             } else {
-                //No Internet
+                // No Internet
                 state = LoginState.X2.DevicePassword
             }
         }

@@ -24,7 +24,7 @@ class OfficerIdFragment : BaseFragment() {
     private val viewModel: OfficerIdViewModel by activityViewModels()
 
     private var _binding: FragmentValidateOfficerIdBinding? = null
-    private val binding get() = _binding!!
+    private val binding get() = _binding
 
     private lateinit var onContinueClick: (String) -> Unit
 
@@ -42,19 +42,19 @@ class OfficerIdFragment : BaseFragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentValidateOfficerIdBinding.inflate(inflater, container, false)
-        return binding.root
+        return binding!!.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         verifyConnectivityRequirements()
-        binding.setListeners()
+        binding?.setListeners()
     }
 
     override fun onResume() {
         super.onResume()
         if (viewModel.officerId.isEmpty()) viewModel.officerId = officerId
-        binding.setOfficerId()
+        binding?.setOfficerId()
     }
 
     private fun verifyConnectivityRequirements() {
@@ -117,7 +117,7 @@ class OfficerIdFragment : BaseFragment() {
 
     fun setButtonContinueEnable(enable: Boolean) {
         if (binding != null) {
-            binding.buttonContinue.apply {
+            binding!!.buttonContinue.apply {
                 this.isEnabled = enable
                 isActivated = enable
             }
