@@ -190,6 +190,8 @@
     <string name="instruction_5">Tap your Body Camera SSID in the list of available networks. The SSID is an alphanumeric string that starts with an X.</string>
     <string name="_6">6.</string>
     <string name="instruction_6">When prompted, provide the SSID password to connect to the Body Camera.</string>
+    <string name="instruction_5_x2">On your phone, enable Bluetooth under Settings.</string>
+    <string name="instruction_6_x2">Click on OK to Allow permissions to use Bluetooth, when prompted.</string>
     <string name="got_it">Got it!</string>
     <string name="close_instructions_description">close instructions</string>
     <string name="snapshots_title">Snapshots</string>
