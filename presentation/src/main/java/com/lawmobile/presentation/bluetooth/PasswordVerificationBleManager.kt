@@ -142,7 +142,6 @@ class PasswordVerificationBleManager : BaseBleManager() {
             Log.d(TAG, "onCharacteristicRead:" + characteristic?.getStringValue(0))
             gatt?.close()
             onBleStatusUpdates.onDataReceived(characteristic?.getStringValue(0))
-
         }
     }
 }

@@ -12,6 +12,7 @@ class UserRepositoryImpl(
     override suspend fun getUserFromNetwork(uuid: String): Result<User> {
         return try {
             val user = userRemoteDataSource.getUserFromNetwork(uuid).toDomain()
+            println("User after success match Details: " + user.email + "," + user.id + "," + user.name + "," + user.devicePassword)
             Result.Success(user)
         } catch (e: Exception) {
             Result.Error(e)

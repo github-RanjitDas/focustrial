@@ -25,6 +25,7 @@ class SocketHelper(private var socket: Socket) {
                 isSocketAvailable = true
                 Result.Success(Unit)
             } catch (e: Exception) {
+                println("Unable to connect with Camera Socket:" + e.message)
                 isSocketAvailable = true
                 Result.Error(e)
             }
