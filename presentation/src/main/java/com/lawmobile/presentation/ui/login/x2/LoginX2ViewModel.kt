@@ -137,6 +137,7 @@ class LoginX2ViewModel @Inject constructor(
                     if (data != null) {
                         saveConfigLocally(data)
                         KeystoreHandler.storeConfigInKeystore(context, data)
+                        Log.d(TAG, "Successfully Saved Configs in Keystore!")
                         viewModelScope.launch {
                             _updateConfigProgress.value = Result.Success(data)
                         }

@@ -185,7 +185,9 @@ class LoginX2Activity : LoginBaseActivity() {
             doIfSuccess {
                 Log.d(TAG, "SSO Completed with Success:$result")
                 val hotspotName = "X$officerId"
+                Log.d(TAG, "Connect with Wifi :Name: $hotspotName")
                 val hotspotPassword = it.takeLast(16)
+                Log.d(TAG, "Password: $it ")
                 viewModel.suggestWiFiNetwork(hotspotName, hotspotPassword) { isConnected ->
                     state = if (isConnected) LoginState.PairingResult
                     else LoginState.X2.DevicePassword
@@ -262,11 +264,13 @@ class LoginX2Activity : LoginBaseActivity() {
         if (isPermissionGranted(Manifest.permission.ACCESS_FINE_LOCATION)) {
             val configs = KeystoreHandler.getConfigFromKeystore(this)
             if (configs == null) {
+                Log.d(TAG, "No Saved configs found, Need to fetch configs from Bluetooth...")
                 runOnUiThread {
                     initBleConnectionToFetchConfigs()
                 }
             } else {
-                Log.d(TAG, "Found Configs in KeyStore...$configs")
+                Log.d(TAG, "No Need to fetch configs from Bluetooth.")
+                Log.d(TAG, "Found Saved Configs from KeyStore : $configs")
                 viewModel.saveConfigLocally(configs)
                 onReceivedConfigFromBle()
             }

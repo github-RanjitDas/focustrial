@@ -121,7 +121,7 @@ class FetchConfigBleManager : BaseBleManager() {
             characteristic: BluetoothGattCharacteristic?,
             status: Int
         ) {
-            Log.d(TAG, "onCharacteristicRead:" + characteristic?.getStringValue(0))
+            Log.d(TAG, "Received Configs from Bluetooth: " + characteristic?.getStringValue(0))
             gatt?.close()
             onBleStatusUpdates.onDataReceived(characteristic?.getStringValue(0))
         }

@@ -26,9 +26,7 @@ abstract class StatusBarBaseFragment : BaseFragment() {
 
     val sharedViewModel: StatusBarBaseViewModel by activityViewModels()
     val blinkAnimation = Animations.createBlinkAnimation(BLINK_ANIMATION_DURATION)
-
-    var isViewLoaded = false
-
+    protected var isShowCameraStatusFailedError: Boolean = true
     lateinit var parentLayout: ConstraintLayout
     lateinit var textViewBattery: TextView
     lateinit var progressBarBattery: SafeFleetLinearProgressBar
@@ -47,7 +45,11 @@ abstract class StatusBarBaseFragment : BaseFragment() {
     open fun setBatteryLevel(result: Event<Result<Int>>) {
         result.getContentIfNotHandled()?.run {
             doIfSuccess(::manageBatteryLevel)
-            doIfError { showBatteryLevelNotAvailable() }
+            doIfError {
+                if (isShowCameraStatusFailedError) {
+                    showBatteryLevelNotAvailable()
+                }
+            }
         }
     }
 
