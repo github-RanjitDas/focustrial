@@ -62,6 +62,7 @@ class LoginX2Activity : LoginBaseActivity() {
         super.onCreate(savedInstanceState)
         baseViewModel = viewModel
         viewModel.updateConfigProgress.observe(this@LoginX2Activity, ::handleConfigResult)
+        updateInstructionText(true)
         restoreBottomSheetState()
         setCollectors()
         viewModel.setObservers()
