@@ -9,6 +9,7 @@
     <string name="the_camera_was_disconnected">Body Camera Disconnected</string>
     <string name="the_camera_was_disconnected_description">Your Body Camera was disconnected from FOCUS Mobile App. Please tap <b>OK</b> and reconnect again.</string>
     <string name="loading_wait">Loading…</string>
+    <string name="connection_bluetooth">Connecting with bluetooth</string>
     <string name="connection_finished">Idle Session Timeout</string>
     <string name="connection_finished_description">Your Body Camera was disconnected from FOCUS Mobile App after 5 minutes of inactivity.</string>
     <string name="gps_necessary_title">Location Required</string>
@@ -136,7 +137,7 @@
 
     <!-- Partner Id -->
     <string name="allowedOfficerIdAssociatedPattern">ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789</string>
-    <string name="allowedOfficerIdPattern">ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@.</string>
+    <string name="allowedOfficerIdPattern">ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@.-</string>
     <string name="associate_partner_id_content_description">Associate Partner ID</string>
     <string name="file_list_associate_partner_id_success">The Partner ID has been associated successfully.</string>
     <string name="file_list_associate_partner_id_error">Partner ID could not be associated</string>
@@ -189,6 +190,8 @@
     <string name="instruction_5">Tap your Body Camera SSID in the list of available networks. The SSID is an alphanumeric string that starts with an X.</string>
     <string name="_6">6.</string>
     <string name="instruction_6">When prompted, provide the SSID password to connect to the Body Camera.</string>
+    <string name="instruction_5_x2">On your phone, enable Bluetooth under Settings.</string>
+    <string name="instruction_6_x2">Click on OK to Allow permissions to use Bluetooth, when prompted.</string>
     <string name="got_it">Got it!</string>
     <string name="close_instructions_description">close instructions</string>
     <string name="snapshots_title">Snapshots</string>
@@ -218,6 +221,8 @@
     <string name="no_event">No event</string>
     <string name="error_get_information_metadata">Failed to retrieve video information. Please try again.</string>
     <string name="error_getting_officer_information">Failed to retrieve officer information. Please retry or check the Body Camera.</string>
+    <string name="verify_body_camera_hotspot" tools:ignore="ExtraTranslation">Verify your Body-Camera\'s hotspot is ON.</string>
+    <string name="error_getting_config_bluetooth">Failed to connect with Bluetooth. Please retry or check the bluetooth settings.</string>
     <string name="associate_snapshots_to_video">Associate snapshots with video</string>
     <string name="associate_images">Associate snapshots</string>
     <string name="no_new_photo_selected_message">No new photos selected</string>
@@ -283,7 +288,8 @@
     <string name="continue_text">Continue</string>
     <string name="or">or</string>
     <string name="display">Display</string>
-    <string name="officer_id">Enter your officer ID or email</string>
+    <string name="officer_id">Enter your officer ID</string>
+    <string name="officer_email_id">Enter your email id</string>
     <string name="change_camera_type">Change Body-Camera type</string>
     <string name="go_to_on_boarding_cards">Go to on-boarding cards</string>
     <string name="sign_in_with_email">Sign in with Email</string>

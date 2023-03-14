@@ -30,4 +30,10 @@ class OfficerIdViewModel @Inject constructor(
             callback(bluetoothAdapter.isEnabled)
         }
     }
+
+    fun enableBluetooth() {
+        if (!bluetoothAdapter.isEnabled) {
+            bluetoothAdapter.enable()
+        }
+    }
 }

@@ -11,6 +11,7 @@ class GetDevicePasswordImpl(
         return try {
             when (val result = userRepository.getUserFromNetwork(uuid)) {
                 is Result.Success -> {
+                    println("User:" + result.data)
                     val devicePassword = DevicePasswordValidator(result.data.devicePassword)
                     Result.Success(devicePassword)
                 }

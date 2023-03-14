@@ -1,9 +1,11 @@
 package com.lawmobile.body_cameras.utils
 
 import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import com.lawmobile.body_cameras.constants.CameraConstants
 import com.lawmobile.body_cameras.entities.BWCConnectionParams
 import com.lawmobile.body_cameras.entities.LogEvent
+import com.lawmobile.body_cameras.entities.NotificationDictionary
 import com.lawmobile.body_cameras.entities.SetupConfiguration
 import com.lawmobile.body_cameras.socket.SocketHelper
 import com.lawmobile.body_cameras.x1.entities.X1FileResponse
@@ -17,6 +19,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
+import java.io.FileNotFoundException
+import java.lang.reflect.Type
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -94,6 +98,23 @@ class FileInformationHelper(
         }
     }
 
+    suspend fun getNotificationDictionary(): Result<List<NotificationDictionary>> {
+        val nameLogJson =
+            CameraConstants.FILES_MAIN_PATH + CameraConstants.NOTIFICATION_DICTIONARY_FILE_NAME
+        val response = getFileInformation(nameLogJson)
+        response.doIfSuccess {
+            val logEventList = String(it)
+            val gson = Gson()
+            val listType: Type = object : TypeToken<List<NotificationDictionary?>?>() {}.type
+            val notifications: List<NotificationDictionary> = gson.fromJson(logEventList, listType)
+            return Result.Success(notifications)
+        }
+        response.doIfError {
+            return Result.Error(it)
+        }
+        return Result.Error(FileNotFoundException())
+    }
+
     suspend fun getBatteryLevelFromLog(): Result<Int> {
         when (val resultFile = getFileInformation(getNameOfLogToday())) {
             is Result.Success -> {
@@ -150,7 +171,9 @@ class FileInformationHelper(
             var attemptsForNotification = 1
             do {
                 isCameraSendTheNotificationWithCompleteInformation =
-                    commandHelper.isInputStreamAvailable() && isCameraSendTheCompleteBytes(informationFromDataSocket)
+                    commandHelper.isInputStreamAvailable() && isCameraSendTheCompleteBytes(
+                    informationFromDataSocket
+                )
                 attemptsForNotification++
                 delay(100)
             } while (attemptsForNotification < ATTEMPTS_RETRY_REQUEST && !isCameraSendTheNotificationWithCompleteInformation)

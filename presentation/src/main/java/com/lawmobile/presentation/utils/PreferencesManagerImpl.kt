@@ -4,6 +4,7 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
+import com.lawmobile.domain.entities.CameraInfo
 import com.lawmobile.domain.utils.PreferencesManager
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
@@ -11,19 +12,19 @@ import kotlinx.coroutines.flow.map
 class PreferencesManagerImpl(private val dataStore: DataStore<Preferences>) : PreferencesManager {
     override suspend fun getSerialNumber(): String {
         return dataStore.data.map { preferences ->
-            preferences[SERIAL_NUMBER] ?: SERIAL_NUMBER_VALUE
+            preferences[SERIAL_NUMBER] ?: CameraInfo.officerId
         }.first()
     }
 
     override suspend fun getTenantId(): String {
         return dataStore.data.map { preferences ->
-            preferences[TENANT_ID] ?: TENANT_ID_VALUE
+            preferences[TENANT_ID] ?: CameraInfo.tenantId
         }.first()
     }
 
     override suspend fun getDiscoveryEndpointUrl(): String {
         return dataStore.data.map { preferences ->
-            preferences[DISCOVERY_ENDPOINT] ?: DISCOVERY_URL
+            preferences[DISCOVERY_ENDPOINT] ?: CameraInfo.discoveryUrl
         }.first()
     }
 
@@ -96,8 +97,5 @@ class PreferencesManagerImpl(private val dataStore: DataStore<Preferences>) : Pr
         private val DISCOVERY_ENDPOINT = stringPreferencesKey("discovery_endpoint")
         private val TENANT_ID = stringPreferencesKey("tenant_id")
         private val SERIAL_NUMBER = stringPreferencesKey("serial_number")
-        private const val TENANT_ID_VALUE = "commander"
-        private const val SERIAL_NUMBER_VALUE = "x01120093"
-        private const val DISCOVERY_URL = "https://dev.safefleetcloud.us/tenant-settings/api/hardware/discovery"
     }
 }

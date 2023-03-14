@@ -1,14 +1,17 @@
 package com.lawmobile.domain.enums
 
 import com.lawmobile.domain.entities.customEvents.BluetoothErrorEvent
+import com.lawmobile.domain.entities.customEvents.IncorrectPasswordErrorEvent
 import com.lawmobile.domain.entities.customEvents.InternetErrorEvent
+import com.lawmobile.domain.entities.customEvents.LimitOfLoginAttemptsErrorEvent
 import com.lawmobile.domain.entities.customEvents.LoginRequestErrorEvent
 import com.lawmobile.domain.entities.customEvents.WrongCredentialsEvent
 
 enum class NotificationType(
     val value: String,
     val title: String? = null,
-    val message: String? = null
+    val message: String? = null,
+    val subTitle: String? = null,
 ) {
 
     BATTERY_LEVEL("battery_level") {
@@ -92,6 +95,17 @@ enum class NotificationType(
         LoginRequestErrorEvent.title,
         LoginRequestErrorEvent.message
     ),
+    INCORRECT_PASSWORD_ERROR(
+        IncorrectPasswordErrorEvent.value,
+        IncorrectPasswordErrorEvent.title,
+        IncorrectPasswordErrorEvent.message
+    ),
+    LIMIT_OF_LOGIN_ATTEMPTS_ERROR(
+        LimitOfLoginAttemptsErrorEvent.value,
+        LimitOfLoginAttemptsErrorEvent.title,
+        LimitOfLoginAttemptsErrorEvent.message,
+        LimitOfLoginAttemptsErrorEvent.subTitle,
+    ),
     UNKNOWN_OPERATION(
         "unknown_operation",
         "Unknown operation",
@@ -130,6 +144,8 @@ enum class NotificationType(
                 INTERNET_CONNECTION_ISSUES.value -> INTERNET_CONNECTION_ISSUES
                 BLUETOOTH_CONNECTION_ISSUES.value -> BLUETOOTH_CONNECTION_ISSUES
                 HOTSPOT_CONNECTION_ISSUES.value -> HOTSPOT_CONNECTION_ISSUES
+                INCORRECT_PASSWORD_ERROR.value -> INCORRECT_PASSWORD_ERROR
+                LIMIT_OF_LOGIN_ATTEMPTS_ERROR.value -> LIMIT_OF_LOGIN_ATTEMPTS_ERROR
                 LOGIN_REQUEST_ERROR.value -> LOGIN_REQUEST_ERROR
                 UNKNOWN_OPERATION.value -> UNKNOWN_OPERATION
                 else -> DEFAULT

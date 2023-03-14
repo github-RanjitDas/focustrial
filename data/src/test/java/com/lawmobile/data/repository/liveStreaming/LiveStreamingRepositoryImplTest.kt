@@ -1,7 +1,9 @@
 package com.lawmobile.data.repository.liveStreaming
 
+import com.lawmobile.body_cameras.enums.CatalogTypesDto
 import com.lawmobile.data.datasource.remote.liveStreaming.LiveStreamingRemoteDataSource
 import com.lawmobile.domain.entities.FileList
+import com.lawmobile.domain.enums.CatalogTypes
 import com.safefleet.mobile.kotlin_commons.helpers.Result
 import io.mockk.clearAllMocks
 import io.mockk.coEvery
@@ -137,21 +139,21 @@ class LiveStreamingRepositoryImplTest {
     @Test
     fun testGetCatalogInfoSuccess() = runBlockingTest {
         coEvery {
-            liveStreamingRemoteDataSource.getCatalogInfo()
+            liveStreamingRemoteDataSource.getCatalogInfo(CatalogTypesDto.CATEGORIES)
         } returns Result.Success(listOf(mockk(relaxed = true)))
 
-        val result = liveStreamingRepositoryImpl.getCatalogInfo()
+        val result = liveStreamingRepositoryImpl.getCatalogInfo(CatalogTypes.CATEGORIES)
         Assert.assertTrue(result is Result.Success)
 
-        coVerify { liveStreamingRemoteDataSource.getCatalogInfo() }
+        coVerify { liveStreamingRemoteDataSource.getCatalogInfo(CatalogTypesDto.CATEGORIES) }
     }
 
     @Test
     fun testGetCatalogInfoError() = runBlockingTest {
-        coEvery { liveStreamingRemoteDataSource.getCatalogInfo() } returns Result.Error(mockk())
-        val result = liveStreamingRepositoryImpl.getCatalogInfo()
+        coEvery { liveStreamingRemoteDataSource.getCatalogInfo(CatalogTypesDto.CATEGORIES) } returns Result.Error(mockk())
+        val result = liveStreamingRepositoryImpl.getCatalogInfo(CatalogTypes.CATEGORIES)
         Assert.assertTrue(result is Result.Error)
-        coVerify { liveStreamingRemoteDataSource.getCatalogInfo() }
+        coVerify { liveStreamingRemoteDataSource.getCatalogInfo(CatalogTypesDto.CATEGORIES) }
     }
 
     @Test

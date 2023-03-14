@@ -1,21 +1,23 @@
 package com.lawmobile.domain.enums
 
 enum class EventTag(val value: String) {
-    INFORMATION(""),
-    WARNING("warn"),
-    ERROR("err"),
+    NOTIFICATION("notification"),
+    INFORMATION("information"),
+    WARNING("warning"),
+    ERROR("error"),
     INTERNET("internet"),
     BLUETOOTH("bluetooth");
 
     companion object {
         fun getByValue(value: String): EventTag {
-            return when (value) {
-                INFORMATION.value -> INFORMATION
-                WARNING.value -> WARNING
-                ERROR.value -> ERROR
-                INTERNET.value -> INTERNET
-                BLUETOOTH.value -> BLUETOOTH
-                else -> throw Exception("Event tag not supported or does not exist")
+            return when {
+                value.contains(NOTIFICATION.value, true) -> NOTIFICATION
+                value.contains(INFORMATION.value, true) -> INFORMATION
+                value.contains(WARNING.value, true) -> WARNING
+                value.contains(ERROR.value, true) -> ERROR
+                value.contains(INTERNET.value, true) -> INTERNET
+                value.contains(BLUETOOTH.value, true) -> BLUETOOTH
+                else -> NOTIFICATION
             }
         }
     }

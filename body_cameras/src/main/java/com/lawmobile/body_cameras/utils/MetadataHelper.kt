@@ -7,6 +7,7 @@ import com.lawmobile.body_cameras.constants.CameraConstants
 import com.lawmobile.body_cameras.constants.CameraConstants.FILES_MAIN_PATH
 import com.lawmobile.body_cameras.constants.CameraConstants.NAME_SETUP_CONFIGURATION
 import com.lawmobile.body_cameras.entities.AudioInformation
+import com.lawmobile.body_cameras.entities.CameraCatalog
 import com.lawmobile.body_cameras.entities.InformationToSaveMetadata
 import com.lawmobile.body_cameras.entities.PhotoInformation
 import com.lawmobile.body_cameras.entities.SetupConfiguration
@@ -100,6 +101,17 @@ class MetadataHelper(
             val stringJSON = String(bytes)
             val objectList =
                 format.fromJson(stringJSON, Array<PhotoInformation>::class.java).asList()
+            Result.Success(objectList)
+        } catch (e: Exception) {
+            Result.Error(e)
+        }
+    }
+
+    fun getCategoryInfoList(bytes: ByteArray): Result<List<CameraCatalog>> {
+        return try {
+            val stringJSON = String(bytes)
+            val objectList =
+                format.fromJson(stringJSON, Array<CameraCatalog>::class.java).asList()
             Result.Success(objectList)
         } catch (e: Exception) {
             Result.Error(e)

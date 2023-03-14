@@ -147,7 +147,8 @@ abstract class BaseActivity : AppCompatActivity() {
     }
 
     private fun setBaseObservers() {
-        mobileDataStatus.observe(this, ::showMobileDataDialog)
+        // TODO: Commented to enable mobile-data for SSO flow.
+        // mobileDataStatus.observe(this, ::showMobileDataDialog)
         wifiStatus.observe(this, ::showWifiOffDialog)
         activityCollect(wifiHelper.isWifiSignalLow, ::showLowWifiSignalAlert)
     }
@@ -206,6 +207,12 @@ abstract class BaseActivity : AppCompatActivity() {
     fun showLoadingDialog() {
         EspressoIdlingResource.increment()
         loadingDialog = createAlertProgress()
+        loadingDialog?.show()
+    }
+
+    fun showLoadingDialog(text: Int) {
+        EspressoIdlingResource.increment()
+        loadingDialog = createAlertProgress(text)
         loadingDialog?.show()
     }
 

@@ -10,7 +10,6 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.databinding.FragmentLiveStatusBarX1Binding
-import com.lawmobile.presentation.extensions.fragmentLaunch
 import com.lawmobile.presentation.extensions.setOnClickListenerCheckConnection
 import com.lawmobile.presentation.extensions.showErrorSnackBar
 import com.lawmobile.presentation.extensions.startAnimationIfEnabled
@@ -26,6 +25,7 @@ import com.safefleet.mobile.safefleet_ui.widgets.linearProgressBar.SafeFleetLine
 
 class StatusBarX1Fragment : StatusBarBaseFragment() {
 
+    private var ifFirstTimeLoad: Boolean = true
     private val binding: FragmentLiveStatusBarX1Binding get() = _binding!!
     private var _binding: FragmentLiveStatusBarX1Binding? = null
 
@@ -63,7 +63,15 @@ class StatusBarX1Fragment : StatusBarBaseFragment() {
 
     override fun onResume() {
         super.onResume()
-        if (isViewLoaded) fragmentLaunch { getCameraStatus() }
+        if (!ifFirstTimeLoad) {
+            isShowCameraStatusFailedError = false
+            sharedViewModel.getCameraStatusAsync()
+        }
+    }
+
+    override fun onStop() {
+        ifFirstTimeLoad = false
+        super.onStop()
     }
 
     private fun setObservers() {
@@ -130,9 +138,11 @@ class StatusBarX1Fragment : StatusBarBaseFragment() {
                 setTextStorageLevel(it)
             }
             doIfError {
-                binding.textViewStorageLevels.text = getString(R.string.not_available)
-                progressBarBattery.setProgress(0)
-                parentLayout.showErrorSnackBar(getString(R.string.storage_level_error))
+                if (isShowCameraStatusFailedError) {
+                    binding.textViewStorageLevels.text = getString(R.string.not_available)
+                    progressBarBattery.setProgress(0)
+                    parentLayout.showErrorSnackBar(getString(R.string.storage_level_error))
+                }
             }
         }
         hideLoadingDialog()

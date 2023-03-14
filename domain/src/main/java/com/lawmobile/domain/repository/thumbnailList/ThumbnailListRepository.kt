@@ -9,4 +9,5 @@ import com.safefleet.mobile.kotlin_commons.helpers.Result
 interface ThumbnailListRepository : BaseRepository {
     suspend fun getImageBytes(domainCameraFile: DomainCameraFile): Result<DomainInformationImage>
     suspend fun getSnapshotList(): Result<DomainInformationFileResponse>
+    suspend fun getVideoList(): Result<DomainInformationFileResponse>
 }

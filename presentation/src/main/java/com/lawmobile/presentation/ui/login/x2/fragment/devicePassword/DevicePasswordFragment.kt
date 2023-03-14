@@ -17,7 +17,11 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import com.lawmobile.domain.entities.CameraInfo
+import com.lawmobile.domain.entities.customEvents.IncorrectPasswordErrorEvent
+import com.lawmobile.domain.entities.customEvents.LimitOfLoginAttemptsErrorEvent
 import com.lawmobile.domain.entities.customEvents.WrongCredentialsEvent
+import com.lawmobile.domain.enums.BackOfficeType
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.databinding.FragmentStartPairingX2Binding
 import com.lawmobile.presentation.entities.AlertInformation
@@ -37,6 +41,8 @@ import com.safefleet.mobile.android_commons.extensions.hideKeyboard
 import com.safefleet.mobile.kotlin_commons.extensions.doIfError
 import com.safefleet.mobile.kotlin_commons.extensions.doIfSuccess
 import com.safefleet.mobile.kotlin_commons.helpers.Result
+import org.json.JSONObject
+import kotlin.system.exitProcess
 
 class DevicePasswordFragment : BaseFragment(), Instructions, StartPairing {
     private var _binding: FragmentStartPairingX2Binding? = null
@@ -72,8 +78,33 @@ class DevicePasswordFragment : BaseFragment(), Instructions, StartPairing {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.setListeners()
+        viewModel.updatePasswordVerificationProgress.observe(
+            requireActivity(), ::handlePasswordVerificationResult
+        )
         pairingViewModel.setObservers()
         pairingViewModel.cleanCacheFiles()
+    }
+
+    private fun handlePasswordVerificationResult(result: Result<String>?) {
+        hideLoadingDialog()
+        result?.doIfSuccess {
+            val jsonObject = JSONObject(it)
+            val isPasswordCorrect = jsonObject.getBoolean("isSuccess")
+            if (isPasswordCorrect) {
+                val hotspotPassword = jsonObject.getString("hotspotPassword")
+                binding.suggestBodyCameraNetwork(hotspotPassword.takeLast(16))
+            } else {
+                if (incorrectPasswordRetryAttempt >= MAX_INCORRECT_PASSWORD_ATTEMPT) {
+                    showLimitOfLoginAttemptsErrorNotification()
+                } else {
+                    incorrectPasswordRetryAttempt++
+                    showIncorrectPasswordErrorNotification()
+                }
+            }
+        }
+        result?.doIfError {
+            binding.layoutStartPairing.showErrorSnackBar(getString(R.string.error_getting_config_bluetooth))
+        }
     }
 
     override fun onResume() {
@@ -86,9 +117,7 @@ class DevicePasswordFragment : BaseFragment(), Instructions, StartPairing {
         super.onStart()
         val intent = Intent(activity, IsolatedService::class.java)
         context?.bindService(
-            intent,
-            mIsolatedServiceConnection,
-            AppCompatActivity.BIND_AUTO_CREATE
+            intent, mIsolatedServiceConnection, AppCompatActivity.BIND_AUTO_CREATE
         )
     }
 
@@ -162,14 +191,29 @@ class DevicePasswordFragment : BaseFragment(), Instructions, StartPairing {
     private fun startPairingProcess() {
         if (!pairingViewModel.isWifiEnable()) {
             createAlertToNavigateWifiSettings()
-        } else binding.suggestBodyCameraNetwork()
+        } else {
+            if (CameraInfo.backOfficeType == BackOfficeType.NEXUS && CameraInfo.wifiApRouterMode == 1) {
+                initPasswordVerification()
+            } else {
+                val hotspotPassword = binding.editTextDevicePassword.text.toString()
+                binding.suggestBodyCameraNetwork(hotspotPassword)
+            }
+        }
     }
 
-    private fun FragmentStartPairingX2Binding.suggestBodyCameraNetwork() {
-        val networkName = editTextOfficerId.text.toString()
-        val passwordName = editTextDevicePassword.text.toString()
+    private fun initPasswordVerification() {
+        showLoadingDialog()
+        CameraInfo.officerId = binding.editTextOfficerId.text.toString()
+        viewModel.verifyPasswordFromBle(
+            requireContext(), binding.editTextDevicePassword.text.toString()
+        )
+    }
 
-        pairingViewModel.suggestWiFiNetwork(networkName, passwordName) { isConnected ->
+    private fun FragmentStartPairingX2Binding.suggestBodyCameraNetwork(hotspotPassword: String) {
+        val networkName = "X" + editTextOfficerId.text.toString()
+        pairingViewModel.suggestWiFiNetwork(
+            networkName, hotspotPassword
+        ) { isConnected ->
             if (isConnected) onStartPairingClick?.invoke()
             else showWrongCredentialsNotification()
         }
@@ -179,6 +223,23 @@ class DevicePasswordFragment : BaseFragment(), Instructions, StartPairing {
         val cameraEvent = WrongCredentialsEvent.event
         context?.createNotificationDialog(cameraEvent)
             ?.setButtonText(resources.getString(R.string.OK))
+    }
+
+    private fun showIncorrectPasswordErrorNotification() {
+        val cameraEvent = IncorrectPasswordErrorEvent.event
+        context?.createNotificationDialog(cameraEvent)
+            ?.setButtonText(resources.getString(R.string.OK))
+    }
+
+    private fun showLimitOfLoginAttemptsErrorNotification() {
+        val cameraEvent = LimitOfLoginAttemptsErrorEvent.event
+        context?.createNotificationDialog(cameraEvent) {
+            setButtonText(resources.getString(R.string.OK))
+            onConfirmationClick = {
+                activity?.finishAffinity()
+                exitProcess(0)
+            }
+        }
     }
 
     private fun showAlertToNavigateToPermissions() {
@@ -264,6 +325,8 @@ class DevicePasswordFragment : BaseFragment(), Instructions, StartPairing {
         get() = TAG
 
     companion object {
+        var incorrectPasswordRetryAttempt = 1
+        const val MAX_INCORRECT_PASSWORD_ATTEMPT = 5
         val TAG: String = StartPairingFragment::class.java.simpleName
         fun createInstance(onEditOfficerId: (String) -> Unit): DevicePasswordFragment {
             return DevicePasswordFragment().apply {

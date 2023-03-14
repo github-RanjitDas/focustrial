@@ -5,7 +5,9 @@ import com.lawmobile.data.datasource.remote.events.EventsRemoteDataSource
 import com.lawmobile.data.mappers.impl.CameraEventMapper.toDomainList
 import com.lawmobile.data.mappers.impl.CameraEventMapper.toLocal
 import com.lawmobile.data.mappers.impl.CameraEventMapper.toLocalList
+import com.lawmobile.domain.NotificationDictionary
 import com.lawmobile.domain.entities.CameraEvent
+import com.lawmobile.domain.enums.EventTag
 import com.lawmobile.domain.extensions.simpleDateFormat
 import com.lawmobile.domain.repository.events.EventsRepository
 import com.lawmobile.domain.utils.DateHelper
@@ -23,24 +25,41 @@ class EventsRepositoryImpl(
         eventsLocalDataSource.saveEvent(localEvent)
     }
 
+    override suspend fun getNotificationDictionary(): Result<List<NotificationDictionary>> {
+        val result = getResultWithAttempts(ATTEMPTS_TO_GET_CAMERA_EVENTS, ATTEMPTS_DELAY) {
+            eventsRemoteDataSource.getNotificationDictionary()
+        }
+        return when (result) {
+            is Result.Success -> {
+                val transformedList = result.data.map {
+                    NotificationDictionary(it.id, it.name, it.type, it.value, it.note)
+                }
+                Result.Success(transformedList)
+            }
+            is Result.Error -> {
+                Result.Error(result.exception)
+            }
+        }
+    }
+
     override suspend fun getCameraEvents(): Result<List<CameraEvent>> {
-        val todayDate = DateHelper.getTodayDateAtStartOfTheDay()
-        val removeResult = eventsLocalDataSource.deleteOutdatedEvents(todayDate)
-        if (removeResult is Result.Error) return removeResult
+
+        // val todayDate = DateHelper.getTodayDateAtStartOfTheDay()
+        // Clear all previous events.
+        eventsLocalDataSource.clearAllEvents()
+        // if (removeResult is Result.Error) return removeResult
 
         val result = getResultWithAttempts(ATTEMPTS_TO_GET_CAMERA_EVENTS, ATTEMPTS_DELAY) {
             eventsRemoteDataSource.getCameraEvents()
         }
-
         return when (result) {
             is Result.Success -> {
                 val remoteEventList = result.data
                     .toDomainList()
                     .distinct()
                     .toList()
-                    .filter { it.date.simpleDateFormat() >= DateHelper.getTodayDateAtStartOfTheDay() }
+                    .filter { it.eventTag == EventTag.NOTIFICATION }
                     .let { manageEventsReadStatus(it) }
-
                 val saveResult = saveEventsInLocal(remoteEventList)
                 return if (saveResult is Result.Error) saveResult
                 else {
@@ -58,7 +77,7 @@ class EventsRepositoryImpl(
             val resultRemoteEvents = getCameraEvents()
             resultRemoteEvents.doIfSuccess {
                 areCameraEventsRetrieved = true
-                return getNotificationEventsResult()
+                return Result.Success(it)
             }
 
             return Result.Error(Exception("Error to retrieving camera events"))
@@ -80,7 +99,7 @@ class EventsRepositoryImpl(
             val resultRemoteEvents = getCameraEvents()
             resultRemoteEvents.doIfSuccess {
                 areCameraEventsRetrieved = true
-                return eventsLocalDataSource.getPendingNotificationsCount()
+                return Result.Success(it.size)
             }
 
             return Result.Error(Exception("Error to retrieving camera events"))
@@ -128,8 +147,12 @@ class EventsRepositoryImpl(
     private suspend fun saveEventsResult(remoteEventList: List<CameraEvent>): Result<Unit> {
         val localEventList = remoteEventList.toLocalList()
         return when (val result = eventsLocalDataSource.saveAllEvents(localEventList)) {
-            is Result.Success -> Result.Success(Unit)
-            is Result.Error -> result
+            is Result.Success -> {
+                Result.Success(Unit)
+            }
+            is Result.Error -> {
+                result
+            }
         }
     }
 

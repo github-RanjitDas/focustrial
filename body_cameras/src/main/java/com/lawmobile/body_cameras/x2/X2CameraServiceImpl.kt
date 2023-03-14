@@ -3,6 +3,7 @@ package com.lawmobile.body_cameras.x2
 import com.lawmobile.body_cameras.CameraServiceImpl
 import com.lawmobile.body_cameras.entities.CameraFile
 import com.lawmobile.body_cameras.entities.LogEvent
+import com.lawmobile.body_cameras.entities.NotificationDictionary
 import com.lawmobile.body_cameras.entities.NotificationResponse
 import com.lawmobile.body_cameras.entities.PhotoInformation
 import com.lawmobile.body_cameras.entities.SetupConfiguration
@@ -34,6 +35,20 @@ class X2CameraServiceImpl(
         canReadNotification = false
         val command =
             XCameraCommand.Builder().addMsgId(XCameraCommandCodes.GET_BATTERY.commandValue).build()
+
+        val response = commandHelper.getResponseParam(command)
+        canReadNotification = true
+        response.doIfSuccess {
+            return Result.Success(it.toInt())
+        }
+
+        return Result.Error(Exception("Command doesn't work"))
+    }
+
+    override suspend fun getCameraSettings(messageId: Int): Result<Int> {
+        canReadNotification = false
+        val command =
+            XCameraCommand.Builder().addMsgId(messageId).build()
 
         val response = commandHelper.getResponseParam(command)
         canReadNotification = true
@@ -82,6 +97,10 @@ class X2CameraServiceImpl(
         return response
     }
 
+    override suspend fun getNotificationDictionary(): Result<List<NotificationDictionary>> {
+        return fileInformationHelper.getNotificationDictionary()
+    }
+
     override fun reviewIfArriveNotificationInCMDSocket() {
         notificationCameraHelper.reviewIfSocketHasBytesAvailableForNotification(
             notificationCallback = {
@@ -128,6 +147,20 @@ class X2CameraServiceImpl(
         }
 
         return responseWrite
+    }
+
+    override suspend fun turnOnBluetooth(): Result<Unit> {
+        val command =
+            XCameraCommand.Builder().addMsgId(XCameraCommandCodes.TURN_ON_BLUETOOTH.commandValue)
+                .build()
+        return commandHelper.isCommandSuccess(command)
+    }
+
+    override suspend fun turnOffBluetooth(): Result<Unit> {
+        val command =
+            XCameraCommand.Builder().addMsgId(XCameraCommandCodes.TURN_OFF_BLUETOOTH.commandValue)
+                .build()
+        return commandHelper.isCommandSuccess(command)
     }
 
     companion object {

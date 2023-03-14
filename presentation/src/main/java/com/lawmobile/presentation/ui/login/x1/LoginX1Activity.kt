@@ -32,6 +32,7 @@ class LoginX1Activity : LoginBaseActivity() {
         overridePendingTransition(0, R.anim.fade_out)
         baseViewModel = viewModel
         setCollectors()
+        updateInstructionText(false)
         restoreBottomSheetState()
     }
 

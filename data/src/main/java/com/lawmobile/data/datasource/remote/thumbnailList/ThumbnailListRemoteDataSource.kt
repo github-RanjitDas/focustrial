@@ -7,4 +7,5 @@ import com.safefleet.mobile.kotlin_commons.helpers.Result
 interface ThumbnailListRemoteDataSource {
     suspend fun getImageBytes(cameraFile: CameraFile): Result<ByteArray>
     suspend fun getSnapshotList(): Result<FileResponseWithErrors>
+    suspend fun getVideoList(): Result<FileResponseWithErrors>
 }

@@ -10,12 +10,14 @@ import com.lawmobile.body_cameras.entities.CameraUser
 import com.lawmobile.body_cameras.entities.Config
 import com.lawmobile.body_cameras.entities.FileResponseWithErrors
 import com.lawmobile.body_cameras.entities.LogEvent
+import com.lawmobile.body_cameras.entities.NotificationDictionary
 import com.lawmobile.body_cameras.entities.NotificationResponse
 import com.lawmobile.body_cameras.entities.PhotoInformation
 import com.lawmobile.body_cameras.entities.SetupConfiguration
 import com.lawmobile.body_cameras.entities.VideoFileInfo
 import com.lawmobile.body_cameras.entities.VideoInformation
 import com.lawmobile.body_cameras.enums.CameraType
+import com.lawmobile.body_cameras.enums.CatalogTypesDto
 import com.lawmobile.body_cameras.enums.FileListType
 import com.lawmobile.body_cameras.enums.XCameraCommandCodes
 import com.lawmobile.body_cameras.enums.XCameraCommandTypes
@@ -58,14 +60,16 @@ open class CameraServiceImpl(
         ipAddressClient: String
     ) = verifyCommandWithProgress(
         XCameraCommandCodes.VERIFY_CLIENT_INFO,
-        CameraConstants.PROGRESS_CLIENT_INFO, ipAddressClient
+        CameraConstants.PROGRESS_CLIENT_INFO,
+        ipAddressClient
     )
 
     private suspend fun verifyDeviceInfo(
         ipAddressClient: String
     ) = verifyCommandWithProgress(
         XCameraCommandCodes.VERIFY_DEVICE_INFO,
-        CameraConstants.PROGRESS_DEVICE_INFO, ipAddressClient
+        CameraConstants.PROGRESS_DEVICE_INFO,
+        ipAddressClient
     )
 
     override suspend fun resetViewFinder(
@@ -207,22 +211,34 @@ open class CameraServiceImpl(
         return result
     }
 
-    override suspend fun getCatalogInfo(): Result<List<CameraCatalog>> {
-        canReadNotification = false
-        getResultWithAttempts(ATTEMPTS_IN_RETRY) {
-            commandHelper.getNumberOfSnapshots()
-        }.doIfSuccess {
-            numberOfPhotosInCamera = it
-        }
-
-        getResultWithAttempts(ATTEMPTS_IN_RETRY) {
-            fileInformationHelper.getFileInformation(CameraConstants.PATH_DOWNLOAD_CATALOGS)
-        }.doIfSuccess {
+    override suspend fun getCatalogInfo(supportedCatalog: CatalogTypesDto): Result<List<CameraCatalog>> {
+        try {
+            canReadNotification = false
+            // TODO: Check later if this code to get number of snapshots is required here?
+            getResultWithAttempts(ATTEMPTS_IN_RETRY) {
+                commandHelper.getNumberOfSnapshots()
+            }.doIfSuccess {
+                numberOfPhotosInCamera = it
+            }
+            getResultWithAttempts(ATTEMPTS_IN_RETRY) {
+                var filePath = CameraConstants.PATH_EVENTS
+                if (supportedCatalog == CatalogTypesDto.CATEGORIES) {
+                    filePath = CameraConstants.PATH_CATEGORIES
+                }
+                fileInformationHelper.getFileInformation(filePath)
+            }.doIfSuccess {
+                canReadNotification = true
+                return if (supportedCatalog == CatalogTypesDto.EVENT) {
+                    CameraCatalog.createInstanceListWithStringX1(String(it))
+                } else {
+                    metadataHelper.getCategoryInfoList(it)
+                }
+            }
             canReadNotification = true
-            return CameraCatalog.createInstanceListWithStringX1(String(it))
+        } catch (e: Exception) {
+            println("Error in get Catalog" + e.message)
         }
-        canReadNotification = true
-        return Result.Error(Exception("Error in get events"))
+        return Result.Error(Exception("Error in get Catalog"))
     }
 
     override suspend fun saveVideoMetadata(videoInformation: VideoInformation): Result<Unit> {
@@ -387,11 +403,19 @@ open class CameraServiceImpl(
         return Result.Error(Exception(FEATURE_NOT_SUPPORTED))
     }
 
+    override suspend fun getNotificationDictionary(): Result<List<NotificationDictionary>> {
+        return Result.Error(Exception(FEATURE_NOT_SUPPORTED))
+    }
+
     override fun getCanReadNotification(): Boolean {
         return canReadNotification
     }
 
     override suspend fun getBodyWornDiagnosis(): Result<Boolean> {
+        return Result.Error(Exception(FEATURE_NOT_SUPPORTED))
+    }
+
+    override suspend fun getCameraSettings(messageId: Int): Result<Int> {
         return Result.Error(Exception(FEATURE_NOT_SUPPORTED))
     }
 
@@ -416,9 +440,7 @@ open class CameraServiceImpl(
     }
 
     private suspend fun connectCameraCMDSocket(hostnameToConnect: String): Boolean {
-        return when (
-            val connectCameraCMD = commandHelper.connectCMDSocket(hostnameToConnect)
-        ) {
+        return when (val connectCameraCMD = commandHelper.connectCMDSocket(hostnameToConnect)) {
             is Result.Success -> {
                 progressPairingCamera?.invoke(Result.Success(CameraConstants.PROGRESS_CONNECT_CAMERA))
                 true

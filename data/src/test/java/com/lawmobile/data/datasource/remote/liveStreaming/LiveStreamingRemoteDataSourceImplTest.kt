@@ -1,6 +1,7 @@
 package com.lawmobile.data.datasource.remote.liveStreaming
 
 import com.lawmobile.body_cameras.CameraService
+import com.lawmobile.body_cameras.enums.CatalogTypesDto
 import com.lawmobile.data.utils.CameraServiceFactory
 import com.safefleet.mobile.kotlin_commons.helpers.Result
 import io.mockk.coEvery
@@ -123,9 +124,9 @@ class LiveStreamingRemoteDataSourceImplTest {
 
     @Test
     fun testGetCatalogInfoSuccess() {
-        coEvery { cameraService.getCatalogInfo() } returns Result.Success(mockk())
-        runBlocking { liveStreamingRemoteDataSourceImpl.getCatalogInfo() }
-        coVerify { cameraService.getCatalogInfo() }
+        coEvery { cameraService.getCatalogInfo(CatalogTypesDto.CATEGORIES) } returns Result.Success(mockk())
+        runBlocking { liveStreamingRemoteDataSourceImpl.getCatalogInfo(CatalogTypesDto.CATEGORIES) }
+        coVerify { cameraService.getCatalogInfo(CatalogTypesDto.CATEGORIES) }
     }
 
     @Test

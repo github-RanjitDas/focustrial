@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
+import com.lawmobile.domain.entities.CameraInfo
 import com.lawmobile.domain.entities.ParametersBodyWornSettings
 import com.lawmobile.domain.enums.TypesOfBodyWornSettings
 import com.lawmobile.presentation.R
@@ -47,6 +48,16 @@ class SettingsBarFragment : BaseFragment() {
         viewModel.getBodyCameraSettings()
     }
 
+    private fun initWithDefault() {
+        setCurrentStatusBar(
+            ParametersBodyWornSettings(
+                CameraInfo.isCovertModeEnable,
+                CameraInfo.isBluetoothEnable,
+                false
+            )
+        )
+    }
+
     private fun setObservers() {
         viewModel.bodyCameraSettings.observe(
             viewLifecycleOwner,
@@ -58,8 +69,16 @@ class SettingsBarFragment : BaseFragment() {
         )
     }
 
+    override fun onResume() {
+        super.onResume()
+        viewModel.getBodyCameraSettingsInBg()
+    }
+
     private fun manageBodyCameraSettingsResult(result: Result<ParametersBodyWornSettings>) {
         result.doIfSuccess(::setCurrentStatusBar)
+        result.doIfError {
+            initWithDefault()
+        }
         activity?.runOnUiThread { hideLoadingDialog() }
     }
 

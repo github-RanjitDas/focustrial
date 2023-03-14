@@ -100,7 +100,9 @@ class VideoPlaybackViewModelTest {
             }
         )
 
-        coEvery { getMetadataEvents.getCatalogInfo() } returns Result.Success(metadataEvents)
+        coEvery { getMetadataEvents.getCatalogInfo(CatalogTypes.EVENT) } returns Result.Success(
+            metadataEvents
+        )
         mediaInformationMock()
         videoInformationMock()
 
@@ -111,19 +113,21 @@ class VideoPlaybackViewModelTest {
             Assert.assertEquals(metadataEvents, CameraInfo.metadataEvents)
         }
         coVerify {
-            getMetadataEvents.getCatalogInfo()
+            getMetadataEvents.getCatalogInfo(CatalogTypes.EVENT)
             informationManager.setSpinners()
         }
     }
 
     @Test
-    fun testGetMetadataEventsError() {
+    fun testGetMetadataEventsError() = runBlockingTest {
         every { CameraInfo.metadataEvents } returns mutableListOf()
 
         val videoFile: DomainCameraFile = mockk(relaxed = true)
         val exception = Exception()
 
-        coEvery { getMetadataEvents.getCatalogInfo() } returns Result.Error(exception)
+        coEvery { getMetadataEvents.getCatalogInfo(CatalogTypes.CATEGORIES) } returns Result.Error(
+            exception
+        )
         mediaInformationMock()
         videoInformationMock()
 
@@ -133,7 +137,7 @@ class VideoPlaybackViewModelTest {
         testScope.launch {
             Assert.assertEquals(exception, viewModel.videoInformationException.first())
         }
-        coVerify { getMetadataEvents.getCatalogInfo() }
+        coVerify { getMetadataEvents.getCatalogInfo(any()) }
     }
 
     @Test

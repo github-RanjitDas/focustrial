@@ -118,6 +118,7 @@ dependencies {
     implementation Dependencies.Kotlin.standardLibrary
 
     testImplementation Dependencies.JUnit.junit
+    testImplementation project(path: ':presentation')
     androidTestImplementation Dependencies.Espresso.espressoCore
     androidTestImplementation Dependencies.Espresso.idlingResource
     implementation Dependencies.Espresso.idlingResource
