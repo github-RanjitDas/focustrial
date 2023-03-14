@@ -17,6 +17,7 @@ import com.lawmobile.presentation.databinding.FragmentStatusBarBinding
 import com.lawmobile.presentation.extensions.setOnClickListenerCheckConnection
 import com.lawmobile.presentation.extensions.showErrorSnackBar
 import com.lawmobile.presentation.ui.base.BaseFragment
+import com.lawmobile.presentation.utils.FeatureSupportHelper
 import com.safefleet.mobile.kotlin_commons.extensions.doIfError
 import com.safefleet.mobile.kotlin_commons.extensions.doIfSuccess
 import com.safefleet.mobile.kotlin_commons.helpers.Result
@@ -133,19 +134,23 @@ class SettingsBarFragment : BaseFragment() {
 
     private fun setListenersForChangeTheStatus() = with(binding) {
         imageButtonBluetooth.setOnClickListenerCheckConnection {
-            imageButtonBluetooth.isActivated = !imageButtonBluetooth.isActivated
-            changeBodyWornSettings(
-                TypesOfBodyWornSettings.Bluetooth,
-                imageButtonBluetooth.isActivated
-            )
+            if (FeatureSupportHelper.supportClickOnBodyWornSettings) {
+                imageButtonBluetooth.isActivated = !imageButtonBluetooth.isActivated
+                changeBodyWornSettings(
+                    TypesOfBodyWornSettings.Bluetooth,
+                    imageButtonBluetooth.isActivated
+                )
+            }
         }
 
         imageButtonCovertMode.setOnClickListenerCheckConnection {
-            imageButtonCovertMode.isActivated = !imageButtonCovertMode.isActivated
-            changeBodyWornSettings(
-                TypesOfBodyWornSettings.CovertMode,
-                imageButtonCovertMode.isActivated
-            )
+            if (FeatureSupportHelper.supportClickOnBodyWornSettings) {
+                imageButtonCovertMode.isActivated = !imageButtonCovertMode.isActivated
+                changeBodyWornSettings(
+                    TypesOfBodyWornSettings.CovertMode,
+                    imageButtonCovertMode.isActivated
+                )
+            }
         }
     }
 
