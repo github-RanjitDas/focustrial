@@ -7,7 +7,7 @@ import com.lawmobile.data.mappers.impl.CameraEventMapper.toLocal
 import com.lawmobile.data.mappers.impl.CameraEventMapper.toLocalList
 import com.lawmobile.domain.NotificationDictionary
 import com.lawmobile.domain.entities.CameraEvent
-import com.lawmobile.domain.enums.EventTag
+import com.lawmobile.domain.enums.EventType
 import com.lawmobile.domain.extensions.simpleDateFormat
 import com.lawmobile.domain.repository.events.EventsRepository
 import com.lawmobile.domain.utils.DateHelper
@@ -58,7 +58,7 @@ class EventsRepositoryImpl(
                     .toDomainList()
                     .distinct()
                     .toList()
-                    .filter { it.eventTag == EventTag.NOTIFICATION }
+                    .filter { it.eventType == EventType.NOTIFICATION }
                     .let { manageEventsReadStatus(it) }
                 val saveResult = saveEventsInLocal(remoteEventList)
                 return if (saveResult is Result.Error) saveResult

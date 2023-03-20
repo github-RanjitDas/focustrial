@@ -20,8 +20,8 @@ class SocketHelper(private var socket: Socket) {
             waitWhileSocketAvailable()
             socket = recreateSocket(socket)
             try {
-                socket.connect(InetSocketAddress(hostname, port), 2000)
-                socket.soTimeout = 1000
+                socket.connect(InetSocketAddress(hostname, port), 3000)
+                socket.soTimeout = 3000
                 isSocketAvailable = true
                 Result.Success(Unit)
             } catch (e: Exception) {

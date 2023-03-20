@@ -56,14 +56,15 @@ class FetchConfigBleManager : BaseBleManager() {
             super.onScanResult(callbackType, result)
             Log.d(
                 TAG,
-                "Scanning Device:" + result.device.name + "," + result.device.address + ", " + result.scanRecord?.deviceName
+                "Scanning Nearby Devices:" + result.device.name + "," + ", " + result.scanRecord?.deviceName
             )
             val bluetoothNameToFind = "X_" + CameraInfo.officerId
+            Log.d(TAG, "Searching for : $bluetoothNameToFind")
             if (result.device.name.equals(bluetoothNameToFind, true) ||
                 result.scanRecord?.deviceName.equals(bluetoothNameToFind, true)
             ) {
                 isCameraDetected = true
-                Log.d(TAG, "Camera FOUND:" + result.device.name + "," + result.device.address)
+                Log.d(TAG, "Camera FOUND:" + result.device.name + "," + result.scanRecord?.deviceName)
                 bluetoothLeScanner.stopScan(this)
                 onBleStatusUpdates.onScanResult(callbackType, result)
             }

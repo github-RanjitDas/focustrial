@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.activityViewModels
+import com.lawmobile.domain.entities.CameraInfo
 import com.lawmobile.domain.entities.customEvents.BluetoothErrorEvent
 import com.lawmobile.domain.entities.customEvents.InternetErrorEvent
 import com.lawmobile.presentation.R
@@ -111,6 +112,7 @@ class OfficerIdFragment : BaseFragment() {
     private fun FragmentValidateOfficerIdBinding.editTextOfficerIdListener() {
         editTextOfficerId.addTextChangedListener {
             viewModel.officerId = it.toString()
+            CameraInfo.officerId = it.toString()
             setButtonContinueEnable(it.toString().isNotEmpty())
         }
     }

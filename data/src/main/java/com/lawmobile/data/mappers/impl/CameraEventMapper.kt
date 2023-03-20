@@ -23,7 +23,7 @@ object CameraEventMapper :
 
     private fun LocalCameraEvent.toDomain() = CameraEvent(
         name = name,
-        eventType = EventType.CAMERA,
+        eventType = EventType.getByValue(eventType),
         eventTag = EventTag.getByValue(eventTag),
         value = value,
         date = date,
@@ -32,15 +32,15 @@ object CameraEventMapper :
 
     private fun LogEvent.toDomain(): CameraEvent {
         try {
-            val eventType = EventType.CAMERA
+            val eventType = EventType.getByValue(name)
             val eventTag = when {
-                name.contains(EventTag.WARNING.value, true) -> {
+                type.contains(EventTag.WARNING.value, true) -> {
                     EventTag.WARNING
                 }
-                name.contains(EventTag.ERROR.value, true) -> {
+                type.contains(EventTag.ERROR.value, true) -> {
                     EventTag.ERROR
                 }
-                name.contains(EventTag.INFORMATION.value, true) -> {
+                type.contains(EventTag.INFORMATION.value, true) -> {
                     EventTag.INFORMATION
                 }
                 else -> {

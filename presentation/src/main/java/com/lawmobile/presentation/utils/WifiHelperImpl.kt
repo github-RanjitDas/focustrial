@@ -86,7 +86,7 @@ class WifiHelperImpl(
             val specifier = getWifiNetworkSpecifier(networkName, networkPassword)
             val request = getNetworkRequest(specifier)
             val networkCallback = networkCallback(connectionCallback)
-            connectivityManager.requestNetwork(request, networkCallback)
+            connectivityManager.requestNetwork(request, networkCallback, 120000)
         } else {
             val wifiConfig = WifiConfiguration()
             wifiConfig.SSID = java.lang.String.format("\"%s\"", networkName)
