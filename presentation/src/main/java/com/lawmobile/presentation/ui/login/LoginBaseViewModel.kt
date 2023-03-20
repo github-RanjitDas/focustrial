@@ -1,5 +1,6 @@
 package com.lawmobile.presentation.ui.login
 
+import android.os.Handler
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.viewModelScope
@@ -55,12 +56,13 @@ abstract class LoginBaseViewModel(
     }
 
     fun suggestWiFiNetwork(
+        handler: Handler,
         networkName: String,
         networkPassword: String,
         connectionCallback: (connected: Boolean) -> Unit
     ) {
         viewModelScope.launch(ioDispatcher) {
-            wifiHelper.suggestWiFiNetwork(networkName, networkPassword, connectionCallback)
+            wifiHelper.suggestWiFiNetwork(handler, networkName, networkPassword, connectionCallback)
         }
     }
 

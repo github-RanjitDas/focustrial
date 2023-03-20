@@ -3,6 +3,7 @@ package com.lawmobile.presentation.ui.login.x2
 import android.Manifest
 import android.content.Intent
 import android.content.RestrictionsManager
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -178,6 +179,17 @@ class LoginX2Activity : LoginBaseActivity() {
         authRequestResult.observe(this@LoginX2Activity, ::handleAuthRequestResult)
         devicePasswordResult.observe(this@LoginX2Activity, ::handleDevicePasswordResult)
         userFromCameraResult.observe(this@LoginX2Activity, ::handleUserResult)
+        isPermissionDeniedStatus.observe(this@LoginX2Activity, ::handlePermissionDeniedStatus)
+    }
+
+    private fun handlePermissionDeniedStatus(result: Result<Boolean>?) {
+        result?.doIfSuccess {
+            if (it) {
+                showPermissionDeniedDialogAndCloseApp()
+            } else {
+                showPermissionDialogToEducateUser()
+            }
+        }
     }
 
     override fun handleLoginState(loginState: LoginState) {
@@ -185,7 +197,11 @@ class LoginX2Activity : LoginBaseActivity() {
         with(loginState) {
             onOfficerId {
                 showOfficerIdFragment()
-                showPermissionDialogToEducateUser()
+                if (!isPermissionGranted(Manifest.permission.ACCESS_FINE_LOCATION)) {
+                    viewModel.isPermissionsDenied()
+                } else {
+                    showPermissionDialogToEducateUser()
+                }
             }
             onDevicePassword {
                 showDevicePasswordFragment()
@@ -214,14 +230,21 @@ class LoginX2Activity : LoginBaseActivity() {
             doIfSuccess {
                 Log.d(TAG, "SSO Completed with Success:$result")
                 val hotspotName = "X$officerId"
-                Log.d(TAG, "Connect with Wifi :Name: $hotspotName")
+                Log.d(TAG, "Now Connect with Wifi :Name: $hotspotName")
                 val hotspotPassword = it.takeLast(16)
                 Log.d(TAG, "Password: $it ")
-                viewModel.suggestWiFiNetwork(hotspotName, hotspotPassword) { isConnected ->
-                    state = if (isConnected) LoginState.PairingResult
-                    else LoginState.X2.DevicePassword
+                val handler = Handler(Looper.getMainLooper())
+                viewModel.suggestWiFiNetwork(handler, hotspotName, hotspotPassword) { isConnected ->
+                    if (isConnected) {
+                        waitToEnableContinue()
+                        Log.d(TAG, "Success Connect with Wifi :Name: $hotspotName")
+                        state = LoginState.PairingResult
+                    } else {
+                        waitToEnableContinue()
+                        Log.d(TAG, "Error Connecting with Wifi :Name: $hotspotName")
+                        showRequestError()
+                    }
                 }
-                waitToEnableContinue()
             }
             doIfError {
                 Log.d(TAG, "SSO Completed with Error:$it")
@@ -306,11 +329,26 @@ class LoginX2Activity : LoginBaseActivity() {
         fetchConfigsFromBle()
     }
 
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        if (requestCode == PERMISSION_FOR_LOCATION) {
+            if (grantResults[0] == PackageManager.PERMISSION_DENIED) {
+                viewModel.savePermissionsDeniedValue(true)
+                showPermissionDeniedDialogAndCloseApp()
+            } else {
+                viewModel.savePermissionsDeniedValue(false)
+            }
+        }
+    }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        if (resultCode == RestrictionsManager.RESULT_ERROR_INTERNAL) {
-            state = LoginState.X2.DevicePassword
+        if (resultCode == RestrictionsManager.RESULT_ERROR_INTERNAL || resultCode == RestrictionsManager.RESULT_ERROR) {
+            showRequestError()
         }
 
         if (!viewModel.isUserAuthorized() && data != null) {

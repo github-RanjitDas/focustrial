@@ -5,6 +5,7 @@ import com.lawmobile.domain.entities.customEvents.IncorrectPasswordErrorEvent
 import com.lawmobile.domain.entities.customEvents.InternetErrorEvent
 import com.lawmobile.domain.entities.customEvents.LimitOfLoginAttemptsErrorEvent
 import com.lawmobile.domain.entities.customEvents.LoginRequestErrorEvent
+import com.lawmobile.domain.entities.customEvents.PermissionDeniedErrorEvent
 import com.lawmobile.domain.entities.customEvents.WrongCredentialsEvent
 
 enum class NotificationType(
@@ -106,6 +107,11 @@ enum class NotificationType(
         LimitOfLoginAttemptsErrorEvent.message,
         LimitOfLoginAttemptsErrorEvent.subTitle,
     ),
+    PERMISSIONS_DENIED_ERROR(
+        PermissionDeniedErrorEvent.value,
+        PermissionDeniedErrorEvent.title,
+        PermissionDeniedErrorEvent.message
+    ),
     UNKNOWN_OPERATION(
         "unknown_operation",
         "Unknown operation",
@@ -148,6 +154,7 @@ enum class NotificationType(
                 LIMIT_OF_LOGIN_ATTEMPTS_ERROR.value -> LIMIT_OF_LOGIN_ATTEMPTS_ERROR
                 LOGIN_REQUEST_ERROR.value -> LOGIN_REQUEST_ERROR
                 UNKNOWN_OPERATION.value -> UNKNOWN_OPERATION
+                PERMISSIONS_DENIED_ERROR.value -> PERMISSIONS_DENIED_ERROR
                 else -> DEFAULT
             }
         }

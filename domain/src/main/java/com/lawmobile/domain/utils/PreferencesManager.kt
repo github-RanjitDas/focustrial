@@ -14,4 +14,6 @@ interface PreferencesManager {
     suspend fun saveAuthorizationEndpointUrl(url: String)
     suspend fun getTokenEndpointUrl(): String
     suspend fun saveTokenEndpointUrl(url: String)
+    suspend fun saveIsPermissionsDenied(isPermissionDenied: Boolean)
+    suspend fun getIsPermissionsDenied(): Boolean
 }

@@ -104,7 +104,10 @@
     <string name="playback_driver_license">Driver License</string>
     <string name="playback_license_plate">License Plate</string>
     <string name="select_event">Select event</string>
+    <string name="select_category">Select category</string>
+
     <string name="event_mandatory">Please select Event Type</string>
+    <string name="category_mandatory">Please select Category Type</string>
     <string name="catalog_error">Failed to retrieve the events. Please retry or check the Body Camera again.</string>
     <string name="catalog_error_video_playback">Failed to retrieve the events. Please check the Body Camera again.</string>
     <string name="get_video_metadata_error">Failed to retrieve video metadata. Please try again.</string>
@@ -220,6 +223,7 @@
     <string name="start_date_filter">Start date</string>
     <string name="end_date_filter">End date</string>
     <string name="no_event">No event</string>
+    <string name="no_category">No category</string>
     <string name="error_get_information_metadata">Failed to retrieve video information. Please try again.</string>
     <string name="error_getting_officer_information">Failed to retrieve officer information. Please retry or check the Body Camera.</string>
     <string name="verify_body_camera_hotspot" tools:ignore="ExtraTranslation">Verify your Body-Camera\'s hotspot is ON.</string>
@@ -319,6 +323,7 @@
     <string name="reset">Reset</string>
     <string name="location_permission_title">Location Permission</string>
     <string name="location_permission_description">This app needs location permission to scan and connect to nearby devices</string>
+    <string name="location_permission_denied_description">you have denied required permissions for app to work and the app will be closed</string>
     <string name="button_allow_permissions">Allow Permission</string>
-
+    <string name="button_close">Close</string>
 </resources>

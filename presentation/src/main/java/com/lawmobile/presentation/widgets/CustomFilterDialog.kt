@@ -11,6 +11,7 @@ import com.lawmobile.domain.entities.CameraInfo
 import com.lawmobile.domain.entities.DomainInformationFile
 import com.lawmobile.domain.entities.DomainInformationForList
 import com.lawmobile.domain.entities.DomainInformationImage
+import com.lawmobile.domain.enums.BackOfficeType
 import com.lawmobile.domain.extensions.getDateDependingOnNameLength
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.databinding.FileListFilterDialogBinding
@@ -64,9 +65,14 @@ class CustomFilterDialog constructor(
     }
 
     private fun setEventsSpinner() {
+        var selectText = context.getString(R.string.select_event)
+        var noDataText = context.getString(R.string.no_event)
+        if (CameraInfo.backOfficeType == BackOfficeType.NEXUS) {
+            selectText = context.getString(R.string.select_category)
+            noDataText = context.getString(R.string.no_category)
+        }
         val events = mutableListOf(
-            context.getString(R.string.select_event),
-            context.getString(R.string.no_event)
+            selectText, noDataText
         ).apply { addAll(CameraInfo.metadataEvents.map { it.name }) }
         binding.eventsSpinnerFilter.adapter = ArrayAdapter(context, R.layout.spinner_item, events)
     }
@@ -121,10 +127,16 @@ class CustomFilterDialog constructor(
     }
 
     private fun cancelChangesAndRestore() = with(binding) {
+        var selectText = context.getString(R.string.select_event)
+        var noDataText = context.getString(R.string.no_event)
+        if (CameraInfo.backOfficeType == BackOfficeType.NEXUS) {
+            selectText = context.getString(R.string.select_category)
+            noDataText = context.getString(R.string.no_category)
+        }
         when (currentFilters.getOrNull(EVENT_POSITION)) {
-            "", null, context.getString(R.string.select_event) ->
+            "", null, selectText ->
                 eventsSpinnerFilter.setSelection(0)
-            context.getString(R.string.no_event) ->
+            noDataText ->
                 eventsSpinnerFilter.setSelection(1)
             else -> {
                 val eventIndex = getEventIndexFromList() + 2

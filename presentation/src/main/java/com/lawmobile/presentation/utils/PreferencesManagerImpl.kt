@@ -2,6 +2,7 @@ package com.lawmobile.presentation.utils
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import com.lawmobile.domain.entities.CameraInfo
@@ -63,6 +64,17 @@ class PreferencesManagerImpl(private val dataStore: DataStore<Preferences>) : Pr
             preferences[TOKEN_ENDPOINT] = url
         }
     }
+    override suspend fun saveIsPermissionsDenied(isPermissionDenied: Boolean) {
+        dataStore.edit { preferences ->
+            preferences[PERMISSION_STATUS] = isPermissionDenied
+        }
+    }
+
+    override suspend fun getIsPermissionsDenied(): Boolean {
+        return dataStore.data.map { preferences ->
+            preferences[PERMISSION_STATUS] ?: false
+        }.first()
+    }
 
     override suspend fun getSafeFleetIdConfigUrl(): String {
         return dataStore.data.map { preferences ->
@@ -94,6 +106,7 @@ class PreferencesManagerImpl(private val dataStore: DataStore<Preferences>) : Pr
         private val USERS_ENDPOINT = stringPreferencesKey("users_endpoint")
         private val AUTHORIZATION_ENDPOINT = stringPreferencesKey("authorization_endpoint")
         private val TOKEN_ENDPOINT = stringPreferencesKey("token_endpoint")
+        private val PERMISSION_STATUS = booleanPreferencesKey("permission_status")
         private val DISCOVERY_ENDPOINT = stringPreferencesKey("discovery_endpoint")
         private val TENANT_ID = stringPreferencesKey("tenant_id")
         private val SERIAL_NUMBER = stringPreferencesKey("serial_number")

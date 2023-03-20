@@ -1,5 +1,7 @@
 package com.lawmobile.presentation.ui.login
 
+import android.os.Handler
+import android.os.Looper
 import com.lawmobile.domain.entities.User
 import com.lawmobile.domain.usecase.getUserFromCamera.GetUserFromCamera
 import com.lawmobile.presentation.InstantExecutorExtension
@@ -69,9 +71,10 @@ internal class LoginBaseViewModelTest {
 
     @Test
     fun suggestWiFiNetwork() {
-        every { wifiHelper.suggestWiFiNetwork(any(), any(), any()) } returns Unit
-        baseViewModel.suggestWiFiNetwork("", "") {}
-        verify { wifiHelper.suggestWiFiNetwork(any(), any(), any()) }
+        every { wifiHelper.suggestWiFiNetwork(any(), any(), any(), any()) } returns Unit
+        val handler = Handler(Looper.getMainLooper())
+        baseViewModel.suggestWiFiNetwork(handler, "", "") {}
+        verify { wifiHelper.suggestWiFiNetwork(any(), any(), any(), any()) }
     }
 
     @Test
