@@ -70,8 +70,8 @@ fun View.showErrorSnackBar(
     message: String,
     duration: Int = 7000,
     onRetryClick: ((View) -> Unit)? = null
-) {
-    SafeFleetSnackBar.make(
+): SafeFleetSnackBar? {
+    return SafeFleetSnackBar.make(
         SafeFleetSnackBarSettings(
             this,
             message,

@@ -203,6 +203,7 @@
     <string name="selected">Selected</string>
     <string name="date_and_time">Date and time</string>
     <string name="event">Event</string>
+    <string name="category">Category</string>
     <string name="officer_id_hint">Officer ID</string>
     <string name="assign_to_officer_subtitle">Enter officer ID</string>
     <string name="file_item_image_description">File image</string>
@@ -316,4 +317,8 @@
     <string name="return_to_regular_login">Login using Device Password</string>
     <string name="video_still_recording">You cannot access this file at the moment because it is still being recorded</string>
     <string name="reset">Reset</string>
+    <string name="location_permission_title">Location Permission</string>
+    <string name="location_permission_description">This app needs location permission to scan and connect to nearby devices</string>
+    <string name="button_allow_permissions">Allow Permission</string>
+
 </resources>

@@ -215,7 +215,15 @@ class DevicePasswordFragment : BaseFragment(), Instructions, StartPairing {
             networkName, hotspotPassword
         ) { isConnected ->
             if (isConnected) onStartPairingClick?.invoke()
-            else showWrongCredentialsNotification()
+            else {
+                if (incorrectPasswordRetryAttempt >= MAX_INCORRECT_PASSWORD_ATTEMPT) {
+                    showLimitOfLoginAttemptsErrorNotification()
+                } else {
+                    incorrectPasswordRetryAttempt++
+                    showIncorrectPasswordErrorNotification()
+                }
+            }
+            // else showWrongCredentialsNotification()
         }
     }
 

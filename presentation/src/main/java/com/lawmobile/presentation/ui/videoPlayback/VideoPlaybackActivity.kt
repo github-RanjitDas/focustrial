@@ -14,6 +14,7 @@ import com.lawmobile.domain.entities.DomainCameraFile
 import com.lawmobile.domain.entities.DomainInformationVideo
 import com.lawmobile.domain.entities.DomainVideoMetadata
 import com.lawmobile.domain.entities.FilesAssociatedByUser
+import com.lawmobile.domain.enums.BackOfficeType
 import com.lawmobile.domain.extensions.getDateDependingOnNameLength
 import com.lawmobile.domain.extensions.getDurationMinutesLong
 import com.lawmobile.domain.extensions.getDurationMinutesString
@@ -80,7 +81,11 @@ class VideoPlaybackActivity : BaseActivity() {
         binding = ActivityVideoPlaybackBinding.inflate(layoutInflater)
         setContentView(binding.root)
         val videoFile = getCameraConnectFileFromIntent()
-
+        if (CameraInfo.backOfficeType == BackOfficeType.NEXUS) {
+            binding.layoutMetadataForm.eventTitle.text = getString(R.string.category)
+        } else {
+            binding.layoutMetadataForm.eventTitle.text = getString(R.string.event)
+        }
         videoFile?.let {
             setVideoNameAndDate(it)
             metadataManager.setup(binding.layoutMetadataForm, it)

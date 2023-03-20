@@ -36,7 +36,7 @@ enum class NotificationType(
     },
     LOW_BATTERY(
         "low_battery_warning",
-        "Low Battery Warning!",
+        "Low Battery",
         ""
     ) {
         override fun getTypeOfEvent(): EventType {
@@ -49,7 +49,7 @@ enum class NotificationType(
     },
     LOW_STORAGE(
         "low_storage_warning",
-        "Low Storage Warning!",
+        "Low Storage",
         "Your Body Camera is critically low on storage"
     ) {
         override fun getTypeOfEvent(): EventType {

@@ -15,6 +15,7 @@ import com.lawmobile.domain.entities.User
 import com.lawmobile.domain.entities.customEvents.BluetoothErrorEvent
 import com.lawmobile.domain.entities.customEvents.LoginRequestErrorEvent
 import com.lawmobile.domain.enums.BackOfficeType
+import com.lawmobile.domain.enums.CameraType
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.extensions.attachFragmentWithAnimation
 import com.lawmobile.presentation.extensions.createNotificationDialog
@@ -31,15 +32,18 @@ import com.lawmobile.presentation.ui.sso.SSOActivity
 import com.safefleet.mobile.kotlin_commons.extensions.doIfError
 import com.safefleet.mobile.kotlin_commons.extensions.doIfSuccess
 import com.safefleet.mobile.kotlin_commons.helpers.Result
+import com.safefleet.mobile.safefleet_ui.widgets.snackbar.SafeFleetSnackBar
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import net.openid.appauth.AuthorizationException
 import net.openid.appauth.AuthorizationRequest
 import net.openid.appauth.AuthorizationResponse
 import net.openid.appauth.TokenResponse
+import org.json.JSONObject
 
 class LoginX2Activity : LoginBaseActivity() {
 
+    private var snackBarObject: SafeFleetSnackBar? = null
     override val parentTag: String
         get() = this::class.java.simpleName
 
@@ -72,14 +76,38 @@ class LoginX2Activity : LoginBaseActivity() {
         with(result) {
             this?.doIfSuccess { onReceivedConfigFromBle() }
             this?.doIfError {
-                showErrorSnackBar(
-                    R.string.error_getting_config_bluetooth, ::retryBleConnectionToFetchConfigs
-                )
-                hideLoadingDialog()
-                setCollectors()
-                viewModel.setObservers()
+                Log.d(TAG, "Check for saved configs...")
+                val configs = KeystoreHandler.getConfigFromKeystore(this@LoginX2Activity)
+                if (configs == null) {
+                    // Flow Blocked
+                    showError()
+                } else {
+                    Log.d(TAG, "configs not null:$configs")
+                    val jsonObject = JSONObject(configs)
+                    var savedOfficerId = jsonObject.getString("deviceId")
+                    if (CameraInfo.cameraType == CameraType.X2) {
+                        savedOfficerId = "x2$savedOfficerId"
+                    }
+                    Log.d(TAG, "savedOfficerId:$savedOfficerId,officerId$officerId")
+
+                    if (officerId == savedOfficerId) {
+                        Log.d(TAG, "Found Saved Configs from KeyStore : $configs")
+                        viewModel.saveConfigLocally(configs)
+                        onReceivedConfigFromBle()
+                    } else {
+                        // Flow Blocked
+                        showError()
+                    }
+                }
             }
+            hideLoadingDialog()
         }
+    }
+
+    private fun showError() {
+        snackBarObject = showErrorSnackBar(
+            R.string.error_getting_config_bluetooth, ::retryBleConnectionToFetchConfigs
+        )
     }
 
     private fun retryBleConnectionToFetchConfigs() {
@@ -157,7 +185,7 @@ class LoginX2Activity : LoginBaseActivity() {
         with(loginState) {
             onOfficerId {
                 showOfficerIdFragment()
-                verifyLocationPermission()
+                showPermissionDialogToEducateUser()
             }
             onDevicePassword {
                 showDevicePasswordFragment()
@@ -263,22 +291,16 @@ class LoginX2Activity : LoginBaseActivity() {
 
     private fun fetchConfigsFromBle() {
         if (isPermissionGranted(Manifest.permission.ACCESS_FINE_LOCATION)) {
-            val configs = KeystoreHandler.getConfigFromKeystore(this)
-            if (configs == null) {
-                Log.d(TAG, "No Saved configs found, Need to fetch configs from Bluetooth...")
-                runOnUiThread {
-                    initBleConnectionToFetchConfigs()
-                }
-            } else {
-                Log.d(TAG, "No Need to fetch configs from Bluetooth.")
-                Log.d(TAG, "Found Saved Configs from KeyStore : $configs")
-                viewModel.saveConfigLocally(configs)
-                onReceivedConfigFromBle()
+            runOnUiThread {
+                initBleConnectionToFetchConfigs()
             }
         }
     }
 
     private fun onContinueClick(officerId: String) {
+        if (snackBarObject != null && snackBarObject!!.isShown) {
+            snackBarObject!!.dismiss()
+        }
         this.officerId = officerId
         CameraInfo.officerId = officerId
         fetchConfigsFromBle()
@@ -327,7 +349,6 @@ class LoginX2Activity : LoginBaseActivity() {
                 )
             }
             doIfError {
-                hideLoadingDialog()
                 Log.d(TAG, "onTokenResponse:Error:$it")
                 showRequestError()
             }
@@ -336,8 +357,7 @@ class LoginX2Activity : LoginBaseActivity() {
 
     private fun goToSsoLogin(authRequest: AuthorizationRequest) {
         Log.d(
-            "SSO",
-            CameraInfo.officerId + "," + CameraInfo.discoveryUrl + "," + CameraInfo.tenantId
+            "SSO", CameraInfo.officerId + "," + CameraInfo.discoveryUrl + "," + CameraInfo.tenantId
         )
         this.authRequest = authRequest
         val intent = Intent(baseContext, SSOActivity::class.java)

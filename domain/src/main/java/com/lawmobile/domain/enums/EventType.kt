@@ -7,12 +7,21 @@ enum class EventType(val value: String) {
 
     companion object {
         fun getByValue(value: String): EventType {
-            return when (value) {
-                NOTIFICATION.value -> NOTIFICATION
-                CAMERA.value -> CAMERA
-                DIAGNOSIS.value -> DIAGNOSIS
-                else -> throw Exception("Event type not supported or does not exist")
+            val eventType = when {
+                value.contains(NOTIFICATION.value, true) -> {
+                    NOTIFICATION
+                }
+                value.contains(CAMERA.value, true) -> {
+                    CAMERA
+                }
+                value.contains(DIAGNOSIS.value, true) -> {
+                    DIAGNOSIS
+                }
+                else -> {
+                    CAMERA
+                }
             }
+            return eventType
         }
     }
 }

@@ -1,6 +1,7 @@
 package com.lawmobile.presentation.ui.login
 
 import android.Manifest
+import android.app.AlertDialog
 import android.os.Bundle
 import android.widget.TextView
 import androidx.cardview.widget.CardView
@@ -12,6 +13,7 @@ import com.lawmobile.presentation.R
 import com.lawmobile.presentation.databinding.ActivityLoginBinding
 import com.lawmobile.presentation.extensions.activityCollect
 import com.lawmobile.presentation.extensions.attachFragmentWithAnimation
+import com.lawmobile.presentation.extensions.isPermissionGranted
 import com.lawmobile.presentation.extensions.showErrorSnackBar
 import com.lawmobile.presentation.extensions.verifyForAskingPermission
 import com.lawmobile.presentation.extensions.verifySessionBeforeAction
@@ -24,6 +26,7 @@ import com.safefleet.mobile.android_commons.extensions.hideKeyboard
 import com.safefleet.mobile.kotlin_commons.extensions.doIfError
 import com.safefleet.mobile.kotlin_commons.extensions.doIfSuccess
 import com.safefleet.mobile.kotlin_commons.helpers.Result
+import com.safefleet.mobile.safefleet_ui.widgets.snackbar.SafeFleetSnackBar
 
 abstract class LoginBaseActivity : BaseActivity() {
 
@@ -65,7 +68,9 @@ abstract class LoginBaseActivity : BaseActivity() {
     }
 
     protected open fun handleLoginState(loginState: LoginState) {
-        loginState.onPairingResult { showPairingResultFragment() }
+        loginState.onPairingResult {
+            showPairingResultFragment()
+        }
     }
 
     protected open fun handleUserResult(result: Result<User>) {
@@ -122,7 +127,25 @@ abstract class LoginBaseActivity : BaseActivity() {
         else sheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
     }
 
-    fun verifyLocationPermission() {
+    fun showPermissionDialogToEducateUser() {
+        if (!isPermissionGranted(Manifest.permission.ACCESS_FINE_LOCATION)) {
+            val builder = AlertDialog.Builder(this)
+            builder.setTitle(getString(R.string.location_permission_title))
+            builder.setCancelable(false)
+            builder.setMessage(getString(R.string.location_permission_description))
+            builder.setPositiveButton(getString(R.string.button_allow_permissions)) { dialog, _ ->
+                dialog.cancel()
+                verifyLocationPermission()
+            }
+//        builder.setNegativeButton("Exit") { dialog, which ->
+//            dialog.cancel()
+//            this.finish()
+//        }
+            builder.show()
+        }
+    }
+
+    private fun verifyLocationPermission() {
         this.verifyForAskingPermission(
             Manifest.permission.ACCESS_FINE_LOCATION, PERMISSION_FOR_LOCATION
         )
@@ -147,9 +170,9 @@ abstract class LoginBaseActivity : BaseActivity() {
         }
     }
 
-    fun showErrorSnackBar(message: Int, retry: () -> Unit) {
+    fun showErrorSnackBar(message: Int, retry: () -> Unit): SafeFleetSnackBar? {
         hideKeyboard()
-        binding.root.showErrorSnackBar(
+        return binding.root.showErrorSnackBar(
             getString(message), Snackbar.LENGTH_INDEFINITE
         ) {
             retry.invoke()

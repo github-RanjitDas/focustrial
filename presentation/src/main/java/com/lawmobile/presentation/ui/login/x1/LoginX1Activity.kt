@@ -41,7 +41,7 @@ class LoginX1Activity : LoginBaseActivity() {
         with(loginState) {
             onStartPairing {
                 showStartPairingFragment()
-                verifyLocationPermission()
+                showPermissionDialogToEducateUser()
                 setInstructionsListener()
                 setStartPairingListener()
             }
