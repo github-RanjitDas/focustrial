@@ -1,5 +1,6 @@
 package com.lawmobile.presentation.ui.login.shared
 
+import android.os.Handler
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.viewModelScope
@@ -75,12 +76,13 @@ class PairingViewModel @Inject constructor(
     }
 
     fun suggestWiFiNetwork(
+        handler: Handler,
         networkName: String,
         networkPassword: String,
         connectionCallback: (connected: Boolean) -> Unit
     ) {
         viewModelScope.launch {
-            wifiHelper.suggestWiFiNetwork(networkName, networkPassword, connectionCallback)
+            wifiHelper.suggestWiFiNetwork(handler, networkName, networkPassword, connectionCallback)
         }
     }
 

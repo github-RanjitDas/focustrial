@@ -8,7 +8,9 @@ import android.content.ServiceConnection
 import android.location.LocationManager
 import android.net.Uri
 import android.os.Bundle
+import android.os.Handler
 import android.os.IBinder
+import android.os.Looper
 import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
@@ -86,7 +88,6 @@ class DevicePasswordFragment : BaseFragment(), Instructions, StartPairing {
     }
 
     private fun handlePasswordVerificationResult(result: Result<String>?) {
-        hideLoadingDialog()
         result?.doIfSuccess {
             val jsonObject = JSONObject(it)
             val isPasswordCorrect = jsonObject.getBoolean("isSuccess")
@@ -94,6 +95,7 @@ class DevicePasswordFragment : BaseFragment(), Instructions, StartPairing {
                 val hotspotPassword = jsonObject.getString("hotspotPassword")
                 binding.suggestBodyCameraNetwork(hotspotPassword.takeLast(16))
             } else {
+                hideLoadingDialog()
                 if (incorrectPasswordRetryAttempt >= MAX_INCORRECT_PASSWORD_ATTEMPT) {
                     showLimitOfLoginAttemptsErrorNotification()
                 } else {
@@ -103,6 +105,7 @@ class DevicePasswordFragment : BaseFragment(), Instructions, StartPairing {
             }
         }
         result?.doIfError {
+            hideLoadingDialog()
             binding.layoutStartPairing.showErrorSnackBar(getString(R.string.error_getting_config_bluetooth))
         }
     }
@@ -211,19 +214,27 @@ class DevicePasswordFragment : BaseFragment(), Instructions, StartPairing {
 
     private fun FragmentStartPairingX2Binding.suggestBodyCameraNetwork(hotspotPassword: String) {
         val networkName = "X" + editTextOfficerId.text.toString()
+        val handler = Handler(Looper.getMainLooper())
         pairingViewModel.suggestWiFiNetwork(
+            handler,
             networkName, hotspotPassword
         ) { isConnected ->
-            if (isConnected) onStartPairingClick?.invoke()
-            else {
-                if (incorrectPasswordRetryAttempt >= MAX_INCORRECT_PASSWORD_ATTEMPT) {
-                    showLimitOfLoginAttemptsErrorNotification()
+            if (isConnected) {
+                hideLoadingDialog()
+                onStartPairingClick?.invoke()
+            } else {
+                hideLoadingDialog()
+                if (CameraInfo.backOfficeType == BackOfficeType.COMMAND_CENTRE) {
+                    if (incorrectPasswordRetryAttempt >= MAX_INCORRECT_PASSWORD_ATTEMPT) {
+                        showLimitOfLoginAttemptsErrorNotification()
+                    } else {
+                        incorrectPasswordRetryAttempt++
+                        showIncorrectPasswordErrorNotification()
+                    }
                 } else {
-                    incorrectPasswordRetryAttempt++
-                    showIncorrectPasswordErrorNotification()
+                    showWrongCredentialsNotification()
                 }
             }
-            // else showWrongCredentialsNotification()
         }
     }
 

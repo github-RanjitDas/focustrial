@@ -389,7 +389,12 @@ class VideoPlaybackActivity : BaseActivity() {
         hideKeyboard()
 
         if (!CameraInfo.metadataEvents.isNullOrEmpty() && !metadataManager.isEventSelected()) {
-            layoutVideoPlayback.showErrorSnackBar(getString(R.string.event_mandatory))
+            if (CameraInfo.backOfficeType == BackOfficeType.NEXUS) {
+                layoutVideoPlayback.showErrorSnackBar(getString(R.string.category_mandatory))
+            } else {
+                layoutVideoPlayback.showErrorSnackBar(getString(R.string.event_mandatory))
+            }
+
             return
         }
 

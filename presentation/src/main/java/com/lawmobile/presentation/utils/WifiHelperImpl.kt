@@ -9,6 +9,7 @@ import android.net.wifi.WifiConfiguration
 import android.net.wifi.WifiManager
 import android.net.wifi.WifiNetworkSpecifier
 import android.os.Build
+import android.os.Handler
 import androidx.annotation.RequiresApi
 import com.lawmobile.domain.entities.CameraInfo
 import com.lawmobile.presentation.connectivity.WifiHelper
@@ -78,6 +79,7 @@ class WifiHelperImpl(
 
     @Suppress("DEPRECATION")
     override fun suggestWiFiNetwork(
+        handler: Handler,
         networkName: String,
         networkPassword: String,
         connectionCallback: (connected: Boolean) -> Unit
@@ -85,8 +87,31 @@ class WifiHelperImpl(
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             val specifier = getWifiNetworkSpecifier(networkName, networkPassword)
             val request = getNetworkRequest(specifier)
-            val networkCallback = networkCallback(connectionCallback)
-            connectivityManager.requestNetwork(request, networkCallback, 120000)
+            var isStuckInFinding = true
+            val networkCallback = object : ConnectivityManager.NetworkCallback() {
+                override fun onAvailable(network: Network) {
+                    isStuckInFinding = false
+                    connectivityManager.bindProcessToNetwork(network)
+                    connectionCallback(true)
+                }
+
+                override fun onUnavailable() {
+                    isStuckInFinding = false
+                    connectionCallback(false)
+                }
+            }
+            handler.postDelayed(
+                {
+                    println("Timer is up for 1Min:$isStuckInFinding")
+                    if (isStuckInFinding) {
+                        println("Unregister and close request because it is stuck in finding the device.")
+                        connectivityManager.unregisterNetworkCallback(networkCallback)
+                        connectionCallback(false)
+                    }
+                },
+                60000
+            )
+            connectivityManager.requestNetwork(request, networkCallback)
         } else {
             val wifiConfig = WifiConfiguration()
             wifiConfig.SSID = java.lang.String.format("\"%s\"", networkName)

@@ -1,5 +1,7 @@
 package com.lawmobile.presentation.ui.login.shared
 
+import android.os.Handler
+import android.os.Looper
 import com.lawmobile.domain.enums.CameraType
 import com.lawmobile.domain.usecase.pairingPhoneWithCamera.PairingPhoneWithCameraUseCase
 import com.lawmobile.presentation.InstantExecutorExtension
@@ -154,8 +156,9 @@ class PairingViewModelTest {
 
     @Test
     fun suggestWiFiNetwork() {
-        every { wifiHelper.suggestWiFiNetwork(any(), any(), any()) } returns Unit
-        viewModel.suggestWiFiNetwork("", "") {}
-        verify { wifiHelper.suggestWiFiNetwork(any(), any(), any()) }
+        every { wifiHelper.suggestWiFiNetwork(any(), any(), any(), any()) } returns Unit
+        val handler = Handler(Looper.getMainLooper())
+        viewModel.suggestWiFiNetwork(handler, "", "") {}
+        verify { wifiHelper.suggestWiFiNetwork(any(), any(), any(), any()) }
     }
 }

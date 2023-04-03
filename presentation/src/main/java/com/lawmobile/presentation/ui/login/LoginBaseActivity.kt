@@ -9,10 +9,12 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.snackbar.Snackbar
 import com.lawmobile.domain.entities.CameraInfo
 import com.lawmobile.domain.entities.User
+import com.lawmobile.domain.entities.customEvents.PermissionDeniedErrorEvent
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.databinding.ActivityLoginBinding
 import com.lawmobile.presentation.extensions.activityCollect
 import com.lawmobile.presentation.extensions.attachFragmentWithAnimation
+import com.lawmobile.presentation.extensions.createNotificationDialog
 import com.lawmobile.presentation.extensions.isPermissionGranted
 import com.lawmobile.presentation.extensions.showErrorSnackBar
 import com.lawmobile.presentation.extensions.verifyForAskingPermission
@@ -27,6 +29,7 @@ import com.safefleet.mobile.kotlin_commons.extensions.doIfError
 import com.safefleet.mobile.kotlin_commons.extensions.doIfSuccess
 import com.safefleet.mobile.kotlin_commons.helpers.Result
 import com.safefleet.mobile.safefleet_ui.widgets.snackbar.SafeFleetSnackBar
+import kotlin.system.exitProcess
 
 abstract class LoginBaseActivity : BaseActivity() {
 
@@ -137,11 +140,18 @@ abstract class LoginBaseActivity : BaseActivity() {
                 dialog.cancel()
                 verifyLocationPermission()
             }
-//        builder.setNegativeButton("Exit") { dialog, which ->
-//            dialog.cancel()
-//            this.finish()
-//        }
             builder.show()
+        }
+    }
+
+    fun showPermissionDeniedDialogAndCloseApp() {
+        val cameraEvent = PermissionDeniedErrorEvent.event
+        createNotificationDialog(cameraEvent) {
+            setButtonText(resources.getString(R.string.button_close))
+            onConfirmationClick = {
+                this@LoginBaseActivity.finishAffinity()
+                exitProcess(0)
+            }
         }
     }
 

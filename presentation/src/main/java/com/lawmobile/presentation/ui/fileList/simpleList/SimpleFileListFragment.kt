@@ -12,6 +12,7 @@ import com.lawmobile.domain.entities.CameraInfo
 import com.lawmobile.domain.entities.DomainCameraFile
 import com.lawmobile.domain.entities.DomainInformationFile
 import com.lawmobile.domain.entities.DomainInformationFileResponse
+import com.lawmobile.domain.enums.BackOfficeType
 import com.lawmobile.domain.enums.RequestError
 import com.lawmobile.domain.extensions.getDateDependingOnNameLength
 import com.lawmobile.presentation.R
@@ -55,6 +56,11 @@ class SimpleFileListFragment : FileListBaseFragment() {
         setListeners()
         setListType()
         isLoadedOnCreate = true
+        if (CameraInfo.backOfficeType == BackOfficeType.NEXUS) {
+            binding.textViewEvent.text = getString(R.string.category)
+        } else {
+            binding.textViewEvent.text = getString(R.string.event)
+        }
         getFileList()
     }
 

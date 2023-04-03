@@ -17,6 +17,7 @@ import com.lawmobile.domain.entities.CameraInfo
 import kotlin.collections.ArrayList
 
 class FetchConfigBleManager : BaseBleManager() {
+    var context: Context? = null
 
     fun doStartScanning(param: OnBleStatusUpdates) {
         setListener(param)
@@ -64,6 +65,7 @@ class FetchConfigBleManager : BaseBleManager() {
                 result.scanRecord?.deviceName.equals(bluetoothNameToFind, true)
             ) {
                 isCameraDetected = true
+                scanning = false
                 Log.d(TAG, "Camera FOUND:" + result.device.name + "," + result.scanRecord?.deviceName)
                 bluetoothLeScanner.stopScan(this)
                 onBleStatusUpdates.onScanResult(callbackType, result)
@@ -87,7 +89,7 @@ class FetchConfigBleManager : BaseBleManager() {
                 if (newState == BluetoothProfile.STATE_CONNECTED) {
                     Log.d(TAG, "Device get Connected")
                     // successfully connected to the GATT Server
-                    gatt.requestMtu(512)
+                    gatt.discoverServices()
                 } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
                     Log.d(TAG, "Device get Disconnect")
                     // disconnected from the GATT Server
@@ -97,12 +99,6 @@ class FetchConfigBleManager : BaseBleManager() {
                 gatt.close()
                 onBleStatusUpdates.onFailedFetchConfig()
             }
-        }
-
-        override fun onMtuChanged(gatt: BluetoothGatt?, mtu: Int, status: Int) {
-            Log.d(TAG, "onMtuChanged:$mtu")
-            // Call to discover services...
-            gatt?.discoverServices()
         }
 
         override fun onServicesDiscovered(gatt: BluetoothGatt?, status: Int) {

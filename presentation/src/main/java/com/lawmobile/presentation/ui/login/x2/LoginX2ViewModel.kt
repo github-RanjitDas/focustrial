@@ -67,6 +67,9 @@ class LoginX2ViewModel @Inject constructor(
     val updateConfigProgress: LiveData<Result<String>> get() = _updateConfigProgress
     private val _updateConfigProgress by lazy { MediatorLiveData<Result<String>>() }
 
+    val isPermissionDeniedStatus: LiveData<Result<Boolean>> get() = _isPermissionDeniedStatus
+    private val _isPermissionDeniedStatus by lazy { MediatorLiveData<Result<Boolean>>() }
+
     fun getAuthorizationEndpoints() {
         viewModelScope.launch(ioDispatcher) {
             _authEndpointsResult.postValue(loginUseCases.getAuthorizationEndpoints())
@@ -127,6 +130,7 @@ class LoginX2ViewModel @Inject constructor(
         context: Context,
         retryCallback: KFunction1<Context, Unit>
     ) {
+        bleManager.context = context
         bleManager.doStartScanning(object : OnBleStatusUpdates {
             override fun onScanResult(callbackType: Int, result: ScanResult) {
                 bleManager.doConnectGatt(context, result.device)
@@ -193,6 +197,18 @@ class LoginX2ViewModel @Inject constructor(
     fun verifyInternetConnection(callback: (Boolean) -> Unit) {
         viewModelScope.launch(Dispatchers.IO) {
             simpleNetworkManager.verifyInternetConnection(callback)
+        }
+    }
+
+    fun isPermissionsDenied() {
+        viewModelScope.launch {
+            _isPermissionDeniedStatus.postValue(Result.Success(preferencesManager.getIsPermissionsDenied()))
+        }
+    }
+
+    fun savePermissionsDeniedValue(isPermissionDenied: Boolean) {
+        viewModelScope.launch {
+            preferencesManager.saveIsPermissionsDenied(isPermissionDenied)
         }
     }
 

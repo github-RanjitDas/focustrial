@@ -67,6 +67,7 @@ class PasswordVerificationBleManager : BaseBleManager() {
                 isCameraDetected = true
                 scanning = false
                 Log.d(TAG, "Camera FOUND:" + result.device.name + "," + result.device.address)
+                handler.removeCallbacksAndMessages(null)
                 bluetoothLeScanner.stopScan(this)
                 onBleStatusUpdates.onScanResult(callbackType, result)
             }
@@ -89,7 +90,7 @@ class PasswordVerificationBleManager : BaseBleManager() {
             if (status == BluetoothGatt.GATT_SUCCESS) {
                 if (newState == BluetoothProfile.STATE_CONNECTED) {
                     // successfully connected to the GATT Server
-                    gatt.requestMtu(512)
+                    gatt.discoverServices()
                 } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
                     // disconnected from the GATT Server
                     gatt.disconnect()
@@ -98,12 +99,6 @@ class PasswordVerificationBleManager : BaseBleManager() {
                 gatt.close()
                 onBleStatusUpdates.onFailedFetchConfig()
             }
-        }
-
-        override fun onMtuChanged(gatt: BluetoothGatt?, mtu: Int, status: Int) {
-            Log.d(TAG, "onMtuChanged:$mtu")
-            // Call to discover services...
-            gatt?.discoverServices()
         }
 
         override fun onServicesDiscovered(gatt: BluetoothGatt?, status: Int) {
