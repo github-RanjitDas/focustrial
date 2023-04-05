@@ -24,6 +24,7 @@ import com.lawmobile.presentation.ui.login.shared.Instructions
 import com.lawmobile.presentation.ui.login.shared.PairingResultFragment
 import com.lawmobile.presentation.ui.login.shared.StartPairing
 import com.lawmobile.presentation.ui.login.state.LoginState
+import com.lawmobile.presentation.utils.SFConsoleLogs
 import com.safefleet.mobile.android_commons.extensions.hideKeyboard
 import com.safefleet.mobile.kotlin_commons.extensions.doIfError
 import com.safefleet.mobile.kotlin_commons.extensions.doIfSuccess
@@ -83,6 +84,12 @@ abstract class LoginBaseActivity : BaseActivity() {
                 CameraInfo.officerId = it.id ?: ""
             }
             doIfError {
+                SFConsoleLogs.log(
+                    SFConsoleLogs.Level.ERROR,
+                    SFConsoleLogs.Tags.TAG_CAMERA_ERRORS,
+                    it,
+                    getString(R.string.error_getting_officer_information)
+                )
                 showUserInformationError()
             }
         }

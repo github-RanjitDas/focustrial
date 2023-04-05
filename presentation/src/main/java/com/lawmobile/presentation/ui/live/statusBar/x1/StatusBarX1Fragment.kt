@@ -16,6 +16,7 @@ import com.lawmobile.presentation.extensions.startAnimationIfEnabled
 import com.lawmobile.presentation.ui.helpSection.HelpPageActivity
 import com.lawmobile.presentation.ui.live.statusBar.StatusBarBaseFragment
 import com.lawmobile.presentation.utils.EspressoIdlingResource
+import com.lawmobile.presentation.utils.SFConsoleLogs
 import com.safefleet.mobile.kotlin_commons.extensions.doIfError
 import com.safefleet.mobile.kotlin_commons.extensions.doIfSuccess
 import com.safefleet.mobile.kotlin_commons.helpers.Event
@@ -138,6 +139,12 @@ class StatusBarX1Fragment : StatusBarBaseFragment() {
                 setTextStorageLevel(it)
             }
             doIfError {
+                SFConsoleLogs.log(
+                    SFConsoleLogs.Level.ERROR,
+                    SFConsoleLogs.Tags.TAG_CAMERA_ERRORS,
+                    it,
+                    getString(R.string.storage_level_error)
+                )
                 if (isShowCameraStatusFailedError) {
                     binding.textViewStorageLevels.text = getString(R.string.not_available)
                     progressBarBattery.setProgress(0)

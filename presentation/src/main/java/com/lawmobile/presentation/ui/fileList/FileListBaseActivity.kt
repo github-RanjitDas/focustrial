@@ -23,6 +23,7 @@ import com.lawmobile.presentation.ui.fileList.simpleList.SimpleFileListFragment
 import com.lawmobile.presentation.ui.fileList.state.FileListState
 import com.lawmobile.presentation.ui.fileList.thumbnailList.ThumbnailFileListFragment
 import com.lawmobile.presentation.utils.Constants
+import com.lawmobile.presentation.utils.SFConsoleLogs
 import com.lawmobile.presentation.utils.VLCMediaPlayer
 import com.lawmobile.presentation.widgets.CustomFilterDialog
 import com.safefleet.mobile.android_commons.extensions.hideKeyboard
@@ -261,6 +262,12 @@ abstract class FileListBaseActivity : BaseActivity() {
                     isAssociateDialogOpen = false
                 }
                 doIfError {
+                    SFConsoleLogs.log(
+                        SFConsoleLogs.Level.ERROR,
+                        SFConsoleLogs.Tags.TAG_CAMERA_ERRORS,
+                        it,
+                        getString(R.string.file_list_associate_partner_id_error)
+                    )
                     binding.root.showErrorSnackBar(
                         it.message ?: getString(R.string.file_list_associate_partner_id_error),
                         Snackbar.LENGTH_INDEFINITE

@@ -1,6 +1,5 @@
 package com.lawmobile.presentation.ui.videoPlayback
 
-import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.lawmobile.domain.entities.CameraInfo
 import com.lawmobile.domain.entities.DomainCameraFile
@@ -96,7 +95,6 @@ class VideoPlaybackViewModel @Inject constructor(
                         _videoMetadataResultFlow.emit(Result.Success("Success"))
                     }
                     doIfError {
-                        Log.d(TAG, "Unable to fetch video metadata events: $it")
                         _videoMetadataResultFlow.emit(Result.Error(it))
                     }
                 }

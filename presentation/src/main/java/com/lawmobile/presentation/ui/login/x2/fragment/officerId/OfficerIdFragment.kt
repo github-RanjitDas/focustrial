@@ -17,6 +17,7 @@ import com.lawmobile.presentation.extensions.createNotificationDialog
 import com.lawmobile.presentation.ui.base.BaseFragment
 import com.lawmobile.presentation.ui.onBoardingCards.OnBoardingCardsActivity
 import com.lawmobile.presentation.ui.selectCamera.SelectCameraActivity
+import com.lawmobile.presentation.utils.SFConsoleLogs
 import com.safefleet.mobile.android_commons.extensions.hideKeyboard
 import kotlin.reflect.KFunction1
 
@@ -91,6 +92,12 @@ class OfficerIdFragment : BaseFragment() {
     }
 
     private fun showNoInternetConnectionDialog() {
+        SFConsoleLogs.log(
+            SFConsoleLogs.Level.ERROR,
+            SFConsoleLogs.Tags.TAG_INTERNET_CONNECTION_ERRORS,
+            message = InternetErrorEvent.title
+        )
+
         activity?.runOnUiThread {
             val cameraEvent = InternetErrorEvent.event
             context?.createNotificationDialog(cameraEvent)

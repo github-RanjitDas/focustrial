@@ -30,6 +30,7 @@ import com.lawmobile.presentation.utils.Constants.AUDIO_LIST
 import com.lawmobile.presentation.utils.Constants.FILE_LIST_TYPE
 import com.lawmobile.presentation.utils.Constants.SNAPSHOT_LIST
 import com.lawmobile.presentation.utils.Constants.VIDEO_LIST
+import com.lawmobile.presentation.utils.SFConsoleLogs
 import com.safefleet.mobile.kotlin_commons.extensions.doIfError
 import com.safefleet.mobile.kotlin_commons.extensions.doIfSuccess
 import com.safefleet.mobile.kotlin_commons.helpers.Event
@@ -195,6 +196,12 @@ class ThumbnailFileListFragment : FileListBaseFragment() {
                 } else showEmptyListMessage(binding.fileListRecycler, binding.noFilesTextView)
             }
             doIfError {
+                SFConsoleLogs.log(
+                    SFConsoleLogs.Level.ERROR,
+                    SFConsoleLogs.Tags.TAG_CAMERA_ERRORS,
+                    it,
+                    getString(R.string.file_list_failed_load_files)
+                )
                 binding.fileListLayout.showErrorSnackBar(
                     getString(R.string.file_list_failed_load_files),
                     Snackbar.LENGTH_INDEFINITE
@@ -224,7 +231,14 @@ class ThumbnailFileListFragment : FileListBaseFragment() {
     private fun handleImageBytes(result: Event<Result<DomainInformationImage>>) {
         result.getContentIfNotHandled()?.run {
             doIfSuccess { setImagesInAdapter(it) }
-            doIfError { manageErrorLoadingImageBytes(it) }
+            doIfError {
+                SFConsoleLogs.log(
+                    SFConsoleLogs.Level.ERROR,
+                    SFConsoleLogs.Tags.TAG_CAMERA_ERRORS,
+                    it, "Error loading image bytes"
+                )
+                manageErrorLoadingImageBytes(it)
+            }
         }
     }
 

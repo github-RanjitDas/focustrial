@@ -10,6 +10,7 @@ import com.lawmobile.presentation.extensions.setOnClickListenerCheckConnection
 import com.lawmobile.presentation.extensions.showErrorSnackBar
 import com.lawmobile.presentation.ui.base.BaseActivity
 import com.lawmobile.presentation.ui.bodyWornDiagnosis.state.DiagnosisState
+import com.lawmobile.presentation.utils.SFConsoleLogs
 import com.safefleet.mobile.kotlin_commons.extensions.doIfError
 import com.safefleet.mobile.kotlin_commons.extensions.doIfSuccess
 import com.safefleet.mobile.kotlin_commons.helpers.Result
@@ -57,6 +58,12 @@ class BodyWornDiagnosisActivity : BaseActivity() {
         with(result) {
             doIfSuccess { state = DiagnosisState.Finished(it) }
             doIfError {
+                SFConsoleLogs.log(
+                    SFConsoleLogs.Level.ERROR,
+                    SFConsoleLogs.Tags.TAG_CAMERA_ERRORS,
+                    it,
+                    getString(R.string.error_trying_to_diagnose)
+                )
                 state = DiagnosisState.Start
                 sectionBodyWornStartDiagnosis.showErrorSnackBar(
                     getString(R.string.error_trying_to_diagnose)

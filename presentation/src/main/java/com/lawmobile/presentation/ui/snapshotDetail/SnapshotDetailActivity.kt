@@ -28,6 +28,7 @@ import com.lawmobile.presentation.ui.fileList.thumbnailList.ThumbnailFileListFra
 import com.lawmobile.presentation.ui.snapshotDetail.state.SnapshotDetailState
 import com.lawmobile.presentation.utils.Constants
 import com.lawmobile.presentation.utils.FeatureSupportHelper
+import com.lawmobile.presentation.utils.SFConsoleLogs
 import com.safefleet.mobile.android_commons.extensions.hideKeyboard
 import com.safefleet.mobile.kotlin_commons.extensions.doIfError
 import com.safefleet.mobile.kotlin_commons.extensions.doIfSuccess
@@ -247,7 +248,13 @@ class SnapshotDetailActivity : BaseActivity() {
                     isAssociateDialogOpen = false
                     setCurrentOfficerAssociatedInView()
                 }
-                doIfError {
+                doIfError { exception ->
+                    SFConsoleLogs.log(
+                        SFConsoleLogs.Level.ERROR,
+                        SFConsoleLogs.Tags.TAG_CAMERA_ERRORS,
+                        exception,
+                        getString(R.string.file_list_associate_partner_id_error)
+                    )
                     constraintLayoutDetail.showErrorSnackBar(
                         getString(R.string.file_list_associate_partner_id_error)
                     )
@@ -265,6 +272,12 @@ class SnapshotDetailActivity : BaseActivity() {
                     setSnapshotMetadata()
                 }
                 doIfError {
+                    SFConsoleLogs.log(
+                        SFConsoleLogs.Level.ERROR,
+                        SFConsoleLogs.Tags.TAG_CAMERA_ERRORS,
+                        it,
+                        getString(R.string.snapshot_detail_metadata_error)
+                    )
                     showMetadataNotAvailable()
                     binding.constraintLayoutDetail.showErrorSnackBar(
                         getString(R.string.snapshot_detail_metadata_error),
@@ -288,6 +301,12 @@ class SnapshotDetailActivity : BaseActivity() {
                     setImageWithPath(path)
                 }
                 doIfError {
+                    SFConsoleLogs.log(
+                        SFConsoleLogs.Level.ERROR,
+                        SFConsoleLogs.Tags.TAG_CAMERA_ERRORS,
+                        it,
+                        "Error getting image bytes"
+                    )
                     imageReload.isVisible = true
                 }
 

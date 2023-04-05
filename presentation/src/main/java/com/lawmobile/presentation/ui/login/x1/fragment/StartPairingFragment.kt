@@ -30,6 +30,7 @@ import com.lawmobile.presentation.ui.login.shared.Instructions
 import com.lawmobile.presentation.ui.login.shared.PairingViewModel
 import com.lawmobile.presentation.ui.login.shared.StartPairing
 import com.lawmobile.presentation.ui.selectCamera.SelectCameraActivity
+import com.lawmobile.presentation.utils.SFConsoleLogs
 import com.safefleet.mobile.kotlin_commons.extensions.doIfError
 import com.safefleet.mobile.kotlin_commons.extensions.doIfSuccess
 import com.safefleet.mobile.kotlin_commons.helpers.Result
@@ -176,6 +177,12 @@ class StartPairingFragment : BaseFragment(), Instructions, StartPairing {
         with(result) {
             doIfSuccess { onStartPairingClick?.invoke() }
             doIfError {
+                SFConsoleLogs.log(
+                    SFConsoleLogs.Level.ERROR,
+                    SFConsoleLogs.Tags.TAG_HOTSPOT_CONNECTION_ERRORS,
+                    it,
+                    "Unable to Connect to Socket"
+                )
                 binding.layoutStartPairing.showErrorSnackBar(getString(R.string.verify_camera_wifi))
             }
         }
