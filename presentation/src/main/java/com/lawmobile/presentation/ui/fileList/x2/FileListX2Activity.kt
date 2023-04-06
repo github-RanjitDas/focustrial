@@ -21,6 +21,7 @@ import com.lawmobile.presentation.ui.fileList.shared.ListTypeButtons
 import com.lawmobile.presentation.ui.videoPlayback.VideoPlaybackViewModel
 import com.lawmobile.presentation.utils.Constants
 import com.lawmobile.presentation.utils.FeatureSupportHelper
+import com.lawmobile.presentation.utils.SFConsoleLogs
 import com.safefleet.mobile.kotlin_commons.extensions.doIfError
 import com.safefleet.mobile.kotlin_commons.extensions.doIfSuccess
 
@@ -99,7 +100,12 @@ class FileListX2Activity : FileListBaseActivity() {
                 Log.d(TAG, "Events loaded successfully and saved in cache")
             }
             result.doIfError {
-                Log.e(TAG, "Error loading Events: $it")
+                SFConsoleLogs.log(
+                    SFConsoleLogs.Level.ERROR,
+                    SFConsoleLogs.Tags.TAG_CAMERA_ERRORS,
+                    it,
+                    "Unable to fetch video metadata events"
+                )
             }
         }
     }

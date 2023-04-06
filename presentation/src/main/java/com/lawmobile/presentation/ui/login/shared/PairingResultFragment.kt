@@ -14,6 +14,7 @@ import com.lawmobile.presentation.R
 import com.lawmobile.presentation.databinding.FragmentPairingResultBinding
 import com.lawmobile.presentation.extensions.runWithDelay
 import com.lawmobile.presentation.ui.base.BaseFragment
+import com.lawmobile.presentation.utils.SFConsoleLogs
 import com.safefleet.mobile.kotlin_commons.extensions.doIfError
 import com.safefleet.mobile.kotlin_commons.helpers.Result
 
@@ -94,7 +95,12 @@ class PairingResultFragment : BaseFragment() {
             is Result.Success -> setProgressInViewOfProgress(result.data)
             is Result.Error -> {
                 result.doIfError {
-                    println("Error in Pairing:" + result.exception)
+                    SFConsoleLogs.log(
+                        SFConsoleLogs.Level.ERROR,
+                        SFConsoleLogs.Tags.TAG_HOTSPOT_CONNECTION_ERRORS,
+                        it,
+                        "Error in pairing with camera"
+                    )
                 }
                 showErrorResult()
             }

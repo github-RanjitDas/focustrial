@@ -10,6 +10,7 @@ import com.lawmobile.presentation.databinding.ActivityBodyWornSettingsBinding
 import com.lawmobile.presentation.extensions.setClickListenerCheckConnection
 import com.lawmobile.presentation.extensions.showErrorSnackBar
 import com.lawmobile.presentation.ui.base.BaseActivity
+import com.lawmobile.presentation.utils.SFConsoleLogs
 import com.safefleet.mobile.kotlin_commons.extensions.doIfError
 import com.safefleet.mobile.kotlin_commons.extensions.doIfSuccess
 import com.safefleet.mobile.kotlin_commons.helpers.Result
@@ -87,6 +88,12 @@ class BodyWornSettingsActivity : BaseActivity() {
 
     private fun resultChangeStatusSetting(result: Result<Unit>) {
         result.doIfError {
+            SFConsoleLogs.log(
+                SFConsoleLogs.Level.ERROR,
+                SFConsoleLogs.Tags.TAG_CAMERA_ERRORS,
+                it,
+                getString(R.string.body_worn_settings_error_in_change_settings)
+            )
             returnStatusForErrorInChange()
             binding.rootContent.showErrorSnackBar(getString(R.string.body_worn_settings_error_in_change_settings))
         }
@@ -109,6 +116,12 @@ class BodyWornSettingsActivity : BaseActivity() {
                 setBodyWornSettings(it)
             }
             doIfError {
+                SFConsoleLogs.log(
+                    SFConsoleLogs.Level.ERROR,
+                    SFConsoleLogs.Tags.TAG_CAMERA_ERRORS,
+                    it,
+                    getString(R.string.body_worn_settings_error_in_get_settings)
+                )
                 initWithDefault()
                 binding.rootContent.showErrorSnackBar(
                     getString(R.string.body_worn_settings_error_in_get_settings),

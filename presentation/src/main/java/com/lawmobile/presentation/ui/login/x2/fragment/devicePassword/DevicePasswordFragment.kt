@@ -39,6 +39,7 @@ import com.lawmobile.presentation.ui.login.shared.Instructions
 import com.lawmobile.presentation.ui.login.shared.PairingViewModel
 import com.lawmobile.presentation.ui.login.shared.StartPairing
 import com.lawmobile.presentation.ui.login.x1.fragment.StartPairingFragment
+import com.lawmobile.presentation.utils.SFConsoleLogs
 import com.safefleet.mobile.android_commons.extensions.hideKeyboard
 import com.safefleet.mobile.kotlin_commons.extensions.doIfError
 import com.safefleet.mobile.kotlin_commons.extensions.doIfSuccess
@@ -106,6 +107,12 @@ class DevicePasswordFragment : BaseFragment(), Instructions, StartPairing {
         }
         result?.doIfError {
             hideLoadingDialog()
+            SFConsoleLogs.log(
+                SFConsoleLogs.Level.ERROR,
+                SFConsoleLogs.Tags.TAG_BLUETOOTH_CONNECTION_ERRORS,
+                it,
+                getString(R.string.error_getting_config_bluetooth)
+            )
             binding.layoutStartPairing.showErrorSnackBar(getString(R.string.error_getting_config_bluetooth))
         }
     }
@@ -223,6 +230,11 @@ class DevicePasswordFragment : BaseFragment(), Instructions, StartPairing {
                 hideLoadingDialog()
                 onStartPairingClick?.invoke()
             } else {
+                SFConsoleLogs.log(
+                    SFConsoleLogs.Level.ERROR,
+                    SFConsoleLogs.Tags.TAG_BLUETOOTH_CONNECTION_ERRORS,
+                    message = "Error Connecting with Wifi : $networkName"
+                )
                 hideLoadingDialog()
                 if (CameraInfo.backOfficeType == BackOfficeType.COMMAND_CENTRE) {
                     if (incorrectPasswordRetryAttempt >= MAX_INCORRECT_PASSWORD_ATTEMPT) {
@@ -293,6 +305,12 @@ class DevicePasswordFragment : BaseFragment(), Instructions, StartPairing {
         with(result) {
             doIfSuccess { onStartPairingClick?.invoke() }
             doIfError {
+                SFConsoleLogs.log(
+                    SFConsoleLogs.Level.ERROR,
+                    SFConsoleLogs.Tags.TAG_SOCKET_CONNECTION_ERRORS,
+                    it,
+                    "Unable to Connect to Socket"
+                )
                 binding.layoutStartPairing.showErrorSnackBar(getString(R.string.verify_camera_wifi))
             }
         }

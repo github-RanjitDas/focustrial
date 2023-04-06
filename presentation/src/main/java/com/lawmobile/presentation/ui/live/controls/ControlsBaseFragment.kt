@@ -16,6 +16,7 @@ import com.lawmobile.presentation.extensions.startAnimationIfEnabled
 import com.lawmobile.presentation.ui.base.BaseActivity
 import com.lawmobile.presentation.ui.base.BaseFragment
 import com.lawmobile.presentation.utils.CameraHelper
+import com.lawmobile.presentation.utils.SFConsoleLogs
 import com.lawmobile.presentation.widgets.CustomAudioButton
 import com.lawmobile.presentation.widgets.CustomRecordButton
 import com.lawmobile.presentation.widgets.CustomSnapshotButton
@@ -141,6 +142,12 @@ abstract class ControlsBaseFragment : BaseFragment() {
         updateVideoRecordingStatus(!BaseActivity.isRecordingVideo)
         result.getContentIfNotHandled()?.run {
             doIfError {
+                SFConsoleLogs.log(
+                    SFConsoleLogs.Level.ERROR,
+                    SFConsoleLogs.Tags.TAG_CAMERA_ERRORS,
+                    it,
+                    getString(R.string.error_saving_video)
+                )
                 buttonRecordAudio?.setEnabledState(true)
                 parentLayout.showErrorSnackBar(getString(R.string.error_saving_video))
             }
@@ -156,6 +163,12 @@ abstract class ControlsBaseFragment : BaseFragment() {
         showRecordingIndicator(BaseActivity.isRecordingAudio)
         result.getContentIfNotHandled()?.run {
             doIfError {
+                SFConsoleLogs.log(
+                    SFConsoleLogs.Level.ERROR,
+                    SFConsoleLogs.Tags.TAG_CAMERA_ERRORS,
+                    it,
+                    getString(R.string.error_saving_audio)
+                )
                 parentLayout.showErrorSnackBar(getString(R.string.error_saving_audio))
             }
         }
@@ -185,6 +198,12 @@ abstract class ControlsBaseFragment : BaseFragment() {
                 parentLayout.showSuccessSnackBar(getString(R.string.live_view_take_photo_success))
             }
             doIfError {
+                SFConsoleLogs.log(
+                    SFConsoleLogs.Level.ERROR,
+                    SFConsoleLogs.Tags.TAG_CAMERA_ERRORS,
+                    it,
+                    getString(R.string.live_view_take_photo_failed)
+                )
                 parentLayout.showErrorSnackBar(getString(R.string.live_view_take_photo_failed))
             }
         }

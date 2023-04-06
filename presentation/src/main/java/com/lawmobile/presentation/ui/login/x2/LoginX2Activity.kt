@@ -30,6 +30,7 @@ import com.lawmobile.presentation.ui.login.state.LoginState
 import com.lawmobile.presentation.ui.login.x2.fragment.devicePassword.DevicePasswordFragment
 import com.lawmobile.presentation.ui.login.x2.fragment.officerId.OfficerIdFragment
 import com.lawmobile.presentation.ui.sso.SSOActivity
+import com.lawmobile.presentation.utils.SFConsoleLogs
 import com.safefleet.mobile.kotlin_commons.extensions.doIfError
 import com.safefleet.mobile.kotlin_commons.extensions.doIfSuccess
 import com.safefleet.mobile.kotlin_commons.helpers.Result
@@ -73,10 +74,20 @@ class LoginX2Activity : LoginBaseActivity() {
         viewModel.setObservers()
     }
 
+    private fun logBluetoothError(exception: Exception) {
+        SFConsoleLogs.log(
+            SFConsoleLogs.Level.ERROR,
+            SFConsoleLogs.Tags.TAG_BLUETOOTH_CONNECTION_ERRORS,
+            exception,
+            getString(R.string.error_getting_config_bluetooth)
+        )
+    }
+
     private fun handleConfigResult(result: Result<String>?) {
         with(result) {
             this?.doIfSuccess { onReceivedConfigFromBle() }
             this?.doIfError {
+                logBluetoothError(it)
                 Log.d(TAG, "Check for saved configs...")
                 val configs = KeystoreHandler.getConfigFromKeystore(this@LoginX2Activity)
                 if (configs == null) {
@@ -214,14 +225,30 @@ class LoginX2Activity : LoginBaseActivity() {
     private fun handleAuthEndpointsResult(result: Result<AuthorizationEndpoints>) {
         with(result) {
             doIfSuccess { viewModel.getAuthorizationRequest(it) }
-            doIfError { showRequestError() }
+            doIfError {
+                SFConsoleLogs.log(
+                    SFConsoleLogs.Level.ERROR,
+                    SFConsoleLogs.Tags.TAG_END_POINTS_ERRORS,
+                    it,
+                    "Error in end points result"
+                )
+                showRequestError()
+            }
         }
     }
 
     private fun handleAuthRequestResult(result: Result<AuthorizationRequest>) {
         with(result) {
             doIfSuccess { goToSsoLogin(it) }
-            doIfError { showRequestError() }
+            doIfError {
+                SFConsoleLogs.log(
+                    SFConsoleLogs.Level.ERROR,
+                    SFConsoleLogs.Tags.TAG_END_POINTS_ERRORS,
+                    it,
+                    "Error in Authentication"
+                )
+                showRequestError()
+            }
         }
     }
 
@@ -237,16 +264,25 @@ class LoginX2Activity : LoginBaseActivity() {
                 viewModel.suggestWiFiNetwork(handler, hotspotName, hotspotPassword) { isConnected ->
                     if (isConnected) {
                         waitToEnableContinue()
-                        Log.d(TAG, "Success Connect with Wifi :Name: $hotspotName")
                         state = LoginState.PairingResult
                     } else {
+                        SFConsoleLogs.log(
+                            SFConsoleLogs.Level.ERROR,
+                            SFConsoleLogs.Tags.TAG_HOTSPOT_CONNECTION_ERRORS,
+                            message = "Error Connecting with Wifi : $hotspotName"
+                        )
                         waitToEnableContinue()
-                        Log.d(TAG, "Error Connecting with Wifi :Name: $hotspotName")
                         showRequestError()
                     }
                 }
             }
             doIfError {
+                SFConsoleLogs.log(
+                    SFConsoleLogs.Level.ERROR,
+                    SFConsoleLogs.Tags.TAG_END_POINTS_ERRORS,
+                    it,
+                    "SSO Error"
+                )
                 Log.d(TAG, "SSO Completed with Error:$it")
                 showRequestError()
             }
@@ -387,6 +423,12 @@ class LoginX2Activity : LoginBaseActivity() {
                 )
             }
             doIfError {
+                SFConsoleLogs.log(
+                    SFConsoleLogs.Level.ERROR,
+                    SFConsoleLogs.Tags.TAG_END_POINTS_ERRORS,
+                    it,
+                    "Token Error"
+                )
                 Log.d(TAG, "onTokenResponse:Error:$it")
                 showRequestError()
             }
