@@ -80,7 +80,6 @@ abstract class LoginBaseActivity : BaseActivity() {
         with(result) {
             doIfSuccess {
                 CameraInfo.officerName = it.name ?: ""
-                CameraInfo.officerId = it.id ?: ""
             }
             doIfError {
                 showUserInformationError()

@@ -136,7 +136,7 @@ class VideoInformationManager {
                 path = currentInformation?.path ?: cameraFile.path,
                 associatedFiles = FilesAssociatedByUser.value,
                 annotations = currentInformation?.annotations,
-                serialNumber = CameraInfo.serialNumber,
+                serialNumber = currentInformation?.serialNumber,
                 endTime = currentInformation?.endTime,
                 gmtOffset = currentInformation?.gmtOffset,
                 hash = currentInformation?.hash,
