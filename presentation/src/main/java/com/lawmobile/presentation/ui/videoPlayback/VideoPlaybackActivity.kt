@@ -37,8 +37,8 @@ import com.lawmobile.presentation.ui.base.BaseActivity
 import com.lawmobile.presentation.ui.videoPlayback.state.VideoPlaybackState
 import com.lawmobile.presentation.utils.Constants.DOMAIN_CAMERA_FILE
 import com.lawmobile.presentation.utils.FeatureSupportHelper
+import com.lawmobile.presentation.utils.SFConsoleLogs
 import com.safefleet.mobile.android_commons.extensions.hideKeyboard
-import com.safefleet.mobile.android_commons.extensions.isVisible
 import com.safefleet.mobile.kotlin_commons.helpers.Result
 import com.safefleet.mobile.safefleet_ui.widgets.SafeFleetFilterTag
 import kotlinx.coroutines.Dispatchers
@@ -221,6 +221,11 @@ class VideoPlaybackActivity : BaseActivity() {
     private fun collectInformationExceptions() {
         activityCollect(viewModel.videoInformationException) { exception ->
             exception.let {
+                SFConsoleLogs.log(
+                    SFConsoleLogs.Level.ERROR,
+                    SFConsoleLogs.Tags.TAG_CAMERA_ERRORS, it,
+                    getString(R.string.error_get_information_metadata)
+                )
                 showToast(
                     getString(R.string.error_get_information_metadata), Toast.LENGTH_SHORT
                 )

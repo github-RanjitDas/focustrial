@@ -16,6 +16,7 @@ import com.lawmobile.presentation.extensions.startAnimationIfEnabled
 import com.lawmobile.presentation.ui.base.BaseActivity
 import com.lawmobile.presentation.ui.live.statusBar.StatusBarBaseFragment
 import com.lawmobile.presentation.utils.EspressoIdlingResource
+import com.lawmobile.presentation.utils.SFConsoleLogs
 import com.safefleet.mobile.kotlin_commons.extensions.doIfError
 import com.safefleet.mobile.kotlin_commons.extensions.doIfSuccess
 import com.safefleet.mobile.kotlin_commons.helpers.Event
@@ -130,6 +131,12 @@ class StatusBarX2Fragment : StatusBarBaseFragment() {
                 manageStorageLevel(getAvailableStoragePercent(it))
             }
             doIfError {
+                SFConsoleLogs.log(
+                    SFConsoleLogs.Level.ERROR,
+                    SFConsoleLogs.Tags.TAG_CAMERA_ERRORS,
+                    it,
+                    getString(R.string.storage_level_error)
+                )
                 binding.textViewStorageLevels.text = getString(R.string.not_available)
                 progressBarBattery.setProgress(0)
                 parentLayout.showErrorSnackBar(getString(R.string.storage_level_error))
@@ -186,7 +193,15 @@ class StatusBarX2Fragment : StatusBarBaseFragment() {
     override fun setBatteryLevel(result: Event<Result<Int>>) {
         result.getContentIfNotHandled()?.run {
             doIfSuccess(::manageBatteryLevel)
-            doIfError { showBatteryLevelNotAvailable() }
+            doIfError {
+                SFConsoleLogs.log(
+                    SFConsoleLogs.Level.ERROR,
+                    SFConsoleLogs.Tags.TAG_CAMERA_ERRORS,
+                    it,
+                    getString(R.string.battery_level_error)
+                )
+                showBatteryLevelNotAvailable()
+            }
         }
     }
 

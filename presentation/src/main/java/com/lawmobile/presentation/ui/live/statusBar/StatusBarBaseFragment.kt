@@ -13,6 +13,7 @@ import com.lawmobile.presentation.entities.AlertInformation
 import com.lawmobile.presentation.extensions.createAlertInformation
 import com.lawmobile.presentation.extensions.showErrorSnackBar
 import com.lawmobile.presentation.ui.base.BaseFragment
+import com.lawmobile.presentation.utils.SFConsoleLogs
 import com.safefleet.mobile.kotlin_commons.extensions.doIfError
 import com.safefleet.mobile.kotlin_commons.extensions.doIfSuccess
 import com.safefleet.mobile.kotlin_commons.helpers.Event
@@ -46,6 +47,12 @@ abstract class StatusBarBaseFragment : BaseFragment() {
         result.getContentIfNotHandled()?.run {
             doIfSuccess(::manageBatteryLevel)
             doIfError {
+                SFConsoleLogs.log(
+                    SFConsoleLogs.Level.ERROR,
+                    SFConsoleLogs.Tags.TAG_CAMERA_ERRORS,
+                    it,
+                    getString(R.string.battery_level_error)
+                )
                 if (isShowCameraStatusFailedError) {
                     showBatteryLevelNotAvailable()
                 }
