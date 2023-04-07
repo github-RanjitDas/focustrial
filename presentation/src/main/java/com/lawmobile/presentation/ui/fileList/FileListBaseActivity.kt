@@ -6,6 +6,7 @@ import androidx.cardview.widget.CardView
 import androidx.core.view.isVisible
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.snackbar.Snackbar
+import com.lawmobile.domain.entities.CameraInfo
 import com.lawmobile.domain.entities.DomainCameraFile
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.databinding.ActivityFileListBinding
@@ -23,6 +24,8 @@ import com.lawmobile.presentation.ui.fileList.simpleList.SimpleFileListFragment
 import com.lawmobile.presentation.ui.fileList.state.FileListState
 import com.lawmobile.presentation.ui.fileList.thumbnailList.ThumbnailFileListFragment
 import com.lawmobile.presentation.utils.Constants
+import com.lawmobile.presentation.utils.Constants.SIMPLE_FILE_LIST
+import com.lawmobile.presentation.utils.Constants.THUMBNAIL_FILE_LIST
 import com.lawmobile.presentation.utils.SFConsoleLogs
 import com.lawmobile.presentation.utils.VLCMediaPlayer
 import com.lawmobile.presentation.widgets.CustomFilterDialog
@@ -128,6 +131,7 @@ abstract class FileListBaseActivity : BaseActivity() {
         listTypeButtons.onThumbnailsClick = {
             if (state is FileListState.Simple) {
                 state = FileListState.Thumbnail
+                CameraInfo.fragmentListTypeToLoad = THUMBNAIL_FILE_LIST
                 isSelectActive = false
             }
         }
@@ -137,6 +141,7 @@ abstract class FileListBaseActivity : BaseActivity() {
         listTypeButtons.onSimpleClick = {
             if (state is FileListState.Thumbnail) {
                 state = FileListState.Simple
+                CameraInfo.fragmentListTypeToLoad = SIMPLE_FILE_LIST
                 isSelectActive = false
             }
         }
@@ -165,7 +170,13 @@ abstract class FileListBaseActivity : BaseActivity() {
         setFragmentArguments()
         if (state == null) {
             when (listType) {
-                Constants.SNAPSHOT_LIST -> state = FileListState.Thumbnail
+                Constants.SNAPSHOT_LIST -> {
+                    when (CameraInfo.fragmentListTypeToLoad) {
+                        SIMPLE_FILE_LIST -> state = FileListState.Simple
+                        THUMBNAIL_FILE_LIST -> state = FileListState.Thumbnail
+                        else -> FileListState.Thumbnail
+                    }
+                }
                 Constants.VIDEO_LIST -> state = FileListState.Simple
             }
         }
@@ -191,10 +202,12 @@ abstract class FileListBaseActivity : BaseActivity() {
         activityCollect(fileListState) {
             it?.run {
                 onSimple {
+                    CameraInfo.fragmentListTypeToLoad = SIMPLE_FILE_LIST
                     listTypeButtons.toggleListType(true)
                     attachSimpleFileListFragment()
                 }
                 onThumbnail {
+                    CameraInfo.fragmentListTypeToLoad = THUMBNAIL_FILE_LIST
                     listTypeButtons.toggleListType(false)
                     attachThumbnailListFragment()
                 }

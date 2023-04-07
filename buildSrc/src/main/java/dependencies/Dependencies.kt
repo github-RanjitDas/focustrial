@@ -30,7 +30,7 @@ object Dependencies {
         const val androidCommons = "com.safefleet.mobile:android-commons:2.4.1-SNAPSHOT@aar"
         const val kotlinCommons = "com.safefleet.mobile:kotlin-commons:2.4.0-SNAPSHOT@jar"
         const val safeFleetUI = "com.safefleet.mobile:safefleet-ui:1.4.3@aar"
-        const val authentication = "com.safefleet.mobile:authentication:2.5.5-SNAPSHOT@aar"
+        const val authentication = "com.safefleet.mobile:authentication:2.5.8-SNAPSHOT@aar"
     }
 
     object ConstraintLayout {

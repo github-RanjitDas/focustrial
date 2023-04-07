@@ -15,9 +15,9 @@ enum class NotificationType(
     val subTitle: String? = null,
 ) {
 
-    BATTERY_LEVEL("battery_level") {
+    BATTERY_LEVEL("battery_level", title = "battery level") {
         override fun getTypeOfEvent(): EventType {
-            return EventType.CAMERA
+            return EventType.NOTIFICATION
         }
     },
     STORAGE_REMAIN("storage_remain") {

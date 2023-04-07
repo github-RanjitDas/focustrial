@@ -22,6 +22,7 @@ object CameraInfo {
     var isBluetoothEnable = false
     var isCovertModeEnable = false
     lateinit var videoDetailMetaDataCached: VideoDetailMetaDataCached
+    var fragmentListTypeToLoad: String = "thumbnailFileList"
 
     fun cleanInfo() {
         metadataEvents = mutableListOf()
