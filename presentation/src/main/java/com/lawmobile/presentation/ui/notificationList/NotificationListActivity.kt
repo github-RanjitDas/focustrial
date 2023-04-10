@@ -111,7 +111,8 @@ class NotificationListActivity : BaseActivity() {
                     override fun onStateChanged(bottomSheet: View, newState: Int) {
                         when (newState) {
                             BottomSheetBehavior.STATE_HIDDEN ->
-                                shadowNotificationListView.isVisible = false
+                                shadowNotificationListView.isVisible =
+                                    false
                             else -> shadowNotificationListView.isVisible = true
                         }
                     }
@@ -167,19 +168,31 @@ class NotificationListActivity : BaseActivity() {
     }
 
     private fun setNotificationInformation(cameraEvent: CameraEvent) {
+        println("setNotificationInformation:$cameraEvent")
         with(binding.bottomSheetNotification.layoutNotificationInformation) {
             val notificationType = NotificationType.getByValue(cameraEvent.name)
             textViewNotificationTitle.text = notificationType.title ?: cameraEvent.name
             imageViewNotificationIcon.setImageDependingOnEventTag(cameraEvent.eventTag)
-            textViewNotificationMessage.text =
-                CameraInfo.getDescriptiveTextFromNotificationDictionary(cameraEvent.name)
+            when (notificationType) {
+                NotificationType.LOW_BATTERY -> {
+                    textViewNotificationMessage.text =
+                        notificationType.getCustomMessage(cameraEvent.value)
+                }
+                NotificationType.BATTERY_LEVEL -> {
+                    textViewNotificationMessage.text =
+                        CameraInfo.getDescriptiveTextFromNotificationDictionary(cameraEvent.name) + " to " + cameraEvent.value + "%"
+                }
+                else -> {
+                    textViewNotificationMessage.text =
+                        CameraInfo.getDescriptiveTextFromNotificationDictionary(cameraEvent.name)
+                }
+            }
             textViewNotificationDate.text = cameraEvent.date
         }
     }
 
     private fun setCustomAppBar() {
-        appBarFragment =
-            AppBarX2Fragment.createInstance(false, getString(R.string.notifications))
+        appBarFragment = AppBarX2Fragment.createInstance(false, getString(R.string.notifications))
     }
 
     private fun attachAppBarFragment() {
@@ -192,9 +205,7 @@ class NotificationListActivity : BaseActivity() {
 
     private fun attachMenuFragment() {
         supportFragmentManager.attachFragment(
-            containerId = R.id.menuContainer,
-            fragment = menuFragment,
-            tag = MenuFragment.TAG
+            containerId = R.id.menuContainer, fragment = menuFragment, tag = MenuFragment.TAG
         )
     }
 
