@@ -1,6 +1,7 @@
 package com.lawmobile.body_cameras.utils
 
 import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import com.google.gson.JsonObject
 import com.lawmobile.body_cameras.cache.CameraServiceCache
 import com.lawmobile.body_cameras.constants.CameraConstants
@@ -130,7 +131,8 @@ class MetadataHelper(
 
     private suspend fun saveJsonVideoInformation(videoInformation: VideoInformation): Result<Unit> {
         val jsonMetadataMerged = getMergedJsonMetadata(videoInformation)
-        val jsonMetadataString = format.toJson(jsonMetadataMerged)
+        val gson: Gson = GsonBuilder().setPrettyPrinting().create()
+        val jsonMetadataString = gson.toJson(jsonMetadataMerged)
         val cameraInformation =
             InformationToSaveMetadata(jsonMetadataString, videoInformation.getJsonNamePath())
 
