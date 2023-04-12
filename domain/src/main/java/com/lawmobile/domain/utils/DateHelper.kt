@@ -25,5 +25,5 @@ object DateHelper {
         return dateToString(Date(), NOTIFICATION_DATE_PATTERN)
     }
 
-    private const val NOTIFICATION_DATE_PATTERN = "MM/dd/yyyy HH:mm:ss"
+    private const val NOTIFICATION_DATE_PATTERN = "yyyy-MM-dd / HH:mm:ss"
 }

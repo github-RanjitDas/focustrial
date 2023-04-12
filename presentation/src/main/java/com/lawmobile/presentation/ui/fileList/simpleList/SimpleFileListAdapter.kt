@@ -151,7 +151,7 @@ class SimpleFileListAdapter(
         private fun setDataToViews(remoteCameraFile: DomainInformationFile) {
             with(remoteCameraFile) {
                 dateSimpleListItem.text =
-                    Html.fromHtml(domainCameraFile.getDateDependingOnNameLength(), 0)
+                    Html.fromHtml("<u>" + domainCameraFile.getDateDependingOnNameLength() + "</u>", 0)
                 eventSimpleListItem.text = domainVideoMetadata?.metadata?.event?.name ?: ""
             }
         }
