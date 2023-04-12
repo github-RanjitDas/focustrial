@@ -9,7 +9,6 @@ fun DomainCameraFile.getDateDependingOnNameLength(): String {
 
 fun DomainCameraFile.getCreationDateWhenSerial(): String {
     return try {
-
         val year = date.substring(0, 2) + nameFolder.substring(0, 2)
         val month = nameFolder.substring(2, 4)
         val day = nameFolder.substring(4, 6)
@@ -20,7 +19,7 @@ fun DomainCameraFile.getCreationDateWhenSerial(): String {
         val min = time?.substring(2, 4)
         val sec = time?.substring(4, 6)
 
-        String.format("%s %s:%s:%s", date, hour, min, sec)
+        String.format("%s / %s:%s:%s", date, hour, min, sec)
     } catch (e: Exception) {
         date
     }
@@ -38,7 +37,7 @@ fun DomainCameraFile.getCreationDateWhenSimple(): String {
         val min = time.substring(2, 4)
         val sec = time.substring(4, 6)
 
-        String.format("%s %s:%s:%s", date, hour, min, sec)
+        String.format("%s / %s:%s:%s", date, hour, min, sec)
     } catch (e: Exception) {
         date
     }

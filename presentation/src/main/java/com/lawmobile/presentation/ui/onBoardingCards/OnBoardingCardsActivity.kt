@@ -56,6 +56,10 @@ class OnBoardingCardsActivity : BaseActivity() {
                 OnBoardingCardContent(
                     getString(R.string.description_card_4),
                     R.drawable.ob_card_4
+                ),
+                OnBoardingCardContent(
+                    getString(R.string.description_card_5),
+                    R.drawable.ob_card_5
                 )
             )
         )

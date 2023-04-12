@@ -8,7 +8,7 @@ import com.lawmobile.domain.utils.DateHelper
 object BluetoothErrorEvent {
     const val value = "bluetooth_issues"
     const val title = "The mobile Bluetooth is off"
-    const val message = "Please turn on the mobile bluetooth."
+    const val message = "Please turn on the mobile Bluetooth"
 
     val event = CameraEvent(
         name = value,

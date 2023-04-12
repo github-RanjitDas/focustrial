@@ -374,7 +374,7 @@ class SnapshotDetailActivity : BaseActivity() {
 
     private fun setInformationOfSnapshot() {
         binding.photoNameValue.text = file.name
-        binding.dateTimeValue.text = file.date
+        binding.dateTimeValue.text = file.getDateDependingOnNameLength()
     }
 
     private fun setSnapshotMetadata() {
