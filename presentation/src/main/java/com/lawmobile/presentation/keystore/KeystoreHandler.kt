@@ -100,6 +100,14 @@ object KeystoreHandler {
         }
     }
 
+    fun deleteKeystoreEntry() {
+        try {
+            val keyStore = KeyStore.getInstance(keyStoreType)
+            keyStore.deleteEntry(alias)
+        } catch (_: Exception) {
+        }
+    }
+
     fun getConfigFromKeystore(context: Context): String? {
         try {
             val keyStore = KeyStore.getInstance(keyStoreType)

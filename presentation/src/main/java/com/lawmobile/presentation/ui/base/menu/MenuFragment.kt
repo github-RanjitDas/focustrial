@@ -16,6 +16,7 @@ import com.lawmobile.presentation.extensions.restartApp
 import com.lawmobile.presentation.extensions.setOnClickListenerCheckConnection
 import com.lawmobile.presentation.extensions.setOnSwipeRightListener
 import com.lawmobile.presentation.extensions.setOnTouchListenerCheckConnection
+import com.lawmobile.presentation.keystore.KeystoreHandler
 import com.lawmobile.presentation.ui.base.BaseActivity
 import com.lawmobile.presentation.ui.base.BaseFragment
 import com.lawmobile.presentation.ui.bodyWornDiagnosis.BodyWornDiagnosisActivity
@@ -214,6 +215,7 @@ class MenuFragment : BaseFragment() {
     }
 
     private fun logoutApplication() {
+        KeystoreHandler.deleteKeystoreEntry()
         CameraInfo.cleanInfo()
         menuViewModel.disconnectCamera()
         requireContext().restartApp()

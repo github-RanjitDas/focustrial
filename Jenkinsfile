@@ -18,7 +18,7 @@ node('jenkins-builds-slave') {
                     [vaultKey: 'firebase_distribution_stg', envVar: 'firebase_distribution_stg']
                   ]
         ]]
-        def imageDocker = "245255707803.dkr.ecr.us-east-1.amazonaws.com/android-sdk-seon:sdk29-gradle6.0.0-fastlane"
+        def imageDocker = "245255707803.dkr.ecr.us-east-1.amazonaws.com/android-sdk-seon:0.sdk33-gradle6.3-fastlane-java11.latest"
         stage('Checkout') {
             logger.stage()
             timeout(10) {
@@ -155,7 +155,7 @@ node('jenkins-builds-slave') {
 									alias = "${env.KEYSTORE_ALIAS}"
 								}
 								withEnv(["KEYSTORE_PASSWORD=$pass", "KEYSTORE_ALIAS=$alias"]) {
-									sh "/home/user/android-sdk-linux/build-tools/28.0.3/apksigner sign --ks app/keystore.jks --ks-pass pass:$pass app/build/outputs/apk/debug/app-debug-${BUILD_NUMBER}.apk"
+									sh "/home/user/android-sdk-linux/build-tools/33.0.0/apksigner sign --ks app/keystore.jks --ks-pass pass:$pass app/build/outputs/apk/debug/app-debug-${BUILD_NUMBER}.apk"
 									//sh "/home/user/android-sdk-linux/build-tools/28.0.3/apksigner sign --ks app/keystore.jks --ks-pass pass:$pass app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk"
 									sh "gcloud auth activate-service-account --key-file=fma-service-account.json"
 									sh "gcloud config set project fma-dev-8d851"

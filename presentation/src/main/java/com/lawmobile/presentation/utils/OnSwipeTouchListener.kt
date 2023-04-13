@@ -14,7 +14,7 @@ open class OnSwipeTouchListener(context: Context?) : OnTouchListener {
     private val gestureDetector: GestureDetector
 
     @SuppressLint("ClickableViewAccessibility")
-    override fun onTouch(v: View?, event: MotionEvent?): Boolean {
+    override fun onTouch(v: View?, event: MotionEvent): Boolean {
         return gestureDetector.onTouchEvent(event)
     }
 
@@ -30,21 +30,21 @@ open class OnSwipeTouchListener(context: Context?) : OnTouchListener {
             return true
         }
 
-        override fun onSingleTapConfirmed(e: MotionEvent?): Boolean {
+        override fun onSingleTapConfirmed(e: MotionEvent): Boolean {
             onClick()
             return true
         }
 
         override fun onFling(
-            event1: MotionEvent?,
-            event2: MotionEvent?,
+            event1: MotionEvent,
+            event2: MotionEvent,
             velocityX: Float,
             velocityY: Float
         ): Boolean {
             var result = false
             try {
-                val diffY = (event2?.y ?: 0f) - (event1?.y ?: 0f)
-                val diffX = (event2?.x ?: 0f) - (event1?.x ?: 0f)
+                val diffY = (event2.y ?: 0f) - (event1.y ?: 0f)
+                val diffX = (event2.x ?: 0f) - (event1.x ?: 0f)
                 if (isMovementFromLeftToRight(diffX, diffY, velocityX)) {
                     val isMoveToRight = diffX > 0
                     if (isMoveToRight) {

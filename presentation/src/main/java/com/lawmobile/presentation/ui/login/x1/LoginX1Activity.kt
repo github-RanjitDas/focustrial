@@ -40,8 +40,7 @@ class LoginX1Activity : LoginBaseActivity() {
         super.handleLoginState(loginState)
         with(loginState) {
             onStartPairing {
-                showStartPairingFragment()
-                showPermissionDialogToEducateUser()
+                verifyPermissions()
                 setInstructionsListener()
                 setStartPairingListener()
             }
@@ -59,6 +58,10 @@ class LoginX1Activity : LoginBaseActivity() {
     override fun handleUserResult(result: Result<User>) {
         super.handleUserResult(result)
         result.doIfSuccess { officerPasswordFragment.passwordFromCamera = it.password ?: "" }
+    }
+
+    override fun onPermissionsGranted() {
+        showStartPairingFragment()
     }
 
     private fun showStartPairingFragment() {

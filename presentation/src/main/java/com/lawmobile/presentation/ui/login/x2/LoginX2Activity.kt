@@ -1,9 +1,7 @@
 package com.lawmobile.presentation.ui.login.x2
 
-import android.Manifest
 import android.content.Intent
 import android.content.RestrictionsManager
-import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -20,7 +18,6 @@ import com.lawmobile.domain.enums.CameraType
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.extensions.attachFragmentWithAnimation
 import com.lawmobile.presentation.extensions.createNotificationDialog
-import com.lawmobile.presentation.extensions.isPermissionGranted
 import com.lawmobile.presentation.keystore.KeystoreHandler
 import com.lawmobile.presentation.ui.live.x2.LiveX2Activity
 import com.lawmobile.presentation.ui.login.LoginBaseActivity
@@ -98,7 +95,7 @@ class LoginX2Activity : LoginBaseActivity() {
                     val jsonObject = JSONObject(configs)
                     var savedOfficerId = jsonObject.getString("deviceId")
                     if (CameraInfo.cameraType == CameraType.X2) {
-                        savedOfficerId = "x2$savedOfficerId"
+                        savedOfficerId = "x2-$savedOfficerId"
                     }
                     Log.d(TAG, "savedOfficerId:$savedOfficerId,officerId$officerId")
 
@@ -190,29 +187,13 @@ class LoginX2Activity : LoginBaseActivity() {
         authRequestResult.observe(this@LoginX2Activity, ::handleAuthRequestResult)
         devicePasswordResult.observe(this@LoginX2Activity, ::handleDevicePasswordResult)
         userFromCameraResult.observe(this@LoginX2Activity, ::handleUserResult)
-        isPermissionDeniedStatus.observe(this@LoginX2Activity, ::handlePermissionDeniedStatus)
-    }
-
-    private fun handlePermissionDeniedStatus(result: Result<Boolean>?) {
-        result?.doIfSuccess {
-            if (it) {
-                showPermissionDeniedDialogAndCloseApp()
-            } else {
-                showPermissionDialogToEducateUser()
-            }
-        }
     }
 
     override fun handleLoginState(loginState: LoginState) {
         super.handleLoginState(loginState)
         with(loginState) {
             onOfficerId {
-                showOfficerIdFragment()
-                if (!isPermissionGranted(Manifest.permission.ACCESS_FINE_LOCATION)) {
-                    viewModel.isPermissionsDenied()
-                } else {
-                    showPermissionDialogToEducateUser()
-                }
+                startRequestPermission()
             }
             onDevicePassword {
                 showDevicePasswordFragment()
@@ -220,6 +201,10 @@ class LoginX2Activity : LoginBaseActivity() {
                 setStartPairingListener()
             }
         }
+    }
+
+    private fun startRequestPermission() {
+        verifyPermissions()
     }
 
     private fun handleAuthEndpointsResult(result: Result<AuthorizationEndpoints>) {
@@ -349,10 +334,8 @@ class LoginX2Activity : LoginBaseActivity() {
     }
 
     private fun fetchConfigsFromBle() {
-        if (isPermissionGranted(Manifest.permission.ACCESS_FINE_LOCATION)) {
-            runOnUiThread {
-                initBleConnectionToFetchConfigs()
-            }
+        runOnUiThread {
+            initBleConnectionToFetchConfigs()
         }
     }
 
@@ -365,19 +348,8 @@ class LoginX2Activity : LoginBaseActivity() {
         fetchConfigsFromBle()
     }
 
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
-        if (requestCode == PERMISSION_FOR_LOCATION) {
-            if (grantResults[0] == PackageManager.PERMISSION_DENIED) {
-                viewModel.savePermissionsDeniedValue(true)
-                showPermissionDeniedDialogAndCloseApp()
-            } else {
-                viewModel.savePermissionsDeniedValue(false)
-            }
-        }
+    override fun onPermissionsGranted() {
+        showOfficerIdFragment()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

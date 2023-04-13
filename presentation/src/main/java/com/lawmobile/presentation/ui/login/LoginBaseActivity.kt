@@ -1,23 +1,31 @@
 package com.lawmobile.presentation.ui.login
 
-import android.Manifest
+import android.app.Activity
 import android.app.AlertDialog
+import android.content.Context
+import android.content.Intent
+import android.content.SharedPreferences
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
 import android.widget.TextView
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.cardview.widget.CardView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.snackbar.Snackbar
 import com.lawmobile.domain.entities.CameraInfo
 import com.lawmobile.domain.entities.User
-import com.lawmobile.domain.entities.customEvents.PermissionDeniedErrorEvent
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.databinding.ActivityLoginBinding
+import com.lawmobile.presentation.extensions.IS_FIRST_TIME_ASKING_PERMISSION
+import com.lawmobile.presentation.extensions.PREFS_PERMISSIONS
 import com.lawmobile.presentation.extensions.activityCollect
 import com.lawmobile.presentation.extensions.attachFragmentWithAnimation
-import com.lawmobile.presentation.extensions.createNotificationDialog
-import com.lawmobile.presentation.extensions.isPermissionGranted
+import com.lawmobile.presentation.extensions.hasPermissions
+import com.lawmobile.presentation.extensions.requestPermissions
+import com.lawmobile.presentation.extensions.shouldShowPermissionRationale
 import com.lawmobile.presentation.extensions.showErrorSnackBar
-import com.lawmobile.presentation.extensions.verifyForAskingPermission
 import com.lawmobile.presentation.extensions.verifySessionBeforeAction
 import com.lawmobile.presentation.ui.base.BaseActivity
 import com.lawmobile.presentation.ui.login.shared.Instructions
@@ -57,11 +65,13 @@ abstract class LoginBaseActivity : BaseActivity() {
 
     protected abstract val instructions: Instructions
     protected abstract val startPairing: StartPairing
+    protected var permissionStatus: SharedPreferences? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        permissionStatus = getSharedPreferences(PREFS_PERMISSIONS, Context.MODE_PRIVATE)
         binding.versionNumberTextLogin.text = getApplicationVersionText()
         configureBottomSheet()
     }
@@ -136,35 +146,103 @@ abstract class LoginBaseActivity : BaseActivity() {
         else sheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
     }
 
-    fun showPermissionDialogToEducateUser() {
-        if (!isPermissionGranted(Manifest.permission.ACCESS_FINE_LOCATION)) {
-            val builder = AlertDialog.Builder(this)
-            builder.setTitle(getString(R.string.location_permission_title))
-            builder.setCancelable(false)
-            builder.setMessage(getString(R.string.location_permission_description))
-            builder.setPositiveButton(getString(R.string.button_allow_permissions)) { dialog, _ ->
-                dialog.cancel()
-                verifyLocationPermission()
+    private fun showPermissionDialogToEducateUser() {
+        var title = ""
+        var description = ""
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            title = getString(R.string.nearby_permission_title)
+            description = getString(R.string.nearby_permission_description)
+        } else {
+            title = getString(R.string.location_permission_title)
+            description = getString(R.string.location_permission_description)
+        }
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle(title)
+        builder.setCancelable(false)
+        builder.setMessage(description)
+        builder.setPositiveButton(getString(R.string.button_allow_permissions)) { dialog, _ ->
+            dialog.cancel()
+            requestPermissions(this, REQUEST_PERMISSION_CODE)
+        }
+        builder.setNegativeButton("Exit") { dialog, which ->
+            dialog.cancel()
+            this@LoginBaseActivity.finishAffinity()
+            exitProcess(0)
+        }
+        builder.show()
+    }
+
+    protected fun verifyPermissions() {
+        if (hasPermissions(this)) {
+            onPermissionsGranted()
+        } else {
+            // Some permissions not granted.
+            if (shouldShowPermissionRationale(this)) {
+                // should rationale is false so user denied the request, so show educate dialog
+                showPermissionDialogToEducateUser()
+            } else if (!isFirstTimeAskingPermission()) {
+                // should rationale is false so user denied the request, and we are not
+                // requesting permissions first time, It means it denied permanently
+                showDialogToOpenSettings()
+            } else {
+                // Just Request the Permissions
+                requestPermissions(this, REQUEST_PERMISSION_CODE)
             }
-            builder.show()
         }
     }
 
-    fun showPermissionDeniedDialogAndCloseApp() {
-        val cameraEvent = PermissionDeniedErrorEvent.event
-        createNotificationDialog(cameraEvent) {
-            setButtonText(resources.getString(R.string.button_close))
-            onConfirmationClick = {
-                this@LoginBaseActivity.finishAffinity()
-                exitProcess(0)
-            }
+    private fun showDialogToOpenSettings() {
+        var title = 0
+        var description = 0
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            title = R.string.please_enable_permission
+            description = R.string.please_enable_permission_setting_nearby
+        } else {
+            title = R.string.please_enable_permission
+            description = R.string.please_enable_permission_setting_location
         }
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle(title)
+        builder.setCancelable(false)
+        builder.setMessage(description)
+        builder.setPositiveButton(getString(R.string.button_allow_permissions)) { dialog, _ ->
+            dialog.cancel()
+            openSettingScreen()
+        }
+        builder.setNegativeButton("Exit") { dialog, which ->
+            dialog.cancel()
+            this@LoginBaseActivity.finishAffinity()
+            exitProcess(0)
+        }
+        builder.show()
     }
 
-    private fun verifyLocationPermission() {
-        this.verifyForAskingPermission(
-            Manifest.permission.ACCESS_FINE_LOCATION, PERMISSION_FOR_LOCATION
+    private var sentToSettings = false
+    private fun openSettingScreen() {
+        sentToSettings = true
+        resultLauncherSettings.launch(
+            Intent(
+                Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                Uri.parse("package:" + this.packageName)
+            )
         )
+    }
+
+    private var resultLauncherSettings =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                if (hasPermissions(this)) {
+                    onPermissionsGranted()
+                }
+            } else {
+                verifyPermissions()
+            }
+        }
+
+    abstract fun onPermissionsGranted()
+
+    private fun isFirstTimeAskingPermission(): Boolean {
+        return permissionStatus!!.getBoolean(IS_FIRST_TIME_ASKING_PERMISSION, true)
     }
 
     private fun showPairingResultFragment() {
@@ -197,6 +275,31 @@ abstract class LoginBaseActivity : BaseActivity() {
 
     protected open fun onConnectionSuccessful() {
         baseViewModel.getUserFromCamera()
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        if (requestCode == REQUEST_PERMISSION_CODE) {
+            updateFirstTimeAskingPermissionPrefs()
+            if (hasPermissions(this)) {
+                onPermissionsGranted()
+            } else {
+                if (shouldShowPermissionRationale(this, permissions)) {
+                    showPermissionDialogToEducateUser()
+                } else {
+                    showDialogToOpenSettings()
+                }
+            }
+        }
+    }
+
+    private fun updateFirstTimeAskingPermissionPrefs() {
+        val editor = permissionStatus!!.edit()
+        editor.putBoolean(IS_FIRST_TIME_ASKING_PERMISSION, false)
+        editor.apply()
     }
 
     override fun onBackPressed() {
