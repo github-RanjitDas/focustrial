@@ -21,9 +21,9 @@
 
     <!-- Onboarding -->
     <string name="skip_intro">Skip</string>
-    <string name="description_card_1">Please, &lt;b&gt;turn on &lt;/b&gt; the Body-Camera hotspot</string>
+    <string name="description_card_1">Please, &lt;b&gt;turn on &lt;/b&gt; the Body-Camera hotspot.</string>
     <string name="description_card_2">Please Enter your OfficerID and tap in the &lt;b&gt;Continue&lt;/b&gt; button.</string>
-    <string name="description_card_3">If you are in this screen, please enter your email and tap in the &lt;b&gt;Next&lt;/b&gt; button</string>
+    <string name="description_card_3">If you are in this screen, please enter your email and tap in the &lt;b&gt;Next&lt;/b&gt; button.</string>
     <string name="description_card_4">If you are in this screen, please enter your password and tap in the &lt;b&gt;Login&lt;/b&gt; button.</string>
     <string name="description_card_5">If you are in this screen, please enter your device password and tap in the &lt;b&gt;Connect&lt;/b&gt; button.</string>
 
@@ -296,8 +296,8 @@
     <string name="display">Display</string>
     <string name="officer_id">Enter your officer ID</string>
     <string name="officer_email_id">Enter your email id</string>
-    <string name="change_camera_type">Change Body-Camera type</string>
-    <string name="go_to_on_boarding_cards">Go to on-boarding cards</string>
+    <string name="change_camera_type">Reset Camera Type</string>
+    <string name="go_to_on_boarding_cards">Go to onboarding cards</string>
     <string name="sign_in_with_email">Sign in with Email</string>
     <string name="connect">Connect</string>
     <string name="device_password">Device Password</string>
