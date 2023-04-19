@@ -1,17 +1,15 @@
 package com.lawmobile.presentation.ui.login.x2.fragment.devicePassword
 
-import android.Manifest
 import android.content.ComponentName
-import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
-import android.location.LocationManager
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
 import android.provider.Settings
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -29,11 +27,10 @@ import com.lawmobile.presentation.databinding.FragmentStartPairingX2Binding
 import com.lawmobile.presentation.entities.AlertInformation
 import com.lawmobile.presentation.extensions.createAlertInformation
 import com.lawmobile.presentation.extensions.createNotificationDialog
-import com.lawmobile.presentation.extensions.isPermissionGranted
+import com.lawmobile.presentation.extensions.isGPSActive
 import com.lawmobile.presentation.extensions.showErrorSnackBar
 import com.lawmobile.presentation.security.IIsolatedService
 import com.lawmobile.presentation.security.IsolatedService
-import com.lawmobile.presentation.ui.base.BaseActivity
 import com.lawmobile.presentation.ui.base.BaseFragment
 import com.lawmobile.presentation.ui.login.shared.Instructions
 import com.lawmobile.presentation.ui.login.shared.PairingViewModel
@@ -177,34 +174,28 @@ class DevicePasswordFragment : BaseFragment(), Instructions, StartPairing {
     }
 
     private fun verifyPermissionsToStartPairing() {
-        if (arePermissionsGranted()) {
-            if (isGPSActive()) startPairingProcess() else showAlertToGPSEnable()
-        } else showAlertToNavigateToPermissions()
-    }
-
-    private fun arePermissionsGranted() =
-        (activity as BaseActivity).isPermissionGranted(Manifest.permission.ACCESS_FINE_LOCATION)
-
-    private fun isGPSActive(): Boolean {
-        val locationManager =
-            requireContext().getSystemService(Context.LOCATION_SERVICE) as LocationManager
-        var gpsEnable = false
-        try {
-            gpsEnable = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-
-        return gpsEnable
+        if (isGPSActive(requireContext())) startPairingProcess() else showAlertToGPSEnable()
     }
 
     private fun startPairingProcess() {
         if (!pairingViewModel.isWifiEnable()) {
             createAlertToNavigateWifiSettings()
         } else {
-            if (CameraInfo.backOfficeType == BackOfficeType.NEXUS && CameraInfo.wifiApRouterMode == 1) {
-                initPasswordVerification()
+            if (CameraInfo.backOfficeType == BackOfficeType.NEXUS) {
+                // Nexus
+                if (CameraInfo.wifiApRouterMode == 1) {
+                    // Wifi AP Router 1
+                    initPasswordVerification()
+                } else {
+                    // Wifi AP Router 0
+                    val hotspotPassword = binding.editTextDevicePassword.text.toString()
+                    binding.suggestBodyCameraNetwork(
+                        hotspotPassword,
+                        "X" + CameraInfo.deviceIdFromConfig
+                    )
+                }
             } else {
+                // CC
                 val hotspotPassword = binding.editTextDevicePassword.text.toString()
                 binding.suggestBodyCameraNetwork(hotspotPassword)
             }
@@ -219,12 +210,16 @@ class DevicePasswordFragment : BaseFragment(), Instructions, StartPairing {
         )
     }
 
-    private fun FragmentStartPairingX2Binding.suggestBodyCameraNetwork(hotspotPassword: String) {
-        val networkName = "X" + editTextOfficerId.text.toString()
+    private fun FragmentStartPairingX2Binding.suggestBodyCameraNetwork(
+        hotspotPassword: String,
+        hotspotSSID: String = "X" + editTextOfficerId.text.toString()
+    ) {
+        Log.d(TAG, "Connect with Wifi Name:$hotspotSSID")
+        Log.d(TAG, "Connect with Wifi Password:$hotspotPassword")
         val handler = Handler(Looper.getMainLooper())
         pairingViewModel.suggestWiFiNetwork(
             handler,
-            networkName, hotspotPassword
+            hotspotSSID, hotspotPassword
         ) { isConnected ->
             if (isConnected) {
                 hideLoadingDialog()
@@ -232,19 +227,15 @@ class DevicePasswordFragment : BaseFragment(), Instructions, StartPairing {
             } else {
                 SFConsoleLogs.log(
                     SFConsoleLogs.Level.ERROR,
-                    SFConsoleLogs.Tags.TAG_BLUETOOTH_CONNECTION_ERRORS,
-                    message = "Error Connecting with Wifi : $networkName"
+                    SFConsoleLogs.Tags.TAG_HOTSPOT_CONNECTION_ERRORS,
+                    message = "Error Connecting with Wifi : $hotspotSSID"
                 )
                 hideLoadingDialog()
-                if (CameraInfo.backOfficeType == BackOfficeType.COMMAND_CENTRE) {
-                    if (incorrectPasswordRetryAttempt >= MAX_INCORRECT_PASSWORD_ATTEMPT) {
-                        showLimitOfLoginAttemptsErrorNotification()
-                    } else {
-                        incorrectPasswordRetryAttempt++
-                        showIncorrectPasswordErrorNotification()
-                    }
+                if (incorrectPasswordRetryAttempt >= MAX_INCORRECT_PASSWORD_ATTEMPT) {
+                    showLimitOfLoginAttemptsErrorNotification()
                 } else {
-                    showWrongCredentialsNotification()
+                    incorrectPasswordRetryAttempt++
+                    showIncorrectPasswordErrorNotification()
                 }
             }
         }
@@ -271,16 +262,6 @@ class DevicePasswordFragment : BaseFragment(), Instructions, StartPairing {
                 exitProcess(0)
             }
         }
-    }
-
-    private fun showAlertToNavigateToPermissions() {
-        val alertInformation = AlertInformation(
-            R.string.please_enable_permission,
-            R.string.please_enable_permission_location,
-            { startIntentToGivePermission() },
-            { dialogInterface -> dialogInterface.cancel() }
-        )
-        activity?.createAlertInformation(alertInformation)
     }
 
     private fun showAlertToGPSEnable() {

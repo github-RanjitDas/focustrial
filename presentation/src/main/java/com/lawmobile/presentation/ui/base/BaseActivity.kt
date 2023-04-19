@@ -12,7 +12,6 @@ import com.lawmobile.domain.entities.CameraInfo
 import com.lawmobile.domain.enums.EventType
 import com.lawmobile.domain.enums.NotificationType
 import com.lawmobile.domain.usecase.events.EventsUseCase
-import com.lawmobile.presentation.BuildConfig
 import com.lawmobile.presentation.connectivity.MobileDataStatus
 import com.lawmobile.presentation.connectivity.WifiHelper
 import com.lawmobile.presentation.connectivity.WifiStatus
@@ -87,8 +86,9 @@ abstract class BaseActivity : AppCompatActivity() {
     }
 
     fun getApplicationVersionText(): String {
-        return if (BuildConfig.DEBUG) "Version ${BuildConfig.VERSION_NAME}(${BuildConfig.VERSION_CODE})"
-        else "Version ${BuildConfig.VERSION_NAME}"
+//        return if (BuildConfig.DEBUG) "Version ${BuildConfig.VERSION_NAME}(${BuildConfig.VERSION_CODE})"
+//        else "Version ${BuildConfig.VERSION_NAME}"
+        return ""
     }
 
     private fun setEventsUseCase() {
@@ -243,7 +243,7 @@ abstract class BaseActivity : AppCompatActivity() {
         var isRecordingVideo: Boolean = false
         var isRecordingAudio: Boolean = false
 
-        const val PERMISSION_FOR_LOCATION = 100
+        const val REQUEST_PERMISSION_CODE = 100
         const val MAX_TIME_SESSION = 300000
     }
 }

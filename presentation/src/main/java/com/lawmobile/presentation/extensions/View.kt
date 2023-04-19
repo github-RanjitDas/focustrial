@@ -12,11 +12,11 @@ import com.safefleet.mobile.safefleet_ui.widgets.snackbar.SafeFleetSnackBar
 import com.safefleet.mobile.safefleet_ui.widgets.snackbar.SafeFleetSnackBarSettings
 
 private val snackBarListener = object : View.OnAttachStateChangeListener {
-    override fun onViewAttachedToWindow(v: View?) {
+    override fun onViewAttachedToWindow(v: View) {
         // The interface requires to implement this method but not needed
     }
 
-    override fun onViewDetachedFromWindow(v: View?) {
+    override fun onViewDetachedFromWindow(v: View) {
         EspressoIdlingResource.decrement()
     }
 }

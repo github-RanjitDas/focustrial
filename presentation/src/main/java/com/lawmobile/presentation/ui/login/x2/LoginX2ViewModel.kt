@@ -67,9 +67,6 @@ class LoginX2ViewModel @Inject constructor(
     val updateConfigProgress: LiveData<Result<String>> get() = _updateConfigProgress
     private val _updateConfigProgress by lazy { MediatorLiveData<Result<String>>() }
 
-    val isPermissionDeniedStatus: LiveData<Result<Boolean>> get() = _isPermissionDeniedStatus
-    private val _isPermissionDeniedStatus by lazy { MediatorLiveData<Result<Boolean>>() }
-
     fun getAuthorizationEndpoints() {
         viewModelScope.launch(ioDispatcher) {
             _authEndpointsResult.postValue(loginUseCases.getAuthorizationEndpoints())
@@ -82,7 +79,13 @@ class LoginX2ViewModel @Inject constructor(
         }
     }
 
-    fun isUserAuthorized() = authStateManager.isCurrentAuthStateAuthorized()
+    fun isUserAuthorized(): Boolean {
+        return if (this::authStateManager.isInitialized) {
+            authStateManager.isCurrentAuthStateAuthorized()
+        } else {
+            false
+        }
+    }
 
     fun authenticateToGetToken(
         response: AuthorizationResponse,
@@ -163,9 +166,11 @@ class LoginX2ViewModel @Inject constructor(
         CameraInfo.tenantId = jsonObject.getString("tenantId")
         val backOffice = jsonObject.getString("backoffice")
         val userId = jsonObject.getString("UserID")
+        CameraInfo.deviceIdFromConfig = jsonObject.getString("deviceId")
         val wiFiAPRouterMode = jsonObject.getString("WiFiAPRouterMode")
         Log.d(TAG, "Get Configs:DiscoveryUrl:" + CameraInfo.discoveryUrl)
         Log.d(TAG, "userId :$userId")
+        Log.d(TAG, "deviceId :" + CameraInfo.deviceIdFromConfig)
         Log.d(TAG, "tenantId:" + CameraInfo.tenantId)
         Log.d(TAG, "wiFiAPRouterMode:$wiFiAPRouterMode")
         CameraInfo.userId = userId
@@ -197,18 +202,6 @@ class LoginX2ViewModel @Inject constructor(
     fun verifyInternetConnection(callback: (Boolean) -> Unit) {
         viewModelScope.launch(Dispatchers.IO) {
             simpleNetworkManager.verifyInternetConnection(callback)
-        }
-    }
-
-    fun isPermissionsDenied() {
-        viewModelScope.launch {
-            _isPermissionDeniedStatus.postValue(Result.Success(preferencesManager.getIsPermissionsDenied()))
-        }
-    }
-
-    fun savePermissionsDeniedValue(isPermissionDenied: Boolean) {
-        viewModelScope.launch {
-            preferencesManager.saveIsPermissionsDenied(isPermissionDenied)
         }
     }
 

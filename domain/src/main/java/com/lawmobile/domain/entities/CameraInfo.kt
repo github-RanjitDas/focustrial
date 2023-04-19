@@ -15,6 +15,7 @@ object CameraInfo {
     var metadataEvents = mutableListOf<MetadataEvent>()
     var isOfficerLogged: Boolean = false
     var officerId = ""
+    var deviceIdFromConfig = ""
     var serialNumber = ""
     var officerName = ""
     var areNewChanges = false

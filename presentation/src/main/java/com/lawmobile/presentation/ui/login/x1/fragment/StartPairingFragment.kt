@@ -1,11 +1,8 @@
 package com.lawmobile.presentation.ui.login.x1.fragment
 
-import android.Manifest
 import android.content.ComponentName
-import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
-import android.location.LocationManager
 import android.net.Uri
 import android.os.Bundle
 import android.os.IBinder
@@ -20,11 +17,10 @@ import com.lawmobile.presentation.R
 import com.lawmobile.presentation.databinding.FragmentStartPairingBinding
 import com.lawmobile.presentation.entities.AlertInformation
 import com.lawmobile.presentation.extensions.createAlertInformation
-import com.lawmobile.presentation.extensions.isPermissionGranted
+import com.lawmobile.presentation.extensions.isGPSActive
 import com.lawmobile.presentation.extensions.showErrorSnackBar
 import com.lawmobile.presentation.security.IIsolatedService
 import com.lawmobile.presentation.security.IsolatedService
-import com.lawmobile.presentation.ui.base.BaseActivity
 import com.lawmobile.presentation.ui.base.BaseFragment
 import com.lawmobile.presentation.ui.login.shared.Instructions
 import com.lawmobile.presentation.ui.login.shared.PairingViewModel
@@ -109,27 +105,7 @@ class StartPairingFragment : BaseFragment(), Instructions, StartPairing {
     }
 
     private fun verifyPermissionsToStartPairing() {
-        if (arePermissionsGranted()) {
-            if (isGPSActive()) startPairing() else showAlertToGPSEnable()
-        } else {
-            showAlertToNavigateToPermissions()
-        }
-    }
-
-    private fun arePermissionsGranted() =
-        (activity as BaseActivity).isPermissionGranted(Manifest.permission.ACCESS_FINE_LOCATION)
-
-    private fun isGPSActive(): Boolean {
-        val locationManager =
-            requireContext().getSystemService(Context.LOCATION_SERVICE) as LocationManager
-        var gpsEnable = false
-        try {
-            gpsEnable = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-
-        return gpsEnable
+        if (isGPSActive(requireContext())) startPairing() else showAlertToGPSEnable()
     }
 
     private fun startPairing() {
