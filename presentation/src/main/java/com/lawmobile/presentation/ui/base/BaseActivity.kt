@@ -12,6 +12,7 @@ import com.lawmobile.domain.entities.CameraInfo
 import com.lawmobile.domain.enums.EventType
 import com.lawmobile.domain.enums.NotificationType
 import com.lawmobile.domain.usecase.events.EventsUseCase
+import com.lawmobile.presentation.BuildConfig
 import com.lawmobile.presentation.connectivity.MobileDataStatus
 import com.lawmobile.presentation.connectivity.WifiHelper
 import com.lawmobile.presentation.connectivity.WifiStatus
@@ -86,9 +87,8 @@ abstract class BaseActivity : AppCompatActivity() {
     }
 
     fun getApplicationVersionText(): String {
-//        return if (BuildConfig.DEBUG) "Version ${BuildConfig.VERSION_NAME}(${BuildConfig.VERSION_CODE})"
-//        else "Version ${BuildConfig.VERSION_NAME}"
-        return ""
+        return if (BuildConfig.DEBUG) "Version ${BuildConfig.VERSION_NAME}(${BuildConfig.VERSION_CODE})"
+        else "Version ${BuildConfig.VERSION_NAME}"
     }
 
     private fun setEventsUseCase() {

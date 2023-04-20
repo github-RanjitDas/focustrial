@@ -164,6 +164,7 @@ class DevicePasswordFragment : BaseFragment(), Instructions, StartPairing {
         buttonConnect.isEnabled = false
         buttonConnect.isActivated = false
         buttonConnect.setOnClickListener {
+            showLoadingDialog()
             (activity as AppCompatActivity).hideKeyboard()
             if (!verifyMagiskInPhone()) verifyPermissionsToStartPairing()
         }
@@ -179,6 +180,7 @@ class DevicePasswordFragment : BaseFragment(), Instructions, StartPairing {
 
     private fun startPairingProcess() {
         if (!pairingViewModel.isWifiEnable()) {
+            hideLoadingDialog()
             createAlertToNavigateWifiSettings()
         } else {
             if (CameraInfo.backOfficeType == BackOfficeType.NEXUS) {
@@ -221,8 +223,8 @@ class DevicePasswordFragment : BaseFragment(), Instructions, StartPairing {
             handler,
             hotspotSSID, hotspotPassword
         ) { isConnected ->
+            hideLoadingDialog()
             if (isConnected) {
-                hideLoadingDialog()
                 onStartPairingClick?.invoke()
             } else {
                 SFConsoleLogs.log(
@@ -230,7 +232,6 @@ class DevicePasswordFragment : BaseFragment(), Instructions, StartPairing {
                     SFConsoleLogs.Tags.TAG_HOTSPOT_CONNECTION_ERRORS,
                     message = "Error Connecting with Wifi : $hotspotSSID"
                 )
-                hideLoadingDialog()
                 if (incorrectPasswordRetryAttempt >= MAX_INCORRECT_PASSWORD_ATTEMPT) {
                     showLimitOfLoginAttemptsErrorNotification()
                 } else {
