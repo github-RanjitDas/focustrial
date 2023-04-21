@@ -16,6 +16,9 @@ abstract class BaseFragment : Fragment() {
     abstract val viewTag: String?
 
     fun showLoadingDialog(textResource: Int = R.string.loading_wait) {
+        if (loadingDialog != null && loadingDialog!!.isShowing) {
+            hideLoadingDialog()
+        }
         EspressoIdlingResource.increment()
         loadingDialog = (activity as BaseActivity).createAlertProgress(textResource)
         loadingDialog?.show()
