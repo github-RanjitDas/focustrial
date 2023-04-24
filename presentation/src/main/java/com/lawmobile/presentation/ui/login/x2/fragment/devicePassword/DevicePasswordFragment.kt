@@ -186,6 +186,7 @@ class DevicePasswordFragment : BaseFragment(), Instructions, StartPairing {
             if (CameraInfo.backOfficeType == BackOfficeType.NEXUS) {
                 // Nexus
                 if (CameraInfo.wifiApRouterMode == 1) {
+                    hideLoadingDialog()
                     // Wifi AP Router 1
                     initPasswordVerification()
                 } else {
@@ -199,7 +200,10 @@ class DevicePasswordFragment : BaseFragment(), Instructions, StartPairing {
             } else {
                 // CC
                 val hotspotPassword = binding.editTextDevicePassword.text.toString()
-                binding.suggestBodyCameraNetwork(hotspotPassword)
+                binding.suggestBodyCameraNetwork(
+                    hotspotPassword,
+                    "X" + CameraInfo.deviceIdFromConfig
+                )
             }
         }
     }
