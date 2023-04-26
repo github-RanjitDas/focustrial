@@ -1,6 +1,7 @@
 package com.lawmobile.presentation.ui.videoPlayback
 
 import android.graphics.Rect
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.SurfaceView
@@ -8,6 +9,11 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.cardview.widget.CardView
 import androidx.core.view.isVisible
+import androidx.media3.common.MediaItem
+import androidx.media3.common.Player
+import androidx.media3.exoplayer.ExoPlayer
+import androidx.media3.exoplayer.rtsp.RtspMediaSource
+import androidx.media3.exoplayer.source.MediaSource
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.lawmobile.domain.entities.CameraInfo
 import com.lawmobile.domain.entities.DomainCameraFile
@@ -57,6 +63,8 @@ class VideoPlaybackActivity : BaseActivity() {
     private val bottomSheetBehavior: BottomSheetBehavior<CardView> by lazy {
         BottomSheetBehavior.from(binding.bottomSheetAssociate.bottomSheetAssociate)
     }
+
+    private var exoPlayer: ExoPlayer? = null
 
     private var isAssociateDialogOpen: Boolean
         get() = viewModel.isAssociateDialogOpen
@@ -183,7 +191,7 @@ class VideoPlaybackActivity : BaseActivity() {
                     setFullScreenViews()
                 }
             }
-            viewModel.mediaInformation.value?.let(::createVideoPlayer)
+            viewModel.mediaInformation.value?.let(::createVideoPlayerExo)
         }
     }
 
@@ -206,7 +214,7 @@ class VideoPlaybackActivity : BaseActivity() {
     private fun collectMediaInformation() {
         activityCollect(viewModel.mediaInformation) { result ->
             result?.let {
-                createVideoPlayer(it)
+                createVideoPlayerExo(it)
                 setMediaInformation(it)
             }
         }
@@ -246,6 +254,7 @@ class VideoPlaybackActivity : BaseActivity() {
                         dispatcher = Dispatchers.Main.immediate, callback = ::finish
                     )
                 }
+
                 is Result.Error -> showToast(
                     getString(R.string.video_metadata_save_error), Toast.LENGTH_SHORT
                 )
@@ -313,16 +322,17 @@ class VideoPlaybackActivity : BaseActivity() {
         }
     }
 
-    private fun buttonFullScreenListener() = with(binding.layoutNormalPlayback.buttonFullScreen) {
-        isActivated = false
-        setOnClickListenerCheckConnection {
-            state = VideoPlaybackState.FullScreen
+    private fun buttonFullScreenListener() =
+        with(binding.layoutNormalPlayback.buttonFullScreenExo) {
+            isActivated = false
+            setOnClickListenerCheckConnection {
+                state = VideoPlaybackState.FullScreen
+            }
+            VideoPlaybackViewModel.isVidePlayerInFullScreen = true
         }
-        VideoPlaybackViewModel.isVidePlayerInFullScreen = true
-    }
 
     private fun buttonNormalScreenListener() =
-        with(binding.layoutFullScreenPlayback.buttonFullScreen) {
+        with(binding.layoutFullScreenPlayback.buttonFullScreenExo) {
             isActivated = true
             setOnClickListenerCheckConnection {
                 state = VideoPlaybackState.Default
@@ -425,6 +435,56 @@ class VideoPlaybackActivity : BaseActivity() {
         }
     }
 
+    private fun createVideoPlayerExo(mediaInformation: DomainInformationVideo) {
+        releasePlayer()
+        exoPlayer = ExoPlayer.Builder(this)
+            .build()
+            .also { exoPlayer ->
+                if (binding.layoutFullScreenPlayback.layoutVideoPlayback.isVisible) {
+                    binding.layoutFullScreenPlayback.videoView.setShowNextButton(false)
+                    binding.layoutFullScreenPlayback.videoView.setShowPreviousButton(false)
+                    binding.layoutFullScreenPlayback.videoView.setShowVrButton(false)
+                    binding.layoutFullScreenPlayback.videoView.setShowShuffleButton(false)
+                    binding.layoutFullScreenPlayback.videoView.player = exoPlayer
+                } else {
+                    binding.layoutNormalPlayback.videoView.setShowNextButton(false)
+                    binding.layoutNormalPlayback.videoView.setShowPreviousButton(false)
+                    binding.layoutNormalPlayback.videoView.setShowVrButton(false)
+                    binding.layoutNormalPlayback.videoView.setShowShuffleButton(false)
+                    binding.layoutNormalPlayback.videoView.player = exoPlayer
+                }
+                // binding.layoutNormalPlayback.videoView.controllerAutoShow = false
+
+                val mediaSource: MediaSource = RtspMediaSource.Factory().setForceUseRtpTcp(true)
+                    .createMediaSource(MediaItem.fromUri(Uri.parse(mediaInformation.urlVideo)))
+                exoPlayer.setMediaSource(mediaSource)
+            }
+        exoPlayer?.addListener(object : Player.Listener {
+            override fun onPlaybackStateChanged(playbackState: Int) {
+
+                when (playbackState) {
+                    ExoPlayer.STATE_ENDED -> {
+                        val mediaSource: MediaSource =
+                            RtspMediaSource.Factory().setForceUseRtpTcp(true)
+                                .createMediaSource(MediaItem.fromUri(Uri.parse(mediaInformation.urlVideo)))
+                        exoPlayer?.setMediaSource(mediaSource)
+                        exoPlayer?.pause()
+                    }
+
+                    else -> {}
+                }
+            }
+        })
+        // exoPlayer?.repeatMode = ExoPlayer.REPEAT_MODE_ALL
+        exoPlayer?.prepare()
+        exoPlayer?.playWhenReady = true
+    }
+
+    private fun releasePlayer() {
+        exoPlayer?.release()
+        exoPlayer = null
+    }
+
     private fun getNormalPlayerControls() = binding.layoutNormalPlayback.run {
         MediaPlayerControls(
             buttonPlay, textViewPlayerTime, textViewPlayerDuration, seekProgressVideo, buttonAspect
@@ -447,8 +507,14 @@ class VideoPlaybackActivity : BaseActivity() {
         } else state = VideoPlaybackState.Default
     }
 
+    override fun onStop() {
+        super.onStop()
+        releasePlayer()
+    }
+
     override fun onDestroy() {
         super.onDestroy()
+        releasePlayer()
         FilesAssociatedByUser.cleanList()
         if (!VideoPlaybackViewModel.isVidePlayerInFullScreen) {
             viewModel.informationManager.saveVideoDetailMetaData(binding.layoutNormalPlayback.seekProgressVideo.progress)

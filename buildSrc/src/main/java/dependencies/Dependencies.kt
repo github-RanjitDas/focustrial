@@ -50,14 +50,14 @@ object Dependencies {
     }
 
     object Espresso {
-        private const val VERSION = "3.4.0"
+        private const val VERSION = "3.5.1"
         const val espressoCore = "androidx.test.espresso:espresso-core:$VERSION"
         const val idlingResource = "androidx.test.espresso:espresso-idling-resource:$VERSION"
         const val intents = "androidx.test.espresso:espresso-intents:$VERSION"
     }
 
     object Fragment {
-        private const val VERSION = "1.2.5"
+        private const val VERSION = "1.5.7"
         const val extensions = "androidx.fragment:fragment-ktx:$VERSION"
     }
 
@@ -73,30 +73,30 @@ object Dependencies {
     }
 
     object Hilt {
-        private const val VERSION = "2.33-beta"
+        private const val VERSION = "2.43.2"
         private const val JETPACK_VERSION = "1.0.0-alpha03"
         const val hiltAndroid = "com.google.dagger:hilt-android:$VERSION"
         const val hiltAndroidCompiler = "com.google.dagger:hilt-android-compiler:$VERSION"
-        const val hiltCompiler = "androidx.hilt:hilt-compiler:$JETPACK_VERSION"
-        const val hiltViewModel = "androidx.hilt:hilt-lifecycle-viewmodel:$JETPACK_VERSION"
+        const val hiltCompiler = "androidx.hilt:hilt-compiler:1.0.0"
+        const val hiltViewModel = "androidx.hilt:hilt-lifecycle-viewmodel:$VERSION"
         const val gradlePlugin = "com.google.dagger:hilt-android-gradle-plugin:$VERSION"
     }
 
     object JUnit {
-        private const val VERSION = "4.13.1"
+        private const val VERSION = "4.13.2"
         const val junit = "junit:junit:$VERSION"
     }
 
     object JUnit5 {
-        private const val VERSION = "5.5.1"
+        private const val VERSION = "5.9.3"
         const val jupiterApi = "org.junit.jupiter:junit-jupiter-api:$VERSION"
         const val jupiterEngine = "org.junit.jupiter:junit-jupiter-engine:$VERSION"
         const val jupiterParams = "org.junit.jupiter:junit-jupiter-params:$VERSION"
     }
 
     object Kotlin {
-        private const val VERSION = "1.4.32"
-        const val standardLibrary = "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$VERSION"
+        private const val VERSION = "1.6.10"
+        const val standardLibrary = "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.6.10"
         const val gradlePlugin = "org.jetbrains.kotlin:kotlin-gradle-plugin:$VERSION"
     }
 
@@ -110,10 +110,10 @@ object Dependencies {
 
     object Lifecycle {
         private const val VERSION = "2.4.0-alpha03"
-        private const val EXT_VERSION = "2.2.0"
-        const val extensions = "androidx.lifecycle:lifecycle-extensions:$EXT_VERSION"
-        const val runtime = "androidx.lifecycle:lifecycle-runtime-ktx:$VERSION"
-        const val viewModel = "androidx.lifecycle:lifecycle-viewmodel-ktx:$VERSION"
+        private const val EXT_VERSION = "2.4.0"
+        const val extensions = "androidx.lifecycle:lifecycle-extensions:2.2.0"
+        const val runtime = "androidx.lifecycle:lifecycle-runtime-ktx:$EXT_VERSION"
+        const val viewModel = "androidx.lifecycle:lifecycle-viewmodel-ktx:$EXT_VERSION"
     }
 
     object Lottie {
@@ -164,7 +164,15 @@ object Dependencies {
     }
 
     object VLC {
-        private const val VERSION = "3.4.3"
+        private const val VERSION = "4.0.0-eap9"
         const val libVLC = "org.videolan.android:libvlc-all:$VERSION"
+    }
+
+    object ExoPlayer {
+        private const val VERSION = "1.0.1"
+        const val player = "androidx.media3:media3-exoplayer:$VERSION"
+        const val ui = "androidx.media3:media3-ui:$VERSION"
+        const val dash = "androidx.media3:media3-exoplayer-dash:$VERSION"
+        const val rtsp = "androidx.media3:media3-exoplayer-rtsp:$VERSION"
     }
 }

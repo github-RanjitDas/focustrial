@@ -92,7 +92,7 @@ android {
         }
 
         debug {
-            testCoverageEnabled true
+            //testCoverageEnabled true
             debuggable true
             minifyEnabled false
             shrinkResources false
@@ -164,8 +164,8 @@ dependencies {
     implementation Dependencies.Google.gson
     implementation Dependencies.Hilt.hiltAndroid
     kapt Dependencies.Hilt.hiltAndroidCompiler
-
-    implementation Dependencies.Hilt.hiltViewModel
+    kapt "org.jetbrains.kotlinx:kotlinx-metadata-jvm:0.5.0"
+    //implementation Dependencies.Hilt.hiltViewModel
     kapt Dependencies.Hilt.hiltCompiler
 
     //Base repository
@@ -193,4 +193,8 @@ dependencies {
     implementation project(path: Modules.domain)
     implementation project(path: Modules.database)
     implementation project(path: Modules.body_cameras)
+}
+
+repositories {
+    google()
 }

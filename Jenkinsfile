@@ -54,7 +54,7 @@ node('jenkins-builds-slave') {
             stage('Unit Tests') {
                 logger.stage()
                 timeout(7) {
-                    sh "./gradlew testDebugUnitTestCoverage --stacktrace"
+                    sh "./gradlew testDebugUnitTest --stacktrace"
                 }
 			}
             if(env.BRANCH_NAME != 'develop' && env.BRANCH_NAME != 'master'){
