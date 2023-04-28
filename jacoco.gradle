@@ -31,7 +31,8 @@ task testDebugUnitTestCoverage(type: JacocoReport) {
             'presentation/build/jacoco/testDebugUnitTest.exec',
             'domain/build/jacoco/testDebugUnitTest.exec',
             'data/build/jacoco/testDebugUnitTest.exec',
-            'database/build/jacoco/testDebugUnitTest.exec'
+            'database/build/jacoco/testDebugUnitTest.exec',
+            "outputs/unit_test_code_coverage/debugUnitTest/testDebugUnitTest.exec"
     ])
 
     reports {

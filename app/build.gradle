@@ -130,7 +130,7 @@ android {
         resolutionStrategy {
             eachDependency { details ->
                 if ('org.jacoco' == details.requested.group) {
-                    details.useVersion "0.8.7"
+                    details.useVersion "0.8.8"
                 }
             }
         }

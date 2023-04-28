@@ -62,6 +62,15 @@ allprojects {
             url "https://nexus.vmaxlive.net/repository/maven-public/"
         }
     }
+    configurations.all {
+        resolutionStrategy {
+            eachDependency { details ->
+                if ('org.jacoco' == details.requested.group) {
+                    details.useVersion "0.8.8"
+                }
+            }
+        }
+    }
 }
 
 task installGitHook(type: Copy) {
