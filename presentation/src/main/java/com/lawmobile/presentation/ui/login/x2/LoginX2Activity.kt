@@ -5,6 +5,7 @@ import android.content.RestrictionsManager
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.os.SystemClock
 import android.util.Log
 import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -18,6 +19,8 @@ import com.lawmobile.domain.enums.CameraType
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.extensions.attachFragmentWithAnimation
 import com.lawmobile.presentation.extensions.createNotificationDialog
+import com.lawmobile.presentation.extensions.showIncorrectPasswordErrorNotification
+import com.lawmobile.presentation.extensions.showLimitOfLoginAttemptsErrorNotification
 import com.lawmobile.presentation.keystore.KeystoreHandler
 import com.lawmobile.presentation.ui.live.x2.LiveX2Activity
 import com.lawmobile.presentation.ui.login.LoginBaseActivity
@@ -27,6 +30,7 @@ import com.lawmobile.presentation.ui.login.state.LoginState
 import com.lawmobile.presentation.ui.login.x2.fragment.devicePassword.DevicePasswordFragment
 import com.lawmobile.presentation.ui.login.x2.fragment.officerId.OfficerIdFragment
 import com.lawmobile.presentation.ui.sso.SSOActivity
+import com.lawmobile.presentation.utils.EncodePassword
 import com.lawmobile.presentation.utils.SFConsoleLogs
 import com.safefleet.mobile.kotlin_commons.extensions.doIfError
 import com.safefleet.mobile.kotlin_commons.extensions.doIfSuccess
@@ -55,6 +59,8 @@ class LoginX2Activity : LoginBaseActivity() {
     override val instructions: Instructions get() = devicePasswordFragment
     override val startPairing: StartPairing get() = devicePasswordFragment
 
+    private var mLastClickTime: Long = 0
+
     var officerId: String
         get() = viewModel.officerId
         set(value) {
@@ -69,6 +75,10 @@ class LoginX2Activity : LoginBaseActivity() {
         restoreBottomSheetState()
         setCollectors()
         viewModel.setObservers()
+    }
+
+    fun getUserNPasswordFromCamera() {
+        viewModel.getUserFromCamera()
     }
 
     private fun logBluetoothError(exception: Exception) {
@@ -165,11 +175,13 @@ class LoginX2Activity : LoginBaseActivity() {
                                 showLoadingDialog()
                                 viewModel.getAuthorizationEndpoints()
                             }
+
                             else -> {
                                 state = LoginState.X2.DevicePassword
                             }
                         }
                     }
+
                     else -> {
                         // Not Nexus
                         state = LoginState.X2.DevicePassword
@@ -296,7 +308,63 @@ class LoginX2Activity : LoginBaseActivity() {
 
     override fun handleUserResult(result: Result<User>) {
         super.handleUserResult(result)
-        result.doIfSuccess { startLiveViewActivity() }
+        hideLoadingDialog()
+        if (CameraInfo.isBackOfficeCC()) {
+            // CC
+            if (SystemClock.elapsedRealtime() - mLastClickTime < 2000) {
+                return
+            } else {
+                mLastClickTime = SystemClock.elapsedRealtime()
+                result.doIfSuccess {
+                    val passwordFromCamera = it.password ?: ""
+                    devicePasswordFragment.passwordFromCamera = passwordFromCamera
+                    validateOfficerPassword(passwordFromCamera)
+                }
+            }
+        } else {
+            // Nexus
+            startLiveViewActivity()
+        }
+    }
+
+    private fun isCorrectPassword(passwordFromCamera: String): Boolean {
+        val inputPassword = devicePasswordFragment.inputPassword
+        val sha256Password = EncodePassword.encodePasswordOfficer(inputPassword)
+        Log.d(
+            TAG_CC_PWD_VALIDATION,
+            "input password:$inputPassword,sha256Password:$sha256Password,passwordFromCamera:$passwordFromCamera"
+        )
+        return sha256Password.isNotEmpty() && sha256Password == passwordFromCamera
+    }
+
+    fun validateOfficerPassword(passwordFromCamera: String) {
+        Log.d(TAG_CC_PWD_VALIDATION, "validateOfficerPassword:$passwordFromCamera")
+        if (passwordFromCamera.isNotEmpty() && isCorrectPassword(passwordFromCamera)) {
+            isOnlyShowSuccessAnimation = true
+            state = LoginState.PairingResult
+            handler.postDelayed(
+                {
+                    handleConnectionAnimationListener?.onShowSuccessAnimation()
+                },
+                1000
+            )
+        } else {
+            state = LoginState.X2.DevicePassword
+            showUserPasswordError()
+        }
+    }
+
+    private fun showUserPasswordError() {
+        Log.d(
+            TAG_CC_PWD_VALIDATION,
+            "showUserPasswordError:" + DevicePasswordFragment.incorrectPasswordRetryAttempt
+        )
+        if (DevicePasswordFragment.incorrectPasswordRetryAttempt >= DevicePasswordFragment.MAX_INCORRECT_PASSWORD_ATTEMPT) {
+            this.showLimitOfLoginAttemptsErrorNotification(this)
+        } else {
+            DevicePasswordFragment.incorrectPasswordRetryAttempt++
+            this.showIncorrectPasswordErrorNotification()
+        }
     }
 
     private fun startLiveViewActivity() {
@@ -368,6 +436,7 @@ class LoginX2Activity : LoginBaseActivity() {
                     showLoadingDialog()
                     viewModel.authenticateToGetToken(response, ::onTokenResponse)
                 }
+
                 exception != null -> {
                     showRequestError()
                 }
@@ -418,6 +487,7 @@ class LoginX2Activity : LoginBaseActivity() {
     }
 
     companion object {
+        const val TAG_CC_PWD_VALIDATION = "CC_PWD_VALIDATION"
         private const val ENABLE_CONTINUE_DELAY = 1000L
         private const val WAIT_TO_ENABLE_BLUETOOTH_DELAY = 1000L
         private const val TAG = "LoginX2Activity"

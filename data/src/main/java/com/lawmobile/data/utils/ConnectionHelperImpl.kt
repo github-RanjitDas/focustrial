@@ -11,6 +11,7 @@ class ConnectionHelperImpl(private val cameraServiceFactory: CameraServiceFactor
     private var cameraService: CameraService = cameraServiceFactory.create()
 
     override fun isCameraConnected(ipAddress: String) = cameraService.isCameraConnected(ipAddress)
+    override fun isCameraConnectedV2(ipAddress: String) = cameraService.isCameraConnectedV2(ipAddress)
     override fun onCameraEvent(callback: (CameraEvent) -> Unit) {
         cameraService.arriveNotificationFromCamera = {
             callback.invoke(it.toDomain())

@@ -1,6 +1,8 @@
 package com.lawmobile.presentation.ui.login.shared
 
+import android.content.Intent
 import android.os.Bundle
+import android.os.SystemClock
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,18 +16,23 @@ import com.lawmobile.presentation.R
 import com.lawmobile.presentation.databinding.FragmentPairingResultBinding
 import com.lawmobile.presentation.extensions.runWithDelay
 import com.lawmobile.presentation.ui.base.BaseFragment
+import com.lawmobile.presentation.ui.live.x2.LiveX2Activity
+import com.lawmobile.presentation.ui.login.LoginBaseActivity
 import com.lawmobile.presentation.utils.SFConsoleLogs
 import com.safefleet.mobile.kotlin_commons.extensions.doIfError
 import com.safefleet.mobile.kotlin_commons.helpers.Result
 
-class PairingResultFragment : BaseFragment() {
+class PairingResultFragment : BaseFragment(), LoginBaseActivity.OnHandleConnectionAnimation {
 
     private var _binding: FragmentPairingResultBinding? = null
     private val binding get() = _binding!!
+    private var mLastClickTime: Long = 0
 
     private val pairingViewModel: PairingViewModel by activityViewModels()
     lateinit var onConnectionSuccessful: () -> Unit
+    lateinit var onHandleConnectionAnimation: (LoginBaseActivity.OnHandleConnectionAnimation) -> Unit
     private lateinit var animation: Animation
+    private var isOnlyShowSuccessAnimation: Boolean = false
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -41,6 +48,10 @@ class PairingResultFragment : BaseFragment() {
         setObservers()
         setListeners()
         setAnimation()
+        if (CameraInfo.isBackOfficeCC()) {
+            onHandleConnectionAnimation.invoke(this)
+        }
+        println("CC_PWD_VALIDATION PairingResultFragment:$isOnlyShowSuccessAnimation")
         pairingViewModel.connectWithCamera()
     }
 
@@ -82,7 +93,11 @@ class PairingResultFragment : BaseFragment() {
         _binding?.textViewProgressConnection?.text = percent
         if (progress == PERCENT_TOTAL_CONNECTION_CAMERA) {
             saveSerialNumber()
-            showSuccessResult()
+            if (CameraInfo.isBackOfficeCC()) {
+                onConnectionSuccessful()
+            } else {
+                showSuccessResult()
+            }
         }
     }
 
@@ -108,14 +123,13 @@ class PairingResultFragment : BaseFragment() {
     }
 
     private fun showSuccessResult() {
+        println("CC_PWD_VALIDATION showSuccessResult:")
         binding.pairingProgressLayout.isVisible = false
         binding.pairingResultLayout.isVisible = true
         binding.buttonRetry.isVisible = false
         binding.imageViewResultPairing.setImageDrawable(
             ResourcesCompat.getDrawable(
-                resources,
-                R.drawable.ic_successful_green,
-                null
+                resources, R.drawable.ic_successful_green, null
             )
         )
         binding.textViewResultPairing.setText(R.string.success_connection_to_camera)
@@ -124,7 +138,21 @@ class PairingResultFragment : BaseFragment() {
     }
 
     private fun waitToFinishAnimation() {
-        runWithDelay(ANIMATION_DURATION) { onConnectionSuccessful() }
+        println("CC_PWD_VALIDATION waitToFinishAnimation:$isOnlyShowSuccessAnimation")
+        runWithDelay(ANIMATION_DURATION) {
+            if (isOnlyShowSuccessAnimation && CameraInfo.isBackOfficeCC()) {
+                startLiveViewActivity()
+            } else {
+                onConnectionSuccessful()
+            }
+        }
+    }
+
+    private fun startLiveViewActivity() {
+        CameraInfo.isOfficerLogged = true
+        val intent = Intent(activity, LiveX2Activity::class.java)
+        startActivity(intent)
+        activity?.finish()
     }
 
     private fun showErrorResult() {
@@ -133,9 +161,7 @@ class PairingResultFragment : BaseFragment() {
         binding.buttonRetry.isVisible = true
         binding.imageViewResultPairing.setImageDrawable(
             ResourcesCompat.getDrawable(
-                resources,
-                R.drawable.ic_error_big,
-                null
+                resources, R.drawable.ic_error_big, null
             )
         )
         binding.textViewResultPairing.setText(R.string.error_connection_to_camera)
@@ -155,7 +181,22 @@ class PairingResultFragment : BaseFragment() {
         private const val PERCENT_TOTAL_CONNECTION_CAMERA = 100
         private const val ANIMATION_DURATION = 1200L
 
-        fun createInstance(onConnectionSuccess: () -> Unit): PairingResultFragment =
-            PairingResultFragment().apply { this.onConnectionSuccessful = onConnectionSuccess }
+        fun createInstance(
+            onConnectionSuccess: () -> Unit,
+            handleAnimation: (LoginBaseActivity.OnHandleConnectionAnimation) -> Unit
+        ): PairingResultFragment = PairingResultFragment().apply {
+            this.onConnectionSuccessful = onConnectionSuccess
+            this.onHandleConnectionAnimation = handleAnimation
+        }
+    }
+
+    override fun onShowSuccessAnimation() {
+        if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
+            return
+        } else {
+            mLastClickTime = SystemClock.elapsedRealtime()
+        }
+        isOnlyShowSuccessAnimation = true
+        showSuccessResult()
     }
 }

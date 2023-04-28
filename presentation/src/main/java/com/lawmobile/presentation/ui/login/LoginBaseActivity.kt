@@ -9,6 +9,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
+import android.util.Log
 import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.cardview.widget.CardView
@@ -32,6 +33,7 @@ import com.lawmobile.presentation.ui.login.shared.Instructions
 import com.lawmobile.presentation.ui.login.shared.PairingResultFragment
 import com.lawmobile.presentation.ui.login.shared.StartPairing
 import com.lawmobile.presentation.ui.login.state.LoginState
+import com.lawmobile.presentation.ui.login.x2.LoginX2Activity.Companion.TAG_CC_PWD_VALIDATION
 import com.lawmobile.presentation.utils.SFConsoleLogs
 import com.safefleet.mobile.android_commons.extensions.hideKeyboard
 import com.safefleet.mobile.kotlin_commons.extensions.doIfError
@@ -51,6 +53,8 @@ abstract class LoginBaseActivity : BaseActivity() {
         }
 
     protected lateinit var baseViewModel: LoginBaseViewModel
+
+    protected var isOnlyShowSuccessAnimation = false
 
     private var isInstructionsOpen: Boolean
         get() = baseViewModel.isInstructionsOpen
@@ -248,11 +252,19 @@ abstract class LoginBaseActivity : BaseActivity() {
     private fun showPairingResultFragment() {
         supportFragmentManager.attachFragmentWithAnimation(
             containerId = R.id.fragmentContainer,
-            fragment = PairingResultFragment.createInstance(::onConnectionSuccessful),
+            fragment = PairingResultFragment.createInstance(
+                ::onConnectionSuccessful,
+                ::setHandleConnectionAnimationCallback
+            ),
             tag = PairingResultFragment.TAG,
             animationIn = android.R.anim.fade_in,
             animationOut = android.R.anim.fade_out
         )
+    }
+
+    open fun setHandleConnectionAnimationCallback(handleConnectionAnimation: OnHandleConnectionAnimation) {
+        this.handleConnectionAnimationListener = null
+        this.handleConnectionAnimationListener = handleConnectionAnimation
     }
 
     private fun showUserInformationError() {
@@ -273,7 +285,8 @@ abstract class LoginBaseActivity : BaseActivity() {
         }
     }
 
-    protected open fun onConnectionSuccessful() {
+    open fun onConnectionSuccessful() {
+        Log.d(TAG_CC_PWD_VALIDATION, "onConnectionSuccessful()")
         baseViewModel.getUserFromCamera()
     }
 
@@ -282,6 +295,7 @@ abstract class LoginBaseActivity : BaseActivity() {
         permissions: Array<out String>,
         grantResults: IntArray
     ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == REQUEST_PERMISSION_CODE) {
             updateFirstTimeAskingPermissionPrefs()
             if (hasPermissions(this)) {
@@ -304,5 +318,11 @@ abstract class LoginBaseActivity : BaseActivity() {
 
     override fun onBackPressed() {
         // This method is implemented to invalidate the behaviour of back button on the phones
+    }
+
+    protected var handleConnectionAnimationListener: OnHandleConnectionAnimation? = null
+
+    interface OnHandleConnectionAnimation {
+        fun onShowSuccessAnimation()
     }
 }
