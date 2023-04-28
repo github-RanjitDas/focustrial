@@ -92,7 +92,7 @@ android {
         }
 
         debug {
-            //testCoverageEnabled true
+            testCoverageEnabled true
             debuggable true
             minifyEnabled false
             shrinkResources false
@@ -127,6 +127,13 @@ android {
 
     configurations.all {
         resolutionStrategy.force Dependencies.Google.findBugs
+        resolutionStrategy {
+            eachDependency { details ->
+                if ('org.jacoco' == details.requested.group) {
+                    details.useVersion "0.8.7"
+                }
+            }
+        }
     }
 
     compileOptions {
