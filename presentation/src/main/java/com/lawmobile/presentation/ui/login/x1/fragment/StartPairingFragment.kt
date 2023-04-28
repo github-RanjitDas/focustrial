@@ -19,6 +19,7 @@ import com.lawmobile.presentation.entities.AlertInformation
 import com.lawmobile.presentation.extensions.createAlertInformation
 import com.lawmobile.presentation.extensions.isGPSActive
 import com.lawmobile.presentation.extensions.showErrorSnackBar
+import com.lawmobile.presentation.keystore.KeystoreHandler
 import com.lawmobile.presentation.security.IIsolatedService
 import com.lawmobile.presentation.security.IsolatedService
 import com.lawmobile.presentation.ui.base.BaseFragment
@@ -77,7 +78,10 @@ class StartPairingFragment : BaseFragment(), Instructions, StartPairing {
     }
 
     private fun FragmentStartPairingBinding.changeCameraListener() {
-        buttonChangeCamera.setOnClickListener { goToSelectCamera() }
+        buttonChangeCamera.setOnClickListener {
+            KeystoreHandler.deleteKeystoreEntry()
+            goToSelectCamera()
+        }
     }
 
     private fun FragmentStartPairingBinding.buttonInstructionsListener() {
