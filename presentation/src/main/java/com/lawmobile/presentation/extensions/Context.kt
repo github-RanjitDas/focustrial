@@ -13,10 +13,14 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
 import com.lawmobile.domain.entities.CameraEvent
 import com.lawmobile.domain.entities.CameraInfo
+import com.lawmobile.domain.entities.customEvents.IncorrectPasswordErrorEvent
+import com.lawmobile.domain.entities.customEvents.LimitOfLoginAttemptsErrorEvent
+import com.lawmobile.domain.entities.customEvents.WrongCredentialsEvent
 import com.lawmobile.domain.enums.CameraType
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.entities.AlertInformation
 import com.lawmobile.presentation.ui.base.BaseActivity
+import com.lawmobile.presentation.ui.login.LoginBaseActivity
 import com.lawmobile.presentation.utils.CameraHelper
 import com.lawmobile.presentation.utils.checkIfSessionIsExpired
 import com.lawmobile.presentation.widgets.CustomNotificationDialog
@@ -199,5 +203,28 @@ fun Context.getIntentForCameraType(
     return when (CameraInfo.cameraType) {
         CameraType.X1 -> Intent(this, activityForX1)
         CameraType.X2 -> Intent(this, activityForX2)
+    }
+}
+
+fun Context.showWrongCredentialsNotification() {
+    val cameraEvent = WrongCredentialsEvent.event
+    createNotificationDialog(cameraEvent)
+        ?.setButtonText(resources.getString(R.string.OK))
+}
+
+fun Context.showIncorrectPasswordErrorNotification() {
+    val cameraEvent = IncorrectPasswordErrorEvent.event
+    createNotificationDialog(cameraEvent)
+        .setButtonText(resources.getString(R.string.OK))
+}
+
+fun Context.showLimitOfLoginAttemptsErrorNotification(activity: LoginBaseActivity) {
+    val cameraEvent = LimitOfLoginAttemptsErrorEvent.event
+    createNotificationDialog(cameraEvent) {
+        setButtonText(resources.getString(R.string.OK))
+        onConfirmationClick = {
+            activity.finishAffinity()
+            exitProcess(0)
+        }
     }
 }

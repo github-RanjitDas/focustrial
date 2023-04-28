@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
+import android.os.SystemClock
 import android.provider.Settings
 import android.util.Log
 import android.view.LayoutInflater
@@ -18,33 +19,35 @@ import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import com.lawmobile.domain.entities.CameraInfo
-import com.lawmobile.domain.entities.customEvents.IncorrectPasswordErrorEvent
-import com.lawmobile.domain.entities.customEvents.LimitOfLoginAttemptsErrorEvent
-import com.lawmobile.domain.entities.customEvents.WrongCredentialsEvent
 import com.lawmobile.domain.enums.BackOfficeType
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.databinding.FragmentStartPairingX2Binding
 import com.lawmobile.presentation.entities.AlertInformation
 import com.lawmobile.presentation.extensions.createAlertInformation
-import com.lawmobile.presentation.extensions.createNotificationDialog
 import com.lawmobile.presentation.extensions.isGPSActive
 import com.lawmobile.presentation.extensions.showErrorSnackBar
+import com.lawmobile.presentation.extensions.showIncorrectPasswordErrorNotification
+import com.lawmobile.presentation.extensions.showLimitOfLoginAttemptsErrorNotification
 import com.lawmobile.presentation.security.IIsolatedService
 import com.lawmobile.presentation.security.IsolatedService
 import com.lawmobile.presentation.ui.base.BaseFragment
+import com.lawmobile.presentation.ui.login.LoginBaseActivity
 import com.lawmobile.presentation.ui.login.shared.Instructions
 import com.lawmobile.presentation.ui.login.shared.PairingViewModel
 import com.lawmobile.presentation.ui.login.shared.StartPairing
 import com.lawmobile.presentation.ui.login.x1.fragment.StartPairingFragment
+import com.lawmobile.presentation.ui.login.x2.LoginX2Activity
 import com.lawmobile.presentation.utils.SFConsoleLogs
 import com.safefleet.mobile.android_commons.extensions.hideKeyboard
 import com.safefleet.mobile.kotlin_commons.extensions.doIfError
 import com.safefleet.mobile.kotlin_commons.extensions.doIfSuccess
 import com.safefleet.mobile.kotlin_commons.helpers.Result
 import org.json.JSONObject
-import kotlin.system.exitProcess
 
 class DevicePasswordFragment : BaseFragment(), Instructions, StartPairing {
+    var inputPassword: String = ""
+    var passwordFromCamera: String = ""
+    private var mLastClickTime: Long = 0
     private var _binding: FragmentStartPairingX2Binding? = null
     private val binding get() = _binding!!
 
@@ -95,10 +98,10 @@ class DevicePasswordFragment : BaseFragment(), Instructions, StartPairing {
             } else {
                 hideLoadingDialog()
                 if (incorrectPasswordRetryAttempt >= MAX_INCORRECT_PASSWORD_ATTEMPT) {
-                    showLimitOfLoginAttemptsErrorNotification()
+                    requireContext().showLimitOfLoginAttemptsErrorNotification(activity as LoginBaseActivity)
                 } else {
                     incorrectPasswordRetryAttempt++
-                    showIncorrectPasswordErrorNotification()
+                    requireContext().showIncorrectPasswordErrorNotification()
                 }
             }
         }
@@ -199,11 +202,28 @@ class DevicePasswordFragment : BaseFragment(), Instructions, StartPairing {
                 }
             } else {
                 // CC
-                val hotspotPassword = binding.editTextDevicePassword.text.toString()
-                binding.suggestBodyCameraNetwork(
-                    hotspotPassword,
-                    "X" + CameraInfo.deviceIdFromConfig
-                )
+                inputPassword = binding.editTextDevicePassword.text.toString()
+                if (viewModel.isCameraConnected()) {
+                    Log.d(LoginX2Activity.TAG_CC_PWD_VALIDATION, "Camera Connected Already")
+                    if (passwordFromCamera.isNotEmpty()) {
+                        if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
+                            return
+                        } else {
+                            mLastClickTime = SystemClock.elapsedRealtime()
+                            (activity as LoginX2Activity).validateOfficerPassword(passwordFromCamera)
+                            hideLoadingDialog()
+                        }
+                    } else {
+                        (activity as LoginX2Activity).getUserNPasswordFromCamera()
+                        hideLoadingDialog()
+                    }
+                } else {
+                    Log.d(LoginX2Activity.TAG_CC_PWD_VALIDATION, "Camera Not Connected")
+                    val hotspotPasswordDefault = CameraInfo.defaultPasswordForCC
+                    binding.suggestBodyCameraNetwork(
+                        hotspotPasswordDefault, "X" + CameraInfo.deviceIdFromConfig
+                    )
+                }
             }
         }
     }
@@ -237,34 +257,11 @@ class DevicePasswordFragment : BaseFragment(), Instructions, StartPairing {
                     message = "Error Connecting with Wifi : $hotspotSSID"
                 )
                 if (incorrectPasswordRetryAttempt >= MAX_INCORRECT_PASSWORD_ATTEMPT) {
-                    showLimitOfLoginAttemptsErrorNotification()
+                    requireContext().showLimitOfLoginAttemptsErrorNotification(activity as LoginBaseActivity)
                 } else {
                     incorrectPasswordRetryAttempt++
-                    showIncorrectPasswordErrorNotification()
+                    requireContext().showIncorrectPasswordErrorNotification()
                 }
-            }
-        }
-    }
-
-    private fun showWrongCredentialsNotification() {
-        val cameraEvent = WrongCredentialsEvent.event
-        context?.createNotificationDialog(cameraEvent)
-            ?.setButtonText(resources.getString(R.string.OK))
-    }
-
-    private fun showIncorrectPasswordErrorNotification() {
-        val cameraEvent = IncorrectPasswordErrorEvent.event
-        context?.createNotificationDialog(cameraEvent)
-            ?.setButtonText(resources.getString(R.string.OK))
-    }
-
-    private fun showLimitOfLoginAttemptsErrorNotification() {
-        val cameraEvent = LimitOfLoginAttemptsErrorEvent.event
-        context?.createNotificationDialog(cameraEvent) {
-            setButtonText(resources.getString(R.string.OK))
-            onConfirmationClick = {
-                activity?.finishAffinity()
-                exitProcess(0)
             }
         }
     }

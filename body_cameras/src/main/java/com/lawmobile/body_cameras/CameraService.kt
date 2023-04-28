@@ -32,6 +32,7 @@ interface CameraService {
 
     // Verifications
     fun isCameraConnected(gatewayConnection: String): Boolean
+    fun isCameraConnectedV2(gatewayConnection: String): Boolean
     suspend fun isPossibleTheConnection(hostnameToConnect: String): Result<Unit>
     fun getCanReadNotification(): Boolean
     fun reviewIfArriveNotificationInCMDSocket()

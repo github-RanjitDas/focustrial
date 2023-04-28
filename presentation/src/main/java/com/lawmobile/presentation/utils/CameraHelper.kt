@@ -28,6 +28,9 @@ class CameraHelper(
         return connectionHelper.isCameraConnected(wifiHelper.getGatewayAddress())
     }
 
+    fun checkIfTheCameraIsConnected(): Boolean {
+        return connectionHelper.isCameraConnectedV2(wifiHelper.getGatewayAddress())
+    }
     fun onCameraEvent(callback: (CameraEvent) -> Unit) {
         connectionHelper.onCameraEvent(callback)
     }

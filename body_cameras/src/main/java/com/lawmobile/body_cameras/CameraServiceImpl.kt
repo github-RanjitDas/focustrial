@@ -168,6 +168,11 @@ open class CameraServiceImpl(
         return BWCConnectionParams.hostnameToConnect == gatewayConnection
     }
 
+    override fun isCameraConnectedV2(gatewayConnection: String): Boolean {
+        if (gatewayConnection.isEmpty()) return false
+        return BWCConnectionParams.hostnameToConnect == gatewayConnection
+    }
+
     override suspend fun disconnectCamera(): Result<Unit> {
         val command =
             XCameraCommand.Builder().addMsgId(XCameraCommandCodes.DISCONNECT_X_CAMERA.commandValue)
@@ -445,6 +450,7 @@ open class CameraServiceImpl(
                 progressPairingCamera?.invoke(Result.Success(CameraConstants.PROGRESS_CONNECT_CAMERA))
                 true
             }
+
             is Result.Error -> {
                 progressPairingCamera?.invoke(Result.Error(connectCameraCMD.exception))
                 false

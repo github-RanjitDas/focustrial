@@ -6,6 +6,7 @@ import com.lawmobile.domain.enums.CameraType
 
 object CameraInfo {
     var cameraType: CameraType = CameraType.X1
+    var defaultPasswordForCC = "1234567890"
     var backOfficeType: BackOfficeType = BackOfficeType.COMMAND_CENTRE
     var discoveryUrl = ""
     var tenantId = ""
@@ -46,5 +47,9 @@ object CameraInfo {
 
     fun setCamera(cameraType: CameraType) {
         this.cameraType = cameraType
+    }
+
+    fun isBackOfficeCC(): Boolean {
+        return CameraInfo.backOfficeType != BackOfficeType.NEXUS
     }
 }

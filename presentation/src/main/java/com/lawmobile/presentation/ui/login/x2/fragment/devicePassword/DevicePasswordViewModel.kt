@@ -9,6 +9,7 @@ import androidx.lifecycle.viewModelScope
 import com.lawmobile.presentation.bluetooth.OnBleStatusUpdates
 import com.lawmobile.presentation.bluetooth.PasswordVerificationBleManager
 import com.lawmobile.presentation.ui.base.BaseViewModel
+import com.lawmobile.presentation.utils.CameraHelper
 import com.safefleet.mobile.kotlin_commons.helpers.Result
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -26,6 +27,10 @@ class DevicePasswordViewModel @Inject constructor(private val bleManager: Passwo
         bleManager.initManager(context)
         bleManager.inputPassword = inputPassword
         scanNConnectFromBluetooth(context)
+    }
+
+    fun isCameraConnected(): Boolean {
+        return CameraHelper.getInstance().checkIfTheCameraIsConnected()
     }
 
     private fun scanNConnectFromBluetooth(

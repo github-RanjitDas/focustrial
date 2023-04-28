@@ -223,6 +223,9 @@ class CameraConnectServiceMock : CameraService {
     }
 
     override fun isCameraConnected(gatewayConnection: String): Boolean = true
+    override fun isCameraConnectedV2(gatewayConnection: String): Boolean {
+        return true
+    }
 
     override suspend fun isPossibleTheConnection(hostnameToConnect: String): Result<Unit> {
         return Result.Success(Unit)

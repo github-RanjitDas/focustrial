@@ -1,5 +1,6 @@
 package com.safefleet.lawmobile.helpers
 
+import android.os.Handler
 import com.lawmobile.presentation.connectivity.WifiHelper
 import com.safefleet.lawmobile.testData.TestLoginData
 import kotlinx.coroutines.flow.Flow
@@ -28,6 +29,7 @@ class WifiHelperMock : WifiHelper {
     }
 
     override fun suggestWiFiNetwork(
+        handler: Handler,
         networkName: String,
         networkPassword: String,
         connectionCallback: (connected: Boolean) -> Unit
