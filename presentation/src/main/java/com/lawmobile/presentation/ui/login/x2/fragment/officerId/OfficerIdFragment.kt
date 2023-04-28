@@ -14,6 +14,7 @@ import com.lawmobile.domain.entities.customEvents.InternetErrorEvent
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.databinding.FragmentValidateOfficerIdBinding
 import com.lawmobile.presentation.extensions.createNotificationDialog
+import com.lawmobile.presentation.keystore.KeystoreHandler
 import com.lawmobile.presentation.ui.base.BaseFragment
 import com.lawmobile.presentation.ui.onBoardingCards.OnBoardingCardsActivity
 import com.lawmobile.presentation.ui.selectCamera.SelectCameraActivity
@@ -144,7 +145,10 @@ class OfficerIdFragment : BaseFragment() {
     }
 
     private fun FragmentValidateOfficerIdBinding.changeCameraListener() {
-        buttonChangeCamera.setOnClickListener { goToSelectCamera() }
+        buttonChangeCamera.setOnClickListener {
+            KeystoreHandler.deleteKeystoreEntry()
+            goToSelectCamera()
+        }
     }
 
     private fun FragmentValidateOfficerIdBinding.buttonContinueListener() {

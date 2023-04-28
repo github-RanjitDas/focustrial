@@ -298,7 +298,7 @@
     <string name="display">Display</string>
     <string name="officer_id">Enter your officer ID</string>
     <string name="officer_email_id">Enter your email id</string>
-    <string name="change_camera_type">Reset Camera Type</string>
+    <string name="change_camera_type">Reset Camera</string>
     <string name="go_to_on_boarding_cards">Go to onboarding cards</string>
     <string name="sign_in_with_email">Sign in with Email</string>
     <string name="connect">Connect</string>
