@@ -139,13 +139,17 @@ dependencies {
     implementation Dependencies.AndroidX.coreKTX
     implementation Dependencies.ConstraintLayout.constraintLayout
     implementation Dependencies.VLC.libVLC
+    implementation Dependencies.ExoPlayer.player
+    implementation Dependencies.ExoPlayer.ui
+    implementation Dependencies.ExoPlayer.dash
+    implementation Dependencies.ExoPlayer.rtsp
     implementation Dependencies.RecyclerView.recyclerView
     implementation Dependencies.PDF.pdfViewer
     implementation Dependencies.Hilt.hiltAndroid
     kapt Dependencies.Hilt.hiltAndroidCompiler
     kapt Dependencies.Hilt.hiltCompiler
     implementation Dependencies.Fragment.extensions
-    implementation Dependencies.Hilt.hiltViewModel
+    //implementation Dependencies.Hilt.hiltViewModel
     implementation Dependencies.Glide.glide
     implementation Dependencies.Google.flexBox
 
@@ -159,10 +163,8 @@ dependencies {
     implementation Dependencies.Base.authentication
 
     implementation Dependencies.DataStore.preferences
-
     implementation Dependencies.Auth0.jwtDecode
     implementation Dependencies.OpenId.appAuth
-
     implementation project(path: Modules.domain)
 }
 
@@ -180,4 +182,8 @@ pitest {
     avoidCallsTo.set(["kotlin.jvm.internal", "kotlin/ResultKt"]) //Stabilizes mutation run for Android
     enableDefaultIncrementalAnalysis.set(true)
     timestampedReports.set(false) //Overwrite past mutation report
+}
+
+repositories {
+    google()
 }

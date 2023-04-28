@@ -1,11 +1,16 @@
 package com.lawmobile.presentation.ui.live.stream
 
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
+import androidx.media3.common.MediaItem
+import androidx.media3.exoplayer.ExoPlayer
+import androidx.media3.exoplayer.rtsp.RtspMediaSource
+import androidx.media3.exoplayer.source.MediaSource
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.databinding.FragmentLiveStreamBinding
 import com.lawmobile.presentation.extensions.setOnClickListenerCheckConnection
@@ -26,6 +31,7 @@ class LiveStreamFragment : BaseFragment(), LiveStream {
     override var onFullScreenClick: (() -> Unit)? = null
 
     private var isButtonFullscreenActivated = false
+    private var exoPlayer: ExoPlayer? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -44,7 +50,7 @@ class LiveStreamFragment : BaseFragment(), LiveStream {
 
     override fun onResume() {
         super.onResume()
-        startLiveStream()
+        startLiveStreamExoPlayer()
     }
 
     private fun setFullscreenButtonActivated() {
@@ -65,8 +71,14 @@ class LiveStreamFragment : BaseFragment(), LiveStream {
     }
 
     fun setStreamVisibility(isVisible: Boolean) {
-        if (isVisible) binding.liveStreamingView.setBackgroundResource(R.color.transparent)
-        else binding.liveStreamingView.setBackgroundResource(R.color.black)
+        if (isVisible) {
+            startLiveStreamExoPlayer()
+            binding.liveStreamingViewExoPlayer.setBackgroundResource(R.color.transparent)
+        } else {
+            exoPlayer?.stop()
+            releasePlayer()
+            binding.liveStreamingViewExoPlayer.setBackgroundResource(R.color.black)
+        }
         binding.toggleFullScreenLiveView.isClickable = isVisible
     }
 
@@ -88,6 +100,21 @@ class LiveStreamFragment : BaseFragment(), LiveStream {
         viewModel.mediaPlayer.play()
     }
 
+    private fun startLiveStreamExoPlayer() {
+        releasePlayer()
+        exoPlayer = ExoPlayer.Builder(requireContext())
+            .build()
+            .also { exoPlayer ->
+                binding.liveStreamingViewExoPlayer.player = exoPlayer
+                val url = viewModel.getUrlLive()
+                val mediaSource: MediaSource = RtspMediaSource.Factory().setForceUseRtpTcp(true)
+                    .createMediaSource(MediaItem.fromUri(Uri.parse(url)))
+                exoPlayer.setMediaSource(mediaSource)
+            }
+        exoPlayer?.prepare()
+        exoPlayer?.playWhenReady = true
+    }
+
     private fun setListeners() {
         binding.toggleFullScreenLiveView.setOnClickListenerCheckConnection {
             onFullScreenClick?.invoke()
@@ -97,11 +124,18 @@ class LiveStreamFragment : BaseFragment(), LiveStream {
     override fun onStop() {
         super.onStop()
         viewModel.mediaPlayer.stop()
+        releasePlayer()
+    }
+
+    private fun releasePlayer() {
+        exoPlayer?.release()
+        exoPlayer = null
     }
 
     override fun onDestroy() {
         super.onDestroy()
         _binding = null
+        releasePlayer()
     }
 
     override val viewTag: String

@@ -10,10 +10,32 @@
         android:id="@+id/surfaceVideoPlayback"
         android:layout_width="match_parent"
         android:layout_height="@dimen/no_dp"
+        android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@id/layoutPlaybackControls"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.media3.ui.PlayerView
+        android:id="@+id/video_view"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/no_dp"
+        app:resize_mode="fill"
+        app:layout_constraintBottom_toTopOf="@id/layoutPlaybackControls"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        />
+
+    <ImageButton
+        android:id="@+id/buttonFullScreenExo"
+        style="@style/buttonPlayBackVideo"
+        android:layout_marginEnd="@dimen/video_playback_button_full_screen_margin_sides"
+        android:contentDescription="@string/image_description_full_screen_size"
+        android:src="@drawable/selector_fullscreen_button"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/layoutPlaybackControls"
@@ -21,6 +43,7 @@
         android:layout_height="@dimen/_60dp"
         android:background="@color/black"
         android:paddingBottom="@dimen/padding_5dp"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
