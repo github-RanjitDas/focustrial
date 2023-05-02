@@ -26,6 +26,7 @@ import com.lawmobile.presentation.ui.fileList.thumbnailList.ThumbnailFileListFra
 import com.lawmobile.presentation.utils.Constants
 import com.lawmobile.presentation.utils.Constants.SIMPLE_FILE_LIST
 import com.lawmobile.presentation.utils.Constants.THUMBNAIL_FILE_LIST
+import com.lawmobile.presentation.utils.Constants.VIDEO_LIST
 import com.lawmobile.presentation.utils.SFConsoleLogs
 import com.lawmobile.presentation.utils.VLCMediaPlayer
 import com.lawmobile.presentation.widgets.CustomFilterDialog
@@ -131,7 +132,7 @@ abstract class FileListBaseActivity : BaseActivity() {
         listTypeButtons.onThumbnailsClick = {
             if (state is FileListState.Simple) {
                 state = FileListState.Thumbnail
-                CameraInfo.fragmentListTypeToLoad = THUMBNAIL_FILE_LIST
+                CameraInfo.fragmentListTypeToLoadForSnapshot = THUMBNAIL_FILE_LIST
                 isSelectActive = false
             }
         }
@@ -141,7 +142,7 @@ abstract class FileListBaseActivity : BaseActivity() {
         listTypeButtons.onSimpleClick = {
             if (state is FileListState.Thumbnail) {
                 state = FileListState.Simple
-                CameraInfo.fragmentListTypeToLoad = SIMPLE_FILE_LIST
+                CameraInfo.fragmentListTypeToLoadForSnapshot = SIMPLE_FILE_LIST
                 isSelectActive = false
             }
         }
@@ -171,7 +172,7 @@ abstract class FileListBaseActivity : BaseActivity() {
         if (state == null) {
             when (listType) {
                 Constants.SNAPSHOT_LIST -> {
-                    when (CameraInfo.fragmentListTypeToLoad) {
+                    when (CameraInfo.fragmentListTypeToLoadForSnapshot) {
                         SIMPLE_FILE_LIST -> state = FileListState.Simple
                         THUMBNAIL_FILE_LIST -> state = FileListState.Thumbnail
                         else -> FileListState.Thumbnail
@@ -202,12 +203,20 @@ abstract class FileListBaseActivity : BaseActivity() {
         activityCollect(fileListState) {
             it?.run {
                 onSimple {
-                    CameraInfo.fragmentListTypeToLoad = SIMPLE_FILE_LIST
+                    if (listType == VIDEO_LIST) {
+                        CameraInfo.fragmentListTypeToLoadForVideo = SIMPLE_FILE_LIST
+                    } else {
+                        CameraInfo.fragmentListTypeToLoadForSnapshot = SIMPLE_FILE_LIST
+                    }
                     listTypeButtons.toggleListType(true)
                     attachSimpleFileListFragment()
                 }
                 onThumbnail {
-                    CameraInfo.fragmentListTypeToLoad = THUMBNAIL_FILE_LIST
+                    if (listType == VIDEO_LIST) {
+                        CameraInfo.fragmentListTypeToLoadForVideo = THUMBNAIL_FILE_LIST
+                    } else {
+                        CameraInfo.fragmentListTypeToLoadForSnapshot = THUMBNAIL_FILE_LIST
+                    }
                     listTypeButtons.toggleListType(false)
                     attachThumbnailListFragment()
                 }
