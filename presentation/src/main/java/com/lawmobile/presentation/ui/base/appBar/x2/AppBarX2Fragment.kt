@@ -48,7 +48,9 @@ class AppBarX2Fragment : BaseFragment() {
 
     override fun onResume() {
         super.onResume()
-        setCurrentNotificationCount()
+        if (CameraInfo.isCameraConnected) {
+            setCurrentNotificationCount()
+        }
     }
 
     private fun setCurrentNotificationCount() = with(binding) {

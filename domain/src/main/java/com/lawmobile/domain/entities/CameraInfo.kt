@@ -15,6 +15,7 @@ object CameraInfo {
     var notificationDictionaryList: List<NotificationDictionary> = ArrayList()
     var metadataEvents = mutableListOf<MetadataEvent>()
     var isOfficerLogged: Boolean = false
+    var isCameraConnected: Boolean = false
     var officerId = ""
     var deviceIdFromConfig = ""
     var serialNumber = ""
@@ -30,6 +31,7 @@ object CameraInfo {
     fun cleanInfo() {
         metadataEvents = mutableListOf()
         isOfficerLogged = false
+        isCameraConnected = false
         officerId = ""
         serialNumber = ""
         officerName = ""
@@ -51,6 +53,6 @@ object CameraInfo {
     }
 
     fun isBackOfficeCC(): Boolean {
-        return CameraInfo.backOfficeType != BackOfficeType.NEXUS
+        return backOfficeType != BackOfficeType.NEXUS
     }
 }

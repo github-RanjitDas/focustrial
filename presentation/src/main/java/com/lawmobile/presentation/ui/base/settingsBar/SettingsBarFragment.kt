@@ -72,7 +72,9 @@ class SettingsBarFragment : BaseFragment() {
 
     override fun onResume() {
         super.onResume()
-        viewModel.getBodyCameraSettingsInBg()
+        if (CameraInfo.isCameraConnected) {
+            viewModel.getBodyCameraSettingsInBg()
+        }
     }
 
     private fun manageBodyCameraSettingsResult(result: Result<ParametersBodyWornSettings>) {

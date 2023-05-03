@@ -1,6 +1,7 @@
 package com.lawmobile.presentation.utils
 
 import com.lawmobile.domain.entities.CameraEvent
+import com.lawmobile.domain.entities.CameraInfo
 import com.lawmobile.domain.utils.ConnectionHelper
 import com.lawmobile.presentation.connectivity.WifiHelper
 import kotlinx.coroutines.CoroutineDispatcher
@@ -36,6 +37,7 @@ class CameraHelper(
     }
 
     fun disconnectCamera() {
+        CameraInfo.isCameraConnected = false
         CoroutineScope(dispatcher).launch {
             connectionHelper.disconnectCamera()
         }

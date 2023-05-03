@@ -287,6 +287,7 @@ abstract class LoginBaseActivity : BaseActivity() {
 
     open fun onConnectionSuccessful() {
         Log.d(TAG_CC_PWD_VALIDATION, "onConnectionSuccessful()")
+        CameraInfo.isCameraConnected = true
         baseViewModel.getUserFromCamera()
     }
 

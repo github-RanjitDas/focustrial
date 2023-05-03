@@ -264,6 +264,6 @@ abstract class BaseActivity : AppCompatActivity() {
         var isRecordingAudio: Boolean = false
 
         const val REQUEST_PERMISSION_CODE = 100
-        const val MAX_TIME_SESSION = 300000
+        const val MAX_TIME_SESSION = 30000
     }
 }

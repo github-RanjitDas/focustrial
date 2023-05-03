@@ -13,6 +13,7 @@ import com.google.android.flexbox.FlexDirection
 import com.google.android.flexbox.FlexboxLayoutManager
 import com.google.android.flexbox.JustifyContent
 import com.google.android.material.snackbar.Snackbar
+import com.lawmobile.domain.entities.CameraInfo
 import com.lawmobile.domain.entities.DomainCameraFile
 import com.lawmobile.domain.entities.DomainInformationFile
 import com.lawmobile.domain.entities.DomainInformationFileResponse
@@ -81,9 +82,11 @@ class ThumbnailFileListFragment : FileListBaseFragment() {
 
     override fun onResume() {
         super.onResume()
-        viewModel.cancelGetImageBytes()
-        listType = arguments?.getString(FILE_LIST_TYPE)
-        getFileListBasedOnType()
+        if (CameraInfo.isCameraConnected) {
+            viewModel.cancelGetImageBytes()
+            listType = arguments?.getString(FILE_LIST_TYPE)
+            getFileListBasedOnType()
+        }
     }
 
     private fun getFileListBasedOnType() {

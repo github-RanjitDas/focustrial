@@ -61,7 +61,9 @@ class NotificationListActivity : BaseActivity() {
 
     override fun onResume() {
         super.onResume()
-        getNotificationList()
+        if (CameraInfo.isCameraConnected) {
+            getNotificationList()
+        }
     }
 
     private fun attachFragments() {
