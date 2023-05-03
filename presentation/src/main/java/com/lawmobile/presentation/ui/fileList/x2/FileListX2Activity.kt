@@ -3,6 +3,7 @@ package com.lawmobile.presentation.ui.fileList.x2
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.viewModels
+import com.lawmobile.domain.entities.CameraInfo
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.entities.MenuInformation
 import com.lawmobile.presentation.extensions.activityCollect
@@ -50,7 +51,9 @@ class FileListX2Activity : FileListBaseActivity() {
 
     override fun onResume() {
         super.onResume()
-        getFragmentInformation()
+        if (CameraInfo.isCameraConnected) {
+            getFragmentInformation()
+        }
     }
 
     private fun getFragmentInformation() {

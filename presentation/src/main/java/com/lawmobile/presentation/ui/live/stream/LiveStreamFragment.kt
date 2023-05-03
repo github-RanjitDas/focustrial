@@ -11,10 +11,12 @@ import androidx.media3.common.MediaItem
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.rtsp.RtspMediaSource
 import androidx.media3.exoplayer.source.MediaSource
+import com.lawmobile.domain.entities.CameraInfo
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.databinding.FragmentLiveStreamBinding
 import com.lawmobile.presentation.extensions.setOnClickListenerCheckConnection
 import com.lawmobile.presentation.extensions.startAnimationIfEnabled
+import com.lawmobile.presentation.extensions.verifySessionBeforeAction
 import com.lawmobile.presentation.ui.base.BaseFragment
 import com.lawmobile.presentation.ui.fileList.simpleList.SimpleFileListFragment
 import com.lawmobile.presentation.ui.live.shared.LiveStream
@@ -50,7 +52,9 @@ class LiveStreamFragment : BaseFragment(), LiveStream {
 
     override fun onResume() {
         super.onResume()
-        startLiveStreamExoPlayer()
+        if (CameraInfo.isCameraConnected) {
+            requireContext().verifySessionBeforeAction(::startLiveStreamExoPlayer)
+        }
     }
 
     private fun setFullscreenButtonActivated() {

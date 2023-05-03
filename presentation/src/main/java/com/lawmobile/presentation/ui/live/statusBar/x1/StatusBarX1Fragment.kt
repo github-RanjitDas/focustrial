@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import com.lawmobile.domain.entities.CameraInfo
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.databinding.FragmentLiveStatusBarX1Binding
 import com.lawmobile.presentation.extensions.setOnClickListenerCheckConnection
@@ -64,9 +65,11 @@ class StatusBarX1Fragment : StatusBarBaseFragment() {
 
     override fun onResume() {
         super.onResume()
-        if (!ifFirstTimeLoad) {
-            isShowCameraStatusFailedError = false
-            sharedViewModel.getCameraStatusAsync()
+        if (CameraInfo.isCameraConnected) {
+            if (!ifFirstTimeLoad) {
+                isShowCameraStatusFailedError = false
+                sharedViewModel.getCameraStatusAsync()
+            }
         }
     }
 
