@@ -13,7 +13,7 @@ import kotlinx.coroutines.flow.map
 class PreferencesManagerImpl(private val dataStore: DataStore<Preferences>) : PreferencesManager {
     override suspend fun getSerialNumber(): String {
         return dataStore.data.map { preferences ->
-            preferences[SERIAL_NUMBER] ?: CameraInfo.officerId
+            preferences[SERIAL_NUMBER] ?: ("x2-" + CameraInfo.deviceIdFromConfig)
         }.first()
     }
 
@@ -64,6 +64,7 @@ class PreferencesManagerImpl(private val dataStore: DataStore<Preferences>) : Pr
             preferences[TOKEN_ENDPOINT] = url
         }
     }
+
     override suspend fun saveIsPermissionsDenied(isPermissionDenied: Boolean) {
         dataStore.edit { preferences ->
             preferences[PERMISSION_STATUS] = isPermissionDenied
