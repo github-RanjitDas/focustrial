@@ -27,7 +27,8 @@ class SSOActivity : BaseActivity() {
     }
 
     private fun onUriChange(isLoginUri: Boolean) {
-        binding.returnButton.isVisible = isLoginUri
+        // Hide the return button always.
+        binding.returnButton.isVisible = false
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

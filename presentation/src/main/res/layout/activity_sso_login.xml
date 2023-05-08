@@ -26,6 +26,7 @@
         android:layout_height="wrap_content"
         android:background="@drawable/shape_button_white"
         android:textAllCaps="false"
+        android:visibility="gone"
         android:paddingHorizontal="@dimen/padding_30dp"
         android:text="@string/return_to_regular_login"
         android:textColor="@color/FMABlue"
