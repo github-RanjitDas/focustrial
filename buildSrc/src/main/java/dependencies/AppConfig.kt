@@ -11,7 +11,7 @@ object AppConfig {
     const val buildVersion = 3
     private const val major = 3
     private const val minor = 8
-    private const val patch = 0
+    private const val patch = 1
     //versionName will be different for release
     const val versionName = "develop-$major.$minor.$patch"
     val jvmTarget = JavaVersion.VERSION_1_8

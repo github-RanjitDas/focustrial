@@ -27,6 +27,7 @@ object CameraInfo {
     lateinit var videoDetailMetaDataCached: VideoDetailMetaDataCached
     var fragmentListTypeToLoadForSnapshot: String = "thumbnailFileList"
     var fragmentListTypeToLoadForVideo: String = "simpleFileList"
+    var playbackPosition: Long? = 0
 
     fun cleanInfo() {
         metadataEvents = mutableListOf()
