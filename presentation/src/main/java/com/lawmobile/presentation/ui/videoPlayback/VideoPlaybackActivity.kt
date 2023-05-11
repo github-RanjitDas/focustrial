@@ -3,7 +3,6 @@ package com.lawmobile.presentation.ui.videoPlayback
 import android.graphics.Rect
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.SurfaceView
 import android.widget.Toast
 import androidx.activity.viewModels
@@ -112,13 +111,9 @@ class VideoPlaybackActivity : BaseActivity() {
                 RestoreVideoMetaDataFromCache {
                 override fun onRestoreVideoMetaData() {
                     if (savedInstanceState != null) {
+                        exoPlayer?.seekTo(CameraInfo.playbackPosition ?: 0)
                         if (isInPortraitMode()) {
                             viewModel.informationManager.restoreVideoDetailMetaDataFromCache()
-                            binding.layoutNormalPlayback.seekProgressVideo.progress =
-                                CameraInfo.videoDetailMetaDataCached.playerProgress
-                        } else {
-                            binding.layoutFullScreenPlayback.seekProgressVideo.progress =
-                                CameraInfo.videoDetailMetaDataCached.playerProgress
                         }
                     }
                 }
@@ -326,6 +321,7 @@ class VideoPlaybackActivity : BaseActivity() {
         with(binding.layoutNormalPlayback.buttonFullScreenExo) {
             isActivated = false
             setOnClickListenerCheckConnection {
+                CameraInfo.playbackPosition = exoPlayer?.currentPosition
                 state = VideoPlaybackState.FullScreen
             }
             VideoPlaybackViewModel.isVidePlayerInFullScreen = true
@@ -335,6 +331,7 @@ class VideoPlaybackActivity : BaseActivity() {
         with(binding.layoutFullScreenPlayback.buttonFullScreenExo) {
             isActivated = true
             setOnClickListenerCheckConnection {
+                CameraInfo.playbackPosition = exoPlayer?.currentPosition
                 state = VideoPlaybackState.Default
             }
             VideoPlaybackViewModel.isVidePlayerInFullScreen = false
@@ -352,7 +349,6 @@ class VideoPlaybackActivity : BaseActivity() {
         (!fakeSurfaceVideoPlayback.getLocalVisibleRect(scrollBounds) && viewModel.mediaPlayer.isPlaying)
 
     private fun setVideoInformation(videoInformation: DomainVideoMetadata) {
-        Log.d("TTT", "setVideoInformation():$videoInformation")
         videoInformation.associatedFiles?.let {
             associateSnapshotsFragment.setFilesAssociatedFromMetadata(it as MutableList)
         }
@@ -500,11 +496,16 @@ class VideoPlaybackActivity : BaseActivity() {
     override fun onBackPressed() {
         if (state is VideoPlaybackState.Default) {
             if (!isAssociateDialogOpen) {
-                viewModel.mediaPlayer.pause()
                 if (viewModel.theMetadataWasEdited()) createAlertDialogUnsavedChanges()
-                else super.onBackPressed()
+                else {
+                    CameraInfo.playbackPosition = 0
+                    super.onBackPressed()
+                }
             } else isAssociateDialogOpen = false
-        } else state = VideoPlaybackState.Default
+        } else {
+            CameraInfo.playbackPosition = exoPlayer?.currentPosition
+            state = VideoPlaybackState.Default
+        }
     }
 
     override fun onStop() {
@@ -517,7 +518,7 @@ class VideoPlaybackActivity : BaseActivity() {
         releasePlayer()
         FilesAssociatedByUser.cleanList()
         if (!VideoPlaybackViewModel.isVidePlayerInFullScreen) {
-            viewModel.informationManager.saveVideoDetailMetaData(binding.layoutNormalPlayback.seekProgressVideo.progress)
+            viewModel.informationManager.saveVideoDetailMetaData(CameraInfo.playbackPosition!!.toInt())
         }
     }
 }
