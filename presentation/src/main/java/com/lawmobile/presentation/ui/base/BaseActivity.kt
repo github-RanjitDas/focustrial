@@ -118,10 +118,28 @@ abstract class BaseActivity : AppCompatActivity() {
 
     private fun handleNotificationEvent(cameraEvent: CameraEvent) {
         when (cameraEvent.name) {
-            NotificationType.LOW_BATTERY.value -> onLowBattery?.invoke(cameraEvent.value?.toInt())
-            NotificationType.LOW_STORAGE.value -> onLowStorage?.invoke()
+            NotificationType.LOW_BATTERY.value -> {
+                onLowBattery?.invoke(cameraEvent.value?.toInt())
+                showNotificationPopup(cameraEvent)
+            }
+            NotificationType.BATTERY_LEVEL.value -> {
+                val batteryLevel = cameraEvent.value?.toInt()
+                if (batteryLevel in 0..5) {
+                    onLowBattery?.invoke(batteryLevel)
+                    showNotificationPopup(cameraEvent)
+                }
+            }
+            NotificationType.LOW_STORAGE.value -> {
+                onLowStorage?.invoke()
+                showNotificationPopup(cameraEvent)
+            }
         }
-        checkActivityBeforeDialog { createNotificationDialog(cameraEvent) }
+    }
+
+    private fun showNotificationPopup(cameraEvent: CameraEvent) {
+        checkActivityBeforeDialog {
+            createNotificationDialog(cameraEvent)
+        }
     }
 
     private fun handleInformationEvent(cameraEvent: CameraEvent) {
@@ -131,11 +149,13 @@ abstract class BaseActivity : AppCompatActivity() {
                     onBatteryLevelChanged?.invoke(it)
                 }
             }
+
             NotificationType.STORAGE_REMAIN.value -> {
                 cameraEvent.value?.toDouble()?.let { availableStorage ->
                     onStorageLevelChanged?.invoke(availableStorage)
                 }
             }
+
             NotificationType.VIDEO_RECORDING_STARTED.value -> onVideoRecordingStatus?.invoke(true)
             NotificationType.VIDEO_RECORDING_STOPPED.value -> onVideoRecordingStatus?.invoke(false)
         }
