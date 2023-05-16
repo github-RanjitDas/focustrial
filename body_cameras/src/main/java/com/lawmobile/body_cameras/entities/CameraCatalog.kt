@@ -12,7 +12,7 @@ class CameraCatalog(
     companion object {
         fun createInstanceListWithStringX1(value: String): Result<List<CameraCatalog>> {
             return try {
-                val catalogList =
+                var catalogList =
                     arrayListOf<CameraCatalog>()
                 val params = separateValuesByString(value.replace("\r", ""), "\n")
                 var section = 0
@@ -38,10 +38,12 @@ class CameraCatalog(
                     }
                 }
 
-                if (catalogList.isNotEmpty())
+                if (catalogList.isNotEmpty()) {
+                    catalogList = catalogList.filter { it.type == X1CatalogTypes.EVENT.value } as ArrayList<CameraCatalog>
                     Result.Success(catalogList)
-                else
+                } else {
                     Result.Error(Exception("The catalog is empty"))
+                }
             } catch (e: Exception) {
                 Result.Error(e)
             }
