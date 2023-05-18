@@ -153,7 +153,7 @@ class VideoPlaybackViewModel @Inject constructor(
 
     private fun setInformationException(it: Exception) {
         _videoInformationException.tryEmit(it)
-        job.cancel()
+        // job.cancel()
     }
 
     fun saveVideoMetadata() {
