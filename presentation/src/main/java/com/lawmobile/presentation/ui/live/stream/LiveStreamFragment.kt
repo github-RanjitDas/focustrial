@@ -78,10 +78,12 @@ class LiveStreamFragment : BaseFragment(), LiveStream {
         if (isVisible) {
             startLiveStreamExoPlayer()
             binding.liveStreamingViewExoPlayer.setBackgroundResource(R.color.transparent)
+            binding.liveViewClosed.visibility = View.GONE
         } else {
             exoPlayer?.stop()
             releasePlayer()
             binding.liveStreamingViewExoPlayer.setBackgroundResource(R.color.black)
+            binding.liveViewClosed.visibility = View.VISIBLE
         }
         binding.toggleFullScreenLiveView.isClickable = isVisible
     }

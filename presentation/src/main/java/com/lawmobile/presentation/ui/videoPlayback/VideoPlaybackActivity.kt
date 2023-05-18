@@ -223,16 +223,18 @@ class VideoPlaybackActivity : BaseActivity() {
 
     private fun collectInformationExceptions() {
         activityCollect(viewModel.videoInformationException) { exception ->
+            hideLoadingDialog()
             exception.let {
                 SFConsoleLogs.log(
                     SFConsoleLogs.Level.ERROR,
                     SFConsoleLogs.Tags.TAG_CAMERA_ERRORS, it,
                     getString(R.string.error_get_information_metadata)
                 )
-                showToast(
-                    getString(R.string.error_get_information_metadata), Toast.LENGTH_SHORT
-                )
-                finish()
+                if (isInPortraitMode()) {
+                    showToast(
+                        getString(R.string.error_get_information_metadata), Toast.LENGTH_SHORT
+                    )
+                }
             }
         }
     }
