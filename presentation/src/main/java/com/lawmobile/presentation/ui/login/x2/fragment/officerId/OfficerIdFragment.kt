@@ -2,6 +2,8 @@ package com.lawmobile.presentation.ui.login.x2.fragment.officerId
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -23,6 +25,8 @@ import com.safefleet.mobile.android_commons.extensions.hideKeyboard
 import kotlin.reflect.KFunction1
 
 class OfficerIdFragment : BaseFragment() {
+
+    val handler = Handler(Looper.myLooper()!!)
 
     private val viewModel: OfficerIdViewModel by activityViewModels()
 
@@ -61,10 +65,13 @@ class OfficerIdFragment : BaseFragment() {
     }
 
     private fun verifyConnectivityRequirements() {
+        val delay: Long = 1000
         if (wereConnectivityRequirementsChecked.not()) {
-            verifyInternetConnection()
+            handler.postDelayed({
+                verifyInternetConnection()
+                wereConnectivityRequirementsChecked = true
+            }, delay)
             verifyBluetoothEnabled()
-            wereConnectivityRequirementsChecked = true
         }
     }
 
