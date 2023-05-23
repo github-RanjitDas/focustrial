@@ -1,6 +1,8 @@
 package com.lawmobile.presentation.ui.base
 
+import android.content.Context
 import android.content.pm.ActivityInfo
+import android.content.res.Configuration
 import android.os.Bundle
 import android.view.WindowManager
 import androidx.activity.viewModels
@@ -100,6 +102,13 @@ abstract class BaseActivity : AppCompatActivity() {
             finish()
             return
         }
+    }
+
+    override fun attachBaseContext(newBase: Context?) {
+        super.attachBaseContext(newBase)
+        val config = Configuration(newBase?.resources?.configuration)
+        config.fontScale = 1.0f
+        applyOverrideConfiguration(config)
     }
 
     private fun setEventsListener() {
