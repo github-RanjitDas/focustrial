@@ -14,6 +14,7 @@ import androidx.activity.viewModels
 import androidx.cardview.widget.CardView
 import androidx.core.view.isVisible
 import androidx.media3.common.MediaItem
+import androidx.media3.common.PlaybackException
 import androidx.media3.common.Player
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.rtsp.RtspMediaSource
@@ -486,6 +487,10 @@ class VideoPlaybackActivity : BaseActivity() {
                 exoPlayer.setMediaSource(mediaSource)
             }
         exoPlayerListener = object : Player.Listener {
+
+            override fun onPlayerError(error: PlaybackException) {
+                binding.layoutVideoPlayback.showErrorSnackBar(getString(R.string.error_get_information_metadata))
+            }
 
             override fun onPlaybackStateChanged(playbackState: Int) {
 
