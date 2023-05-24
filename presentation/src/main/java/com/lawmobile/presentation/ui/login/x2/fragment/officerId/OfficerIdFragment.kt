@@ -67,10 +67,13 @@ class OfficerIdFragment : BaseFragment() {
     private fun verifyConnectivityRequirements() {
         val delay: Long = 1000
         if (wereConnectivityRequirementsChecked.not()) {
-            handler.postDelayed({
-                verifyInternetConnection()
-                wereConnectivityRequirementsChecked = true
-            }, delay)
+            handler.postDelayed(
+                {
+                    verifyInternetConnection()
+                    wereConnectivityRequirementsChecked = true
+                },
+                delay
+            )
             verifyBluetoothEnabled()
         }
     }
