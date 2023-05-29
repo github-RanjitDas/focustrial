@@ -4,13 +4,20 @@ import android.app.Activity
 import android.app.Application
 import android.os.Bundle
 import android.view.WindowManager
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.ProcessLifecycleOwner
+import com.lawmobile.domain.entities.CameraInfo
+import com.lawmobile.presentation.utils.CameraHelper
 import com.newrelic.agent.android.NewRelic
 import dagger.hilt.android.HiltAndroidApp
 
 @HiltAndroidApp
-class BaseApplication : Application() {
+class BaseApplication : Application(), LifecycleEventObserver {
     override fun onCreate() {
         super.onCreate()
+        ProcessLifecycleOwner.get().lifecycle.addObserver(this)
         this.registerActivityLifecycleCallbacks(AppLifecycleTracker())
         startNewRelic()
         setupActivityListener()
@@ -43,5 +50,19 @@ class BaseApplication : Application() {
             override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) {}
             override fun onActivityDestroyed(activity: Activity) {}
         })
+    }
+
+    override fun onStateChanged(source: LifecycleOwner, event: Lifecycle.Event) {
+        when (event) {
+            Lifecycle.Event.ON_STOP -> {
+                println("App enters background." + CameraInfo.isCameraConnected)
+                if (CameraInfo.isCameraConnected) {
+                    CameraInfo.isCameraConnected = false
+                    CameraHelper.getInstance().disconnectCamera()
+                }
+            }
+
+            else -> {}
+        }
     }
 }

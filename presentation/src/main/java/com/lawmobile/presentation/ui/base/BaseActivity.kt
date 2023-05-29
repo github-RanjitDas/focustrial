@@ -118,8 +118,10 @@ abstract class BaseActivity : AppCompatActivity() {
 
     private fun manageCameraEvent(cameraEvent: CameraEvent) {
         runOnUiThread {
-            if (cameraEvent.eventType == EventType.NOTIFICATION) handleNotificationEvent(cameraEvent)
-            else handleInformationEvent(cameraEvent)
+            if (cameraEvent.eventType == EventType.NOTIFICATION) {
+                handleNotificationEvent(cameraEvent)
+                handleInformationEvent(cameraEvent)
+            } else handleInformationEvent(cameraEvent)
         }
 
         baseViewModel.saveNotificationEvent(cameraEvent)
