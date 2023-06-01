@@ -25,6 +25,7 @@ import com.lawmobile.presentation.databinding.FragmentStartPairingX2Binding
 import com.lawmobile.presentation.entities.AlertInformation
 import com.lawmobile.presentation.extensions.createAlertInformation
 import com.lawmobile.presentation.extensions.isGPSActive
+import com.lawmobile.presentation.extensions.showConnectionErrorNotification
 import com.lawmobile.presentation.extensions.showErrorSnackBar
 import com.lawmobile.presentation.extensions.showIncorrectPasswordErrorNotification
 import com.lawmobile.presentation.extensions.showLimitOfLoginAttemptsErrorNotification
@@ -256,11 +257,10 @@ class DevicePasswordFragment : BaseFragment(), Instructions, StartPairing {
                     SFConsoleLogs.Tags.TAG_HOTSPOT_CONNECTION_ERRORS,
                     message = "Error Connecting with Wifi : $hotspotSSID"
                 )
-                if (incorrectPasswordRetryAttempt >= MAX_INCORRECT_PASSWORD_ATTEMPT) {
-                    requireContext().showLimitOfLoginAttemptsErrorNotification(activity as LoginBaseActivity)
-                } else {
-                    incorrectPasswordRetryAttempt++
-                    requireContext().showIncorrectPasswordErrorNotification()
+                if (activity != null) {
+                    if (!requireActivity().isFinishing && !requireActivity().isDestroyed) {
+                        requireContext().showConnectionErrorNotification()
+                    }
                 }
             }
         }

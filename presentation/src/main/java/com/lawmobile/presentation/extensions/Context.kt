@@ -13,6 +13,7 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
 import com.lawmobile.domain.entities.CameraEvent
 import com.lawmobile.domain.entities.CameraInfo
+import com.lawmobile.domain.entities.customEvents.ConnectionErrorEvent
 import com.lawmobile.domain.entities.customEvents.IncorrectPasswordErrorEvent
 import com.lawmobile.domain.entities.customEvents.LimitOfLoginAttemptsErrorEvent
 import com.lawmobile.domain.entities.customEvents.WrongCredentialsEvent
@@ -158,7 +159,7 @@ fun Context.verifySessionBeforeAction(callback: () -> Unit) {
     val isSessionExpired = checkIfSessionIsExpired()
     if (isSessionExpired) {
         this.createAlertSessionExpired()
-    } else if (!CameraHelper.getInstance().checkWithAlertIfTheCameraIsConnected()) {
+    } else if (!CameraHelper.getInstance().checkWithAlertIfTheCameraIsConnected() || !CameraInfo.isCameraConnected) {
         this.createAlertErrorConnection()
     } else {
         callback.invoke()
@@ -208,6 +209,12 @@ fun Context.getIntentForCameraType(
 
 fun Context.showWrongCredentialsNotification() {
     val cameraEvent = WrongCredentialsEvent.event
+    createNotificationDialog(cameraEvent)
+        ?.setButtonText(resources.getString(R.string.OK))
+}
+
+fun Context.showConnectionErrorNotification() {
+    val cameraEvent = ConnectionErrorEvent.event
     createNotificationDialog(cameraEvent)
         ?.setButtonText(resources.getString(R.string.OK))
 }
