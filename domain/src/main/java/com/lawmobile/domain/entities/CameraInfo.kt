@@ -28,6 +28,8 @@ object CameraInfo {
     var fragmentListTypeToLoadForSnapshot: String = "thumbnailFileList"
     var fragmentListTypeToLoadForVideo: String = "simpleFileList"
     var playbackPosition: Long? = 0
+    const val BATTERY_TOTAL_HOURS = 10f
+    const val TOTAL_PERCENTAGE = 100
 
     fun cleanInfo() {
         metadataEvents = mutableListOf()

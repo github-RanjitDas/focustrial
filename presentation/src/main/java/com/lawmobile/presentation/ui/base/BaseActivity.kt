@@ -135,7 +135,7 @@ abstract class BaseActivity : AppCompatActivity() {
             }
             NotificationType.BATTERY_LEVEL.value -> {
                 val batteryLevel = cameraEvent.value?.toInt()
-                if (batteryLevel in 0..5) {
+                if (batteryLevel in 0..15) {
                     onLowBattery?.invoke(batteryLevel)
                     showNotificationPopup(cameraEvent)
                 }
