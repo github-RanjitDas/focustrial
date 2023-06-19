@@ -7,6 +7,7 @@ import androidx.cardview.widget.CardView
 import androidx.core.view.isVisible
 import com.bumptech.glide.Glide
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.lawmobile.domain.entities.CameraInfo
 import com.lawmobile.domain.entities.DomainCameraFile
 import com.lawmobile.domain.entities.DomainInformationImageMetadata
 import com.lawmobile.domain.extensions.getDateDependingOnNameLength
@@ -102,9 +103,11 @@ class SnapshotDetailActivity : BaseActivity() {
 
     override fun onResume() {
         super.onResume()
-        restartVisibility()
-        if (!isImageLoaded) getSnapshotBytes()
-        hideKeyboard()
+        if (CameraInfo.isCameraConnected) {
+            restartVisibility()
+            if (!isImageLoaded) getSnapshotBytes()
+            hideKeyboard()
+        }
     }
 
     private fun setFeatures() {

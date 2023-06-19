@@ -2,6 +2,7 @@ package com.lawmobile.presentation.ui.base.menu
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -162,6 +163,15 @@ class MenuFragment : BaseFragment() {
         binding.textViewHelp.setOnTouchListenerCheckConnection(
             {
                 startHelpActivity()
+                onCloseMenuButton()
+            },
+            { onCloseMenuButton() }
+        )
+
+        binding.textViewPrivacyPolicy.setOnTouchListenerCheckConnection(
+            {
+                val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse("https://community.safefleet.net/fma-privacy-policy/"))
+                startActivity(browserIntent)
                 onCloseMenuButton()
             },
             { onCloseMenuButton() }

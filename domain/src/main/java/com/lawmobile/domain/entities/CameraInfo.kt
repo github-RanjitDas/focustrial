@@ -15,6 +15,7 @@ object CameraInfo {
     var notificationDictionaryList: List<NotificationDictionary> = ArrayList()
     var metadataEvents = mutableListOf<MetadataEvent>()
     var isOfficerLogged: Boolean = false
+    var isCameraConnected: Boolean = false
     var officerId = ""
     var deviceIdFromConfig = ""
     var serialNumber = ""
@@ -24,11 +25,16 @@ object CameraInfo {
     var isBluetoothEnable = false
     var isCovertModeEnable = false
     lateinit var videoDetailMetaDataCached: VideoDetailMetaDataCached
-    var fragmentListTypeToLoad: String = "thumbnailFileList"
+    var fragmentListTypeToLoadForSnapshot: String = "thumbnailFileList"
+    var fragmentListTypeToLoadForVideo: String = "simpleFileList"
+    var playbackPosition: Long? = 0
+    const val BATTERY_TOTAL_HOURS = 10f
+    const val TOTAL_PERCENTAGE = 100
 
     fun cleanInfo() {
         metadataEvents = mutableListOf()
         isOfficerLogged = false
+        isCameraConnected = false
         officerId = ""
         serialNumber = ""
         officerName = ""
@@ -50,6 +56,6 @@ object CameraInfo {
     }
 
     fun isBackOfficeCC(): Boolean {
-        return CameraInfo.backOfficeType != BackOfficeType.NEXUS
+        return backOfficeType != BackOfficeType.NEXUS
     }
 }

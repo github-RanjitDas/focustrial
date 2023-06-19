@@ -11,6 +11,7 @@ import com.lawmobile.presentation.R
 import com.lawmobile.presentation.databinding.NotificationListRecyclerItemBinding
 import com.lawmobile.presentation.extensions.setImageDependingOnEventTag
 import com.lawmobile.presentation.extensions.setOnClickListenerCheckConnection
+import java.util.Locale
 
 class NotificationListAdapter(
     private val onNotificationItemCLick: (CameraEvent) -> Unit
@@ -82,7 +83,9 @@ class NotificationListAdapter(
 
         private fun setTextViews(notification: CameraEvent) {
             val notificationType = NotificationType.getByValue(notification.name)
-            binding.textViewNotification.text = notificationType.title ?: notification.name
+            val title = notificationType.title ?: notification.name
+            val newTitle = title.split(' ').joinToString(" ") { it.capitalize(Locale.ROOT) }
+            binding.textViewNotification.text = newTitle
             binding.textViewNotificationDate.text = notification.date
         }
 

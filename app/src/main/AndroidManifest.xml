@@ -115,6 +115,7 @@
         <activity
             android:name="com.lawmobile.presentation.ui.videoPlayback.VideoPlaybackActivity"
             android:screenOrientation="portrait"
+            android:configChanges="keyboardHidden|orientation|screenSize"
             android:theme="@style/AppTheme.NoActionBar"
             tools:ignore="LockedOrientationActivity" />
 

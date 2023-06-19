@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
+import com.lawmobile.domain.entities.CameraInfo
 import com.lawmobile.domain.entities.DomainAssociatedFile
 import com.lawmobile.domain.entities.DomainInformationFile
 import com.lawmobile.domain.entities.DomainInformationForList
@@ -86,7 +87,9 @@ class AssociateFilesFragment : BaseFragment() {
 
     override fun onResume() {
         super.onResume()
-        setAssociatedRecyclerView()
+        if (CameraInfo.isCameraConnected) {
+            setAssociatedRecyclerView()
+        }
     }
 
     private fun setAssociatedRecyclerView() {

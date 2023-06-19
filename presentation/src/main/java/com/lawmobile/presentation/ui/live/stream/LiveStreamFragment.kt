@@ -15,6 +15,7 @@ import com.lawmobile.presentation.R
 import com.lawmobile.presentation.databinding.FragmentLiveStreamBinding
 import com.lawmobile.presentation.extensions.setOnClickListenerCheckConnection
 import com.lawmobile.presentation.extensions.startAnimationIfEnabled
+import com.lawmobile.presentation.extensions.verifySessionBeforeAction
 import com.lawmobile.presentation.ui.base.BaseFragment
 import com.lawmobile.presentation.ui.fileList.simpleList.SimpleFileListFragment
 import com.lawmobile.presentation.ui.live.shared.LiveStream
@@ -50,7 +51,7 @@ class LiveStreamFragment : BaseFragment(), LiveStream {
 
     override fun onResume() {
         super.onResume()
-        startLiveStreamExoPlayer()
+        requireContext().verifySessionBeforeAction(::startLiveStreamExoPlayer)
     }
 
     private fun setFullscreenButtonActivated() {
@@ -74,10 +75,12 @@ class LiveStreamFragment : BaseFragment(), LiveStream {
         if (isVisible) {
             startLiveStreamExoPlayer()
             binding.liveStreamingViewExoPlayer.setBackgroundResource(R.color.transparent)
+            binding.liveViewClosed.visibility = View.GONE
         } else {
             exoPlayer?.stop()
             releasePlayer()
             binding.liveStreamingViewExoPlayer.setBackgroundResource(R.color.black)
+            binding.liveViewClosed.visibility = View.VISIBLE
         }
         binding.toggleFullScreenLiveView.isClickable = isVisible
     }

@@ -8,7 +8,6 @@ import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.io.IOException
-import java.lang.UnsupportedOperationException
 import java.math.BigInteger
 import java.nio.charset.StandardCharsets
 import java.security.InvalidAlgorithmParameterException
@@ -102,6 +101,7 @@ object KeystoreHandler {
 
     fun deleteKeystoreEntry() {
         try {
+            Log.d(TAG, "deleted keystore entry successfully.")
             val keyStore = KeyStore.getInstance(keyStoreType)
             keyStore.deleteEntry(alias)
         } catch (_: Exception) {
