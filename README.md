@@ -1,4 +1,5 @@
-# focus-mobile-android-v3
+# focus-mobile-android-v4
+Contains new features such as SSO, Nexus Support and BLE.
 
 ## Pre-commit format verification
 To enable the ktlint check pre-commit make sure to run build before commiting any changes to install it automatically.
