@@ -23,7 +23,6 @@ buildscript {
         pitest "org.pitest:pitest-junit5-plugin:$pitest_junit5_plugin_version"
         classpath "com.google.dagger:hilt-android-gradle-plugin:$hilt_version"
         classpath "com.squareup.sqldelight:gradle-plugin:$sqldelight_version"
-        classpath "com.newrelic.agent.android:agent-gradle-plugin:$new_relic"
         classpath "com.google.firebase:firebase-appdistribution-gradle:$firebase_app_distribution_version"
     }
 }

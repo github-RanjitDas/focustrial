@@ -123,7 +123,6 @@ class PairingResultFragment : BaseFragment(), LoginBaseActivity.OnHandleConnecti
     }
 
     private fun showSuccessResult() {
-        println("CC_PWD_VALIDATION showSuccessResult:")
         binding.pairingProgressLayout.isVisible = false
         binding.pairingResultLayout.isVisible = true
         binding.buttonRetry.isVisible = false

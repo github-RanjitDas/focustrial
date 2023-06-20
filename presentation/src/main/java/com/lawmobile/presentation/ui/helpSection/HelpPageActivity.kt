@@ -49,14 +49,10 @@ class HelpPageActivity : BaseActivity() {
 
     private fun loadPDFGuideDependsCameraType() {
         when (CameraInfo.cameraType) {
-            CameraType.X1 -> loadPDFGuideCameraX1()
             CameraType.X2 -> loadPDFGuideCameraX2()
         }
     }
 
-    private fun loadPDFGuideCameraX1() {
-        activityHelpPageBinding.pdfView.fromAsset(PDF_GUIDE_FILE_NAME_X1).load()
-    }
 
     private fun loadPDFGuideCameraX2() {
         activityHelpPageBinding.pdfView.fromAsset(PDF_GUIDE_FILE_NAME_X2).load()
@@ -79,7 +75,6 @@ class HelpPageActivity : BaseActivity() {
     }
 
     companion object {
-        private const val PDF_GUIDE_FILE_NAME_X1 = "FMA_Interactive_Help_X1.pdf"
         private const val PDF_GUIDE_FILE_NAME_X2 = "FMA_Interactive_Help_X2.pdf"
     }
 }

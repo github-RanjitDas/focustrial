@@ -137,10 +137,6 @@ object Dependencies {
         const val appAuth = "net.openid:appauth:$VERSION"
     }
 
-    object NewRelic {
-        const val android = "com.newrelic.agent.android:android-agent:6.3.1"
-    }
-
     object PDF {
         private const val VERSION = "3.2.0-beta.1"
         const val pdfViewer = "com.github.barteksc:android-pdf-viewer:$VERSION"
@@ -163,10 +159,6 @@ object Dependencies {
         const val uiAutomator = "androidx.test.uiautomator:uiautomator:$VERSION"
     }
 
-    object VLC {
-        private const val VERSION = "4.0.0-eap9"
-        const val libVLC = "org.videolan.android:libvlc-all:$VERSION"
-    }
 
     object ExoPlayer {
         private const val VERSION = "1.0.1"

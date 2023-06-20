@@ -58,19 +58,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/midGuideline" />
 
-    <TextView
-        android:id="@+id/buttonChangeCamera"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/change_camera_type"
-        android:textColor="@color/white"
-        android:textSize="@dimen/text_h5"
-        android:clickable="true"
-        android:gravity="center"
-        app:layout_constraintBottom_toTopOf="@+id/midBottomGuideline"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        android:focusable="true" />
 
     <TextView
         android:id="@+id/textViewOnBoardingCards"

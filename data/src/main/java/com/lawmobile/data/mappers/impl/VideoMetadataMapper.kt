@@ -61,9 +61,6 @@ object VideoMetadataMapper :
         )
 
         when (CameraInfo.cameraType) {
-            CameraType.X1 -> {
-                if (videoInformation.x1sn.isNullOrEmpty()) videoInformation.x1sn = serialNumber
-            }
             CameraType.X2 -> {
                 if (videoInformation.x2sn.isNullOrEmpty()) videoInformation.x2sn = serialNumber
             }

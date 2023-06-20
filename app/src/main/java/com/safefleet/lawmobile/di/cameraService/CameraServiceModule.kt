@@ -7,7 +7,6 @@ import com.lawmobile.body_cameras.utils.CommandHelper
 import com.lawmobile.body_cameras.utils.FileInformationHelper
 import com.lawmobile.body_cameras.utils.MetadataHelper
 import com.lawmobile.body_cameras.utils.NotificationCameraHelper
-import com.lawmobile.body_cameras.x1.X1CameraServiceImpl
 import com.lawmobile.body_cameras.x2.X2CameraServiceImpl
 import com.lawmobile.data.utils.CameraServiceFactory
 import com.lawmobile.data.utils.CameraServiceFactoryImpl
@@ -57,16 +56,6 @@ class CameraServiceModule {
             cmdHelper: CommandHelper
         ): NotificationCameraHelper = NotificationCameraHelper(cmdHelper)
 
-        @Provides
-        @Singleton
-        @Named("x1CameraService")
-        fun provideCameraServiceX1(
-            fileInformationHelper: FileInformationHelper,
-            commandHelper: CommandHelper,
-            metadataHelper: MetadataHelper
-        ): CameraService {
-            return X1CameraServiceImpl(fileInformationHelper, commandHelper, metadataHelper)
-        }
 
         @Provides
         @Singleton
@@ -88,10 +77,9 @@ class CameraServiceModule {
         @Provides
         @Singleton
         fun provideCameraServiceFactory(
-            @Named("x1CameraService") x1CameraService: CameraService,
             @Named("x2CameraService") x2CameraService: CameraService
         ): CameraServiceFactory {
-            return CameraServiceFactoryImpl(x1CameraService, x2CameraService)
+            return CameraServiceFactoryImpl(x2CameraService)
         }
 
         @Provides

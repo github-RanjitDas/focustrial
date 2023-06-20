@@ -16,10 +16,8 @@ import com.lawmobile.domain.entities.customEvents.InternetErrorEvent
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.databinding.FragmentValidateOfficerIdBinding
 import com.lawmobile.presentation.extensions.createNotificationDialog
-import com.lawmobile.presentation.keystore.KeystoreHandler
 import com.lawmobile.presentation.ui.base.BaseFragment
 import com.lawmobile.presentation.ui.onBoardingCards.OnBoardingCardsActivity
-import com.lawmobile.presentation.ui.selectCamera.SelectCameraActivity
 import com.lawmobile.presentation.utils.SFConsoleLogs
 import com.safefleet.mobile.android_commons.extensions.hideKeyboard
 import kotlin.reflect.KFunction1
@@ -123,7 +121,6 @@ class OfficerIdFragment : BaseFragment() {
     private fun FragmentValidateOfficerIdBinding.setListeners() {
         editTextOfficerIdListener()
         buttonContinueListener()
-        changeCameraListener()
         onBoardingCardsListener()
     }
 
@@ -154,12 +151,6 @@ class OfficerIdFragment : BaseFragment() {
         activity?.finish()
     }
 
-    private fun FragmentValidateOfficerIdBinding.changeCameraListener() {
-        buttonChangeCamera.setOnClickListener {
-            KeystoreHandler.deleteKeystoreEntry()
-            goToSelectCamera()
-        }
-    }
 
     private fun FragmentValidateOfficerIdBinding.buttonContinueListener() {
         setButtonContinueEnable(viewModel.officerId.isNotEmpty())
@@ -174,11 +165,6 @@ class OfficerIdFragment : BaseFragment() {
         onContinueClick(viewModel.officerId)
     }
 
-    private fun goToSelectCamera() {
-        val selectCameraIntent = Intent(context, SelectCameraActivity::class.java)
-        activity?.startActivity(selectCameraIntent)
-        activity?.finish()
-    }
 
     override fun onDestroy() {
         super.onDestroy()

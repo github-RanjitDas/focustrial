@@ -198,11 +198,9 @@ fun Context.createNotificationDialog(
 }
 
 fun Context.getIntentForCameraType(
-    activityForX1: Class<out BaseActivity>,
     activityForX2: Class<out BaseActivity>
 ): Intent {
     return when (CameraInfo.cameraType) {
-        CameraType.X1 -> Intent(this, activityForX1)
         CameraType.X2 -> Intent(this, activityForX2)
     }
 }
