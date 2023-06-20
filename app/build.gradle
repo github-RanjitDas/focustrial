@@ -9,7 +9,6 @@ plugins {
     id 'kotlin-kapt'
     id 'dagger.hilt.android.plugin'
     id 'com.squareup.sqldelight'
-    id 'newrelic'
     id 'com.google.firebase.appdistribution'
 }
 
@@ -44,8 +43,8 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled false
-            shrinkResources false
+            minifyEnabled true
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.release
 
@@ -167,7 +166,6 @@ dependencies {
         exclude group: 'org.jetbrains.kotlin'
     }
 
-    implementation Dependencies.VLC.libVLC
     implementation Dependencies.Google.gson
     implementation Dependencies.Hilt.hiltAndroid
     kapt Dependencies.Hilt.hiltAndroidCompiler
@@ -193,7 +191,6 @@ dependencies {
     implementation Dependencies.Auth0.jwtDecode
     implementation Dependencies.OpenId.appAuth
 
-    implementation Dependencies.NewRelic.android
 
     implementation project(path: Modules.presentation)
     implementation project(path: Modules.data)

@@ -19,7 +19,6 @@ import com.lawmobile.presentation.connectivity.WifiHelper
 import com.lawmobile.presentation.connectivity.WifiStatus
 import com.lawmobile.presentation.extensions.dataStore
 import com.lawmobile.presentation.utils.PreferencesManagerImpl
-import com.lawmobile.presentation.utils.VLCMediaPlayer
 import com.lawmobile.presentation.utils.WifiHelperImpl
 import com.safefleet.mobile.kotlin_commons.helpers.network_manager.ListenableNetworkManager
 import com.safefleet.mobile.kotlin_commons.helpers.network_manager.SimpleNetworkManager
@@ -34,8 +33,6 @@ import io.ktor.client.HttpClient
 import io.ktor.client.engine.android.Android
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
-import org.videolan.libvlc.LibVLC
-import org.videolan.libvlc.MediaPlayer
 import javax.inject.Singleton
 
 @Module
@@ -127,15 +124,6 @@ class AppModule {
         @Singleton
         fun provideGSON() = Gson()
 
-        @Provides
-        fun provideLibVLC(@ApplicationContext context: Context): LibVLC = LibVLC(context)
-
-        @Provides
-        fun provideMediaPlayer(libVLC: LibVLC): MediaPlayer = MediaPlayer(libVLC)
-
-        @Provides
-        fun provideVLCMediaPlayer(libVLC: LibVLC, mediaPlayer: MediaPlayer): VLCMediaPlayer =
-            VLCMediaPlayer(libVLC, mediaPlayer)
 
         @Provides
         @Singleton

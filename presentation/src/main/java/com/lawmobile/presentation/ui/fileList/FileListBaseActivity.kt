@@ -28,7 +28,6 @@ import com.lawmobile.presentation.utils.Constants.SIMPLE_FILE_LIST
 import com.lawmobile.presentation.utils.Constants.THUMBNAIL_FILE_LIST
 import com.lawmobile.presentation.utils.Constants.VIDEO_LIST
 import com.lawmobile.presentation.utils.SFConsoleLogs
-import com.lawmobile.presentation.utils.VLCMediaPlayer
 import com.lawmobile.presentation.widgets.CustomFilterDialog
 import com.safefleet.mobile.android_commons.extensions.hideKeyboard
 import com.safefleet.mobile.kotlin_commons.extensions.doIfError
@@ -189,10 +188,6 @@ abstract class FileListBaseActivity : BaseActivity() {
         simpleFileListFragment.arguments = bundle
     }
 
-    override fun onRestart() {
-        super.onRestart()
-        VLCMediaPlayer.currentProgress = 0
-    }
 
     private fun setObservers() {
         viewModel.observeFileListState()

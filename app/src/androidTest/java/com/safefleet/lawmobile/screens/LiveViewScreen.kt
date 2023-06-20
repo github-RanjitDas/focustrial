@@ -32,7 +32,6 @@ open class LiveViewScreen : BaseScreen() {
 
     open fun closeErrorMessage() = clickOn(R.id.closeSnackBarButton)
 
-    fun openHelpPage() = waitUntil { clickOn(R.id.buttonOpenHelpPage) }
 
     fun refreshCameraStatus() {
         waitUntil { mainMenuScreen.clickOnMainMenu() }
@@ -41,12 +40,6 @@ open class LiveViewScreen : BaseScreen() {
     }
 
     fun closeHelpView() = helPageScreen.goBack()
-
-    fun refreshCameraStatusX1() {
-        waitUntil { clickOn(R.id.buttonOpenHelpPage) }
-        sleep(500)
-        closeHelpView()
-    }
 
     fun clickOkButton() = waitUntil { clickOn(R.string.OK) }
 
@@ -80,7 +73,6 @@ open class LiveViewScreen : BaseScreen() {
         assertNotExist(R.id.liveStreamingView)
         assertNotExist(R.id.buttonRecord)
         assertNotExist(R.id.buttonSnapshot)
-        assertNotExist(R.id.buttonOpenHelpPage)
     }
 
     fun isBatteryStatusDisplayed() {

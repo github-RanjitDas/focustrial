@@ -29,7 +29,6 @@ import com.lawmobile.presentation.extensions.createNotificationDialog
 import com.lawmobile.presentation.security.RootedHelper
 import com.lawmobile.presentation.utils.CameraHelper
 import com.lawmobile.presentation.utils.EspressoIdlingResource
-import com.lawmobile.presentation.utils.NewRelicLogger
 import com.lawmobile.presentation.utils.checkIfSessionIsExpired
 import dagger.hilt.android.AndroidEntryPoint
 import java.sql.Timestamp
@@ -81,7 +80,6 @@ abstract class BaseActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        NewRelicLogger.updateActiveParent(parentTag)
     }
 
     private fun setCameraHelper() {

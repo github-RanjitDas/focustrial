@@ -96,13 +96,6 @@ class LiveStreamFragment : BaseFragment(), LiveStream {
         }
     }
 
-    private fun startLiveStream() {
-        if (viewModel.mediaPlayer.isPlaying) viewModel.mediaPlayer.stop()
-        val url = viewModel.getUrlLive()
-        viewModel.mediaPlayer.create(url, binding.liveStreamingView)
-        viewModel.mediaPlayer.play()
-    }
-
     private fun startLiveStreamExoPlayer() {
         releasePlayer()
         exoPlayer = ExoPlayer.Builder(requireContext())
@@ -126,7 +119,6 @@ class LiveStreamFragment : BaseFragment(), LiveStream {
 
     override fun onStop() {
         super.onStop()
-        viewModel.mediaPlayer.stop()
         releasePlayer()
     }
 

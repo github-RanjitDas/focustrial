@@ -10,7 +10,6 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ProcessLifecycleOwner
 import com.lawmobile.domain.entities.CameraInfo
 import com.lawmobile.presentation.utils.CameraHelper
-import com.newrelic.agent.android.NewRelic
 import dagger.hilt.android.HiltAndroidApp
 
 @HiltAndroidApp
@@ -19,16 +18,8 @@ class BaseApplication : Application(), LifecycleEventObserver {
         super.onCreate()
         ProcessLifecycleOwner.get().lifecycle.addObserver(this)
         this.registerActivityLifecycleCallbacks(AppLifecycleTracker())
-        startNewRelic()
-        setupActivityListener()
-    }
 
-    private fun startNewRelic() {
-        if (BuildConfig.BUILD_TYPE == "release") {
-            NewRelic.withApplicationToken(
-                "AA861c1409d6db06bfa9b12036716403508a522b05-NRMA"
-            ).start(this.applicationContext)
-        }
+        setupActivityListener()
     }
 
     private fun setupActivityListener() {

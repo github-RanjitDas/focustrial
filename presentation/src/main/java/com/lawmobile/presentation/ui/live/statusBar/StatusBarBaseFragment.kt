@@ -73,13 +73,10 @@ abstract class StatusBarBaseFragment : BaseFragment() {
     open fun manageBatteryLevel(batteryPercent: Int) {
         activity?.runOnUiThread {
             if (batteryPercent >= 0) {
-                if (batteryPercent == 0 && CameraInfo.cameraType.isX1()) {
-                    showBatteryLevelNotAvailable()
-                } else {
-                    progressBarBattery.setProgress(batteryPercent)
-                    setColorInBattery(batteryPercent)
-                    setTextInProgressBattery(batteryPercent)
-                }
+                progressBarBattery.setProgress(batteryPercent)
+                setColorInBattery(batteryPercent)
+                setTextInProgressBattery(batteryPercent)
+
             } else showBatteryLevelNotAvailable()
         }
     }
@@ -94,6 +91,7 @@ abstract class StatusBarBaseFragment : BaseFragment() {
                     )
                 onBatteryLow?.invoke()
             }
+
             in batteryBarRanges.mediumRange -> {
                 imageViewBattery.backgroundTintList =
                     ContextCompat.getColorStateList(
@@ -102,6 +100,7 @@ abstract class StatusBarBaseFragment : BaseFragment() {
                     )
                 imageViewBattery.clearAnimation()
             }
+
             else -> {
                 imageViewBattery.backgroundTintList =
                     ContextCompat.getColorStateList(

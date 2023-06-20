@@ -11,7 +11,6 @@ import com.lawmobile.domain.usecase.liveStreaming.LiveStreamingUseCase
 import com.lawmobile.domain.usecase.videoPlayback.VideoPlaybackUseCase
 import com.lawmobile.presentation.ui.base.BaseViewModel
 import com.lawmobile.presentation.ui.videoPlayback.state.VideoPlaybackState
-import com.lawmobile.presentation.utils.VLCMediaPlayer
 import com.safefleet.mobile.kotlin_commons.extensions.doIfError
 import com.safefleet.mobile.kotlin_commons.extensions.doIfSuccess
 import com.safefleet.mobile.kotlin_commons.helpers.Result
@@ -31,7 +30,6 @@ import javax.inject.Inject
 @HiltViewModel
 class VideoPlaybackViewModel @Inject constructor(
     private val videoPlaybackUseCase: VideoPlaybackUseCase,
-    val mediaPlayer: VLCMediaPlayer,
     val informationManager: VideoInformationManager,
     private val liveStreamingUseCase: LiveStreamingUseCase
 ) : BaseViewModel() {

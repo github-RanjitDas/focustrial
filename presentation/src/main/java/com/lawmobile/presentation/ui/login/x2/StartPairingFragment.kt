@@ -1,4 +1,4 @@
-package com.lawmobile.presentation.ui.login.x1.fragment
+package com.lawmobile.presentation.ui.login.x2
 
 import android.content.ComponentName
 import android.content.Intent
@@ -19,14 +19,12 @@ import com.lawmobile.presentation.entities.AlertInformation
 import com.lawmobile.presentation.extensions.createAlertInformation
 import com.lawmobile.presentation.extensions.isGPSActive
 import com.lawmobile.presentation.extensions.showErrorSnackBar
-import com.lawmobile.presentation.keystore.KeystoreHandler
 import com.lawmobile.presentation.security.IIsolatedService
 import com.lawmobile.presentation.security.IsolatedService
 import com.lawmobile.presentation.ui.base.BaseFragment
 import com.lawmobile.presentation.ui.login.shared.Instructions
 import com.lawmobile.presentation.ui.login.shared.PairingViewModel
 import com.lawmobile.presentation.ui.login.shared.StartPairing
-import com.lawmobile.presentation.ui.selectCamera.SelectCameraActivity
 import com.lawmobile.presentation.utils.SFConsoleLogs
 import com.safefleet.mobile.kotlin_commons.extensions.doIfError
 import com.safefleet.mobile.kotlin_commons.extensions.doIfSuccess
@@ -74,15 +72,8 @@ class StartPairingFragment : BaseFragment(), Instructions, StartPairing {
     private fun FragmentStartPairingBinding.setListeners() {
         buttonGoListener()
         buttonInstructionsListener()
-        changeCameraListener()
     }
 
-    private fun FragmentStartPairingBinding.changeCameraListener() {
-        buttonChangeCamera.setOnClickListener {
-            KeystoreHandler.deleteKeystoreEntry()
-            goToSelectCamera()
-        }
-    }
 
     private fun FragmentStartPairingBinding.buttonInstructionsListener() {
         buttonInstructionsToLinkCamera.setOnClickListener {
@@ -98,11 +89,6 @@ class StartPairingFragment : BaseFragment(), Instructions, StartPairing {
         }
     }
 
-    private fun goToSelectCamera() {
-        val selectCameraIntent = Intent(context, SelectCameraActivity::class.java)
-        activity?.startActivity(selectCameraIntent)
-        activity?.finish()
-    }
 
     private fun PairingViewModel.setObservers() {
         isConnectionPossible.observe(viewLifecycleOwner, ::manageIsPossibleConnection)
