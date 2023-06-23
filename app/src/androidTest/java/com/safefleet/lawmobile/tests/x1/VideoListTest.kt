@@ -5,7 +5,7 @@ import androidx.test.filters.LargeTest
 import androidx.test.filters.MediumTest
 import com.lawmobile.body_cameras.entities.CameraCatalog
 import com.lawmobile.domain.enums.CameraType
-import com.lawmobile.presentation.ui.login.x1.LoginX1Activity
+import com.lawmobile.presentation.ui.login.x2.LoginX2Activity
 import com.lawmobile.presentation.utils.FeatureSupportHelper
 import com.safefleet.lawmobile.R
 import com.safefleet.lawmobile.helpers.CustomAssertionActions.waitUntil
@@ -28,7 +28,7 @@ import org.junit.runner.RunWith
 @LargeTest
 @RunWith(AndroidJUnit4::class)
 class VideoListTest :
-    EspressoStartActivityBaseTest<LoginX1Activity>(LoginX1Activity::class.java) {
+    EspressoStartActivityBaseTest<LoginX2Activity>(LoginX2Activity::class.java) {
 
     companion object {
         private val videoList = CameraFilesData.DEFAULT_VIDEO_LIST.value
@@ -45,7 +45,7 @@ class VideoListTest :
 
     @Before
     fun setUp() {
-        mockUtils.setCameraType(CameraType.X1)
+        mockUtils.setCameraType(CameraType.X2)
         LoginScreen().login()
         FeatureSupportHelper.supportAssociateOfficerID = true
     }

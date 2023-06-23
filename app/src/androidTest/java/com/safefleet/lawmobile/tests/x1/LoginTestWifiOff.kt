@@ -3,7 +3,7 @@ package com.safefleet.lawmobile.tests.x1
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
 import com.lawmobile.domain.enums.CameraType
-import com.lawmobile.presentation.ui.login.x1.LoginX1Activity
+import com.lawmobile.presentation.ui.login.x2.LoginX2Activity
 import com.safefleet.lawmobile.tests.EspressoStartActivityBaseTest
 import com.schibsted.spain.barista.rule.flaky.AllowFlaky
 import org.junit.Before
@@ -13,11 +13,11 @@ import org.junit.runner.RunWith
 @LargeTest
 @RunWith(AndroidJUnit4::class)
 class LoginTestWifiOff :
-    EspressoStartActivityBaseTest<LoginX1Activity>(LoginX1Activity::class.java) {
+    EspressoStartActivityBaseTest<LoginX2Activity>(LoginX2Activity::class.java) {
 
     @Before
     fun setUp() {
-        mockUtils.setCameraType(CameraType.X1)
+        mockUtils.setCameraType(CameraType.X2)
         mockUtils.turnWifiOff()
     }
 

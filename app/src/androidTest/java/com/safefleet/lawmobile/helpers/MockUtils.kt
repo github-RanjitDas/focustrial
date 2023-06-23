@@ -87,8 +87,8 @@ class MockUtils {
     }
 
     fun setCameraType(cameraType: CameraType) {
-        cameraSSID = if (cameraType == CameraType.X1) {
-            TestLoginData.SSID_X1.value
+        cameraSSID = if (cameraType == CameraType.X2) {
+            TestLoginData.SSID_X2.value
         } else {
             TestLoginData.SSID_X2.value
         }

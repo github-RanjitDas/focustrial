@@ -47,6 +47,7 @@ class LiveStreamingRepositoryImpl(
             CatalogTypes.CATEGORIES -> {
                 com.lawmobile.body_cameras.enums.CatalogTypesDto.CATEGORIES
             }
+
             CatalogTypes.EVENT -> {
                 com.lawmobile.body_cameras.enums.CatalogTypesDto.EVENT
             }

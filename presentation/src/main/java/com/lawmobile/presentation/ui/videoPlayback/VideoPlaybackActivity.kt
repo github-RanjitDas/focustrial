@@ -454,15 +454,6 @@ class VideoPlaybackActivity : BaseActivity() {
         binding.layoutMetadataForm.durationValue.text = durationText
     }
 
-    private fun createVideoPlayer(mediaInformation: DomainInformationVideo) {
-        viewModel.mediaPlayer.apply {
-            setControls(
-                mediaPlayerControls, mediaInformation.getDurationMinutesLong(), lifecycle
-            )
-            create(mediaInformation.urlVideo, videoSurface)
-            if (!isEndReached && !isPaused) play()
-        }
-    }
 
     private fun createVideoPlayerExo(mediaInformation: DomainInformationVideo) {
         releasePlayer()

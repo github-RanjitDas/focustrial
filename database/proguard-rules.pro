@@ -20,6 +20,6 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 
--keep class com.newrelic.** { *; }
--dontwarn com.newrelic.**
+
+
 -keepattributes Exceptions, Signature, InnerClasses, LineNumberTable

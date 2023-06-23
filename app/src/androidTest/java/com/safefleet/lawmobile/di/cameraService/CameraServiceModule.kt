@@ -60,17 +60,6 @@ class CameraServiceModule {
 
         @Provides
         @Singleton
-        @Named("x1CameraService")
-        fun provideCameraServiceX1(
-            fileInformationHelper: FileInformationHelper,
-            commandHelper: CommandHelper,
-            metadataHelper: MetadataHelper
-        ): CameraService {
-            return MockUtils.bodyCameraServiceMock
-        }
-
-        @Provides
-        @Singleton
         @Named("x2CameraService")
         fun provideCameraServiceX2(
             notificationCameraHelper: NotificationCameraHelper,
@@ -84,10 +73,9 @@ class CameraServiceModule {
         @Provides
         @Singleton
         fun provideCameraServiceFactory(
-            @Named("x1CameraService") x1CameraService: CameraService,
             @Named("x2CameraService") x2CameraService: CameraService
         ): CameraServiceFactory {
-            return CameraServiceFactoryImpl(x1CameraService, x2CameraService)
+            return CameraServiceFactoryImpl(x2CameraService)
         }
 
         @Provides

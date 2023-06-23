@@ -9,10 +9,8 @@ import com.lawmobile.domain.entities.CameraInfo
 import com.lawmobile.domain.enums.CameraType
 import com.lawmobile.presentation.ui.base.BaseActivity
 import com.lawmobile.presentation.ui.base.BaseViewModel
-import com.lawmobile.presentation.ui.login.x1.LoginX1Activity
 import com.lawmobile.presentation.ui.login.x2.LoginX2Activity
 import com.lawmobile.presentation.ui.onBoardingCards.OnBoardingCardsActivity
-import com.lawmobile.presentation.ui.selectCamera.SelectCameraActivity
 import com.lawmobile.presentation.utils.Constants
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.first
@@ -41,27 +39,24 @@ class SplashViewModel @Inject constructor(
             }.first()
 
         updateCameraType(cameraType)
-
-        val wasCameraSelected = wasCameraSelected(cameraType)
-        getOnBoardingPreference(wasCameraSelected)
+        getOnBoardingPreference(true)
     }
 
     private fun updateCameraType(cameraType: String) {
         when (cameraType) {
-            CameraType.X1.name -> CameraInfo.cameraType = CameraType.X1
+
             CameraType.X2.name -> CameraInfo.cameraType = CameraType.X2
         }
     }
 
     private fun wasCameraSelected(cameraType: String) =
-        cameraType == CameraType.X1.name || cameraType == CameraType.X2.name
+         cameraType == CameraType.X2.name
 
     private suspend fun getOnBoardingPreference(wasCameraSelected: Boolean) {
         val wasOnBoardingDisplayed = dataStore.data
             .map { preferences ->
                 val displayed = preferences[Constants.ON_BOARDING_DISPLAYED] ?: false
-                if (!displayed) CameraInfo.cameraType == CameraType.X1
-                else displayed
+                displayed
             }.first()
 
         setNextActivity(wasOnBoardingDisplayed, wasCameraSelected)
@@ -69,7 +64,6 @@ class SplashViewModel @Inject constructor(
 
     private fun setNextActivity(wasOnBoardingDisplayed: Boolean, wasCameraSelected: Boolean) {
         val activity = when {
-            !wasCameraSelected -> SelectCameraActivity::class.java
             !wasOnBoardingDisplayed -> OnBoardingCardsActivity::class.java
             else -> getCameraTypeLoginActivity()
         }
@@ -77,6 +71,5 @@ class SplashViewModel @Inject constructor(
     }
 
     private fun getCameraTypeLoginActivity() =
-        if (CameraInfo.cameraType == CameraType.X1) LoginX1Activity::class.java
-        else LoginX2Activity::class.java
+        LoginX2Activity::class.java
 }

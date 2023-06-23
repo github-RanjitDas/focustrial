@@ -5,7 +5,7 @@ import com.lawmobile.domain.enums.BackOfficeType
 import com.lawmobile.domain.enums.CameraType
 
 object CameraInfo {
-    var cameraType: CameraType = CameraType.X1
+    var cameraType: CameraType = CameraType.X2
     var defaultPasswordForCC = "1234567890"
     var backOfficeType: BackOfficeType = BackOfficeType.COMMAND_CENTRE
     var discoveryUrl = ""
