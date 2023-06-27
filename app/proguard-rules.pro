@@ -97,6 +97,8 @@
 -keep,allowobfuscation,allowshrinking class com.google.gson.reflect.TypeToken
 -keep,allowobfuscation,allowshrinking class * extends com.google.gson.reflect.TypeToken
 -keep class com.lawmobile.body_cameras.entities.** { <fields>; }
+-keep class com.lawmobile.data.dto.entities.** { <fields>; }
+
 -keep class com.shockwave.**
 -keep class com.shockwave.** { *; }
 -keepclassmembers class com.shockwave.** { *; }

@@ -1,10 +1,9 @@
 @file:Suppress("DEPRECATION")
 
-package com.safefleet.lawmobile.di
+package net.safefleet.focus.di
 
 import android.content.Context
 import android.net.ConnectivityManager
-import android.net.NetworkRequest
 import android.net.wifi.WifiConfiguration
 import android.net.wifi.WifiManager
 import androidx.datastore.core.DataStore
@@ -20,9 +19,9 @@ import com.lawmobile.presentation.connectivity.WifiHelper
 import com.lawmobile.presentation.connectivity.WifiStatus
 import com.lawmobile.presentation.extensions.dataStore
 import com.lawmobile.presentation.utils.PreferencesManagerImpl
-import com.safefleet.lawmobile.helpers.SimpleTestNetworkManager
-import com.safefleet.lawmobile.helpers.WifiHelperMock
+import com.lawmobile.presentation.utils.WifiHelperImpl
 import com.safefleet.mobile.kotlin_commons.helpers.network_manager.ListenableNetworkManager
+import com.safefleet.mobile.kotlin_commons.helpers.network_manager.SimpleNetworkManager
 import com.squareup.sqldelight.android.AndroidSqliteDriver
 import com.squareup.sqldelight.db.SqlDriver
 import dagger.Module
@@ -32,10 +31,6 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.android.Android
-import io.mockk.Runs
-import io.mockk.every
-import io.mockk.just
-import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import javax.inject.Singleton
@@ -73,14 +68,14 @@ class AppModule {
 
         @Provides
         @Singleton
-        fun provideSimpleNetworkManager(): ListenableNetworkManager = SimpleTestNetworkManager()
-
-        @Provides
-        @Singleton
         fun provideBackgroundDispatcher() = Dispatchers.IO
 
         @Provides
         fun provideJob(): Job = Job()
+
+        @Provides
+        @Singleton
+        fun provideSimpleNetworkManager(): ListenableNetworkManager = SimpleNetworkManager()
 
         @Provides
         @Singleton
@@ -105,28 +100,21 @@ class AppModule {
         @Provides
         @Singleton
         fun provideConnectivityManager(@ApplicationContext context: Context): ConnectivityManager =
-            mockk(relaxed = true) {
-                every {
-                    registerNetworkCallback(
-                        any<NetworkRequest>(),
-                        any<ConnectivityManager.NetworkCallback>()
-                    )
-                } just Runs
-                every {
-                    requestNetwork(
-                        any<NetworkRequest>(),
-                        any<ConnectivityManager.NetworkCallback>()
-                    )
-                } just Runs
-                every { bindProcessToNetwork(any()) } returns true
-            }
+            context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+
+        @Provides
+        @Singleton
+        fun provideWifiHelperImpl(
+            wifiManager: WifiManager,
+            connectivityManager: ConnectivityManager
+        ): WifiHelperImpl = WifiHelperImpl(wifiManager, connectivityManager)
 
         @Provides
         @Singleton
         fun provideWifiHelper(
             wifiManager: WifiManager,
             connectivityManager: ConnectivityManager
-        ): WifiHelper = WifiHelperMock()
+        ): WifiHelper = WifiHelperImpl(wifiManager, connectivityManager)
 
         @Provides
         @Singleton
@@ -140,9 +128,7 @@ class AppModule {
         @Provides
         @Singleton
         fun provideMobileDataStatus(connectivityManager: ConnectivityManager) =
-            mockk<MobileDataStatus>(relaxed = true) {
-                every { value } returns false
-            }
+            MobileDataStatus(connectivityManager)
 
         @Provides
         @Singleton

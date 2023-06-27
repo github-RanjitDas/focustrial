@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "318417771168",
+    "project_id": "focus-mobile-app---production",
+    "storage_bucket": "focus-mobile-app---production.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:318417771168:android:b10ccd5b7a2391e0d107c5",
+        "android_client_info": {
+          "package_name": "net.safefleet.focus"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "318417771168-hok0lucrs6jfukm0kp5a665aev3aggn8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDcM6qi5vXzKXFtNFi5EZ6oM9fSkCSCYm4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "318417771168-hok0lucrs6jfukm0kp5a665aev3aggn8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

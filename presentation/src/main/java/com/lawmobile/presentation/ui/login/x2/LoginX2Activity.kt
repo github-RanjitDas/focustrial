@@ -478,7 +478,7 @@ class LoginX2Activity : LoginBaseActivity() {
 
     private fun goToSsoLogin(authRequest: AuthorizationRequest) {
         Log.d(
-            "SSO", CameraInfo.officerId + "," + CameraInfo.discoveryUrl + "," + CameraInfo.tenantId
+            "SSOLogin", CameraInfo.officerId + "," + CameraInfo.discoveryUrl + "," + CameraInfo.tenantId
         )
         this.authRequest = authRequest
         val intent = Intent(baseContext, SSOActivity::class.java)
