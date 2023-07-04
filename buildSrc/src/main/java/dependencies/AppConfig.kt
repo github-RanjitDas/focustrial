@@ -3,12 +3,12 @@ package dependencies
 import org.gradle.api.JavaVersion
 
 object AppConfig {
-    const val applicationId = "com.cobantch.focusx1"
+    const val applicationId = "net.safefleet.focus"
     const val compileSdkVersion = 33
     const val minSdkVersion = 24
     const val targetSdkVersion = 33
     //buildVersion will be different for release
-    const val buildVersion = 1
+    const val buildVersion = 3
     private const val major = 1
     private const val minor = 0
     private const val patch = 0
