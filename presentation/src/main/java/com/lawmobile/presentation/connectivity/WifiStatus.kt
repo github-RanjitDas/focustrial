@@ -25,6 +25,5 @@ class WifiStatus @Inject constructor(private val connectivityManager: Connectivi
         val builder = NetworkRequest.Builder()
             .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
         connectivityManager.registerNetworkCallback(builder.build(), networkCallback)
-
     }
 }

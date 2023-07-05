@@ -74,7 +74,6 @@ class StartPairingFragment : BaseFragment(), Instructions, StartPairing {
         buttonInstructionsListener()
     }
 
-
     private fun FragmentStartPairingBinding.buttonInstructionsListener() {
         buttonInstructionsToLinkCamera.setOnClickListener {
             onInstructionsClick?.invoke()
@@ -88,7 +87,6 @@ class StartPairingFragment : BaseFragment(), Instructions, StartPairing {
             }
         }
     }
-
 
     private fun PairingViewModel.setObservers() {
         isConnectionPossible.observe(viewLifecycleOwner, ::manageIsPossibleConnection)

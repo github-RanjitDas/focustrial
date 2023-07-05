@@ -50,7 +50,7 @@ class SplashViewModel @Inject constructor(
     }
 
     private fun wasCameraSelected(cameraType: String) =
-         cameraType == CameraType.X2.name
+        cameraType == CameraType.X2.name
 
     private suspend fun getOnBoardingPreference(wasCameraSelected: Boolean) {
         val wasOnBoardingDisplayed = dataStore.data

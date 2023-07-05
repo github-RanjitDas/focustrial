@@ -36,8 +36,8 @@ import com.lawmobile.presentation.ui.login.LoginBaseActivity
 import com.lawmobile.presentation.ui.login.shared.Instructions
 import com.lawmobile.presentation.ui.login.shared.PairingViewModel
 import com.lawmobile.presentation.ui.login.shared.StartPairing
-import com.lawmobile.presentation.ui.login.x2.StartPairingFragment
 import com.lawmobile.presentation.ui.login.x2.LoginX2Activity
+import com.lawmobile.presentation.ui.login.x2.StartPairingFragment
 import com.lawmobile.presentation.utils.SFConsoleLogs
 import com.safefleet.mobile.android_commons.extensions.hideKeyboard
 import com.safefleet.mobile.kotlin_commons.extensions.doIfError

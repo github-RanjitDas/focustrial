@@ -119,13 +119,13 @@ class LoginX2ViewModel @Inject constructor(
     }
 
     private fun retryFetchConfig(context: Context) {
-        if (MAX_RETRY_ATTEMPT >= retryCounter) {
-            Log.d("Retry", "retryFetchConfig: attempt:$retryCounter")
+        if (MAX_RETRY_ATTEMPT > retryCounter) {
             retryCounter++
+            Log.d("Retry", "Retry BLE Scan: attempt:$retryCounter")
             scanNConnectFromBluetooth(context, ::retryFetchConfig)
         } else {
             _updateConfigProgress.value =
-                Result.Error(Exception("Unable to fetch config from Camera"))
+                Result.Error(Exception("Unable to fetch configs from Camera"))
         }
     }
 

@@ -1,10 +1,10 @@
 package net.safefleet.focus.di
 
+import dagger.BindsInstance
+import dagger.Component
 import net.safefleet.focus.BaseApplication
 import net.safefleet.focus.di.cameraService.CameraServiceModule
 import net.safefleet.focus.di.events.EventsModule
-import dagger.BindsInstance
-import dagger.Component
 import javax.inject.Singleton
 
 @Singleton
