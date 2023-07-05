@@ -17,8 +17,11 @@ import com.lawmobile.domain.entities.customEvents.LoginRequestErrorEvent
 import com.lawmobile.domain.enums.BackOfficeType
 import com.lawmobile.domain.enums.CameraType
 import com.lawmobile.presentation.R
+import com.lawmobile.presentation.entities.AlertInformation
 import com.lawmobile.presentation.extensions.attachFragmentWithAnimation
+import com.lawmobile.presentation.extensions.createAlertInformation
 import com.lawmobile.presentation.extensions.createNotificationDialog
+import com.lawmobile.presentation.extensions.isGPSActive
 import com.lawmobile.presentation.extensions.showIncorrectPasswordErrorNotification
 import com.lawmobile.presentation.extensions.showLimitOfLoginAttemptsErrorNotification
 import com.lawmobile.presentation.keystore.KeystoreHandler
@@ -411,9 +414,24 @@ class LoginX2Activity : LoginBaseActivity() {
         if (snackBarObject != null && snackBarObject!!.isShown) {
             snackBarObject!!.dismiss()
         }
-        this.officerId = officerId
-        CameraInfo.officerId = officerId
-        fetchConfigsFromBle()
+        if (isGPSActive(this)) {
+            this.officerId = officerId
+            CameraInfo.officerId = officerId
+            fetchConfigsFromBle()
+        } else {
+            officerIdFragment.setButtonContinueEnable(true)
+            showAlertToGPSEnable()
+        }
+    }
+
+    private fun showAlertToGPSEnable() {
+        val alertInformation = AlertInformation(
+            R.string.gps_necessary_title,
+            R.string.gps_necessary_description,
+            { dialogInterface -> dialogInterface.cancel() },
+            null
+        )
+        createAlertInformation(alertInformation)
     }
 
     override fun onPermissionsGranted() {
@@ -478,7 +496,9 @@ class LoginX2Activity : LoginBaseActivity() {
 
     private fun goToSsoLogin(authRequest: AuthorizationRequest) {
         Log.d(
-            "SSOLogin", CameraInfo.officerId + "," + CameraInfo.discoveryUrl + "," + CameraInfo.tenantId
+            "SSOLogin",
+            "Move to SSO Page: " +
+                CameraInfo.officerId + "," + CameraInfo.discoveryUrl + "," + CameraInfo.tenantId
         )
         this.authRequest = authRequest
         val intent = Intent(baseContext, SSOActivity::class.java)

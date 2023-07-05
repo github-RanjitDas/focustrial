@@ -31,6 +31,7 @@ val permissions = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
         )
     } else {
         arrayOf(
+            android.Manifest.permission.ACCESS_FINE_LOCATION,
             android.Manifest.permission.BLUETOOTH_CONNECT,
             android.Manifest.permission.BLUETOOTH_SCAN
         )
@@ -96,7 +97,7 @@ fun BaseActivity.shouldShowPermissionRationale(activity: Activity): Boolean {
 
 fun isGPSActive(context: Context): Boolean {
     var gpsEnable = false
-    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) {
+    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
         val locationManager =
             context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
         try {

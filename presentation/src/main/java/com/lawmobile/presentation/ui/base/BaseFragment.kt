@@ -35,5 +35,4 @@ abstract class BaseFragment : Fragment() {
 
     fun isInPortraitMode() =
         resources.configuration.orientation == ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-
 }

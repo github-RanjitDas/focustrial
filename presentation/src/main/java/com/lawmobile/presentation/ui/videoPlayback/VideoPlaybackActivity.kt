@@ -27,7 +27,6 @@ import com.lawmobile.domain.entities.DomainVideoMetadata
 import com.lawmobile.domain.entities.FilesAssociatedByUser
 import com.lawmobile.domain.enums.BackOfficeType
 import com.lawmobile.domain.extensions.getDateDependingOnNameLength
-import com.lawmobile.domain.extensions.getDurationMinutesLong
 import com.lawmobile.domain.extensions.getDurationMinutesString
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.databinding.ActivityVideoPlaybackBinding
@@ -453,7 +452,6 @@ class VideoPlaybackActivity : BaseActivity() {
         val durationText = mediaInformation.getDurationMinutesString()
         binding.layoutMetadataForm.durationValue.text = durationText
     }
-
 
     private fun createVideoPlayerExo(mediaInformation: DomainInformationVideo) {
         releasePlayer()

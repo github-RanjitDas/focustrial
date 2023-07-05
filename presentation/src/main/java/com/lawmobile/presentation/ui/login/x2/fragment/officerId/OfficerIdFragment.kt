@@ -151,7 +151,6 @@ class OfficerIdFragment : BaseFragment() {
         activity?.finish()
     }
 
-
     private fun FragmentValidateOfficerIdBinding.buttonContinueListener() {
         setButtonContinueEnable(viewModel.officerId.isNotEmpty())
         buttonContinue.setOnClickListener {
@@ -164,7 +163,6 @@ class OfficerIdFragment : BaseFragment() {
         (activity as AppCompatActivity).hideKeyboard()
         onContinueClick(viewModel.officerId)
     }
-
 
     override fun onDestroy() {
         super.onDestroy()
