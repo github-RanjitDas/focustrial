@@ -1,5 +1,8 @@
 package net.safefleet.focus.di
 
+import dagger.Module
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 import net.safefleet.focus.di.audioDetail.AudioDetailComponent
 import net.safefleet.focus.di.bodyWornDiagnosis.BodyWornDiagnosisComponent
 import net.safefleet.focus.di.bodyWornSettings.BodyWornSettingsComponent
@@ -10,9 +13,6 @@ import net.safefleet.focus.di.login.LoginComponent
 import net.safefleet.focus.di.snapshotDetail.SnapshotDetailComponent
 import net.safefleet.focus.di.typeOfCamera.TypeOfCameraComponent
 import net.safefleet.focus.di.videoPlayback.VideoPlaybackComponent
-import dagger.Module
-import dagger.hilt.InstallIn
-import dagger.hilt.components.SingletonComponent
 
 @InstallIn(SingletonComponent::class)
 @Module(

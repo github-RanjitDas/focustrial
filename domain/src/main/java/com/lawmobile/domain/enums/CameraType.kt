@@ -20,6 +20,6 @@ enum class CameraType {
 
     companion object {
         fun isValidBodyCameraNumber(codeCamera: String): Boolean =
-             X2.reviewIfIsThisTypeOfCamera(codeCamera)
+            X2.reviewIfIsThisTypeOfCamera(codeCamera)
     }
 }

@@ -14,7 +14,6 @@ class TypeOfCameraRepositoryImpl(
         val response = typeOfCameraRemoteDataSource.getTypeOfCamera()
         response.doIfSuccess { cameraType ->
             return Result.Success(CameraType.X2)
-
         }
         return Result.Error(Exception("Exception to get type"))
     }

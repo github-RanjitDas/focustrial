@@ -56,7 +56,6 @@ class CameraServiceModule {
             cmdHelper: CommandHelper
         ): NotificationCameraHelper = NotificationCameraHelper(cmdHelper)
 
-
         @Provides
         @Singleton
         @Named("x2CameraService")

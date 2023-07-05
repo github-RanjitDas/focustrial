@@ -37,7 +37,6 @@ class WifiHelperImpl(
             if (isSignalLevelLow != isWifiSignalStateLow) {
                 isWifiSignalStateLow = isSignalLevelLow
                 emit(isSignalLevelLow)
-
             }
         }
     }.flowOn(Dispatchers.IO)

@@ -124,7 +124,6 @@ class AppModule {
         @Singleton
         fun provideGSON() = Gson()
 
-
         @Provides
         @Singleton
         fun provideMobileDataStatus(connectivityManager: ConnectivityManager) =

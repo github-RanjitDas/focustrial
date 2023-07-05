@@ -43,7 +43,7 @@ open class BaseBleManager {
 
         // Stops scanning after 30 seconds.
         @JvmStatic
-        protected val SCAN_PERIOD: Long = 20000
+        protected val SCAN_PERIOD: Long = 10000
         private fun convertFromInteger(i: Int): UUID {
             val MSB = 0x0000000000001000L
             val LSB = -0x7fffff7fa064cb05L

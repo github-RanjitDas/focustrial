@@ -188,7 +188,6 @@ abstract class FileListBaseActivity : BaseActivity() {
         simpleFileListFragment.arguments = bundle
     }
 
-
     private fun setObservers() {
         viewModel.observeFileListState()
         observeAssociationResult()
