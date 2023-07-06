@@ -79,6 +79,7 @@ node('jenkins-builds-slave') {
 					sh "./merge_mutation_reports.sh"
 				}
 			}
+
 // 			stage('Sonar Quality') {
 // 				logger.stage()
 // 				timeout(15) {
