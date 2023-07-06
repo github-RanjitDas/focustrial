@@ -7,7 +7,7 @@ import com.lawmobile.body_cameras.enums.FileListType
 import com.lawmobile.body_cameras.socket.SocketHelper
 import com.lawmobile.body_cameras.x1.entities.XCameraCommand
 import com.safefleet.mobile.kotlin_commons.helpers.Result
-import io.mockk.clearMocks
+import io.mockk.clearAllMocks
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
@@ -26,7 +26,7 @@ internal class CommandHelperTest {
 
     @BeforeEach
     fun setUp() {
-        clearMocks()
+        clearAllMocks()
     }
 
     @Test

@@ -62,7 +62,7 @@ android {
             initWith debug
             firebaseAppDistribution {
                 artifactType="APK"
-                appId="1:189561416446:android:6fa7154eae0824aef813af"
+                appId="1:706327065083:android:91e2be0d1f4cc25709db5e"
                 serviceCredentialsFile="app/src/staging/fma-distribution.json"
                 groups="Perficient"
             }
@@ -102,7 +102,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             firebaseAppDistribution {
                 artifactType="APK"
-                appId="1:287818701608:android:269f4522720e50b5ed8e1d"
+                appId="1:706327065083:android:91e2be0d1f4cc25709db5e"
                 serviceCredentialsFile="app/src/debug/fma-distribution.json"
                 groups="Perficient"
             }

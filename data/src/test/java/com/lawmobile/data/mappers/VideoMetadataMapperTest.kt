@@ -43,63 +43,6 @@ internal class VideoMetadataMapperTest {
     }
 
     @Test
-    fun domainToCameraX1() {
-        mockkObject(CameraInfo)
-        CameraInfo.cameraType = CameraType.X1
-        val domainVideoMetadata: DomainVideoMetadata = mockk(relaxed = true) {
-            every { associatedFiles } returns listOf(
-                DomainAssociatedFile("", "3"),
-                DomainAssociatedFile("", "1"),
-                DomainAssociatedFile("", "5"),
-            )
-        }
-        val cameraConnectVideoMetadata = domainVideoMetadata.toCamera()
-        with(cameraConnectVideoMetadata) {
-            domainVideoMetadata.let {
-                assertTrue(it.fileName == fileName)
-                assertTrue(it.metadata?.partnerID == metadata?.partnerID)
-                assertTrue(it.nameFolder == nameFolder)
-                assertTrue(it.officerId == officerId)
-                assertTrue(it.path == path)
-                assertTrue(it.serialNumber == x1sn)
-                it.associatedFiles?.forEachIndexed { index, photo ->
-                    assertTrue(photo.name == associatedFiles?.get(index)?.name)
-                    assertTrue(photo.date == associatedFiles?.get(index)?.date)
-                }
-            }
-        }
-    }
-
-    @Test
-    fun domainToCameraX1x1snNotEmpty() {
-        mockkObject(CameraInfo)
-        CameraInfo.cameraType = CameraType.X1
-        val domainVideoMetadata: DomainVideoMetadata = mockk(relaxed = true) {
-            every { associatedFiles } returns listOf(
-                DomainAssociatedFile("", "3"),
-                DomainAssociatedFile("", "1"),
-                DomainAssociatedFile("", "5"),
-            )
-            every { x1sn } returns "X1"
-        }
-        val cameraConnectVideoMetadata = domainVideoMetadata.toCamera()
-        with(cameraConnectVideoMetadata) {
-            domainVideoMetadata.let {
-                assertTrue(it.fileName == fileName)
-                assertTrue(it.metadata?.partnerID == metadata?.partnerID)
-                assertTrue(it.nameFolder == nameFolder)
-                assertTrue(it.officerId == officerId)
-                assertTrue(it.path == path)
-                assertTrue(it.x1sn == x1sn)
-                it.associatedFiles?.forEachIndexed { index, photo ->
-                    assertTrue(photo.name == associatedFiles?.get(index)?.name)
-                    assertTrue(photo.date == associatedFiles?.get(index)?.date)
-                }
-            }
-        }
-    }
-
-    @Test
     fun domainToCameraX2() {
         mockkObject(CameraInfo)
         CameraInfo.cameraType = CameraType.X2

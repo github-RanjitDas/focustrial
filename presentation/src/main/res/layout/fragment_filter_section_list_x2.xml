@@ -39,7 +39,6 @@
         android:layout_marginEnd="@dimen/margin_16dp"
         android:contentDescription="@string/focus_mobile_app_logo_description"
         app:imageButton="@drawable/ic_list_custom_selector"
-
         app:layout_constraintEnd_toStartOf="@+id/buttonOpenFilters"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -64,7 +63,7 @@
         android:layout_marginTop="@dimen/margin_18dp"
         android:orientation="horizontal"
         android:visibility="gone"
-        app:layout_constraintTop_toBottomOf="@id/buttonThumbnailList">
+        app:layout_constraintTop_toBottomOf="@id/buttonOpenFilters">
 
         <HorizontalScrollView
             android:layout_width="wrap_content"

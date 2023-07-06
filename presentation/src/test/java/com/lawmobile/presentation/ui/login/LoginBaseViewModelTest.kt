@@ -1,17 +1,20 @@
 package com.lawmobile.presentation.ui.login
 
+import android.bluetooth.BluetoothAdapter
 import android.os.Handler
 import android.os.Looper
-import com.lawmobile.domain.entities.User
+import com.lawmobile.domain.usecase.LoginUseCases
 import com.lawmobile.domain.usecase.getUserFromCamera.GetUserFromCamera
+import com.lawmobile.domain.utils.PreferencesManager
 import com.lawmobile.presentation.InstantExecutorExtension
+import com.lawmobile.presentation.authentication.AuthStateManagerFactory
+import com.lawmobile.presentation.bluetooth.FetchConfigBleManager
 import com.lawmobile.presentation.connectivity.WifiHelper
 import com.lawmobile.presentation.ui.login.shared.PairingViewModelTest
 import com.lawmobile.presentation.ui.login.state.LoginState
-import com.lawmobile.presentation.ui.login.x1.LoginX1ViewModel
-import com.safefleet.mobile.kotlin_commons.helpers.Result
-import io.mockk.coEvery
-import io.mockk.coVerify
+import com.lawmobile.presentation.ui.login.x2.LoginX2ViewModel
+import com.safefleet.mobile.authentication.AuthStateManager
+import com.safefleet.mobile.kotlin_commons.helpers.network_manager.SimpleNetworkManager
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
@@ -33,7 +36,28 @@ internal class LoginBaseViewModelTest {
         every { isEqualsValueWithSSID(PairingViewModelTest.DEFAULT_SSID) } returns true
         every { isEqualsValueWithSSID("X") } returns false
     }
-    private val baseViewModel = LoginX1ViewModel(getUserFromCamera, wifiHelper, dispatcher)
+    private val useCases: LoginUseCases = mockk(relaxed = true)
+
+    private val authStateManager: AuthStateManager = mockk()
+
+    private val authStateManagerFactory: AuthStateManagerFactory = mockk {
+        every { create(any()) } returns authStateManager
+    }
+    private val preferencesManager: PreferencesManager = mockk()
+    private val bleManager: FetchConfigBleManager = mockk()
+    private val bleAdapter: BluetoothAdapter = mockk()
+    private val simpleNetworkManager: SimpleNetworkManager = mockk()
+    private val baseViewModel =
+        LoginX2ViewModel(
+            useCases,
+            authStateManagerFactory,
+            preferencesManager,
+            dispatcher,
+            bleManager,
+            wifiHelper,
+            bleAdapter,
+            simpleNetworkManager
+        )
 
     @Test
     fun setInstructionsOpenTrue() {
@@ -45,28 +69,6 @@ internal class LoginBaseViewModelTest {
     fun setInstructionsOpenFalse() {
         baseViewModel.isInstructionsOpen = false
         Assert.assertFalse(baseViewModel.isInstructionsOpen)
-    }
-
-    @Test
-    fun testGetUserFromCameraFlow() {
-        coEvery { getUserFromCamera() } returns Result.Success(User("1", "", ""))
-        baseViewModel.getUserFromCamera()
-        coVerify { getUserFromCamera() }
-    }
-
-    @Test
-    fun testGetUserFromCameraSuccess() {
-        val result = Result.Success(User("1", "", ""))
-        coEvery { getUserFromCamera() } returns result
-        baseViewModel.getUserFromCamera()
-        Assert.assertEquals(baseViewModel.userFromCameraResult.value, result)
-    }
-
-    @Test
-    fun testGetUserFromCameraError() {
-        coEvery { getUserFromCamera() } returns Result.Error(Exception("Error"))
-        baseViewModel.getUserFromCamera()
-        Assert.assertTrue(baseViewModel.userFromCameraResult.value is Result.Error)
     }
 
     @Test

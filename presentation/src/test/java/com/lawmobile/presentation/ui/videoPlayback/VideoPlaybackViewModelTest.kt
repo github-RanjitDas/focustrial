@@ -11,7 +11,6 @@ import com.lawmobile.domain.enums.CatalogTypes
 import com.lawmobile.domain.usecase.liveStreaming.LiveStreamingUseCase
 import com.lawmobile.domain.usecase.videoPlayback.VideoPlaybackUseCase
 import com.lawmobile.presentation.ui.videoPlayback.state.VideoPlaybackState
-import com.lawmobile.presentation.utils.VLCMediaPlayer
 import com.safefleet.mobile.kotlin_commons.helpers.Result
 import io.mockk.clearAllMocks
 import io.mockk.coEvery
@@ -40,7 +39,6 @@ import org.junit.jupiter.api.TestInstance
 class VideoPlaybackViewModelTest {
 
     private val videoPlaybackUseCase: VideoPlaybackUseCase = mockk()
-    private val vlcMediaPlayer: VLCMediaPlayer = mockk()
     private val informationManager: VideoInformationManager = mockk {
         every { setInformation(any()) } returns Unit
         every { setSpinners() } returns Unit
@@ -50,7 +48,6 @@ class VideoPlaybackViewModelTest {
     private val viewModel by lazy {
         VideoPlaybackViewModel(
             videoPlaybackUseCase,
-            vlcMediaPlayer,
             informationManager,
             getMetadataEvents
         )
@@ -360,11 +357,6 @@ class VideoPlaybackViewModelTest {
     fun setState() {
         viewModel.setState(VideoPlaybackState.FullScreen)
         Assert.assertTrue(viewModel.getState() is VideoPlaybackState.FullScreen)
-    }
-
-    @Test
-    fun getMediaPlayer() {
-        Assert.assertEquals(vlcMediaPlayer, viewModel.mediaPlayer)
     }
 
     @Test

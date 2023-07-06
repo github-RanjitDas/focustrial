@@ -5,10 +5,8 @@ import androidx.datastore.preferences.core.Preferences
 import com.lawmobile.domain.entities.CameraInfo
 import com.lawmobile.domain.enums.CameraType
 import com.lawmobile.presentation.InstantExecutorExtension
-import com.lawmobile.presentation.ui.login.x1.LoginX1Activity
 import com.lawmobile.presentation.ui.login.x2.LoginX2Activity
 import com.lawmobile.presentation.ui.onBoardingCards.OnBoardingCardsActivity
-import com.lawmobile.presentation.ui.selectCamera.SelectCameraActivity
 import com.lawmobile.presentation.utils.Constants
 import io.mockk.coEvery
 import io.mockk.every
@@ -40,51 +38,12 @@ internal class SplashViewModelTest {
     }
 
     @Test
-    fun getNextActivitySelectCamera() {
-        every { preferences[Constants.CAMERA_TYPE] } returns null
-        every { preferences[Constants.ON_BOARDING_DISPLAYED] } returns null
-        splashViewModel.getNextActivity()
-        Assert.assertEquals(
-            SelectCameraActivity::class.java,
-            splashViewModel.nextActivityResult.value
-        )
-        verify { preferences[Constants.CAMERA_TYPE] }
-        verify { preferences[Constants.ON_BOARDING_DISPLAYED] }
-    }
-
-    @Test
     fun getNextActivityOnBoardingCards() {
         every { preferences[Constants.CAMERA_TYPE] } returns CameraType.X2.name
         every { preferences[Constants.ON_BOARDING_DISPLAYED] } returns false
         splashViewModel.getNextActivity()
         Assert.assertEquals(
             OnBoardingCardsActivity::class.java,
-            splashViewModel.nextActivityResult.value
-        )
-        verify { preferences[Constants.CAMERA_TYPE] }
-        verify { preferences[Constants.ON_BOARDING_DISPLAYED] }
-    }
-
-    @Test
-    fun getNextActivityLoginX1OnBoardingNotDisplayed() {
-        every { preferences[Constants.CAMERA_TYPE] } returns CameraType.X1.name
-        every { preferences[Constants.ON_BOARDING_DISPLAYED] } returns false
-        splashViewModel.getNextActivity()
-        Assert.assertEquals(
-            LoginX1Activity::class.java,
-            splashViewModel.nextActivityResult.value
-        )
-        verify { preferences[Constants.CAMERA_TYPE] }
-        verify { preferences[Constants.ON_BOARDING_DISPLAYED] }
-    }
-
-    @Test
-    fun getNextActivityLoginX1OnBoardingDisplayed() {
-        every { preferences[Constants.CAMERA_TYPE] } returns CameraType.X1.name
-        every { preferences[Constants.ON_BOARDING_DISPLAYED] } returns true
-        splashViewModel.getNextActivity()
-        Assert.assertEquals(
-            LoginX1Activity::class.java,
             splashViewModel.nextActivityResult.value
         )
         verify { preferences[Constants.CAMERA_TYPE] }
