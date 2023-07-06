@@ -1,5 +1,6 @@
 package com.lawmobile.presentation.bluetooth
 
+import android.annotation.SuppressLint
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothGatt
 import android.bluetooth.BluetoothGattCallback
@@ -15,6 +16,7 @@ import android.os.ParcelUuid
 import android.util.Log
 import com.lawmobile.domain.entities.CameraInfo
 
+@SuppressLint("MissingPermission")
 class PasswordVerificationBleManager : BaseBleManager() {
     var inputPassword: String = ""
 
@@ -35,14 +37,16 @@ class PasswordVerificationBleManager : BaseBleManager() {
             scanning = true
             val settings = ScanSettings.Builder().setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY)
                 .setCallbackType(CALLBACK_TYPE_FIRST_MATCH)
-                // .setMatchMode(MATCH_MODE_AGGRESSIVE)
-                // .setPhy(ScanSettings.PHY_LE_ALL_SUPPORTED)
+                .setMatchMode(ScanSettings.MATCH_MODE_AGGRESSIVE)
+                .setNumOfMatches(ScanSettings.MATCH_NUM_ONE_ADVERTISEMENT)
                 .build()
             val filters: MutableList<ScanFilter?> = ArrayList()
             val filter = ScanFilter.Builder().setServiceUuid(ParcelUuid(BLE_SERVICE_UUID)).build()
             filters.add(filter)
             isCameraDetected = false
-            Log.d(TAG, "start scan for password verification...")
+            Log.d(TAG, "Starting BLE Scan for Validation...")
+            val bluetoothNameToFind = "X_" + CameraInfo.officerId
+            Log.d(TAG, "Searching Camera with name $bluetoothNameToFind in the Nearby devices.")
             bluetoothLeScanner.startScan(filters, settings, leScanCallback)
         } else {
             scanning = false
@@ -56,7 +60,8 @@ class PasswordVerificationBleManager : BaseBleManager() {
             super.onScanResult(callbackType, result)
             Log.d(
                 TAG,
-                "Scanning Device:" + result.device.name + "," + result.device.address + ",Trying to match with:" + "X_" + CameraInfo.officerId
+                "Scanning Nearby Devices: Name:" + result.device.name + ", ScanRecordName:" +
+                    result.scanRecord?.deviceName + ", Address:" + result.device.address
             )
             val bluetoothNameToFind = "X_" + CameraInfo.officerId
             if (result.device.name.equals(
@@ -66,7 +71,10 @@ class PasswordVerificationBleManager : BaseBleManager() {
             ) {
                 isCameraDetected = true
                 scanning = false
-                Log.d(TAG, "Camera FOUND:" + result.device.name + "," + result.device.address)
+                Log.d(
+                    TAG,
+                    "Camera FOUND Successfully:" + result.device.name + "," + result.scanRecord?.deviceName
+                )
                 handler.removeCallbacksAndMessages(null)
                 bluetoothLeScanner.stopScan(this)
                 onBleStatusUpdates.onScanResult(callbackType, result)
