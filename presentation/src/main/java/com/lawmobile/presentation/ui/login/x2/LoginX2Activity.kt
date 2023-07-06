@@ -167,6 +167,7 @@ class LoginX2Activity : LoginBaseActivity() {
     }
 
     private fun onReceivedConfigFromBle() {
+        Log.d(TAG, "Successfully Received Configs from BLE...")
         hideLoadingDialog()
         viewModel.verifyInternetConnection {
             if (it) {
@@ -224,7 +225,10 @@ class LoginX2Activity : LoginBaseActivity() {
 
     private fun handleAuthEndpointsResult(result: Result<AuthorizationEndpoints>) {
         with(result) {
-            doIfSuccess { viewModel.getAuthorizationRequest(it) }
+            doIfSuccess {
+                Log.d(TAG, "Successfully Received EndPoints for SSO Login.")
+                viewModel.getAuthorizationRequest(it)
+            }
             doIfError {
                 SFConsoleLogs.log(
                     SFConsoleLogs.Level.ERROR,
@@ -239,7 +243,10 @@ class LoginX2Activity : LoginBaseActivity() {
 
     private fun handleAuthRequestResult(result: Result<AuthorizationRequest>) {
         with(result) {
-            doIfSuccess { goToSsoLogin(it) }
+            doIfSuccess {
+                Log.d(TAG, "Successfully Received Auth Request for SSO Login.. Now Go to SSO Login...")
+                goToSsoLogin(it)
+            }
             doIfError {
                 SFConsoleLogs.log(
                     SFConsoleLogs.Level.ERROR,

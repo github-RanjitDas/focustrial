@@ -55,6 +55,7 @@ allprojects {
         google()
         mavenCentral()
         maven { url "https://jitpack.io" }
+        maven { url "http://jcenter.bintray.com" }
         maven {
             credentials {
                 username = nexusUsername
@@ -62,6 +63,8 @@ allprojects {
             }
             url "https://nexus.vmaxlive.net/repository/maven-public/"
         }
+        google()
+        gradlePluginPortal()
     }
     configurations.all {
         resolutionStrategy {

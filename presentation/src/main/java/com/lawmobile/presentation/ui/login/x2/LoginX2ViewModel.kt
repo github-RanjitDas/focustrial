@@ -68,6 +68,7 @@ class LoginX2ViewModel @Inject constructor(
     private val _updateConfigProgress by lazy { MediatorLiveData<Result<String>>() }
 
     fun getAuthorizationEndpoints() {
+        Log.d(TAG, "Start Fetching EndPoints from Internet for SSO Login.")
         viewModelScope.launch(ioDispatcher) {
             _authEndpointsResult.postValue(loginUseCases.getAuthorizationEndpoints())
         }
@@ -97,6 +98,7 @@ class LoginX2ViewModel @Inject constructor(
     }
 
     fun getAuthorizationRequest(authorizationEndpoints: AuthorizationEndpoints) {
+        Log.d(TAG, "Send Authorization Request for SSO Login.")
         if (!this::authStateManager.isInitialized) {
             authStateManager = authStateManagerFactory.create(authorizationEndpoints)
         }
@@ -143,11 +145,11 @@ class LoginX2ViewModel @Inject constructor(
                 viewModelScope.launch(Dispatchers.IO) {
                     if (data != null) {
                         saveConfigLocally(data)
-                        KeystoreHandler.storeConfigInKeystore(context, data)
-                        Log.d(TAG, "Successfully Saved Configs in Keystore!")
                         viewModelScope.launch {
                             _updateConfigProgress.value = Result.Success(data)
                         }
+                        KeystoreHandler.storeConfigInKeystore(context, data)
+                        Log.d(TAG, "Successfully Saved Configs in Keystore!")
                     } else {
                         retryCallback.invoke(context)
                     }

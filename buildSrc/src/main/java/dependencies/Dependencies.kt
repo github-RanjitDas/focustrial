@@ -127,7 +127,7 @@ object Dependencies {
     }
 
     object Mockk {
-        private const val VERSION = "1.9"
+        private const val VERSION = "1.12.1"
         const val mockk = "io.mockk:mockk:$VERSION"
         const val mockkAndroid = "io.mockk:mockk-android:$VERSION"
     }

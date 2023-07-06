@@ -6,7 +6,7 @@ import com.lawmobile.body_cameras.entities.PhotoInformation
 import com.lawmobile.body_cameras.entities.VideoInformation
 import com.safefleet.mobile.kotlin_commons.helpers.Result
 import io.mockk.Runs
-import io.mockk.clearMocks
+import io.mockk.clearAllMocks
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.just
@@ -25,7 +25,7 @@ class MetadataHelperTest {
 
     @BeforeEach
     fun setUp() {
-        clearMocks()
+        clearAllMocks()
     }
 
     @Test
