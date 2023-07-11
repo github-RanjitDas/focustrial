@@ -14,8 +14,8 @@ node('jenkins-builds-slave') {
                     [vaultKey: 'keystore_alias', envVar: 'KEYSTORE_ALIAS'],
                     [vaultKey: 'keystore_password', envVar: 'KEYSTORE_PASSWORD'],
                     [vaultKey: 'firebase_distribution_develop', envVar: 'firebase_distribution_develop'],
-                    [vaultKey: 'firebase_distribution_test', envVar: 'firebase_distribution_test'],
-                    [vaultKey: 'firebase_distribution_stg', envVar: 'firebase_distribution_stg']
+//                     [vaultKey: 'firebase_distribution_test', envVar: 'firebase_distribution_test'],
+//                     [vaultKey: 'firebase_distribution_stg', envVar: 'firebase_distribution_stg']
                   ]
         ]]
         def imageDocker = "245255707803.dkr.ecr.us-east-1.amazonaws.com/android-sdk-seon:0.sdk33-gradle6.3-fastlane-java11.latest"
@@ -133,14 +133,14 @@ node('jenkins-builds-slave') {
 							}
 							logger.info("Send APK Test to Firebase")
 							timeout(10){
-                                withVault(vaultSecrets: secrets) {
-                                    sh """cat > $WORKSPACE/firebase_distribution_test.json_64 <<  EOL\n$firebase_distribution_test\nEOL"""
-                                    sh "base64 -d firebase_distribution_test.json_64 > app/src/qaTest/fma-distribution.json"
-
-                                    sh "./gradlew assembleQaTest appDistributionUploadQaTest --stacktrace"
-
-                                    sh "rm $WORKSPACE/app/src/qaTest/fma-distribution.json"
-                                }
+//                                 withVault(vaultSecrets: secrets) {
+//                                     sh """cat > $WORKSPACE/firebase_distribution_test.json_64 <<  EOL\n$firebase_distribution_test\nEOL"""
+//                                     sh "base64 -d firebase_distribution_test.json_64 > app/src/qaTest/fma-distribution.json"
+//
+//                                     sh "./gradlew assembleQaTest appDistributionUploadQaTest --stacktrace"
+//
+//                                     sh "rm $WORKSPACE/app/src/qaTest/fma-distribution.json"
+//                                 }
                             }
 						}
 						stage('Sign APKs and run tests on firebase'){
