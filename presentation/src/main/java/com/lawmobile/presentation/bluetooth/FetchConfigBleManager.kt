@@ -10,7 +10,6 @@ import android.bluetooth.le.ScanCallback
 import android.bluetooth.le.ScanFilter
 import android.bluetooth.le.ScanResult
 import android.bluetooth.le.ScanSettings
-import android.bluetooth.le.ScanSettings.CALLBACK_TYPE_ALL_MATCHES
 import android.bluetooth.le.ScanSettings.CALLBACK_TYPE_FIRST_MATCH
 import android.bluetooth.le.ScanSettings.MATCH_MODE_AGGRESSIVE
 import android.content.Context
@@ -32,7 +31,7 @@ class FetchConfigBleManager : BaseBleManager() {
                     bluetoothLeScanner.stopScan(leScanCallback)
                     if (!isCameraDetected) {
                         val bluetoothNameToFind = "X_" + CameraInfo.officerId
-                        Log.e(TAG, "$bluetoothNameToFind Camera Not Found")
+                        Log.e(TAG, "$bluetoothNameToFind Camera Not Found.")
                         onBleStatusUpdates.onFailedFetchConfig()
                     }
                 },
@@ -41,12 +40,13 @@ class FetchConfigBleManager : BaseBleManager() {
             scanning = true
             val settings = ScanSettings.Builder().setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY)
                 .setCallbackType(CALLBACK_TYPE_FIRST_MATCH)
-                 .setMatchMode(MATCH_MODE_AGGRESSIVE)
+                .setMatchMode(MATCH_MODE_AGGRESSIVE)
                 .setNumOfMatches(ScanSettings.MATCH_NUM_ONE_ADVERTISEMENT)
                 .build()
             val filters: MutableList<ScanFilter?> = ArrayList()
             val filter = ScanFilter.Builder()
                 .setServiceUuid(ParcelUuid(BLE_SERVICE_UUID))
+                .setDeviceName("X_" + CameraInfo.officerId)
                 .build()
             filters.add(filter)
             isCameraDetected = false
@@ -68,7 +68,8 @@ class FetchConfigBleManager : BaseBleManager() {
             Log.d(
                 TAG,
                 "Scanning Nearby Devices: Name:" + result.device.name + ", ScanRecordName:" +
-                        result.scanRecord?.deviceName + ", Address:" + result.device.address)
+                    result.scanRecord?.deviceName + ", Address:" + result.device.address
+            )
             val bluetoothNameToFind = "X_" + CameraInfo.officerId
             if (result.device.name.equals(bluetoothNameToFind, true) ||
                 result.scanRecord?.deviceName.equals(bluetoothNameToFind, true)
@@ -90,7 +91,6 @@ class FetchConfigBleManager : BaseBleManager() {
             onBleStatusUpdates.onFailedFetchConfig()
         }
     }
-
 
     fun doConnectGatt(context: Context, xBleDevice: BluetoothDevice) {
         xBleDevice.connectGatt(context, false, bluetoothGattCallback, 2)

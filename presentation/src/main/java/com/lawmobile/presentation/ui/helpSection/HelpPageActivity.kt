@@ -53,7 +53,6 @@ class HelpPageActivity : BaseActivity() {
         }
     }
 
-
     private fun loadPDFGuideCameraX2() {
         activityHelpPageBinding.pdfView.fromAsset(PDF_GUIDE_FILE_NAME_X2).load()
     }

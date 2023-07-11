@@ -8,7 +8,7 @@ object AppConfig {
     const val minSdkVersion = 24
     const val targetSdkVersion = 33
     //buildVersion will be different for release
-    const val buildVersion = 3
+    const val buildVersion = 5
     private const val major = 1
     private const val minor = 0
     private const val patch = 0

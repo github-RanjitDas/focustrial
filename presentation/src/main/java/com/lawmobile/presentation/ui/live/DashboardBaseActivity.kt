@@ -95,10 +95,15 @@ abstract class DashboardBaseActivity : BaseActivity() {
             controlsFragment.checkCameraIsRecordingVideo()
             onStatusRetrieved()
             hideLoadingDialog()
+            fetchNotificationCount()
         }
     }
 
     protected open suspend fun onStatusRetrieved() {
+        // open to override
+    }
+
+    protected open suspend fun fetchNotificationCount() {
         // open to override
     }
 

@@ -39,11 +39,15 @@ class LiveX2Activity : DashboardBaseActivity() {
     override suspend fun onStatusRetrieved() {
         super.onStatusRetrieved()
         delay(TIME_BETWEEN_REQUESTS)
-        appBarX2Fragment.getUnreadNotificationCount()
         if (FeatureSupportHelper.supportBodyWornSettings) {
             delay(TIME_BETWEEN_REQUESTS)
             statusBarSettingsFragment.getBodyCameraSettings()
         }
+    }
+
+    override suspend fun fetchNotificationCount() {
+        super.fetchNotificationCount()
+        appBarX2Fragment.getUnreadNotificationCount()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

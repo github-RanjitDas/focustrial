@@ -11,6 +11,7 @@ import android.view.View
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.appcompat.widget.AppCompatImageButton
 import androidx.cardview.widget.CardView
 import androidx.core.view.isVisible
 import androidx.media3.common.MediaItem
@@ -19,6 +20,7 @@ import androidx.media3.common.Player
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.rtsp.RtspMediaSource
 import androidx.media3.exoplayer.source.MediaSource
+import androidx.media3.ui.PlayerControlView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.lawmobile.domain.entities.CameraInfo
 import com.lawmobile.domain.entities.DomainCameraFile
@@ -27,7 +29,6 @@ import com.lawmobile.domain.entities.DomainVideoMetadata
 import com.lawmobile.domain.entities.FilesAssociatedByUser
 import com.lawmobile.domain.enums.BackOfficeType
 import com.lawmobile.domain.extensions.getDateDependingOnNameLength
-import com.lawmobile.domain.extensions.getDurationMinutesLong
 import com.lawmobile.domain.extensions.getDurationMinutesString
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.databinding.ActivityVideoPlaybackBinding
@@ -454,7 +455,6 @@ class VideoPlaybackActivity : BaseActivity() {
         binding.layoutMetadataForm.durationValue.text = durationText
     }
 
-
     private fun createVideoPlayerExo(mediaInformation: DomainInformationVideo) {
         releasePlayer()
         exoPlayer = ExoPlayer.Builder(this)
@@ -473,6 +473,11 @@ class VideoPlaybackActivity : BaseActivity() {
                     binding.videoView.setShowShuffleButton(false)
                     binding.videoView.player = exoPlayer
                 }
+                // Playback control view.
+                val customController = binding.videoView.findViewById<PlayerControlView>(androidx.media3.ui.R.id.exo_controller)
+                customController.findViewById<AppCompatImageButton>(androidx.media3.ui.R.id.exo_settings).visibility =
+                    View.GONE
+
                 val mediaSource: MediaSource = RtspMediaSource.Factory().setForceUseRtpTcp(true)
                     .createMediaSource(MediaItem.fromUri(Uri.parse(mediaInformation.urlVideo)))
                 exoPlayer.setMediaSource(mediaSource)

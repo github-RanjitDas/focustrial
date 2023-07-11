@@ -2,7 +2,7 @@ package com.lawmobile.presentation.ui.login.x2.fragment.devicePassword
 
 import com.lawmobile.presentation.InstantExecutorExtension
 import com.lawmobile.presentation.bluetooth.PasswordVerificationBleManager
-import io.mockk.clearMocks
+import io.mockk.clearAllMocks
 import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -23,7 +23,7 @@ class DevicePasswordViewModelTest {
     @ExperimentalCoroutinesApi
     @BeforeEach
     fun setUp() {
-        clearMocks()
+        clearAllMocks()
         Dispatchers.setMain(Dispatchers.Unconfined)
     }
 

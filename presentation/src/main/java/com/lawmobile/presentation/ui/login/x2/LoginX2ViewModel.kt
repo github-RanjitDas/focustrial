@@ -68,6 +68,7 @@ class LoginX2ViewModel @Inject constructor(
     private val _updateConfigProgress by lazy { MediatorLiveData<Result<String>>() }
 
     fun getAuthorizationEndpoints() {
+        Log.d(TAG, "Start Fetching EndPoints from Internet for SSO Login.")
         viewModelScope.launch(ioDispatcher) {
             _authEndpointsResult.postValue(loginUseCases.getAuthorizationEndpoints())
         }
@@ -97,6 +98,7 @@ class LoginX2ViewModel @Inject constructor(
     }
 
     fun getAuthorizationRequest(authorizationEndpoints: AuthorizationEndpoints) {
+        Log.d(TAG, "Send Authorization Request for SSO Login.")
         if (!this::authStateManager.isInitialized) {
             authStateManager = authStateManagerFactory.create(authorizationEndpoints)
         }
@@ -119,13 +121,13 @@ class LoginX2ViewModel @Inject constructor(
     }
 
     private fun retryFetchConfig(context: Context) {
-        if (MAX_RETRY_ATTEMPT >= retryCounter) {
-            Log.d("Retry", "retryFetchConfig: attempt:$retryCounter")
+        if (MAX_RETRY_ATTEMPT > retryCounter) {
             retryCounter++
+            Log.d("Retry", "Retry BLE Scan: attempt:$retryCounter")
             scanNConnectFromBluetooth(context, ::retryFetchConfig)
         } else {
             _updateConfigProgress.value =
-                Result.Error(Exception("Unable to fetch config from Camera"))
+                Result.Error(Exception("Unable to fetch configs from Camera"))
         }
     }
 
@@ -143,11 +145,11 @@ class LoginX2ViewModel @Inject constructor(
                 viewModelScope.launch(Dispatchers.IO) {
                     if (data != null) {
                         saveConfigLocally(data)
-                        KeystoreHandler.storeConfigInKeystore(context, data)
-                        Log.d(TAG, "Successfully Saved Configs in Keystore!")
                         viewModelScope.launch {
                             _updateConfigProgress.value = Result.Success(data)
                         }
+                        KeystoreHandler.storeConfigInKeystore(context, data)
+                        Log.d(TAG, "Successfully Saved Configs in Keystore!")
                     } else {
                         retryCallback.invoke(context)
                     }

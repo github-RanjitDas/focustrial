@@ -7,7 +7,6 @@ import androidx.annotation.ColorRes
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
-import com.lawmobile.domain.entities.CameraInfo
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.entities.AlertInformation
 import com.lawmobile.presentation.extensions.createAlertInformation
@@ -76,7 +75,6 @@ abstract class StatusBarBaseFragment : BaseFragment() {
                 progressBarBattery.setProgress(batteryPercent)
                 setColorInBattery(batteryPercent)
                 setTextInProgressBattery(batteryPercent)
-
             } else showBatteryLevelNotAvailable()
         }
     }

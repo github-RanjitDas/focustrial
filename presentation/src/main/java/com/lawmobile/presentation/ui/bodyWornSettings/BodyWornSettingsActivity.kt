@@ -138,7 +138,7 @@ class BodyWornSettingsActivity : BaseActivity() {
         binding.switchCovertMode.isActivated = parametersBodyWornSettings.isCovertModeEnable
         binding.switchBluetooth.isActivated = parametersBodyWornSettings.isBluetoothEnable
         binding.switchGPS.isActivated = parametersBodyWornSettings.isGPSEnable
-        //Hide Bluetooth
+        // Hide Bluetooth
         binding.switchBluetooth.isVisible = false
         binding.textViewBluetooth.isVisible = false
         binding.imageViewBluetooth.isVisible = false
