@@ -58,39 +58,39 @@ android {
             ]
         }
 
-        staging {
-            initWith debug
-            firebaseAppDistribution {
-                artifactType="APK"
-                appId="1:706327065083:android:91e2be0d1f4cc25709db5e"
-                serviceCredentialsFile="app/src/staging/fma-distribution.json"
-                groups="Perficient"
-            }
+//        staging {
+//            initWith debug
+//            firebaseAppDistribution {
+//                artifactType="APK"
+//                appId="1:706327065083:android:91e2be0d1f4cc25709db5e"
+//                serviceCredentialsFile="app/src/staging/fma-distribution.json"
+//                groups="Perficient"
+//            }
+//
+//            buildConfigField Build.STRING_TYPE, Build.VALIDATE_USER_URL_FIELD, Build.VALIDATE_USER_URL_STAGING_VALUE
+//            buildConfigField Build.STRING_TYPE, Build.DISCOVERY_URL_FIELD, Build.DISCOVERY_URL_STAGING_VALUE
+//
+//            manifestPlaceholders = [
+//                    'appAuthRedirectScheme': Build.SSO_CALLBACK_VALUE
+//            ]
+//        }
 
-            buildConfigField Build.STRING_TYPE, Build.VALIDATE_USER_URL_FIELD, Build.VALIDATE_USER_URL_STAGING_VALUE
-            buildConfigField Build.STRING_TYPE, Build.DISCOVERY_URL_FIELD, Build.DISCOVERY_URL_STAGING_VALUE
-
-            manifestPlaceholders = [
-                    'appAuthRedirectScheme': Build.SSO_CALLBACK_VALUE
-            ]
-        }
-
-        qaTest {
-            initWith debug
-            firebaseAppDistribution {
-                artifactType="APK"
-                appId="1:608657564588:android:364a8d74bf5e16030e1009"
-                serviceCredentialsFile="app/src/qaTest/fma-distribution.json"
-                groups="Perficient"
-            }
-
-            buildConfigField Build.STRING_TYPE, Build.VALIDATE_USER_URL_FIELD, Build.VALIDATE_USER_URL_QATEST_VALUE
-            buildConfigField Build.STRING_TYPE, Build.DISCOVERY_URL_FIELD, Build.DISCOVERY_URL_QATEST_VALUE
-
-            manifestPlaceholders = [
-                    'appAuthRedirectScheme': Build.SSO_CALLBACK_VALUE
-            ]
-        }
+//        qaTest {
+//            initWith debug
+//            firebaseAppDistribution {
+//                artifactType="APK"
+//                appId="1:608657564588:android:364a8d74bf5e16030e1009"
+//                serviceCredentialsFile="app/src/qaTest/fma-distribution.json"
+//                groups="Perficient"
+//            }
+//
+//            buildConfigField Build.STRING_TYPE, Build.VALIDATE_USER_URL_FIELD, Build.VALIDATE_USER_URL_QATEST_VALUE
+//            buildConfigField Build.STRING_TYPE, Build.DISCOVERY_URL_FIELD, Build.DISCOVERY_URL_QATEST_VALUE
+//
+//            manifestPlaceholders = [
+//                    'appAuthRedirectScheme': Build.SSO_CALLBACK_VALUE
+//            ]
+//        }
 
         debug {
             applicationIdSuffix ".dev"
