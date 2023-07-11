@@ -13,7 +13,7 @@ node('jenkins-builds-slave') {
                     [vaultKey: 'android_keystore', envVar: 'android_keystore'],
                     [vaultKey: 'keystore_alias', envVar: 'KEYSTORE_ALIAS'],
                     [vaultKey: 'keystore_password', envVar: 'KEYSTORE_PASSWORD'],
-                    [vaultKey: 'firebase_distribution_develop', envVar: 'firebase_distribution_develop'],
+                    [vaultKey: 'firebase_distribution_develop', envVar: 'firebase_distribution_develop']
 //                     [vaultKey: 'firebase_distribution_test', envVar: 'firebase_distribution_test'],
 //                     [vaultKey: 'firebase_distribution_stg', envVar: 'firebase_distribution_stg']
                   ]
