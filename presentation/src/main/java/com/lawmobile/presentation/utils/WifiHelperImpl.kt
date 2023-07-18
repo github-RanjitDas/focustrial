@@ -30,14 +30,13 @@ class WifiHelperImpl(
     private var isWifiSignalStateLow = false
 
     override val isWifiSignalLow = flow {
-        NewRelicLogger.updateLowWifiSignal(isWifiSignalStateLow)
+
         while (CameraInfo.isOfficerLogged) {
             delay(DELAY_ON_READING_SIGNAL)
             val isSignalLevelLow = getSignalLevel() <= LOW_SIGNAL_LEVEL
             if (isSignalLevelLow != isWifiSignalStateLow) {
                 isWifiSignalStateLow = isSignalLevelLow
                 emit(isSignalLevelLow)
-                NewRelicLogger.updateLowWifiSignal(isSignalLevelLow)
             }
         }
     }.flowOn(Dispatchers.IO)

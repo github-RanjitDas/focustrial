@@ -13,8 +13,7 @@ class TypeOfCameraRepositoryImpl(
     override suspend fun getTypeOfCamera(): Result<CameraType> {
         val response = typeOfCameraRemoteDataSource.getTypeOfCamera()
         response.doIfSuccess { cameraType ->
-            return if (cameraType == X2) Result.Success(CameraType.X2)
-            else Result.Success(CameraType.X1)
+            return Result.Success(CameraType.X2)
         }
         return Result.Error(Exception("Exception to get type"))
     }

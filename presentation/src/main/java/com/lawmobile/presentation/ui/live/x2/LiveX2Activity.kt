@@ -15,7 +15,7 @@ import com.lawmobile.presentation.ui.base.menu.MenuFragment
 import com.lawmobile.presentation.ui.base.menu.MenuFragment.Companion.isInMainScreen
 import com.lawmobile.presentation.ui.base.settingsBar.SettingsBarFragment
 import com.lawmobile.presentation.ui.live.DashboardBaseActivity
-import com.lawmobile.presentation.ui.live.controls.x1.ControlsX1Fragment
+import com.lawmobile.presentation.ui.live.controls.x2.ControlsX2Fragment
 import com.lawmobile.presentation.ui.live.statusBar.x2.StatusBarX2Fragment
 import com.lawmobile.presentation.utils.FeatureSupportHelper
 import kotlinx.coroutines.delay
@@ -39,11 +39,15 @@ class LiveX2Activity : DashboardBaseActivity() {
     override suspend fun onStatusRetrieved() {
         super.onStatusRetrieved()
         delay(TIME_BETWEEN_REQUESTS)
-        appBarX2Fragment.getUnreadNotificationCount()
         if (FeatureSupportHelper.supportBodyWornSettings) {
             delay(TIME_BETWEEN_REQUESTS)
             statusBarSettingsFragment.getBodyCameraSettings()
         }
+    }
+
+    override suspend fun fetchNotificationCount() {
+        super.fetchNotificationCount()
+        appBarX2Fragment.getUnreadNotificationCount()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -119,7 +123,7 @@ class LiveX2Activity : DashboardBaseActivity() {
     }
 
     override fun setControlsFragment() {
-        controlsFragment = ControlsX1Fragment()
+        controlsFragment = ControlsX2Fragment()
         super.setControlsFragment()
     }
 

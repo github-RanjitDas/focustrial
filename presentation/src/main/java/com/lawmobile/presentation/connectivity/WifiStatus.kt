@@ -6,7 +6,6 @@ import android.net.NetworkCapabilities
 import android.net.NetworkRequest
 import androidx.lifecycle.LiveData
 import com.lawmobile.domain.entities.CameraInfo
-import com.lawmobile.presentation.utils.NewRelicLogger
 import javax.inject.Inject
 
 class WifiStatus @Inject constructor(private val connectivityManager: ConnectivityManager) :
@@ -16,7 +15,6 @@ class WifiStatus @Inject constructor(private val connectivityManager: Connectivi
         override fun onLost(network: Network) {
             if (CameraInfo.isOfficerLogged) {
                 postValue(false)
-                NewRelicLogger.updateWifiStatus(false)
             }
         }
     }
@@ -27,7 +25,5 @@ class WifiStatus @Inject constructor(private val connectivityManager: Connectivi
         val builder = NetworkRequest.Builder()
             .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
         connectivityManager.registerNetworkCallback(builder.build(), networkCallback)
-
-        NewRelicLogger.updateWifiStatus(true)
     }
 }

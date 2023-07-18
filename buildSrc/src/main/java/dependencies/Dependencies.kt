@@ -30,7 +30,7 @@ object Dependencies {
         const val androidCommons = "com.safefleet.mobile:android-commons:2.4.1-SNAPSHOT@aar"
         const val kotlinCommons = "com.safefleet.mobile:kotlin-commons:2.4.0-SNAPSHOT@jar"
         const val safeFleetUI = "com.safefleet.mobile:safefleet-ui:1.4.3@aar"
-        const val authentication = "com.safefleet.mobile:authentication:2.5.8-SNAPSHOT@aar"
+        const val authentication = "com.safefleet.mobile:authentication:2.5.9-SNAPSHOT@aar"
     }
 
     object ConstraintLayout {
@@ -127,7 +127,7 @@ object Dependencies {
     }
 
     object Mockk {
-        private const val VERSION = "1.9"
+        private const val VERSION = "1.12.1"
         const val mockk = "io.mockk:mockk:$VERSION"
         const val mockkAndroid = "io.mockk:mockk-android:$VERSION"
     }
@@ -135,10 +135,6 @@ object Dependencies {
     object OpenId {
         private const val VERSION = "0.7.1"
         const val appAuth = "net.openid:appauth:$VERSION"
-    }
-
-    object NewRelic {
-        const val android = "com.newrelic.agent.android:android-agent:6.3.1"
     }
 
     object PDF {
@@ -163,10 +159,6 @@ object Dependencies {
         const val uiAutomator = "androidx.test.uiautomator:uiautomator:$VERSION"
     }
 
-    object VLC {
-        private const val VERSION = "4.0.0-eap9"
-        const val libVLC = "org.videolan.android:libvlc-all:$VERSION"
-    }
 
     object ExoPlayer {
         private const val VERSION = "1.0.1"
@@ -174,5 +166,10 @@ object Dependencies {
         const val ui = "androidx.media3:media3-ui:$VERSION"
         const val dash = "androidx.media3:media3-exoplayer-dash:$VERSION"
         const val rtsp = "androidx.media3:media3-exoplayer-rtsp:$VERSION"
+    }
+
+    object Crashlytics {
+        const val bom = "com.google.firebase:firebase-bom:32.1.1"
+        const val crashlyticsKtx = "com.google.firebase:firebase-crashlytics-ktx"
     }
 }

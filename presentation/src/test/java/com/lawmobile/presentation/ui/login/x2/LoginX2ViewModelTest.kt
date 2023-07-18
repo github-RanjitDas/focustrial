@@ -13,7 +13,6 @@ import com.lawmobile.presentation.ui.login.state.LoginState
 import com.safefleet.mobile.authentication.AuthStateManager
 import com.safefleet.mobile.kotlin_commons.helpers.Result
 import com.safefleet.mobile.kotlin_commons.helpers.network_manager.SimpleNetworkManager
-import io.mockk.clearMocks
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
@@ -45,6 +44,7 @@ internal class LoginX2ViewModelTest {
     private val authStateManagerFactory: AuthStateManagerFactory = mockk {
         every { create(any()) } returns authStateManager
     }
+
     private val preferencesManager: PreferencesManager = mockk()
     private val bleManager: FetchConfigBleManager = mockk()
     private val bleAdapter: BluetoothAdapter = mockk()
@@ -63,7 +63,6 @@ internal class LoginX2ViewModelTest {
 
     @BeforeEach
     fun setUp() {
-        clearMocks()
         Dispatchers.setMain(dispatcher)
     }
 

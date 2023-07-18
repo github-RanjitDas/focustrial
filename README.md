@@ -1,4 +1,5 @@
-# focus-mobile-android-new
+# Android-FOCUS-Mobile-APP-By-Safe-Fleet
+Contains new features such as SSO, Nexus Support and BLE.
 # New Features:
 1) Nexus Support
 2) BLE Support for Validation and reading configuration

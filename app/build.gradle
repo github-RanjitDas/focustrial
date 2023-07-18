@@ -9,8 +9,9 @@ plugins {
     id 'kotlin-kapt'
     id 'dagger.hilt.android.plugin'
     id 'com.squareup.sqldelight'
-    id 'newrelic'
     id 'com.google.firebase.appdistribution'
+    id 'com.google.gms.google-services'
+    id 'com.google.firebase.crashlytics'
 }
 
 check.dependsOn ktlint
@@ -44,8 +45,8 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled false
-            shrinkResources false
+            minifyEnabled true
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.release
 
@@ -57,41 +58,43 @@ android {
             ]
         }
 
-        staging {
-            initWith debug
-            firebaseAppDistribution {
-                artifactType="APK"
-                appId="1:189561416446:android:6fa7154eae0824aef813af"
-                serviceCredentialsFile="app/src/staging/fma-distribution.json"
-                groups="Perficient"
-            }
+//        staging {
+//            initWith debug
+//            firebaseAppDistribution {
+//                artifactType="APK"
+//                appId="1:706327065083:android:91e2be0d1f4cc25709db5e"
+//                serviceCredentialsFile="app/src/staging/fma-distribution.json"
+//                groups="Perficient"
+//            }
+//
+//            buildConfigField Build.STRING_TYPE, Build.VALIDATE_USER_URL_FIELD, Build.VALIDATE_USER_URL_STAGING_VALUE
+//            buildConfigField Build.STRING_TYPE, Build.DISCOVERY_URL_FIELD, Build.DISCOVERY_URL_STAGING_VALUE
+//
+//            manifestPlaceholders = [
+//                    'appAuthRedirectScheme': Build.SSO_CALLBACK_VALUE
+//            ]
+//        }
 
-            buildConfigField Build.STRING_TYPE, Build.VALIDATE_USER_URL_FIELD, Build.VALIDATE_USER_URL_STAGING_VALUE
-            buildConfigField Build.STRING_TYPE, Build.DISCOVERY_URL_FIELD, Build.DISCOVERY_URL_STAGING_VALUE
-
-            manifestPlaceholders = [
-                    'appAuthRedirectScheme': Build.SSO_CALLBACK_VALUE
-            ]
-        }
-
-        qaTest {
-            initWith debug
-            firebaseAppDistribution {
-                artifactType="APK"
-                appId="1:608657564588:android:364a8d74bf5e16030e1009"
-                serviceCredentialsFile="app/src/qaTest/fma-distribution.json"
-                groups="Perficient"
-            }
-
-            buildConfigField Build.STRING_TYPE, Build.VALIDATE_USER_URL_FIELD, Build.VALIDATE_USER_URL_QATEST_VALUE
-            buildConfigField Build.STRING_TYPE, Build.DISCOVERY_URL_FIELD, Build.DISCOVERY_URL_QATEST_VALUE
-
-            manifestPlaceholders = [
-                    'appAuthRedirectScheme': Build.SSO_CALLBACK_VALUE
-            ]
-        }
+//        qaTest {
+//            initWith debug
+//            firebaseAppDistribution {
+//                artifactType="APK"
+//                appId="1:608657564588:android:364a8d74bf5e16030e1009"
+//                serviceCredentialsFile="app/src/qaTest/fma-distribution.json"
+//                groups="Perficient"
+//            }
+//
+//            buildConfigField Build.STRING_TYPE, Build.VALIDATE_USER_URL_FIELD, Build.VALIDATE_USER_URL_QATEST_VALUE
+//            buildConfigField Build.STRING_TYPE, Build.DISCOVERY_URL_FIELD, Build.DISCOVERY_URL_QATEST_VALUE
+//
+//            manifestPlaceholders = [
+//                    'appAuthRedirectScheme': Build.SSO_CALLBACK_VALUE
+//            ]
+//        }
 
         debug {
+            applicationIdSuffix ".dev"
+            versionNameSuffix '-DEBUG'
             testCoverageEnabled true
             debuggable true
             minifyEnabled false
@@ -99,7 +102,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             firebaseAppDistribution {
                 artifactType="APK"
-                appId="1:287818701608:android:269f4522720e50b5ed8e1d"
+                appId="1:706327065083:android:91e2be0d1f4cc25709db5e"
                 serviceCredentialsFile="app/src/debug/fma-distribution.json"
                 groups="Perficient"
             }
@@ -162,12 +165,12 @@ dependencies {
     kaptAndroidTest Dependencies.Hilt.hiltCompiler
     kaptTest Dependencies.Hilt.hiltAndroidCompiler
     implementation Dependencies.Espresso.idlingResource
+    testImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.2'
 
     androidTestImplementation(Dependencies.Barista.barista) {
         exclude group: 'org.jetbrains.kotlin'
     }
 
-    implementation Dependencies.VLC.libVLC
     implementation Dependencies.Google.gson
     implementation Dependencies.Hilt.hiltAndroid
     kapt Dependencies.Hilt.hiltAndroidCompiler
@@ -193,13 +196,15 @@ dependencies {
     implementation Dependencies.Auth0.jwtDecode
     implementation Dependencies.OpenId.appAuth
 
-    implementation Dependencies.NewRelic.android
 
     implementation project(path: Modules.presentation)
     implementation project(path: Modules.data)
     implementation project(path: Modules.domain)
     implementation project(path: Modules.database)
     implementation project(path: Modules.body_cameras)
+
+    implementation platform(Dependencies.Crashlytics.bom)
+    implementation Dependencies.Crashlytics.crashlyticsKtx
 }
 
 repositories {

@@ -3,7 +3,7 @@ package com.lawmobile.domain.usecase.bodyWornSettings
 import com.lawmobile.domain.enums.TypesOfBodyWornSettings
 import com.lawmobile.domain.repository.bodyWornSettings.BodyWornSettingsRepository
 import com.safefleet.mobile.kotlin_commons.helpers.Result
-import io.mockk.clearMocks
+import io.mockk.clearAllMocks
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
@@ -19,7 +19,7 @@ class BodyWornSettingsUseCaseImplTest {
 
     @BeforeEach
     fun setup() {
-        clearMocks()
+        clearAllMocks()
     }
 
     @Test

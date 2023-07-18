@@ -3,6 +3,7 @@ package com.lawmobile.presentation.ui.bodyWornDiagnosis
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.core.view.isVisible
+import com.lawmobile.domain.entities.CameraInfo
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.databinding.ActivityBodyWornDiagnosisBinding
 import com.lawmobile.presentation.extensions.activityCollect
@@ -116,8 +117,10 @@ class BodyWornDiagnosisActivity : BaseActivity() {
         with(diagnosisState) {
             onStartDiagnosis(::startDiagnosis)
             onProgressDiagnosis {
-                viewModel.getDiagnosis()
-                progressDiagnosis()
+                if (CameraInfo.isCameraConnected) {
+                    viewModel.getDiagnosis()
+                    progressDiagnosis()
+                }
             }
             onFinishedDiagnosis(::finishedDiagnosis)
         }

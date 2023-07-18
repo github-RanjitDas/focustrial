@@ -1,6 +1,7 @@
 package com.lawmobile.domain.enums
 
 import com.lawmobile.domain.entities.customEvents.BluetoothErrorEvent
+import com.lawmobile.domain.entities.customEvents.ConnectionErrorEvent
 import com.lawmobile.domain.entities.customEvents.IncorrectPasswordErrorEvent
 import com.lawmobile.domain.entities.customEvents.InternetErrorEvent
 import com.lawmobile.domain.entities.customEvents.LimitOfLoginAttemptsErrorEvent
@@ -15,9 +16,23 @@ enum class NotificationType(
     val subTitle: String? = null,
 ) {
 
-    BATTERY_LEVEL("battery_level", title = "battery level") {
+    BATTERY_LEVEL("battery_level", title = "Battery Level") {
         override fun getTypeOfEvent(): EventType {
             return EventType.NOTIFICATION
+        }
+
+        override fun getCustomMessage(value: String?): String? {
+//            var minutesLeftText =
+//                ((value!!.toInt() * BATTERY_TOTAL_HOURS) / TOTAL_PERCENTAGE).toString()
+//                    .subSequence(0, 3)
+//            val minutesLeftNumber = minutesLeftText.toString().toFloat()
+//
+//            minutesLeftText =
+//                if (minutesLeftNumber < 1) (minutesLeftNumber * 60).toInt().toString() + " minutes"
+//                else "$minutesLeftText hours"
+//
+//            return "Your Body Camera will stop running in ${minutesLeftText ?: 7}. Please charge your Body Camera"
+            return "The BWC reports the battery level to $value%"
         }
     },
     STORAGE_REMAIN("storage_remain") {
@@ -101,6 +116,11 @@ enum class NotificationType(
         IncorrectPasswordErrorEvent.title,
         IncorrectPasswordErrorEvent.message
     ),
+    CONNECTION_ERROR(
+        ConnectionErrorEvent.value,
+        ConnectionErrorEvent.title,
+        ConnectionErrorEvent.message
+    ),
     LIMIT_OF_LOGIN_ATTEMPTS_ERROR(
         LimitOfLoginAttemptsErrorEvent.value,
         LimitOfLoginAttemptsErrorEvent.title,
@@ -151,6 +171,7 @@ enum class NotificationType(
                 BLUETOOTH_CONNECTION_ISSUES.value -> BLUETOOTH_CONNECTION_ISSUES
                 HOTSPOT_CONNECTION_ISSUES.value -> HOTSPOT_CONNECTION_ISSUES
                 INCORRECT_PASSWORD_ERROR.value -> INCORRECT_PASSWORD_ERROR
+                CONNECTION_ERROR.value -> CONNECTION_ERROR
                 LIMIT_OF_LOGIN_ATTEMPTS_ERROR.value -> LIMIT_OF_LOGIN_ATTEMPTS_ERROR
                 LOGIN_REQUEST_ERROR.value -> LOGIN_REQUEST_ERROR
                 UNKNOWN_OPERATION.value -> UNKNOWN_OPERATION

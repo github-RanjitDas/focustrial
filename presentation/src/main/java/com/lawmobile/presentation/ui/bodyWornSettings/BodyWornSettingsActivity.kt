@@ -2,6 +2,7 @@ package com.lawmobile.presentation.ui.bodyWornSettings
 
 import android.os.Bundle
 import androidx.activity.viewModels
+import androidx.core.view.isVisible
 import com.lawmobile.domain.entities.CameraInfo
 import com.lawmobile.domain.entities.ParametersBodyWornSettings
 import com.lawmobile.domain.enums.TypesOfBodyWornSettings
@@ -137,5 +138,9 @@ class BodyWornSettingsActivity : BaseActivity() {
         binding.switchCovertMode.isActivated = parametersBodyWornSettings.isCovertModeEnable
         binding.switchBluetooth.isActivated = parametersBodyWornSettings.isBluetoothEnable
         binding.switchGPS.isActivated = parametersBodyWornSettings.isGPSEnable
+        // Hide Bluetooth
+        binding.switchBluetooth.isVisible = false
+        binding.textViewBluetooth.isVisible = false
+        binding.imageViewBluetooth.isVisible = false
     }
 }

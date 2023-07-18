@@ -1,19 +1,26 @@
 package com.lawmobile.presentation.ui.videoPlayback
 
+import android.content.res.Configuration
+import android.graphics.Point
 import android.graphics.Rect
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
+import android.view.Display
 import android.view.SurfaceView
+import android.view.View
+import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.appcompat.widget.AppCompatImageButton
 import androidx.cardview.widget.CardView
 import androidx.core.view.isVisible
 import androidx.media3.common.MediaItem
+import androidx.media3.common.PlaybackException
 import androidx.media3.common.Player
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.rtsp.RtspMediaSource
 import androidx.media3.exoplayer.source.MediaSource
+import androidx.media3.ui.PlayerControlView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.lawmobile.domain.entities.CameraInfo
 import com.lawmobile.domain.entities.DomainCameraFile
@@ -22,7 +29,6 @@ import com.lawmobile.domain.entities.DomainVideoMetadata
 import com.lawmobile.domain.entities.FilesAssociatedByUser
 import com.lawmobile.domain.enums.BackOfficeType
 import com.lawmobile.domain.extensions.getDateDependingOnNameLength
-import com.lawmobile.domain.extensions.getDurationMinutesLong
 import com.lawmobile.domain.extensions.getDurationMinutesString
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.databinding.ActivityVideoPlaybackBinding
@@ -51,6 +57,7 @@ import kotlinx.coroutines.Dispatchers
 
 class VideoPlaybackActivity : BaseActivity() {
 
+    private var exoPlayerListener: Player.Listener? = null
     override val parentTag: String
         get() = this::class.java.simpleName
 
@@ -77,13 +84,13 @@ class VideoPlaybackActivity : BaseActivity() {
         get() = viewModel.getState()
         set(value) {
             toggleDeXFullScreen()
-            viewModel.mediaPlayer.stop()
             viewModel.setState(value)
         }
 
     private lateinit var mediaPlayerControls: MediaPlayerControls
     private lateinit var videoSurface: SurfaceView
 
+    private var isPortrait: Boolean = true
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityVideoPlaybackBinding.inflate(layoutInflater)
@@ -112,13 +119,9 @@ class VideoPlaybackActivity : BaseActivity() {
                 RestoreVideoMetaDataFromCache {
                 override fun onRestoreVideoMetaData() {
                     if (savedInstanceState != null) {
+                        exoPlayer?.seekTo(CameraInfo.playbackPosition ?: 0)
                         if (isInPortraitMode()) {
                             viewModel.informationManager.restoreVideoDetailMetaDataFromCache()
-                            binding.layoutNormalPlayback.seekProgressVideo.progress =
-                                CameraInfo.videoDetailMetaDataCached.playerProgress
-                        } else {
-                            binding.layoutFullScreenPlayback.seekProgressVideo.progress =
-                                CameraInfo.videoDetailMetaDataCached.playerProgress
                         }
                     }
                 }
@@ -178,37 +181,52 @@ class VideoPlaybackActivity : BaseActivity() {
         activityCollect(viewModel.state) {
             with(it) {
                 onDefault {
-                    if (!isInPortraitMode()) setPortraitOrientation()
-                    setFullscreenVisibility(false)
+                    if (!isPortrait) {
+                        setPortraitOrientation()
+                    }
+                    binding.layoutMetadataForm.layoutMetadataForm.visibility = View.VISIBLE
+                    binding.buttonSaveMetadata.visibility = View.VISIBLE
+                    binding.layoutAppBar.layoutCustomAppBar.visibility = View.VISIBLE
+                    val sizeInPixel: Int =
+                        resources.getDimensionPixelSize(R.dimen.size_260dp)
+                    val params = LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        sizeInPixel
+                    )
+                    binding.scrollView.setOnTouchListener { _, _ -> false }
+                    binding.layoutPlayer.layoutParams = params
                     setViews()
                     setListeners()
-                    setDefaultViews()
                 }
                 onFullScreen {
-                    setFullscreenVisibility(true)
+                    binding.layoutMetadataForm.layoutMetadataForm.visibility = View.GONE
+                    binding.buttonSaveMetadata.visibility = View.GONE
+                    binding.shadowPlaybackView.visibility = View.GONE
+                    binding.layoutAppBar.layoutCustomAppBar.visibility = View.GONE
+                    binding.scrollView.setOnTouchListener { _, _ -> true }
+                    val display: Display = windowManager.defaultDisplay
+                    val size = Point()
+                    display.getSize(size)
+                    val width = size.x
+                    val sizeInPixel: Int =
+                        resources.getDimensionPixelSize(R.dimen.margin_21dp)
+
+                    val params = LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        width - sizeInPixel
+                    )
+                    binding.layoutPlayer.layoutParams = params
+//                    val paramsSV = LinearLayout.LayoutParams(
+//                        LinearLayout.LayoutParams.MATCH_PARENT,
+//                        LinearLayout.LayoutParams.MATCH_PARENT
+//                    )
+//                    paramsSV.bottomMargin = 0
+//                    binding.scrollView.layoutParams = paramsSV
                     onPlayingListener()
                     buttonNormalScreenListener()
-                    setFullScreenViews()
                 }
             }
-            viewModel.mediaInformation.value?.let(::createVideoPlayerExo)
         }
-    }
-
-    private fun setFullScreenViews() {
-        mediaPlayerControls = getFullscreenPlayerControls()
-        videoSurface = binding.layoutFullScreenPlayback.surfaceVideoPlayback
-    }
-
-    private fun setDefaultViews() {
-        mediaPlayerControls = getNormalPlayerControls()
-        videoSurface = binding.layoutNormalPlayback.surfaceVideoPlayback
-    }
-
-    private fun setFullscreenVisibility(isVisible: Boolean) = with(binding) {
-        layoutFullScreenPlayback.layoutVideoPlayback.isVisible = isVisible
-        scrollView.isVisible = !isVisible
-        buttonSaveMetadata.isVisible = !isVisible
     }
 
     private fun collectMediaInformation() {
@@ -228,16 +246,18 @@ class VideoPlaybackActivity : BaseActivity() {
 
     private fun collectInformationExceptions() {
         activityCollect(viewModel.videoInformationException) { exception ->
+            hideLoadingDialog()
             exception.let {
                 SFConsoleLogs.log(
                     SFConsoleLogs.Level.ERROR,
                     SFConsoleLogs.Tags.TAG_CAMERA_ERRORS, it,
                     getString(R.string.error_get_information_metadata)
                 )
-                showToast(
-                    getString(R.string.error_get_information_metadata), Toast.LENGTH_SHORT
-                )
-                finish()
+                if (isPortrait) {
+                    showToast(
+                        getString(R.string.error_get_information_metadata), Toast.LENGTH_SHORT
+                    )
+                }
             }
         }
     }
@@ -265,7 +285,7 @@ class VideoPlaybackActivity : BaseActivity() {
 
     private fun setObservers() {
         isNetworkAlertShowing.observe(this) { isShowing ->
-            if (isShowing) viewModel.mediaPlayer.pause()
+            if (isShowing) exoPlayer?.pause()
         }
     }
 
@@ -288,10 +308,15 @@ class VideoPlaybackActivity : BaseActivity() {
     }
 
     private fun onPlayingListener() {
-        viewModel.mediaPlayer.isPlayingCallback = {
-            if (viewModel.mediaPlayer.isEndReached) updateLastInteraction()
-            updateLiveOrPlaybackActive(it)
-        }
+//        viewModel.mediaPlayer.isPlayingCallback = {
+//            if (viewModel.mediaPlayer.isEndReached) updateLastInteraction()
+//            updateLiveOrPlaybackActive(it)
+//        }
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        isPortrait = !isPortrait
     }
 
     private fun onAssociateSnapshots() {
@@ -323,10 +348,15 @@ class VideoPlaybackActivity : BaseActivity() {
     }
 
     private fun buttonFullScreenListener() =
-        with(binding.layoutNormalPlayback.buttonFullScreenExo) {
+        with(binding.buttonFullScreenExo) {
             isActivated = false
             setOnClickListenerCheckConnection {
-                state = VideoPlaybackState.FullScreen
+                CameraInfo.playbackPosition = exoPlayer?.currentPosition
+                state = if (isPortrait) {
+                    VideoPlaybackState.FullScreen
+                } else {
+                    VideoPlaybackState.Default
+                }
             }
             VideoPlaybackViewModel.isVidePlayerInFullScreen = true
         }
@@ -335,6 +365,7 @@ class VideoPlaybackActivity : BaseActivity() {
         with(binding.layoutFullScreenPlayback.buttonFullScreenExo) {
             isActivated = true
             setOnClickListenerCheckConnection {
+                CameraInfo.playbackPosition = exoPlayer?.currentPosition
                 state = VideoPlaybackState.Default
             }
             VideoPlaybackViewModel.isVidePlayerInFullScreen = false
@@ -344,15 +375,14 @@ class VideoPlaybackActivity : BaseActivity() {
         scrollView.viewTreeObserver.addOnScrollChangedListener {
             val scrollBounds = Rect()
             scrollView.getHitRect(scrollBounds)
-            if (videoIsNotVisible(scrollBounds)) viewModel.mediaPlayer.pause()
+            if (videoIsNotVisible(scrollBounds)) exoPlayer?.pause()
         }
     }
 
     private fun ActivityVideoPlaybackBinding.videoIsNotVisible(scrollBounds: Rect) =
-        (!fakeSurfaceVideoPlayback.getLocalVisibleRect(scrollBounds) && viewModel.mediaPlayer.isPlaying)
+        (!fakeSurfaceVideoPlayback.getLocalVisibleRect(scrollBounds) && exoPlayer?.isPlaying!!)
 
     private fun setVideoInformation(videoInformation: DomainVideoMetadata) {
-        Log.d("TTT", "setVideoInformation():$videoInformation")
         videoInformation.associatedFiles?.let {
             associateSnapshotsFragment.setFilesAssociatedFromMetadata(it as MutableList)
         }
@@ -392,7 +422,7 @@ class VideoPlaybackActivity : BaseActivity() {
     }
 
     private fun setAssociateFilesFragment() {
-        viewModel.mediaPlayer.pause()
+        exoPlayer?.pause()
         supportFragmentManager.attachFragment(
             R.id.fragmentAssociateHolder, associateSnapshotsFragment, AssociateFilesFragment.TAG
         )
@@ -400,7 +430,7 @@ class VideoPlaybackActivity : BaseActivity() {
     }
 
     private fun saveVideoInformation() = with(binding) {
-        viewModel.mediaPlayer.pause()
+        exoPlayer?.pause()
         hideKeyboard()
 
         if (!CameraInfo.metadataEvents.isNullOrEmpty() && !metadataManager.isEventSelected()) {
@@ -425,16 +455,6 @@ class VideoPlaybackActivity : BaseActivity() {
         binding.layoutMetadataForm.durationValue.text = durationText
     }
 
-    private fun createVideoPlayer(mediaInformation: DomainInformationVideo) {
-        viewModel.mediaPlayer.apply {
-            setControls(
-                mediaPlayerControls, mediaInformation.getDurationMinutesLong(), lifecycle
-            )
-            create(mediaInformation.urlVideo, videoSurface)
-            if (!isEndReached && !isPaused) play()
-        }
-    }
-
     private fun createVideoPlayerExo(mediaInformation: DomainInformationVideo) {
         releasePlayer()
         exoPlayer = ExoPlayer.Builder(this)
@@ -447,19 +467,27 @@ class VideoPlaybackActivity : BaseActivity() {
                     binding.layoutFullScreenPlayback.videoView.setShowShuffleButton(false)
                     binding.layoutFullScreenPlayback.videoView.player = exoPlayer
                 } else {
-                    binding.layoutNormalPlayback.videoView.setShowNextButton(false)
-                    binding.layoutNormalPlayback.videoView.setShowPreviousButton(false)
-                    binding.layoutNormalPlayback.videoView.setShowVrButton(false)
-                    binding.layoutNormalPlayback.videoView.setShowShuffleButton(false)
-                    binding.layoutNormalPlayback.videoView.player = exoPlayer
+                    binding.videoView.setShowNextButton(false)
+                    binding.videoView.setShowPreviousButton(false)
+                    binding.videoView.setShowVrButton(false)
+                    binding.videoView.setShowShuffleButton(false)
+                    binding.videoView.player = exoPlayer
                 }
-                // binding.layoutNormalPlayback.videoView.controllerAutoShow = false
+                // Playback control view.
+                val customController = binding.videoView.findViewById<PlayerControlView>(androidx.media3.ui.R.id.exo_controller)
+                customController.findViewById<AppCompatImageButton>(androidx.media3.ui.R.id.exo_settings).visibility =
+                    View.GONE
 
                 val mediaSource: MediaSource = RtspMediaSource.Factory().setForceUseRtpTcp(true)
                     .createMediaSource(MediaItem.fromUri(Uri.parse(mediaInformation.urlVideo)))
                 exoPlayer.setMediaSource(mediaSource)
             }
-        exoPlayer?.addListener(object : Player.Listener {
+        exoPlayerListener = object : Player.Listener {
+
+            override fun onPlayerError(error: PlaybackException) {
+                binding.layoutVideoPlayback.showErrorSnackBar(getString(R.string.error_get_information_metadata))
+            }
+
             override fun onPlaybackStateChanged(playbackState: Int) {
 
                 when (playbackState) {
@@ -474,37 +502,34 @@ class VideoPlaybackActivity : BaseActivity() {
                     else -> {}
                 }
             }
-        })
+        }
+        exoPlayer?.addListener(exoPlayerListener!!)
         // exoPlayer?.repeatMode = ExoPlayer.REPEAT_MODE_ALL
         exoPlayer?.prepare()
         exoPlayer?.playWhenReady = true
     }
 
     private fun releasePlayer() {
+        exoPlayer?.stop()
+        exoPlayer?.removeMediaItem(0)
+        exoPlayerListener.let { exoPlayer?.removeListener(it!!) }
         exoPlayer?.release()
         exoPlayer = null
-    }
-
-    private fun getNormalPlayerControls() = binding.layoutNormalPlayback.run {
-        MediaPlayerControls(
-            buttonPlay, textViewPlayerTime, textViewPlayerDuration, seekProgressVideo, buttonAspect
-        )
-    }
-
-    private fun getFullscreenPlayerControls() = binding.layoutFullScreenPlayback.run {
-        MediaPlayerControls(
-            buttonPlay, textViewPlayerTime, textViewPlayerDuration, seekProgressVideo, buttonAspect
-        )
     }
 
     override fun onBackPressed() {
         if (state is VideoPlaybackState.Default) {
             if (!isAssociateDialogOpen) {
-                viewModel.mediaPlayer.pause()
                 if (viewModel.theMetadataWasEdited()) createAlertDialogUnsavedChanges()
-                else super.onBackPressed()
+                else {
+                    CameraInfo.playbackPosition = 0
+                    super.onBackPressed()
+                }
             } else isAssociateDialogOpen = false
-        } else state = VideoPlaybackState.Default
+        } else {
+            CameraInfo.playbackPosition = exoPlayer?.currentPosition
+            state = VideoPlaybackState.Default
+        }
     }
 
     override fun onStop() {
@@ -517,7 +542,7 @@ class VideoPlaybackActivity : BaseActivity() {
         releasePlayer()
         FilesAssociatedByUser.cleanList()
         if (!VideoPlaybackViewModel.isVidePlayerInFullScreen) {
-            viewModel.informationManager.saveVideoDetailMetaData(binding.layoutNormalPlayback.seekProgressVideo.progress)
+            viewModel.informationManager.saveVideoDetailMetaData(CameraInfo.playbackPosition!!.toInt())
         }
     }
 }

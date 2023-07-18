@@ -2,6 +2,7 @@ package com.lawmobile.presentation.ui.base.menu
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -21,10 +22,8 @@ import com.lawmobile.presentation.ui.base.BaseActivity
 import com.lawmobile.presentation.ui.base.BaseFragment
 import com.lawmobile.presentation.ui.bodyWornDiagnosis.BodyWornDiagnosisActivity
 import com.lawmobile.presentation.ui.bodyWornSettings.BodyWornSettingsActivity
-import com.lawmobile.presentation.ui.fileList.x1.FileListX1Activity
 import com.lawmobile.presentation.ui.fileList.x2.FileListX2Activity
 import com.lawmobile.presentation.ui.helpSection.HelpPageActivity
-import com.lawmobile.presentation.ui.live.x1.LiveX1Activity
 import com.lawmobile.presentation.ui.live.x2.LiveX2Activity
 import com.lawmobile.presentation.ui.notificationList.NotificationListActivity
 import com.lawmobile.presentation.utils.Constants
@@ -167,6 +166,15 @@ class MenuFragment : BaseFragment() {
             { onCloseMenuButton() }
         )
 
+        binding.textViewPrivacyPolicy.setOnTouchListenerCheckConnection(
+            {
+                val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse("https://community.safefleet.net/fma-privacy-policy/"))
+                startActivity(browserIntent)
+                onCloseMenuButton()
+            },
+            { onCloseMenuButton() }
+        )
+
         binding.viewLogout.setOnClickListenerCheckConnection {
             activity?.createAlertConfirmAppExit(::logoutApplication)
             onCloseMenuButton()
@@ -181,7 +189,7 @@ class MenuFragment : BaseFragment() {
         isInMainScreen = true
         if (activity is LiveX2Activity) return
         val intent = activity?.getIntentForCameraType(
-            LiveX1Activity::class.java, LiveX2Activity::class.java
+            LiveX2Activity::class.java
         )
         startActivity(intent)
     }
@@ -191,7 +199,7 @@ class MenuFragment : BaseFragment() {
         currentListView = fileType
         (activity as BaseActivity).updateLiveOrPlaybackActive(false)
         val fileListIntent = activity?.getIntentForCameraType(
-            FileListX1Activity::class.java, FileListX2Activity::class.java
+            FileListX2Activity::class.java
         )
         fileListIntent?.putExtra(Constants.FILE_LIST_SELECTOR, fileType)
         startActivity(fileListIntent)

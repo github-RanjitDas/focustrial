@@ -1,6 +1,8 @@
 package com.lawmobile.presentation.ui.base
 
+import android.content.Context
 import android.content.pm.ActivityInfo
+import android.content.res.Configuration
 import android.os.Bundle
 import android.view.WindowManager
 import androidx.activity.viewModels
@@ -27,7 +29,6 @@ import com.lawmobile.presentation.extensions.createNotificationDialog
 import com.lawmobile.presentation.security.RootedHelper
 import com.lawmobile.presentation.utils.CameraHelper
 import com.lawmobile.presentation.utils.EspressoIdlingResource
-import com.lawmobile.presentation.utils.NewRelicLogger
 import com.lawmobile.presentation.utils.checkIfSessionIsExpired
 import dagger.hilt.android.AndroidEntryPoint
 import java.sql.Timestamp
@@ -79,7 +80,6 @@ abstract class BaseActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        NewRelicLogger.updateActiveParent(parentTag)
     }
 
     private fun setCameraHelper() {
@@ -102,6 +102,13 @@ abstract class BaseActivity : AppCompatActivity() {
         }
     }
 
+    override fun attachBaseContext(newBase: Context?) {
+        super.attachBaseContext(newBase)
+        val config = Configuration(newBase?.resources?.configuration)
+        config.fontScale = 1.0f
+        applyOverrideConfiguration(config)
+    }
+
     private fun setEventsListener() {
         if (CameraInfo.isOfficerLogged && CameraInfo.cameraType.isX2())
             cameraHelper.onCameraEvent(::manageCameraEvent)
@@ -109,8 +116,10 @@ abstract class BaseActivity : AppCompatActivity() {
 
     private fun manageCameraEvent(cameraEvent: CameraEvent) {
         runOnUiThread {
-            if (cameraEvent.eventType == EventType.NOTIFICATION) handleNotificationEvent(cameraEvent)
-            else handleInformationEvent(cameraEvent)
+            if (cameraEvent.eventType == EventType.NOTIFICATION) {
+                handleNotificationEvent(cameraEvent)
+                handleInformationEvent(cameraEvent)
+            } else handleInformationEvent(cameraEvent)
         }
 
         baseViewModel.saveNotificationEvent(cameraEvent)
@@ -124,7 +133,7 @@ abstract class BaseActivity : AppCompatActivity() {
             }
             NotificationType.BATTERY_LEVEL.value -> {
                 val batteryLevel = cameraEvent.value?.toInt()
-                if (batteryLevel in 0..5) {
+                if (batteryLevel in 0..15) {
                     onLowBattery?.invoke(batteryLevel)
                     showNotificationPopup(cameraEvent)
                 }

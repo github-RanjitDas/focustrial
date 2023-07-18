@@ -1,11 +1,13 @@
 package com.lawmobile.presentation.utils
 
 import com.lawmobile.domain.entities.CameraEvent
+import com.lawmobile.domain.entities.CameraInfo
 import com.lawmobile.domain.utils.ConnectionHelper
 import com.lawmobile.presentation.connectivity.WifiHelper
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 
 class CameraHelper(
     private val connectionHelper: ConnectionHelper,
@@ -31,12 +33,14 @@ class CameraHelper(
     fun checkIfTheCameraIsConnected(): Boolean {
         return connectionHelper.isCameraConnectedV2(wifiHelper.getGatewayAddress())
     }
+
     fun onCameraEvent(callback: (CameraEvent) -> Unit) {
         connectionHelper.onCameraEvent(callback)
     }
 
     fun disconnectCamera() {
-        CoroutineScope(dispatcher).launch {
+        CameraInfo.isCameraConnected = false
+        runBlocking {
             connectionHelper.disconnectCamera()
         }
     }

@@ -15,7 +15,7 @@ import com.lawmobile.presentation.ui.base.BaseFragment
 import com.lawmobile.presentation.ui.base.appBar.x2.AppBarX2Fragment
 import com.lawmobile.presentation.ui.live.bottomNavigation.x1.BottomNavigationX1Fragment
 import com.lawmobile.presentation.ui.live.controls.ControlsBaseFragment
-import com.lawmobile.presentation.ui.live.controls.x1.ControlsX1Fragment
+import com.lawmobile.presentation.ui.live.controls.x2.ControlsX2Fragment
 import com.lawmobile.presentation.ui.live.shared.LiveStream
 import com.lawmobile.presentation.ui.live.state.DashboardState
 import com.lawmobile.presentation.ui.live.statusBar.StatusBarBaseFragment
@@ -95,10 +95,15 @@ abstract class DashboardBaseActivity : BaseActivity() {
             controlsFragment.checkCameraIsRecordingVideo()
             onStatusRetrieved()
             hideLoadingDialog()
+            fetchNotificationCount()
         }
     }
 
     protected open suspend fun onStatusRetrieved() {
+        // open to override
+    }
+
+    protected open suspend fun fetchNotificationCount() {
         // open to override
     }
 
@@ -154,7 +159,7 @@ abstract class DashboardBaseActivity : BaseActivity() {
         supportFragmentManager.attachFragment(
             containerId = R.id.controlsContainer,
             fragment = controlsFragment,
-            tag = ControlsX1Fragment.TAG
+            tag = ControlsX2Fragment.TAG
         )
     }
 

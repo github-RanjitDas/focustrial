@@ -1,5 +1,6 @@
 package com.lawmobile.presentation.bluetooth
 
+import android.annotation.SuppressLint
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothGatt
 import android.bluetooth.BluetoothGattCallback
@@ -10,12 +11,14 @@ import android.bluetooth.le.ScanFilter
 import android.bluetooth.le.ScanResult
 import android.bluetooth.le.ScanSettings
 import android.bluetooth.le.ScanSettings.CALLBACK_TYPE_FIRST_MATCH
+import android.bluetooth.le.ScanSettings.MATCH_MODE_AGGRESSIVE
 import android.content.Context
 import android.os.ParcelUuid
 import android.util.Log
 import com.lawmobile.domain.entities.CameraInfo
 import kotlin.collections.ArrayList
 
+@SuppressLint("MissingPermission")
 class FetchConfigBleManager : BaseBleManager() {
     var context: Context? = null
 
@@ -27,6 +30,8 @@ class FetchConfigBleManager : BaseBleManager() {
                     scanning = false
                     bluetoothLeScanner.stopScan(leScanCallback)
                     if (!isCameraDetected) {
+                        val bluetoothNameToFind = "X_" + CameraInfo.officerId
+                        Log.e(TAG, "$bluetoothNameToFind Camera Not Found.")
                         onBleStatusUpdates.onFailedFetchConfig()
                     }
                 },
@@ -35,15 +40,19 @@ class FetchConfigBleManager : BaseBleManager() {
             scanning = true
             val settings = ScanSettings.Builder().setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY)
                 .setCallbackType(CALLBACK_TYPE_FIRST_MATCH)
-                // .setMatchMode(MATCH_MODE_AGGRESSIVE)
-                // .setPhy(ScanSettings.PHY_LE_ALL_SUPPORTED)
+                .setMatchMode(MATCH_MODE_AGGRESSIVE)
+                .setNumOfMatches(ScanSettings.MATCH_NUM_ONE_ADVERTISEMENT)
                 .build()
             val filters: MutableList<ScanFilter?> = ArrayList()
             val filter = ScanFilter.Builder()
                 .setServiceUuid(ParcelUuid(BLE_SERVICE_UUID))
+                .setDeviceName("X_" + CameraInfo.officerId)
                 .build()
             filters.add(filter)
             isCameraDetected = false
+            Log.d(TAG, "Starting BLE Scan...")
+            val bluetoothNameToFind = "X_" + CameraInfo.officerId
+            Log.d(TAG, "Searching Camera with name $bluetoothNameToFind in the Nearby devices.")
             bluetoothLeScanner.startScan(filters, settings, leScanCallback)
         } else {
             scanning = false
@@ -53,20 +62,24 @@ class FetchConfigBleManager : BaseBleManager() {
 
     // Device scan callback.
     private val leScanCallback: ScanCallback = object : ScanCallback() {
+        @SuppressLint("MissingPermission")
         override fun onScanResult(callbackType: Int, result: ScanResult) {
             super.onScanResult(callbackType, result)
             Log.d(
                 TAG,
-                "Scanning Nearby Devices:" + result.device.name + "," + ", " + result.scanRecord?.deviceName
+                "Scanning Nearby Devices: Name:" + result.device.name + ", ScanRecordName:" +
+                    result.scanRecord?.deviceName + ", Address:" + result.device.address
             )
             val bluetoothNameToFind = "X_" + CameraInfo.officerId
-            Log.d(TAG, "Searching for : $bluetoothNameToFind")
             if (result.device.name.equals(bluetoothNameToFind, true) ||
                 result.scanRecord?.deviceName.equals(bluetoothNameToFind, true)
             ) {
                 isCameraDetected = true
                 scanning = false
-                Log.d(TAG, "Camera FOUND:" + result.device.name + "," + result.scanRecord?.deviceName)
+                Log.d(
+                    TAG,
+                    "Camera FOUND Successfully:" + result.device.name + "," + result.scanRecord?.deviceName
+                )
                 bluetoothLeScanner.stopScan(this)
                 onBleStatusUpdates.onScanResult(callbackType, result)
             }
@@ -87,11 +100,11 @@ class FetchConfigBleManager : BaseBleManager() {
         override fun onConnectionStateChange(gatt: BluetoothGatt, status: Int, newState: Int) {
             if (status == BluetoothGatt.GATT_SUCCESS) {
                 if (newState == BluetoothProfile.STATE_CONNECTED) {
-                    Log.d(TAG, "Device get Connected")
+                    Log.d(TAG, "Camera Connected Successfully")
                     // successfully connected to the GATT Server
                     gatt.discoverServices()
                 } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
-                    Log.d(TAG, "Device get Disconnect")
+                    Log.e(TAG, "Camera get Disconnected")
                     // disconnected from the GATT Server
                     gatt.disconnect()
                 }
@@ -118,7 +131,7 @@ class FetchConfigBleManager : BaseBleManager() {
             characteristic: BluetoothGattCharacteristic?,
             status: Int
         ) {
-            Log.d(TAG, "Received Configs from Bluetooth: " + characteristic?.getStringValue(0))
+            Log.d(TAG, "Successfully Received Configs from Camera: " + characteristic?.getStringValue(0))
             gatt?.close()
             onBleStatusUpdates.onDataReceived(characteristic?.getStringValue(0))
         }

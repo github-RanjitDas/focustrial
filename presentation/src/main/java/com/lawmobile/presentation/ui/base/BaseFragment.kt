@@ -6,7 +6,6 @@ import androidx.fragment.app.Fragment
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.extensions.createAlertProgress
 import com.lawmobile.presentation.utils.EspressoIdlingResource
-import com.lawmobile.presentation.utils.NewRelicLogger
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -36,11 +35,4 @@ abstract class BaseFragment : Fragment() {
 
     fun isInPortraitMode() =
         resources.configuration.orientation == ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-
-    override fun onResume() {
-        super.onResume()
-        viewTag?.let {
-            NewRelicLogger.updateActiveView(it)
-        }
-    }
 }

@@ -208,9 +208,11 @@ class SimpleFileListFragment : FileListBaseFragment() {
 
     override fun onResume() {
         super.onResume()
-        if (CameraInfo.areNewChanges && !isLoadedOnCreate) {
-            getFileList()
-            CameraInfo.areNewChanges = false
+        if (CameraInfo.isCameraConnected) {
+            if (CameraInfo.areNewChanges && !isLoadedOnCreate) {
+                getFileList()
+                CameraInfo.areNewChanges = false
+            }
         }
         isLoadedOnCreate = false
     }

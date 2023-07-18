@@ -6,16 +6,16 @@ node('jenkins-builds-slave') {
                 retriever: modernSCM([$class: 'GitSCMSource', remote: "${env.DEFAULT_SHARED_LIBS_REPO}"])
         pipelineProps.defaultBuildMultibranchProperties()
         def secrets = [[
-                  path: "/secret-dev/safefleet1",
+                  path: "/secret-dev/safefleet2",
                   engineVersion: '2',
                   secretValues: [
                     [vaultKey: 'credential_google_x1', envVar: 'credential_google_x1'],
                     [vaultKey: 'android_keystore', envVar: 'android_keystore'],
                     [vaultKey: 'keystore_alias', envVar: 'KEYSTORE_ALIAS'],
                     [vaultKey: 'keystore_password', envVar: 'KEYSTORE_PASSWORD'],
-                    [vaultKey: 'firebase_distribution_develop', envVar: 'firebase_distribution_develop'],
-                    [vaultKey: 'firebase_distribution_test', envVar: 'firebase_distribution_test'],
-                    [vaultKey: 'firebase_distribution_stg', envVar: 'firebase_distribution_stg']
+                    [vaultKey: 'firebase_distribution_develop', envVar: 'firebase_distribution_develop']
+//                     [vaultKey: 'firebase_distribution_test', envVar: 'firebase_distribution_test'],
+//                     [vaultKey: 'firebase_distribution_stg', envVar: 'firebase_distribution_stg']
                   ]
         ]]
         def imageDocker = "245255707803.dkr.ecr.us-east-1.amazonaws.com/android-sdk-seon:0.sdk33-gradle6.3-fastlane-java11.latest"
@@ -111,72 +111,72 @@ node('jenkins-builds-slave') {
                                 archiveArtifacts "app/build/outputs/apk/debug/app-debug-${BUILD_NUMBER}.apk"
                             }
 						}
-						stage('Send APK to Firebase'){
-						    logger.stage()
-						    logger.info("Get Keystore")
-						    timeout(10){
-                                withVault(vaultSecrets: secrets) {
-                                    sh """cat > $WORKSPACE/keystore.jks_64 <<  EOL\n$android_keystore\nEOL"""
-                                    sh "base64 -d keystore.jks_64 > app/keystore.jks"
-                                }
-                            }
-							logger.info("Send APK Develop to Firebase")
-							timeout(10){
-								withVault(vaultSecrets: secrets) {
-									sh """cat > $WORKSPACE/firebase_distribution_develop.json_64 <<  EOL\n$firebase_distribution_develop\nEOL"""
-									sh "base64 -d firebase_distribution_develop.json_64 > app/src/debug/fma-distribution.json"
-
-									sh "./gradlew assembleDebug appDistributionUploadDebug --stacktrace"
-
-									sh "rm $WORKSPACE/app/src/debug/fma-distribution.json"
-								}
-							}
-							logger.info("Send APK Test to Firebase")
-							timeout(10){
-                                withVault(vaultSecrets: secrets) {
-                                    sh """cat > $WORKSPACE/firebase_distribution_test.json_64 <<  EOL\n$firebase_distribution_test\nEOL"""
-                                    sh "base64 -d firebase_distribution_test.json_64 > app/src/qaTest/fma-distribution.json"
-
-                                    sh "./gradlew assembleQaTest appDistributionUploadQaTest --stacktrace"
-
-                                    sh "rm $WORKSPACE/app/src/qaTest/fma-distribution.json"
-                                }
-                            }
-						}
-						stage('Sign APKs and run tests on firebase'){
-							logger.stage()
-							timeout(60){
-								def pass = ""
-								def alias = ""
-								withVault(vaultSecrets: secrets) {
-									sh """cat > $WORKSPACE/firebase_distribution_develop.json_64 <<  EOL\n$firebase_distribution_develop\nEOL"""
-									sh "base64 -d firebase_distribution_develop.json_64 > fma-service-account.json"
-									pass = "${env.KEYSTORE_PASSWORD}"
-									alias = "${env.KEYSTORE_ALIAS}"
-								}
-								withEnv(["KEYSTORE_PASSWORD=$pass", "KEYSTORE_ALIAS=$alias"]) {
-									sh "/home/user/android-sdk-linux/build-tools/33.0.0/apksigner sign --ks app/keystore.jks --ks-pass pass:$pass app/build/outputs/apk/debug/app-debug-${BUILD_NUMBER}.apk"
-									//sh "/home/user/android-sdk-linux/build-tools/28.0.3/apksigner sign --ks app/keystore.jks --ks-pass pass:$pass app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk"
-									sh "gcloud auth activate-service-account --key-file=fma-service-account.json"
-									sh "gcloud config set project fma-dev-8d851"
-									//sh "gcloud firebase test android run --timeout 20m --type instrumentation --app app/build/outputs/apk/debug/app-debug-${BUILD_NUMBER}.apk --test app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk --device model=x1q,version=29,locale=en,orientation=portrait --use-orchestrator --test-targets \"annotation com.safefleet.lawmobile.helpers.SmokeTest\""
-								}
-							}
-						}
-						stage('Clean credentials Keystore'){
-							logger.stage()
-							timeout(10){
-								sh "rm $WORKSPACE/keystore.jks_64"
-								sh "rm $WORKSPACE/app/keystore.jks"
-							}
-						}
+// 						stage('Send APK to Firebase'){
+// 						    logger.stage()
+// 						    logger.info("Get Keystore")
+// 						    timeout(10){
+//                                 withVault(vaultSecrets: secrets) {
+//                                     sh """cat > $WORKSPACE/keystore.jks_64 <<  EOL\n$android_keystore\nEOL"""
+//                                     sh "base64 -d keystore.jks_64 > app/keystore.jks"
+//                                 }
+//                             }
+// 							logger.info("Send APK Develop to Firebase")
+// 							timeout(10){
+// 								withVault(vaultSecrets: secrets) {
+// 									sh """cat > $WORKSPACE/firebase_distribution_develop.json_64 <<  EOL\n$firebase_distribution_develop\nEOL"""
+// 									sh "base64 -d firebase_distribution_develop.json_64 > app/src/debug/fma-distribution.json"
+//
+// 									sh "./gradlew assembleDebug appDistributionUploadDebug --stacktrace"
+//
+// 									sh "rm $WORKSPACE/app/src/debug/fma-distribution.json"
+// 								}
+// 							}
+// 							logger.info("Send APK Test to Firebase")
+// 							timeout(10){
+//                                 withVault(vaultSecrets: secrets) {
+//                                     sh """cat > $WORKSPACE/firebase_distribution_test.json_64 <<  EOL\n$firebase_distribution_test\nEOL"""
+//                                     sh "base64 -d firebase_distribution_test.json_64 > app/src/qaTest/fma-distribution.json"
+//
+//                                     sh "./gradlew assembleQaTest appDistributionUploadQaTest --stacktrace"
+//
+//                                     sh "rm $WORKSPACE/app/src/qaTest/fma-distribution.json"
+//                                 }
+//                             }
+// 						}
+// 						stage('Sign APKs and run tests on firebase'){
+// 							logger.stage()
+// 							timeout(60){
+// 								def pass = ""
+// 								def alias = ""
+// 								withVault(vaultSecrets: secrets) {
+// 									sh """cat > $WORKSPACE/firebase_distribution_develop.json_64 <<  EOL\n$firebase_distribution_develop\nEOL"""
+// 									sh "base64 -d firebase_distribution_develop.json_64 > fma-service-account.json"
+// 									pass = "${env.KEYSTORE_PASSWORD}"
+// 									alias = "${env.KEYSTORE_ALIAS}"
+// 								}
+// 								withEnv(["KEYSTORE_PASSWORD=$pass", "KEYSTORE_ALIAS=$alias"]) {
+// 									sh "/home/user/android-sdk-linux/build-tools/33.0.0/apksigner sign --ks app/keystore.jks --ks-pass pass:$pass app/build/outputs/apk/debug/app-debug-${BUILD_NUMBER}.apk"
+// 									//sh "/home/user/android-sdk-linux/build-tools/28.0.3/apksigner sign --ks app/keystore.jks --ks-pass pass:$pass app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk"
+// 									sh "gcloud auth activate-service-account --key-file=fma-service-account.json"
+// 									sh "gcloud config set project fma-dev-8d851"
+// 									//sh "gcloud firebase test android run --timeout 20m --type instrumentation --app app/build/outputs/apk/debug/app-debug-${BUILD_NUMBER}.apk --test app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk --device model=x1q,version=29,locale=en,orientation=portrait --use-orchestrator --test-targets \"annotation com.safefleet.lawmobile.helpers.SmokeTest\""
+// 								}
+// 							}
+// 						}
+// 						stage('Clean credentials Keystore'){
+// 							logger.stage()
+// 							timeout(10){
+// 								sh "rm $WORKSPACE/keystore.jks_64"
+// 								sh "rm $WORKSPACE/app/keystore.jks"
+// 							}
+// 						}
 					} else {
 						exit 1
 						currentBuild.result = 'FAILURE'
 					}
 				}
             }
-            if(env.BRANCH_NAME == 'develop' || env.BRANCH_NAME == 'master' || env.BRANCH_NAME.startsWith('release/')) {
+            if(env.BRANCH_NAME.contains('Develop') || env.BRANCH_NAME.contains('develop') || env.BRANCH_NAME == 'master' || env.BRANCH_NAME.startsWith('release/')) {
                 stage('Upload libraries'){
                     timeout(5){
                         withEnv(["VARIANT=SNAPSHOT"]) {
@@ -185,8 +185,8 @@ node('jenkins-builds-slave') {
                     }
                 }
             }
-            if(env.BRANCH_NAME.contains('develop') || env.BRANCH_NAME == 'master' || env.BRANCH_NAME.startsWith('release/')){
-                stage('Generate APK'){
+            if(env.BRANCH_NAME.contains('Develop') || env.BRANCH_NAME.contains('develop') || env.BRANCH_NAME == 'master' || env.BRANCH_NAME.startsWith('release/')){
+                stage('Generate Release APK'){
                     logger.stage()
                     timeout(10){
                         withVault(vaultSecrets: secrets) {
@@ -203,9 +203,6 @@ node('jenkins-builds-slave') {
                  timeout(10){
                  sh "mv $WORKSPACE/app/build/outputs/apk/release/app-release.apk $WORKSPACE/app/build/outputs/apk/release/app-release-${BUILD_NUMBER}.apk"
                   archiveArtifacts "app/build/outputs/apk/release/app-release-${BUILD_NUMBER}.apk"
-
-
-
                   }
                 }
 

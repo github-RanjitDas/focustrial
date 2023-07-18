@@ -330,6 +330,30 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/dividerDiagnose" />
 
+            <View
+                android:id="@+id/dividerPP"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/width_1dp"
+                android:background="@color/whiteTransparentMenuDivider"
+                app:layout_constraintTop_toBottomOf="@id/text_view_help" />
+
+            <TextView
+                android:id="@+id/text_view_privacy_policy"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/roboto_regular"
+                android:paddingStart="@dimen/menu_live_view_icon_user_margin"
+                android:paddingTop="@dimen/menu_live_view_item_navigation_margin"
+                android:paddingEnd="@dimen/no_dp"
+                android:paddingBottom="@dimen/menu_live_view_item_navigation_margin"
+                android:text="@string/live_view_menu_item_privacy_policy"
+                android:textColor="@color/white"
+                android:textSize="@dimen/menu_live_view_text_items_size"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/dividerPP" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </ScrollView>

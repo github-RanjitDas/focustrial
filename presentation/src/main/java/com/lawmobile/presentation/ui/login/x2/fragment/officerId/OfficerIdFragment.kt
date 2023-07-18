@@ -2,6 +2,8 @@ package com.lawmobile.presentation.ui.login.x2.fragment.officerId
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,12 +18,13 @@ import com.lawmobile.presentation.databinding.FragmentValidateOfficerIdBinding
 import com.lawmobile.presentation.extensions.createNotificationDialog
 import com.lawmobile.presentation.ui.base.BaseFragment
 import com.lawmobile.presentation.ui.onBoardingCards.OnBoardingCardsActivity
-import com.lawmobile.presentation.ui.selectCamera.SelectCameraActivity
 import com.lawmobile.presentation.utils.SFConsoleLogs
 import com.safefleet.mobile.android_commons.extensions.hideKeyboard
 import kotlin.reflect.KFunction1
 
 class OfficerIdFragment : BaseFragment() {
+
+    val handler = Handler(Looper.myLooper()!!)
 
     private val viewModel: OfficerIdViewModel by activityViewModels()
 
@@ -60,10 +63,16 @@ class OfficerIdFragment : BaseFragment() {
     }
 
     private fun verifyConnectivityRequirements() {
+        val delay: Long = 1000
         if (wereConnectivityRequirementsChecked.not()) {
-            verifyInternetConnection()
+            handler.postDelayed(
+                {
+                    verifyInternetConnection()
+                    wereConnectivityRequirementsChecked = true
+                },
+                delay
+            )
             verifyBluetoothEnabled()
-            wereConnectivityRequirementsChecked = true
         }
     }
 
@@ -112,7 +121,6 @@ class OfficerIdFragment : BaseFragment() {
     private fun FragmentValidateOfficerIdBinding.setListeners() {
         editTextOfficerIdListener()
         buttonContinueListener()
-        changeCameraListener()
         onBoardingCardsListener()
     }
 
@@ -143,10 +151,6 @@ class OfficerIdFragment : BaseFragment() {
         activity?.finish()
     }
 
-    private fun FragmentValidateOfficerIdBinding.changeCameraListener() {
-        buttonChangeCamera.setOnClickListener { goToSelectCamera() }
-    }
-
     private fun FragmentValidateOfficerIdBinding.buttonContinueListener() {
         setButtonContinueEnable(viewModel.officerId.isNotEmpty())
         buttonContinue.setOnClickListener {
@@ -158,12 +162,6 @@ class OfficerIdFragment : BaseFragment() {
     private fun validateOfficerId() {
         (activity as AppCompatActivity).hideKeyboard()
         onContinueClick(viewModel.officerId)
-    }
-
-    private fun goToSelectCamera() {
-        val selectCameraIntent = Intent(context, SelectCameraActivity::class.java)
-        activity?.startActivity(selectCameraIntent)
-        activity?.finish()
     }
 
     override fun onDestroy() {

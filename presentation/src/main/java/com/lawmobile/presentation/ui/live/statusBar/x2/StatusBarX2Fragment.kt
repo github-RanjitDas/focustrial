@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import com.lawmobile.domain.entities.CameraInfo
 import com.lawmobile.domain.entities.customEvents.LowStorageEvent
 import com.lawmobile.presentation.R
 import com.lawmobile.presentation.databinding.FragmentLiveStatusBarX2Binding
@@ -60,8 +61,10 @@ class StatusBarX2Fragment : StatusBarBaseFragment() {
 
     override fun onResume() {
         super.onResume()
-        manageBatteryLevel(currentBatteryPercent)
-        manageStorageLevel(currentStoragePercent)
+        if (CameraInfo.isCameraConnected) {
+            manageBatteryLevel(currentBatteryPercent)
+            manageStorageLevel(currentStoragePercent)
+        }
     }
 
     private fun setObservers() {

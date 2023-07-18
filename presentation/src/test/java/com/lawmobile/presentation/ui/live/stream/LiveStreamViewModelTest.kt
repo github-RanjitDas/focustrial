@@ -2,13 +2,9 @@ package com.lawmobile.presentation.ui.live.stream
 
 import com.lawmobile.domain.usecase.liveStreaming.LiveStreamingUseCase
 import com.lawmobile.presentation.InstantExecutorExtension
-import com.lawmobile.presentation.utils.VLCMediaPlayer
-import io.mockk.Runs
 import io.mockk.every
-import io.mockk.just
 import io.mockk.mockk
 import io.mockk.verify
-import org.junit.Assert
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.api.extension.ExtendWith
@@ -17,28 +13,17 @@ import org.junit.jupiter.api.extension.ExtendWith
 @ExtendWith(InstantExecutorExtension::class)
 internal class LiveStreamViewModelTest {
 
-    private val vlcMediaPlayer: VLCMediaPlayer = mockk {
-        every { create(any(), any()) } just Runs
-        every { play() } just Runs
-        every { stop() } just Runs
-    }
-
     private val liveStreamingUseCase: LiveStreamingUseCase = mockk {
         every { getUrlForLiveStream() } returns String()
     }
 
     private val liveStreamViewModel: LiveStreamViewModel by lazy {
-        LiveStreamViewModel(vlcMediaPlayer, liveStreamingUseCase)
+        LiveStreamViewModel(liveStreamingUseCase)
     }
 
     @Test
     fun testGetUrlForLiveStreamVerifyFlow() {
         liveStreamViewModel.getUrlLive()
         verify { liveStreamingUseCase.getUrlForLiveStream() }
-    }
-
-    @Test
-    fun getMediaPlayer() {
-        Assert.assertEquals(vlcMediaPlayer, liveStreamViewModel.mediaPlayer)
     }
 }

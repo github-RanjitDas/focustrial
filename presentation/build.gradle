@@ -9,7 +9,6 @@ plugins {
     id 'kotlin-android'
     id 'kotlin-kapt'
     id 'dagger.hilt.android.plugin'
-    id 'newrelic'
 }
 
 check.dependsOn ktlint
@@ -138,7 +137,6 @@ dependencies {
     implementation Dependencies.AppCompat.appCompat
     implementation Dependencies.AndroidX.coreKTX
     implementation Dependencies.ConstraintLayout.constraintLayout
-    implementation Dependencies.VLC.libVLC
     implementation Dependencies.ExoPlayer.player
     implementation Dependencies.ExoPlayer.ui
     implementation Dependencies.ExoPlayer.dash
@@ -156,7 +154,6 @@ dependencies {
     api Dependencies.Coroutines.coroutinesAndroid
     api Dependencies.Coroutines.coroutinesCore
 
-    implementation Dependencies.NewRelic.android
 
     implementation Dependencies.Base.androidCommons
     implementation Dependencies.Base.safeFleetUI

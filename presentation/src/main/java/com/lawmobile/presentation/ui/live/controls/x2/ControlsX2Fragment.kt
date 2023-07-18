@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import androidx.core.view.isVisible
 import com.lawmobile.presentation.databinding.FragmentLiveControlsX2Binding
 import com.lawmobile.presentation.ui.live.controls.ControlsBaseFragment
-import com.lawmobile.presentation.ui.live.controls.x1.ControlsX1Fragment
 import com.lawmobile.presentation.utils.FeatureSupportHelper
 
 class ControlsX2Fragment : ControlsBaseFragment() {
@@ -60,7 +59,7 @@ class ControlsX2Fragment : ControlsBaseFragment() {
     }
 
     override val viewTag: String
-        get() = ControlsX1Fragment.TAG
+        get() = ControlsX2Fragment.TAG
 
     companion object {
         val TAG: String = ControlsX2Fragment::class.java.simpleName
