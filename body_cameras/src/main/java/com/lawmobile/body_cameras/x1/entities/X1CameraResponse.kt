@@ -11,10 +11,18 @@ data class X1CameraResponse(
     fun getItemsFile(path: String, folder: String): List<CameraFile> {
 
         val items =
-            listing?.map { CameraFile(it.keys.first(), it.values.first(), path, folder) }
+            listing?.map {
+                CameraFile(it.keys.first(), it.values.first(), path, folder)
+            }
                 ?: emptyList()
-        println("getItemsFile items: " + path + folder + " : " + items.size.toString())
-        return items
+        val filterList = mutableListOf<CameraFile>()
+        items.forEach {
+            if (!(it.name.contains("AB.JPG") || it.name.contains("BB.JPG"))) {
+                filterList.add(it)
+            }
+        }
+        // println("getItemsFile items: $items")
+        return filterList
     }
 
     fun isCommandSuccess(): Boolean =
