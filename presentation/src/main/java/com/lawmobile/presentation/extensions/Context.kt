@@ -145,6 +145,10 @@ fun Context.showToast(message: String, duration: Int = Toast.LENGTH_SHORT) {
 }
 
 fun Context.checkSession(callback: (View) -> Unit, view: View) {
+    if (CameraInfo.demoMode) {
+        callback.invoke(view)
+        return
+    }
     val isSessionExpired = checkIfSessionIsExpired()
     if (isSessionExpired) {
         this.createAlertSessionExpired()
@@ -156,6 +160,10 @@ fun Context.checkSession(callback: (View) -> Unit, view: View) {
 }
 
 fun Context.verifySessionBeforeAction(callback: () -> Unit) {
+    if (CameraInfo.demoMode) {
+        callback.invoke()
+        return
+    }
     val isSessionExpired = checkIfSessionIsExpired()
     if (isSessionExpired) {
         this.createAlertSessionExpired()
