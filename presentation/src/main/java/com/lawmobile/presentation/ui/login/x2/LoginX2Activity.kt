@@ -418,6 +418,15 @@ class LoginX2Activity : LoginBaseActivity() {
     }
 
     private fun onContinueClick(officerId: String) {
+        if (officerId == "demo_account") {
+            this.officerId = officerId
+            CameraInfo.officerId = officerId
+            CameraInfo.demoMode = true
+            startLiveViewActivity()
+            return
+        } else {
+            CameraInfo.demoMode = false
+        }
         if (snackBarObject != null && snackBarObject!!.isShown) {
             snackBarObject!!.dismiss()
         }
